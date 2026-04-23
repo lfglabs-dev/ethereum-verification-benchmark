@@ -1,0 +1,19 @@
+manifest_kind: family
+schema_version: 1
+family_id: erc4337
+display_name: ERC-4337
+split: active
+status: active
+description: >
+  Benchmark family for ERC-4337 Account Abstraction EntryPoint contract.
+  Covers the core security invariant: execution happens if and only if
+  validation passed. This property was the subject of a year-long formal
+  verification effort by Certora using SMT solvers, which could not prove
+  it due to the inability to universally quantify over arbitrary contract
+  implementations.
+implementation_ids:
+  - erc4337_v09
+case_ids:
+  - erc4337/entry_point_invariant
+source_languages:
+  - solidity
