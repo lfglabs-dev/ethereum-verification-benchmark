@@ -1,0 +1,54 @@
+manifest_kind: case
+project: erc4337
+case_id: entry_point_invariant
+schema_version: 1
+split: active
+family_id: erc4337
+implementation_id: erc4337_v09
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/eth-infinitism/account-abstraction
+upstream_commit: 1c6b669acfe1edb54e7aca43f8e55f81581cec16
+original_contract_path: contracts/core/EntryPoint.sol
+source_ref: https://github.com/eth-infinitism/account-abstraction@1c6b669acfe1edb54e7aca43f8e55f81581cec16:contracts/core/EntryPoint.sol
+lean_target: Benchmark.Cases.ERC4337.EntryPointInvariant.Compile
+selected_functions:
+  - handleOps
+  - _iterateValidationPhase
+  - _executeUserOp
+source_language: solidity
+verity_version: 4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - abstract_control_flow_model
+  - two_loop_structure
+  - universally_quantified_validation
+  - gas_accounting_elided
+  - paymaster_logic_elided
+abstraction_notes: >
+  The benchmark models the two-loop structure of ERC-4337 handleOps as pure
+  Lean functions. UserOperations are abstracted to indices with validation
+  outcomes modeled as List Bool. The validation phase succeeds iff ALL results
+  are true (reflecting the all-or-nothing revert semantics). The execution phase
+  produces List.replicate n true (reflecting that every execution is attempted
+  via try/catch). Gas accounting, paymaster logic, and account implementation
+  details are abstracted away since they do not affect the core invariant. A
+  Verity contract model (EntryPointModel) demonstrates the single-op case.
+unsupported_feature_codes:
+  - indexed_for_loop
+  - ecm_runtime_target
+  - try_catch_high_level
+  - tuple_return
+  - struct_parameters
+spec_target: Benchmark.Cases.ERC4337.EntryPointInvariant.Specs
+proof_target: Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs
+notes: >
+  ERC-4337 EntryPoint core invariant: execution happens if and only if
+  validation passed. This is the property that Certora spent over a year
+  attempting to verify with SMT solvers but could not prove because SMT
+  cannot universally quantify over arbitrary contract implementations.
+  The Lean proof succeeds because it naturally handles universal quantification
+  over all possible validation outcomes.

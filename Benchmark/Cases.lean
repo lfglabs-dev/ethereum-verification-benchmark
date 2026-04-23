@@ -17,3 +17,4 @@ import Benchmark.Cases.OneDelta
 import Benchmark.Cases.Zodiac
 import Benchmark.Cases.Polaris
 import Benchmark.Cases.IPOR
+import Benchmark.Cases.ERC4337
