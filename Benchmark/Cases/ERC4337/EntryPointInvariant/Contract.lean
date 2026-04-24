@@ -5,6 +5,7 @@ namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 open Verity hiding pure bind
 open Verity.EVM.Uint256
 open Verity.Stdlib.Math
+open Contracts
 
 /-!
 # ERC-4337 EntryPoint — Abstract Invariant Model
@@ -164,7 +165,7 @@ def wasExecuted (executionResults : Option (List ExecutionAttempted)) (i : Nat) 
 ## Verity contract for on-chain modeling
 
 We also provide a Verity contract that implements the same logic using
-storage arrays, to demonstrate the pattern within the DSL.
+storage arrays, native bounded loops, and environment-backed call oracles.
 -/
 
 verity_contract EntryPointModel where
@@ -177,15 +178,45 @@ verity_contract EntryPointModel where
     collected : Uint256 := slot 2
     -- Per-operation deposit tracking (simplified StakeManager)
     deposits : Address → Uint256 := slot 3
+    -- Per-operation validation status recorded by the validation loop
+    validationStatus : Uint256 → Uint256 := slot 4
+    -- Per-operation execution status recorded by the execution loop
+    executionStatus : Uint256 → Uint256 := slot 5
 
   constants
     STATUS_NOT_VALIDATED : Uint256 := 0
     STATUS_VALIDATED : Uint256 := 1
     STATUS_EXECUTED : Uint256 := 2
 
+  -- Batch lifecycle model using the executable ERC-4337 primitives in Verity:
+  -- `forEach` runs once per index and binds `i`, `externalCall` reads from the
+  -- environment oracle, and `tryCatch` treats account execution failure as a
+  -- caught inner revert while still recording that execution was attempted.
+  function handleOpsNative (opslen : Uint256) : Unit := do
+    setStorage opsCount opslen
+
+    -- Phase 1: validate every operation. A zero oracle word models validation
+    -- failure and reverts the whole batch.
+    forEach "i" opslen (do
+      let validationWord := externalCall "validateUserOp" [i]
+      require (validationWord != STATUS_NOT_VALIDATED) "AA validation failed"
+      setMappingUint validationStatus i STATUS_VALIDATED)
+
+    -- Phase 2: attempt execution for every validated operation. The inner call
+    -- can fail independently; `tryCatch` catches that failure and the attempt is
+    -- still recorded.
+    forEach "i" opslen (do
+      tryCatch (call 0 i 0 0 0 0 0) (do
+        pure ())
+      setMappingUint executionStatus i STATUS_EXECUTED
+      let currentCollected ← getStorage collected
+      setStorage collected (add currentCollected 1))
+
+    setStorage batchExecuted 1
+
   -- Simplified: process a single operation's full lifecycle
   -- This models the case of a single-op batch (N=1) which is the common case
-  -- and sufficient to demonstrate the invariant.
+  -- and keeps the proof-only tasks compact.
   function processSingleOp (validationPassed : Bool, _sender : Address) : Unit := do
     -- Phase 1: Validation
     require validationPassed "AA validation failed"
