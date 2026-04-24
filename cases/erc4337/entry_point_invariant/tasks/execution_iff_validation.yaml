@@ -5,7 +5,7 @@ case_id: erc4337/entry_point_invariant
 split: active
 family_id: erc4337
 implementation_id: erc4337_v09
-source_ref: https://github.com/eth-infinitism/account-abstraction@1c6b669acfe1edb54e7aca43f8e55f81581cec16:contracts/core/EntryPoint.sol
+source_ref: https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol
 task_interface_version: 2
 theorem_name: Benchmark.Cases.ERC4337.EntryPointInvariant.execution_iff_validation
 proof_family: refinement_equivalence
@@ -28,7 +28,8 @@ reference_solution_module: Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs
 reference_solution_declaration: Benchmark.Cases.ERC4337.EntryPointInvariant.execution_iff_validation
 abstraction_level: protocol_slice
 abstraction_notes: >
-  The full ERC-4337 biconditional invariant: in a non-reverting handleOps call,
-  execution at index i if and only if validation passed at index i. This is the
-  combined property that Certora could not prove with SMT solvers.
+  The selected ERC-4337 biconditional control-flow invariant: in a non-reverting
+  handleOps model, the operation execution path is attempted at index i if and
+  only if validation passed at index i. This task does not model full arbitrary
+  account/paymaster EVM behavior or `innerHandleOp` calldata effects.
 unsupported_feature_codes: []

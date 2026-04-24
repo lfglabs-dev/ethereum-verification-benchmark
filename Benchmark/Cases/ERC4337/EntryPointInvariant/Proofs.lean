@@ -9,20 +9,21 @@ open Verity.EVM.Uint256
 /-!
 # ERC-4337 EntryPoint Invariant Proofs
 
-These proofs establish the core ERC-4337 security property:
+These proofs establish the selected ERC-4337 EntryPoint control-flow property:
 
-> "The EntryPoint only calls the sender with userOp.callData if and only if
->  validateUserOp on that specific sender has passed."
+> EntryPoint reaches the operation execution path if and only if validation for
+> that same operation has passed.
 
 The proofs work on the abstract pure-Lean model of the two-loop `handleOps`
 structure. Because the model uses universally quantified validation results
-(a `List Bool`), these proofs hold for ALL possible validation outcomes —
-exactly the property that Certora's SMT solver could not establish.
+(a `List Bool`), these proofs hold for all possible validation outcomes in this
+model. The proof does not model full arbitrary EVM account/paymaster behavior or
+the `callData.length > 0` sender-call branch in `innerHandleOp`.
 
 ## Proof strategy
 
 The key insight is that `handleOps` has only two outcomes:
-1. All validations pass → `some (List.replicate n true)` → all executed
+1. All validations pass → `some (List.replicate n true)` → all execution paths attempted
 2. Some validation fails → `none` → nothing executed
 
 In case 1, `List.replicate n true` at any in-bounds index gives `true`,
@@ -136,10 +137,8 @@ theorem validation_implies_execution
   exact wasExecuted_replicate_true validationResults.length i hi
 
 /--
-**Combined invariant — Biconditional**: execution at index i ↔ validation at i.
-
-This is the full invariant that Certora could not prove. We prove it by
-combining Claims 1 and 2.
+**Combined invariant — Biconditional**: execution attempt at index i ↔ validation
+at i in the selected control-flow model.
 -/
 theorem execution_iff_validation
     (validationResults : List ValidationResult)

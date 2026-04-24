@@ -5,7 +5,7 @@ case_id: erc4337/entry_point_invariant
 split: active
 family_id: erc4337
 implementation_id: erc4337_v09
-source_ref: https://github.com/eth-infinitism/account-abstraction@1c6b669acfe1edb54e7aca43f8e55f81581cec16:contracts/core/EntryPoint.sol
+source_ref: https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol
 task_interface_version: 2
 theorem_name: Benchmark.Cases.ERC4337.EntryPointInvariant.all_executed_on_success
 proof_family: refinement_equivalence

@@ -10,22 +10,24 @@ translation_status: translated
 spec_status: frozen
 proof_status: complete
 upstream_repo: https://github.com/eth-infinitism/account-abstraction
-upstream_commit: 1c6b669acfe1edb54e7aca43f8e55f81581cec16
+upstream_commit: b36a1ed52ae00da6f8a4c8d50181e2877e4fa410
 original_contract_path: contracts/core/EntryPoint.sol
-source_ref: https://github.com/eth-infinitism/account-abstraction@1c6b669acfe1edb54e7aca43f8e55f81581cec16:contracts/core/EntryPoint.sol
+source_ref: https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol
 lean_target: Benchmark.Cases.ERC4337.EntryPointInvariant.Compile
 selected_functions:
   - handleOps
   - _iterateValidationPhase
   - _executeUserOp
 source_language: solidity
-verity_version: 4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a
+verity_version: b6859954d9187f49e30642977cde83d2350d741c
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
   - abstract_control_flow_model
   - two_loop_structure
   - universally_quantified_validation
+  - execution_attempt_not_call_success
+  - calldata_payload_elided
   - gas_accounting_elided
   - paymaster_logic_elided
 abstraction_notes: >
@@ -33,10 +35,12 @@ abstraction_notes: >
   Lean functions. UserOperations are abstracted to indices with validation
   outcomes modeled as List Bool. The validation phase succeeds iff ALL results
   are true (reflecting the all-or-nothing revert semantics). The execution phase
-  produces List.replicate n true (reflecting that every execution is attempted
-  via try/catch). Gas accounting, paymaster logic, and account implementation
-  details are abstracted away since they do not affect the core invariant. A
-  Verity contract model (EntryPointModel) demonstrates the single-op case.
+  produces List.replicate n true (reflecting that `_executeUserOp` is reached
+  once per operation after validation). The model records execution-path
+  attempts, not account-call success, and elides callData payloads, gas
+  accounting, paymaster internals, and account implementation details. A Verity
+  contract model (EntryPointModel) demonstrates the native-loop/oracle-call
+  shape and the single-op case.
 unsupported_feature_codes:
   - indexed_for_loop
   - ecm_runtime_target
@@ -46,9 +50,7 @@ unsupported_feature_codes:
 spec_target: Benchmark.Cases.ERC4337.EntryPointInvariant.Specs
 proof_target: Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs
 notes: >
-  ERC-4337 EntryPoint core invariant: execution happens if and only if
-  validation passed. This is the property that Certora spent over a year
-  attempting to verify with SMT solvers but could not prove because SMT
-  cannot universally quantify over arbitrary contract implementations.
-  The Lean proof succeeds because it naturally handles universal quantification
-  over all possible validation outcomes.
+  ERC-4337 EntryPoint control-flow invariant slice: the operation execution
+  path is reached if and only if validation passed. This is not a full proof of
+  arbitrary account/paymaster EVM behavior or `innerHandleOp` calldata effects;
+  it proves the selected two-loop model for all possible validation outcomes.

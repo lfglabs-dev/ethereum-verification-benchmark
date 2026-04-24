@@ -6,11 +6,9 @@ split: active
 status: active
 description: >
   Benchmark family for ERC-4337 Account Abstraction EntryPoint contract.
-  Covers the core security invariant: execution happens if and only if
-  validation passed. This property was the subject of a year-long formal
-  verification effort by Certora using SMT solvers, which could not prove
-  it due to the inability to universally quantify over arbitrary contract
-  implementations.
+  Covers the validation-before-execution control-flow slice of handleOps:
+  the operation execution path is reached only after validation, and a
+  non-reverting batch reaches that path once per operation.
 implementation_ids:
   - erc4337_v09
 case_ids:

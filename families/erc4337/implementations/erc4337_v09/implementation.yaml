@@ -6,15 +6,15 @@ display_name: ERC-4337 EntryPoint v0.9
 split: active
 status: translated
 upstream_repo: https://github.com/eth-infinitism/account-abstraction
-upstream_commit: 1c6b669acfe1edb54e7aca43f8e55f81581cec16
+upstream_commit: b36a1ed52ae00da6f8a4c8d50181e2877e4fa410
 source_language: solidity
 source_artifact_path: contracts/core/EntryPoint.sol
 case_ids:
   - erc4337/entry_point_invariant
 notes: >
   Implementation entry for the ERC-4337 EntryPoint v0.9 contract,
-  benchmarking the two-loop handleOps invariant: execution at index i
-  if and only if validation passed at index i. The model abstracts
-  UserOperations to indices with boolean validation outcomes, gas
-  accounting is elided, and the two-loop control flow structure is
-  faithfully preserved.
+  benchmarking the two-loop handleOps control-flow slice: the execution
+  path for index i is attempted only after validation passed at index i.
+  The model abstracts UserOperations to indices with boolean validation
+  outcomes and elides calldata payloads, account/paymaster internals, and
+  gas accounting.

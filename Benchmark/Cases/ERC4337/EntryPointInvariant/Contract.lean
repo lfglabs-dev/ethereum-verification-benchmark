@@ -8,11 +8,11 @@ open Verity.Stdlib.Math
 open Contracts
 
 /-!
-# ERC-4337 EntryPoint — Abstract Invariant Model
+# ERC-4337 EntryPoint — Control-Flow Invariant Model
 
 This is an abstract model of the ERC-4337 EntryPoint v0.9 `handleOps` function,
-faithfully capturing the two-loop control flow that is the heart of the contract's
-security model.
+capturing the two-loop validation-before-execution control flow that is the heart
+of this benchmark case.
 
 ## What this models
 
@@ -22,30 +22,35 @@ The real EntryPoint processes a batch of UserOperations in two phases:
    If validation fails, the entire transaction reverts (the UserOp is rejected).
    If validation passes, record the result in `opInfos[i]`.
 
-2. **Execution loop**: For each UserOp[i] that passed validation, call the account
-   with `userOp.callData`. Even if execution reverts, the operation is considered
-   "attempted" (fees are collected).
+2. **Execution loop**: For each UserOp[i] that passed validation, enter
+   `_executeUserOp(i, ops[i], opInfos[i])`. That path builds the `innerHandleOp`
+   call and, when the effective call data is non-empty, `innerHandleOp` calls the
+   account. Even if the account call reverts, the operation execution path was
+   attempted and fees are accounted.
 
-## The invariant (from ERC-4337 spec)
+## The invariant slice
 
-> "The EntryPoint only calls the sender with userOp.callData if and only if
->  validateUserOp on that sender has passed."
+> EntryPoint reaches the execution path for UserOp[i] if and only if validation
+> for that same UserOp[i] passed.
 
 This decomposes into:
-- **Claim 1 (safety)**: Execution at index i implies validation at index i passed.
+- **Claim 1 (safety)**: An execution attempt at index i implies validation at
+  index i passed.
 - **Claim 2 (liveness)**: If validation at index i passed (and the function doesn't
-  revert), then execution at index i is attempted.
+  revert), then the execution path for index i is attempted.
 
 ## Abstraction choices
 
 - UserOperations are abstracted to indices (0..N-1) with validation outcomes
   modeled as a function `validateResult : Fin N → Bool`.
-- The account and paymaster are modeled as **universally quantified parameters** —
-  the proof holds for ALL possible validation outcomes, which is the key property
-  Certora could not prove (their SMT solver cannot universally quantify over
-  arbitrary contract behaviors).
+- The account and paymaster are modeled as **universally quantified parameters**:
+  the proof holds for all possible validation outcomes in this control-flow model.
+- The model records `_executeUserOp` attempts, not account-call success. It also
+  elides the `callData.length > 0` branch inside `innerHandleOp`, so an
+  "execution" event here means "EntryPoint attempted the operation execution
+  path", not necessarily that a non-empty `Exec.call(sender, ...)` happened.
 - Gas accounting is abstracted away (it does not affect the execution-iff-validation
-  invariant).
+  control-flow claim).
 - The two-loop structure is modeled via two storage arrays tracking which ops
   were validated and which were executed.
 
@@ -72,7 +77,8 @@ function handleOps(PackedUserOperation[] calldata ops, address payable beneficia
 In the real contract, if ANY validation in loop 1 fails, the entire `handleOps`
 reverts. So when loop 2 runs, ALL ops in the batch have passed validation.
 Loop 2 always runs for every index, calling `_executeUserOp` which calls
-`this.innerHandleOp` — even if the inner call reverts, it's still "attempted".
+`this.innerHandleOp`. This benchmark records that execution-path attempt; it
+does not model the full payload, gas accounting, or account call result.
 -/
 
 /-!
@@ -88,9 +94,10 @@ flow invariant, not about storage encoding.
     We abstract it to a Bool: true = validation passed, false = reverted. -/
 abbrev ValidationResult := Bool
 
-/-- Result of executing a single UserOp. In the real contract this is always
-    "attempted" because `_executeUserOp` uses try/catch — even if the inner
-    call reverts, the execution was attempted and fees are collected. -/
+/-- Result of entering the execution path for a single UserOp. In the real
+    contract `_executeUserOp` performs an inner self-call and handles the result;
+    even if the inner account call reverts, this benchmark records that the
+    operation execution path was attempted. -/
 abbrev ExecutionAttempted := Bool
 
 /--
@@ -129,9 +136,9 @@ Returns `none` if the transaction reverts (validation failure),
 or `some executionList` if it succeeds, where `executionList[i] = true`
 means UserOp[i]'s execution was attempted.
 
-This faithfully captures the Solidity control flow:
+This captures the selected Solidity control-flow slice:
 - If any validation fails → entire transaction reverts → no executions
-- If all validations pass → all executions are attempted
+- If all validations pass → `_executeUserOp` is attempted once per index
 -/
 def handleOps (validationResults : List ValidationResult)
     : Option (List ExecutionAttempted) :=
@@ -151,7 +158,7 @@ def wasValidated (validationResults : List ValidationResult) (i : Nat) : Bool :=
 
 /--
 For a single UserOp at index `i`:
-Was execution attempted? (Did the EntryPoint call the sender with callData?)
+Was execution attempted? (Did EntryPoint enter the execution path for i?)
 -/
 def wasExecuted (executionResults : Option (List ExecutionAttempted)) (i : Nat) : Bool :=
   match executionResults with

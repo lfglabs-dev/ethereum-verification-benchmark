@@ -9,10 +9,10 @@ open Verity.EVM.Uint256
 /-!
 # ERC-4337 EntryPoint Invariant Specifications
 
-The core security property of the ERC-4337 EntryPoint, as stated in the EIP:
+The selected control-flow property of the ERC-4337 EntryPoint:
 
-> "The EntryPoint only calls the sender with userOp.callData if and only if
->  validateUserOp on that specific sender has passed."
+> EntryPoint reaches the operation execution path if and only if validation for
+> that same operation has passed.
 
 This decomposes into two claims:
 
@@ -27,10 +27,7 @@ This decomposes into two claims:
 -/
 
 /--
-**Claim 1 — Safety**: Execution implies validation.
-
-"The EntryPoint only calls the sender with userOp.callData
- if validateUserOp to that specific sender has passed."
+**Claim 1 — Safety**: Execution attempt implies validation.
 
 For all indices in the batch: if execution was attempted,
 then validation must have succeeded.
@@ -43,10 +40,8 @@ def execution_implies_validation_spec
   wasValidated validationResults i = true
 
 /--
-**Claim 2 — Liveness**: Validation implies execution (in non-reverting case).
-
-"If the EntryPoint calls validateUserOp and passes, it also must make
- the generic call with calldata equal to userOp.calldata."
+**Claim 2 — Liveness**: Validation implies an execution-path attempt in the
+non-reverting case.
 
 If handleOps does not revert (i.e., returns some result), and validation
 passed for index i (which it must have, since handleOps only succeeds if
@@ -62,10 +57,8 @@ def validation_implies_execution_spec
   wasExecuted executionResults i = true
 
 /--
-**Combined invariant — Biconditional**: In a non-reverting handleOps,
-execution at index i ↔ validation at index i.
-
-This is the full invariant that Certora could not prove.
+**Combined invariant — Biconditional**: In a non-reverting handleOps control-flow
+model, execution attempt at index i ↔ validation at index i.
 -/
 def execution_iff_validation_spec
     (validationResults : List ValidationResult)
