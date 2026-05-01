@@ -144,7 +144,7 @@ theorem H5_from_invariant_and_no_overflow
   accounts_earmarked_le_cumulative_of_invariant s ids accountId hMem
     hSyncedAtAccountId hQ128MulOne hInvariant hSumNoOverflow
 
-/-! ## H6 — counterexample
+/-! ## H6 — reformulated as projected debt conservation
 
   H6 is the bridging identity used inside `_earmark_preserves_invariant`:
 
@@ -153,11 +153,27 @@ theorem H5_from_invariant_and_no_overflow
           sub (totalDebt s) (cumulativeEarmarked s)
 
   It is *not* a property of arbitrary `(s, ids)` pairs — it depends on
-  the contract's debt-conservation sister invariant
-  `Σ accounts_debt(id) = totalDebt`. Without modeling debt-mutation
-  operations (`_addDebt`, `_resetDebt`, the constructor seed), we
-  cannot prove it. We give a concrete pair `(s, ids)` where the LHS
-  and RHS disagree to show H6 is *not* a model tautology.
+  the contract's debt-conservation sister invariant. Without modeling
+  debt-mutation operations (`_addDebt`, `_resetDebt`, the constructor
+  seed), we cannot prove it as a true preservation invariant.
+
+  **Cheap fix.** We reformulate the original H6 as the natural sister
+  of the main invariant: `sumProjectedDebt = totalDebt` (see
+  `projectedDebt_conservation_spec` in Specs.lean). The lemma
+  `H6_from_projectedDebt_conservation` (in Proofs.lean) proves the two
+  are equivalent under the main invariant + the line-1306 sister
+  invariant. So a caller of `_earmark_preserves_invariant` who has the
+  cleaner sister gets the original H6 form for free.
+
+  The reformulation does not change what is or isn't proven about
+  Alchemix — both forms are still hypotheses. But the new form is
+  honest: it sits next to the main invariant as its obvious sister,
+  making it clear that the assumption is "debt also conserves" rather
+  than a Q128-projected technicality.
+
+  We retain the original counterexample below — `H6_not_a_tautology`
+  shows the H6 form (and equivalently the projected-debt-conservation
+  form) is genuinely a hypothesis, not a model tautology.
 
   Non-empty witness: `totalDebt = 100`, `cumulativeEarmarked = 0`,
   `_transmuterEarmarkAmount = 50` (so `_earmark_active = true`),
@@ -207,6 +223,19 @@ theorem H6_not_a_tautology :
       ids.sum (earmark_unearmarkedTimesRSR s) ≠
         sub (totalDebt s) (cumulativeEarmarked s) :=
   ⟨h6_cex_state, h6_cex_ids, H6_active, H6_falsified⟩
+
+/-- **H6 cheap fix**: a caller with the cleaner projected-debt-conservation
+    sister invariant + the main earmark invariant + the line-1306 sister
+    invariant gets the original H6 form by composition. The bridge is
+    `H6_from_projectedDebt_conservation` in Proofs.lean. -/
+theorem H6_from_sister_invariant
+    (s : ContractState) (ids : FiniteSet Uint256)
+    (hMain : sumProjectedEarmarked s ids = cumulativeEarmarked s)
+    (hSister : projectedDebt_conservation_spec s ids)
+    (hCumLeTd : cumulativeEarmarked_le_totalDebt_spec s) :
+    ids.sum (earmark_unearmarkedTimesRSR s) =
+      sub (totalDebt s) (cumulativeEarmarked s) :=
+  H6_from_projectedDebt_conservation s ids hMain hSister hCumLeTd
 
 /-! ## H3 — counterexample
 

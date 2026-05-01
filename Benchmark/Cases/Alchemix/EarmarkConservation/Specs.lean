@@ -314,4 +314,43 @@ def earmark_unearmarkedTimesRSR (s : ContractState) (id : Uint256) : Uint256 :=
   let unearmarkedRemaining := mulQ128 userExposure unearmarkSurvivalRatio
   mulQ128 unearmarkedRemaining redemptionSurvivalRatio
 
+/-! ## Projected debt (sister of projectedEarmarked) -/
+
+/-- Per-id Q128-projected debt: the natural sister of `projectedEarmarked`.
+
+    Algebraically (under Q128 idealization, `dbt ≥ earm`):
+        projectedDebt(s, id) = mulQ128 (accounts_debt s id) USR-redeem(id)
+
+    Operationally, every account's "current" debt equals what
+    `_computeUnrealizedAccount` would commit if `_sync` were called on
+    it now: `projectedEarmarked + earmark_unearmarkedTimesRSR`. The
+    first summand is the lazily-projected earmarked debt, the second
+    is the lazily-projected live unearmarked debt; together they
+    reconstruct the projected total debt at the id. -/
+def projectedDebt (s : ContractState) (id : Uint256) : Uint256 :=
+  add (projectedEarmarked s id) (earmark_unearmarkedTimesRSR s id)
+
+/-- Sum of `projectedDebt` over a finite set of active token IDs.
+
+    The sister of `sumProjectedEarmarked`: where
+    `sumProjectedEarmarked` aggregates the per-id projected
+    *earmarked debt*, this aggregates the per-id projected *total
+    debt*. -/
+def sumProjectedDebt (s : ContractState) (ids : FiniteSet Uint256) : Uint256 :=
+  ids.sum (fun id => projectedDebt s id)
+
+/-- **Projected debt conservation** — the sister of
+    `earmark_conservation_spec`.
+
+    `Σ projectedDebt(s, id) = totalDebt s`: the lazily-projected sum of
+    every active account's total debt equals the global `totalDebt`.
+
+    This is the sister-invariant version of the H6 hypothesis used in
+    `_earmark_preserves_invariant`. The deployed contract maintains the
+    storage-level invariant `Σ accounts_debt(id) = totalDebt`; this is
+    its Q128-projected form. -/
+def projectedDebt_conservation_spec
+    (s : ContractState) (ids : FiniteSet Uint256) : Prop :=
+  sumProjectedDebt s ids = totalDebt s
+
 end Benchmark.Cases.Alchemix.EarmarkConservation

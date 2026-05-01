@@ -2137,4 +2137,158 @@ theorem _sync_then_subDebt_preserves_invariant_v2
   earmark side, so we carry H6 as a hypothesis here. A follow-up case
   on the debt side closes the loop and removes H6 entirely. -/
 
+/-! ## H6 cheap fix — reformulate as projected debt conservation
+
+  The original H6 form (`Σ unearmarkedTimesRSR = totalDebt - cumulativeEarmarked`)
+  is awkward to state and easy to misread as a Q128-projected technicality.
+  The cheap fix reformulates it as the natural sister of the main
+  invariant: `sumProjectedDebt = totalDebt`. The lemma below shows the
+  two are equivalent (under the main invariant + the line-1306 sister
+  invariant), so a caller can supply the cleaner form and the original
+  H6 follows. -/
+
+/-- The sum of `earmark_unearmarkedTimesRSR` is the difference between
+    `sumProjectedDebt` and `sumProjectedEarmarked`, by the per-id
+    definition `projectedDebt = projectedEarmarked + earmark_unearmarkedTimesRSR`. -/
+private theorem sum_unearmarkedTimesRSR_eq_sub_sumProjectedDebt
+    (s : ContractState) (ids : FiniteSet Uint256) :
+    sumProjectedDebt s ids =
+      add (sumProjectedEarmarked s ids)
+        (ids.sum (earmark_unearmarkedTimesRSR s)) := by
+  unfold sumProjectedDebt sumProjectedEarmarked
+  -- projectedDebt(id) = projectedEarmarked(id) + earmark_unearmarkedTimesRSR(id)
+  -- Sum distributes by foldl_add_distrib.
+  have h := foldl_add_distrib ids
+    (fun id => projectedEarmarked s id)
+    (fun id => earmark_unearmarkedTimesRSR s id)
+  show ids.sum (fun id => projectedDebt s id) = _
+  unfold projectedDebt at *
+  exact h
+
+/-- **H6 from projected debt conservation**: the original H6 hypothesis
+    follows from the main invariant + the projected-debt sister
+    invariant (`sumProjectedDebt = totalDebt`) + the line-1306 sister
+    invariant (`cumulativeEarmarked ≤ totalDebt`). The cheap-fix bridge:
+    a caller of `_earmark_preserves_invariant` who has the cleaner
+    sister invariant gets the original H6 for free. -/
+theorem H6_from_projectedDebt_conservation
+    (s : ContractState) (ids : FiniteSet Uint256)
+    (hMain : sumProjectedEarmarked s ids = cumulativeEarmarked s)
+    (hSister : projectedDebt_conservation_spec s ids)
+    (hCumLeTd : cumulativeEarmarked_le_totalDebt_spec s) :
+    ids.sum (earmark_unearmarkedTimesRSR s) =
+      sub (totalDebt s) (cumulativeEarmarked s) := by
+  -- Σ projectedDebt = Σ projectedEarmarked + Σ Q1 (definitional split).
+  have hSplit :
+      sumProjectedDebt s ids =
+        add (sumProjectedEarmarked s ids)
+          (ids.sum (earmark_unearmarkedTimesRSR s)) :=
+    sum_unearmarkedTimesRSR_eq_sub_sumProjectedDebt s ids
+  -- Substitute the two invariants.
+  have hSplit' :
+      totalDebt s =
+        add (cumulativeEarmarked s)
+          (ids.sum (earmark_unearmarkedTimesRSR s)) := by
+    have hSister' : sumProjectedDebt s ids = totalDebt s := hSister
+    rw [← hSister']
+    rw [hSplit]
+    rw [hMain]
+  -- totalDebt = cum + Σ Q1, so sub totalDebt cum = Σ Q1, provided no overflow.
+  -- Since cum ≤ totalDebt, sub td cum has val = td.val - cum.val.
+  -- And add cum (Σ Q1) has val = cum.val + (Σ Q1).val (if no wrap).
+  -- The equation td = cum + Σ Q1 (in Uint256) implies (td.val mod m) = (cum.val + Σ Q1).val.
+  -- Combined with td.val < m, we get td.val = (cum.val + (Σ Q1).val) mod m.
+  -- When cum + Σ Q1 doesn't overflow: cum.val + (Σ Q1).val < m, so equality holds in Nat.
+  -- Then td.val - cum.val = (Σ Q1).val, i.e., sub td cum = Σ Q1.
+  apply Verity.Core.Uint256.ext
+  have hCumLeTdVal :
+      (cumulativeEarmarked s).val ≤ (totalDebt s).val := hCumLeTd
+  have hSubVal :
+      (sub (totalDebt s) (cumulativeEarmarked s)).val =
+        (totalDebt s).val - (cumulativeEarmarked s).val :=
+    Verity.Core.Uint256.sub_eq_of_le hCumLeTdVal
+  rw [hSubVal]
+  -- From hSplit': td = cum + Σ Q1 (Uint256-add). Take .val:
+  have hValEq :
+      (totalDebt s).val =
+        (add (cumulativeEarmarked s)
+          (ids.sum (earmark_unearmarkedTimesRSR s))).val :=
+    congrArg Verity.Core.Uint256.val hSplit'
+  -- Unfold add.val: (a + b).val = (a.val + b.val) % modulus.
+  have hAddVal :
+      (add (cumulativeEarmarked s)
+        (ids.sum (earmark_unearmarkedTimesRSR s))).val =
+      ((cumulativeEarmarked s).val +
+        (ids.sum (earmark_unearmarkedTimesRSR s)).val) %
+          Verity.Core.Uint256.modulus := by
+    show (Verity.Core.Uint256.add _ _).val = _
+    unfold Verity.Core.Uint256.add
+    rfl
+  rw [hAddVal] at hValEq
+  -- Want: (Σ Q1).val = td.val - cum.val.
+  -- From hValEq: td.val = (cum.val + (Σ Q1).val) % modulus.
+  -- Under `cum ≤ td` (sister invariant), wrap is impossible: a wrap
+  -- would force td.val ≤ cum.val + (Σ Q1).val - modulus < cum.val,
+  -- contradicting cum.val ≤ td.val.
+  have hSumQ1Lt :
+      (ids.sum (earmark_unearmarkedTimesRSR s)).val < Verity.Core.Uint256.modulus :=
+    (ids.sum (earmark_unearmarkedTimesRSR s)).isLt
+  have hCumLt : (cumulativeEarmarked s).val < Verity.Core.Uint256.modulus :=
+    (cumulativeEarmarked s).isLt
+  have hNoWrap :
+      (cumulativeEarmarked s).val +
+        (ids.sum (earmark_unearmarkedTimesRSR s)).val <
+          Verity.Core.Uint256.modulus := by
+    by_cases hWrap :
+        (cumulativeEarmarked s).val +
+          (ids.sum (earmark_unearmarkedTimesRSR s)).val <
+            Verity.Core.Uint256.modulus
+    · exact hWrap
+    · -- Wrap case: cum + Σ Q1 ≥ modulus. Derive contradiction with hCumLeTdVal.
+      have hWrap' :
+          (cumulativeEarmarked s).val +
+            (ids.sum (earmark_unearmarkedTimesRSR s)).val ≥
+              Verity.Core.Uint256.modulus := Nat.le_of_not_lt hWrap
+      -- Set up arithmetic: under the wrap, td.val = (cum + Σ Q1) - modulus,
+      -- which is < cum.val. But cum.val ≤ td.val. Contradiction.
+      have hLt2m :
+          (cumulativeEarmarked s).val +
+            (ids.sum (earmark_unearmarkedTimesRSR s)).val <
+              2 * Verity.Core.Uint256.modulus := by omega
+      have hModEq :
+          ((cumulativeEarmarked s).val +
+            (ids.sum (earmark_unearmarkedTimesRSR s)).val) %
+              Verity.Core.Uint256.modulus =
+            ((cumulativeEarmarked s).val +
+              (ids.sum (earmark_unearmarkedTimesRSR s)).val) -
+                Verity.Core.Uint256.modulus := by
+        have hLtMod :
+            ((cumulativeEarmarked s).val +
+                (ids.sum (earmark_unearmarkedTimesRSR s)).val) -
+                  Verity.Core.Uint256.modulus < Verity.Core.Uint256.modulus := by omega
+        have hPosM : 0 < Verity.Core.Uint256.modulus :=
+          Verity.Core.Uint256.modulus_pos
+        have :
+            (cumulativeEarmarked s).val +
+              (ids.sum (earmark_unearmarkedTimesRSR s)).val =
+              (((cumulativeEarmarked s).val +
+                  (ids.sum (earmark_unearmarkedTimesRSR s)).val) -
+                Verity.Core.Uint256.modulus) + 1 * Verity.Core.Uint256.modulus := by
+          omega
+        rw [this, Nat.add_mul_mod_self_right, Nat.mod_eq_of_lt hLtMod]
+        omega
+      rw [hModEq] at hValEq
+      exfalso
+      omega
+  -- No-wrap branch: mod = identity, equation reduces.
+  have hModEq :
+      ((cumulativeEarmarked s).val +
+        (ids.sum (earmark_unearmarkedTimesRSR s)).val) %
+          Verity.Core.Uint256.modulus =
+        (cumulativeEarmarked s).val +
+          (ids.sum (earmark_unearmarkedTimesRSR s)).val :=
+    Nat.mod_eq_of_lt hNoWrap
+  rw [hModEq] at hValEq
+  omega
+
 end Benchmark.Cases.Alchemix.EarmarkConservation
