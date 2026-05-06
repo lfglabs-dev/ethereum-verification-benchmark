@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 16
-- Implementations: 16
-- Active cases: 12
-- Buildable active cases: 12
-- Active tasks: 85
+- Families: 18
+- Implementations: 18
+- Active cases: 14
+- Buildable active cases: 14
+- Active tasks: 91
 - Backlog cases: 4
 
 ## Buildable active cases
@@ -92,6 +92,26 @@ This report is generated from the benchmark manifests.
 - Selected functions: `claimUsdc`, `_claimUsdc`, `claimWeth`, `_claimWeth`, `claimBoth`
 - Source artifact: `src/StreamRecoveryClaim.sol`
 - Notes: Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
+
+### `polygon/agglayer_bridge`
+- Family / implementation: `polygon` / `agglayer_bridge`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Polygon.AgglayerBridge.Compile`
+- Source ref: `https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol`
+- Selected functions: `claimAsset`, `claimMessage`, `_verifyLeafAndSetNullifier`, `_verifyLeaf`, `_setAndCheckClaimed`, `isClaimed`, `_validateAndDecodeGlobalIndex`, `_bitmapPositions`, `_addLeafBridge`, `_updateGlobalExitRoot`
+- Source artifact: `contracts/AgglayerBridge.sol`
+- Notes: The proved property is split into public claim theorems that show successful claims validate the leaf and reach the nullifier helper, plus a helper theorem that proves the nullifier helper consumes the source-network/leaf-index bitmap entry.
+
+### `reserve/auction_price_band`
+- Family / implementation: `reserve` / `dtfs`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Reserve.AuctionPriceBand.Compile`
+- Source ref: `https://github.com/reserve-protocol/dtfs@14f75d18856d587adfaff24e77e5b20dda7c7267:contracts/utils/RebalancingLib.sol`
+- Selected functions: `_price`
+- Source artifact: `contracts/utils/RebalancingLib.sol`
+- Notes: Auction price band slice of Reserve DTF Protocol's RebalancingLib._price. The Verity model keeps the start/end branching plus the interior exponential decay; storage I/O and external view calls (auction + rebalance state) are folded into pure parameters.
 
 ### `safe/owner_manager_reach`
 - Family / implementation: `safe` / `smart_account`
@@ -708,6 +728,66 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Polygon.AgglayerBridge.claimAsset_valid_leaf_and_consumes_unique_nullifier`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/polygon/agglayer_bridge/verity/Contract.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean`
+- Specification files: `cases/polygon/agglayer_bridge/verity/Specs.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.lean`
+- Hidden reference solution: `Benchmark.Cases.Polygon.AgglayerBridge.Proofs`
+
+### `polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/polygon/agglayer_bridge/verity/Contract.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean`
+- Specification files: `cases/polygon/agglayer_bridge/verity/Specs.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.lean`
+- Hidden reference solution: `Benchmark.Cases.Polygon.AgglayerBridge.Proofs`
+
+### `reserve/auction_price_band/price_at_end_time`
+- Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_at_end_time`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
+- Specification files: `cases/reserve/auction_price_band/verity/Specs.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceAtEndTime.lean`
+- Hidden reference solution: `Benchmark.Cases.Reserve.AuctionPriceBand.Proofs`
+
+### `reserve/auction_price_band/price_at_start_time`
+- Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_at_start_time`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
+- Specification files: `cases/reserve/auction_price_band/verity/Specs.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceAtStartTime.lean`
+- Hidden reference solution: `Benchmark.Cases.Reserve.AuctionPriceBand.Proofs`
+
+### `reserve/auction_price_band/price_lower_bound`
+- Track / property class / proof family: `proof-only` / `price_band` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_lower_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
+- Specification files: `cases/reserve/auction_price_band/verity/Specs.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceLowerBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Reserve.AuctionPriceBand.Proofs`
+
+### `reserve/auction_price_band/price_upper_bound`
+- Track / property class / proof family: `proof-only` / `price_band` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_upper_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
+- Specification files: `cases/reserve/auction_price_band/verity/Specs.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceUpperBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Reserve.AuctionPriceBand.Proofs`
 
 ### `safe/owner_manager_reach/add_owner_acyclicity`
 - Track / property class / proof family: `proof-only` / `linked_list_acyclicity` / `state_preservation_local_effects`

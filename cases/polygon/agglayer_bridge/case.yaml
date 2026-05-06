@@ -1,0 +1,50 @@
+manifest_kind: case
+project: polygon
+case_id: agglayer_bridge
+schema_version: 1
+split: active
+family_id: polygon
+implementation_id: agglayer_bridge
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/agglayer/agglayer-contracts
+upstream_commit: 110bda5a03e70ee7331bc06407a8e79226d3e520
+original_contract_path: contracts/AgglayerBridge.sol
+source_ref: https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol
+lean_target: Benchmark.Cases.Polygon.AgglayerBridge.Compile
+spec_target: Benchmark.Cases.Polygon.AgglayerBridge.Specs
+proof_target: Benchmark.Cases.Polygon.AgglayerBridge.Proofs
+selected_functions:
+  - claimAsset
+  - claimMessage
+  - _verifyLeafAndSetNullifier
+  - _verifyLeaf
+  - _setAndCheckClaimed
+  - isClaimed
+  - _validateAndDecodeGlobalIndex
+  - _bitmapPositions
+  - _addLeafBridge
+  - _updateGlobalExitRoot
+source_language: solidity
+verity_version: 4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - merkle_proof_summary
+  - nullifier_bitmap
+  - global_exit_root_ghost
+  - metadata_hash_parameter
+  - post_nullifier_effects_elided
+abstraction_notes: >
+  The benchmark models the claim validation and nullifier path of AgglayerBridge.
+  Dynamic metadata bytes are represented by a precomputed metadata hash, Merkle
+  proof calculation is summarized by a deterministic root combiner, and token or
+  message side effects after nullifier consumption are elided.
+unsupported_feature_codes: []
+notes: >
+  The proved property is split into public claim theorems that show successful
+  claims validate the leaf and reach the nullifier helper, plus a helper theorem
+  that proves the nullifier helper consumes the source-network/leaf-index bitmap
+  entry.
