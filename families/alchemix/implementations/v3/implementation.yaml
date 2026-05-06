@@ -1,0 +1,19 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: alchemix
+implementation_id: v3
+display_name: Alchemix V3
+split: active
+status: translated
+upstream_repo: https://github.com/alchemix-finance/v3
+upstream_commit: 117c95b6ee11a75221d6fbdc79f16ac6acdb96f5
+source_language: solidity
+source_artifact_path: src/AlchemistV3.sol
+case_ids:
+  - alchemix/earmark_conservation
+notes: >
+  Implementation entry for the Alchemix V3 master branch, benchmarking the
+  earmarking accounting system (_earmark, _sync, _computeUnrealizedAccount,
+  redeem, _subEarmarkedDebt, _subDebt) and the lazy-projected earmark
+  conservation invariant the team identified as most important
+  (Ov3rkoalafied, 2026-04-24).

@@ -1,0 +1,65 @@
+manifest_kind: case
+project: alchemix
+case_id: earmark_conservation
+schema_version: 1
+split: active
+family_id: alchemix
+implementation_id: v3
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/alchemix-finance/v3
+upstream_commit: 117c95b6ee11a75221d6fbdc79f16ac6acdb96f5
+original_contract_path: src/AlchemistV3.sol
+source_ref: https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol
+lean_target: Benchmark.Cases.Alchemix.EarmarkConservation.Compile
+spec_target: Benchmark.Cases.Alchemix.EarmarkConservation.Specs
+proof_target: Benchmark.Cases.Alchemix.EarmarkConservation.Proofs
+selected_functions:
+  - _earmark
+  - _sync
+  - _computeUnrealizedAccount
+  - redeem
+  - _subEarmarkedDebt
+  - _subDebt
+source_language: solidity
+verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - q128_idealized
+  - cross_epoch_path_elided
+  - external_calls_opaque
+  - access_control_elided
+  - cover_shares_abstracted
+  - account_fields_pruned
+  - active_id_set_explicit
+abstraction_notes: >
+  The benchmark targets the lazy-projected earmark conservation invariant
+  agreed with the Alchemix team (Ov3rkoalafied, 2026-04-24): the sum over
+  active accounts of project(account, _earmarkWeight, _redemptionWeight,
+  _survivalAccumulator).newEarmarked equals cumulativeEarmarked. Q128
+  fixed-point operations are treated as exact (no floor-rounding drift)
+  and the cross-epoch reconciliation branch of _computeUnrealizedAccount
+  is folded into the same-epoch path. External calls (Transmuter.queryGraph,
+  TokenUtils.safeBalanceOf, TokenUtils.safeTransfer) are modeled as opaque
+  ghost reads / no-ops. Access control, NFT ownership, Initializable, and
+  pause flags are elided. Account struct fields not on the earmark/debt
+  path (collateralBalance, freeCollateral, lastCollateralWeight,
+  lastMintBlock, lastRepayBlock, lastTotalRedeemed*, mintAllowances,
+  allowancesVersion) are dropped. The set of active token IDs is passed
+  as an explicit FiniteSet Uint256 because ContractState lacks a
+  knownTokenIds ghost field for Uint256-keyed mappings.
+unsupported_feature_codes:
+  - q128_fixed_point_helpers
+  - mapping_uint_keyset_tracking
+notes: >
+  Earmark conservation invariant for Alchemix V3 lazy-accrual debt
+  accounting. The literal "sum of stored account.earmarked equals
+  cumulativeEarmarked" is provably false on the deployed code (see
+  AlchemistV3.sol:1014 comment "Global can lag local by rounding")
+  because per-account earmarked is updated lazily inside _sync(tokenId).
+  The lazy-projected version proven here is the property the design
+  actually maintains and that downstream consumers (redemption math,
+  collateral debit) rely on.

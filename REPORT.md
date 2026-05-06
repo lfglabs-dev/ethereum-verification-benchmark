@@ -4,14 +4,34 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 11
-- Implementations: 11
-- Active cases: 7
-- Buildable active cases: 7
-- Active tasks: 45
+- Families: 16
+- Implementations: 16
+- Active cases: 12
+- Buildable active cases: 12
+- Active tasks: 85
 - Backlog cases: 4
 
 ## Buildable active cases
+
+### `alchemix/earmark_conservation`
+- Family / implementation: `alchemix` / `v3`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Alchemix.EarmarkConservation.Compile`
+- Source ref: `https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol`
+- Selected functions: `_earmark`, `_sync`, `_computeUnrealizedAccount`, `redeem`, `_subEarmarkedDebt`, `_subDebt`
+- Source artifact: `src/AlchemistV3.sol`
+- Notes: Earmark conservation invariant for Alchemix V3 lazy-accrual debt accounting. The literal "sum of stored account.earmarked equals cumulativeEarmarked" is provably false on the deployed code (see AlchemistV3.sol:1014 comment "Global can lag local by rounding") because per-account earmarked is updated lazily inside _sync(tokenId). The lazy-projected version proven here is the property the design actually maintains and that downstream consumers (redemption math, collateral debit) rely on.
+
+### `cork/pool_solvency`
+- Family / implementation: `cork` / `phoenix`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`partial`
+- Lean target: `Benchmark.Cases.Cork.PoolSolvency.Compile`
+- Source ref: `https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol`
+- Selected functions: `previewUnwindExerciseOther`, `_unwindExercise`
+- Source artifact: `contracts/libraries/PoolLib.sol`
+- Notes: Cork Phoenix pool solvency slice targeting the Certora P-02 gap. Based on the Certora formal verification report (September-December 2025). P-02 was verified for all functions except unwindExerciseOther (timeout).
 
 ### `damn_vulnerable_defi/side_entrance`
 - Family / implementation: `damn_vulnerable_defi` / `v2`
@@ -66,12 +86,12 @@ This report is generated from the benchmark manifests.
 ### `paladin_votes/stream_recovery_claim_usdc`
 - Family / implementation: `paladin_votes` / `stream_recovery_claim`
 - Stage: `build_green`
-- Status dimensions: translation=`translated`, spec=`frozen`, proof=`partial`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
 - Lean target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Compile`
 - Source ref: `https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol`
-- Selected functions: `claimUsdc`, `_claimUsdc`
+- Selected functions: `claimUsdc`, `_claimUsdc`, `claimWeth`, `_claimWeth`, `claimBoth`
 - Source artifact: `src/StreamRecoveryClaim.sol`
-- Notes: Single-round accounting slice of the USDC claim path. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
+- Notes: Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
 
 ### `safe/owner_manager_reach`
 - Family / implementation: `safe` / `smart_account`
@@ -83,11 +103,101 @@ This report is generated from the benchmark manifests.
 - Source artifact: `contracts/base/OwnerManager.sol`
 - Notes: Linked list reachability invariant preservation and functional correctness for the Safe OwnerManager. Based on the Certora OwnerReach.spec which defines the inListReachable and reachableInList invariants. All 15 proof tasks are complete (0 sorry) covering acyclicity, inListReachable, ownerListInvariant preservation, and isOwner functional correctness for all four operations. The unprovable stronglyAcyclic axiom was replaced with the provable uniquePredecessor property. Functional correctness proofs verify that each operation changes exactly the intended owners and leaves all others unchanged.
 
+### `termmax/order_v2_buy_xt_single_segment`
+- Family / implementation: `termmax` / `contracts_v2`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Compile`
+- Source ref: `https://github.com/term-structure/termmax-contract-v2@64bd47b98e064c7fb91ab4a59b70520e0ec285d5:contracts/v2/TermMaxOrderV2.sol`
+- Selected functions: `swapExactTokenToToken`, `_swapAndUpdateReserves`, `_buyToken`, `_buyXt`, `_buyXtStep`, `buyXt`, `cutsReverseIter`, `calcIntervalProps`, `plusInt256`
+- Source artifact: `contracts/v2/TermMaxOrderV2.sol`
+- Notes: TermMax range-order AMM slice for pricing-state transition correctness. The proof target is the highest-signal easy theorem in this family: on the successful single-segment `debtToken -> XT` exact-input path, the stored `virtualXtReserve` decreases by exactly the XT amount implied by the curve.
+
+### `wildcat/borrow_liquidity_safety`
+- Family / implementation: `wildcat` / `v2_protocol`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Compile`
+- Source ref: `https://github.com/wildcat-finance/v2-protocol@a70f297fbd1b1ab597e0e9a3458a2d13a34b4657:src/market/WildcatMarket.sol`
+- Selected functions: `borrow`, `_getUpdatedState`, `liquidityRequired`, `borrowableAssets`
+- Source artifact: `src/market/WildcatMarket.sol`
+- Notes: Wildcat V2 borrow safety slice proving that a successful positive borrow cannot pull market assets below the liquidity requirement computed from the updated state used by the borrow guard. The required liquidity includes the reserve-ratio-backed portion of non-pending supply, 100% of pending withdrawals, 100% of normalized unclaimed withdrawals, and updated accrued protocol fees.
+
+### `zama/erc7984_confidential_token`
+- Family / implementation: `zama` / `confidential_contracts`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`partial`
+- Lean target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Compile`
+- Source ref: `https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol`
+- Selected functions: `_update`, `_transfer`, `_mint`, `_burn`, `confidentialTransferFrom`, `setOperator`
+- Source artifact: `contracts/token/ERC7984/ERC7984.sol`
+- Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, and functional correctness of setOperator. Eleven proof tasks cover the 5 modeled functions.
+
 ## Non-buildable active cases
 
 - None
 
 ## Active tasks
+
+### `alchemix/earmark_conservation/earmark_preserves_invariant`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation._earmark_preserves_invariant`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
+- Specification files: `cases/alchemix/earmark_conservation/verity/Specs.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/EarmarkPreservesInvariant.lean`
+- Hidden reference solution: `Benchmark.Cases.Alchemix.EarmarkConservation.Proofs`
+
+### `alchemix/earmark_conservation/redeem_preserves_invariant`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation.redeem_preserves_invariant`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
+- Specification files: `cases/alchemix/earmark_conservation/verity/Specs.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/RedeemPreservesInvariant.lean`
+- Hidden reference solution: `Benchmark.Cases.Alchemix.EarmarkConservation.Proofs`
+
+### `alchemix/earmark_conservation/sub_debt_preserves_invariant`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation._subDebt_preserves_invariant`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
+- Specification files: `cases/alchemix/earmark_conservation/verity/Specs.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SubDebtPreservesInvariant.lean`
+- Hidden reference solution: `Benchmark.Cases.Alchemix.EarmarkConservation.Proofs`
+
+### `alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation._subEarmarkedDebt_preserves_invariant`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
+- Specification files: `cases/alchemix/earmark_conservation/verity/Specs.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SubEarmarkedDebtPreservesInvariant.lean`
+- Hidden reference solution: `Benchmark.Cases.Alchemix.EarmarkConservation.Proofs`
+
+### `alchemix/earmark_conservation/sync_account_preserves_invariant`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation._sync_preserves_invariant`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
+- Specification files: `cases/alchemix/earmark_conservation/verity/Specs.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SyncAccountPreservesInvariant.lean`
+- Hidden reference solution: `Benchmark.Cases.Alchemix.EarmarkConservation.Proofs`
+
+### `cork/pool_solvency/solvency_preserved`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Cork.PoolSolvency.solvency_preserved`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/cork/pool_solvency/verity/Contract.lean`, `Benchmark/Cases/Cork/PoolSolvency/Contract.lean`
+- Specification files: `cases/cork/pool_solvency/verity/Specs.lean`, `Benchmark/Cases/Cork/PoolSolvency/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Cork/PoolSolvency/Tasks/SolvencyPreserved.lean`
+- Hidden reference solution: `Benchmark.Cases.Cork.PoolSolvency.Proofs`
 
 ### `damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance`
 - Track / property class / proof family: `proof-only` / `storage_update` / `state_preservation_local_effects`
@@ -339,6 +449,116 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/NexusMutual/RammPriceBand/Tasks/SyncSetsSellPrice.lean`
 - Hidden reference solution: `Benchmark.Cases.NexusMutual.RammPriceBand.Proofs`
 
+### `paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_marks_both_claimed`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimMarksBothClaimed.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_round_claimed`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimUpdatesRoundClaimed.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_total_allocated`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimUpdatesTotalAllocated.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_claimed_plus_allocated_conserved`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimedPlusAllocatedConserved.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims`
+- Track / property class / proof family: `proof-only` / `noninterference` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_matches_independent_claims`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothMatchesIndependentClaims.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/both_no_overclaim`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_preserves_round_bounds`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothNoOverclaim.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_exceeds_total`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothUsdcBoundViolationRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_already_claimed`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothUsdcDoubleClaimRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_exceeds_total`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothWethBoundViolationRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_already_claimed`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothWethDoubleClaimRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_exceeds_total`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BoundViolationRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
 ### `paladin_votes/stream_recovery_claim_usdc/claim_marks_user`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -379,6 +599,16 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/ClaimedPlusAllocatedConserved.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
 
+### `paladin_votes/stream_recovery_claim_usdc/double_claim_rejected`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_already_claimed`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/DoubleClaimRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
 ### `paladin_votes/stream_recovery_claim_usdc/no_overclaim`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -387,6 +617,96 @@ This report is generated from the benchmark manifests.
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
 - Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/NoOverclaim.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state`
+- Track / property class / proof family: `proof-only` / `frame_property` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_weth_state`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/UsdcPreservesWethState.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_exceeds_total`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethBoundViolationRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_marks_user_claimed`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimMarksUser.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_round_claimed`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimUpdatesRoundClaimed.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_total_allocated`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimUpdatesTotalAllocated.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_claimed_plus_allocated_conserved`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimedPlusAllocatedConserved.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_already_claimed`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethDoubleClaimRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_round_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethNoOverclaim.lean`
+- Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state`
+- Track / property class / proof family: `proof-only` / `frame_property` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_usdc_state`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
+- Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
+- Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
 
 ### `safe/owner_manager_reach/add_owner_acyclicity`
@@ -538,6 +858,136 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/safe/owner_manager_reach/verity/Specs.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerOwnerListInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Safe.OwnerManagerReach.Proofs`
+
+### `termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve`
+- Track / property class / proof family: `proof-only` / `reserve_state_transition` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.swapDebtTokenToXt_updates_virtual_xt_reserve`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/termmax/order_v2_buy_xt_single_segment/verity/Contract.lean`, `Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Contract.lean`
+- Specification files: `cases/termmax/order_v2_buy_xt_single_segment/verity/Specs.lean`, `Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Specs.lean`
+- Editable proof file: `Benchmark/Generated/TermMax/OrderV2BuyXtSingleSegment/Tasks/SwapDebtTokenToXtUpdatesVirtualXtReserve.lean`
+- Hidden reference solution: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs`
+
+### `wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Wildcat.BorrowLiquiditySafety.positive_borrow_preserves_required_liquidity`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/wildcat/borrow_liquidity_safety/verity/Contract.lean`, `Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Contract.lean`
+- Specification files: `cases/wildcat/borrow_liquidity_safety/verity/Specs.lean`, `Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Wildcat/BorrowLiquiditySafety/Tasks/PositiveBorrowPreservesRequiredLiquidity.lean`
+- Hidden reference solution: `Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs`
+
+### `zama/erc7984_confidential_token/burn_decreases_supply`
+- Track / property class / proof family: `proof-only` / `supply_update` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_decreases_supply`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/BurnDecreasesSupply.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/burn_insufficient`
+- Track / property class / proof family: `proof-only` / `silent_failure` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_insufficient`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/BurnInsufficient.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/mint_increases_supply`
+- Track / property class / proof family: `proof-only` / `supply_update` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_increases_supply`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintIncreasesSupply.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/mint_overflow_protection`
+- Track / property class / proof family: `proof-only` / `overflow_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_overflow_protection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintOverflowProtection.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/setOperator_updates`
+- Track / property class / proof family: `proof-only` / `storage_write` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.setOperator_updates`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/SetOperatorUpdates.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/transferFrom_conservation`
+- Track / property class / proof family: `proof-only` / `balance_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transferFrom_conservation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferFromConservation.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/transfer_conservation`
+- Track / property class / proof family: `proof-only` / `balance_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_conservation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferConservation.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/transfer_insufficient`
+- Track / property class / proof family: `proof-only` / `silent_failure` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_insufficient`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferInsufficient.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/transfer_no_balance_revert`
+- Track / property class / proof family: `proof-only` / `non_leakage` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_no_balance_revert`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferNoBalanceRevert.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/transfer_preserves_supply`
+- Track / property class / proof family: `proof-only` / `supply_invariance` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_preserves_supply`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferPreservesSupply.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/transfer_sufficient`
+- Track / property class / proof family: `proof-only` / `balance_update` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_sufficient`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferSufficient.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
 
 ## Backlog
 

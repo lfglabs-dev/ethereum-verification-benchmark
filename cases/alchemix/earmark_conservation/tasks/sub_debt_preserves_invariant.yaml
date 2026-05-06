@@ -1,0 +1,38 @@
+manifest_kind: task
+schema_version: 1
+task_id: sub_debt_preserves_invariant
+case_id: alchemix/earmark_conservation
+split: active
+family_id: alchemix
+implementation_id: v3
+source_ref: https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Alchemix.EarmarkConservation._subDebt_preserves_invariant
+proof_family: state_preservation_local_effects
+property_class: accounting_conservation
+difficulty: easy
+category: lazy_accrual_invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/alchemix/earmark_conservation/verity/Contract.lean
+  - Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean
+specification_files:
+  - cases/alchemix/earmark_conservation/verity/Specs.lean
+  - Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean
+editable_files:
+  - Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SubDebtPreservesInvariant.lean
+reference_solution_module: Benchmark.Cases.Alchemix.EarmarkConservation.Proofs
+reference_solution_declaration: Benchmark.Cases.Alchemix.EarmarkConservation._subDebt_preserves_invariant
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves that `subDebt(tokenId, amount)` preserves the lazy-projected
+  earmark conservation invariant. Under the cumulativeEarmarked ≤
+  totalDebt corollary (always holds under the invariant), the line 1306
+  clamp is a no-op and the global is unchanged; the per-account debt
+  decrement does not affect projected earmarked.
+unsupported_feature_codes:
+  - q128_fixed_point_helpers
+  - mapping_uint_keyset_tracking

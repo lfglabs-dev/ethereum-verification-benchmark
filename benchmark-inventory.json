@@ -10,49 +10,59 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 11,
-    "implementation_count": 11,
-    "active_case_count": 7,
+    "family_count": 16,
+    "implementation_count": 16,
+    "active_case_count": 12,
     "backlog_case_count": 4,
-    "active_task_count": 45,
+    "active_task_count": 85,
     "backlog_task_count": 8,
-    "buildable_case_count": 9,
-    "runnable_task_count": 53,
+    "buildable_case_count": 14,
+    "runnable_task_count": 93,
     "case_stage_counts": {
-      "build_green": 7,
+      "build_green": 12,
       "candidate": 2,
       "proof_complete": 2
     },
     "translation_status_counts": {
       "blocked": 2,
-      "translated": 9
+      "translated": 14
     },
     "proof_status_counts": {
       "blocked": 2,
-      "complete": 3,
-      "partial": 6
+      "complete": 7,
+      "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 53
+      "proof-only": 93
     },
     "task_property_class_counts": {
-      "accounting_bound": 8,
-      "accounting_conservation": 3,
+      "accounting_bound": 16,
+      "accounting_conservation": 10,
       "accounting_invariant_break": 1,
-      "accounting_update": 2,
-      "authorization_state": 1,
+      "accounting_update": 6,
+      "authorization_state": 7,
+      "balance_conservation": 2,
       "balance_credit_update": 2,
+      "balance_update": 1,
       "exploit_trace": 1,
+      "frame_property": 2,
       "isOwner_effect": 3,
       "linked_list_acyclicity": 4,
       "linked_list_invariant": 8,
       "mapping_consistency": 1,
       "monotonic_counter": 2,
+      "non_leakage": 1,
+      "noninterference": 1,
       "output_range": 2,
+      "overflow_safety": 1,
       "price_computation": 3,
+      "reserve_state_transition": 1,
+      "silent_failure": 2,
       "storage_update": 1,
-      "storage_write": 5,
+      "storage_write": 6,
       "subtree_partition": 1,
+      "supply_invariance": 1,
+      "supply_update": 2,
       "threshold_activation": 1,
       "threshold_partition": 1,
       "total_conservation": 1,
@@ -60,18 +70,52 @@
       "weighted_selection": 1
     },
     "task_proof_family_counts": {
-      "authorization_enablement": 2,
-      "functional_correctness": 14,
-      "protocol_transition_correctness": 9,
-      "refinement_equivalence": 6,
-      "state_preservation_local_effects": 22
+      "authorization_enablement": 14,
+      "functional_correctness": 23,
+      "protocol_transition_correctness": 15,
+      "refinement_equivalence": 9,
+      "state_preservation_local_effects": 32
     },
     "family_split_counts": {
-      "active": 7,
+      "active": 12,
       "backlog": 4
     }
   },
   "families": [
+    {
+      "family_id": "alchemix",
+      "display_name": "Alchemix",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Alchemix Finance V3 self-repaying lending. Covers the lazy-accrual debt accounting machinery \u2014 earmarking, redemption, and the conservation invariants that bridge per-account state to the global Transmuter claim.",
+      "implementation_ids": [
+        "v3"
+      ],
+      "case_ids": [
+        "alchemix/earmark_conservation"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/alchemix/family.yaml"
+    },
+    {
+      "family_id": "cork",
+      "display_name": "Cork Protocol",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Cork Protocol (Phoenix version) covering pool solvency invariants from the Certora formal verification report (September-December 2025). Targets the P-02 solvency gap where Certora timed out on unwindExerciseOther.",
+      "implementation_ids": [
+        "phoenix"
+      ],
+      "case_ids": [
+        "cork/pool_solvency"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/cork/family.yaml"
+    },
     {
       "family_id": "damn_vulnerable_defi",
       "display_name": "Damn Vulnerable DeFi",
@@ -209,6 +253,23 @@
       "manifest_path": "families/safe/family.yaml"
     },
     {
+      "family_id": "termmax",
+      "display_name": "TermMax",
+      "split": "active",
+      "status": "active",
+      "description": "Active benchmark family for TermMax protocol slices centered on proving AMM pricing-state transitions and fee-consistent reserve updates.",
+      "implementation_ids": [
+        "contracts_v2"
+      ],
+      "case_ids": [
+        "termmax/order_v2_buy_xt_single_segment"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/termmax/family.yaml"
+    },
+    {
       "family_id": "uniswap_v2",
       "display_name": "Uniswap V2",
       "split": "backlog",
@@ -258,9 +319,75 @@
         "solidity"
       ],
       "manifest_path": "families/usual/family.yaml"
+    },
+    {
+      "family_id": "wildcat",
+      "display_name": "Wildcat",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Wildcat protocol slices focused on borrower liquidity obligations, reserve accounting, and withdrawal-priority-aware safety properties.",
+      "implementation_ids": [
+        "v2_protocol"
+      ],
+      "case_ids": [
+        "wildcat/borrow_liquidity_safety"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/wildcat/family.yaml"
+    },
+    {
+      "family_id": "zama",
+      "display_name": "Zama",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Zama fhEVM confidential contract logic, starting with the ERC-7984 confidential token standard (co-developed with OpenZeppelin). Focuses on verifying the accounting correctness of FHE-based token operations where balances and transfer amounts are encrypted.",
+      "implementation_ids": [
+        "confidential_contracts"
+      ],
+      "case_ids": [
+        "zama/erc7984_confidential_token"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/zama/family.yaml"
     }
   ],
   "implementations": [
+    {
+      "family_id": "alchemix",
+      "implementation_id": "v3",
+      "display_name": "Alchemix V3",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/alchemix-finance/v3",
+      "upstream_commit": "117c95b6ee11a75221d6fbdc79f16ac6acdb96f5",
+      "source_language": "solidity",
+      "source_artifact_path": "src/AlchemistV3.sol",
+      "case_ids": [
+        "alchemix/earmark_conservation"
+      ],
+      "notes": "Implementation entry for the Alchemix V3 master branch, benchmarking the earmarking accounting system (_earmark, _sync, _computeUnrealizedAccount, redeem, _subEarmarkedDebt, _subDebt) and the lazy-projected earmark conservation invariant the team identified as most important (Ov3rkoalafied, 2026-04-24).",
+      "manifest_path": "families/alchemix/implementations/v3/implementation.yaml"
+    },
+    {
+      "family_id": "cork",
+      "implementation_id": "phoenix",
+      "display_name": "Cork Phoenix",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/Cork-Technology/phoenix",
+      "upstream_commit": "40d9b173c4b",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/libraries/PoolLib.sol",
+      "case_ids": [
+        "cork/pool_solvency"
+      ],
+      "notes": "Implementation entry for Cork Protocol Phoenix version (v1.1.2), benchmarking the pool solvency invariant (Certora P-02) for the unwindExerciseOther function path.",
+      "manifest_path": "families/cork/implementations/phoenix/implementation.yaml"
+    },
     {
       "family_id": "damn_vulnerable_defi",
       "implementation_id": "v2",
@@ -390,6 +517,22 @@
       "manifest_path": "families/safe/implementations/smart_account/implementation.yaml"
     },
     {
+      "family_id": "termmax",
+      "implementation_id": "contracts_v2",
+      "display_name": "TermMax Contracts V2",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/term-structure/termmax-contract-v2",
+      "upstream_commit": "64bd47b98e064c7fb91ab4a59b70520e0ec285d5",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/v2/TermMaxOrderV2.sol",
+      "case_ids": [
+        "termmax/order_v2_buy_xt_single_segment"
+      ],
+      "notes": "Active implementation entry for the TermMax V2 contracts repository, currently benchmarking the single-segment `debtToken -> XT` pricing-state transition slice of `TermMaxOrderV2`.",
+      "manifest_path": "families/termmax/implementations/contracts_v2/implementation.yaml"
+    },
+    {
       "family_id": "uniswap_v2",
       "implementation_id": "v2_core",
       "display_name": "Uniswap V2 Core",
@@ -436,9 +579,134 @@
       ],
       "notes": "Intake is blocked on repository access, so no implementation artifact or case slice can be pinned yet.",
       "manifest_path": "families/usual/implementations/private_repo/implementation.yaml"
+    },
+    {
+      "family_id": "wildcat",
+      "implementation_id": "v2_protocol",
+      "display_name": "Wildcat V2 Protocol",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/wildcat-finance/v2-protocol",
+      "upstream_commit": "a70f297fbd1b1ab597e0e9a3458a2d13a34b4657",
+      "source_language": "solidity",
+      "source_artifact_path": "src/market/WildcatMarket.sol",
+      "case_ids": [
+        "wildcat/borrow_liquidity_safety"
+      ],
+      "notes": "Implementation entry for Wildcat V2. This benchmark case isolates the borrow path and proves the positive-borrow liquidity preservation property against the tagged `v2.0.0` market logic.",
+      "manifest_path": "families/wildcat/implementations/v2_protocol/implementation.yaml"
+    },
+    {
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "display_name": "OpenZeppelin Confidential Contracts (ERC-7984)",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts",
+      "upstream_commit": "master",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/token/ERC7984/ERC7984.sol",
+      "case_ids": [
+        "zama/erc7984_confidential_token"
+      ],
+      "notes": "OpenZeppelin's reference implementation of ERC-7984, the confidential fungible token standard for Zama's fhEVM. Uses FHESafeMath for overflow-safe encrypted arithmetic and the FHE.select pattern for branchless conditional transfers.",
+      "manifest_path": "families/zama/implementations/confidential_contracts/implementation.yaml"
     }
   ],
   "cases": [
+    {
+      "case_id": "alchemix/earmark_conservation",
+      "project": "alchemix",
+      "case_name": "earmark_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/alchemix/earmark_conservation/case.yaml",
+      "split": "active",
+      "family_id": "alchemix",
+      "implementation_id": "v3",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/alchemix-finance/v3",
+      "upstream_commit": "117c95b6ee11a75221d6fbdc79f16ac6acdb96f5",
+      "original_contract_path": "src/AlchemistV3.sol",
+      "source_ref": "https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol",
+      "selected_functions": [
+        "_earmark",
+        "_sync",
+        "_computeUnrealizedAccount",
+        "redeem",
+        "_subEarmarkedDebt",
+        "_subDebt"
+      ],
+      "lean_target": "Benchmark.Cases.Alchemix.EarmarkConservation.Compile",
+      "failure_reason": null,
+      "notes": "Earmark conservation invariant for Alchemix V3 lazy-accrual debt accounting. The literal \"sum of stored account.earmarked equals cumulativeEarmarked\" is provably false on the deployed code (see AlchemistV3.sol:1014 comment \"Global can lag local by rounding\") because per-account earmarked is updated lazily inside _sync(tokenId). The lazy-projected version proven here is the property the design actually maintains and that downstream consumers (redemption math, collateral debit) rely on.",
+      "buildable": true,
+      "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "q128_idealized",
+        "cross_epoch_path_elided",
+        "external_calls_opaque",
+        "access_control_elided",
+        "cover_shares_abstracted",
+        "account_fields_pruned",
+        "active_id_set_explicit"
+      ],
+      "abstraction_notes": "The benchmark targets the lazy-projected earmark conservation invariant agreed with the Alchemix team (Ov3rkoalafied, 2026-04-24): the sum over active accounts of project(account, _earmarkWeight, _redemptionWeight, _survivalAccumulator).newEarmarked equals cumulativeEarmarked. Q128 fixed-point operations are treated as exact (no floor-rounding drift) and the cross-epoch reconciliation branch of _computeUnrealizedAccount is folded into the same-epoch path. External calls (Transmuter.queryGraph, TokenUtils.safeBalanceOf, TokenUtils.safeTransfer) are modeled as opaque ghost reads / no-ops. Access control, NFT ownership, Initializable, and pause flags are elided. Account struct fields not on the earmark/debt path (collateralBalance, freeCollateral, lastCollateralWeight, lastMintBlock, lastRepayBlock, lastTotalRedeemed*, mintAllowances, allowancesVersion) are dropped. The set of active token IDs is passed as an explicit FiniteSet Uint256 because ContractState lacks a knownTokenIds ghost field for Uint256-keyed mappings.",
+      "unsupported_feature_codes": [
+        "q128_fixed_point_helpers",
+        "mapping_uint_keyset_tracking"
+      ],
+      "spec_target": "Benchmark.Cases.Alchemix.EarmarkConservation.Specs",
+      "proof_target": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs"
+    },
+    {
+      "case_id": "cork/pool_solvency",
+      "project": "cork",
+      "case_name": "pool_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/cork/pool_solvency/case.yaml",
+      "split": "active",
+      "family_id": "cork",
+      "implementation_id": "phoenix",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "partial",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/Cork-Technology/phoenix",
+      "upstream_commit": "40d9b173c4b",
+      "original_contract_path": "contracts/libraries/PoolLib.sol",
+      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol",
+      "selected_functions": [
+        "previewUnwindExerciseOther",
+        "_unwindExercise"
+      ],
+      "lean_target": "Benchmark.Cases.Cork.PoolSolvency.Compile",
+      "failure_reason": null,
+      "notes": "Cork Phoenix pool solvency slice targeting the Certora P-02 gap. Based on the Certora formal verification report (September-December 2025). P-02 was verified for all functions except unwindExerciseOther (timeout).",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "oracle_elided",
+        "fee_decay_elided",
+        "access_control_elided",
+        "token_transfers_elided",
+        "decimal_exponentiation_parameterized"
+      ],
+      "abstraction_notes": "The benchmark isolates the solvency-critical arithmetic of Cork Phoenix unwindExerciseOther. The model captures how cST shares released and net collateral added relate to the solvency invariant. Time-decay fee computation is factored out (net effect preserved). Decimal scale factors are parameterized rather than computed from exponentiation. Oracle rate is a storage parameter. Certora P-02 timed out on this function; this case fills that gap and proves solvency for arbitrary exchange rates and decimal combinations (Certora restricted to rate=1 or 3*1e18, decimals=17/16).",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Cork.PoolSolvency.Specs",
+      "proof_target": "Benchmark.Cases.Cork.PoolSolvency.Proofs"
+    },
     {
       "case_id": "damn_vulnerable_defi/side_entrance",
       "project": "damn_vulnerable_defi",
@@ -662,7 +930,7 @@
       "stage": "build_green",
       "translation_status": "translated",
       "spec_status": "frozen",
-      "proof_status": "partial",
+      "proof_status": "complete",
       "source_language": "solidity",
       "upstream_repo": "https://github.com/Figu3/sonic-earn-recovery-system",
       "upstream_commit": "699cbbc79def374cab9739e451acbbf866293d12",
@@ -670,11 +938,14 @@
       "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
       "selected_functions": [
         "claimUsdc",
-        "_claimUsdc"
+        "_claimUsdc",
+        "claimWeth",
+        "_claimWeth",
+        "claimBoth"
       ],
       "lean_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Compile",
       "failure_reason": null,
-      "notes": "Single-round accounting slice of the USDC claim path. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.",
+      "notes": "Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
@@ -684,7 +955,7 @@
         "token_transfer_elided",
         "single_round_slice"
       ],
-      "abstraction_notes": "The benchmark fixes focus on the single-round claim path and abstracts Merkle verification plus token transfer effects into a simpler state-only model.",
+      "abstraction_notes": "The benchmark focuses on the single-round USDC and WETH claim surface, including the sequential `claimBoth` path, while abstracting Merkle verification plus token transfer effects into a simpler state-only model.",
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Specs",
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
@@ -729,6 +1000,157 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Safe.OwnerManagerReach.Specs",
       "proof_target": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs"
+    },
+    {
+      "case_id": "termmax/order_v2_buy_xt_single_segment",
+      "project": "termmax",
+      "case_name": "order_v2_buy_xt_single_segment",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/termmax/order_v2_buy_xt_single_segment/case.yaml",
+      "split": "active",
+      "family_id": "termmax",
+      "implementation_id": "contracts_v2",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/term-structure/termmax-contract-v2",
+      "upstream_commit": "64bd47b98e064c7fb91ab4a59b70520e0ec285d5",
+      "original_contract_path": "contracts/v2/TermMaxOrderV2.sol",
+      "source_ref": "https://github.com/term-structure/termmax-contract-v2@64bd47b98e064c7fb91ab4a59b70520e0ec285d5:contracts/v2/TermMaxOrderV2.sol",
+      "selected_functions": [
+        "swapExactTokenToToken",
+        "_swapAndUpdateReserves",
+        "_buyToken",
+        "_buyXt",
+        "_buyXtStep",
+        "buyXt",
+        "cutsReverseIter",
+        "calcIntervalProps",
+        "plusInt256"
+      ],
+      "lean_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Compile",
+      "failure_reason": null,
+      "notes": "TermMax range-order AMM slice for pricing-state transition correctness. The proof target is the highest-signal easy theorem in this family: on the successful single-segment `debtToken -> XT` exact-input path, the stored `virtualXtReserve` decreases by exactly the XT amount implied by the curve.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "exact_in_xt_only",
+        "single_segment_slice",
+        "direct_curvecut_params",
+        "helper_stack_restored",
+        "higher_order_helper_specialized",
+        "callbacks_elided",
+        "transfer_rebalance_elided",
+        "int256_native_offset",
+        "named_errors",
+        "nonreentrant_modeled"
+      ],
+      "abstraction_notes": "This benchmark isolates the exact-input `debtToken -> XT` pricing/state-update path of `TermMaxOrderV2`. The model keeps the Solidity helper stack structurally visible (`calcIntervalProps`, `cutsReverseIter`, `_buyXtStep`, `_buyToken`, `_buyXt`, `_swapAndUpdateReserves`), with each storage read happening in the same caller as in the Solidity source. The curve cut offset is now carried as a native `Int256` parameter, and `MathLib.plusInt256` is inlined as the same `if (b < 0) ... else ...` shape Solidity uses. Solidity custom errors (`UnexpectedAmount`, `InsufficientLiquidity`, `XtReserveTooHigh`) are mirrored as named Verity errors, and the entry function carries the `nonreentrant(nonReentrancyLock)` modifier. Remaining DSL gaps: `CurveCut[]` cannot exist as a parameter or storage field (Verity#1003/#1745 \u2014 nested arrays / storage struct arrays), and Solidity function-pointer parameters of `_buyToken` / `_swapAndUpdateReserves` cannot be passed in Verity, so they are specialized to the concrete `_buyXtStep` / `_buyXt` path. Token transfers, callbacks, pool/GT rebalancing, deadline/sameToken/onlyOpen modifiers, and event emission are omitted because they do not affect `virtualXtReserve` (and reentry is blocked by the `nonreentrant` modifier).",
+      "unsupported_feature_codes": [
+        "array_of_struct_param_unsupported",
+        "higher_order_function_param_specialized",
+        "external_lean_helper_call_unsupported"
+      ],
+      "spec_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Specs",
+      "proof_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs"
+    },
+    {
+      "case_id": "wildcat/borrow_liquidity_safety",
+      "project": "wildcat",
+      "case_name": "borrow_liquidity_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/wildcat/borrow_liquidity_safety/case.yaml",
+      "split": "active",
+      "family_id": "wildcat",
+      "implementation_id": "v2_protocol",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/wildcat-finance/v2-protocol",
+      "upstream_commit": "a70f297fbd1b1ab597e0e9a3458a2d13a34b4657",
+      "original_contract_path": "src/market/WildcatMarket.sol",
+      "source_ref": "https://github.com/wildcat-finance/v2-protocol@a70f297fbd1b1ab597e0e9a3458a2d13a34b4657:src/market/WildcatMarket.sol",
+      "selected_functions": [
+        "borrow",
+        "_getUpdatedState",
+        "liquidityRequired",
+        "borrowableAssets"
+      ],
+      "lean_target": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Compile",
+      "failure_reason": null,
+      "notes": "Wildcat V2 borrow safety slice proving that a successful positive borrow cannot pull market assets below the liquidity requirement computed from the updated state used by the borrow guard. The required liquidity includes the reserve-ratio-backed portion of non-pending supply, 100% of pending withdrawals, 100% of normalized unclaimed withdrawals, and updated accrued protocol fees.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "borrow_liquidity_slice",
+        "state_update_compressed",
+        "external_boundaries_trusted",
+        "packed_storage_rewritten"
+      ],
+      "abstraction_notes": "The benchmark keeps the Wildcat V2 successful borrow path, the `MarketState.liquidityRequired` arithmetic, and the final transfer/write sequence. `_getUpdatedState()` is compressed to a precomputed protocol-fee delta applied before the borrow check, while the pending-withdrawal and unclaimed-withdrawal fields are treated as already current borrow-check inputs. Hooks, sanctions, and ERC20 balance reads/transfers remain explicit trusted boundaries.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Specs",
+      "proof_target": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "project": "zama",
+      "case_name": "erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/case.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "partial",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts",
+      "upstream_commit": "master",
+      "original_contract_path": "contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "selected_functions": [
+        "_update",
+        "_transfer",
+        "_mint",
+        "_burn",
+        "confidentialTransferFrom",
+        "setOperator"
+      ],
+      "lean_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Compile",
+      "failure_reason": null,
+      "notes": "ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance \u2192 silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, and functional correctness of setOperator. Eleven proof tasks cover the 5 modeled functions.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "fhe_homomorphic_plaintext_equivalence",
+        "acl_elided",
+        "disclosure_elided",
+        "callbacks_elided",
+        "block_timestamp_as_parameter"
+      ],
+      "abstraction_notes": "The benchmark models the core accounting logic of ERC-7984: transfer, transferFrom, setOperator, mint, and burn. FHE operations are modeled as plaintext equivalents justified by homomorphism (FHE.add \u2192 mod-2^64 addition, FHE.select \u2192 if/then/else, FHESafeMath.tryDecrease/tryIncrease \u2192 inlined conditional arithmetic). The ACL system (FHE.allow/allowThis), cryptographic proof verification (fromExternal + inputProof), async disclosure/decryption via the off-chain gateway, and ERC1363-style receiver callbacks are omitted as they cannot be modeled in Verity. The nested operator mapping (address \u2192 address \u2192 uint48) is modeled faithfully using Verity's storageMap2 / getMapping2 / setMapping2. block.timestamp is passed as a parameter to transferFrom because the verity_contract DSL macro does not currently expose blockTimestamp as a bind source. FHE.isInitialized is modeled via a separate boolean mapping. All arithmetic uses explicit mod 2^64 to faithfully capture euint64 wrapping semantics.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "spec_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs",
+      "proof_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs"
     }
   ],
   "backlog": [
@@ -893,6 +1315,291 @@
     }
   ],
   "tasks": [
+    {
+      "task_ref": "alchemix/earmark_conservation/earmark_preserves_invariant",
+      "task_id": "earmark_preserves_invariant",
+      "case_id": "alchemix/earmark_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/earmark_preserves_invariant.yaml",
+      "split": "active",
+      "family_id": "alchemix",
+      "implementation_id": "v3",
+      "source_ref": "https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation._earmark_preserves_invariant",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/EarmarkPreservesInvariant.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that calling `earmark()` preserves the lazy-projected earmark conservation invariant. The increment to `cumulativeEarmarked` (`effectiveEarmarked`) must equal the sum, over active accounts, of the corresponding increment in each account's `projectedEarmarked`. This is a Finset.sum distribution lemma over Q128 multiplication.",
+      "unsupported_feature_codes": [
+        "q128_fixed_point_helpers",
+        "mapping_uint_keyset_tracking"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+      "task_id": "redeem_preserves_invariant",
+      "case_id": "alchemix/earmark_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/redeem_preserves_invariant.yaml",
+      "split": "active",
+      "family_id": "alchemix",
+      "implementation_id": "v3",
+      "source_ref": "https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation.redeem_preserves_invariant",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/RedeemPreservesInvariant.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that calling `redeem(amount)` preserves the lazy-projected earmark conservation invariant. Both `cumulativeEarmarked` and the per-account redemption survival ratio scale by the same `ratioApplied`, so the equality is preserved by Q128 linearity (under the idealization assumption).",
+      "unsupported_feature_codes": [
+        "q128_fixed_point_helpers",
+        "mapping_uint_keyset_tracking"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "alchemix/earmark_conservation/sub_debt_preserves_invariant",
+      "task_id": "sub_debt_preserves_invariant",
+      "case_id": "alchemix/earmark_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/sub_debt_preserves_invariant.yaml",
+      "split": "active",
+      "family_id": "alchemix",
+      "implementation_id": "v3",
+      "source_ref": "https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation._subDebt_preserves_invariant",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SubDebtPreservesInvariant.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that `subDebt(tokenId, amount)` preserves the lazy-projected earmark conservation invariant. Under the cumulativeEarmarked \u2264 totalDebt corollary (always holds under the invariant), the line 1306 clamp is a no-op and the global is unchanged; the per-account debt decrement does not affect projected earmarked.",
+      "unsupported_feature_codes": [
+        "q128_fixed_point_helpers",
+        "mapping_uint_keyset_tracking"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+      "task_id": "sub_earmarked_debt_preserves_invariant",
+      "case_id": "alchemix/earmark_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/sub_earmarked_debt_preserves_invariant.yaml",
+      "split": "active",
+      "family_id": "alchemix",
+      "implementation_id": "v3",
+      "source_ref": "https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation._subEarmarkedDebt_preserves_invariant",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SubEarmarkedDebtPreservesInvariant.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that `subEarmarkedDebt(amount, accountId)` preserves the lazy- projected earmark conservation invariant. Under the invariant, the global is never less than the literal sum, so the `min(...)` clamp on the global subtraction is a no-op and both sides decrement by the same amount.",
+      "unsupported_feature_codes": [
+        "q128_fixed_point_helpers",
+        "mapping_uint_keyset_tracking"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "alchemix/earmark_conservation/sync_account_preserves_invariant",
+      "task_id": "sync_account_preserves_invariant",
+      "case_id": "alchemix/earmark_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/sync_account_preserves_invariant.yaml",
+      "split": "active",
+      "family_id": "alchemix",
+      "implementation_id": "v3",
+      "source_ref": "https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation._sync_preserves_invariant",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SyncAccountPreservesInvariant.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that calling `syncAccount(id)` preserves the lazy-projected earmark conservation invariant. Sync replaces stored values with the projected values at the current global weights. The projected sum is unchanged because we were already counting the projection.",
+      "unsupported_feature_codes": [
+        "q128_fixed_point_helpers",
+        "mapping_uint_keyset_tracking"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "cork/pool_solvency/solvency_preserved",
+      "task_id": "solvency_preserved",
+      "case_id": "cork/pool_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/cork/pool_solvency/tasks/solvency_preserved.yaml",
+      "split": "active",
+      "family_id": "cork",
+      "implementation_id": "phoenix",
+      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Cork.PoolSolvency.solvency_preserved",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/cork/pool_solvency/verity/Contract.lean",
+        "Benchmark/Cases/Cork/PoolSolvency/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/cork/pool_solvency/verity/Specs.lean",
+        "Benchmark/Cases/Cork/PoolSolvency/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Cork/PoolSolvency/Tasks/SolvencyPreserved.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Certora P-02 solvency invariant for unwindExerciseOther. After the operation, locked collateral normalized to 18 decimals must still cover the outstanding swap share supply. Requires showing that ceiling-rounded collateral added is at least the floor-rounded shares released, via the ceilDiv sandwich bound. Certora timed out on this function and restricted rate/decimals; this proof covers arbitrary parameters.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Cork.PoolSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
     {
       "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
       "task_id": "deposit_sets_pool_balance",
@@ -2019,6 +2726,501 @@
       }
     },
     {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed",
+      "task_id": "both_claim_marks_both_claimed",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_marks_both_claimed.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_marks_both_claimed",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimMarksBothClaimed.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task checks that the combined entry point marks the caller as claimed for both tokens on the successful path.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed",
+      "task_id": "both_claim_updates_round_claimed",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_updates_round_claimed.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_round_claimed",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimUpdatesRoundClaimed.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the paired round-level accounting increments induced by the combined claim path.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated",
+      "task_id": "both_claim_updates_total_allocated",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_updates_total_allocated.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_total_allocated",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimUpdatesTotalAllocated.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the paired decreases in remaining USDC and WETH allocations along the combined claim path.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved",
+      "task_id": "both_claimed_plus_allocated_conserved",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claimed_plus_allocated_conserved.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "accounting",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_claimed_plus_allocated_conserved",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimedPlusAllocatedConserved.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task composes the paired USDC and WETH accounting updates from `claimBoth` into a two-token conservation theorem.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims",
+      "task_id": "both_matches_independent_claims",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_matches_independent_claims.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "noninterference",
+      "category": "equivalence",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_matches_independent_claims",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothMatchesIndependentClaims.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task proves the non-interference property for the combined entry point: the USDC slice matches `claimUsdc` alone and the WETH slice matches `claimWeth` alone.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_no_overclaim",
+      "task_id": "both_no_overclaim",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_no_overclaim.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_preserves_round_bounds",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothNoOverclaim.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task captures the two-token round-balance bounds after a successful `claimBoth` call inside the benchmark's simplified single-round model.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected",
+      "task_id": "both_usdc_bound_violation_rejected",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_usdc_bound_violation_rejected.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "revert",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_exceeds_total",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothUsdcBoundViolationRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the USDC round-total bound inside `claimBoth` and proves that an overclaim attempt aborts the whole call without state mutation.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected",
+      "task_id": "both_usdc_double_claim_rejected",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_usdc_double_claim_rejected.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "revert",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_already_claimed",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothUsdcDoubleClaimRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the first guard in `claimBoth` and proves that an already claimed USDC entitlement aborts the whole call without state mutation.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected",
+      "task_id": "both_weth_bound_violation_rejected",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_weth_bound_violation_rejected.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "revert",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_exceeds_total",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothWethBoundViolationRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task proves that a WETH-side bound failure causes `claimBoth` to revert and roll back the earlier USDC sub-claim.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected",
+      "task_id": "both_weth_double_claim_rejected",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_weth_double_claim_rejected.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "revert",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_already_claimed",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothWethDoubleClaimRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task proves that a WETH-side repeat claim causes `claimBoth` to revert and roll back the earlier USDC sub-claim.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected",
+      "task_id": "bound_violation_rejected",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/bound_violation_rejected.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "bounds",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_exceeds_total",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BoundViolationRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task isolates the round-total bound check and proves that an overclaiming attempt reverts without mutating the benchmark state.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
       "task_id": "claim_marks_user",
       "case_id": "paladin_votes/stream_recovery_claim_usdc",
@@ -2037,7 +3239,7 @@
       "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_marks_user_claimed",
       "proof_family": "authorization_enablement",
       "translation_status": "translated",
-      "proof_status": "partial",
+      "proof_status": "complete",
       "implementation_files": [
         "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
         "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
@@ -2082,7 +3284,7 @@
       "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_round_claimed",
       "proof_family": "protocol_transition_correctness",
       "translation_status": "translated",
-      "proof_status": "partial",
+      "proof_status": "complete",
       "implementation_files": [
         "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
         "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
@@ -2127,7 +3329,7 @@
       "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_total_allocated",
       "proof_family": "protocol_transition_correctness",
       "translation_status": "translated",
-      "proof_status": "partial",
+      "proof_status": "complete",
       "implementation_files": [
         "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
         "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
@@ -2172,7 +3374,7 @@
       "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_claimed_plus_allocated_conserved",
       "proof_family": "refinement_equivalence",
       "translation_status": "translated",
-      "proof_status": "partial",
+      "proof_status": "complete",
       "implementation_files": [
         "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
         "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
@@ -2186,6 +3388,51 @@
       ],
       "abstraction_level": "protocol_slice",
       "abstraction_notes": "This task composes the claim path's two accounting updates into a single conservation theorem: claimed USDC increases by exactly the amount removed from total allocated USDC in the benchmark's single-round slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/double_claim_rejected",
+      "task_id": "double_claim_rejected",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/double_claim_rejected.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_already_claimed",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/DoubleClaimRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task isolates the repeated-claim guard and proves that a rejected second claim leaves the benchmark state unchanged.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "evaluation": {
@@ -2217,7 +3464,7 @@
       "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_round_bound",
       "proof_family": "authorization_enablement",
       "translation_status": "translated",
-      "proof_status": "partial",
+      "proof_status": "complete",
       "implementation_files": [
         "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
         "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
@@ -2231,6 +3478,411 @@
       ],
       "abstraction_level": "protocol_slice",
       "abstraction_notes": "The task captures the round-level accounting bound after a claim while staying inside the benchmark's simplified single-round model.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state",
+      "task_id": "usdc_preserves_weth_state",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/usdc_preserves_weth_state.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "frame_property",
+      "category": "isolation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_weth_state",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/UsdcPreservesWethState.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the frame condition for the USDC claim path and shows that the WETH accounting slice remains untouched.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected",
+      "task_id": "weth_bound_violation_rejected",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_bound_violation_rejected.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "bounds",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_exceeds_total",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethBoundViolationRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task isolates the WETH round-total bound check and proves that an overclaiming attempt reverts without mutating the benchmark state.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user",
+      "task_id": "weth_claim_marks_user",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_marks_user.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_marks_user_claimed",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimMarksUser.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task checks the WETH claimed-flag update in isolation from Merkle validation and ERC20 transfer side effects.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed",
+      "task_id": "weth_claim_updates_round_claimed",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_updates_round_claimed.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_round_claimed",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimUpdatesRoundClaimed.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the direct round-level WETH accounting increment on the successful claim path.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated",
+      "task_id": "weth_claim_updates_total_allocated",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_updates_total_allocated.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_total_allocated",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimUpdatesTotalAllocated.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the compensating decrease in remaining allocated WETH on the successful claim path.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved",
+      "task_id": "weth_claimed_plus_allocated_conserved",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claimed_plus_allocated_conserved.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_claimed_plus_allocated_conserved",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimedPlusAllocatedConserved.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task composes the WETH claim path's two accounting updates into a single conservation theorem in the benchmark's single-round slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected",
+      "task_id": "weth_double_claim_rejected",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_double_claim_rejected.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_already_claimed",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethDoubleClaimRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task isolates the repeated WETH-claim guard and proves that a rejected second claim leaves the benchmark state unchanged.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim",
+      "task_id": "weth_no_overclaim",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_no_overclaim.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_round_bound",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethNoOverclaim.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task captures the round-level WETH accounting bound after a claim while staying inside the benchmark's simplified single-round model.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state",
+      "task_id": "weth_preserves_usdc_state",
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_preserves_usdc_state.yaml",
+      "split": "active",
+      "family_id": "paladin_votes",
+      "implementation_id": "stream_recovery_claim",
+      "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "frame_property",
+      "category": "isolation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_usdc_state",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the frame condition for the WETH claim path and shows that the USDC accounting slice remains untouched.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "evaluation": {
@@ -2917,6 +4569,594 @@
         "editable_proof": "ready",
         "reference_solution": "ready"
       }
+    },
+    {
+      "task_ref": "termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve",
+      "task_id": "swap_debt_token_to_xt_updates_virtual_xt_reserve",
+      "case_id": "termmax/order_v2_buy_xt_single_segment",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/termmax/order_v2_buy_xt_single_segment/tasks/swap_debt_token_to_xt_updates_virtual_xt_reserve.yaml",
+      "split": "active",
+      "family_id": "termmax",
+      "implementation_id": "contracts_v2",
+      "source_ref": "https://github.com/term-structure/termmax-contract-v2@64bd47b98e064c7fb91ab4a59b70520e0ec285d5:contracts/v2/TermMaxOrderV2.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "reserve_state_transition",
+      "category": "invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.swapDebtTokenToXt_updates_virtual_xt_reserve",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/termmax/order_v2_buy_xt_single_segment/verity/Contract.lean",
+        "Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/termmax/order_v2_buy_xt_single_segment/verity/Specs.lean",
+        "Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/TermMax/OrderV2BuyXtSingleSegment/Tasks/SwapDebtTokenToXtUpdatesVirtualXtReserve.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Single-segment slice of the exact-input `debtToken -> XT` path. The theorem proves only the pricing-state transition: successful execution stores `virtualXtReserve_before - deltaXt_curve`.",
+      "unsupported_feature_codes": [
+        "array_of_struct_param_unsupported",
+        "higher_order_function_param_specialized"
+      ],
+      "reference_solution_module": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity",
+      "task_id": "positive_borrow_preserves_required_liquidity",
+      "case_id": "wildcat/borrow_liquidity_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/wildcat/borrow_liquidity_safety/tasks/positive_borrow_preserves_required_liquidity.yaml",
+      "split": "active",
+      "family_id": "wildcat",
+      "implementation_id": "v2_protocol",
+      "source_ref": "https://github.com/wildcat-finance/v2-protocol@a70f297fbd1b1ab597e0e9a3458a2d13a34b4657:src/market/WildcatMarket.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.positive_borrow_preserves_required_liquidity",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/wildcat/borrow_liquidity_safety/verity/Contract.lean",
+        "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/wildcat/borrow_liquidity_safety/verity/Specs.lean",
+        "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Wildcat/BorrowLiquiditySafety/Tasks/PositiveBorrowPreservesRequiredLiquidity.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused Wildcat V2 borrow/liquidity benchmark. The state update is compressed to a protocol-fee delta while the borrow theorem still reasons about the updated liquidity requirement that includes reserve-ratio-backed outstanding supply, pending withdrawals, normalized unclaimed withdrawals, and accrued protocol fees.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/burn_decreases_supply",
+      "task_id": "burn_decreases_supply",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/burn_decreases_supply.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "supply_update",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_decreases_supply",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/BurnDecreasesSupply.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "When the sender has sufficient balance, burning decreases both the sender's balance and totalSupply by exactly amount.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/burn_insufficient",
+      "task_id": "burn_insufficient",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/burn_insufficient.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "silent_failure",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_insufficient",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/BurnInsufficient.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "When the holder has insufficient balance, burn silently burns 0 tokens instead of reverting. Both holder balance and totalSupply remain unchanged. Same FHE.select mechanism as transfer \u2014 the balance comparison cannot leak information through the control flow.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/mint_increases_supply",
+      "task_id": "mint_increases_supply",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_increases_supply.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "supply_update",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_increases_supply",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintIncreasesSupply.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "When totalSupply + amount does not overflow uint64, minting increases both totalSupply and the receiver's balance by exactly amount.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/mint_overflow_protection",
+      "task_id": "mint_overflow_protection",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_overflow_protection.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "overflow_safety",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_overflow_protection",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintOverflowProtection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "When totalSupply + amount would overflow uint64, FHESafeMath.tryIncrease detects it (newValue < oldValue after wrapping) and returns the original supply unchanged. No tokens are minted.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/setOperator_updates",
+      "task_id": "setOperator_updates",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/setOperator_updates.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_write",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.setOperator_updates",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/SetOperatorUpdates.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "setOperator writes into the nested operator mapping at key (msg.sender, operator). The theorem proves both the positive effect (the target entry is updated) and frame preservation (all other entries unchanged).",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/transferFrom_conservation",
+      "task_id": "transferFrom_conservation",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transferFrom_conservation.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "balance_conservation",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transferFrom_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferFromConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Operator-gated transferFrom preserves the sum balances[holder] + balances[recipient]. The operator expiry is read from the nested mapping _operators[holder][msg.sender] using getMapping2. Authorization is granted if holder == msg.sender or block.timestamp <= expiry (passed as a parameter since Verity's verity_contract DSL does not expose blockTimestamp as a bind source).",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/transfer_conservation",
+      "task_id": "transfer_conservation",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_conservation.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "balance_conservation",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The fundamental accounting invariant: the sum of sender and receiver balances is preserved by a transfer, regardless of whether the sender has sufficient balance. This holds because tryDecrease either subtracts amount (and adds it to receiver) or leaves both unchanged.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/transfer_insufficient",
+      "task_id": "transfer_insufficient",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_insufficient.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "silent_failure",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_insufficient",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferInsufficient.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The defining semantic of ERC-7984 vs ERC-20: when the sender has insufficient balance, the transfer silently transfers 0 instead of reverting. Both sender and receiver balances remain unchanged.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/transfer_no_balance_revert",
+      "task_id": "transfer_no_balance_revert",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_no_balance_revert.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "non_leakage",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_no_balance_revert",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferNoBalanceRevert.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Contract-level non-leakage: the transfer function never reverts based on the encrypted balance comparison. Only plaintext checks (zero address, uninitialized balance) can cause reverts. This ensures an on-chain observer cannot distinguish sufficient from insufficient transfers by observing transaction success/failure. Combined with FHE encryption of the return value and emitted events, this provides confidentiality of transfer outcomes.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/transfer_preserves_supply",
+      "task_id": "transfer_preserves_supply",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_preserves_supply.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "supply_invariance",
+      "category": "invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_preserves_supply",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferPreservesSupply.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Transfer does not touch totalSupply. Only mint and burn paths in _update modify slot 0.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/transfer_sufficient",
+      "task_id": "transfer_sufficient",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_sufficient.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "balance_update",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_sufficient",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferSufficient.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "When the sender has sufficient balance (fromBalance >= amount), the transfer moves exactly amount tokens: fromBalance decreases by amount, toBalance increases by amount (mod 2^64).",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
     }
   ],
   "backlog_tasks": [
@@ -3281,5 +5521,5 @@
       }
     }
   ],
-  "generated_at": "2026-04-12T07:37:47.094355+00:00"
+  "generated_at": "2026-04-28T17:34:17.541206+00:00"
 }

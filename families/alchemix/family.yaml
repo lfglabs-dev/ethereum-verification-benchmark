@@ -1,0 +1,17 @@
+manifest_kind: family
+schema_version: 1
+family_id: alchemix
+display_name: Alchemix
+split: active
+status: active
+description: >
+  Benchmark family for Alchemix Finance V3 self-repaying lending. Covers
+  the lazy-accrual debt accounting machinery — earmarking, redemption,
+  and the conservation invariants that bridge per-account state to the
+  global Transmuter claim.
+implementation_ids:
+  - v3
+case_ids:
+  - alchemix/earmark_conservation
+source_languages:
+  - solidity
