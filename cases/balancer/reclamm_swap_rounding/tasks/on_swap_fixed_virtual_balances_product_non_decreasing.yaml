@@ -1,0 +1,40 @@
+manifest_kind: task
+schema_version: 1
+task_id: on_swap_fixed_virtual_balances_product_non_decreasing
+case_id: balancer/reclamm_swap_rounding
+split: active
+family_id: balancer
+implementation_id: reclamm
+source_ref: https://github.com/balancer/reclamm@cff18033d401a61326a2d6c078507084cbdc864b:contracts/lib/ReClammMath.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Balancer.ReClammSwapRounding.onSwap_fixed_virtual_balances_product_non_decreasing
+proof_family: state_preservation_local_effects
+property_class: arithmetic_rounding
+difficulty: hard
+category: swap_rounding_invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/balancer/reclamm_swap_rounding/verity/Contract.lean
+  - Benchmark/Cases/Balancer/ReClammSwapRounding/Contract.lean
+specification_files:
+  - cases/balancer/reclamm_swap_rounding/verity/Specs.lean
+  - Benchmark/Cases/Balancer/ReClammSwapRounding/Specs.lean
+editable_files:
+  - Benchmark/Generated/Balancer/ReClammSwapRounding/Tasks/OnSwapFixedVirtualBalancesProductNonDecreasing.lean
+reference_solution_module: Benchmark.Cases.Balancer.ReClammSwapRounding.Proofs
+reference_solution_declaration: Benchmark.Cases.Balancer.ReClammSwapRounding.onSwap_fixed_virtual_balances_product_non_decreasing
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves that a successful `onSwap` quote preserves or increases the ReClamm
+  product after applying the returned exact-in or exact-out real-balance deltas,
+  with the current virtual balances held fixed. This captures the core
+  "swaps never round in the trader's favor" property for the arithmetic branch
+  where Certora I-01-style rounding mistakes occur.
+unsupported_feature_codes:
+  - memory_dynamic_array_scalarized
+  - struct_memory_flattened
+  - library_call_inlined
+  - checked_uint256_overflow_preconditions

@@ -1,0 +1,56 @@
+manifest_kind: case
+project: balancer
+case_id: reclamm_swap_rounding
+schema_version: 1
+split: active
+family_id: balancer
+implementation_id: reclamm
+stage: build_green
+translation_status: translated
+spec_status: draft
+proof_status: complete
+upstream_repo: https://github.com/balancer/reclamm
+upstream_commit: cff18033d401a61326a2d6c078507084cbdc864b
+original_contract_path: contracts/lib/ReClammMath.sol
+source_ref: https://github.com/balancer/reclamm@cff18033d401a61326a2d6c078507084cbdc864b:contracts/lib/ReClammMath.sol
+lean_target: Benchmark.Cases.Balancer.ReClammSwapRounding.Compile
+spec_target: Benchmark.Cases.Balancer.ReClammSwapRounding.Specs
+proof_target: Benchmark.Cases.Balancer.ReClammSwapRounding.Proofs
+selected_functions:
+  - computeOutGivenIn
+  - computeInGivenOut
+  - onSwap
+source_language: solidity
+verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - two_token_memory_array_scalarized
+  - pool_swap_params_flattened
+  - current_virtual_balances_as_inputs
+  - vault_balance_application_spec_boundary
+  - library_call_inlined
+  - overflow_preconditions_explicit
+abstraction_notes: >
+  The benchmark targets the core ReClamm swap rounding invariant: for a
+  successful exact-in or exact-out quote, with the current virtual balances
+  fixed during the quote, applying the returned Vault-side real-balance deltas
+  must not decrease (balanceA + virtualBalanceA) * (balanceB + virtualBalanceB).
+  The model keeps the branch structure and rounding direction of
+  computeOutGivenIn (floor) and computeInGivenOut (ceil via mulDivUp), while
+  scalarizing the fixed two-token balances array and flattening PoolSwapParams.
+  The virtual-balance refresh path is abstracted into explicit current virtual
+  balance inputs because timestamp interpolation, sqrt, and powDown movement are
+  separate from the rounding bug class targeted by this case. The onSwap model
+  inlines the two ReClammMath helper bodies to avoid cross-contract/library-call
+  macro surface while preserving the exact branch arithmetic.
+unsupported_feature_codes:
+  - memory_dynamic_array_scalarized
+  - struct_memory_flattened
+  - library_call_inlined
+  - checked_uint256_overflow_preconditions
+notes: >
+  Certora I-01 identified that an intermediate floor division can undermine an
+  intended rounding-up path. This case isolates the ReClamm arithmetic surface
+  where that class of issue matters: exact-in swaps must not overpay output, and
+  exact-out swaps must not undercharge input.

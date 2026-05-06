@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: balancer
+display_name: Balancer
+split: active
+status: active
+description: >
+  Benchmark family for Balancer protocol math and pool accounting invariants.
+  The initial case targets ReClamm concentrated-liquidity swap rounding.
+implementation_ids:
+  - reclamm
+case_ids:
+  - balancer/reclamm_swap_rounding
+source_languages:
+  - solidity

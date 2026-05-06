@@ -1,0 +1,18 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: balancer
+implementation_id: reclamm
+display_name: Balancer ReClamm
+split: active
+status: translated
+upstream_repo: https://github.com/balancer/reclamm
+upstream_commit: cff18033d401a61326a2d6c078507084cbdc864b
+source_language: solidity
+source_artifact_path: contracts/lib/ReClammMath.sol
+case_ids:
+  - balancer/reclamm_swap_rounding
+notes: >
+  ReClamm is a Balancer v3 two-token readjusting concentrated-liquidity AMM.
+  This implementation entry covers the swap quote arithmetic in
+  ReClammMath.computeOutGivenIn / computeInGivenOut and the ReClammPool.onSwap
+  dispatch path.

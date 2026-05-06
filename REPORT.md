@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 17
-- Implementations: 17
-- Active cases: 14
-- Buildable active cases: 13
-- Active tasks: 90
+- Families: 18
+- Implementations: 18
+- Active cases: 15
+- Buildable active cases: 14
+- Active tasks: 91
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -22,6 +22,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_earmark`, `_sync`, `_computeUnrealizedAccount`, `redeem`, `_subEarmarkedDebt`, `_subDebt`
 - Source artifact: `src/AlchemistV3.sol`
 - Notes: Earmark conservation invariant for Alchemix V3 lazy-accrual debt accounting. The literal "sum of stored account.earmarked equals cumulativeEarmarked" is provably false on the deployed code (see AlchemistV3.sol:1014 comment "Global can lag local by rounding") because per-account earmarked is updated lazily inside _sync(tokenId). The lazy-projected version proven here is the property the design actually maintains and that downstream consumers (redemption math, collateral debit) rely on.
+
+### `balancer/reclamm_swap_rounding`
+- Family / implementation: `balancer` / `reclamm`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`draft`, proof=`complete`
+- Lean target: `Benchmark.Cases.Balancer.ReClammSwapRounding.Compile`
+- Source ref: `https://github.com/balancer/reclamm@cff18033d401a61326a2d6c078507084cbdc864b:contracts/lib/ReClammMath.sol`
+- Selected functions: `computeOutGivenIn`, `computeInGivenOut`, `onSwap`
+- Source artifact: `contracts/lib/ReClammMath.sol`
+- Notes: Certora I-01 identified that an intermediate floor division can undermine an intended rounding-up path. This case isolates the ReClamm arithmetic surface where that class of issue matters: exact-in swaps must not overpay output, and exact-out swaps must not undercharge input.
 
 ### `cork/pool_solvency`
 - Family / implementation: `cork` / `phoenix`
@@ -206,6 +216,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/alchemix/earmark_conservation/verity/Specs.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SyncAccountPreservesInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Alchemix.EarmarkConservation.Proofs`
+
+### `balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing`
+- Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Balancer.ReClammSwapRounding.onSwap_fixed_virtual_balances_product_non_decreasing`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/balancer/reclamm_swap_rounding/verity/Contract.lean`, `Benchmark/Cases/Balancer/ReClammSwapRounding/Contract.lean`
+- Specification files: `cases/balancer/reclamm_swap_rounding/verity/Specs.lean`, `Benchmark/Cases/Balancer/ReClammSwapRounding/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Balancer/ReClammSwapRounding/Tasks/OnSwapFixedVirtualBalancesProductNonDecreasing.lean`
+- Hidden reference solution: `Benchmark.Cases.Balancer.ReClammSwapRounding.Proofs`
 
 ### `cork/pool_solvency/solvency_preserved`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
