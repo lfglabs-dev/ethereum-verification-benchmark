@@ -151,7 +151,7 @@ This report is generated from the benchmark manifests.
 - Status dimensions: translation=`scoped`, spec=`draft`, proof=`not_started`
 - Lean target: `Benchmark.Cases.UnlinkXyz.Pool.Compile`
 - Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
-- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `adapterDeposit`, `adapterWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`
+- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `emergencyWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`
 - Source artifact: `protocol/contracts/src/UnlinkPool.sol`
 - Notes: This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case is scoped against a pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.
 

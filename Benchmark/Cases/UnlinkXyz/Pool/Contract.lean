@@ -71,11 +71,17 @@ literals out-of-band via `#guard` (below) keeps the audit story
 tight without changing the `verity_contract` surface. Lifting that
 restriction is filed as a Verity follow-up. -/
 
+/-- Mirrors the hardcoded literal in the `constants` block below.
+    Once the lakefile bump to post-#1827 verity lands case-wide, this
+    becomes `Verity.keccak256_lit "unlink.storage.UnlinkPoolRelayers"`
+    so the literal is checked by the in-tree Keccak engine rather than
+    hardcoded. -/
 def RELAYER_STORAGE_LOCATION_LIT : Uint256 :=
-  Verity.keccak256_lit "unlink.storage.UnlinkPoolRelayers"
+  0xd8b607728433c567965c4023813a35a19b26751353d5652c8798f8eea4b19b00
 
+/-- Mirrors the hardcoded literal for the EIP-712 typehash. -/
 def DEPOSIT_WITNESS_TYPEHASH_LIT : Uint256 :=
-  Verity.keccak256_lit "DepositWitness(address pool,bytes32 notesHash)"
+  0x67ae6b76317e3d6f1fa6e72b9bfb9f3ddff09efad9d20ad0070f49b9efbfbd2c
 
 /- ### Pool entry point: `UnlinkPool` -/
 
@@ -297,14 +303,21 @@ verity_contract UnlinkPool where
 
 /-
   ============================================================================
-  BLOCKED(verity#1832): the three public ZK entry points
+  BLOCKED(verity#1832): the public ZK entry points that take struct-array
+  calldata with nested dynamic members:
 
     function transfer(Transaction[] calldata _transactions)
       external onlyRelayer nonReentrant;
     function withdraw(WithdrawalTransaction[] calldata _withdrawals)
       external onlyRelayer nonReentrant;
-    function adapterWithdraw(AdapterTransaction[] calldata _adapters, ...)
-      external onlyRelayer nonReentrant;
+    function emergencyWithdraw(WithdrawalTransaction[] calldata _transactions)
+      external nonReentrant;                       // UnlinkPool.sol:374-383
+
+  Source confirms: there is NO `adapterDeposit` or `adapterWithdraw` in the
+  pinned commit (`UnlinkAdapter` was deleted upstream in
+  `d9c8948 chore(contracts): delete UnlinkAdapter + strip adapter surface
+  (UE-425)` predating our pin `4bc46c1f`; the umbrella issue verity#1760
+  references the older multi-relayer release).
 
   carry struct-array parameters where each element contains nested dynamic
   members (`uint256[]`, `Ciphertext[]`, `Call[]`). The Verity macro
