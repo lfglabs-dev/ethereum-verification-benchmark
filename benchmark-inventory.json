@@ -26,7 +26,7 @@
     },
     "translation_status_counts": {
       "blocked": 1,
-      "in_progress": 1,
+      "scoped": 1,
       "translated": 15
     },
     "proof_status_counts": {
@@ -77,15 +77,14 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 14,
-      "build_green": 1,
-      "functional_correctness": 27,
+      "functional_correctness": 28,
       "protocol_transition_correctness": 15,
       "refinement_equivalence": 9,
       "state_preservation_local_effects": 32
     },
     "family_split_counts": {
-      "active": 13,
-      "backlog": 4
+      "active": 14,
+      "backlog": 3
     }
   },
   "families": [
@@ -313,14 +312,14 @@
     {
       "family_id": "unlink_xyz",
       "display_name": "unlink.xyz",
-      "split": "backlog",
-      "status": "backlog",
-      "description": "Backlog intake for unlink.xyz contracts pending recovery of a resolvable upstream repository snapshot.",
+      "split": "active",
+      "status": "active",
+      "description": "Unlink.xyz privacy pool and atomic-DeFi adapter, modeled as Verity contracts against unlink-xyz/monorepo. Protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier) live in `unlink-verity` as package-local assumed-status boundaries per the package-split policy.",
       "implementation_ids": [
         "monorepo"
       ],
       "case_ids": [
-        "unlink_xyz/placeholder"
+        "unlink_xyz/pool"
       ],
       "source_languages": [
         "solidity"
@@ -592,16 +591,16 @@
       "family_id": "unlink_xyz",
       "implementation_id": "monorepo",
       "display_name": "unlink.xyz Monorepo",
-      "split": "backlog",
-      "status": "blocked",
+      "split": "active",
+      "status": "scoped",
       "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": null,
+      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
       "source_language": "solidity",
-      "source_artifact_path": "TBD",
+      "source_artifact_path": "protocol/contracts/src",
       "case_ids": [
-        "unlink_xyz/placeholder"
+        "unlink_xyz/pool"
       ],
-      "notes": "The referenced repository snapshot was unavailable during intake, so the case remains a placeholder without a pinned artifact.",
+      "notes": "Pinned against the `4bc46c1f` commit of `unlink-xyz/monorepo`. Cases under this implementation translate Solidity contracts in `protocol/contracts/src` and route the protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier) through the `unlink-verity` package-local assumed-status boundaries declared inside each case's `Specs.lean`.",
       "manifest_path": "families/unlink_xyz/implementations/monorepo/implementation.yaml"
     },
     {
@@ -1150,8 +1149,8 @@
       "family_id": "unlink_xyz",
       "implementation_id": "monorepo",
       "stage": "scoped",
-      "translation_status": "in_progress",
-      "spec_status": "drafted",
+      "translation_status": "scoped",
+      "spec_status": "draft",
       "proof_status": "not_started",
       "source_language": "solidity",
       "upstream_repo": "https://github.com/unlink-xyz/monorepo",
@@ -4926,8 +4925,8 @@
       "category": "build",
       "difficulty": "easy",
       "theorem_name": "Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles",
-      "proof_family": "build_green",
-      "translation_status": "in_progress",
+      "proof_family": "functional_correctness",
+      "translation_status": "scoped",
       "proof_status": "not_started",
       "implementation_files": [
         "cases/unlink_xyz/pool/verity/Contract.lean",
@@ -5859,5 +5858,5 @@
       }
     }
   ],
-  "generated_at": "2026-05-12T08:50:20.339360+00:00"
+  "generated_at": "2026-05-12T09:32:13.918817+00:00"
 }

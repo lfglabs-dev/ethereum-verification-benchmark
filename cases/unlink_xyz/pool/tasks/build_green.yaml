@@ -8,12 +8,12 @@ implementation_id: monorepo
 source_ref: https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol
 task_interface_version: 2
 theorem_name: Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles
-proof_family: build_green
+proof_family: functional_correctness
 property_class: compilation
 difficulty: easy
 category: build
 track: translation-only
-translation_status: in_progress
+translation_status: scoped
 proof_status: not_started
 evaluation_engine: lean_proof_generation
 implementation_files:

@@ -148,7 +148,7 @@ This report is generated from the benchmark manifests.
 ### `unlink_xyz/pool`
 - Family / implementation: `unlink_xyz` / `monorepo`
 - Stage: `scoped`
-- Status dimensions: translation=`in_progress`, spec=`drafted`, proof=`not_started`
+- Status dimensions: translation=`scoped`, spec=`draft`, proof=`not_started`
 - Lean target: `Benchmark.Cases.UnlinkXyz.Pool.Compile`
 - Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
 - Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `adapterDeposit`, `adapterWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`
@@ -928,7 +928,7 @@ This report is generated from the benchmark manifests.
 - Hidden reference solution: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs`
 
 ### `unlink_xyz/pool/build_green`
-- Track / property class / proof family: `translation-only` / `compilation` / `build_green`
+- Track / property class / proof family: `translation-only` / `compilation` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`blocked`, reference_solution=`blocked`
 - Theorem target: `Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`

@@ -6,8 +6,8 @@ split: active
 family_id: unlink_xyz
 implementation_id: monorepo
 stage: scoped
-translation_status: in_progress
-spec_status: drafted
+translation_status: scoped
+spec_status: draft
 proof_status: not_started
 upstream_repo: https://github.com/unlink-xyz/monorepo
 upstream_commit: 4bc46c1fffbc0e146dccfff5b9fe00167121b27b
