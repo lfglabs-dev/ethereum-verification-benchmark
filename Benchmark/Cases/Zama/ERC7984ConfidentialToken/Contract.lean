@@ -197,8 +197,11 @@ verity_contract ERC7984 where
       ptr = FHE.add(_balances[to], transferred);
       _balances[to] = ptr;
   -/
-  function mint (to : Address, amount : Uint256) : Uint256 := do
-    require (to != zeroAddress) "ERC7984InvalidReceiver"
+  -- NOTE: `to` is reserved by EvmYul's Yul notation, so the parameter is named
+  -- `recipient` here; it still corresponds to the `to` argument of Solidity's
+  -- `_mint(to, amount)` / `_update(address(0), to, amount)` path.
+  function mint (recipient : Address, amount : Uint256) : Uint256 := do
+    require (recipient != zeroAddress) "ERC7984InvalidReceiver"
 
     let currentSupply ← getStorage totalSupply
     let newSupplyCandidate := (add currentSupply amount) % 18446744073709551616
@@ -208,10 +211,10 @@ verity_contract ERC7984 where
 
     let transferred := ite success amount 0
 
-    let toBalance ← getMapping balances to
+    let toBalance ← getMapping balances recipient
     let newToBalance := (add toBalance transferred) % 18446744073709551616
-    setMapping balances to newToBalance
-    setMapping balanceInitialized to 1
+    setMapping balances recipient newToBalance
+    setMapping balanceInitialized recipient 1
 
     return transferred
 

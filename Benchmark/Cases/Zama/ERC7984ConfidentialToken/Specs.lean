@@ -83,20 +83,20 @@ def transfer_preserves_supply_spec
   totalSupply increases by amount and receiver balance increases by amount.
 -/
 def mint_increases_supply_spec
-    (to : Address) (amount : Uint256) (s s' : ContractState) : Prop :=
+    (recipient : Address) (amount : Uint256) (s s' : ContractState) : Prop :=
   (tryIncrease64 (supply s) amount).1 = true →
   supply s' = add64 (supply s) amount ∧
-  balanceOf s' to = add64 (balanceOf s to) amount
+  balanceOf s' recipient = add64 (balanceOf s recipient) amount
 
 /--
   Mint overflow protection: when totalSupply + amount would overflow uint64,
   no tokens are minted. totalSupply is unchanged. Receiver balance is unchanged.
 -/
 def mint_overflow_protection_spec
-    (to : Address) (amount : Uint256) (s s' : ContractState) : Prop :=
+    (recipient : Address) (amount : Uint256) (s s' : ContractState) : Prop :=
   (tryIncrease64 (supply s) amount).1 = false →
   supply s' = supply s ∧
-  balanceOf s' to = add64 (balanceOf s to) 0
+  balanceOf s' recipient = add64 (balanceOf s recipient) 0
 
 /-! ## Burn specifications -/
 

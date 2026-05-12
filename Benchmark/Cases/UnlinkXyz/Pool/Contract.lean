@@ -33,15 +33,20 @@
       for `DEPOSIT_WITNESS_TYPEHASH` and the ERC-7201 namespace key
       inside the `constants` block below.
 
-  Three entry points are SCOPED but not yet TRANSLATED:
+  Three entry points are SCOPED but not yet TRANSLATED — bodies will land
+  in a follow-up PR now that the macro surface they need is in place:
     - `transfer(Transaction[] calldata _transactions)`
     - `withdraw(WithdrawalTransaction[] calldata _withdrawals)`
-    - `adapterWithdraw(AdapterTransaction[] calldata _adapters, ...)`
+    - `emergencyWithdraw(WithdrawalTransaction[] calldata _transactions)`
 
-  Their parameter shapes carry nested dynamic members inside struct
-  elements; macro rejection is at `Verity/Macro/Translate.lean:1715`
-  ("struct parameter projection from an ABI-dynamic root is not
-  supported"). Dedicated tracker: verity#1832.
+  These shapes use struct-array parameters whose elements carry nested
+  dynamic members (`uint256[] nullifierHashes`, `Ciphertext[] ciphertexts`,
+  etc.). The macro accepts the required projections as of verity#1832 /
+  verity#1843 (`Expr.paramDynamicHeadWord` plus the prerequisite
+  param-loader fix in verity#1839 and the validator-wildcard refactor in
+  verity#1842, all merged 2026-05-12). Promotion to `build_green` is the
+  Unlink-side trigger for closing verity#1760 and only requires writing
+  the bodies — the macro and lowering already exist.
 -/
 import Contracts.Common
 import Compiler.Modules.Precompiles
@@ -57,31 +62,51 @@ open Contracts
 /- ### Compile-time hash constants — pure Lean shadow defs
 
 These mirror the literals embedded in the `constants` block of
-`UnlinkPool` below. They are derived through `Verity.keccak256_lit`
-(verity#1827, pure Lean Keccak engine) so the literal bytes inside
-the `verity_contract` constants block can be cross-checked against
-the in-tree Keccak engine via the two `#guard` examples that follow.
+`UnlinkPool` below. The plain EIP-712 typehash is cross-checked
+against the in-tree Keccak engine via `#guard` below
+(`Verity.keccak256_lit` from verity#1827). The ERC-7201 namespace
+slot uses a different derivation (`keccak256(abi.encode(keccak256(s)
+- 1)) & ~0xff`) so it cannot be cross-checked by a single
+`keccak256_lit` call; it is reproduced symbolically from the
+upstream Solidity comment instead.
 
 Why a shadow def rather than a direct `keccak256_lit` call inside the
-`constants` block: at the lakefile-pinned Verity revision, the
-`constants` term parser is the macro-restricted `verityConstant` /
-`translatePureExprWithTypes` path, which does not yet recognise the
-`Verity.keccak256_lit` Lean def in term position. Verifying the
-literals out-of-band via `#guard` (below) keeps the audit story
-tight without changing the `verity_contract` surface. Lifting that
-restriction is filed as a Verity follow-up. -/
+`constants` block: the `constants` term parser is the macro-restricted
+`verityConstant` / `translatePureExprWithTypes` path, which does not
+yet recognise the `Verity.keccak256_lit` Lean def in term position.
+Verifying the literals out-of-band via `#guard` (below) keeps the
+audit story tight without changing the `verity_contract` surface. -/
 
 /-- Mirrors the hardcoded literal in the `constants` block below.
-    Once the lakefile bump to post-#1827 verity lands case-wide, this
-    becomes `Verity.keccak256_lit "unlink.storage.UnlinkPoolRelayers"`
-    so the literal is checked by the in-tree Keccak engine rather than
-    hardcoded. -/
+
+    ERC-7201 storage slot derivation (UnlinkPool.sol:75):
+    `keccak256(abi.encode(uint256(keccak256("unlink.storage.UnlinkPoolRelayers")) - 1)) & ~bytes32(uint256(0xff))`.
+
+    The two-stage derivation (`keccak256` → `n-1` → `keccak256(abi.encode(n-1))`
+    → `& ~0xff`) is not expressible as a single `keccak256_lit` call,
+    so the literal is reproduced from `UnlinkPool.sol:77` verbatim
+    rather than cross-checked here. -/
 def RELAYER_STORAGE_LOCATION_LIT : Uint256 :=
   0xd8b607728433c567965c4023813a35a19b26751353d5652c8798f8eea4b19b00
 
-/-- Mirrors the hardcoded literal for the EIP-712 typehash. -/
+/-- Mirrors the hardcoded literal for the EIP-712 typehash.
+
+    Solidity source (UnlinkPool.sol:64):
+    `bytes32 constant DEPOSIT_WITNESS_TYPEHASH =
+       keccak256('DepositWitness(address pool,bytes32 notesHash)');`
+
+    The plain `keccak256` is cross-checked against
+    `Verity.keccak256_lit` via the `#guard` below. -/
 def DEPOSIT_WITNESS_TYPEHASH_LIT : Uint256 :=
-  0x67ae6b76317e3d6f1fa6e72b9bfb9f3ddff09efad9d20ad0070f49b9efbfbd2c
+  0xbc5a735b1283bedbbb26bd202f39770544802f342490e830972aacc15681b130
+
+/- Cross-check the EIP-712 typehash literal against the in-tree
+   Keccak-256 engine.  If this `#guard` fails after a Solidity
+   source rename, update `DEPOSIT_WITNESS_TYPEHASH_LIT` and the
+   `DEPOSIT_WITNESS_TYPEHASH` value inside the `constants` block
+   below to whatever the engine reports. -/
+#guard DEPOSIT_WITNESS_TYPEHASH_LIT.val =
+  (Verity.keccak256_lit "DepositWitness(address pool,bytes32 notesHash)").val
 
 /- ### Pool entry point: `UnlinkPool` -/
 
@@ -152,7 +177,7 @@ verity_contract UnlinkPool where
     -- Mirrors `DEPOSIT_WITNESS_TYPEHASH_LIT` (= keccak256_lit
     -- "DepositWitness(address pool,bytes32 notesHash)").
     DEPOSIT_WITNESS_TYPEHASH : Uint256 :=
-      0x67ae6b76317e3d6f1fa6e72b9bfb9f3ddff09efad9d20ad0070f49b9efbfbd2c
+      0xbc5a735b1283bedbbb26bd202f39770544802f342490e830972aacc15681b130
 
   -- `ISignatureTransfer public immutable PERMIT2` (UnlinkPool.sol:55).
   -- Bound at construction time to a constructor-supplied address.
@@ -189,7 +214,7 @@ verity_contract UnlinkPool where
       the BN254 precompile ECMs landed by verity#1827. The known-answer
       cross-validation `g1·3 (via 0x07) == g1 + (2·g1) (via 0x06)` is
       preserved exactly. -/
-  function initializePool (verifierRouter : Address, ownerAddr : Address, relayer : Address)
+  function «initialize» (verifierRouter : Address, ownerAddr : Address, relayer : Address)
       initializer(initializedSlot) : Unit := do
     -- TODO(verity#1827-followup): _checkBn254Precompile known-answer test.
     -- The BN254 precompile ECMs (`bn256Add` / `bn256ScalarMul` /
@@ -303,8 +328,8 @@ verity_contract UnlinkPool where
 
 /-
   ============================================================================
-  BLOCKED(verity#1832): the public ZK entry points that take struct-array
-  calldata with nested dynamic members:
+  PENDING TRANSLATION — the three public ZK entry points still need their
+  bodies wired against the Solidity source:
 
     function transfer(Transaction[] calldata _transactions)
       external onlyRelayer nonReentrant;
@@ -313,44 +338,40 @@ verity_contract UnlinkPool where
     function emergencyWithdraw(WithdrawalTransaction[] calldata _transactions)
       external nonReentrant;                       // UnlinkPool.sol:374-383
 
-  Source confirms: there is NO `adapterDeposit` or `adapterWithdraw` in the
+  Source confirms there is NO `adapterDeposit` or `adapterWithdraw` in the
   pinned commit (`UnlinkAdapter` was deleted upstream in
   `d9c8948 chore(contracts): delete UnlinkAdapter + strip adapter surface
   (UE-425)` predating our pin `4bc46c1f`; the umbrella issue verity#1760
   references the older multi-relayer release).
 
-  carry struct-array parameters where each element contains nested dynamic
-  members (`uint256[]`, `Ciphertext[]`, `Call[]`). The Verity macro
-  accepts dynamic struct arrays with static-tuple elements (the
-  `CurveCut[]` shape from termmax #1750 / #1768 / #1779) and decodes
-  nested dynamic member leaf words via `Expr.arrayElementDynamicWord`. It
-  does not yet accept struct-parameter projection from an ABI-dynamic
-  root — the rejection point is at `Verity/Macro/Translate.lean:1715`:
+  The macro surface that previously blocked these entry points landed in
+  verity main on 2026-05-12 via:
 
-      "struct parameter projection from an ABI-dynamic root is not
-      supported; use a static struct parameter or wait for nested-dynamic
-      ABI decoding (#1832)"
+    * verity#1841 — fixed `genDynamicParamLoads` off-by-one for
+      dynamic-tuple parameters (`Compiler/CompilationModel/ParamLoading.lean`
+      no longer emits a spurious length word — the `_data_offset` Yul
+      identifier now points at the first head word of the encoded tuple).
+    * verity#1842 — expanded three `Expr → Except` validator wildcards
+      into explicit constructor lists, escaping the Lean 4
+      `_mutual.eq_def` 200 000-heartbeat ceiling when new `Expr`
+      constructors are introduced.
+    * verity#1843 — added `Expr.paramDynamicHeadWord (name, wordOffset)`
+      with a new pair of Yul helpers
+      (`__verity_param_dynamic_head_word_{calldata,memory}_checked`) and
+      routed direct dynamic-tuple parameter leaf projections through
+      `paramDynamicHeadProjection?` in `Verity/Macro/Translate.lean`.
 
-  These three entry points are the bodies labeled
-  `UnlinkPool.sol:309-583`. The translation against the Solidity source
-  is otherwise 1:1: same per-transaction structure, same
-  `_validateContext` / `_verifyProof` / `_spendNullifiers` /
-  `_insertLeaves` / `_transferWithBalanceCheck` decomposition, same
-  per-token deltas.
+  The lakefile pin now points at `cf5cb844` (post-#1843), so writing the
+  bodies translates directly against `UnlinkPool.sol:309-583`. The
+  remaining work — `_validateContext` / `_verifyProof` / `_spendNullifiers`
+  / `_insertLeaves` / `_transferWithBalanceCheck` decomposition,
+  per-transaction loop, per-token deltas, and the per-tx oracle call
+  through `tryExternalCall "getCircuit" [routerAddr, txn.circuitId]` —
+  is a follow-up PR.
 
-  When verity#1832 lands, replace this block with the bodies plus
-  `nonreentrant(reentrancyLockSlot)` modifiers and a per-tx oracle call
-  through `tryExternalCall "getCircuit" [routerAddr, txn.circuitId]`
-  returning the (verifier, inputCount, outputCount, active) tuple.
-
-  Prerequisite for verity#1832: verity#1839 must land first — the
-  parameter loader in `Compiler/CompilationModel/ParamLoading.lean`
-  emits a spurious length word for dynamic-tuple parameters and
-  off-by-one head-word `_data_offset` (latent today because the macro
-  rejects every routing path that would exercise it).
   ============================================================================
 
-  BLOCKED(verity#1832 follow-up): `deposit(Note[] calldata _notes,
+  PENDING TRANSLATION — `deposit(Note[] calldata _notes,
   Ciphertext[] calldata _ciphertexts, address _depositor, ...)` is on
   the borderline. `Note` and `Ciphertext` are static tuples of ABI
   words (no nested dynamic), so the parameter shape already works on
@@ -362,7 +383,7 @@ verity_contract UnlinkPool where
   inlined body once the helper-call lifting in verity#1824 ships.
 
   ============================================================================
-  Until verity#1832 and verity#1824 ship, this scoped translation builds,
+  Until those follow-up PRs land, this scoped translation builds,
   exposes every admin / view / lifecycle entry point through the modern
   feature surface (errors / requireError / requires / nonreentrant /
   initializer / immutables / linked_externals / storage_namespace /
