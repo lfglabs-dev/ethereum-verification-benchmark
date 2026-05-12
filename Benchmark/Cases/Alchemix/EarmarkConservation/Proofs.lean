@@ -758,7 +758,7 @@ private theorem subEarmarkedDebt_earmarkToRemove_le_earmarked
        ≤ accountEarmarked.val
   by_cases h2 : (ite (amountInDebtTokens > accountDebt) accountDebt amountInDebtTokens)
                   > accountEarmarked
-  · rw [if_pos h2]; exact Nat.le_refl _
+  · rw [if_pos h2]
   · rw [if_neg h2]
     have h2val : ¬ ((ite (amountInDebtTokens > accountDebt) accountDebt amountInDebtTokens).val
                     > accountEarmarked.val) := h2
@@ -1837,7 +1837,6 @@ theorem _subEarmarkedDebt_preserves_cumLeTotalDebt
         (cumulativeEarmarked s).val
     by_cases hC : etr > cumulativeEarmarked s
     · rw [if_pos hC]
-      exact Nat.le_refl _
     · rw [if_neg hC]
       have : ¬ (cumulativeEarmarked s).val < etr.val := hC
       omega
