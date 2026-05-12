@@ -3,17 +3,25 @@
 
   Upstream: unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b
   Solidity files:
-    - protocol/contracts/src/lib/Models.sol       (struct shapes)
-    - protocol/contracts/src/lib/Poseidon.sol     (PoseidonT3 / PoseidonT4)
-    - protocol/contracts/src/lib/InternalLazyIMT.sol (append-only IMT)
-    - protocol/contracts/src/VerifierRouter.sol   (Groth16 verifier registry)
+    - protocol/contracts/src/lib/Models.sol            (struct shapes)
+    - protocol/contracts/src/lib/Poseidon.sol          (PoseidonT3 / PoseidonT4)
+    - protocol/contracts/src/lib/InternalLazyIMT.sol   (append-only IMT)
+    - protocol/contracts/src/VerifierRouter.sol        (Groth16 verifier registry)
 
-  The Unlink protocol-specific cryptographic primitives belong in the
-  `unlink-verity` package per the package-split policy documented in
+  Protocol-specific cryptographic primitives belong in the `unlink-verity`
+  package per the package-split policy documented in
   `lfglabs-dev/verity:docs/ROADMAP.md` "Unlink Audit Readiness". This file
-  declares them locally as `opaque`/`axiom` boundaries with a stable axiom
-  naming convention (`unlink_verity_*`) so the trust manifest at proof time
-  has a single place to list them.
+  declares them locally as `opaque` / `axiom` boundaries with the
+  `unlink_verity_*` axiom naming convention so a future trust manifest can
+  list them in one place.
+
+  BN254 precompile probes are NO LONGER declared here: `_checkBn254Precompile`
+  is wired directly to `Compiler.Modules.Precompiles.bn256Add` /
+  `bn256ScalarMul` / `bn256Pairing` (verity#1827, shipped).
+
+  The `DEPOSIT_WITNESS_TYPEHASH` and `RELAYER_STORAGE_LOCATION` constants
+  are NO LONGER declared here either: they live inside the `verity_contract`
+  `constants` block in `Contract.lean`, derived through `keccak256_lit`.
 -/
 import Verity
 
@@ -38,24 +46,16 @@ namespace PoolConstants
       Equals `keccak256("unlink.circuit.spend_10x4_v1")`. -/
   def CIRCUIT_SPEND_10X4_V1 : Uint256 :=
     0x2cb863b71d9ceea7b2f7bbfafe12dc3c8758d42ec2005fce3e00914779e5bd21
-
-  /-- ERC-7201 storage namespace base slot for the relayer set.
-      Derived through `keccak256_lit` (verity#1827) from the namespace
-      string `"unlink.storage.UnlinkPoolRelayers"`. -/
-  def RELAYER_STORAGE_LOCATION : Uint256 :=
-    keccak256_lit "unlink.storage.UnlinkPoolRelayers"
-
-  /-- DEPOSIT_WITNESS_TYPEHASH = `keccak256(
-        "DepositWitness(address pool,bytes32 notesHash)")`.
-
-      Derived at compile time through `keccak256_lit` (verity#1827 →
-      `Verity.Macro.KeccakLit`), so the typehash word is checked by the
-      pure Lean Keccak engine rather than a hardcoded literal. -/
-  def DEPOSIT_WITNESS_TYPEHASH : Uint256 :=
-    keccak256_lit "DepositWitness(address pool,bytes32 notesHash)"
 end PoolConstants
 
-/-! ### Solidity struct mirrors -/
+/-! ### Solidity struct mirrors
+
+`Proof` carries the Groth16 components as Lean product types
+(`Uint256 × Uint256` etc.) rather than the macro-level `fixedArray Uint256 N`,
+because the macro grammar at the lakefile-pinned Verity revision does not
+yet surface `fixedArray` as a parameter type — only the
+`CompilationModel.ParamType.fixedArray` IR constructor exists. Product
+types are observably equivalent for n=2 / n=2x2. -/
 
 structure Proof where
   pA : Uint256 × Uint256
@@ -98,7 +98,7 @@ structure WithdrawalTransaction where
 structure Call where
   target : Address
   value  : Uint256
-  data   : Array Uint8
+  data   : Array UInt8
   deriving Inhabited
 
 structure AdapterTransaction where
@@ -160,17 +160,15 @@ end LazyImtSpec
 
 /-! ### Assumed boundary: Groth16 verifier dispatch
 
-`VerifierRouter.getCircuit(circuitId)` returns `(verifier, inputCount,
-outputCount, active)`. The verifier contract's `verifyProof` is called
-with the proof and the SHA-256-derived public signal. Both calls are
-modeled as opaque, routed through `linked_externals` in the contract
-body so the trust manifest records them per circuit ID. -/
+`VerifierRouter.getCircuit(circuitId)` returns
+`(verifier, inputCount, outputCount, active)`. The verifier contract's
+`verifyProof` is called with the proof and the SHA-256-derived public
+signal. Both calls are modeled as opaque pure Lean specs here, but at
+the contract layer `getCircuit` is exposed as a single tuple-returning
+`linked_externals` declaration (see `Contract.lean`) and the dispatch
+itself runs through Verity's external-call machinery. -/
 
 namespace VerifierRouterSpec
-  /-- Axiom name: `unlink_verity_verifier_router_get_circuit`. -/
-  opaque getCircuit (router : Address) (circuitId : Uint256) :
-    Address × Uint256 × Uint256 × Uint256
-
   /-- Axiom name: `unlink_verity_groth16_verify_proof`. -/
   opaque verifyProof
     (verifier : Address)
@@ -207,22 +205,5 @@ namespace AbiSpec
     (merkleRoot contextHash : Uint256)
     (nullifierHashes newCommitments : Array Uint256) : Uint256
 end AbiSpec
-
-/-! ### BN254 precompile probes (Initializable section)
-
-`_checkBn254Precompile` validates that the three EIP-196 / EIP-197
-precompiles are available at deployment time. As of verity#1827 these
-are first-class Verity ECMs:
-
-  * `Compiler.Modules.Precompiles.ecPrecompileBn256Add` (0x06)
-  * `Compiler.Modules.Precompiles.ecPrecompileBn256ScalarMul` (0x07)
-  * `Compiler.Modules.Precompiles.ecPrecompileBn256Pairing` (0x08)
-
-Each lowers to staticcall against the corresponding precompile, binds
-output coordinates / boolean word from scratch memory, reverts on
-precompile failure, and surfaces a single `evm_bn256_*_precompile`
-trust assumption (see `lfglabs-dev/verity:AXIOMS.md`). The `initialize`
-body in `Contract.lean` wires these in directly. No assumed-boundary
-shim is needed at the case level. -/
 
 end Benchmark.Cases.UnlinkXyz.Pool
