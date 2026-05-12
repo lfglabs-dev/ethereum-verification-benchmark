@@ -4,12 +4,12 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 16
-- Implementations: 16
-- Active cases: 12
-- Buildable active cases: 12
-- Active tasks: 85
-- Backlog cases: 4
+- Families: 17
+- Implementations: 17
+- Active cases: 14
+- Buildable active cases: 13
+- Active tasks: 90
+- Backlog cases: 3
 
 ## Buildable active cases
 
@@ -93,6 +93,16 @@ This report is generated from the benchmark manifests.
 - Source artifact: `src/StreamRecoveryClaim.sol`
 - Notes: Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
 
+### `reserve/auction_price_band`
+- Family / implementation: `reserve` / `dtfs`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Reserve.AuctionPriceBand.Compile`
+- Source ref: `https://github.com/reserve-protocol/dtfs@14f75d18856d587adfaff24e77e5b20dda7c7267:contracts/utils/RebalancingLib.sol`
+- Selected functions: `_price`
+- Source artifact: `contracts/utils/RebalancingLib.sol`
+- Notes: Auction price band slice of Reserve DTF Protocol's RebalancingLib._price. The Verity model keeps the start/end branching plus the interior exponential decay; storage I/O and external view calls (auction + rebalance state) are folded into pure parameters.
+
 ### `safe/owner_manager_reach`
 - Family / implementation: `safe` / `smart_account`
 - Stage: `build_green`
@@ -135,7 +145,15 @@ This report is generated from the benchmark manifests.
 
 ## Non-buildable active cases
 
-- None
+### `unlink_xyz/pool`
+- Family / implementation: `unlink_xyz` / `monorepo`
+- Stage: `scoped`
+- Status dimensions: translation=`scoped`, spec=`draft`, proof=`not_started`
+- Lean target: `Benchmark.Cases.UnlinkXyz.Pool.Compile`
+- Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
+- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `adapterDeposit`, `adapterWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`
+- Source artifact: `protocol/contracts/src/UnlinkPool.sol`
+- Notes: This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case is scoped against a pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.
 
 ## Active tasks
 
@@ -709,6 +727,46 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
 
+### `reserve/auction_price_band/price_at_end_time`
+- Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_at_end_time`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
+- Specification files: `cases/reserve/auction_price_band/verity/Specs.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceAtEndTime.lean`
+- Hidden reference solution: `Benchmark.Cases.Reserve.AuctionPriceBand.Proofs`
+
+### `reserve/auction_price_band/price_at_start_time`
+- Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_at_start_time`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
+- Specification files: `cases/reserve/auction_price_band/verity/Specs.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceAtStartTime.lean`
+- Hidden reference solution: `Benchmark.Cases.Reserve.AuctionPriceBand.Proofs`
+
+### `reserve/auction_price_band/price_lower_bound`
+- Track / property class / proof family: `proof-only` / `price_band` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_lower_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
+- Specification files: `cases/reserve/auction_price_band/verity/Specs.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceLowerBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Reserve.AuctionPriceBand.Proofs`
+
+### `reserve/auction_price_band/price_upper_bound`
+- Track / property class / proof family: `proof-only` / `price_band` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_upper_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
+- Specification files: `cases/reserve/auction_price_band/verity/Specs.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceUpperBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Reserve.AuctionPriceBand.Proofs`
+
 ### `safe/owner_manager_reach/add_owner_acyclicity`
 - Track / property class / proof family: `proof-only` / `linked_list_acyclicity` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -869,6 +927,16 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/TermMax/OrderV2BuyXtSingleSegment/Tasks/SwapDebtTokenToXtUpdatesVirtualXtReserve.lean`
 - Hidden reference solution: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs`
 
+### `unlink_xyz/pool/build_green`
+- Track / property class / proof family: `translation-only` / `compilation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`blocked`, reference_solution=`blocked`
+- Theorem target: `Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/unlink_xyz/pool/verity/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Contract.lean`
+- Specification files: `cases/unlink_xyz/pool/verity/Specs.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UnlinkXyz/Pool/Tasks/BuildGreen.lean`
+- Hidden reference solution: `Benchmark.Cases.UnlinkXyz.Pool.Proofs`
+
 ### `wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -1010,15 +1078,6 @@ This report is generated from the benchmark manifests.
 - Selected functions: `swap`
 - Source artifact: `contracts/UniswapV2Pair.sol`
 - Notes: Backlog AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. The committed proof module makes the case runnable in the reference-solution benchmark path while it remains backlog-scoped.
-
-### `unlink_xyz/placeholder`
-- Family / implementation: `unlink_xyz` / `monorepo`
-- Stage: `candidate`
-- Status dimensions: translation=`blocked`, spec=`not_started`, proof=`blocked`
-- Failure reason: `upstream_unavailable`
-- Source ref: `unresolved:https://github.com/unlink-xyz/monorepo@unknown:TBD`
-- Source artifact: `TBD`
-- Notes: Referenced repository was not resolvable during setup, so no candidate contract was pinned.
 
 ### `usual/placeholder`
 - Family / implementation: `usual` / `private_repo`

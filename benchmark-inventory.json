@@ -10,30 +10,34 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 16,
-    "implementation_count": 16,
-    "active_case_count": 12,
-    "backlog_case_count": 4,
-    "active_task_count": 85,
+    "family_count": 17,
+    "implementation_count": 17,
+    "active_case_count": 14,
+    "backlog_case_count": 3,
+    "active_task_count": 90,
     "backlog_task_count": 8,
-    "buildable_case_count": 14,
-    "runnable_task_count": 93,
+    "buildable_case_count": 15,
+    "runnable_task_count": 97,
     "case_stage_counts": {
-      "build_green": 12,
-      "candidate": 2,
-      "proof_complete": 2
+      "build_green": 13,
+      "candidate": 1,
+      "proof_complete": 2,
+      "scoped": 1
     },
     "translation_status_counts": {
-      "blocked": 2,
-      "translated": 14
+      "blocked": 1,
+      "scoped": 1,
+      "translated": 15
     },
     "proof_status_counts": {
-      "blocked": 2,
-      "complete": 7,
+      "blocked": 1,
+      "complete": 8,
+      "not_started": 1,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 93
+      "proof-only": 97,
+      "translation-only": 1
     },
     "task_property_class_counts": {
       "accounting_bound": 16,
@@ -44,6 +48,7 @@
       "balance_conservation": 2,
       "balance_credit_update": 2,
       "balance_update": 1,
+      "compilation": 1,
       "exploit_trace": 1,
       "frame_property": 2,
       "isOwner_effect": 3,
@@ -55,7 +60,8 @@
       "noninterference": 1,
       "output_range": 2,
       "overflow_safety": 1,
-      "price_computation": 3,
+      "price_band": 2,
+      "price_computation": 5,
       "reserve_state_transition": 1,
       "silent_failure": 2,
       "storage_update": 1,
@@ -71,14 +77,14 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 14,
-      "functional_correctness": 23,
+      "functional_correctness": 28,
       "protocol_transition_correctness": 15,
       "refinement_equivalence": 9,
       "state_preservation_local_effects": 32
     },
     "family_split_counts": {
-      "active": 12,
-      "backlog": 4
+      "active": 14,
+      "backlog": 3
     }
   },
   "families": [
@@ -236,6 +242,23 @@
       "manifest_path": "families/paladin_votes/family.yaml"
     },
     {
+      "family_id": "reserve",
+      "display_name": "Reserve",
+      "split": "active",
+      "status": "active",
+      "description": "Active benchmark family for Reserve DTF Protocol slices, focused on proving arithmetic and behavioral properties over the rebalance and auction surfaces of the production Folio contracts.",
+      "implementation_ids": [
+        "dtfs"
+      ],
+      "case_ids": [
+        "reserve/auction_price_band"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/reserve/family.yaml"
+    },
+    {
       "family_id": "safe",
       "display_name": "Safe",
       "split": "active",
@@ -289,14 +312,14 @@
     {
       "family_id": "unlink_xyz",
       "display_name": "unlink.xyz",
-      "split": "backlog",
-      "status": "backlog",
-      "description": "Backlog intake for unlink.xyz contracts pending recovery of a resolvable upstream repository snapshot.",
+      "split": "active",
+      "status": "active",
+      "description": "Unlink.xyz privacy pool and atomic-DeFi adapter, modeled as Verity contracts against unlink-xyz/monorepo. Protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier) live in `unlink-verity` as package-local assumed-status boundaries per the package-split policy.",
       "implementation_ids": [
         "monorepo"
       ],
       "case_ids": [
-        "unlink_xyz/placeholder"
+        "unlink_xyz/pool"
       ],
       "source_languages": [
         "solidity"
@@ -501,6 +524,22 @@
       "manifest_path": "families/paladin_votes/implementations/stream_recovery_claim/implementation.yaml"
     },
     {
+      "family_id": "reserve",
+      "implementation_id": "dtfs",
+      "display_name": "Reserve DTF Protocol",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/reserve-protocol/dtfs",
+      "upstream_commit": "14f75d18856d587adfaff24e77e5b20dda7c7267",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/utils/RebalancingLib.sol",
+      "case_ids": [
+        "reserve/auction_price_band"
+      ],
+      "notes": "Active implementation entry for Reserve's DTF Protocol repository, currently benchmarking the auction price-band slice on RebalancingLib._price.",
+      "manifest_path": "families/reserve/implementations/dtfs/implementation.yaml"
+    },
+    {
       "family_id": "safe",
       "implementation_id": "smart_account",
       "display_name": "Safe Smart Account",
@@ -552,16 +591,16 @@
       "family_id": "unlink_xyz",
       "implementation_id": "monorepo",
       "display_name": "unlink.xyz Monorepo",
-      "split": "backlog",
-      "status": "blocked",
+      "split": "active",
+      "status": "scoped",
       "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": null,
+      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
       "source_language": "solidity",
-      "source_artifact_path": "TBD",
+      "source_artifact_path": "protocol/contracts/src",
       "case_ids": [
-        "unlink_xyz/placeholder"
+        "unlink_xyz/pool"
       ],
-      "notes": "The referenced repository snapshot was unavailable during intake, so the case remains a placeholder without a pinned artifact.",
+      "notes": "Pinned against the `4bc46c1f` commit of `unlink-xyz/monorepo`. Cases under this implementation translate Solidity contracts in `protocol/contracts/src` and route the protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier) through the `unlink-verity` package-local assumed-status boundaries declared inside each case's `Specs.lean`.",
       "manifest_path": "families/unlink_xyz/implementations/monorepo/implementation.yaml"
     },
     {
@@ -961,6 +1000,46 @@
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
     },
     {
+      "case_id": "reserve/auction_price_band",
+      "project": "reserve",
+      "case_name": "auction_price_band",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/reserve/auction_price_band/case.yaml",
+      "split": "active",
+      "family_id": "reserve",
+      "implementation_id": "dtfs",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/reserve-protocol/dtfs",
+      "upstream_commit": "14f75d18856d587adfaff24e77e5b20dda7c7267",
+      "original_contract_path": "contracts/utils/RebalancingLib.sol",
+      "source_ref": "https://github.com/reserve-protocol/dtfs@14f75d18856d587adfaff24e77e5b20dda7c7267:contracts/utils/RebalancingLib.sol",
+      "selected_functions": [
+        "_price"
+      ],
+      "lean_target": "Benchmark.Cases.Reserve.AuctionPriceBand.Compile",
+      "failure_reason": null,
+      "notes": "Auction price band slice of Reserve DTF Protocol's RebalancingLib._price. The Verity model keeps the start/end branching plus the interior exponential decay; storage I/O and external view calls (auction + rebalance state) are folded into pure parameters.",
+      "buildable": true,
+      "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "auction_price_band",
+        "exponential_decay_axiomatised",
+        "storage_state_elided",
+        "require_gate_as_precondition"
+      ],
+      "abstraction_notes": "The benchmark freezes the per-pair auction price band that RebalancingLib._price exposes. The interior exponential decay (PRBMath ln + exp) is preserved structurally in the model with two opaque axioms: `MathLib.exp` and `MathLib.ln`. The proof uses one algebraic axiom on `exp` (`exp_nonpositive_le_d18`). The storage-mapping reads on `auction.prices[token]` and `rebalance.details[token].inRebalance` are taken as parameter inputs (NexusMutual RammSpotPrice precedent); the Solidity require gate is encoded as a precondition on the pure function rather than as a `Verity.require` call.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Reserve.AuctionPriceBand.Specs",
+      "proof_target": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs"
+    },
+    {
       "case_id": "safe/owner_manager_reach",
       "project": "safe",
       "case_name": "owner_manager_reach",
@@ -1058,6 +1137,75 @@
       ],
       "spec_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Specs",
       "proof_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs"
+    },
+    {
+      "case_id": "unlink_xyz/pool",
+      "project": "unlink_xyz",
+      "case_name": "pool",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/unlink_xyz/pool/case.yaml",
+      "split": "active",
+      "family_id": "unlink_xyz",
+      "implementation_id": "monorepo",
+      "stage": "scoped",
+      "translation_status": "scoped",
+      "spec_status": "draft",
+      "proof_status": "not_started",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/unlink-xyz/monorepo",
+      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
+      "original_contract_path": "protocol/contracts/src/UnlinkPool.sol",
+      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
+      "selected_functions": [
+        "constructor",
+        "initialize",
+        "deposit",
+        "transfer",
+        "withdraw",
+        "adapterDeposit",
+        "adapterWithdraw",
+        "hashNote",
+        "isRelayer",
+        "addRelayer",
+        "removeRelayer",
+        "setVerifierRouter",
+        "transferOwnership",
+        "acceptOwnership",
+        "renounceOwnership"
+      ],
+      "lean_target": "Benchmark.Cases.UnlinkXyz.Pool.Compile",
+      "failure_reason": null,
+      "notes": "This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case is scoped against a pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.",
+      "buildable": false,
+      "verity_commit": "f28f1ba4d7741f2f0794c0571cd181e480d5a5fd",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "uups_proxy_modeled_as_implementation",
+        "permit2_assumed_boundary",
+        "poseidon_assumed_boundary",
+        "lazy_imt_assumed_boundary",
+        "groth16_assumed_boundary",
+        "bn254_precompile_ecm",
+        "erc7201_storage_namespace",
+        "named_errors",
+        "initializer_modeled",
+        "nonreentrant_modeled",
+        "keccak256_literal_typehash"
+      ],
+      "abstraction_notes": "Verity model of `UnlinkPool` (Unlink privacy pool implementation). Protocol- specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier router) are routed through assumed-status external boundaries with named axioms, per the `unlink-verity` package split documented in `docs/ROADMAP.md` \"Unlink Audit Readiness\". UUPS proxy semantics are modeled as the implementation contract itself (proxy storage rotation is host-level and tracked under verity#1420). The model uses every Solidity-feature-parity primitive that landed in verity through PRs #1782 (selfbalance), #1795 (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254 precompile ECMs + `keccak256_lit` literal sugar). Three public entry points are SCOPED but not yet TRANSLATED because they receive `Transaction[] calldata` / `WithdrawalTransaction[] calldata` / `AdapterTransaction[] calldata` parameter shapes whose struct elements contain nested dynamic members (`uint256[] nullifierHashes`, `uint256[] newCommitments`, `Ciphertext[] ciphertexts`, `Call[] calls`). The Verity macro currently accepts dynamic struct arrays with static-tuple elements (CurveCut[] shape from termmax #1750/#1758) and decodes nested dynamic member leaf words via `Expr.arrayElementDynamicWord`, but rejects struct-parameter projection from an ABI-dynamic-root at `Verity/Macro/Translate.lean:1715`. This is the lead blocker recorded in umbrella issue verity#1760. Once that lands, `transfer`, `withdraw`, and `adapterWithdraw` can be filled in from the Solidity source 1:1. Until then the case ships:   - all admin / view / lifecycle functions: `constructor`, `initialize`,     `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`,     `acceptOwnership`, `renounceOwnership`, `isRelayer`, `hashNote`,     `_checkRelayer`.   - the parameterless-array entries: `deposit` and `adapterDeposit` take     `Note[]` and `Ciphertext[]` arrays whose elements are static tuples of     ABI words, which the macro already accepts. The blocked entry points have explicit `BLOCKED(#1760-nested-dynamic):` markers in `Contract.lean` and link back to verity#1760.",
+      "unsupported_feature_codes": [
+        "nested_dynamic_struct_array_param",
+        "uups_proxy_storage_rotation_not_modeled",
+        "bn254_precompile_probes_via_ecm_assumed",
+        "poseidon_assumed_axiom",
+        "permit2_assumed_axiom",
+        "lazy_imt_assumed_axiom",
+        "groth16_verifier_assumed_axiom"
+      ],
+      "spec_target": "Benchmark.Cases.UnlinkXyz.Pool.Specs",
+      "proof_target": "Benchmark.Cases.UnlinkXyz.Pool.Proofs"
     },
     {
       "case_id": "wildcat/borrow_liquidity_safety",
@@ -1236,44 +1384,6 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Specs",
       "proof_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs"
-    },
-    {
-      "case_id": "unlink_xyz/placeholder",
-      "project": "unlink_xyz",
-      "case_name": "placeholder",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/unlink_xyz/placeholder/case.yaml",
-      "split": "backlog",
-      "family_id": "unlink_xyz",
-      "implementation_id": "monorepo",
-      "stage": "candidate",
-      "translation_status": "blocked",
-      "spec_status": "not_started",
-      "proof_status": "blocked",
-      "source_language": "solidity",
-      "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": null,
-      "original_contract_path": "TBD",
-      "source_ref": "unresolved:https://github.com/unlink-xyz/monorepo@unknown:TBD",
-      "selected_functions": [],
-      "lean_target": null,
-      "failure_reason": "upstream_unavailable",
-      "notes": "Referenced repository was not resolvable during setup, so no candidate contract was pinned.",
-      "buildable": false,
-      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
-      "abstraction_level": "inaccessible_upstream",
-      "abstraction_tags": [
-        "intake_placeholder",
-        "upstream_missing"
-      ],
-      "abstraction_notes": "Intake cannot progress until a resolvable upstream snapshot is available and a benchmark slice can be selected from it.",
-      "unsupported_feature_codes": [
-        "upstream_unavailable"
-      ],
-      "spec_target": null,
-      "proof_target": null
     },
     {
       "case_id": "usual/placeholder",
@@ -3896,6 +4006,186 @@
       }
     },
     {
+      "task_ref": "reserve/auction_price_band/price_at_end_time",
+      "task_id": "price_at_end_time",
+      "case_id": "reserve/auction_price_band",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/reserve/auction_price_band/tasks/price_at_end_time.yaml",
+      "split": "active",
+      "family_id": "reserve",
+      "implementation_id": "dtfs",
+      "source_ref": "https://github.com/reserve-protocol/dtfs@14f75d18856d587adfaff24e77e5b20dda7c7267:contracts/utils/RebalancingLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_computation",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Reserve.AuctionPriceBand.price_at_end_time",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/reserve/auction_price_band/verity/Contract.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/reserve/auction_price_band/verity/Specs.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceAtEndTime.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Boundary exactness at endTime: when the auction has reached its end timestamp and the auction is not atomic-swap, `_price` returns the launcher-published endPrice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "reserve/auction_price_band/price_at_start_time",
+      "task_id": "price_at_start_time",
+      "case_id": "reserve/auction_price_band",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/reserve/auction_price_band/tasks/price_at_start_time.yaml",
+      "split": "active",
+      "family_id": "reserve",
+      "implementation_id": "dtfs",
+      "source_ref": "https://github.com/reserve-protocol/dtfs@14f75d18856d587adfaff24e77e5b20dda7c7267:contracts/utils/RebalancingLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_computation",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Reserve.AuctionPriceBand.price_at_start_time",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/reserve/auction_price_band/verity/Contract.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/reserve/auction_price_band/verity/Specs.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceAtStartTime.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Boundary exactness at startTime: `_price` returns the launcher-published startPrice when the auction has just opened.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "reserve/auction_price_band/price_lower_bound",
+      "task_id": "price_lower_bound",
+      "case_id": "reserve/auction_price_band",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/reserve/auction_price_band/tasks/price_lower_bound.yaml",
+      "split": "active",
+      "family_id": "reserve",
+      "implementation_id": "dtfs",
+      "source_ref": "https://github.com/reserve-protocol/dtfs@14f75d18856d587adfaff24e77e5b20dda7c7267:contracts/utils/RebalancingLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_band",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Reserve.AuctionPriceBand.price_lower_bound",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/reserve/auction_price_band/verity/Contract.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/reserve/auction_price_band/verity/Specs.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceLowerBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Lower band: `endPrice \u2264 price` for any timestamp. The interior branch is closed by the explicit `if (p < endPrice) p = endPrice` clamp; the boundary branches are closed via the `hBand` precondition.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "reserve/auction_price_band/price_upper_bound",
+      "task_id": "price_upper_bound",
+      "case_id": "reserve/auction_price_band",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/reserve/auction_price_band/tasks/price_upper_bound.yaml",
+      "split": "active",
+      "family_id": "reserve",
+      "implementation_id": "dtfs",
+      "source_ref": "https://github.com/reserve-protocol/dtfs@14f75d18856d587adfaff24e77e5b20dda7c7267:contracts/utils/RebalancingLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_band",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Reserve.AuctionPriceBand.price_upper_bound",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/reserve/auction_price_band/verity/Contract.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/reserve/auction_price_band/verity/Specs.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceUpperBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Upper band: `price \u2264 startPrice` for any timestamp. Discharged via the axiom `MathLib_exp_nonpositive_le_D18` (declared in Contract.lean) plus the `mulDivUp_le_self_of_le` ceil-division lemma proven inline in Proofs.lean.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "safe/owner_manager_reach/add_owner_acyclicity",
       "task_id": "add_owner_acyclicity",
       "case_id": "safe/owner_manager_reach",
@@ -4616,6 +4906,53 @@
         "prompt_context": "ready",
         "editable_proof": "ready",
         "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "unlink_xyz/pool/build_green",
+      "task_id": "build_green",
+      "case_id": "unlink_xyz/pool",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/unlink_xyz/pool/tasks/build_green.yaml",
+      "split": "active",
+      "family_id": "unlink_xyz",
+      "implementation_id": "monorepo",
+      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
+      "task_interface_version": 2,
+      "track": "translation-only",
+      "property_class": "compilation",
+      "category": "build",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles",
+      "proof_family": "functional_correctness",
+      "translation_status": "scoped",
+      "proof_status": "not_started",
+      "implementation_files": [
+        "cases/unlink_xyz/pool/verity/Contract.lean",
+        "Benchmark/Cases/UnlinkXyz/Pool/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/unlink_xyz/pool/verity/Specs.lean",
+        "Benchmark/Cases/UnlinkXyz/Pool/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UnlinkXyz/Pool/Tasks/BuildGreen.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "First buildable target for the case: the `verity_contract UnlinkPool` declaration in `Contract.lean` must elaborate cleanly through `lake build` on the lakefile-pinned Verity revision. The three nested-dynamic-struct- array entry points (`transfer`, `withdraw`, `adapterWithdraw`) are stubbed with `BLOCKED(#1760-nested-dynamic):` markers until the Verity macro surface gains struct-parameter projection from an ABI-dynamic root.",
+      "unsupported_feature_codes": [
+        "nested_dynamic_struct_array_param"
+      ],
+      "reference_solution_module": "Benchmark.Cases.UnlinkXyz.Pool.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "blocked",
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5521,5 +5858,5 @@
       }
     }
   ],
-  "generated_at": "2026-04-28T17:34:17.541206+00:00"
+  "generated_at": "2026-05-12T09:32:13.918817+00:00"
 }
