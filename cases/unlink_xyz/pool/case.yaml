@@ -1,0 +1,100 @@
+manifest_kind: case
+project: unlink_xyz
+case_id: pool
+schema_version: 1
+split: active
+family_id: unlink_xyz
+implementation_id: monorepo
+stage: scoped
+translation_status: in_progress
+spec_status: drafted
+proof_status: not_started
+upstream_repo: https://github.com/unlink-xyz/monorepo
+upstream_commit: 4bc46c1fffbc0e146dccfff5b9fe00167121b27b
+original_contract_path: protocol/contracts/src/UnlinkPool.sol
+source_ref: https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol
+lean_target: Benchmark.Cases.UnlinkXyz.Pool.Compile
+spec_target: Benchmark.Cases.UnlinkXyz.Pool.Specs
+proof_target: Benchmark.Cases.UnlinkXyz.Pool.Proofs
+selected_functions:
+  - constructor
+  - initialize
+  - deposit
+  - transfer
+  - withdraw
+  - adapterDeposit
+  - adapterWithdraw
+  - hashNote
+  - isRelayer
+  - addRelayer
+  - removeRelayer
+  - setVerifierRouter
+  - transferOwnership
+  - acceptOwnership
+  - renounceOwnership
+source_language: solidity
+verity_version: f28f1ba4d7741f2f0794c0571cd181e480d5a5fd
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - uups_proxy_modeled_as_implementation
+  - permit2_assumed_boundary
+  - poseidon_assumed_boundary
+  - lazy_imt_assumed_boundary
+  - groth16_assumed_boundary
+  - bn254_precompile_ecm
+  - erc7201_storage_namespace
+  - named_errors
+  - initializer_modeled
+  - nonreentrant_modeled
+  - keccak256_literal_typehash
+abstraction_notes: >
+  Verity model of `UnlinkPool` (Unlink privacy pool implementation). Protocol-
+  specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16
+  verifier router) are routed through assumed-status external boundaries with
+  named axioms, per the `unlink-verity` package split documented in
+  `docs/ROADMAP.md` "Unlink Audit Readiness". UUPS proxy semantics are modeled
+  as the implementation contract itself (proxy storage rotation is host-level
+  and tracked under verity#1420). The model uses every Solidity-feature-parity
+  primitive that landed in verity through PRs #1782 (selfbalance), #1795
+  (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254
+  precompile ECMs + `keccak256_lit` literal sugar).
+
+  Three public entry points are SCOPED but not yet TRANSLATED because they
+  receive `Transaction[] calldata` / `WithdrawalTransaction[] calldata` /
+  `AdapterTransaction[] calldata` parameter shapes whose struct elements
+  contain nested dynamic members (`uint256[] nullifierHashes`,
+  `uint256[] newCommitments`, `Ciphertext[] ciphertexts`, `Call[] calls`).
+  The Verity macro currently accepts dynamic struct arrays with static-tuple
+  elements (CurveCut[] shape from termmax #1750/#1758) and decodes nested
+  dynamic member leaf words via `Expr.arrayElementDynamicWord`, but rejects
+  struct-parameter projection from an ABI-dynamic-root at
+  `Verity/Macro/Translate.lean:1715`. This is the lead blocker recorded in
+  umbrella issue verity#1760. Once that lands, `transfer`, `withdraw`, and
+  `adapterWithdraw` can be filled in from the Solidity source 1:1.
+
+  Until then the case ships:
+    - all admin / view / lifecycle functions: `constructor`, `initialize`,
+      `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`,
+      `acceptOwnership`, `renounceOwnership`, `isRelayer`, `hashNote`,
+      `_checkRelayer`.
+    - the parameterless-array entries: `deposit` and `adapterDeposit` take
+      `Note[]` and `Ciphertext[]` arrays whose elements are static tuples of
+      ABI words, which the macro already accepts.
+  The blocked entry points have explicit `BLOCKED(#1760-nested-dynamic):`
+  markers in `Contract.lean` and link back to verity#1760.
+unsupported_feature_codes:
+  - nested_dynamic_struct_array_param
+  - uups_proxy_storage_rotation_not_modeled
+  - bn254_precompile_probes_via_ecm_assumed
+  - poseidon_assumed_axiom
+  - permit2_assumed_axiom
+  - lazy_imt_assumed_axiom
+  - groth16_verifier_assumed_axiom
+notes: >
+  This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which
+  was blocked on `upstream_unavailable`. The upstream is now resolved and the
+  case is scoped against a pinned commit of `unlink-xyz/monorepo`. The original
+  local research scratchpad that informed this translation lived in
+  `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten
+  here to use the new Verity feature surface end-to-end.

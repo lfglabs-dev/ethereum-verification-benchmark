@@ -1,0 +1,228 @@
+/-
+  Verity model of `UnlinkPool` — assumed boundaries and pure structural specs.
+
+  Upstream: unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b
+  Solidity files:
+    - protocol/contracts/src/lib/Models.sol       (struct shapes)
+    - protocol/contracts/src/lib/Poseidon.sol     (PoseidonT3 / PoseidonT4)
+    - protocol/contracts/src/lib/InternalLazyIMT.sol (append-only IMT)
+    - protocol/contracts/src/VerifierRouter.sol   (Groth16 verifier registry)
+
+  The Unlink protocol-specific cryptographic primitives belong in the
+  `unlink-verity` package per the package-split policy documented in
+  `lfglabs-dev/verity:docs/ROADMAP.md` "Unlink Audit Readiness". This file
+  declares them locally as `opaque`/`axiom` boundaries with a stable axiom
+  naming convention (`unlink_verity_*`) so the trust manifest at proof time
+  has a single place to list them.
+-/
+import Verity
+
+namespace Benchmark.Cases.UnlinkXyz.Pool
+
+open Verity hiding pure bind
+open Verity.EVM.Uint256
+
+/-! ### Numeric constants (mirror `library Constants` in Models.sol) -/
+
+namespace PoolConstants
+  /-- BN254 scalar field order (Fr modulus). Identical to the Rust and SDK
+      copies; drift is enforced by `just check-constants` upstream. -/
+  def SNARK_SCALAR_FIELD : Uint256 :=
+    21888242871839275222246405745257275088548364400416034343698204186575808495617
+
+  /-- Output note values are circuit-bounded to 120 bits. -/
+  def MAX_NOTE_VALUE : Uint256 :=
+    Verity.Core.Uint256.sub (Verity.Core.Uint256.shl 120 1) 1
+
+  /-- Canonical circuit identifier for the single PR-B variant.
+      Equals `keccak256("unlink.circuit.spend_10x4_v1")`. -/
+  def CIRCUIT_SPEND_10X4_V1 : Uint256 :=
+    0x2cb863b71d9ceea7b2f7bbfafe12dc3c8758d42ec2005fce3e00914779e5bd21
+
+  /-- ERC-7201 storage namespace base slot for the relayer set.
+      Derived through `keccak256_lit` (verity#1827) from the namespace
+      string `"unlink.storage.UnlinkPoolRelayers"`. -/
+  def RELAYER_STORAGE_LOCATION : Uint256 :=
+    keccak256_lit "unlink.storage.UnlinkPoolRelayers"
+
+  /-- DEPOSIT_WITNESS_TYPEHASH = `keccak256(
+        "DepositWitness(address pool,bytes32 notesHash)")`.
+
+      Derived at compile time through `keccak256_lit` (verity#1827 →
+      `Verity.Macro.KeccakLit`), so the typehash word is checked by the
+      pure Lean Keccak engine rather than a hardcoded literal. -/
+  def DEPOSIT_WITNESS_TYPEHASH : Uint256 :=
+    keccak256_lit "DepositWitness(address pool,bytes32 notesHash)"
+end PoolConstants
+
+/-! ### Solidity struct mirrors -/
+
+structure Proof where
+  pA : Uint256 × Uint256
+  pB : (Uint256 × Uint256) × (Uint256 × Uint256)
+  pC : Uint256 × Uint256
+  deriving Inhabited
+
+structure Note where
+  npk    : Uint256
+  token  : Address
+  amount : Uint256
+  deriving Inhabited
+
+structure Ciphertext where
+  ephemeralKey : Uint256
+  data         : Uint256 × Uint256 × Uint256
+  deriving Inhabited
+
+structure Transaction where
+  proof            : Proof
+  circuitId        : Uint256
+  merkleRoot       : Uint256
+  nullifierHashes  : Array Uint256
+  newCommitments   : Array Uint256
+  contextHash      : Uint256
+  ciphertexts      : Array Ciphertext
+  deriving Inhabited
+
+structure WithdrawalTransaction where
+  proof            : Proof
+  circuitId        : Uint256
+  merkleRoot       : Uint256
+  nullifierHashes  : Array Uint256
+  newCommitments   : Array Uint256
+  contextHash      : Uint256
+  withdrawal       : Note
+  ciphertexts      : Array Ciphertext
+  deriving Inhabited
+
+structure Call where
+  target : Address
+  value  : Uint256
+  data   : Array Uint8
+  deriving Inhabited
+
+structure AdapterTransaction where
+  proof            : Proof
+  circuitId        : Uint256
+  merkleRoot       : Uint256
+  nullifierHashes  : Array Uint256
+  newCommitments   : Array Uint256
+  contextHash      : Uint256
+  withdrawal       : Note
+  calls            : Array Call
+  ciphertexts      : Array Ciphertext
+  deriving Inhabited
+
+/-! ### Assumed boundary: Poseidon T3 / T4 (vendored poseidon-solidity@v0.0.5)
+
+`PoseidonT3.hash(uint[2])` and `PoseidonT4.hash(uint[3])` are the BN254
+scalar-field hashes used inside the ZK circuit. Modeled opaquely; result
+lives in the scalar field. -/
+
+namespace PoseidonT3
+  opaque hash : (Uint256 × Uint256) → Uint256
+  /-- Axiom name: `unlink_verity_poseidon_t3_in_field`. -/
+  axiom hash_in_field (xy : Uint256 × Uint256) :
+    (hash xy : Nat) < (PoolConstants.SNARK_SCALAR_FIELD : Nat)
+end PoseidonT3
+
+namespace PoseidonT4
+  opaque hash : (Uint256 × Uint256 × Uint256) → Uint256
+  /-- Axiom name: `unlink_verity_poseidon_t4_in_field`. -/
+  axiom hash_in_field (xyz : Uint256 × Uint256 × Uint256) :
+    (hash xyz : Nat) < (PoolConstants.SNARK_SCALAR_FIELD : Nat)
+end PoseidonT4
+
+/-! ### Assumed boundary: Permit2.permitWitnessTransferFrom
+
+Modeled as an opaque effect on the pool's token balance. The signature /
+witness checks happen inside Permit2; the pool observes only the post-call
+balance delta (`_transferWithBalanceCheck`). -/
+
+namespace Permit2Spec
+  /-- Axiom name: `unlink_verity_permit2_permit_witness_transfer_from`. -/
+  opaque permitWitnessTransferFromEffect
+    (permit2 : Address) (token : Address) (depositor : Address)
+    (totalAmount : Uint256) (witness : Uint256) : Uint256
+end Permit2Spec
+
+/-! ### Assumed boundary: Lazy-IMT append-only state
+
+`InternalLazyIMT._insert` updates the lazy Merkle-tree state. Modeled as
+an opaque step function so callers can write the leaf and re-read the
+root through the pool's storage fields. -/
+
+namespace LazyImtSpec
+  /-- Axiom name: `unlink_verity_lazy_imt_root_after_inserts`. -/
+  opaque rootAfterInserts (prevRoot prevNumberOfLeaves : Uint256)
+    (leaves : Array Uint256) : Uint256
+end LazyImtSpec
+
+/-! ### Assumed boundary: Groth16 verifier dispatch
+
+`VerifierRouter.getCircuit(circuitId)` returns `(verifier, inputCount,
+outputCount, active)`. The verifier contract's `verifyProof` is called
+with the proof and the SHA-256-derived public signal. Both calls are
+modeled as opaque, routed through `linked_externals` in the contract
+body so the trust manifest records them per circuit ID. -/
+
+namespace VerifierRouterSpec
+  /-- Axiom name: `unlink_verity_verifier_router_get_circuit`. -/
+  opaque getCircuit (router : Address) (circuitId : Uint256) :
+    Address × Uint256 × Uint256 × Uint256
+
+  /-- Axiom name: `unlink_verity_groth16_verify_proof`. -/
+  opaque verifyProof
+    (verifier : Address)
+    (pA : Uint256 × Uint256)
+    (pB : (Uint256 × Uint256) × (Uint256 × Uint256))
+    (pC : Uint256 × Uint256)
+    (publicSignal : Uint256) : Bool
+end VerifierRouterSpec
+
+/-! ### Assumed boundary: ABI keccak / sha256 composites
+
+The pool builds two composite keccak hashes (the deposit witness and the
+ciphertexts-context hash) and one composite sha256 (the public-signals
+hash). The composition itself is byte-faithful Solidity; Verity expresses
+each as a pure boundary so the trust report records exactly three named
+opaque hashes rather than threading raw `abi.encode` byte layout. -/
+
+namespace AbiSpec
+  /-- `keccak256(abi.encode(DEPOSIT_WITNESS_TYPEHASH, address(this),
+                            keccak256(abi.encode(notes, ciphertexts))))` -/
+  opaque depositWitnessHash
+    (typehash : Uint256) (poolAddress : Address)
+    (notes : Array Note) (ciphertexts : Array Ciphertext) : Uint256
+
+  /-- `keccak256(abi.encode(block.chainid, address(this),
+                            keccak256(abi.encode(ciphertexts))))` -/
+  opaque ciphertextsContextHash
+    (chainId : Uint256) (poolAddress : Address)
+    (ciphertexts : Array Ciphertext) : Uint256
+
+  /-- `sha256(abi.encodePacked(merkleRoot, contextHash,
+                               nullifierHashes, newCommitments))` -/
+  opaque publicSignalsSha256
+    (merkleRoot contextHash : Uint256)
+    (nullifierHashes newCommitments : Array Uint256) : Uint256
+end AbiSpec
+
+/-! ### BN254 precompile probes (Initializable section)
+
+`_checkBn254Precompile` validates that the three EIP-196 / EIP-197
+precompiles are available at deployment time. As of verity#1827 these
+are first-class Verity ECMs:
+
+  * `Compiler.Modules.Precompiles.ecPrecompileBn256Add` (0x06)
+  * `Compiler.Modules.Precompiles.ecPrecompileBn256ScalarMul` (0x07)
+  * `Compiler.Modules.Precompiles.ecPrecompileBn256Pairing` (0x08)
+
+Each lowers to staticcall against the corresponding precompile, binds
+output coordinates / boolean word from scratch memory, reverts on
+precompile failure, and surfaces a single `evm_bn256_*_precompile`
+trust assumption (see `lfglabs-dev/verity:AXIOMS.md`). The `initialize`
+body in `Contract.lean` wires these in directly. No assumed-boundary
+shim is needed at the case level. -/
+
+end Benchmark.Cases.UnlinkXyz.Pool
