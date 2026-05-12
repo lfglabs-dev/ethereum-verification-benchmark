@@ -342,6 +342,12 @@ verity_contract UnlinkPool where
   `nonreentrant(reentrancyLockSlot)` modifiers and a per-tx oracle call
   through `tryExternalCall "getCircuit" [routerAddr, txn.circuitId]`
   returning the (verifier, inputCount, outputCount, active) tuple.
+
+  Prerequisite for verity#1832: verity#1839 must land first — the
+  parameter loader in `Compiler/CompilationModel/ParamLoading.lean`
+  emits a spurious length word for dynamic-tuple parameters and
+  off-by-one head-word `_data_offset` (latent today because the macro
+  rejects every routing path that would exercise it).
   ============================================================================
 
   BLOCKED(verity#1832 follow-up): `deposit(Note[] calldata _notes,
