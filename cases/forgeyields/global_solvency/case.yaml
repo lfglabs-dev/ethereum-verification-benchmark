@@ -1,0 +1,49 @@
+manifest_kind: case
+project: forgeyields
+case_id: global_solvency
+schema_version: 1
+split: active
+family_id: forgeyields
+implementation_id: contracts
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code
+upstream_commit: etherscan-verified-source
+original_contract_path: TokenGateway.sol
+source_ref: https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol
+lean_target: Benchmark.Cases.ForgeYields.GlobalSolvency.Compile
+spec_target: Benchmark.Cases.ForgeYields.GlobalSolvency.Specs
+proof_target: Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs
+selected_functions:
+  - deposit
+  - requestRedeem
+  - claimRedeem
+  - redeemTokenGatewayDepreciated
+  - transferRemote
+  - handle
+  - report
+source_language: solidity
+verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - guarded_depreciation_invariant
+  - ghost_erc20_balance
+  - decoded_message_inputs
+  - bridge_external_call_elided
+abstraction_notes: >
+  Focused TokenGateway accounting slice for the guarded global-solvency invariant:
+  while `depreciated == 0`, the gateway's ghost ERC20 balance covers `buffer`
+  plus `_redeemInfo.assetsLocked`. The invariant is intentionally vacuous after
+  depreciation mode, matching ForgeYields' clarification that active code no
+  longer uses `_redeemInfo.assetsLocked`.
+unsupported_feature_codes:
+  - external_erc20_balance_ghosted
+  - hyperlane_bridge_calls_elided
+  - bytes_report_parsing_decoded
+notes: >
+  Reference proofs are complete for the guarded invariant across the modeled
+  successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic
+  obligations needed by the focused model.

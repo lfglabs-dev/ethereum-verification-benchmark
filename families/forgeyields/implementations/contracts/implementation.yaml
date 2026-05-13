@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: forgeyields
+implementation_id: contracts
+display_name: ForgeYields Contracts
+split: active
+status: translated
+upstream_repo: https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code
+upstream_commit: etherscan-verified-source
+source_language: solidity
+source_artifact_path: TokenGateway.sol
+case_ids:
+  - forgeyields/global_solvency
+notes: >
+  Focused TokenGateway accounting implementation entry for the guarded
+  global-solvency benchmark.

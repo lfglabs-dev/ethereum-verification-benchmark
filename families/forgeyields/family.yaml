@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: forgeyields
+display_name: ForgeYields
+split: active
+status: active
+description: ForgeYields protocol verification cases.
+implementation_ids:
+  - contracts
+case_ids:
+  - forgeyields/global_solvency
+source_languages:
+  - solidity

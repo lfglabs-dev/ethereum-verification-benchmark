@@ -10,16 +10,16 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 17,
-    "implementation_count": 17,
-    "active_case_count": 14,
+    "family_count": 18,
+    "implementation_count": 18,
+    "active_case_count": 15,
     "backlog_case_count": 3,
-    "active_task_count": 90,
+    "active_task_count": 97,
     "backlog_task_count": 8,
-    "buildable_case_count": 15,
-    "runnable_task_count": 97,
+    "buildable_case_count": 16,
+    "runnable_task_count": 104,
     "case_stage_counts": {
-      "build_green": 13,
+      "build_green": 14,
       "candidate": 1,
       "proof_complete": 2,
       "scoped": 1
@@ -27,16 +27,16 @@
     "translation_status_counts": {
       "blocked": 1,
       "scoped": 1,
-      "translated": 15
+      "translated": 16
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 8,
+      "complete": 9,
       "not_started": 1,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 97,
+      "proof-only": 104,
       "translation-only": 1
     },
     "task_property_class_counts": {
@@ -51,6 +51,7 @@
       "compilation": 1,
       "exploit_trace": 1,
       "frame_property": 2,
+      "guarded_solvency": 7,
       "isOwner_effect": 3,
       "linked_list_acyclicity": 4,
       "linked_list_invariant": 8,
@@ -78,12 +79,12 @@
     "task_proof_family_counts": {
       "authorization_enablement": 14,
       "functional_correctness": 28,
-      "protocol_transition_correctness": 15,
+      "protocol_transition_correctness": 22,
       "refinement_equivalence": 9,
       "state_preservation_local_effects": 32
     },
     "family_split_counts": {
-      "active": 14,
+      "active": 15,
       "backlog": 3
     }
   },
@@ -155,6 +156,23 @@
         "vyper"
       ],
       "manifest_path": "families/ethereum/family.yaml"
+    },
+    {
+      "family_id": "forgeyields",
+      "display_name": "ForgeYields",
+      "split": "active",
+      "status": "active",
+      "description": "ForgeYields protocol verification cases.",
+      "implementation_ids": [
+        "contracts"
+      ],
+      "case_ids": [
+        "forgeyields/global_solvency"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/forgeyields/family.yaml"
     },
     {
       "family_id": "kleros",
@@ -442,6 +460,22 @@
       ],
       "notes": "Canonical validator deposit contract used for the minimal counter and threshold slice translated into Lean.",
       "manifest_path": "families/ethereum/implementations/deposit_contract/implementation.yaml"
+    },
+    {
+      "family_id": "forgeyields",
+      "implementation_id": "contracts",
+      "display_name": "ForgeYields Contracts",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code",
+      "upstream_commit": "etherscan-verified-source",
+      "source_language": "solidity",
+      "source_artifact_path": "TokenGateway.sol",
+      "case_ids": [
+        "forgeyields/global_solvency"
+      ],
+      "notes": "Focused TokenGateway accounting implementation entry for the guarded global-solvency benchmark.",
+      "manifest_path": "families/forgeyields/implementations/contracts/implementation.yaml"
     },
     {
       "family_id": "kleros",
@@ -830,6 +864,56 @@
       "proof_target": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs"
     },
     {
+      "case_id": "forgeyields/global_solvency",
+      "project": "forgeyields",
+      "case_name": "global_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/forgeyields/global_solvency/case.yaml",
+      "split": "active",
+      "family_id": "forgeyields",
+      "implementation_id": "contracts",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code",
+      "upstream_commit": "etherscan-verified-source",
+      "original_contract_path": "TokenGateway.sol",
+      "source_ref": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol",
+      "selected_functions": [
+        "deposit",
+        "requestRedeem",
+        "claimRedeem",
+        "redeemTokenGatewayDepreciated",
+        "transferRemote",
+        "handle",
+        "report"
+      ],
+      "lean_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Compile",
+      "failure_reason": null,
+      "notes": "Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.",
+      "buildable": true,
+      "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "guarded_depreciation_invariant",
+        "ghost_erc20_balance",
+        "decoded_message_inputs",
+        "bridge_external_call_elided"
+      ],
+      "abstraction_notes": "Focused TokenGateway accounting slice for the guarded global-solvency invariant: while `depreciated == 0`, the gateway's ghost ERC20 balance covers `buffer` plus `_redeemInfo.assetsLocked`. The invariant is intentionally vacuous after depreciation mode, matching ForgeYields' clarification that active code no longer uses `_redeemInfo.assetsLocked`.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "hyperlane_bridge_calls_elided",
+        "bytes_report_parsing_decoded"
+      ],
+      "spec_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Specs",
+      "proof_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs"
+    },
+    {
       "case_id": "kleros/sortition_trees",
       "project": "kleros",
       "case_name": "sortition_trees",
@@ -1177,7 +1261,7 @@
       "failure_reason": null,
       "notes": "This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case is scoped against a pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.",
       "buildable": false,
-      "verity_commit": "f28f1ba4d7741f2f0794c0571cd181e480d5a5fd",
+      "verity_commit": "b2f2ee402fd56b59e19df39752f7da039f3df4eb",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
@@ -1193,9 +1277,12 @@
         "nonreentrant_modeled",
         "keccak256_literal_typehash"
       ],
-      "abstraction_notes": "Verity model of `UnlinkPool` (Unlink privacy pool implementation). Protocol- specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier router) are routed through assumed-status external boundaries with named axioms, per the `unlink-verity` package split documented in `docs/ROADMAP.md` \"Unlink Audit Readiness\". UUPS proxy semantics are modeled as the implementation contract itself (proxy storage rotation is host-level and tracked under verity#1420). The model uses every Solidity-feature-parity primitive that landed in verity through PRs #1782 (selfbalance), #1795 (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254 precompile ECMs + `keccak256_lit` literal sugar). Three public entry points are SCOPED but not yet TRANSLATED because they receive `Transaction[] calldata` / `WithdrawalTransaction[] calldata` parameter shapes whose struct elements contain nested dynamic members (`uint256[] nullifierHashes`, `uint256[] newCommitments`, `Ciphertext[] ciphertexts`). The Verity macro currently accepts dynamic struct arrays with static-tuple elements (CurveCut[] shape from termmax #1750/#1758) and decodes nested dynamic member leaf words via `Expr.arrayElementDynamicWord`, but rejects struct-parameter projection from an ABI-dynamic-root at `Verity/Macro/Translate.lean:1715`. Tracked as a dedicated issue under verity#1832 (umbrella: verity#1760). Once that lands, `transfer`, `withdraw`, and `emergencyWithdraw` can be filled in from the Solidity source 1:1. Source confirmation (pinned commit 4bc46c1f): there is NO `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` \u2014 `UnlinkAdapter` was deleted upstream in `d9c8948 chore(contracts): delete UnlinkAdapter + strip adapter surface (UE-425)` predating our pin. The umbrella verity#1760 references the older multi-relayer release that still carried the adapter surface. With the adapter removed, the case scope is `UnlinkPool` only. Spec modules ported from the local scratchpad:   - `InternalLazyIMT.lean`: full LazyIMT spec (Z_0..Z_32 tower,     `_init`, `_insert`, `_update`, `_root`, `_rootWithDepth`,     `_levels`, `_merkleProofElements`). Pure Lean spec used by the     pool's `_insertLeaves` path.   - `State.lean`: `StateStorage` record + `_initializeState`,     `_insertLeaves`, `_spend`, `_setVerifierRouter` helpers operating     over the LazyIMT spine + nullifier set + verifier-router. `verity_contract UnlinkPool` ships in `Contract.lean` covering:   - all admin / view / lifecycle functions: `constructor`,     `initialize`, `addRelayer`, `removeRelayer`, `setVerifierRouter`,     `transferOwnership`, `acceptOwnership`, `renounceOwnership`,     `isRelayer`, `hashNote`, `_checkRelayer`.   - `deposit` translation is gated by verity#1824 (Array-param helper     lowering) \u2014 `_validateAndCollectDeposit` /     `_transferWithBalanceCheck` / `_insertLeaves` can't be factored     into internal helpers that accept `Array Note` / `Array Uint256`     parameters until that ships. The blocked entry points have explicit `BLOCKED(verity#1832):` markers in `Contract.lean`.",
+      "abstraction_notes": "Verity model of `UnlinkPool` (Unlink privacy pool implementation). Protocol- specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier router) are routed through assumed-status external boundaries with named axioms, per the `unlink-verity` package split documented in `docs/ROADMAP.md` \"Unlink Audit Readiness\". UUPS proxy semantics are modeled as the implementation contract itself (proxy storage rotation is host-level and tracked under verity#1420). The model uses every Solidity-feature-parity primitive that landed in verity through PRs #1782 (selfbalance), #1795 (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254 precompile ECMs + `keccak256_lit` literal sugar). Three public entry points are SCOPED but not yet TRANSLATED. The PARAMETER-SHAPE side of the blocker (struct-parameter projection from an ABI-dynamic root for single-word static leaves) shipped via verity#1832 / verity#1843 on top of verity#1841 and verity#1842, and the lakefile pin has been bumped past those PRs. An empirical pilot (`pilot/transfer-body-1832`, 2026-05-13) confirmed that the macro now accepts `Array Transaction` / `Array WithdrawalTransaction` parameters and reads single-word static leaves of their elements (`(arrayElement _ i).circuitId` / `.merkleRoot` / `.contextHash`), but cannot yet express the per-tx body. Three further macro capabilities are required, tracked under verity#1849:   * G1 \u2014 `arrayLength` on a struct-element dynamic member     (`txn.nullifierHashes.length`).   * G2 \u2014 element indexing of struct-element dynamic members     (`txn.nullifierHashes[k]`).   * G3 \u2014 forwarding dynamic-array values to `tryExternalCall` / `emit` /     `revertError` argument lists. Combined with verity#1824 (internal helpers with `Array` parameters cannot be lowered), these are the final Verity-core gates on `transfer`, `withdraw`, and `emergencyWithdraw`. Source confirmation (pinned commit 4bc46c1f): there is NO `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` \u2014 `UnlinkAdapter` was deleted upstream in `d9c8948 chore(contracts): delete UnlinkAdapter + strip adapter surface (UE-425)` predating our pin. The umbrella verity#1760 references the older multi-relayer release that still carried the adapter surface. With the adapter removed, the case scope is `UnlinkPool` only. Spec modules ported from the local scratchpad:   - `InternalLazyIMT.lean`: full LazyIMT spec (Z_0..Z_32 tower,     `_init`, `_insert`, `_update`, `_root`, `_rootWithDepth`,     `_levels`, `_merkleProofElements`). Pure Lean spec used by the     pool's `_insertLeaves` path.   - `State.lean`: `StateStorage` record + `_initializeState`,     `_insertLeaves`, `_spend`, `_setVerifierRouter` helpers operating     over the LazyIMT spine + nullifier set + verifier-router. `verity_contract UnlinkPool` ships in `Contract.lean` covering:   - all admin / view / lifecycle functions: `constructor`,     `initialize`, `addRelayer`, `removeRelayer`, `setVerifierRouter`,     `transferOwnership`, `acceptOwnership`, `renounceOwnership`,     `isRelayer`, `hashNote`, `_checkRelayer`.   - `deposit` translation is gated by verity#1824 (Array-param helper     lowering) \u2014 `_validateAndCollectDeposit` /     `_transferWithBalanceCheck` / `_insertLeaves` can't be factored     into internal helpers that accept `Array Note` / `Array Uint256`     parameters until that ships. The blocked entry points have explicit `PENDING TRANSLATION` markers in `Contract.lean` referencing verity#1849 (G1/G2/G3) and verity#1824.",
       "unsupported_feature_codes": [
-        "nested_dynamic_struct_array_param",
+        "struct_array_element_dynamic_member_arrayLength",
+        "struct_array_element_dynamic_member_index",
+        "dynamic_array_forwarding_to_external_emit_revert",
+        "internal_helper_array_param_lowering",
         "uups_proxy_storage_rotation_not_modeled",
         "bn254_precompile_probes_via_ecm_assumed",
         "poseidon_assumed_axiom",
@@ -2149,6 +2236,349 @@
       "abstraction_notes": "This task isolates the non-full-deposit branch: deposits below the full threshold must leave the full-deposit counter unchanged.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "forgeyields/global_solvency/claim_redeem_preserves_global_solvency",
+      "task_id": "claim_redeem_preserves_global_solvency",
+      "case_id": "forgeyields/global_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/claim_redeem_preserves_global_solvency.yaml",
+      "split": "active",
+      "family_id": "forgeyields",
+      "implementation_id": "contracts",
+      "source_ref": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "guarded_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.claimRedeem_preserves_global_solvency",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/ClaimRedeemPreservesGlobalSolvency.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused TokenGateway accounting proof for the guarded active-mode solvency invariant.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "hyperlane_bridge_calls_elided",
+        "bytes_report_parsing_decoded"
+      ],
+      "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "forgeyields/global_solvency/deposit_preserves_global_solvency",
+      "task_id": "deposit_preserves_global_solvency",
+      "case_id": "forgeyields/global_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/deposit_preserves_global_solvency.yaml",
+      "split": "active",
+      "family_id": "forgeyields",
+      "implementation_id": "contracts",
+      "source_ref": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "guarded_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.deposit_preserves_global_solvency",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/DepositPreservesGlobalSolvency.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused TokenGateway accounting proof for the guarded active-mode solvency invariant.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "hyperlane_bridge_calls_elided",
+        "bytes_report_parsing_decoded"
+      ],
+      "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+      "task_id": "handle_preserves_global_solvency",
+      "case_id": "forgeyields/global_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/handle_preserves_global_solvency.yaml",
+      "split": "active",
+      "family_id": "forgeyields",
+      "implementation_id": "contracts",
+      "source_ref": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "guarded_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.handle_preserves_global_solvency",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/HandlePreservesGlobalSolvency.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused TokenGateway accounting proof for the guarded active-mode solvency invariant.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "hyperlane_bridge_calls_elided",
+        "bytes_report_parsing_decoded"
+      ],
+      "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency",
+      "task_id": "redeem_token_gateway_depreciated_preserves_global_solvency",
+      "case_id": "forgeyields/global_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/redeem_token_gateway_depreciated_preserves_global_solvency.yaml",
+      "split": "active",
+      "family_id": "forgeyields",
+      "implementation_id": "contracts",
+      "source_ref": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "guarded_solvency",
+      "category": "invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.redeemTokenGatewayDepreciated_preserves_global_solvency",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/RedeemTokenGatewayDepreciatedPreservesGlobalSolvency.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused TokenGateway accounting proof for the guarded active-mode solvency invariant.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "hyperlane_bridge_calls_elided",
+        "bytes_report_parsing_decoded"
+      ],
+      "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency",
+      "task_id": "report_preserves_global_solvency",
+      "case_id": "forgeyields/global_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/report_preserves_global_solvency.yaml",
+      "split": "active",
+      "family_id": "forgeyields",
+      "implementation_id": "contracts",
+      "source_ref": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "guarded_solvency",
+      "category": "invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.report_preserves_global_solvency",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/ReportPreservesGlobalSolvency.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused TokenGateway accounting proof for the guarded active-mode solvency invariant.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "hyperlane_bridge_calls_elided",
+        "bytes_report_parsing_decoded"
+      ],
+      "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "forgeyields/global_solvency/request_redeem_preserves_global_solvency",
+      "task_id": "request_redeem_preserves_global_solvency",
+      "case_id": "forgeyields/global_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/request_redeem_preserves_global_solvency.yaml",
+      "split": "active",
+      "family_id": "forgeyields",
+      "implementation_id": "contracts",
+      "source_ref": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "guarded_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.requestRedeem_preserves_global_solvency",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/RequestRedeemPreservesGlobalSolvency.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused TokenGateway accounting proof for the guarded active-mode solvency invariant.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "hyperlane_bridge_calls_elided",
+        "bytes_report_parsing_decoded"
+      ],
+      "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "forgeyields/global_solvency/transfer_remote_preserves_global_solvency",
+      "task_id": "transfer_remote_preserves_global_solvency",
+      "case_id": "forgeyields/global_solvency",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/transfer_remote_preserves_global_solvency.yaml",
+      "split": "active",
+      "family_id": "forgeyields",
+      "implementation_id": "contracts",
+      "source_ref": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "guarded_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.transferRemote_preserves_global_solvency",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused TokenGateway accounting proof for the guarded active-mode solvency invariant.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "hyperlane_bridge_calls_elided",
+        "bytes_report_parsing_decoded"
+      ],
+      "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -5857,5 +6287,5 @@
       }
     }
   ],
-  "generated_at": "2026-05-12T15:13:35.130964+00:00"
+  "generated_at": "2026-05-13T09:19:39.379066+00:00"
 }

@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 17
-- Implementations: 17
-- Active cases: 14
-- Buildable active cases: 13
-- Active tasks: 90
+- Families: 18
+- Implementations: 18
+- Active cases: 15
+- Buildable active cases: 14
+- Active tasks: 97
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -52,6 +52,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `deposit`
 - Source artifact: `deposit_contract/contracts/validator_registration.v.py`
 - Notes: Counter-oriented slice of the deposit path. Merkle tree, SSZ hashing, and log emission are omitted so the benchmark can focus on threshold-driven state updates.
+
+### `forgeyields/global_solvency`
+- Family / implementation: `forgeyields` / `contracts`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.ForgeYields.GlobalSolvency.Compile`
+- Source ref: `https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol`
+- Selected functions: `deposit`, `requestRedeem`, `claimRedeem`, `redeemTokenGatewayDepreciated`, `transferRemote`, `handle`, `report`
+- Source artifact: `TokenGateway.sol`
+- Notes: Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.
 
 ### `kleros/sortition_trees`
 - Family / implementation: `kleros` / `kleros_v2`
@@ -316,6 +326,76 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/ethereum/deposit_contract_minimal/verity/Specs.lean`, `Benchmark/Cases/Ethereum/DepositContractMinimal/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Ethereum/DepositContractMinimal/Tasks/SmallDepositPreservesFullCount.lean`
 - Hidden reference solution: `Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs`
+
+### `forgeyields/global_solvency/claim_redeem_preserves_global_solvency`
+- Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.claimRedeem_preserves_global_solvency`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
+- Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/ClaimRedeemPreservesGlobalSolvency.lean`
+- Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `forgeyields/global_solvency/deposit_preserves_global_solvency`
+- Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.deposit_preserves_global_solvency`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
+- Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/DepositPreservesGlobalSolvency.lean`
+- Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `forgeyields/global_solvency/handle_preserves_global_solvency`
+- Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.handle_preserves_global_solvency`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
+- Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/HandlePreservesGlobalSolvency.lean`
+- Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency`
+- Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.redeemTokenGatewayDepreciated_preserves_global_solvency`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
+- Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/RedeemTokenGatewayDepreciatedPreservesGlobalSolvency.lean`
+- Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `forgeyields/global_solvency/report_preserves_global_solvency`
+- Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.report_preserves_global_solvency`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
+- Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/ReportPreservesGlobalSolvency.lean`
+- Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `forgeyields/global_solvency/request_redeem_preserves_global_solvency`
+- Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.requestRedeem_preserves_global_solvency`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
+- Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/RequestRedeemPreservesGlobalSolvency.lean`
+- Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `forgeyields/global_solvency/transfer_remote_preserves_global_solvency`
+- Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.transferRemote_preserves_global_solvency`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
+- Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean`
+- Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
 
 ### `kleros/sortition_trees/draw_interval_matches_weights`
 - Track / property class / proof family: `proof-only` / `weighted_selection` / `functional_correctness`

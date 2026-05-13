@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: request_redeem_preserves_global_solvency
+case_id: forgeyields/global_solvency
+split: active
+family_id: forgeyields
+implementation_id: contracts
+source_ref: https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.ForgeYields.GlobalSolvency.requestRedeem_preserves_global_solvency
+proof_family: protocol_transition_correctness
+property_class: guarded_solvency
+difficulty: medium
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/forgeyields/global_solvency/verity/Contract.lean
+  - Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean
+specification_files:
+  - cases/forgeyields/global_solvency/verity/Specs.lean
+  - Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean
+editable_files:
+  - Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/RequestRedeemPreservesGlobalSolvency.lean
+reference_solution_module: Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs
+reference_solution_declaration: Benchmark.Cases.ForgeYields.GlobalSolvency.requestRedeem_preserves_global_solvency
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Focused TokenGateway accounting proof for the guarded active-mode solvency invariant.
+unsupported_feature_codes:
+  - external_erc20_balance_ghosted
+  - hyperlane_bridge_calls_elided
+  - bytes_report_parsing_decoded
