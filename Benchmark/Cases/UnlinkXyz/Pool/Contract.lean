@@ -344,8 +344,8 @@ verity_contract UnlinkPool where
   (UE-425)` predating our pin `4bc46c1f`; the umbrella issue verity#1760
   references the older multi-relayer release).
 
-  The macro surface that previously blocked these entry points landed in
-  verity main on 2026-05-12 via:
+  The PARAMETER-SHAPE side of the blocker landed in verity main on
+  2026-05-12 via:
 
     * verity#1841 — fixed `genDynamicParamLoads` off-by-one for
       dynamic-tuple parameters (`Compiler/CompilationModel/ParamLoading.lean`
@@ -361,13 +361,36 @@ verity_contract UnlinkPool where
       routed direct dynamic-tuple parameter leaf projections through
       `paramDynamicHeadProjection?` in `Verity/Macro/Translate.lean`.
 
-  The lakefile pin now points at `cf5cb844` (post-#1843), so writing the
-  bodies translates directly against `UnlinkPool.sol:309-583`. The
-  remaining work — `_validateContext` / `_verifyProof` / `_spendNullifiers`
-  / `_insertLeaves` / `_transferWithBalanceCheck` decomposition,
-  per-transaction loop, per-token deltas, and the per-tx oracle call
-  through `tryExternalCall "getCircuit" [routerAddr, txn.circuitId]` —
-  is a follow-up PR.
+  The lakefile pin now points past those PRs at `b2f2ee40`
+  (verity-benchmark#44), so `Array Transaction` / `Array WithdrawalTransaction`
+  parameters and SINGLE-WORD STATIC LEAF projections from their elements
+  (`(arrayElement _transactions i).circuitId`,
+  `(arrayElement _transactions i).merkleRoot`,
+  `(arrayElement _transactions i).contextHash`) now lower cleanly.
+
+  HOWEVER, an empirical pilot (`pilot/transfer-body-1832`,
+  2026-05-13) confirmed that the bodies still cannot be translated
+  line-by-line against `UnlinkPool.sol:309-583`. Three further macro
+  capabilities are missing, tracked under verity#1849:
+
+    * G1 — `arrayLength (arrayElement _ i).<dynamicMember>` (need
+      `txn.nullifierHashes.length`, `txn.ciphertexts.length`,
+      `txn.newCommitments.length` for the per-tx shape checks).
+    * G2 — `arrayElement (arrayElement _ i).<dynamicMember> k` (need
+      `txn.nullifierHashes[k]` for the per-tx nullifier loop).
+    * G3 — passing dynamic-array values to `tryExternalCall` / `emit` /
+      `revertError` argument lists (need to forward `txn.nullifierHashes`,
+      `txn.newCommitments`, `txn.ciphertexts` to the verifier external
+      and the `Transferred` / `Withdrawn` / `EmergencyWithdrawn`
+      events).
+
+  Together with verity#1824 (internal helpers with `Array` parameters
+  cannot be lowered, which forces an inlined body even after G1–G3),
+  these are the remaining Verity-core gates on `transfer` / `withdraw` /
+  `emergencyWithdraw`. Until G1–G3 land, the macro accepts the parameter
+  SHAPES but cannot express the bodies. See verity#1849 for the
+  reproducer, `Verity/Macro/Translate.lean` line references, and the
+  proposed minimal lifts.
 
   ============================================================================
 
