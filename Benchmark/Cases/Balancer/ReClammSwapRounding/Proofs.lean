@@ -193,21 +193,17 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
       simp [hExactFalse, balanceOf, virtualBalanceOf] at hExactOutNumeratorNoOverflow
       have hQuoteAndReq :
           amountCalculatedScaled18 =
-              (ite (mul (add balanceA virtualBalanceA) amountGivenScaled18 == 0) 0
-                (add
-                  (div (sub (mul (add balanceA virtualBalanceA) amountGivenScaled18) 1)
-                    (sub (add balanceB virtualBalanceB) amountGivenScaled18))
-                  1)) ∧
+              mulDivUp (add balanceA virtualBalanceA) amountGivenScaled18
+                (sub (add balanceB virtualBalanceB) amountGivenScaled18) ∧
             amountGivenScaled18.val ≤ balanceB.val := by
         have h10 : (1 : Uint256) ≠ 0 := by decide
         unfold ReClammPool.onSwap at hRun
         simp [hExactFalse, Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run,
           Verity.require, h10] at hRun
-        split_ifs at hRun with hOut hDen hNum <;> simp at hRun
+        split_ifs at hRun with hOut hDen <;> simp at hRun
         all_goals
           constructor
-          · simp [hNum]
-            exact hRun.symm
+          · exact hRun.symm
           · exact hOut
       rcases hQuoteAndReq with ⟨hQuote, hOutReq⟩
       have hAddA : (add balanceA virtualBalanceA).val = balanceA.val + virtualBalanceA.val :=
@@ -228,7 +224,7 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
         unfold ReClammPool.onSwap at hRunCopy
         simp [hExactFalse, Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run,
           Verity.require, h10] at hRunCopy
-        split_ifs at hRunCopy with hOut hDen hNum <;> simp at hRunCopy
+        split_ifs at hRunCopy with hOut hDen <;> simp at hRunCopy
         all_goals exact fun h => hOut (Verity.Core.Uint256.ext h)
       have hNumExact :
           (mul (add balanceA virtualBalanceA) amountGivenScaled18).val =
@@ -242,7 +238,7 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
               (balanceB.val + virtualBalanceB.val - amountGivenScaled18.val)
             ≥
           (balanceA.val + virtualBalanceA.val) * amountGivenScaled18.val := by
-        rw [hQuote, ← hDenExact, ← hNumExact]
+        rw [hQuote, mulDivUp, ← hDenExact, ← hNumExact]
         exact ceil_sub_one_div_mul_ge _ _ hDenValNe
       unfold onSwap_fixed_virtual_balances_product_non_decreasing_spec
       unfold postInvariantNat invariantNat postBalanceA postBalanceB totalNat
@@ -345,21 +341,17 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
       simp [hExactFalse, balanceOf, virtualBalanceOf] at hExactOutNumeratorNoOverflow
       have hQuoteAndReq :
           amountCalculatedScaled18 =
-              (ite (mul (add balanceB virtualBalanceB) amountGivenScaled18 == 0) 0
-                (add
-                  (div (sub (mul (add balanceB virtualBalanceB) amountGivenScaled18) 1)
-                    (sub (add balanceA virtualBalanceA) amountGivenScaled18))
-                  1)) ∧
+              mulDivUp (add balanceB virtualBalanceB) amountGivenScaled18
+                (sub (add balanceA virtualBalanceA) amountGivenScaled18) ∧
             amountGivenScaled18.val ≤ balanceA.val := by
         have h10 : (1 : Uint256) ≠ 0 := by decide
         unfold ReClammPool.onSwap at hRun
         simp [hExactFalse, Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run,
           Verity.require, h10] at hRun
-        split_ifs at hRun with hOut hDen hNum <;> simp at hRun
+        split_ifs at hRun with hOut hDen <;> simp at hRun
         all_goals
           constructor
-          · simp [hNum]
-            exact hRun.symm
+          · exact hRun.symm
           · exact hOut
       rcases hQuoteAndReq with ⟨hQuote, hOutReq⟩
       have hAddA : (add balanceA virtualBalanceA).val = balanceA.val + virtualBalanceA.val :=
@@ -380,7 +372,7 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
         unfold ReClammPool.onSwap at hRunCopy
         simp [hExactFalse, Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run,
           Verity.require, h10] at hRunCopy
-        split_ifs at hRunCopy with hOut hDen hNum <;> simp at hRunCopy
+        split_ifs at hRunCopy with hOut hDen <;> simp at hRunCopy
         all_goals exact fun h => hOut (Verity.Core.Uint256.ext h)
       have hNumExact :
           (mul (add balanceB virtualBalanceB) amountGivenScaled18).val =
@@ -394,7 +386,7 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
               (balanceA.val + virtualBalanceA.val - amountGivenScaled18.val)
             ≥
           (balanceB.val + virtualBalanceB.val) * amountGivenScaled18.val := by
-        rw [hQuote, ← hDenExact, ← hNumExact]
+        rw [hQuote, mulDivUp, ← hDenExact, ← hNumExact]
         exact ceil_sub_one_div_mul_ge _ _ hDenValNe
       unfold onSwap_fixed_virtual_balances_product_non_decreasing_spec
       unfold postInvariantNat invariantNat postBalanceA postBalanceB totalNat

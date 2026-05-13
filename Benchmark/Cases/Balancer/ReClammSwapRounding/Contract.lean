@@ -158,9 +158,8 @@ verity_contract ReClammMath where
     -- src: ReClammMath.sol:228-233 — ceil input amount via FixedPoint.mulDivUp.
     let denominator := sub (add balanceTokenOut virtualBalanceTokenOut) amountOutScaled18
     require (denominator != 0) "DivisionByZero"
-    let numeratorBase := add balanceTokenIn virtualBalanceTokenIn
-    let numerator := mul numeratorBase amountOutScaled18
-    let amountInScaled18 := ite (numerator == 0) 0 (add (div (sub numerator 1) denominator) 1)
+    let amountInScaled18 :=
+      mulDivUp (add balanceTokenIn virtualBalanceTokenIn) amountOutScaled18 denominator
     return amountInScaled18
 
 verity_contract ReClammPool where
@@ -197,9 +196,8 @@ verity_contract ReClammPool where
       let balanceTokenIn := ite (indexIn == 0) balanceA balanceB
       let denominator := sub (add balanceTokenOut virtualBalanceTokenOut) amountGivenScaled18
       require (denominator != 0) "DivisionByZero"
-      let numeratorBase := add balanceTokenIn virtualBalanceTokenIn
-      let numerator := mul numeratorBase amountGivenScaled18
-      let amountCalculatedScaled18 := ite (numerator == 0) 0 (add (div (sub numerator 1) denominator) 1)
+      let amountCalculatedScaled18 :=
+        mulDivUp (add balanceTokenIn virtualBalanceTokenIn) amountGivenScaled18 denominator
       return amountCalculatedScaled18
 
 end Benchmark.Cases.Balancer.ReClammSwapRounding
