@@ -32,7 +32,7 @@ selected_functions:
   - acceptOwnership
   - renounceOwnership
 source_language: solidity
-verity_version: f28f1ba4d7741f2f0794c0571cd181e480d5a5fd
+verity_version: b2f2ee402fd56b59e19df39752f7da039f3df4eb
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -59,18 +59,26 @@ abstraction_notes: >
   (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254
   precompile ECMs + `keccak256_lit` literal sugar).
 
-  Three public entry points are SCOPED but not yet TRANSLATED because
-  they receive `Transaction[] calldata` / `WithdrawalTransaction[] calldata`
-  parameter shapes whose struct elements contain nested dynamic members
-  (`uint256[] nullifierHashes`, `uint256[] newCommitments`,
-  `Ciphertext[] ciphertexts`). The Verity macro currently accepts dynamic
-  struct arrays with static-tuple elements (CurveCut[] shape from termmax
-  #1750/#1758) and decodes nested dynamic member leaf words via
-  `Expr.arrayElementDynamicWord`, but rejects struct-parameter projection
-  from an ABI-dynamic-root at `Verity/Macro/Translate.lean:1715`. Tracked
-  as a dedicated issue under verity#1832 (umbrella: verity#1760). Once
-  that lands, `transfer`, `withdraw`, and `emergencyWithdraw` can be
-  filled in from the Solidity source 1:1.
+  Three public entry points are SCOPED but not yet TRANSLATED. The
+  PARAMETER-SHAPE side of the blocker (struct-parameter projection from
+  an ABI-dynamic root for single-word static leaves) shipped via
+  verity#1832 / verity#1843 on top of verity#1841 and verity#1842, and the
+  lakefile pin has been bumped past those PRs. An empirical pilot
+  (`pilot/transfer-body-1832`, 2026-05-13) confirmed that the macro now
+  accepts `Array Transaction` / `Array WithdrawalTransaction` parameters
+  and reads single-word static leaves of their elements
+  (`(arrayElement _ i).circuitId` / `.merkleRoot` / `.contextHash`), but
+  cannot yet express the per-tx body. Three further macro capabilities
+  are required, tracked under verity#1849:
+    * G1 — `arrayLength` on a struct-element dynamic member
+      (`txn.nullifierHashes.length`).
+    * G2 — element indexing of struct-element dynamic members
+      (`txn.nullifierHashes[k]`).
+    * G3 — forwarding dynamic-array values to `tryExternalCall` / `emit` /
+      `revertError` argument lists.
+  Combined with verity#1824 (internal helpers with `Array` parameters
+  cannot be lowered), these are the final Verity-core gates on
+  `transfer`, `withdraw`, and `emergencyWithdraw`.
 
   Source confirmation (pinned commit 4bc46c1f): there is NO
   `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` —
@@ -100,10 +108,13 @@ abstraction_notes: >
       into internal helpers that accept `Array Note` / `Array Uint256`
       parameters until that ships.
 
-  The blocked entry points have explicit `BLOCKED(verity#1832):`
-  markers in `Contract.lean`.
+  The blocked entry points have explicit `PENDING TRANSLATION` markers
+  in `Contract.lean` referencing verity#1849 (G1/G2/G3) and verity#1824.
 unsupported_feature_codes:
-  - nested_dynamic_struct_array_param
+  - struct_array_element_dynamic_member_arrayLength
+  - struct_array_element_dynamic_member_index
+  - dynamic_array_forwarding_to_external_emit_revert
+  - internal_helper_array_param_lowering
   - uups_proxy_storage_rotation_not_modeled
   - bn254_precompile_probes_via_ecm_assumed
   - poseidon_assumed_axiom
