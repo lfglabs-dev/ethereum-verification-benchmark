@@ -428,47 +428,47 @@ verity_contract UnlinkPool where
     let txLen := arrayLength transactions
     requireError (txLen != 0) PoolEmptyTransactions()
     forEach "i" txLen (do
+      let txn := arrayElement transactions i
       let verifierRouter ← getStorageAddr stateVerifierRouter
       let (success, verifier, inputCount, outputCount, active) ←
         tryExternalCall "getCircuit"
-          [verifierRouter, (arrayElement transactions i).circuitId]
+          [verifierRouter, txn.circuitId]
       let verifierWord := add verifier 0
       let activeWord := add active 0
       requireError success PoolCircuitNotRegistered()
       requireError (verifierWord != 0) PoolCircuitNotRegistered()
       requireError (activeWord != 0) PoolCircuitInactive()
-      requireError ((arrayLength (arrayElement transactions i).nullifierHashes) == inputCount)
+      requireError ((arrayLength txn.nullifierHashes) == inputCount)
         PoolInvalidInputShape()
-      requireError ((arrayLength (arrayElement transactions i).newCommitments) == outputCount)
+      requireError ((arrayLength txn.newCommitments) == outputCount)
         PoolInvalidOutputShape()
-      let ciphertextCount ← countNonZero (arrayElement transactions i).newCommitments
+      let ciphertextCount ← countNonZero txn.newCommitments
         0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-      requireError ((arrayLength (arrayElement transactions i).ciphertexts) == ciphertextCount)
+      requireError ((arrayLength txn.ciphertexts) == ciphertextCount)
         PoolCiphertextCountMismatch()
-      let computedContext ← computeContextHash (arrayElement transactions i).ciphertexts
-      validateContext (arrayElement transactions i).merkleRoot
-        (arrayElement transactions i).contextHash computedContext
+      let computedContext ← computeContextHash txn.ciphertexts
+      validateContext txn.merkleRoot txn.contextHash computedContext
       let (proofOk, ok) ← tryExternalCall "verifySpend"
         [verifierWord,
-         abiHeadWord (arrayElement transactions i) 0,
-         abiHeadWord (arrayElement transactions i) 1,
-         abiHeadWord (arrayElement transactions i) 2,
-         abiHeadWord (arrayElement transactions i) 3,
-         abiHeadWord (arrayElement transactions i) 4,
-         abiHeadWord (arrayElement transactions i) 5,
-         abiHeadWord (arrayElement transactions i) 6,
-         abiHeadWord (arrayElement transactions i) 7,
-         (arrayElement transactions i).merkleRoot,
-         (arrayElement transactions i).contextHash,
-         (arrayElement transactions i).nullifierHashes,
-         (arrayElement transactions i).newCommitments]
+         abiHeadWord txn 0,
+         abiHeadWord txn 1,
+         abiHeadWord txn 2,
+         abiHeadWord txn 3,
+         abiHeadWord txn 4,
+         abiHeadWord txn 5,
+         abiHeadWord txn 6,
+         abiHeadWord txn 7,
+         txn.merkleRoot,
+         txn.contextHash,
+         txn.nullifierHashes,
+         txn.newCommitments]
       requireError proofOk PoolProofVerificationFailed()
       requireError ok PoolProofVerificationFailed()
-      spendNullifiers (arrayElement transactions i).nullifierHashes
+      spendNullifiers txn.nullifierHashes
       let startIndex ← nextLeafIndex
       let mut newRoot := startIndex
-      forEach "m" (arrayLength (arrayElement transactions i).newCommitments) (do
-        let leaf := arrayElement (arrayElement transactions i).newCommitments m
+      forEach "m" (arrayLength txn.newCommitments) (do
+        let leaf := arrayElement txn.newCommitments m
         if leaf != 0 then
           newRoot := add newRoot leaf
         else
@@ -478,8 +478,8 @@ verity_contract UnlinkPool where
       setStorage lazyNumberOfLeaves (add startIndex ciphertextCount)
       emit "Transferred"
         [newRoot, startIndex, ciphertextCount,
-         arrayLength (arrayElement transactions i).nullifierHashes,
-         arrayLength (arrayElement transactions i).ciphertexts])
+         arrayLength txn.nullifierHashes,
+         arrayLength txn.ciphertexts])
 
   /- `_executeWithdrawal(WithdrawalTransaction calldata _txn, bool _emergency)`
       (UnlinkPool.sol:614-666). -/
