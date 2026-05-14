@@ -32,7 +32,7 @@ selected_functions:
   - acceptOwnership
   - renounceOwnership
 source_language: solidity
-verity_version: b9a6dec13d1115fb57217a5a4b339410e6bb1455
+verity_version: 695cc136c564e0c1ad415971902b659c771c4216
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -105,7 +105,6 @@ unsupported_feature_codes:
   - proof_struct_forwarding_to_verifier
   - memory_array_return_helpers
   - source_faithful_insert_leaves
-  - dynamic_struct_element_helper_argument
   - dynamic_array_event_payloads
   - uups_proxy_storage_rotation_not_modeled
   - bn254_precompile_probes_via_ecm_assumed

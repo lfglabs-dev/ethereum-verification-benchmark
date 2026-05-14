@@ -466,59 +466,53 @@ verity_contract UnlinkPool where
          arrayLength (arrayElement transactions i).ciphertexts])
 
   /- `_executeWithdrawal(WithdrawalTransaction calldata _txn, bool _emergency)`
-      (UnlinkPool.sol:614-666), represented with the source transaction
-      array plus index because the macro cannot pass a dynamic struct-array
-      element value as a first-class helper argument. -/
-  function executeWithdrawal
-      (transactions : Array WithdrawalTransaction, i : Uint256, emergency : Bool)
-      : Unit := do
-    let recipient := wordToAddress ((arrayElement transactions i).withdrawal.npk)
-    requireError ((arrayElement transactions i).withdrawal.amount != 0)
+      (UnlinkPool.sol:614-666). -/
+  function executeWithdrawal (txn : WithdrawalTransaction, emergency : Bool) : Unit := do
+    let recipient := wordToAddress txn.withdrawal.npk
+    requireError (txn.withdrawal.amount != 0)
       PoolInvalidNoteAmount()
-    requireError ((arrayElement transactions i).withdrawal.npk != 0)
+    requireError (txn.withdrawal.npk != 0)
       PoolInvalidNoteNPK()
-    requireError ((arrayElement transactions i).withdrawal.token != zeroAddress)
+    requireError (txn.withdrawal.token != zeroAddress)
       PoolInvalidNoteToken()
-    requireError ((arrayElement transactions i).withdrawal.npk <=
-      0xffffffffffffffffffffffffffffffffffffffff) PoolInvalidWithdrawalRecipient()
+    requireError (txn.withdrawal.npk <= 0xffffffffffffffffffffffffffffffffffffffff)
+      PoolInvalidWithdrawalRecipient()
     let selfAddr ← Verity.contractAddress
     requireError (recipient != selfAddr) PoolInvalidWithdrawalRecipient()
     let (success, verifier, inputCount, outputCount, active) ←
-      tryExternalCall "getCircuit" [(arrayElement transactions i).circuitId]
+      tryExternalCall "getCircuit" [txn.circuitId]
     let verifierWord := add verifier 0
     let activeWord := add active 0
     requireError success PoolCircuitNotRegistered()
     requireError (verifierWord != 0) PoolCircuitNotRegistered()
     requireError (activeWord != 0) PoolCircuitInactive()
-    requireError ((arrayLength (arrayElement transactions i).nullifierHashes) == inputCount)
+    requireError ((arrayLength txn.nullifierHashes) == inputCount)
       PoolInvalidInputShape()
-    requireError ((arrayLength (arrayElement transactions i).newCommitments) == outputCount)
+    requireError ((arrayLength txn.newCommitments) == outputCount)
       PoolInvalidOutputShape()
     let wSlot := sub outputCount 1
-    let withdrawalCommitment := arrayElement (arrayElement transactions i).newCommitments wSlot
+    let withdrawalCommitment := arrayElement txn.newCommitments wSlot
     requireError (withdrawalCommitment != 0) PoolWithdrawalSlotZero()
-    let noteHash := add (arrayElement transactions i).withdrawal.npk
-      (arrayElement transactions i).withdrawal.amount
+    let noteHash := add txn.withdrawal.npk txn.withdrawal.amount
     requireError (withdrawalCommitment == noteHash) PoolInvalidWithdrawalCommitment()
-    let ciphertextCount ← countNonZero (arrayElement transactions i).newCommitments wSlot
-    requireError ((arrayLength (arrayElement transactions i).ciphertexts) == ciphertextCount)
+    let ciphertextCount ← countNonZero txn.newCommitments wSlot
+    requireError ((arrayLength txn.ciphertexts) == ciphertextCount)
       PoolCiphertextCountMismatch()
-    let computedContext ← computeContextHash (arrayElement transactions i).ciphertexts
-    validateContext (arrayElement transactions i).merkleRoot
-      (arrayElement transactions i).contextHash computedContext
+    let computedContext ← computeContextHash txn.ciphertexts
+    validateContext txn.merkleRoot txn.contextHash computedContext
     let (proofOk, ok) ← tryExternalCall "verifySpend"
       [verifierWord,
-       (arrayElement transactions i).merkleRoot,
-       (arrayElement transactions i).contextHash,
-       (arrayElement transactions i).nullifierHashes,
-       (arrayElement transactions i).newCommitments]
+       txn.merkleRoot,
+       txn.contextHash,
+       txn.nullifierHashes,
+       txn.newCommitments]
     requireError proofOk PoolProofVerificationFailed()
     requireError ok PoolProofVerificationFailed()
-    spendNullifiers (arrayElement transactions i).nullifierHashes
+    spendNullifiers txn.nullifierHashes
     let startIndex ← nextLeafIndex
     let mut newRoot := startIndex
     forEach "m" wSlot (do
-      let leaf := arrayElement (arrayElement transactions i).newCommitments m
+      let leaf := arrayElement txn.newCommitments m
       if leaf != 0 then
         newRoot := add newRoot leaf
       else
@@ -526,26 +520,25 @@ verity_contract UnlinkPool where
     setStorage stateMerkleRoot newRoot
     setMappingWord stateRootSeen newRoot 0 1
     setStorage lazyNumberOfLeaves (add startIndex ciphertextCount)
-    settleWithdrawalTransfer (arrayElement transactions i).withdrawal.token recipient
-      (arrayElement transactions i).withdrawal.amount
+    settleWithdrawalTransfer txn.withdrawal.token recipient txn.withdrawal.amount
     if emergency then
       emit "EmergencyWithdrawn"
         [addressToWord recipient,
-         (arrayElement transactions i).withdrawal.npk,
-         addressToWord ((arrayElement transactions i).withdrawal.token),
-         (arrayElement transactions i).withdrawal.amount,
+         txn.withdrawal.npk,
+         addressToWord txn.withdrawal.token,
+         txn.withdrawal.amount,
          newRoot, startIndex, ciphertextCount,
-         arrayLength (arrayElement transactions i).nullifierHashes,
-         arrayLength (arrayElement transactions i).ciphertexts]
+         arrayLength txn.nullifierHashes,
+         arrayLength txn.ciphertexts]
     else
       emit "Withdrawn"
         [addressToWord recipient,
-         (arrayElement transactions i).withdrawal.npk,
-         addressToWord ((arrayElement transactions i).withdrawal.token),
-         (arrayElement transactions i).withdrawal.amount,
+         txn.withdrawal.npk,
+         addressToWord txn.withdrawal.token,
+         txn.withdrawal.amount,
          newRoot, startIndex, ciphertextCount,
-         arrayLength (arrayElement transactions i).nullifierHashes,
-         arrayLength (arrayElement transactions i).ciphertexts]
+         arrayLength txn.nullifierHashes,
+         arrayLength txn.ciphertexts]
 
   /- `function withdraw(WithdrawalTransaction[] calldata _transactions)
       external onlyRelayer nonReentrant` (UnlinkPool.sol:365-372). -/
@@ -557,7 +550,7 @@ verity_contract UnlinkPool where
     let txLen := arrayLength transactions
     requireError (txLen != 0) PoolEmptyTransactions()
     forEach "i" txLen (do
-      executeWithdrawal transactions i false)
+      executeWithdrawal (arrayElement transactions i) false)
 
   /- `function emergencyWithdraw(WithdrawalTransaction[] calldata _transactions)
       external nonReentrant` (UnlinkPool.sol:376-383). -/
@@ -566,7 +559,7 @@ verity_contract UnlinkPool where
     let txLen := arrayLength transactions
     requireError (txLen != 0) PoolEmptyTransactions()
     forEach "i" txLen (do
-      executeWithdrawal transactions i true)
+      executeWithdrawal (arrayElement transactions i) true)
 
 /-
   ============================================================================
