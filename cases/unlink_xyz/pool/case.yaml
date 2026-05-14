@@ -32,7 +32,7 @@ selected_functions:
   - acceptOwnership
   - renounceOwnership
 source_language: solidity
-verity_version: 1ae097e7f6bc0af1e4b97c1bf3fc0198fb23a096
+verity_version: 56b831a53113d1df3a0dc78209a6b25fe6794ba2
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -61,7 +61,7 @@ abstraction_notes: >
   precompile ECMs + `keccak256_lit` literal sugar), plus #1870
   (memory-array helper lowering), #1871 (dynamic-array event sources), #1872
   (array values in executable emit calls), and #1873 (projected static-struct
-  event payloads).
+  event payloads), and #1874 (multi-result ECM binding).
 
   The three public ZK entry points (`transfer`, `withdraw`, and
   `emergencyWithdraw`) now build against `Array Transaction` /
@@ -75,7 +75,8 @@ abstraction_notes: >
   `_insertLeaves` body still uses this scoped model's lightweight LazyIMT
   accumulator boundary.
   `_executeWithdrawal(_transactions[i], bool)` is routed through an internal
-  helper call.
+  helper call. The deploy-time BN254 precompile probe in `initialize` is wired
+  through the 0x06/0x07/0x08 precompile ECMs and the multi-result ECM binder.
 
   Source confirmation (pinned commit 4bc46c1f): there is NO
   `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` —
@@ -109,7 +110,6 @@ abstraction_notes: >
 unsupported_feature_codes:
   - lazy_imt_insert_body_assumed
   - uups_proxy_storage_rotation_not_modeled
-  - bn254_precompile_probes_via_ecm_assumed
   - poseidon_assumed_axiom
   - permit2_assumed_axiom
   - lazy_imt_assumed_axiom

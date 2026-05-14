@@ -42,8 +42,8 @@
   These shapes use struct-array parameters whose elements carry nested
   dynamic members (`uint256[] nullifierHashes`, `Ciphertext[] ciphertexts`,
   etc.). The remaining fidelity gaps are the parts that still need
-  first-class source equivalents in Verity or this model: dynamic array event
-  payloads and the LazyIMT insertion body behind `_insertLeaves`.
+  first-class source equivalents in Verity or this model: the LazyIMT insertion
+  body behind `_insertLeaves`.
 -/
 import Contracts.Common
 import Compiler.Modules.Hashing
@@ -261,18 +261,55 @@ verity_contract UnlinkPool where
       the BN254 precompile ECMs landed by verity#1827. The known-answer
       cross-validation `g1·3 (via 0x07) == g1 + (2·g1) (via 0x06)` is
       preserved exactly. -/
-  function «initialize» (verifierRouter : Address, ownerAddr : Address, relayer : Address)
+  function allow_post_interaction_writes «initialize» (verifierRouter : Address, ownerAddr : Address, relayer : Address)
       initializer(initializedSlot) : Unit := do
-    -- TODO(verity#1827-followup): _checkBn254Precompile known-answer test.
-    -- The BN254 precompile ECMs (`bn256Add` / `bn256ScalarMul` /
-    -- `bn256Pairing` from `Compiler.Modules.Precompiles`) are shipped at
-    -- the CompilationModel-IR level (verity#1827), but the
-    -- `verity_contract` macro surface does not yet have a binding form
-    -- for ECMs that bind multiple result vars (`ecmDo` rejects
-    -- multi-result modules with "ecmDo requires an effect-only ECM
-    -- module"; `ecmCall` is single-return only). The macro extension
-    -- would be a multi-return `ecmBind ["x", "y"] (module ...) [args]`
-    -- form mirroring `externalCallBind`. Filing as a Verity follow-up.
+    let qMinusG1Y := 21888242871839275222246405745257275088696311157297823662689037894645226208581
+    let g2x1 := 11559732032986387107991004021392285783925812861821192530917403151452391805634
+    let g2x2 := 10857046999023057135944570762232829481370756359578518086990519993285655852781
+    let g2y1 := 4082367875863433681332203403145435568316851327593401208105741076214120093531
+    let g2y2 := 8495653923123431417604973247489272438418190587263600148770280649306958101930
+    unsafe "_probePairing calldata buffer" do
+      mstore 0 1
+      mstore 32 2
+      mstore 64 g2x1
+      mstore 96 g2x2
+      mstore 128 g2y1
+      mstore 160 g2y2
+      mstore 192 1
+      mstore 224 qMinusG1Y
+      mstore 256 g2x1
+      mstore 288 g2x2
+      mstore 320 g2y1
+      mstore 352 g2y2
+    let pairA ← ecmCall Compiler.Modules.Precompiles.bn256PairingModule [0, 384, 0]
+    requireError (pairA == 1) PoolPrecompileUnavailable()
+    unsafe "_probePairing calldata buffer restore" do
+      mstore 0 1
+      mstore 32 2
+    let pairB ← ecmCall Compiler.Modules.Precompiles.bn256PairingModule [0, 192, 0]
+    requireError (pairB == 0) PoolPrecompileUnavailable()
+    let twoG1x := 1368015179489954701390400359078579693043519447331113978918064868415326638035
+    let twoG1y := 9918110051302171585080402603319702774565515993150576347155970296011118125764
+    ecmBind [mul2x, mul2y]
+      (Compiler.Modules.Precompiles.bn256ScalarMulModule "mul2x" "mul2y")
+      [1, 2, 2]
+    requireError (mul2x == twoG1x) PoolPrecompileUnavailable()
+    requireError (mul2y == twoG1y) PoolPrecompileUnavailable()
+    ecmBind [mul3x, mul3y]
+      (Compiler.Modules.Precompiles.bn256ScalarMulModule "mul3x" "mul3y")
+      [1, 2, 3]
+    requireError ((mul3x != twoG1x) || (mul3y != twoG1y)) PoolPrecompileUnavailable()
+    ecmBind [add2x, add2y]
+      (Compiler.Modules.Precompiles.bn256AddModule "add2x" "add2y")
+      [1, 2, 1, 2]
+    requireError (add2x == twoG1x) PoolPrecompileUnavailable()
+    requireError (add2y == twoG1y) PoolPrecompileUnavailable()
+    ecmBind [add3x, add3y]
+      (Compiler.Modules.Precompiles.bn256AddModule "add3x" "add3y")
+      [1, 2, twoG1x, twoG1y]
+    requireError ((add3x != twoG1x) || (add3y != twoG1y)) PoolPrecompileUnavailable()
+    requireError (mul3x == add3x) PoolPrecompileUnavailable()
+    requireError (mul3y == add3y) PoolPrecompileUnavailable()
     -- __Ownable_init(_owner); __Ownable2Step_init();
     setStorageAddr ownerSlot ownerAddr
     setStorageAddr pendingOwnerSlot zeroAddress
