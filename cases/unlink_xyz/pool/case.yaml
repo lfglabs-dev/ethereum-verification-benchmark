@@ -32,7 +32,7 @@ selected_functions:
   - acceptOwnership
   - renounceOwnership
 source_language: solidity
-verity_version: b2f2ee402fd56b59e19df39752f7da039f3df4eb
+verity_version: b9a6dec13d1115fb57217a5a4b339410e6bb1455
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -59,26 +59,17 @@ abstraction_notes: >
   (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254
   precompile ECMs + `keccak256_lit` literal sugar).
 
-  Three public entry points are SCOPED but not yet TRANSLATED. The
-  PARAMETER-SHAPE side of the blocker (struct-parameter projection from
-  an ABI-dynamic root for single-word static leaves) shipped via
-  verity#1832 / verity#1843 on top of verity#1841 and verity#1842, and the
-  lakefile pin has been bumped past those PRs. An empirical pilot
-  (`pilot/transfer-body-1832`, 2026-05-13) confirmed that the macro now
-  accepts `Array Transaction` / `Array WithdrawalTransaction` parameters
-  and reads single-word static leaves of their elements
-  (`(arrayElement _ i).circuitId` / `.merkleRoot` / `.contextHash`), but
-  cannot yet express the per-tx body. Three further macro capabilities
-  are required, tracked under verity#1849:
-    * G1 — `arrayLength` on a struct-element dynamic member
-      (`txn.nullifierHashes.length`).
-    * G2 — element indexing of struct-element dynamic members
-      (`txn.nullifierHashes[k]`).
-    * G3 — forwarding dynamic-array values to `tryExternalCall` / `emit` /
-      `revertError` argument lists.
-  Combined with verity#1824 (internal helpers with `Array` parameters
-  cannot be lowered), these are the final Verity-core gates on
-  `transfer`, `withdraw`, and `emergencyWithdraw`.
+  The three public ZK entry points (`transfer`, `withdraw`, and
+  `emergencyWithdraw`) now build against `Array Transaction` /
+  `Array WithdrawalTransaction` parameters using dynamic struct-array
+  member projections and projected dynamic-array forwarding to linked
+  externals / internal helpers. Remaining promotion blockers are fidelity
+  gaps rather than basic body expressibility: exact ABI/Keccak context
+  hashing, proof struct forwarding to the verifier boundary,
+  memory-array-return helper shapes for `_realCommitments` /
+  `_realNullifiers`, source-faithful `_insertLeaves`, first-class
+  `_executeWithdrawal(_transactions[i], bool)` helper arguments, and event
+  payloads carrying dynamic arrays.
 
   Source confirmation (pinned commit 4bc46c1f): there is NO
   `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` —
@@ -101,20 +92,21 @@ abstraction_notes: >
     - all admin / view / lifecycle functions: `constructor`,
       `initialize`, `addRelayer`, `removeRelayer`, `setVerifierRouter`,
       `transferOwnership`, `acceptOwnership`, `renounceOwnership`,
-      `isRelayer`, `hashNote`, `_checkRelayer`.
+      `isRelayer`, `nextLeafIndex`, `hashNote`, `_checkRelayer`.
+    - `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired,
+      but still carry the fidelity gaps listed above.
     - `deposit` translation is gated by verity#1824 (Array-param helper
       lowering) — `_validateAndCollectDeposit` /
       `_transferWithBalanceCheck` / `_insertLeaves` can't be factored
       into internal helpers that accept `Array Note` / `Array Uint256`
       parameters until that ships.
-
-  The blocked entry points have explicit `PENDING TRANSLATION` markers
-  in `Contract.lean` referencing verity#1849 (G1/G2/G3) and verity#1824.
 unsupported_feature_codes:
-  - struct_array_element_dynamic_member_arrayLength
-  - struct_array_element_dynamic_member_index
-  - dynamic_array_forwarding_to_external_emit_revert
-  - internal_helper_array_param_lowering
+  - exact_abi_keccak_context_hash
+  - proof_struct_forwarding_to_verifier
+  - memory_array_return_helpers
+  - source_faithful_insert_leaves
+  - dynamic_struct_element_helper_argument
+  - dynamic_array_event_payloads
   - uups_proxy_storage_rotation_not_modeled
   - bn254_precompile_probes_via_ecm_assumed
   - poseidon_assumed_axiom

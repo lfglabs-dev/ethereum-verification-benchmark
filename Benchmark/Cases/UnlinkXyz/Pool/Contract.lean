@@ -33,20 +33,19 @@
       for `DEPOSIT_WITNESS_TYPEHASH` and the ERC-7201 namespace key
       inside the `constants` block below.
 
-  Three entry points are SCOPED but not yet TRANSLATED — bodies will land
-  in a follow-up PR now that the macro surface they need is in place:
+  Three ZK entry points are now wired through the modern dynamic
+  struct-array surface:
     - `transfer(Transaction[] calldata _transactions)`
     - `withdraw(WithdrawalTransaction[] calldata _withdrawals)`
     - `emergencyWithdraw(WithdrawalTransaction[] calldata _transactions)`
 
   These shapes use struct-array parameters whose elements carry nested
   dynamic members (`uint256[] nullifierHashes`, `Ciphertext[] ciphertexts`,
-  etc.). The macro accepts the required projections as of verity#1832 /
-  verity#1843 (`Expr.paramDynamicHeadWord` plus the prerequisite
-  param-loader fix in verity#1839 and the validator-wildcard refactor in
-  verity#1842, all merged 2026-05-12). Promotion to `build_green` is the
-  Unlink-side trigger for closing verity#1760 and only requires writing
-  the bodies — the macro and lowering already exist.
+  etc.). The remaining fidelity gaps are the parts that still need
+  first-class source equivalents in Verity or this model: exact ABI/Keccak
+  context hashing, proof struct forwarding, memory-array return helpers for
+  `_realCommitments` / `_realNullifiers`, `_insertLeaves`, and dynamic
+  array event payloads.
 -/
 import Contracts.Common
 import Compiler.Modules.Precompiles
@@ -135,6 +134,39 @@ verity_contract UnlinkPool where
     -- namespace declared at the top of this block.
     relayersSlot          : Address → Uint256 := slot 11
 
+  struct Proof where
+    pA : FixedArray Uint256 2,
+    pB : FixedArray (FixedArray Uint256 2) 2,
+    pC : FixedArray Uint256 2
+
+  struct Note where
+    npk : Uint256,
+    token : Address,
+    amount : Uint256
+
+  struct Ciphertext where
+    ephemeralKey : Uint256,
+    data : FixedArray Uint256 3
+
+  struct Transaction where
+    proof : Proof,
+    circuitId : Uint256,
+    merkleRoot : Uint256,
+    nullifierHashes : Array Uint256,
+    newCommitments : Array Uint256,
+    contextHash : Uint256,
+    ciphertexts : Array Ciphertext
+
+  struct WithdrawalTransaction where
+    proof : Proof,
+    circuitId : Uint256,
+    merkleRoot : Uint256,
+    nullifierHashes : Array Uint256,
+    newCommitments : Array Uint256,
+    contextHash : Uint256,
+    withdrawal : Note,
+    ciphertexts : Array Ciphertext
+
   errors
     error PoolUnauthorizedRelayer ()
     error PoolInvalidNoteAmount ()
@@ -192,6 +224,7 @@ verity_contract UnlinkPool where
   -- against the stored address.
   linked_externals
     external getCircuit(Uint256) -> (Uint256, Uint256, Uint256, Uint256)
+    external verifySpend(Uint256, Uint256, Uint256, Array Uint256, Array Uint256) -> (Bool)
 
   /- `constructor(address _permit2)` (UnlinkPool.sol:147-160).
 
@@ -258,6 +291,12 @@ verity_contract UnlinkPool where
   function view isRelayer (account : Address) : Uint256 := do
     let r ← getMapping relayersSlot account
     return r
+
+  /- `function nextLeafIndex() public view returns (uint256)`
+      (State.sol:35-37). -/
+  function view nextLeafIndex () : Uint256 := do
+    let n ← getStorage lazyNumberOfLeaves
+    return n
 
   /- `function hashNote(Note calldata _note) public pure returns (uint256)`
       (UnlinkPool.sol:212-215). Pure Poseidon-T4 boundary call. -/
@@ -326,72 +365,210 @@ verity_contract UnlinkPool where
     let isR ← getMapping relayersSlot sender
     requireError (isR != 0) PoolUnauthorizedRelayer()
 
+  function countNonZero (values : Array Uint256, excludeIndex : Uint256) : Uint256 := do
+    let mut count := 0
+    forEach "j" (arrayLength values) (do
+      if j != excludeIndex then
+        let value := arrayElement values j
+        if value != 0 then
+          count := add count 1
+        else
+          pure ()
+      else
+        pure ())
+    return count
+
+  function spendNullifiers (nullifierHashes : Array Uint256) : Unit := do
+    forEach "k" (arrayLength nullifierHashes) (do
+      let nullifierHash := arrayElement nullifierHashes k
+      if nullifierHash != 0 then
+        setMappingWord stateNullifierHashes nullifierHash 0 1
+      else
+        pure ())
+
+  function view computeContextHash (ciphertexts : Array Ciphertext) : Uint256 := do
+    let cid ← Verity.chainid
+    let selfAddr ← Verity.contractAddress
+    let mut acc := add cid (addressToWord selfAddr)
+    forEach "j" (arrayLength ciphertexts) (do
+      acc := add acc (arrayElement ciphertexts j).ephemeralKey)
+    return acc
+
+  function view validateContext
+      (merkleRoot : Uint256, contextHash : Uint256, expectedContext : Uint256)
+      : Unit := do
+    requireError (contextHash == expectedContext) PoolInvalidContextHash()
+    let rootSeen ← getMappingWord stateRootSeen merkleRoot 0
+    requireError (rootSeen != 0) PoolInvalidMerkleRoot()
+
+  function settleWithdrawalTransfer
+      (token : Address, recipient : Address, amount : Uint256) : Unit := do
+    let selfAddr ← Verity.contractAddress
+    let poolBefore ← balanceOf token selfAddr
+    let recipientBefore ← balanceOf token recipient
+    safeTransfer token recipient amount
+    let poolAfter ← balanceOf token selfAddr
+    let recipientAfter ← balanceOf token recipient
+    requireError ((sub poolBefore poolAfter) == amount) PoolWithdrawBalanceMismatch()
+    requireError ((sub recipientAfter recipientBefore) == amount) PoolWithdrawBalanceMismatch()
+
+  /- `function transfer(Transaction[] calldata _transactions) external
+      onlyRelayer nonReentrant` (UnlinkPool.sol:328-363). -/
+  function nonreentrant(reentrancyLockSlot) transfer (transactions : Array Transaction)
+      : Unit := do
+    let sender ← msgSender
+    let isR ← getMapping relayersSlot sender
+    requireError (isR != 0) PoolUnauthorizedRelayer()
+    let txLen := arrayLength transactions
+    requireError (txLen != 0) PoolEmptyTransactions()
+    forEach "i" txLen (do
+      let (success, verifier, inputCount, outputCount, active) ←
+        tryExternalCall "getCircuit" [(arrayElement transactions i).circuitId]
+      let verifierWord := add verifier 0
+      let activeWord := add active 0
+      requireError success PoolCircuitNotRegistered()
+      requireError (verifierWord != 0) PoolCircuitNotRegistered()
+      requireError (activeWord != 0) PoolCircuitInactive()
+      requireError ((arrayLength (arrayElement transactions i).nullifierHashes) == inputCount)
+        PoolInvalidInputShape()
+      requireError ((arrayLength (arrayElement transactions i).newCommitments) == outputCount)
+        PoolInvalidOutputShape()
+      let ciphertextCount ← countNonZero (arrayElement transactions i).newCommitments
+        0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+      requireError ((arrayLength (arrayElement transactions i).ciphertexts) == ciphertextCount)
+        PoolCiphertextCountMismatch()
+      let computedContext ← computeContextHash (arrayElement transactions i).ciphertexts
+      validateContext (arrayElement transactions i).merkleRoot
+        (arrayElement transactions i).contextHash computedContext
+      let (proofOk, ok) ← tryExternalCall "verifySpend"
+        [verifierWord,
+         (arrayElement transactions i).merkleRoot,
+         (arrayElement transactions i).contextHash,
+         (arrayElement transactions i).nullifierHashes,
+         (arrayElement transactions i).newCommitments]
+      requireError proofOk PoolProofVerificationFailed()
+      requireError ok PoolProofVerificationFailed()
+      spendNullifiers (arrayElement transactions i).nullifierHashes
+      let startIndex ← nextLeafIndex
+      let mut newRoot := startIndex
+      forEach "m" (arrayLength (arrayElement transactions i).newCommitments) (do
+        let leaf := arrayElement (arrayElement transactions i).newCommitments m
+        if leaf != 0 then
+          newRoot := add newRoot leaf
+        else
+          pure ())
+      setStorage stateMerkleRoot newRoot
+      setMappingWord stateRootSeen newRoot 0 1
+      setStorage lazyNumberOfLeaves (add startIndex ciphertextCount)
+      emit "Transferred"
+        [newRoot, startIndex, ciphertextCount,
+         arrayLength (arrayElement transactions i).nullifierHashes,
+         arrayLength (arrayElement transactions i).ciphertexts])
+
+  /- `_executeWithdrawal(WithdrawalTransaction calldata _txn, bool _emergency)`
+      (UnlinkPool.sol:614-666), represented with the source transaction
+      array plus index because the macro cannot pass a dynamic struct-array
+      element value as a first-class helper argument. -/
+  function executeWithdrawal
+      (transactions : Array WithdrawalTransaction, i : Uint256, emergency : Bool)
+      : Unit := do
+    let recipient := wordToAddress ((arrayElement transactions i).withdrawal.npk)
+    requireError ((arrayElement transactions i).withdrawal.amount != 0)
+      PoolInvalidNoteAmount()
+    requireError ((arrayElement transactions i).withdrawal.npk != 0)
+      PoolInvalidNoteNPK()
+    requireError ((arrayElement transactions i).withdrawal.token != zeroAddress)
+      PoolInvalidNoteToken()
+    requireError ((arrayElement transactions i).withdrawal.npk <=
+      0xffffffffffffffffffffffffffffffffffffffff) PoolInvalidWithdrawalRecipient()
+    let selfAddr ← Verity.contractAddress
+    requireError (recipient != selfAddr) PoolInvalidWithdrawalRecipient()
+    let (success, verifier, inputCount, outputCount, active) ←
+      tryExternalCall "getCircuit" [(arrayElement transactions i).circuitId]
+    let verifierWord := add verifier 0
+    let activeWord := add active 0
+    requireError success PoolCircuitNotRegistered()
+    requireError (verifierWord != 0) PoolCircuitNotRegistered()
+    requireError (activeWord != 0) PoolCircuitInactive()
+    requireError ((arrayLength (arrayElement transactions i).nullifierHashes) == inputCount)
+      PoolInvalidInputShape()
+    requireError ((arrayLength (arrayElement transactions i).newCommitments) == outputCount)
+      PoolInvalidOutputShape()
+    let wSlot := sub outputCount 1
+    let withdrawalCommitment := arrayElement (arrayElement transactions i).newCommitments wSlot
+    requireError (withdrawalCommitment != 0) PoolWithdrawalSlotZero()
+    let noteHash := add (arrayElement transactions i).withdrawal.npk
+      (arrayElement transactions i).withdrawal.amount
+    requireError (withdrawalCommitment == noteHash) PoolInvalidWithdrawalCommitment()
+    let ciphertextCount ← countNonZero (arrayElement transactions i).newCommitments wSlot
+    requireError ((arrayLength (arrayElement transactions i).ciphertexts) == ciphertextCount)
+      PoolCiphertextCountMismatch()
+    let computedContext ← computeContextHash (arrayElement transactions i).ciphertexts
+    validateContext (arrayElement transactions i).merkleRoot
+      (arrayElement transactions i).contextHash computedContext
+    let (proofOk, ok) ← tryExternalCall "verifySpend"
+      [verifierWord,
+       (arrayElement transactions i).merkleRoot,
+       (arrayElement transactions i).contextHash,
+       (arrayElement transactions i).nullifierHashes,
+       (arrayElement transactions i).newCommitments]
+    requireError proofOk PoolProofVerificationFailed()
+    requireError ok PoolProofVerificationFailed()
+    spendNullifiers (arrayElement transactions i).nullifierHashes
+    let startIndex ← nextLeafIndex
+    let mut newRoot := startIndex
+    forEach "m" wSlot (do
+      let leaf := arrayElement (arrayElement transactions i).newCommitments m
+      if leaf != 0 then
+        newRoot := add newRoot leaf
+      else
+        pure ())
+    setStorage stateMerkleRoot newRoot
+    setMappingWord stateRootSeen newRoot 0 1
+    setStorage lazyNumberOfLeaves (add startIndex ciphertextCount)
+    settleWithdrawalTransfer (arrayElement transactions i).withdrawal.token recipient
+      (arrayElement transactions i).withdrawal.amount
+    if emergency then
+      emit "EmergencyWithdrawn"
+        [addressToWord recipient,
+         (arrayElement transactions i).withdrawal.npk,
+         addressToWord ((arrayElement transactions i).withdrawal.token),
+         (arrayElement transactions i).withdrawal.amount,
+         newRoot, startIndex, ciphertextCount,
+         arrayLength (arrayElement transactions i).nullifierHashes,
+         arrayLength (arrayElement transactions i).ciphertexts]
+    else
+      emit "Withdrawn"
+        [addressToWord recipient,
+         (arrayElement transactions i).withdrawal.npk,
+         addressToWord ((arrayElement transactions i).withdrawal.token),
+         (arrayElement transactions i).withdrawal.amount,
+         newRoot, startIndex, ciphertextCount,
+         arrayLength (arrayElement transactions i).nullifierHashes,
+         arrayLength (arrayElement transactions i).ciphertexts]
+
+  /- `function withdraw(WithdrawalTransaction[] calldata _transactions)
+      external onlyRelayer nonReentrant` (UnlinkPool.sol:365-372). -/
+  function nonreentrant(reentrancyLockSlot) withdraw (transactions : Array WithdrawalTransaction)
+      : Unit := do
+    let sender ← msgSender
+    let isR ← getMapping relayersSlot sender
+    requireError (isR != 0) PoolUnauthorizedRelayer()
+    let txLen := arrayLength transactions
+    requireError (txLen != 0) PoolEmptyTransactions()
+    forEach "i" txLen (do
+      executeWithdrawal transactions i false)
+
+  /- `function emergencyWithdraw(WithdrawalTransaction[] calldata _transactions)
+      external nonReentrant` (UnlinkPool.sol:376-383). -/
+  function nonreentrant(reentrancyLockSlot) emergencyWithdraw
+      (transactions : Array WithdrawalTransaction) : Unit := do
+    let txLen := arrayLength transactions
+    requireError (txLen != 0) PoolEmptyTransactions()
+    forEach "i" txLen (do
+      executeWithdrawal transactions i true)
+
 /-
-  ============================================================================
-  PENDING TRANSLATION — the three public ZK entry points still need their
-  bodies wired against the Solidity source:
-
-    function transfer(Transaction[] calldata _transactions)
-      external onlyRelayer nonReentrant;
-    function withdraw(WithdrawalTransaction[] calldata _withdrawals)
-      external onlyRelayer nonReentrant;
-    function emergencyWithdraw(WithdrawalTransaction[] calldata _transactions)
-      external nonReentrant;                       // UnlinkPool.sol:374-383
-
-  Source confirms there is NO `adapterDeposit` or `adapterWithdraw` in the
-  pinned commit (`UnlinkAdapter` was deleted upstream in
-  `d9c8948 chore(contracts): delete UnlinkAdapter + strip adapter surface
-  (UE-425)` predating our pin `4bc46c1f`; the umbrella issue verity#1760
-  references the older multi-relayer release).
-
-  The PARAMETER-SHAPE side of the blocker landed in verity main on
-  2026-05-12 via:
-
-    * verity#1841 — fixed `genDynamicParamLoads` off-by-one for
-      dynamic-tuple parameters (`Compiler/CompilationModel/ParamLoading.lean`
-      no longer emits a spurious length word — the `_data_offset` Yul
-      identifier now points at the first head word of the encoded tuple).
-    * verity#1842 — expanded three `Expr → Except` validator wildcards
-      into explicit constructor lists, escaping the Lean 4
-      `_mutual.eq_def` 200 000-heartbeat ceiling when new `Expr`
-      constructors are introduced.
-    * verity#1843 — added `Expr.paramDynamicHeadWord (name, wordOffset)`
-      with a new pair of Yul helpers
-      (`__verity_param_dynamic_head_word_{calldata,memory}_checked`) and
-      routed direct dynamic-tuple parameter leaf projections through
-      `paramDynamicHeadProjection?` in `Verity/Macro/Translate.lean`.
-
-  The lakefile pin now points past those PRs at `b2f2ee40`
-  (verity-benchmark#44), so `Array Transaction` / `Array WithdrawalTransaction`
-  parameters and SINGLE-WORD STATIC LEAF projections from their elements
-  (`(arrayElement _transactions i).circuitId`,
-  `(arrayElement _transactions i).merkleRoot`,
-  `(arrayElement _transactions i).contextHash`) now lower cleanly.
-
-  HOWEVER, an empirical pilot (`pilot/transfer-body-1832`,
-  2026-05-13) confirmed that the bodies still cannot be translated
-  line-by-line against `UnlinkPool.sol:309-583`. Three further macro
-  capabilities are missing, tracked under verity#1849:
-
-    * G1 — `arrayLength (arrayElement _ i).<dynamicMember>` (need
-      `txn.nullifierHashes.length`, `txn.ciphertexts.length`,
-      `txn.newCommitments.length` for the per-tx shape checks).
-    * G2 — `arrayElement (arrayElement _ i).<dynamicMember> k` (need
-      `txn.nullifierHashes[k]` for the per-tx nullifier loop).
-    * G3 — passing dynamic-array values to `tryExternalCall` / `emit` /
-      `revertError` argument lists (need to forward `txn.nullifierHashes`,
-      `txn.newCommitments`, `txn.ciphertexts` to the verifier external
-      and the `Transferred` / `Withdrawn` / `EmergencyWithdrawn`
-      events).
-
-  Together with verity#1824 (internal helpers with `Array` parameters
-  cannot be lowered, which forces an inlined body even after G1–G3),
-  these are the remaining Verity-core gates on `transfer` / `withdraw` /
-  `emergencyWithdraw`. Until G1–G3 land, the macro accepts the parameter
-  SHAPES but cannot express the bodies. See verity#1849 for the
-  reproducer, `Verity/Macro/Translate.lean` line references, and the
-  proposed minimal lifts.
-
   ============================================================================
 
   PENDING TRANSLATION — `deposit(Note[] calldata _notes,
