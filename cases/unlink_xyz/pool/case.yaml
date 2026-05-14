@@ -32,7 +32,7 @@ selected_functions:
   - acceptOwnership
   - renounceOwnership
 source_language: solidity
-verity_version: 3b7e69bf819356c64c567f84dd686739befab334
+verity_version: 1d6abc86b042dd99bea46b318452612e43b83839
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -59,7 +59,8 @@ abstraction_notes: >
   primitive that landed in verity through PRs #1782 (selfbalance), #1795
   (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254
   precompile ECMs + `keccak256_lit` literal sugar), plus #1870
-  (memory-array helper lowering) and #1871 (dynamic-array event sources).
+  (memory-array helper lowering), #1871 (dynamic-array event sources), and
+  #1872 (array values in executable emit calls).
 
   The three public ZK entry points (`transfer`, `withdraw`, and
   `emergencyWithdraw`) now build against `Array Transaction` /
@@ -67,11 +68,12 @@ abstraction_notes: >
   member projections and projected dynamic-array forwarding to linked
   externals / internal helpers. The transfer/withdraw paths now use
   `_realCommitments` / `_realNullifiers`-shaped memory-array helpers and pass
-  the resulting memory array into an `_insertLeaves`-shaped helper. Remaining
-  promotion blockers are fidelity gaps rather than basic body expressibility:
-  event payloads still use surrogate scalar counts until first-class dynamic
-  array payload emission lands, and the `_insertLeaves` body still uses this
-  scoped model's lightweight LazyIMT accumulator boundary.
+  the resulting memory array into an `_insertLeaves`-shaped helper, and emit
+  source-shaped dynamic array payloads. Remaining promotion blockers are
+  fidelity gaps rather than basic body expressibility: withdrawal event notes
+  are still scalarized until non-leaf struct event projection lands (verity#1832),
+  and the `_insertLeaves` body still uses this scoped model's lightweight LazyIMT
+  accumulator boundary.
   `_executeWithdrawal(_transactions[i], bool)` is routed through an internal
   helper call.
 
@@ -105,7 +107,7 @@ abstraction_notes: >
       into internal helpers that accept `Array Note` / `Array Uint256`
       parameters until that ships.
 unsupported_feature_codes:
-  - dynamic_array_event_payloads
+  - non_leaf_struct_event_payloads
   - lazy_imt_insert_body_assumed
   - uups_proxy_storage_rotation_not_modeled
   - bn254_precompile_probes_via_ecm_assumed
