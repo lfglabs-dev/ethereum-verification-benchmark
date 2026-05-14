@@ -32,7 +32,7 @@ selected_functions:
   - acceptOwnership
   - renounceOwnership
 source_language: solidity
-verity_version: cd1f92dda5bbf3aed775a744cba1e3da883c739e
+verity_version: 3b7e69bf819356c64c567f84dd686739befab334
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -58,7 +58,8 @@ abstraction_notes: >
   and tracked under verity#1420). The model uses every Solidity-feature-parity
   primitive that landed in verity through PRs #1782 (selfbalance), #1795
   (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254
-  precompile ECMs + `keccak256_lit` literal sugar).
+  precompile ECMs + `keccak256_lit` literal sugar), plus #1870
+  (memory-array helper lowering) and #1871 (dynamic-array event sources).
 
   The three public ZK entry points (`transfer`, `withdraw`, and
   `emergencyWithdraw`) now build against `Array Transaction` /
