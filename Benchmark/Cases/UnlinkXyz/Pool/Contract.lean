@@ -612,18 +612,12 @@ verity_contract UnlinkPool where
     let realNullifierHashes ← realNullifiers txn.nullifierHashes
     if emergency then
       emit "EmergencyWithdrawn"
-        [addressToWord recipient,
-         txn.withdrawal.npk,
-         addressToWord txn.withdrawal.token,
-         txn.withdrawal.amount,
-         newRoot, startIndex, leaves, realNullifierHashes, txn.ciphertexts]
+        [addressToWord recipient, txn.withdrawal, newRoot, startIndex, leaves,
+         realNullifierHashes, txn.ciphertexts]
     else
       emit "Withdrawn"
-        [addressToWord recipient,
-         txn.withdrawal.npk,
-         addressToWord txn.withdrawal.token,
-         txn.withdrawal.amount,
-         newRoot, startIndex, leaves, realNullifierHashes, txn.ciphertexts]
+        [addressToWord recipient, txn.withdrawal, newRoot, startIndex, leaves,
+         realNullifierHashes, txn.ciphertexts]
 
   /- `function withdraw(WithdrawalTransaction[] calldata _transactions)
       external onlyRelayer nonReentrant` (UnlinkPool.sol:365-372). -/
