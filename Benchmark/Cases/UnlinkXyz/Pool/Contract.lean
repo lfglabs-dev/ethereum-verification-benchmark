@@ -33,19 +33,22 @@
       for `DEPOSIT_WITNESS_TYPEHASH` and the ERC-7201 namespace key
       inside the `constants` block below.
 
-  Three ZK entry points are now wired through the modern dynamic
-  struct-array surface:
+  The relayer/permissionless ZK entry points are now wired through the modern
+  array and dynamic struct-array surfaces:
+    - `deposit(address, Note[] calldata, Ciphertext[] calldata, ...)`
     - `transfer(Transaction[] calldata _transactions)`
     - `withdraw(WithdrawalTransaction[] calldata _withdrawals)`
     - `emergencyWithdraw(WithdrawalTransaction[] calldata _transactions)`
 
-  These shapes use struct-array parameters whose elements carry nested
-  dynamic members (`uint256[] nullifierHashes`, `Ciphertext[] ciphertexts`,
-  etc.). The remaining fidelity gaps are the parts that still need
-  first-class source equivalents in Verity or this model: the LazyIMT insertion
-  body behind `_insertLeaves`.
+  The transfer/withdraw shapes use struct-array parameters whose elements
+  carry nested dynamic members (`uint256[] nullifierHashes`,
+  `Ciphertext[] ciphertexts`, etc.). The remaining fidelity gaps are the parts
+  that still need first-class source equivalents in Verity or this model: the
+  LazyIMT insertion body behind `_insertLeaves` and the external cryptographic
+  / Permit2 boundaries tracked in the case manifest.
 -/
 import Contracts.Common
+import Compiler.ECM
 import Compiler.Modules.Hashing
 import Compiler.Modules.Precompiles
 import Benchmark.Cases.UnlinkXyz.Pool.Specs
@@ -107,6 +110,96 @@ def DEPOSIT_WITNESS_TYPEHASH_LIT : Uint256 :=
 #guard DEPOSIT_WITNESS_TYPEHASH_LIT.val =
   (Verity.keccak256_lit "DepositWitness(address pool,bytes32 notesHash)").val
 
+namespace DepositHash
+
+open Compiler.Yul
+open Compiler.ECM
+open Compiler.Constants (freeMemoryPointer)
+
+/-- Keccak-256 over `abi.encode(arrayA, arrayB)` for two direct dynamic-array
+    calldata parameters whose elements have fixed static word widths. -/
+def abiEncodeTwoStaticArraysModule
+    (resultVar arrayA arrayB : String) (elementWordsA elementWordsB : Nat) :
+    ExternalCallModule where
+  name := "abiEncodeTwoStaticArrays"
+  numArgs := 2
+  resultVars := [resultVar]
+  writesState := false
+  readsState := false
+  axioms := ["keccak256_memory_slice_matches_evm",
+    "abi_standard_two_dynamic_arrays_static_element_layout"]
+  compile := fun ctx args => do
+    let (lenA, lenB) ← match args with
+      | [lenA, lenB] => pure (lenA, lenB)
+      | _ => throw s!"abiEncodeTwoStaticArrays expects 2 length arguments, got {args.length}"
+    if arrayA.isEmpty || arrayB.isEmpty then
+      throw "abiEncodeTwoStaticArrays requires non-empty array parameter names"
+    if elementWordsA == 0 || elementWordsB == 0 then
+      throw "abiEncodeTwoStaticArrays requires positive element word widths"
+    let ptrName := s!"__{resultVar}_abi_two_arrays_ptr"
+    let aDataBytesName := s!"__{resultVar}_abi_array_a_data_bytes"
+    let bDataBytesName := s!"__{resultVar}_abi_array_b_data_bytes"
+    let aTailBytesName := s!"__{resultVar}_abi_array_a_tail_bytes"
+    let bTailBytesName := s!"__{resultVar}_abi_array_b_tail_bytes"
+    let bHeadOffsetName := s!"__{resultVar}_abi_array_b_head_offset"
+    let totalBytesName := s!"__{resultVar}_abi_two_arrays_total_bytes"
+    let paddedTotalName := s!"__{resultVar}_abi_two_arrays_padded_total"
+    let ptr := YulExpr.ident ptrName
+    let aDataBytes := YulExpr.ident aDataBytesName
+    let bDataBytes := YulExpr.ident bDataBytesName
+    let bHeadOffset := YulExpr.ident bHeadOffsetName
+    let totalBytes := YulExpr.ident totalBytesName
+    pure [
+      YulStmt.block ([
+        YulStmt.let_ ptrName (YulExpr.call "mload" [YulExpr.lit freeMemoryPointer]),
+        YulStmt.let_ aDataBytesName (YulExpr.call "mul" [
+          lenA, YulExpr.lit (elementWordsA * 32)
+        ]),
+        YulStmt.let_ bDataBytesName (YulExpr.call "mul" [
+          lenB, YulExpr.lit (elementWordsB * 32)
+        ]),
+        YulStmt.let_ aTailBytesName (YulExpr.call "add" [YulExpr.lit 32, aDataBytes]),
+        YulStmt.let_ bTailBytesName (YulExpr.call "add" [YulExpr.lit 32, bDataBytes]),
+        YulStmt.let_ bHeadOffsetName (YulExpr.call "add" [
+          YulExpr.lit 64, YulExpr.ident aTailBytesName
+        ]),
+        YulStmt.let_ totalBytesName (YulExpr.call "add" [
+          bHeadOffset, YulExpr.ident bTailBytesName
+        ]),
+        YulStmt.expr (YulExpr.call "mstore" [ptr, YulExpr.lit 64]),
+        YulStmt.expr (YulExpr.call "mstore" [
+          YulExpr.call "add" [ptr, YulExpr.lit 32], bHeadOffset
+        ]),
+        YulStmt.expr (YulExpr.call "mstore" [
+          YulExpr.call "add" [ptr, YulExpr.lit 64], lenA
+        ])
+      ] ++ dynamicCopyData ctx
+        (YulExpr.call "add" [ptr, YulExpr.lit 96])
+        (YulExpr.ident s!"{arrayA}_data_offset")
+        aDataBytes ++ [
+        YulStmt.expr (YulExpr.call "mstore" [
+          YulExpr.call "add" [ptr, bHeadOffset], lenB
+        ])
+      ] ++ dynamicCopyData ctx
+        (YulExpr.call "add" [YulExpr.call "add" [ptr, bHeadOffset], YulExpr.lit 32])
+        (YulExpr.ident s!"{arrayB}_data_offset")
+        bDataBytes ++ [
+        YulStmt.let_ paddedTotalName (YulExpr.call "and" [
+          YulExpr.call "add" [totalBytes, YulExpr.lit 31],
+          YulExpr.call "not" [YulExpr.lit 31]
+        ]),
+        YulStmt.expr (YulExpr.call "mstore" [
+          YulExpr.lit freeMemoryPointer,
+          YulExpr.call "add" [ptr, YulExpr.ident paddedTotalName]
+        ]),
+        YulStmt.let_ resultVar (YulExpr.call "keccak256" [ptr, totalBytes])
+      ])
+    ]
+
+end DepositHash
+
+open DepositHash
+
 /- ### Pool entry point: `UnlinkPool` -/
 
 verity_contract UnlinkPool where
@@ -147,6 +240,15 @@ verity_contract UnlinkPool where
   struct Ciphertext where
     ephemeralKey : Uint256,
     data : FixedArray Uint256 3
+
+  struct TokenPermissions where
+    token : Address,
+    amount : Uint256
+
+  struct PermitTransferFrom where
+    permitted : TokenPermissions,
+    nonce : Uint256,
+    deadline : Uint256
 
   struct Transaction where
     proof : Proof,
@@ -239,6 +341,9 @@ verity_contract UnlinkPool where
     external verifySpend(
       Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256,
       Uint256, Uint256, Uint256, Array Uint256, Array Uint256) -> (Bool)
+    external permitWitnessTransferFrom(
+      Address, Address, Uint256, Uint256, Uint256, Address, Uint256, Address,
+      Uint256, Bytes) -> (Bool)
 
   /- `constructor(address _permit2)` (UnlinkPool.sol:147-160).
 
@@ -359,6 +464,38 @@ verity_contract UnlinkPool where
   function view hashNote (npk : Uint256, _token : Address, amount : Uint256)
       : Uint256 := do
     return (add npk amount)
+
+  function validateNoteFields (npk : Uint256, token : Address, amount : Uint256) : Unit := do
+    requireError (token != zeroAddress) PoolInvalidNoteToken()
+    requireError ((amount != 0) &&
+      (amount <=
+        100000000000000000000000000000000000000000000000000000000000000000000))
+      PoolInvalidNoteAmount()
+    requireError ((npk != 0) &&
+      (npk <
+        21888242871839275222246405745257275088548364400416034343698204186575808495617))
+      PoolInvalidNoteNPK()
+
+  function sumNoteAmounts (notes : Array Note) : Uint256 := do
+    let mut totalAmount := 0
+    forEach "i" (arrayLength notes) (do
+      let amount := abiHeadWord (arrayElement notes i) 2
+      totalAmount := add totalAmount amount)
+    return totalAmount
+
+  function validateAndCollectDeposit
+      (notes : Array Note, permitToken : Address) : Array Uint256 := do
+    let notesLen := arrayLength notes
+    let newLeaves ← allocArray notesLen
+    forEach "i" notesLen (do
+      let npk := abiHeadWord (arrayElement notes i) 0
+      let token := wordToAddress (abiHeadWord (arrayElement notes i) 1)
+      let amount := abiHeadWord (arrayElement notes i) 2
+      validateNoteFields npk token amount
+      requireError (token == permitToken) PoolTokenMismatch()
+      let leaf ← hashNote npk token amount
+      setMemoryArrayElement newLeaves i leaf)
+    returnArray newLeaves
 
   /- ### Owner functions -/
 
@@ -534,6 +671,53 @@ verity_contract UnlinkPool where
     requireError ((sub poolBefore poolAfter) == amount) PoolWithdrawBalanceMismatch()
     requireError ((sub recipientAfter recipientBefore) == amount) PoolWithdrawBalanceMismatch()
 
+  /- `function deposit(address _depositor, Note[] calldata _notes,
+      Ciphertext[] calldata _ciphertexts, PermitTransferFrom calldata _permit,
+      bytes calldata _signature) external onlyRelayer nonReentrant`
+      (UnlinkPool.sol:306-324). -/
+  function nonreentrant(reentrancyLockSlot) deposit
+      (depositor : Address, notes : Array Note, ciphertexts : Array Ciphertext,
+       permit : PermitTransferFrom, signature : Bytes) : Unit := do
+    let sender ← msgSender
+    let isR ← getMapping relayersSlot sender
+    requireError (isR != 0) PoolUnauthorizedRelayer()
+    let notesLen := arrayLength notes
+    requireError (notesLen != 0) PoolEmptyNotes()
+    requireError ((arrayLength ciphertexts) == notesLen)
+      PoolCiphertextCountMismatch()
+    let newLeaves ← validateAndCollectDeposit notes permit.permitted.token
+    let totalAmount ← sumNoteAmounts notes
+    let selfAddr ← Verity.contractAddress
+    let notesHash ← ecmCall
+      (fun resultVar =>
+        abiEncodeTwoStaticArraysModule resultVar "notes" "ciphertexts" 3 4)
+      [notesLen, arrayLength ciphertexts]
+    let witness ← ecmCall
+      (fun resultVar => abiEncodePackedWordsModule resultVar 3)
+      [DEPOSIT_WITNESS_TYPEHASH, addressToWord selfAddr, notesHash]
+    let token := permit.permitted.token
+    let balBefore ← balanceOf token selfAddr
+    let (permitCallOk, permitAccepted) ← tryExternalCall "permitWitnessTransferFrom"
+      [PERMIT2,
+       token,
+       permit.permitted.amount,
+       permit.nonce,
+       permit.deadline,
+       selfAddr,
+       totalAmount,
+       depositor,
+       witness,
+       signature]
+    requireError permitCallOk PoolDepositBalanceMismatch()
+    requireError permitAccepted PoolDepositBalanceMismatch()
+    let balAfter ← balanceOf token selfAddr
+    requireError ((sub balAfter balBefore) == totalAmount)
+      PoolDepositBalanceMismatch()
+    let startIndex ← nextLeafIndex
+    let newRoot ← insertLeaves newLeaves
+    emit "Deposited"
+      [addressToWord depositor, newRoot, startIndex, notes, ciphertexts]
+
   /- `function transfer(Transaction[] calldata _transactions) external
       onlyRelayer nonReentrant` (UnlinkPool.sol:328-363). -/
   function nonreentrant(reentrancyLockSlot) transfer (transactions : Array Transaction)
@@ -676,32 +860,5 @@ verity_contract UnlinkPool where
     requireError (txLen != 0) PoolEmptyTransactions()
     forEach "i" txLen (do
       executeWithdrawal (arrayElement transactions i) true)
-
-/-
-  ============================================================================
-
-  PENDING TRANSLATION — `deposit(Note[] calldata _notes,
-  Ciphertext[] calldata _ciphertexts, address _depositor, ...)` is on
-  the borderline. `Note` and `Ciphertext` are static tuples of ABI
-  words (no nested dynamic), so the parameter shape already works on
-  the TermMax `CurveCut[]` path. The remaining blocker is verity#1824
-  (internal helpers with Array parameters cannot be lowered), which
-  forces the deposit body to be inlined as one large `forEach` rather
-  than factored into `_validateAndCollectDeposit` / `_insertLeaves` /
-  `_transferWithBalanceCheck` helpers. A follow-up PR will land the
-  inlined body once the helper-call lifting in verity#1824 ships.
-
-  ============================================================================
-  Until those follow-up PRs land, this scoped translation builds,
-  exposes every admin / view / lifecycle entry point through the modern
-  feature surface (errors / requireError / requires / nonreentrant /
-  initializer / immutables / linked_externals / storage_namespace /
-  keccak256_lit / BN254 precompile ECMs), and documents the exact source
-  locations that still need to be wired. See
-  `cases/unlink_xyz/pool/case.yaml` `unsupported_feature_codes:` for the
-  machine-readable counterpart and
-  `cases/unlink_xyz/pool/review/spec-review.md` for the human-readable
-  promotion path.
--/
 
 end Benchmark.Cases.UnlinkXyz.Pool

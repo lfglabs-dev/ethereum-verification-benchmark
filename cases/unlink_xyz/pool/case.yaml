@@ -63,17 +63,20 @@ abstraction_notes: >
   (array values in executable emit calls), and #1873 (projected static-struct
   event payloads), and #1874 (multi-result ECM binding).
 
-  The three public ZK entry points (`transfer`, `withdraw`, and
-  `emergencyWithdraw`) now build against `Array Transaction` /
-  `Array WithdrawalTransaction` parameters using dynamic struct-array
-  member projections and projected dynamic-array forwarding to linked
-  externals / internal helpers. The transfer/withdraw paths now use
-  `_realCommitments` / `_realNullifiers`-shaped memory-array helpers and pass
-  the resulting memory array into an `_insertLeaves`-shaped helper, and emit
-  source-shaped dynamic array and withdrawal-note payloads. Remaining promotion
-  blockers are fidelity gaps rather than basic body expressibility: the
-  `_insertLeaves` body still uses this scoped model's lightweight LazyIMT
-  accumulator boundary.
+  The public ZK entry points (`deposit`, `transfer`, `withdraw`, and
+  `emergencyWithdraw`) now build against source-shaped array parameters.
+  The transfer/withdraw paths use `Array Transaction` /
+  `Array WithdrawalTransaction` parameters with dynamic struct-array member
+  projections and projected dynamic-array forwarding to linked externals /
+  internal helpers. They now use `_realCommitments` / `_realNullifiers`-shaped
+  memory-array helpers, pass the resulting memory array into an
+  `_insertLeaves`-shaped helper, and emit source-shaped dynamic array and
+  withdrawal-note payloads. The deposit path validates static `Note[]`
+  elements, computes the source-shaped deposit witness hash, routes the Permit2
+  transfer through the assumed external boundary, inserts leaves, and emits the
+  source-shaped `Deposited` payload. Remaining promotion blockers are fidelity
+  gaps rather than basic body expressibility: the `_insertLeaves` body still
+  uses this scoped model's lightweight LazyIMT accumulator boundary.
   `_executeWithdrawal(_transactions[i], bool)` is routed through an internal
   helper call. The deploy-time BN254 precompile probe in `initialize` is wired
   through the 0x06/0x07/0x08 precompile ECMs and the multi-result ECM binder.
@@ -100,13 +103,8 @@ abstraction_notes: >
       `initialize`, `addRelayer`, `removeRelayer`, `setVerifierRouter`,
       `transferOwnership`, `acceptOwnership`, `renounceOwnership`,
       `isRelayer`, `nextLeafIndex`, `hashNote`, `_checkRelayer`.
-    - `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired,
+    - `deposit`, `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired,
       but still carry the fidelity gaps listed above.
-    - `deposit` translation is gated by verity#1824 (Array-param helper
-      lowering) — `_validateAndCollectDeposit` /
-      `_transferWithBalanceCheck` / `_insertLeaves` can't be factored
-      into internal helpers that accept `Array Note` / `Array Uint256`
-      parameters until that ships.
 unsupported_feature_codes:
   - lazy_imt_insert_body_assumed
   - uups_proxy_storage_rotation_not_modeled
