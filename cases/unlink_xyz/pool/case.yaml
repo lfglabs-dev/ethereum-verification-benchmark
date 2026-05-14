@@ -39,7 +39,6 @@ abstraction_tags:
   - uups_proxy_modeled_as_implementation
   - permit2_assumed_boundary
   - poseidon_assumed_boundary
-  - lazy_imt_assumed_boundary
   - groth16_assumed_boundary
   - bn254_precompile_ecm
   - erc7201_storage_namespace
@@ -75,8 +74,8 @@ abstraction_notes: >
   elements, computes the source-shaped deposit witness hash, routes the Permit2
   transfer through the assumed external boundary, inserts leaves, and emits the
   source-shaped `Deposited` payload. Remaining promotion blockers are fidelity
-  gaps rather than basic body expressibility: the `_insertLeaves` body still
-  uses this scoped model's lightweight LazyIMT accumulator boundary.
+  gaps rather than basic body expressibility: Poseidon, Permit2, Groth16, and
+  host-level UUPS proxy behavior remain as explicit boundaries.
   `_executeWithdrawal(_transactions[i], bool)` is routed through an internal
   helper call. The deploy-time BN254 precompile probe in `initialize` is wired
   through the 0x06/0x07/0x08 precompile ECMs and the multi-result ECM binder.
@@ -106,11 +105,9 @@ abstraction_notes: >
     - `deposit`, `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired,
       but still carry the fidelity gaps listed above.
 unsupported_feature_codes:
-  - lazy_imt_insert_body_assumed
   - uups_proxy_storage_rotation_not_modeled
   - poseidon_assumed_axiom
   - permit2_assumed_axiom
-  - lazy_imt_assumed_axiom
   - groth16_verifier_assumed_axiom
 notes: >
   This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which
