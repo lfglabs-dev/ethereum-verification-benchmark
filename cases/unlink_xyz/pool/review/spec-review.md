@@ -4,10 +4,10 @@ The Verity model of `UnlinkPool` exposes four classes of declarations.
 
 ## 1. Pure Lean specs
 
-- `Specs.lean` — assumed protocol boundaries (Poseidon T3 / T4, Permit2
+- `Specs.lean` — opaque protocol boundaries (Poseidon T3 / T4, Permit2
   `permitWitnessTransferFrom`, Lazy-IMT root, Groth16 `verifyProof`,
-  three ABI composite hashes) declared via `opaque` + `axiom` with the
-  `unlink_verity_*` axiom-naming convention.
+  three ABI composite hashes). These are trust-boundary declarations, not
+  Lean `axiom` declarations.
 - `InternalLazyIMT.lean` — full LazyIMT spec (Z_0..Z_32 default-zero
   tower, `_init` / `_insert` / `_update` / `_root` / `_rootWithDepth` /
   `_levels` / `_merkleProofElements`). Pure Lean spec consumed by the
@@ -35,22 +35,14 @@ to the router through typed `linked_externals` rather than direct
 references, so the missing sibling is a translation completeness gap,
 not a wire-up gap.
 
-## 4. Blocked surface (`Contract.lean`, `BLOCKED(verity#1832):` markers)
+## 4. Remaining boundary surface
 
 The public ZK entry points carrying `Transaction[] calldata` /
-`WithdrawalTransaction[] calldata` parameters are documented but not
-translated, because their struct elements contain nested dynamic
-members (`uint256[]`, `Ciphertext[]`). The macro rejects struct
-parameter projection from an ABI-dynamic-root at
-`Verity/Macro/Translate.lean:1715`. Tracked dedicated under verity#1832
-(umbrella: verity#1760). Once that lands, the following land 1:1 from
-`UnlinkPool.sol`:
-
-- `transfer(Transaction[] calldata _transactions)`
-  (UnlinkPool.sol:309 ff.)
-- `withdraw(WithdrawalTransaction[] calldata _withdrawals)`
-- `emergencyWithdraw(WithdrawalTransaction[] calldata _transactions)`
-  (UnlinkPool.sol:374-383)
+`WithdrawalTransaction[] calldata` parameters are now translated through
+source-shaped dynamic-array projections. Remaining promotion blockers are
+explicit boundaries rather than basic body expressibility: Poseidon T3/T4,
+Permit2, Groth16 verifier dispatch, and host-level UUPS proxy storage
+rotation.
 
 ### Source confirmation: no UnlinkAdapter at this pin
 
@@ -61,30 +53,24 @@ adapter surface (UE-425)`, which predates our pin
 references the older multi-relayer release that still carried the
 adapter; at the current pin, the case scope is `UnlinkPool` only.
 
-`deposit` translation is gated by verity#1824 (Array-param helper
-lowering), not verity#1832: `Note[]` is a static-tuple-element array
-the macro already accepts, but the natural deposit translation needs
-internal helpers (`_validateAndCollectDeposit`, `_insertLeaves`,
-`_transferWithBalanceCheck`) accepting `Array Note` / `Array Uint256`
-parameters — which verity#1824 documents as unsupported in current
-macro helper lowering.
+`deposit` is translated with source-shaped note validation, Permit2
+witness transfer through the linked boundary, LazyIMT leaf insertion, and
+the source-shaped `Deposited` event payload.
 
 ## Build status
 
 Case stage: `scoped`. `lake build Benchmark.Cases.UnlinkXyz.Pool.Compile`
 green locally. Promotion to `build_green` happens when:
 
-1. verity#1832 lands (struct parameter projection from an ABI-dynamic
-   root).
-2. verity#1824 lands (Array-param helper lowering) — for the
-   helper-factored `deposit` body.
-3. The lakefile in this repo bumps to the resulting verity commit.
-4. The three blocked entry points (`transfer`, `withdraw`,
-   `emergencyWithdraw`) and `deposit` are wired through.
+1. The manifest-level unsupported feature list is cleared.
+2. The remaining cryptographic / Permit2 / Groth16 / UUPS boundaries are
+   either modeled directly or accepted as supported external boundaries.
+3. The lakefile in this repo points at the required Verity revision.
 
 ## Next milestones
 
-- `build_green` once `deposit` + the three blocked entries elaborate.
+- `build_green` once the remaining boundary decisions are resolved and the
+  manifest is promoted.
 - `proof_partial` after a target invariant is selected (likely:
   per-token conservation across `deposit + withdraw` once nullifier
   spend is gated, modeled with the four assumed boundaries).
