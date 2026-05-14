@@ -906,7 +906,6 @@ verity_contract UnlinkPool where
   /- `_executeWithdrawal(WithdrawalTransaction calldata _txn, bool _emergency)`
       (UnlinkPool.sol:614-666). -/
   function executeWithdrawal (txn : WithdrawalTransaction, emergency : Bool) : Unit := do
-    let recipient := wordToAddress txn.withdrawal.npk
     requireError (txn.withdrawal.amount != 0)
       PoolInvalidNoteAmount()
     requireError (txn.withdrawal.npk != 0)
@@ -915,6 +914,7 @@ verity_contract UnlinkPool where
       PoolInvalidNoteToken()
     requireError (txn.withdrawal.npk <= 0xffffffffffffffffffffffffffffffffffffffff)
       PoolInvalidWithdrawalRecipient()
+    let recipient := wordToAddress txn.withdrawal.npk
     let selfAddr ← Verity.contractAddress
     requireError (recipient != selfAddr) PoolInvalidWithdrawalRecipient()
     let verifierRouter ← getStorageAddr stateVerifierRouter
@@ -932,7 +932,7 @@ verity_contract UnlinkPool where
     let wSlot := sub outputCount 1
     let withdrawalCommitment := arrayElement txn.newCommitments wSlot
     requireError (withdrawalCommitment != 0) PoolWithdrawalSlotZero()
-    let noteHash := add txn.withdrawal.npk txn.withdrawal.amount
+    let noteHash ← hashNote txn.withdrawal.npk txn.withdrawal.token txn.withdrawal.amount
     requireError (withdrawalCommitment == noteHash) PoolInvalidWithdrawalCommitment()
     let ciphertextCount ← countNonZero txn.newCommitments wSlot
     requireError ((arrayLength txn.ciphertexts) == ciphertextCount)
