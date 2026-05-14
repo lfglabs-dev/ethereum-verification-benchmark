@@ -39,10 +39,9 @@ not a wire-up gap.
 
 The public ZK entry points carrying `Transaction[] calldata` /
 `WithdrawalTransaction[] calldata` parameters are now translated through
-source-shaped dynamic-array projections. Remaining promotion blockers are
-explicit boundaries rather than basic body expressibility: Poseidon T3/T4,
-Permit2, Groth16 verifier dispatch, and host-level UUPS proxy storage
-rotation.
+source-shaped dynamic-array projections. Poseidon T3/T4, Permit2, Groth16
+verifier dispatch, and host-level UUPS proxy storage rotation are documented
+modeling boundaries rather than unsupported Verity translation features.
 
 ### Source confirmation: no UnlinkAdapter at this pin
 
@@ -59,18 +58,15 @@ the source-shaped `Deposited` event payload.
 
 ## Build status
 
-Case stage: `scoped`. `lake build Benchmark.Cases.UnlinkXyz.Pool.Compile`
-green locally. Promotion to `build_green` happens when:
+Case stage: `build_green`. `lake build Benchmark.Cases.UnlinkXyz.Pool.Compile`
+green locally. The build-green target is:
 
-1. The manifest-level unsupported feature list is cleared.
-2. The remaining cryptographic / Permit2 / Groth16 / UUPS boundaries are
-   either modeled directly or accepted as supported external boundaries.
-3. The lakefile in this repo points at the required Verity revision.
+1. `unsupported_feature_codes: []` in the case and task manifests.
+2. No pool-local Lean `axiom`, `sorry`, or `admit` declarations.
+3. The lakefile points at the Verity revision required by the translation.
 
 ## Next milestones
 
-- `build_green` once the remaining boundary decisions are resolved and the
-  manifest is promoted.
 - `proof_partial` after a target invariant is selected (likely:
   per-token conservation across `deposit + withdraw` once nullifier
-  spend is gated, modeled with the four assumed boundaries).
+  spend is gated, modeled with the explicit boundaries).

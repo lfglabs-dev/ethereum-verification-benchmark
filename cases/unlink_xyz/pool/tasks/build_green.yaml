@@ -13,7 +13,7 @@ property_class: compilation
 difficulty: easy
 category: build
 track: translation-only
-translation_status: scoped
+translation_status: translated
 proof_status: not_started
 evaluation_engine: lean_proof_generation
 implementation_files:
@@ -33,9 +33,5 @@ abstraction_notes: >
   on the lakefile-pinned Verity revision. The pool entry points now elaborate
   with source-shaped dynamic-array projections, LazyIMT insertion, and
   PoseidonT3/T4 routed through explicit linked-external cryptographic
-  boundaries. Remaining blockers are tracked in the case manifest.
-unsupported_feature_codes:
-  - uups_proxy_storage_rotation_not_modeled
-  - poseidon_assumed_axiom
-  - permit2_assumed_axiom
-  - groth16_verifier_assumed_axiom
+  boundaries.
+unsupported_feature_codes: []
