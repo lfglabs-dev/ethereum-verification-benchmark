@@ -16,18 +16,16 @@
     "backlog_case_count": 3,
     "active_task_count": 98,
     "backlog_task_count": 8,
-    "buildable_case_count": 17,
+    "buildable_case_count": 18,
     "runnable_task_count": 105,
     "case_stage_counts": {
-      "build_green": 15,
+      "build_green": 16,
       "candidate": 1,
-      "proof_complete": 2,
-      "scoped": 1
+      "proof_complete": 2
     },
     "translation_status_counts": {
       "blocked": 1,
-      "scoped": 1,
-      "translated": 17
+      "translated": 18
     },
     "proof_status_counts": {
       "blocked": 1,
@@ -1315,8 +1313,8 @@
       "split": "active",
       "family_id": "unlink_xyz",
       "implementation_id": "monorepo",
-      "stage": "scoped",
-      "translation_status": "scoped",
+      "stage": "build_green",
+      "translation_status": "translated",
       "spec_status": "draft",
       "proof_status": "not_started",
       "source_language": "solidity",
@@ -1342,37 +1340,26 @@
       ],
       "lean_target": "Benchmark.Cases.UnlinkXyz.Pool.Compile",
       "failure_reason": null,
-      "notes": "This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case is scoped against a pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.",
-      "buildable": false,
-      "verity_commit": "b2f2ee402fd56b59e19df39752f7da039f3df4eb",
+      "notes": "This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case targets the pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.",
+      "buildable": true,
+      "verity_commit": "56b831a53113d1df3a0dc78209a6b25fe6794ba2",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "uups_proxy_modeled_as_implementation",
         "permit2_assumed_boundary",
         "poseidon_assumed_boundary",
-        "lazy_imt_assumed_boundary",
         "groth16_assumed_boundary",
         "bn254_precompile_ecm",
         "erc7201_storage_namespace",
         "named_errors",
         "initializer_modeled",
         "nonreentrant_modeled",
-        "keccak256_literal_typehash"
+        "keccak256_literal_typehash",
+        "macro_event_declarations"
       ],
-      "abstraction_notes": "Verity model of `UnlinkPool` (Unlink privacy pool implementation). Protocol- specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier router) are routed through assumed-status external boundaries with named axioms, per the `unlink-verity` package split documented in `docs/ROADMAP.md` \"Unlink Audit Readiness\". UUPS proxy semantics are modeled as the implementation contract itself (proxy storage rotation is host-level and tracked under verity#1420). The model uses every Solidity-feature-parity primitive that landed in verity through PRs #1782 (selfbalance), #1795 (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254 precompile ECMs + `keccak256_lit` literal sugar). Three public entry points are SCOPED but not yet TRANSLATED. The PARAMETER-SHAPE side of the blocker (struct-parameter projection from an ABI-dynamic root for single-word static leaves) shipped via verity#1832 / verity#1843 on top of verity#1841 and verity#1842, and the lakefile pin has been bumped past those PRs. An empirical pilot (`pilot/transfer-body-1832`, 2026-05-13) confirmed that the macro now accepts `Array Transaction` / `Array WithdrawalTransaction` parameters and reads single-word static leaves of their elements (`(arrayElement _ i).circuitId` / `.merkleRoot` / `.contextHash`), but cannot yet express the per-tx body. Three further macro capabilities are required, tracked under verity#1849:   * G1 \u2014 `arrayLength` on a struct-element dynamic member     (`txn.nullifierHashes.length`).   * G2 \u2014 element indexing of struct-element dynamic members     (`txn.nullifierHashes[k]`).   * G3 \u2014 forwarding dynamic-array values to `tryExternalCall` / `emit` /     `revertError` argument lists. Combined with verity#1824 (internal helpers with `Array` parameters cannot be lowered), these are the final Verity-core gates on `transfer`, `withdraw`, and `emergencyWithdraw`. Source confirmation (pinned commit 4bc46c1f): there is NO `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` \u2014 `UnlinkAdapter` was deleted upstream in `d9c8948 chore(contracts): delete UnlinkAdapter + strip adapter surface (UE-425)` predating our pin. The umbrella verity#1760 references the older multi-relayer release that still carried the adapter surface. With the adapter removed, the case scope is `UnlinkPool` only. Spec modules ported from the local scratchpad:   - `InternalLazyIMT.lean`: full LazyIMT spec (Z_0..Z_32 tower,     `_init`, `_insert`, `_update`, `_root`, `_rootWithDepth`,     `_levels`, `_merkleProofElements`). Pure Lean spec used by the     pool's `_insertLeaves` path.   - `State.lean`: `StateStorage` record + `_initializeState`,     `_insertLeaves`, `_spend`, `_setVerifierRouter` helpers operating     over the LazyIMT spine + nullifier set + verifier-router. `verity_contract UnlinkPool` ships in `Contract.lean` covering:   - all admin / view / lifecycle functions: `constructor`,     `initialize`, `addRelayer`, `removeRelayer`, `setVerifierRouter`,     `transferOwnership`, `acceptOwnership`, `renounceOwnership`,     `isRelayer`, `hashNote`, `_checkRelayer`.   - `deposit` translation is gated by verity#1824 (Array-param helper     lowering) \u2014 `_validateAndCollectDeposit` /     `_transferWithBalanceCheck` / `_insertLeaves` can't be factored     into internal helpers that accept `Array Note` / `Array Uint256`     parameters until that ships. The blocked entry points have explicit `PENDING TRANSLATION` markers in `Contract.lean` referencing verity#1849 (G1/G2/G3) and verity#1824.",
-      "unsupported_feature_codes": [
-        "struct_array_element_dynamic_member_arrayLength",
-        "struct_array_element_dynamic_member_index",
-        "dynamic_array_forwarding_to_external_emit_revert",
-        "internal_helper_array_param_lowering",
-        "uups_proxy_storage_rotation_not_modeled",
-        "bn254_precompile_probes_via_ecm_assumed",
-        "poseidon_assumed_axiom",
-        "permit2_assumed_axiom",
-        "lazy_imt_assumed_axiom",
-        "groth16_verifier_assumed_axiom"
-      ],
+      "abstraction_notes": "Verity model of `UnlinkPool` (Unlink privacy pool implementation). Protocol- specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier router) are routed through explicit external or opaque boundaries, per the `unlink-verity` package split documented in `docs/ROADMAP.md` \"Unlink Audit Readiness\". UUPS proxy semantics are modeled as the implementation contract itself (proxy storage rotation is host-level and tracked under verity#1420). The model uses every Solidity-feature-parity primitive that landed in verity through PRs #1782 (selfbalance), #1795 (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254 precompile ECMs + `keccak256_lit` literal sugar), plus #1870 (memory-array helper lowering), #1871 (dynamic-array event sources), #1872 (array values in executable emit calls), and #1873 (projected static-struct event payloads), and #1874 (multi-result ECM binding). The public ZK entry points (`deposit`, `transfer`, `withdraw`, and `emergencyWithdraw`) now build against source-shaped array parameters. The transfer/withdraw paths use `Array Transaction` / `Array WithdrawalTransaction` parameters with dynamic struct-array member projections and projected dynamic-array forwarding to linked externals / internal helpers. They now use `_realCommitments` / `_realNullifiers`-shaped memory-array helpers, pass the resulting memory array into an `_insertLeaves`-shaped helper, and emit source-shaped dynamic array and withdrawal-note payloads. The deposit path validates static `Note[]` elements, computes the source-shaped deposit witness hash, routes the Permit2 transfer through the linked external boundary, inserts leaves, and emits the source-shaped `Deposited` payload. Poseidon, Permit2, Groth16, and host-level UUPS proxy behavior remain explicit modeling boundaries, not unsupported Verity translation features. `_executeWithdrawal(_transactions[i], bool)` is routed through an internal helper call. The deploy-time BN254 precompile probe in `initialize` is wired through the 0x06/0x07/0x08 precompile ECMs and the multi-result ECM binder. Source confirmation (pinned commit 4bc46c1f): there is NO `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` \u2014 `UnlinkAdapter` was deleted upstream in `d9c8948 chore(contracts): delete UnlinkAdapter + strip adapter surface (UE-425)` predating our pin. The umbrella verity#1760 references the older multi-relayer release that still carried the adapter surface. With the adapter removed, the case scope is `UnlinkPool` only. Spec modules ported from the local scratchpad:   - `InternalLazyIMT.lean`: full LazyIMT spec (Z_0..Z_32 tower,     `_init`, `_insert`, `_update`, `_root`, `_rootWithDepth`,     `_levels`, `_merkleProofElements`). Pure Lean spec used by the     pool's `_insertLeaves` path.   - `State.lean`: `StateStorage` record + `_initializeState`,     `_insertLeaves`, `_spend`, `_setVerifierRouter` helpers operating     over the LazyIMT spine + nullifier set + verifier-router. `verity_contract UnlinkPool` ships in `Contract.lean` covering:   - all admin / view / lifecycle functions: `constructor`,     `initialize`, `addRelayer`, `removeRelayer`, `setVerifierRouter`,     `transferOwnership`, `acceptOwnership`, `renounceOwnership`,     `isRelayer`, `nextLeafIndex`, `hashNote`, `_checkRelayer`.   - `deposit`, `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired.",
+      "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.UnlinkXyz.Pool.Specs",
       "proof_target": "Benchmark.Cases.UnlinkXyz.Pool.Proofs"
     },
@@ -5488,7 +5475,7 @@
       "difficulty": "easy",
       "theorem_name": "Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles",
       "proof_family": "functional_correctness",
-      "translation_status": "scoped",
+      "translation_status": "translated",
       "proof_status": "not_started",
       "implementation_files": [
         "cases/unlink_xyz/pool/verity/Contract.lean",
@@ -5502,10 +5489,8 @@
         "Benchmark/Generated/UnlinkXyz/Pool/Tasks/BuildGreen.lean"
       ],
       "abstraction_level": "protocol_slice",
-      "abstraction_notes": "First buildable target for the case: the `verity_contract UnlinkPool` declaration in `Contract.lean` must elaborate cleanly through `lake build` on the lakefile-pinned Verity revision. The three nested-dynamic-struct- array entry points (`transfer`, `withdraw`, `adapterWithdraw`) are stubbed with `BLOCKED(#1760-nested-dynamic):` markers until the Verity macro surface gains struct-parameter projection from an ABI-dynamic root.",
-      "unsupported_feature_codes": [
-        "nested_dynamic_struct_array_param"
-      ],
+      "abstraction_notes": "First buildable target for the case: the `verity_contract UnlinkPool` declaration in `Contract.lean` must elaborate cleanly through `lake build` on the lakefile-pinned Verity revision. The pool entry points now elaborate with source-shaped dynamic-array projections, LazyIMT insertion, and PoseidonT3/T4 routed through explicit linked-external cryptographic boundaries.",
+      "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.UnlinkXyz.Pool.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
@@ -6420,5 +6405,5 @@
       }
     }
   ],
-  "generated_at": "2026-05-14T07:12:57.473521+00:00"
+  "generated_at": "2026-05-14T22:37:25.307160+00:00"
 }

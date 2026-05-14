@@ -5,8 +5,8 @@ schema_version: 1
 split: active
 family_id: unlink_xyz
 implementation_id: monorepo
-stage: scoped
-translation_status: scoped
+stage: build_green
+translation_status: translated
 spec_status: draft
 proof_status: not_started
 upstream_repo: https://github.com/unlink-xyz/monorepo
@@ -73,9 +73,9 @@ abstraction_notes: >
   withdrawal-note payloads. The deposit path validates static `Note[]`
   elements, computes the source-shaped deposit witness hash, routes the Permit2
   transfer through the linked external boundary, inserts leaves, and emits the
-  source-shaped `Deposited` payload. Remaining promotion blockers are fidelity
-  gaps rather than basic body expressibility: Poseidon, Permit2, Groth16, and
-  host-level UUPS proxy behavior remain as explicit boundaries.
+  source-shaped `Deposited` payload. Poseidon, Permit2, Groth16, and
+  host-level UUPS proxy behavior remain explicit modeling boundaries, not
+  unsupported Verity translation features.
   `_executeWithdrawal(_transactions[i], bool)` is routed through an internal
   helper call. The deploy-time BN254 precompile probe in `initialize` is wired
   through the 0x06/0x07/0x08 precompile ECMs and the multi-result ECM binder.
@@ -102,17 +102,12 @@ abstraction_notes: >
       `initialize`, `addRelayer`, `removeRelayer`, `setVerifierRouter`,
       `transferOwnership`, `acceptOwnership`, `renounceOwnership`,
       `isRelayer`, `nextLeafIndex`, `hashNote`, `_checkRelayer`.
-    - `deposit`, `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired,
-      but still carry the fidelity gaps listed above.
-unsupported_feature_codes:
-  - uups_proxy_storage_rotation_not_modeled
-  - poseidon_assumed_axiom
-  - permit2_assumed_axiom
-  - groth16_verifier_assumed_axiom
+    - `deposit`, `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired.
+unsupported_feature_codes: []
 notes: >
   This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which
   was blocked on `upstream_unavailable`. The upstream is now resolved and the
-  case is scoped against a pinned commit of `unlink-xyz/monorepo`. The original
-  local research scratchpad that informed this translation lived in
+  case targets the pinned commit of `unlink-xyz/monorepo`. The original local
+  research scratchpad that informed this translation lived in
   `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten
   here to use the new Verity feature surface end-to-end.

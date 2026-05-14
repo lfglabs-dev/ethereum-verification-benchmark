@@ -1,10 +1,8 @@
 /-
   Editable task template for `unlink_xyz/pool/build_green`.
 
-  The case is currently `stage: scoped` with `translation_status:
-  scoped`. The promotion path to `build_green` is documented in
-  `cases/unlink_xyz/pool/review/spec-review.md`. The reference solution
-  lives in `Benchmark.Cases.UnlinkXyz.Pool.Proofs`.
+  The case is `stage: build_green` with `translation_status: translated`.
+  The reference solution lives in `Benchmark.Cases.UnlinkXyz.Pool.Proofs`.
 -/
 import Benchmark.Cases.UnlinkXyz.Pool.Compile
 

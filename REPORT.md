@@ -7,7 +7,7 @@ This report is generated from the benchmark manifests.
 - Families: 19
 - Implementations: 19
 - Active cases: 16
-- Buildable active cases: 15
+- Buildable active cases: 16
 - Active tasks: 98
 - Backlog cases: 3
 
@@ -143,6 +143,16 @@ This report is generated from the benchmark manifests.
 - Source artifact: `contracts/v2/TermMaxOrderV2.sol`
 - Notes: TermMax range-order AMM slice for pricing-state transition correctness. The proof target is the highest-signal easy theorem in this family: on the successful single-segment `debtToken -> XT` exact-input path, the stored `virtualXtReserve` decreases by exactly the XT amount implied by the curve.
 
+### `unlink_xyz/pool`
+- Family / implementation: `unlink_xyz` / `monorepo`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`draft`, proof=`not_started`
+- Lean target: `Benchmark.Cases.UnlinkXyz.Pool.Compile`
+- Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
+- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `emergencyWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`
+- Source artifact: `protocol/contracts/src/UnlinkPool.sol`
+- Notes: This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case targets the pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.
+
 ### `wildcat/borrow_liquidity_safety`
 - Family / implementation: `wildcat` / `v2_protocol`
 - Stage: `build_green`
@@ -165,15 +175,7 @@ This report is generated from the benchmark manifests.
 
 ## Non-buildable active cases
 
-### `unlink_xyz/pool`
-- Family / implementation: `unlink_xyz` / `monorepo`
-- Stage: `scoped`
-- Status dimensions: translation=`scoped`, spec=`draft`, proof=`not_started`
-- Lean target: `Benchmark.Cases.UnlinkXyz.Pool.Compile`
-- Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
-- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `emergencyWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`
-- Source artifact: `protocol/contracts/src/UnlinkPool.sol`
-- Notes: This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case is scoped against a pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.
+- None
 
 ## Active tasks
 
