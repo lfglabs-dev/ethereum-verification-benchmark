@@ -19,10 +19,13 @@ def totalNat (balance virtualBalance : Uint256) : Nat :=
   balance.val + virtualBalance.val
 
 /--
-  Mathematical product `L = (Ra + Va) * (Rb + Vb)`, using Nat arithmetic so
-  the invariant states the economic product rather than wrapped EVM arithmetic.
+  Mathematical product before the quote is applied:
+  `L_before = (Ra + Va) * (Rb + Vb)`.
+
+  Uses Nat arithmetic so the invariant states the economic product rather than
+  wrapped EVM arithmetic.
 -/
-def invariantNat
+def L_before
     (balanceA balanceB virtualBalanceA virtualBalanceB : Uint256) : Nat :=
   totalNat balanceA virtualBalanceA * totalNat balanceB virtualBalanceB
 
@@ -54,8 +57,8 @@ def postBalanceB
     else if indexOut == 1 then balanceB.val - amountGivenScaled18.val
     else balanceB.val
 
-/-- Mathematical post-swap product after applying Vault-side real-balance deltas. -/
-def postInvariantNat
+/-- Mathematical product after applying Vault-side real-balance deltas. -/
+def L_after
     (exactIn : Bool)
     (balanceA balanceB virtualBalanceA virtualBalanceB : Uint256)
     (indexIn indexOut amountGivenScaled18 amountCalculatedScaled18 : Uint256) : Nat :=
@@ -98,8 +101,8 @@ def onSwap_fixed_virtual_balances_product_non_decreasing_spec
     (exactIn : Bool)
     (balanceA balanceB virtualBalanceA virtualBalanceB : Uint256)
     (indexIn indexOut amountGivenScaled18 amountCalculatedScaled18 : Uint256) : Prop :=
-  postInvariantNat exactIn balanceA balanceB virtualBalanceA virtualBalanceB
+  L_after exactIn balanceA balanceB virtualBalanceA virtualBalanceB
       indexIn indexOut amountGivenScaled18 amountCalculatedScaled18
-    >= invariantNat balanceA balanceB virtualBalanceA virtualBalanceB
+    >= L_before balanceA balanceB virtualBalanceA virtualBalanceB
 
 end Benchmark.Cases.Balancer.ReClammSwapRounding

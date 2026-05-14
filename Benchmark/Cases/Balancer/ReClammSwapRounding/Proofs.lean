@@ -168,7 +168,7 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
         rw [hQuote, div_val _ _ hDenValNe, hDenExact, hNumExact]
         exact Nat.div_mul_le_self _ _
       unfold onSwap_fixed_virtual_balances_product_non_decreasing_spec
-      unfold postInvariantNat invariantNat postBalanceA postBalanceB totalNat
+      unfold L_after L_before postBalanceA postBalanceB totalNat
       simp [balanceOf, virtualBalanceOf, uint256_zero_ne_one, uint256_one_ne_zero]
       have hOutLeReal : amountCalculatedScaled18.val ≤ balanceB.val := by
         rw [hQuote]
@@ -243,7 +243,7 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
         rw [hQuote, mulDivUp, ← hDenExact, ← hNumExact]
         exact ceil_sub_one_div_mul_ge _ _ hDenValNe
       unfold onSwap_fixed_virtual_balances_product_non_decreasing_spec
-      unfold postInvariantNat invariantNat postBalanceA postBalanceB totalNat
+      unfold L_after L_before postBalanceA postBalanceB totalNat
       simp [hExact, balanceOf, virtualBalanceOf, uint256_zero_ne_one, uint256_one_ne_zero]
       have hOutLeReal : amountGivenScaled18.val ≤ balanceB.val := by
         exact hOutReq
@@ -316,7 +316,7 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
         rw [hQuote, div_val _ _ hDenValNe, hDenExact, hNumExact]
         exact Nat.div_mul_le_self _ _
       unfold onSwap_fixed_virtual_balances_product_non_decreasing_spec
-      unfold postInvariantNat invariantNat postBalanceA postBalanceB totalNat
+      unfold L_after L_before postBalanceA postBalanceB totalNat
       simp [balanceOf, virtualBalanceOf, uint256_zero_ne_one, uint256_one_ne_zero]
       have hOutLeReal : amountCalculatedScaled18.val ≤ balanceA.val := by
         rw [hQuote]
@@ -391,7 +391,7 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
         rw [hQuote, mulDivUp, ← hDenExact, ← hNumExact]
         exact ceil_sub_one_div_mul_ge _ _ hDenValNe
       unfold onSwap_fixed_virtual_balances_product_non_decreasing_spec
-      unfold postInvariantNat invariantNat postBalanceA postBalanceB totalNat
+      unfold L_after L_before postBalanceA postBalanceB totalNat
       simp [hExact, balanceOf, virtualBalanceOf, uint256_zero_ne_one, uint256_one_ne_zero]
       have hOutLeReal : amountGivenScaled18.val ≤ balanceA.val := by
         exact hOutReq
