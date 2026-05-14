@@ -1,5 +1,5 @@
 /-
-  Verity model of `UnlinkPool` — assumed boundaries and pure structural specs.
+  Verity model of `UnlinkPool` — opaque boundaries and pure structural specs.
 
   Upstream: unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b
   Solidity files:
@@ -11,9 +11,8 @@
   Protocol-specific cryptographic primitives belong in the `unlink-verity`
   package per the package-split policy documented in
   `lfglabs-dev/verity:docs/ROADMAP.md` "Unlink Audit Readiness". This file
-  declares them locally as `opaque` / `axiom` boundaries with the
-  `unlink_verity_*` axiom naming convention so a future trust manifest can
-  list them in one place.
+  declares them locally as opaque boundaries so a future trust manifest can
+  list them in one place without adding Lean axioms to the benchmark target.
 
   BN254 precompile probes are NO LONGER declared here: `_checkBn254Precompile`
   is wired directly to `Compiler.Modules.Precompiles.bn256Add` /
@@ -116,21 +115,14 @@ structure AdapterTransaction where
 /-! ### Assumed boundary: Poseidon T3 / T4 (vendored poseidon-solidity@v0.0.5)
 
 `PoseidonT3.hash(uint[2])` and `PoseidonT4.hash(uint[3])` are the BN254
-scalar-field hashes used inside the ZK circuit. Modeled opaquely; result
-lives in the scalar field. -/
+scalar-field hashes used inside the ZK circuit. Modeled opaquely here. -/
 
 namespace PoseidonT3
   opaque hash : (Uint256 × Uint256) → Uint256
-  /-- Axiom name: `unlink_verity_poseidon_t3_in_field`. -/
-  axiom hash_in_field (xy : Uint256 × Uint256) :
-    (hash xy : Nat) < (PoolConstants.SNARK_SCALAR_FIELD : Nat)
 end PoseidonT3
 
 namespace PoseidonT4
   opaque hash : (Uint256 × Uint256 × Uint256) → Uint256
-  /-- Axiom name: `unlink_verity_poseidon_t4_in_field`. -/
-  axiom hash_in_field (xyz : Uint256 × Uint256 × Uint256) :
-    (hash xyz : Nat) < (PoolConstants.SNARK_SCALAR_FIELD : Nat)
 end PoseidonT4
 
 /-! ### Assumed boundary: Permit2.permitWitnessTransferFrom
@@ -140,7 +132,6 @@ witness checks happen inside Permit2; the pool observes only the post-call
 balance delta (`_transferWithBalanceCheck`). -/
 
 namespace Permit2Spec
-  /-- Axiom name: `unlink_verity_permit2_permit_witness_transfer_from`. -/
   opaque permitWitnessTransferFromEffect
     (permit2 : Address) (token : Address) (depositor : Address)
     (totalAmount : Uint256) (witness : Uint256) : Uint256
@@ -153,7 +144,6 @@ an opaque step function so callers can write the leaf and re-read the
 root through the pool's storage fields. -/
 
 namespace LazyImtSpec
-  /-- Axiom name: `unlink_verity_lazy_imt_root_after_inserts`. -/
   opaque rootAfterInserts (prevRoot prevNumberOfLeaves : Uint256)
     (leaves : Array Uint256) : Uint256
 end LazyImtSpec
@@ -169,7 +159,6 @@ the contract layer `getCircuit` is exposed as a single tuple-returning
 itself runs through Verity's external-call machinery. -/
 
 namespace VerifierRouterSpec
-  /-- Axiom name: `unlink_verity_groth16_verify_proof`. -/
   opaque verifyProof
     (verifier : Address)
     (pA : Uint256 × Uint256)

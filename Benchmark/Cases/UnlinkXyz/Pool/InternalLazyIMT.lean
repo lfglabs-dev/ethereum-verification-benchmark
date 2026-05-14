@@ -15,8 +15,7 @@
 
   This module is pure Lean (not a `verity_contract` declaration); it is
   the trusted-base spec that the pool's `_insertLeaves` /
-  `_validateContext` / `_verifyProof` paths consume. Stored separately
-  so the pool's trust manifest can list the LazyIMT axioms in one place.
+  `_validateContext` / `_verifyProof` paths consume.
 -/
 import Contracts.Common
 import Benchmark.Cases.UnlinkXyz.Pool.Specs
