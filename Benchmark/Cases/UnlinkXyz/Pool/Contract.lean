@@ -379,6 +379,7 @@ verity_contract UnlinkPool where
       Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256,
       Uint256, Uint256, Uint256, Array Uint256, Array Uint256) -> (Bool)
     external poseidonT3(Uint256, Uint256) -> (Uint256)
+    external poseidonT4(Uint256, Uint256, Uint256) -> (Uint256)
     external permitWitnessTransferFrom(
       Address, Address, Uint256, Uint256, Uint256, Address, Uint256, Address,
       Uint256, Bytes) -> (Bool)
@@ -494,14 +495,9 @@ verity_contract UnlinkPool where
 
   /- `function hashNote(Note calldata _note) public pure returns (uint256)`
       (UnlinkPool.sol:212-215). Pure Poseidon-T4 boundary call. -/
-  -- BLOCKED(verity#1003): qualified Lean helper calls (`PoseidonT4.hash`)
-  -- are not yet supported inside `verity_contract` function bodies. The
-  -- pure spec lives in `Specs.lean` (assumed boundary). Once verity#1003
-  -- lifts, replace with `let h ← PoseidonT4.hash (npk, ...)` (the same
-  -- shape the scratchpad uses).
   function view hashNote (npk : Uint256, _token : Address, amount : Uint256)
       : Uint256 := do
-    return (add npk amount)
+    return externalCall "poseidonT4" [npk, addressToWord _token, amount]
 
   function poseidon2 (lhs : Uint256, rhs : Uint256) : Uint256 := do
     return externalCall "poseidonT3" [lhs, rhs]

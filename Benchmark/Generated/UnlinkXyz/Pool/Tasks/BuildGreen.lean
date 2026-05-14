@@ -2,7 +2,7 @@
   Editable task template for `unlink_xyz/pool/build_green`.
 
   The case is currently `stage: scoped` with `translation_status:
-  in_progress`. The promotion path to `build_green` is documented in
+  scoped`. The promotion path to `build_green` is documented in
   `cases/unlink_xyz/pool/review/spec-review.md`. The reference solution
   lives in `Benchmark.Cases.UnlinkXyz.Pool.Proofs`.
 -/

@@ -30,9 +30,12 @@ abstraction_level: protocol_slice
 abstraction_notes: >
   First buildable target for the case: the `verity_contract UnlinkPool`
   declaration in `Contract.lean` must elaborate cleanly through `lake build`
-  on the lakefile-pinned Verity revision. The three nested-dynamic-struct-
-  array entry points (`transfer`, `withdraw`, `adapterWithdraw`) are stubbed
-  with `BLOCKED(#1760-nested-dynamic):` markers until the Verity macro
-  surface gains struct-parameter projection from an ABI-dynamic root.
+  on the lakefile-pinned Verity revision. The pool entry points now elaborate
+  with source-shaped dynamic-array projections, LazyIMT insertion, and
+  PoseidonT3/T4 routed through explicit linked-external cryptographic
+  boundaries. Remaining blockers are tracked in the case manifest.
 unsupported_feature_codes:
-  - nested_dynamic_struct_array_param
+  - uups_proxy_storage_rotation_not_modeled
+  - poseidon_assumed_axiom
+  - permit2_assumed_axiom
+  - groth16_verifier_assumed_axiom
