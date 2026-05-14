@@ -42,10 +42,8 @@
   These shapes use struct-array parameters whose elements carry nested
   dynamic members (`uint256[] nullifierHashes`, `Ciphertext[] ciphertexts`,
   etc.). The remaining fidelity gaps are the parts that still need
-  first-class source equivalents in Verity or this model: memory-array return
-  helpers for `_realCommitments` / `_realNullifiers`, the source-level
-  memory-array value passed into `_insertLeaves`, and dynamic array event
-  payloads.
+  first-class source equivalents in Verity or this model: dynamic array event
+  payloads and the LazyIMT insertion body behind `_insertLeaves`.
 -/
 import Contracts.Common
 import Compiler.Modules.Hashing
@@ -402,26 +400,69 @@ verity_contract UnlinkPool where
       else
         pure ())
 
-  /- Source shape: `_insertLeaves(_realCommitments(values, excludeIndex))`.
-     Verity does not yet model memory-array-return helpers, so this helper
-     fuses the source filter with the `_insertLeaves` state update while
-     keeping the insertion side-effect factored out of entry points. -/
-  function insertFilteredLeaves
-      (values : Array Uint256, excludeIndex : Uint256, leafCount : Uint256,
-       startIndex : Uint256) : Uint256 := do
-    let mut newRoot := startIndex
-    forEach "m" (arrayLength values) (do
-      let leaf := arrayElement values m
-      if m != excludeIndex then
-        if leaf != 0 then
-          newRoot := add newRoot leaf
+  function realCommitments
+      (newCommitments : Array Uint256, excludeIndex : Uint256)
+      : Array Uint256 := do
+    let len := arrayLength newCommitments
+    let mut count := 0
+    forEach "i" len (do
+      let commitment := arrayElement newCommitments i
+      if i != excludeIndex then
+        if commitment != 0 then
+          count := add count 1
         else
           pure ()
       else
         pure ())
+    let leaves ← allocArray count
+    let mut j := 0
+    forEach "i" len (do
+      let commitment := arrayElement newCommitments i
+      if i != excludeIndex then
+        if commitment != 0 then
+          setMemoryArrayElement leaves j commitment
+          j := add j 1
+        else
+          pure ()
+      else
+        pure ())
+    returnArray leaves
+
+  function realNullifiers (nullifierHashes : Array Uint256) : Array Uint256 := do
+    let len := arrayLength nullifierHashes
+    let mut count := 0
+    forEach "i" len (do
+      let nullifierHash := arrayElement nullifierHashes i
+      if nullifierHash != 0 then
+        count := add count 1
+      else
+        pure ())
+    let real ← allocArray count
+    let mut j := 0
+    forEach "i" len (do
+      let nullifierHash := arrayElement nullifierHashes i
+      if nullifierHash != 0 then
+        setMemoryArrayElement real j nullifierHash
+        j := add j 1
+      else
+        pure ())
+    returnArray real
+
+  /- Source shape: `_insertLeaves(uint256[] memory _leafHashes)`.
+     The LazyIMT update is still represented by the existing lightweight
+     accumulator used by this scoped benchmark model. -/
+  function insertLeaves (leafHashes : Array Uint256) : Uint256 := do
+    let startIndex ← nextLeafIndex
+    let mut newRoot := startIndex
+    forEach "m" (arrayLength leafHashes) (do
+      let leaf := arrayElement leafHashes m
+      if leaf != 0 then
+        newRoot := add newRoot leaf
+      else
+        pure ())
     setStorage stateMerkleRoot newRoot
     setMappingWord stateRootSeen newRoot 0 1
-    setStorage lazyNumberOfLeaves (add startIndex leafCount)
+    setStorage lazyNumberOfLeaves (add startIndex (arrayLength leafHashes))
     return newRoot
 
   function view computeContextHash (ciphertexts : Array Ciphertext) : Uint256 := do
@@ -503,16 +544,14 @@ verity_contract UnlinkPool where
       requireError proofOk PoolProofVerificationFailed()
       requireError ok PoolProofVerificationFailed()
       spendNullifiers txn.nullifierHashes
+      let leaves ← realCommitments txn.newCommitments
+        0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
       let startIndex ← nextLeafIndex
-      let newRoot ← insertFilteredLeaves txn.newCommitments
-        0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
-        ciphertextCount
-        startIndex
-      let realNullifierCount ← countNonZero txn.nullifierHashes
-        0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+      let newRoot ← insertLeaves leaves
+      let realNullifierHashes ← realNullifiers txn.nullifierHashes
       emit "Transferred"
-        [newRoot, startIndex, ciphertextCount,
-         realNullifierCount,
+        [newRoot, startIndex, arrayLength leaves,
+         arrayLength realNullifierHashes,
          arrayLength txn.ciphertexts])
 
   /- `_executeWithdrawal(WithdrawalTransaction calldata _txn, bool _emergency)`
@@ -568,19 +607,19 @@ verity_contract UnlinkPool where
     requireError proofOk PoolProofVerificationFailed()
     requireError ok PoolProofVerificationFailed()
     spendNullifiers txn.nullifierHashes
+    let leaves ← realCommitments txn.newCommitments wSlot
     let startIndex ← nextLeafIndex
-    let newRoot ← insertFilteredLeaves txn.newCommitments wSlot ciphertextCount startIndex
+    let newRoot ← insertLeaves leaves
     settleWithdrawalTransfer txn.withdrawal.token recipient txn.withdrawal.amount
-    let realNullifierCount ← countNonZero txn.nullifierHashes
-      0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    let realNullifierHashes ← realNullifiers txn.nullifierHashes
     if emergency then
       emit "EmergencyWithdrawn"
         [addressToWord recipient,
          txn.withdrawal.npk,
          addressToWord txn.withdrawal.token,
          txn.withdrawal.amount,
-         newRoot, startIndex, ciphertextCount,
-         realNullifierCount,
+         newRoot, startIndex, arrayLength leaves,
+         arrayLength realNullifierHashes,
          arrayLength txn.ciphertexts]
     else
       emit "Withdrawn"
@@ -588,8 +627,8 @@ verity_contract UnlinkPool where
          txn.withdrawal.npk,
          addressToWord txn.withdrawal.token,
          txn.withdrawal.amount,
-         newRoot, startIndex, ciphertextCount,
-         realNullifierCount,
+         newRoot, startIndex, arrayLength leaves,
+         arrayLength realNullifierHashes,
          arrayLength txn.ciphertexts]
 
   /- `function withdraw(WithdrawalTransaction[] calldata _transactions)
