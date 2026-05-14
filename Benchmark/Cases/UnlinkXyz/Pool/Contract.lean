@@ -196,6 +196,21 @@ verity_contract UnlinkPool where
     error PoolWithdrawalSlotZero ()
     error CallerNotPendingOwner ()
 
+  event_defs
+    event Deposited(@indexed depositor : Address, newRoot : Uint256, startIndex : Uint256,
+      notes : Array Note, ciphertexts : Array Ciphertext)
+    event Transferred(@indexed newRoot : Uint256, startIndex : Uint256,
+      commitments : Array Uint256, nullifierHashes : Array Uint256, ciphertexts : Array Ciphertext)
+    event Withdrawn(@indexed «to» : Address, note : Note, @indexed newRoot : Uint256,
+      startIndex : Uint256, commitments : Array Uint256, nullifierHashes : Array Uint256,
+      ciphertexts : Array Ciphertext)
+    event EmergencyWithdrawn(@indexed «to» : Address, note : Note, @indexed newRoot : Uint256,
+      startIndex : Uint256, commitments : Array Uint256, nullifierHashes : Array Uint256,
+      ciphertexts : Array Ciphertext)
+    event RelayerAdded(@indexed relayer : Address)
+    event RelayerRemoved(@indexed relayer : Address)
+    event VerifierRouterUpdated(@indexed previousRouter : Address, @indexed newRouter : Address)
+
   -- ERC-7201 namespace base slot for the relayer set:
   -- `keccak256("unlink.storage.UnlinkPoolRelayers")`. Derived at
   -- elaboration time through `keccak256_lit` (verity#1827) so the
