@@ -32,7 +32,7 @@ selected_functions:
   - acceptOwnership
   - renounceOwnership
 source_language: solidity
-verity_version: bd211c574f45cda31d66feab1bbc7e9d08dc5486
+verity_version: 9ebe37665da81b2cf7af0b814e9c48661d4243f5
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
