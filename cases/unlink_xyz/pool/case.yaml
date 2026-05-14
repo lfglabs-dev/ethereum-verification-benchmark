@@ -66,8 +66,10 @@ abstraction_notes: >
   externals / internal helpers. Remaining promotion blockers are fidelity
   gaps rather than basic body expressibility: memory-array-return helper
   shapes for `_realCommitments` / `_realNullifiers`, source-faithful
-  `_insertLeaves`, first-class `_executeWithdrawal(_transactions[i], bool)`
-  helper arguments, and event payloads carrying dynamic arrays.
+  memory-array values flowing into `_insertLeaves`, and event payloads
+  carrying dynamic arrays. `_executeWithdrawal(_transactions[i], bool)` is
+  now routed through an internal helper call; the insertion mutation is also
+  factored into a helper while memory-array construction remains pending.
 
   Source confirmation (pinned commit 4bc46c1f): there is NO
   `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` —

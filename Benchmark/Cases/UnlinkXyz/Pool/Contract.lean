@@ -43,8 +43,9 @@
   dynamic members (`uint256[] nullifierHashes`, `Ciphertext[] ciphertexts`,
   etc.). The remaining fidelity gaps are the parts that still need
   first-class source equivalents in Verity or this model: memory-array return
-  helpers for `_realCommitments` / `_realNullifiers`, `_insertLeaves`, and
-  dynamic array event payloads.
+  helpers for `_realCommitments` / `_realNullifiers`, the source-level
+  memory-array value passed into `_insertLeaves`, and dynamic array event
+  payloads.
 -/
 import Contracts.Common
 import Compiler.Modules.Hashing
@@ -386,6 +387,28 @@ verity_contract UnlinkPool where
       else
         pure ())
 
+  /- Source shape: `_insertLeaves(_realCommitments(values, excludeIndex))`.
+     Verity does not yet model memory-array-return helpers, so this helper
+     fuses the source filter with the `_insertLeaves` state update while
+     keeping the insertion side-effect factored out of entry points. -/
+  function insertFilteredLeaves
+      (values : Array Uint256, excludeIndex : Uint256, leafCount : Uint256,
+       startIndex : Uint256) : Uint256 := do
+    let mut newRoot := startIndex
+    forEach "m" (arrayLength values) (do
+      let leaf := arrayElement values m
+      if m != excludeIndex then
+        if leaf != 0 then
+          newRoot := add newRoot leaf
+        else
+          pure ()
+      else
+        pure ())
+    setStorage stateMerkleRoot newRoot
+    setMappingWord stateRootSeen newRoot 0 1
+    setStorage lazyNumberOfLeaves (add startIndex leafCount)
+    return newRoot
+
   function view computeContextHash (ciphertexts : Array Ciphertext) : Uint256 := do
     let cid ← Verity.chainid
     let selfAddr ← Verity.contractAddress
@@ -466,16 +489,10 @@ verity_contract UnlinkPool where
       requireError ok PoolProofVerificationFailed()
       spendNullifiers txn.nullifierHashes
       let startIndex ← nextLeafIndex
-      let mut newRoot := startIndex
-      forEach "m" (arrayLength txn.newCommitments) (do
-        let leaf := arrayElement txn.newCommitments m
-        if leaf != 0 then
-          newRoot := add newRoot leaf
-        else
-          pure ())
-      setStorage stateMerkleRoot newRoot
-      setMappingWord stateRootSeen newRoot 0 1
-      setStorage lazyNumberOfLeaves (add startIndex ciphertextCount)
+      let newRoot ← insertFilteredLeaves txn.newCommitments
+        0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+        ciphertextCount
+        startIndex
       emit "Transferred"
         [newRoot, startIndex, ciphertextCount,
          arrayLength txn.nullifierHashes,
@@ -535,16 +552,7 @@ verity_contract UnlinkPool where
     requireError ok PoolProofVerificationFailed()
     spendNullifiers txn.nullifierHashes
     let startIndex ← nextLeafIndex
-    let mut newRoot := startIndex
-    forEach "m" wSlot (do
-      let leaf := arrayElement txn.newCommitments m
-      if leaf != 0 then
-        newRoot := add newRoot leaf
-      else
-        pure ())
-    setStorage stateMerkleRoot newRoot
-    setMappingWord stateRootSeen newRoot 0 1
-    setStorage lazyNumberOfLeaves (add startIndex ciphertextCount)
+    let newRoot ← insertFilteredLeaves txn.newCommitments wSlot ciphertextCount startIndex
     settleWithdrawalTransfer txn.withdrawal.token recipient txn.withdrawal.amount
     if emergency then
       emit "EmergencyWithdrawn"
