@@ -42,9 +42,9 @@
   These shapes use struct-array parameters whose elements carry nested
   dynamic members (`uint256[] nullifierHashes`, `Ciphertext[] ciphertexts`,
   etc.). The remaining fidelity gaps are the parts that still need
-  first-class source equivalents in Verity or this model: proof struct
-  forwarding, memory-array return helpers for `_realCommitments` /
-  `_realNullifiers`, `_insertLeaves`, and dynamic array event payloads.
+  first-class source equivalents in Verity or this model: memory-array return
+  helpers for `_realCommitments` / `_realNullifiers`, `_insertLeaves`, and
+  dynamic array event payloads.
 -/
 import Contracts.Common
 import Compiler.Modules.Hashing
@@ -225,7 +225,9 @@ verity_contract UnlinkPool where
   -- against the stored address.
   linked_externals
     external getCircuit(Uint256) -> (Uint256, Uint256, Uint256, Uint256)
-    external verifySpend(Uint256, Uint256, Uint256, Array Uint256, Array Uint256) -> (Bool)
+    external verifySpend(
+      Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256,
+      Uint256, Uint256, Uint256, Array Uint256, Array Uint256) -> (Bool)
 
   /- `constructor(address _permit2)` (UnlinkPool.sol:147-160).
 
@@ -449,6 +451,14 @@ verity_contract UnlinkPool where
         (arrayElement transactions i).contextHash computedContext
       let (proofOk, ok) ← tryExternalCall "verifySpend"
         [verifierWord,
+         abiHeadWord (arrayElement transactions i) 0,
+         abiHeadWord (arrayElement transactions i) 1,
+         abiHeadWord (arrayElement transactions i) 2,
+         abiHeadWord (arrayElement transactions i) 3,
+         abiHeadWord (arrayElement transactions i) 4,
+         abiHeadWord (arrayElement transactions i) 5,
+         abiHeadWord (arrayElement transactions i) 6,
+         abiHeadWord (arrayElement transactions i) 7,
          (arrayElement transactions i).merkleRoot,
          (arrayElement transactions i).contextHash,
          (arrayElement transactions i).nullifierHashes,
@@ -509,6 +519,14 @@ verity_contract UnlinkPool where
     validateContext txn.merkleRoot txn.contextHash computedContext
     let (proofOk, ok) ← tryExternalCall "verifySpend"
       [verifierWord,
+       abiHeadWord txn 0,
+       abiHeadWord txn 1,
+       abiHeadWord txn 2,
+       abiHeadWord txn 3,
+       abiHeadWord txn 4,
+       abiHeadWord txn 5,
+       abiHeadWord txn 6,
+       abiHeadWord txn 7,
        txn.merkleRoot,
        txn.contextHash,
        txn.nullifierHashes,
