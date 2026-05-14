@@ -42,12 +42,12 @@
   These shapes use struct-array parameters whose elements carry nested
   dynamic members (`uint256[] nullifierHashes`, `Ciphertext[] ciphertexts`,
   etc.). The remaining fidelity gaps are the parts that still need
-  first-class source equivalents in Verity or this model: exact ABI/Keccak
-  context hashing, proof struct forwarding, memory-array return helpers for
-  `_realCommitments` / `_realNullifiers`, `_insertLeaves`, and dynamic
-  array event payloads.
+  first-class source equivalents in Verity or this model: proof struct
+  forwarding, memory-array return helpers for `_realCommitments` /
+  `_realNullifiers`, `_insertLeaves`, and dynamic array event payloads.
 -/
 import Contracts.Common
+import Compiler.Modules.Hashing
 import Compiler.Modules.Precompiles
 import Benchmark.Cases.UnlinkXyz.Pool.Specs
 
@@ -55,6 +55,7 @@ namespace Benchmark.Cases.UnlinkXyz.Pool
 
 open Verity hiding pure bind
 open Verity.EVM.Uint256
+open Compiler.Modules.Hashing
 open Compiler.Modules.Precompiles
 open Contracts
 
@@ -389,10 +390,16 @@ verity_contract UnlinkPool where
   function view computeContextHash (ciphertexts : Array Ciphertext) : Uint256 := do
     let cid ← Verity.chainid
     let selfAddr ← Verity.contractAddress
-    let mut acc := add cid (addressToWord selfAddr)
-    forEach "j" (arrayLength ciphertexts) (do
-      acc := add acc (arrayElement ciphertexts j).ephemeralKey)
-    return acc
+    let ciphertextsHash ← ecmCall
+      (fun resultVar => abiEncodeStaticArrayModule resultVar "ciphertexts" 4)
+      [arrayLength ciphertexts]
+    -- For these three 32-byte ABI words, `abi.encode` and the static-word
+    -- packed layout are byte-identical.
+    let rawContext ← ecmCall
+      (fun resultVar => abiEncodePackedWordsModule resultVar 3)
+      [cid, addressToWord selfAddr, ciphertextsHash]
+    return (mod rawContext
+      21888242871839275222246405745257275088548364400416034343698204186575808495617)
 
   function view validateContext
       (merkleRoot : Uint256, contextHash : Uint256, expectedContext : Uint256)
