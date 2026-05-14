@@ -550,9 +550,7 @@ verity_contract UnlinkPool where
       let newRoot ← insertLeaves leaves
       let realNullifierHashes ← realNullifiers txn.nullifierHashes
       emit "Transferred"
-        [newRoot, startIndex, arrayLength leaves,
-         arrayLength realNullifierHashes,
-         arrayLength txn.ciphertexts])
+        [newRoot, startIndex, leaves, realNullifierHashes, txn.ciphertexts])
 
   /- `_executeWithdrawal(WithdrawalTransaction calldata _txn, bool _emergency)`
       (UnlinkPool.sol:614-666). -/
@@ -618,18 +616,14 @@ verity_contract UnlinkPool where
          txn.withdrawal.npk,
          addressToWord txn.withdrawal.token,
          txn.withdrawal.amount,
-         newRoot, startIndex, arrayLength leaves,
-         arrayLength realNullifierHashes,
-         arrayLength txn.ciphertexts]
+         newRoot, startIndex, leaves, realNullifierHashes, txn.ciphertexts]
     else
       emit "Withdrawn"
         [addressToWord recipient,
          txn.withdrawal.npk,
          addressToWord txn.withdrawal.token,
          txn.withdrawal.amount,
-         newRoot, startIndex, arrayLength leaves,
-         arrayLength realNullifierHashes,
-         arrayLength txn.ciphertexts]
+         newRoot, startIndex, leaves, realNullifierHashes, txn.ciphertexts]
 
   /- `function withdraw(WithdrawalTransaction[] calldata _transactions)
       external onlyRelayer nonReentrant` (UnlinkPool.sol:365-372). -/
