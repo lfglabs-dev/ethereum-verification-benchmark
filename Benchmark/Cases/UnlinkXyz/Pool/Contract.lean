@@ -493,9 +493,11 @@ verity_contract UnlinkPool where
         0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
         ciphertextCount
         startIndex
+      let realNullifierCount ← countNonZero txn.nullifierHashes
+        0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
       emit "Transferred"
         [newRoot, startIndex, ciphertextCount,
-         arrayLength txn.nullifierHashes,
+         realNullifierCount,
          arrayLength txn.ciphertexts])
 
   /- `_executeWithdrawal(WithdrawalTransaction calldata _txn, bool _emergency)`
@@ -554,6 +556,8 @@ verity_contract UnlinkPool where
     let startIndex ← nextLeafIndex
     let newRoot ← insertFilteredLeaves txn.newCommitments wSlot ciphertextCount startIndex
     settleWithdrawalTransfer txn.withdrawal.token recipient txn.withdrawal.amount
+    let realNullifierCount ← countNonZero txn.nullifierHashes
+      0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
     if emergency then
       emit "EmergencyWithdrawn"
         [addressToWord recipient,
@@ -561,7 +565,7 @@ verity_contract UnlinkPool where
          addressToWord txn.withdrawal.token,
          txn.withdrawal.amount,
          newRoot, startIndex, ciphertextCount,
-         arrayLength txn.nullifierHashes,
+         realNullifierCount,
          arrayLength txn.ciphertexts]
     else
       emit "Withdrawn"
@@ -570,7 +574,7 @@ verity_contract UnlinkPool where
          addressToWord txn.withdrawal.token,
          txn.withdrawal.amount,
          newRoot, startIndex, ciphertextCount,
-         arrayLength txn.nullifierHashes,
+         realNullifierCount,
          arrayLength txn.ciphertexts]
 
   /- `function withdraw(WithdrawalTransaction[] calldata _transactions)
