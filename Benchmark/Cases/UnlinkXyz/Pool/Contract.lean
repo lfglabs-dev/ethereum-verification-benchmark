@@ -249,6 +249,12 @@ verity_contract UnlinkPool where
     nonce : Uint256,
     deadline : Uint256
 
+  struct Circuit where
+    verifier : Uint256,
+    inputCount : Uint256,
+    outputCount : Uint256,
+    active : Uint256
+
   struct Transaction where
     proof : Proof,
     circuitId : Uint256,
@@ -374,15 +380,22 @@ verity_contract UnlinkPool where
   -- `(verifier, inputCount, outputCount, active)`. The first argument is the
   -- stored router address that Solidity obtains through `_getVerifierRouter()`.
   linked_externals
-    external getCircuit(Address, Uint256) -> (Uint256, Uint256, Uint256, Uint256)
+    external getCircuit(Address, Uint256) -> (Circuit)
+    external getCircuit_try(Address, Uint256) -> (Bool, Circuit)
     external verifySpend(
       Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256,
       Uint256, Uint256, Uint256, Array Uint256, Array Uint256) -> (Bool)
+    external verifySpend_try(
+      Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256, Uint256,
+      Uint256, Uint256, Uint256, Array Uint256, Array Uint256) -> (Bool, Bool)
     external poseidonT3(Uint256, Uint256) -> (Uint256)
     external poseidonT4(Uint256, Uint256, Uint256) -> (Uint256)
     external permitWitnessTransferFrom(
       Address, Address, Uint256, Uint256, Uint256, Address, Uint256, Address,
       Uint256, Bytes) -> (Bool)
+    external permitWitnessTransferFrom_try(
+      Address, Address, Uint256, Uint256, Uint256, Address, Uint256, Address,
+      Uint256, Bytes) -> (Bool, Bool)
 
   /- `constructor(address _permit2)` (UnlinkPool.sol:147-160).
 
@@ -396,6 +409,13 @@ verity_contract UnlinkPool where
     -- PERMIT2 is exposed as an immutable; the macro emits the read-only
     -- binding automatically. `_disableInitializers` sets the marker.
     setStorage initializedSlot 0xff
+
+  /- Solidity's `onlyRelayer` modifier delegates to `_checkRelayer()`
+      (UnlinkPool.sol:266-270). -/
+  modifier onlyRelayer := do
+    let sender ← msgSender
+    let isR ← getMapping relayersSlot sender
+    requireError (isR != 0) PoolUnauthorizedRelayer()
 
   /- `function initialize(address _verifierRouter, address _owner,
                            address _relayer) external initializer`
@@ -577,14 +597,6 @@ verity_contract UnlinkPool where
     requireError (sender == pending) CallerNotPendingOwner()
     setStorageAddr ownerSlot pending
     setStorageAddr pendingOwnerSlot zeroAddress
-
-  /- ### Relayer modifier (inlined per call site) -/
-
-  /- `function _checkRelayer() internal view` (UnlinkPool.sol:266-270). -/
-  function _checkRelayer () : Unit := do
-    let sender ← msgSender
-    let isR ← getMapping relayersSlot sender
-    requireError (isR != 0) PoolUnauthorizedRelayer()
 
   function countNonZero (values : Array Uint256, excludeIndex : Uint256) : Uint256 := do
     let mut count := 0
@@ -807,10 +819,7 @@ verity_contract UnlinkPool where
       (UnlinkPool.sol:306-324). -/
   function nonreentrant(reentrancyLockSlot) deposit
       (depositor : Address, notes : Array Note, ciphertexts : Array Ciphertext,
-       permit : PermitTransferFrom, signature : Bytes) : Unit := do
-    let sender ← msgSender
-    let isR ← getMapping relayersSlot sender
-    requireError (isR != 0) PoolUnauthorizedRelayer()
+       permit : PermitTransferFrom, signature : Bytes) with onlyRelayer : Unit := do
     let notesLen := arrayLength notes
     requireError (notesLen != 0) PoolEmptyNotes()
     requireError ((arrayLength ciphertexts) == notesLen)
@@ -851,26 +860,21 @@ verity_contract UnlinkPool where
   /- `function transfer(Transaction[] calldata _transactions) external
       onlyRelayer nonReentrant` (UnlinkPool.sol:328-363). -/
   function nonreentrant(reentrancyLockSlot) transfer (transactions : Array Transaction)
-      : Unit := do
-    let sender ← msgSender
-    let isR ← getMapping relayersSlot sender
-    requireError (isR != 0) PoolUnauthorizedRelayer()
+      with onlyRelayer : Unit := do
     let txLen := arrayLength transactions
     requireError (txLen != 0) PoolEmptyTransactions()
     forEach "i" txLen (do
       let txn := arrayElement transactions i
       let verifierRouter ← getStorageAddr stateVerifierRouter
-      let (success, verifier, inputCount, outputCount, active) ←
+      let (success, circuit) ←
         tryExternalCall "getCircuit"
           [verifierRouter, txn.circuitId]
-      let verifierWord := add verifier 0
-      let activeWord := add active 0
       requireError success PoolCircuitNotRegistered()
-      requireError (verifierWord != 0) PoolCircuitNotRegistered()
-      requireError (activeWord != 0) PoolCircuitInactive()
-      requireError ((arrayLength txn.nullifierHashes) == inputCount)
+      requireError (circuit.verifier != 0) PoolCircuitNotRegistered()
+      requireError (circuit.active != 0) PoolCircuitInactive()
+      requireError ((arrayLength txn.nullifierHashes) == circuit.inputCount)
         PoolInvalidInputShape()
-      requireError ((arrayLength txn.newCommitments) == outputCount)
+      requireError ((arrayLength txn.newCommitments) == circuit.outputCount)
         PoolInvalidOutputShape()
       let ciphertextCount ← countNonZero txn.newCommitments
         0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
@@ -879,15 +883,8 @@ verity_contract UnlinkPool where
       let computedContext ← computeContextHash txn.ciphertexts
       validateContext txn.merkleRoot txn.contextHash computedContext
       let (proofOk, ok) ← tryExternalCall "verifySpend"
-        [verifierWord,
-         abiHeadWord txn 0,
-         abiHeadWord txn 1,
-         abiHeadWord txn 2,
-         abiHeadWord txn 3,
-         abiHeadWord txn 4,
-         abiHeadWord txn 5,
-         abiHeadWord txn 6,
-         abiHeadWord txn 7,
+        [circuit.verifier,
+         abiEncode txn.proof,
          txn.merkleRoot,
          txn.contextHash,
          txn.nullifierHashes,
@@ -899,9 +896,8 @@ verity_contract UnlinkPool where
         0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
       let startIndex ← nextLeafIndex
       let newRoot ← insertLeaves leaves
-      let realNullifierHashes ← realNullifiers txn.nullifierHashes
       emit "Transferred"
-        [newRoot, startIndex, leaves, realNullifierHashes, txn.ciphertexts])
+        [newRoot, startIndex, leaves, realNullifiers txn.nullifierHashes, txn.ciphertexts])
 
   /- `_executeWithdrawal(WithdrawalTransaction calldata _txn, bool _emergency)`
       (UnlinkPool.sol:614-666). -/
@@ -918,18 +914,16 @@ verity_contract UnlinkPool where
     let selfAddr ← Verity.contractAddress
     requireError (recipient != selfAddr) PoolInvalidWithdrawalRecipient()
     let verifierRouter ← getStorageAddr stateVerifierRouter
-    let (success, verifier, inputCount, outputCount, active) ←
+    let (success, circuit) ←
       tryExternalCall "getCircuit" [verifierRouter, txn.circuitId]
-    let verifierWord := add verifier 0
-    let activeWord := add active 0
     requireError success PoolCircuitNotRegistered()
-    requireError (verifierWord != 0) PoolCircuitNotRegistered()
-    requireError (activeWord != 0) PoolCircuitInactive()
-    requireError ((arrayLength txn.nullifierHashes) == inputCount)
+    requireError (circuit.verifier != 0) PoolCircuitNotRegistered()
+    requireError (circuit.active != 0) PoolCircuitInactive()
+    requireError ((arrayLength txn.nullifierHashes) == circuit.inputCount)
       PoolInvalidInputShape()
-    requireError ((arrayLength txn.newCommitments) == outputCount)
+    requireError ((arrayLength txn.newCommitments) == circuit.outputCount)
       PoolInvalidOutputShape()
-    let wSlot := sub outputCount 1
+    let wSlot := sub circuit.outputCount 1
     let withdrawalCommitment := arrayElement txn.newCommitments wSlot
     requireError (withdrawalCommitment != 0) PoolWithdrawalSlotZero()
     let noteHash ← hashNote txn.withdrawal.npk txn.withdrawal.token txn.withdrawal.amount
@@ -940,15 +934,8 @@ verity_contract UnlinkPool where
     let computedContext ← computeContextHash txn.ciphertexts
     validateContext txn.merkleRoot txn.contextHash computedContext
     let (proofOk, ok) ← tryExternalCall "verifySpend"
-      [verifierWord,
-       abiHeadWord txn 0,
-       abiHeadWord txn 1,
-       abiHeadWord txn 2,
-       abiHeadWord txn 3,
-       abiHeadWord txn 4,
-       abiHeadWord txn 5,
-       abiHeadWord txn 6,
-       abiHeadWord txn 7,
+      [circuit.verifier,
+       abiEncode txn.proof,
        txn.merkleRoot,
        txn.contextHash,
        txn.nullifierHashes,
@@ -960,23 +947,19 @@ verity_contract UnlinkPool where
     let startIndex ← nextLeafIndex
     let newRoot ← insertLeaves leaves
     settleWithdrawalTransfer txn.withdrawal.token recipient txn.withdrawal.amount
-    let realNullifierHashes ← realNullifiers txn.nullifierHashes
     if emergency then
       emit "EmergencyWithdrawn"
         [addressToWord recipient, txn.withdrawal, newRoot, startIndex, leaves,
-         realNullifierHashes, txn.ciphertexts]
+         realNullifiers txn.nullifierHashes, txn.ciphertexts]
     else
       emit "Withdrawn"
         [addressToWord recipient, txn.withdrawal, newRoot, startIndex, leaves,
-         realNullifierHashes, txn.ciphertexts]
+         realNullifiers txn.nullifierHashes, txn.ciphertexts]
 
   /- `function withdraw(WithdrawalTransaction[] calldata _transactions)
       external onlyRelayer nonReentrant` (UnlinkPool.sol:365-372). -/
   function nonreentrant(reentrancyLockSlot) withdraw (transactions : Array WithdrawalTransaction)
-      : Unit := do
-    let sender ← msgSender
-    let isR ← getMapping relayersSlot sender
-    requireError (isR != 0) PoolUnauthorizedRelayer()
+      with onlyRelayer : Unit := do
     let txLen := arrayLength transactions
     requireError (txLen != 0) PoolEmptyTransactions()
     forEach "i" txLen (do
