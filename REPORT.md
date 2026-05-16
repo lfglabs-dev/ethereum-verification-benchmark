@@ -149,7 +149,7 @@ This report is generated from the benchmark manifests.
 - Status dimensions: translation=`translated`, spec=`draft`, proof=`not_started`
 - Lean target: `Benchmark.Cases.UnlinkXyz.Pool.Compile`
 - Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
-- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `emergencyWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`
+- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `emergencyWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`, `VerifierRouter.owner`, `VerifierRouter.pendingOwner`, `VerifierRouter.transferOwnership`, `VerifierRouter.acceptOwnership`, `VerifierRouter.renounceOwnership`, `VerifierRouter.setCircuit`, `VerifierRouter.pauseCircuit`, `VerifierRouter.getCircuit`, `VerifierRouter.verifierToCircuitId`
 - Source artifact: `protocol/contracts/src/UnlinkPool.sol`
 - Notes: This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case targets the pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.
 
@@ -1034,7 +1034,7 @@ This report is generated from the benchmark manifests.
 - Readiness: prompt_context=`ready`, editable_proof=`blocked`, reference_solution=`blocked`
 - Theorem target: `Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/unlink_xyz/pool/verity/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Contract.lean`
+- Implementation files: `cases/unlink_xyz/pool/verity/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean`
 - Specification files: `cases/unlink_xyz/pool/verity/Specs.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Specs.lean`
 - Editable proof file: `Benchmark/Generated/UnlinkXyz/Pool/Tasks/BuildGreen.lean`
 - Hidden reference solution: `Benchmark.Cases.UnlinkXyz.Pool.Proofs`

@@ -19,6 +19,7 @@ evaluation_engine: lean_proof_generation
 implementation_files:
   - cases/unlink_xyz/pool/verity/Contract.lean
   - Benchmark/Cases/UnlinkXyz/Pool/Contract.lean
+  - Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean
 specification_files:
   - cases/unlink_xyz/pool/verity/Specs.lean
   - Benchmark/Cases/UnlinkXyz/Pool/Specs.lean
@@ -29,9 +30,12 @@ reference_solution_declaration: Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compil
 abstraction_level: protocol_slice
 abstraction_notes: >
   First buildable target for the case: the `verity_contract UnlinkPool`
-  declaration in `Contract.lean` must elaborate cleanly through `lake build`
-  on the lakefile-pinned Verity revision. The pool entry points now elaborate
-  with source-shaped dynamic-array projections, LazyIMT insertion, and
-  PoseidonT3/T4 routed through explicit linked-external cryptographic
-  boundaries.
+  declaration in `Contract.lean` and sibling `verity_contract VerifierRouter`
+  declaration in `VerifierRouter.lean` must elaborate cleanly through
+  `lake build` on the lakefile-pinned Verity revision. The pool entry points
+  now elaborate with source-shaped dynamic-array projections, LazyIMT
+  insertion, and PoseidonT3/T4 routed through explicit linked-external
+  cryptographic boundaries; `VerifierRouter` covers the source Groth16 circuit
+  registry with `mapping(bytes32 => Circuit)` represented as
+  `MappingStruct(Uint256, [...])`.
 unsupported_feature_codes: []

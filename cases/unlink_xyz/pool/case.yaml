@@ -31,8 +31,17 @@ selected_functions:
   - transferOwnership
   - acceptOwnership
   - renounceOwnership
+  - VerifierRouter.owner
+  - VerifierRouter.pendingOwner
+  - VerifierRouter.transferOwnership
+  - VerifierRouter.acceptOwnership
+  - VerifierRouter.renounceOwnership
+  - VerifierRouter.setCircuit
+  - VerifierRouter.pauseCircuit
+  - VerifierRouter.getCircuit
+  - VerifierRouter.verifierToCircuitId
 source_language: solidity
-verity_version: 56b831a53113d1df3a0dc78209a6b25fe6794ba2
+verity_version: 7ac455b22bf56c32245c35470abeaba03e3c88b7
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -47,10 +56,15 @@ abstraction_tags:
   - nonreentrant_modeled
   - keccak256_literal_typehash
   - macro_event_declarations
+  - verifier_router_contract
+  - mapping_struct_storage
+  - internal_helper_bytes
 abstraction_notes: >
-  Verity model of `UnlinkPool` (Unlink privacy pool implementation). Protocol-
-  specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16
-  verifier router) are routed through explicit external or opaque boundaries,
+  Verity model of `UnlinkPool` (Unlink privacy pool implementation) plus the
+  sibling `VerifierRouter` Groth16 circuit registry. Protocol-specific
+  cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier
+  contracts reached through the router) are routed through explicit external or
+  opaque boundaries,
   per the `unlink-verity` package split documented in
   `docs/ROADMAP.md` "Unlink Audit Readiness". UUPS proxy semantics are modeled
   as the implementation contract itself (proxy storage rotation is host-level
@@ -59,8 +73,10 @@ abstraction_notes: >
   (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254
   precompile ECMs + `keccak256_lit` literal sugar), plus #1870
   (memory-array helper lowering), #1871 (dynamic-array event sources), #1872
-  (array values in executable emit calls), and #1873 (projected static-struct
-  event payloads), and #1874 (multi-result ECM binding).
+  (array values in executable emit calls), #1873 (projected static-struct
+  event payloads), #1874 (multi-result ECM binding), and #1900 (internal
+  helper fidelity, ERC-7201 storage namespaces, and mapping-struct support
+  needed by this case).
 
   The public ZK entry points (`deposit`, `transfer`, `withdraw`, and
   `emergencyWithdraw`) now build against source-shaped array parameters.
@@ -73,7 +89,8 @@ abstraction_notes: >
   withdrawal-note payloads. The deposit path validates static `Note[]`
   elements, computes the source-shaped deposit witness hash, routes the Permit2
   transfer through the linked external boundary, inserts leaves, and emits the
-  source-shaped `Deposited` payload. Poseidon, Permit2, Groth16, and
+  source-shaped `Deposited` payload. Poseidon, Permit2, external Groth16
+  verifier contracts, and
   host-level UUPS proxy behavior remain explicit modeling boundaries, not
   unsupported Verity translation features.
   `_executeWithdrawal(_transactions[i], bool)` is routed through an internal
@@ -81,12 +98,17 @@ abstraction_notes: >
   through the 0x06/0x07/0x08 precompile ECMs and the multi-result ECM binder.
 
   Source confirmation (pinned commit 4bc46c1f): there is NO
-  `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` —
+  `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` -
   `UnlinkAdapter` was deleted upstream in `d9c8948 chore(contracts):
   delete UnlinkAdapter + strip adapter surface (UE-425)` predating our
   pin. The umbrella verity#1760 references the older multi-relayer
   release that still carried the adapter surface. With the adapter
-  removed, the case scope is `UnlinkPool` only.
+  removed, the case scope is `UnlinkPool` plus `VerifierRouter`.
+
+  The top-level inherited `StateStorage` / `LazyIMTData` storage structs are
+  still represented by explicit namespaced fields at their source slots. This
+  is the only intentional source-shape storage exclusion in the translated
+  case and is tracked by verity#1758.
 
   Spec modules ported from the local scratchpad:
     - `InternalLazyIMT.lean`: full LazyIMT spec (Z_0..Z_32 tower,
@@ -103,6 +125,10 @@ abstraction_notes: >
       `transferOwnership`, `acceptOwnership`, `renounceOwnership`,
       `isRelayer`, `nextLeafIndex`, `hashNote`, `_checkRelayer`.
     - `deposit`, `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired.
+  `verity_contract VerifierRouter` ships in `VerifierRouter.lean` covering
+  Ownable2Step state, circuit registration, circuit pause, circuit lookup, and
+  verifier-to-circuit-id lookup with the Solidity `mapping(bytes32 => Circuit)`
+  represented as `MappingStruct(Uint256, [...])`.
 unsupported_feature_codes: []
 notes: >
   This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which

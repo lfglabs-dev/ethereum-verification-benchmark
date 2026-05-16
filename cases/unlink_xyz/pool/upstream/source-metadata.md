@@ -2,8 +2,11 @@
 
 - Repository: https://github.com/unlink-xyz/monorepo
 - Pinned commit: `4bc46c1fffbc0e146dccfff5b9fe00167121b27b`
-- Contract file: `protocol/contracts/src/UnlinkPool.sol`
+- Contract files:
+  - `protocol/contracts/src/UnlinkPool.sol`
+  - `protocol/contracts/src/VerifierRouter.sol`
 - Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
+- VerifierRouter source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/VerifierRouter.sol`
 
 ## Companion files
 
@@ -18,7 +21,7 @@ commit:
   state mutated by `_insertLeaves`. Verity models this directly in the pool
   helper path.
 - `protocol/contracts/src/VerifierRouter.sol` — Groth16 verifier circuit
-  registry, accessed through `linked_externals`.
+  registry, modeled as a sibling `verity_contract`.
 - `protocol/contracts/src/lib/Poseidon.sol` and `PoseidonT4.sol` —
   Poseidon hashes, routed through package-local opaque boundaries.
 
@@ -33,5 +36,5 @@ documented in `lfglabs-dev/verity:docs/ROADMAP.md` "Unlink Audit Readiness":
 | Poseidon T3 / T4 | Opaque hash boundary | `poseidonT3` / `poseidonT4` |
 | Permit2 `permitWitnessTransferFrom` | Linked external with balance-delta checks | `permitWitnessTransferFrom` |
 | Lazy-IMT `_insert` | Source-shaped Lean helper over pool storage | `lazyInsert` / `insertLeaves` |
-| Groth16 verifier dispatch | `linked_externals` against `VerifierRouter` | `getCircuit` + `verifySpend` |
+| Groth16 verifier dispatch | Real `VerifierRouter` registry model plus pool `linked_externals` boundary for cross-contract lookup and opaque verifier contracts | `VerifierRouter.lean`, `getCircuit`, `verifySpend` |
 | BN254 precompiles (0x06 / 0x07 / 0x08) | First-class Verity ECMs | `evm_bn256_add_precompile` / `evm_bn256_scalar_mul_precompile` / `evm_bn256_pairing_precompile` |
