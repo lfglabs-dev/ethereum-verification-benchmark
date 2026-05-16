@@ -8,9 +8,9 @@
 
   Verity's `verity_contract` macro does not support Solidity inheritance,
   so the helper surface is rendered as `namespace State` operating on a
-  `StateStorage` record. `UnlinkPool` composes these by flattening the
-  storage slots and re-implementing the helpers inline; this module is
-  the trusted-spec source of truth.
+  `StateStorage` record. `UnlinkPool` mirrors the same storage shape with
+  nested `StorageStruct` accessors; this module is the trusted-spec source
+  of truth for the pure helper behavior.
 
   Solidity uses ERC-7201 namespaced storage at `STATE_STORAGE_LOCATION`.
   The constant is recorded here verbatim for audit fidelity; pool storage
