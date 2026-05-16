@@ -41,7 +41,7 @@ selected_functions:
   - VerifierRouter.getCircuit
   - VerifierRouter.verifierToCircuitId
 source_language: solidity
-verity_version: 7ac455b22bf56c32245c35470abeaba03e3c88b7
+verity_version: 820553c7f88e2b7605392a6f822ea373d029f3e3
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -106,9 +106,9 @@ abstraction_notes: >
   removed, the case scope is `UnlinkPool` plus `VerifierRouter`.
 
   The top-level inherited `StateStorage` / `LazyIMTData` storage structs are
-  still represented by explicit namespaced fields at their source slots. This
-  is the only intentional source-shape storage exclusion in the translated
-  case and is tracked by verity#1758.
+  represented directly with Verity `StorageStruct` storage. The translated
+  case checks LazyIMT's packed `uint40` leaves and mapping leaf against their
+  ERC-7201-derived source slots.
 
   Spec modules ported from the local scratchpad:
     - `InternalLazyIMT.lean`: full LazyIMT spec (Z_0..Z_32 tower,

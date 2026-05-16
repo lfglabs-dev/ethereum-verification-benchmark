@@ -4,8 +4,8 @@
   Upstream: unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b
   Source:   protocol/contracts/src/UnlinkPool.sol
 
-  Solidity contract inheritance (modeled as flattened storage + helpers
-  because Verity does not model OZ inheritance):
+  Solidity contract inheritance (modeled as inherited storage roots + helpers
+  because Verity does not model OZ inheritance dispatch):
     contract UnlinkPool is
       Initializable,                 -- OZ initializer slot machinery
       UUPSUpgradeable,               -- onlyOwner-gated _authorizeUpgrade
@@ -213,16 +213,17 @@ verity_contract UnlinkPool where
     reentrancyLockSlot    : Uint256 := slot 3
     -- StateStorage (ERC-7201 namespaced at unlink.storage.State).
     storage_namespace erc7201 "unlink.storage.State"
-    stateMerkleRoot       : Uint256 := slot 0
-    -- LazyIMTData lives at StateStorage slot 1. Verity still lacks top-level
-    -- nested struct storage (#1758), so its packed uint40 fields remain split
-    -- as named fields while sharing the source base slot for layout audit.
-    lazyMaxIndex          : Uint256 := slot 1
-    lazyNumberOfLeaves    : Uint256 := slot 1
-    lazyElements          : Uint256 → Uint256 := slot 2
-    stateRootSeen         : Uint256 → Uint256 := slot 3
-    stateNullifierHashes  : Uint256 → Uint256 := slot 4
-    stateVerifierRouter   : Address := slot 5
+    state : StorageStruct [
+      merkleRoot : Uint256 @word 0,
+      merkleTree : StorageStruct [
+        maxIndex : Uint256 @word 0 packed(0,40),
+        numberOfLeaves : Uint256 @word 0 packed(40,40),
+        elements : Uint256 → Uint256 @word 1
+      ] @word 1,
+      rootSeen : Uint256 → Uint256 @word 3,
+      nullifierHashes : Uint256 → Uint256 @word 4,
+      verifierRouter : Address @word 5
+    ] := slot 0
     -- RelayerStorage (ERC-7201 namespaced at unlink.storage.UnlinkPoolRelayers).
     storage_namespace erc7201 "unlink.storage.UnlinkPoolRelayers"
     relayersSlot          : Address → Uint256 := slot 0
@@ -480,7 +481,7 @@ verity_contract UnlinkPool where
     setStorageAddr pendingOwnerSlot zeroAddress
     -- _setVerifierRouter
     requireError (verifierRouter != zeroAddress) PoolAddressIsNull()
-    setStorageAddr stateVerifierRouter verifierRouter
+    setStorageAddr state.verifierRouter verifierRouter
     -- _addRelayer
     requireError (relayer != zeroAddress) PoolAddressIsNull()
     let already ← getMapping relayersSlot relayer
@@ -511,7 +512,7 @@ verity_contract UnlinkPool where
   /- `function nextLeafIndex() public view returns (uint256)`
       (State.sol:35-37). -/
   function view nextLeafIndex () : Uint256 := do
-    let n ← getStorage lazyNumberOfLeaves
+    let n ← getStorage state.merkleTree.numberOfLeaves
     return n
 
   /- `function hashNote(Note calldata _note) public pure returns (uint256)`
@@ -577,12 +578,12 @@ verity_contract UnlinkPool where
       (UnlinkPool.sol:244-253). -/
   function setVerifierRouter (verifierRouter : Address)
       requires(ownerSlot) : Unit := do
-    let previousRouter ← getStorageAddr stateVerifierRouter
+    let previousRouter ← getStorageAddr state.verifierRouter
     if previousRouter == verifierRouter then
       pure ()
     else
       requireError (verifierRouter != zeroAddress) PoolAddressIsNull()
-      setStorageAddr stateVerifierRouter verifierRouter
+      setStorageAddr state.verifierRouter verifierRouter
       emit "VerifierRouterUpdated"
         [addressToWord previousRouter, addressToWord verifierRouter]
 
@@ -616,7 +617,7 @@ verity_contract UnlinkPool where
     forEach "k" (arrayLength nullifierHashes) (do
       let nullifierHash := arrayElement nullifierHashes k
       if nullifierHash != 0 then
-        setMappingWord stateNullifierHashes nullifierHash 0 1
+        setMappingWord state.nullifierHashes nullifierHash 0 1
       else
         pure ())
 
@@ -708,23 +709,23 @@ verity_contract UnlinkPool where
     return (add (mul MAX_LAZY_INDEX level) index)
 
   function lazyInsert (leaf : Uint256) : Unit := do
-    let startIndex ← getStorage lazyNumberOfLeaves
-    let maxIndex ← getStorage lazyMaxIndex
+    let startIndex ← getStorage state.merkleTree.numberOfLeaves
+    let maxIndex ← getStorage state.merkleTree.maxIndex
     requireError (leaf < SNARK_SCALAR_FIELD) PoolInvalidOutputShape()
     requireError (startIndex < maxIndex) PoolInvalidOutputShape()
-    setStorage lazyNumberOfLeaves (add startIndex 1)
+    setStorage state.merkleTree.numberOfLeaves (add startIndex 1)
     let mut index := startIndex
     let mut hash := leaf
     let mut active := 1
     forEach "level" 32 (do
       if active != 0 then
         let elementKey ← lazyIndexForElement level index
-        setMappingWord lazyElements elementKey 0 hash
+        setMappingWord state.merkleTree.elements elementKey 0 hash
         if bitAnd index 1 == 0 then
           active := 0
         else
           let siblingKey ← lazyIndexForElement level (sub index 1)
-          let sibling ← getMappingWord lazyElements siblingKey 0
+          let sibling ← getMappingWord state.merkleTree.elements siblingKey 0
           let parent ← poseidon2 sibling hash
           hash := parent
           index := shr 1 index
@@ -732,7 +733,7 @@ verity_contract UnlinkPool where
         pure ())
 
   function lazyRootWithDepth32 () : Uint256 := do
-    let numberOfLeaves ← getStorage lazyNumberOfLeaves
+    let numberOfLeaves ← getStorage state.merkleTree.numberOfLeaves
     if numberOfLeaves == 0 then
       return Z_32
     else
@@ -740,7 +741,7 @@ verity_contract UnlinkPool where
       let mut index := sub numberOfLeaves 1
       if bitAnd index 1 == 0 then
         let elementKey ← lazyIndexForElement 0 index
-        let element ← getMappingWord lazyElements elementKey 0
+        let element ← getMappingWord state.merkleTree.elements elementKey 0
         setMemoryArrayElement levels 0 element
       else
         setMemoryArrayElement levels 0 Z_0
@@ -755,31 +756,31 @@ verity_contract UnlinkPool where
           let parentIndex := shr 1 index
           if levelCount > parentIndex then
             let parentKey ← lazyIndexForElement (add level 1) parentIndex
-            let parent ← getMappingWord lazyElements parentKey 0
+            let parent ← getMappingWord state.merkleTree.elements parentKey 0
             setMemoryArrayElement levels (add level 1) parent
           else
             let siblingKey ← lazyIndexForElement level (sub index 1)
-            let sibling ← getMappingWord lazyElements siblingKey 0
+            let sibling ← getMappingWord state.merkleTree.elements siblingKey 0
             let parent ← poseidon2 sibling current
             setMemoryArrayElement levels (add level 1) parent
         index := shr 1 index)
       return (arrayElement levels 32)
 
   /- Source shape: `_insertLeaves(uint256[] memory _leafHashes)`.
-     Appends each leaf through the flattened LazyIMT spine and recomputes the
+     Appends each leaf through the nested LazyIMT spine and recomputes the
      depth-32 root, matching `InternalLazyIMT._insert` / `_root(self, 32)`. -/
   function insertLeaves (leafHashes : Array Uint256) : Uint256 := do
     let count := arrayLength leafHashes
     if count == 0 then
-      let currentRoot ← getStorage stateMerkleRoot
+      let currentRoot ← getStorage state.merkleRoot
       return currentRoot
     else
       forEach "m" count (do
         let leaf := arrayElement leafHashes m
         lazyInsert leaf)
     let newRoot ← lazyRootWithDepth32
-    setStorage stateMerkleRoot newRoot
-    setMappingWord stateRootSeen newRoot 0 1
+    setStorage state.merkleRoot newRoot
+    setMappingWord state.rootSeen newRoot 0 1
     return newRoot
 
   function view computeContextHash (ciphertexts : Array Ciphertext) : Uint256 := do
@@ -800,7 +801,7 @@ verity_contract UnlinkPool where
       (merkleRoot : Uint256, contextHash : Uint256, expectedContext : Uint256)
       : Unit := do
     requireError (contextHash == expectedContext) PoolInvalidContextHash()
-    let rootSeen ← getMappingWord stateRootSeen merkleRoot 0
+    let rootSeen ← getMappingWord state.rootSeen merkleRoot 0
     requireError (rootSeen != 0) PoolInvalidMerkleRoot()
 
   function settleWithdrawalTransfer
@@ -872,7 +873,7 @@ verity_contract UnlinkPool where
     requireError (txLen != 0) PoolEmptyTransactions()
     forEach "i" txLen (do
       let txn := arrayElement transactions i
-      let verifierRouter ← getStorageAddr stateVerifierRouter
+      let verifierRouter ← getStorageAddr state.verifierRouter
       let (success, circuit) ←
         tryExternalCall "getCircuit"
           [verifierRouter, txn.circuitId]
@@ -920,7 +921,7 @@ verity_contract UnlinkPool where
     let recipient := wordToAddress txn.withdrawal.npk
     let selfAddr ← Verity.contractAddress
     requireError (recipient != selfAddr) PoolInvalidWithdrawalRecipient()
-    let verifierRouter ← getStorageAddr stateVerifierRouter
+    let verifierRouter ← getStorageAddr state.verifierRouter
     let (success, circuit) ←
       tryExternalCall "getCircuit" [verifierRouter, txn.circuitId]
     requireError success PoolCircuitNotRegistered()

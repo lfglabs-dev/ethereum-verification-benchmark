@@ -18,8 +18,9 @@ The Verity model of the Unlink pool slice exposes four classes of declarations.
 
 ## 2. Pool contract surface (`Contract.lean`)
 
-Mirrors the Solidity source structure: storage layout (flattened over
-the ERC-7201 namespace), custom errors block, immutables `PERMIT2`,
+Mirrors the Solidity source structure: storage layout over the
+ERC-7201 namespace, including the inherited `StateStorage` /
+`LazyIMTData` nested storage struct, custom errors block, immutables `PERMIT2`,
 typed `linked_externals getCircuit`, constructor, initializer-modifier
 `initialize`, owner / relayer admin functions, Ownable2Step transfer
 glue, public views (`isRelayer`, `hashNote`).
@@ -46,9 +47,9 @@ host-level UUPS proxy storage rotation are documented modeling
 boundaries rather than unsupported Verity translation features.
 
 The pool's top-level inherited `StateStorage` / `LazyIMTData` storage
-structs remain represented by explicit namespaced fields at their source
-slots. This is the only intentional source-shape storage exclusion in the
-case and is tracked upstream by verity#1758.
+structs are represented directly with the Verity `StorageStruct` storage
+item. LazyIMT's packed `uint40` leaves and mapping leaf are checked against
+their ERC-7201-derived source slots in the compile target.
 
 ### Source confirmation: no UnlinkAdapter at this pin
 

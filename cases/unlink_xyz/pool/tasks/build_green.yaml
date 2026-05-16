@@ -34,8 +34,8 @@ abstraction_notes: >
   declaration in `VerifierRouter.lean` must elaborate cleanly through
   `lake build` on the lakefile-pinned Verity revision. The pool entry points
   now elaborate with source-shaped dynamic-array projections, LazyIMT
-  insertion, and PoseidonT3/T4 routed through explicit linked-external
-  cryptographic boundaries; `VerifierRouter` covers the source Groth16 circuit
-  registry with `mapping(bytes32 => Circuit)` represented as
-  `MappingStruct(Uint256, [...])`.
+  insertion over nested `StorageStruct` state, and PoseidonT3/T4 routed
+  through explicit linked-external cryptographic boundaries; `VerifierRouter`
+  covers the source Groth16 circuit registry with `mapping(bytes32 => Circuit)`
+  represented as `MappingStruct(Uint256, [...])`.
 unsupported_feature_codes: []

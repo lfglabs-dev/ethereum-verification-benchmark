@@ -125,20 +125,26 @@ example : unlinkPoolTransferWithBalanceCheckMatchesSource = true := by native_de
 private def hasPoolFieldSlot (name : String) (expectedSlot : Nat) : Bool :=
   UnlinkPool.spec.fields.any (fun field => field.name == name && field.slot == some expectedSlot)
 
+private def hasPoolPackedFieldSlot (name : String) (expectedSlot offset width : Nat) : Bool :=
+  UnlinkPool.spec.fields.any (fun field =>
+    field.name == name &&
+      field.slot == some expectedSlot &&
+      field.packedBits == some { offset := offset, width := width })
+
 def unlinkPoolStorageNamespacesMatchSource : Bool :=
-  hasPoolFieldSlot "stateMerkleRoot"
+  hasPoolFieldSlot "state_merkleRoot"
     0xd7df6c02d48ad87762ead6689b0b308617a10b99ac21276cc6fd199681dcb000 &&
-  hasPoolFieldSlot "lazyMaxIndex"
-    0xd7df6c02d48ad87762ead6689b0b308617a10b99ac21276cc6fd199681dcb001 &&
-  hasPoolFieldSlot "lazyNumberOfLeaves"
-    0xd7df6c02d48ad87762ead6689b0b308617a10b99ac21276cc6fd199681dcb001 &&
-  hasPoolFieldSlot "lazyElements"
+  hasPoolPackedFieldSlot "state_merkleTree_maxIndex"
+    0xd7df6c02d48ad87762ead6689b0b308617a10b99ac21276cc6fd199681dcb001 0 40 &&
+  hasPoolPackedFieldSlot "state_merkleTree_numberOfLeaves"
+    0xd7df6c02d48ad87762ead6689b0b308617a10b99ac21276cc6fd199681dcb001 40 40 &&
+  hasPoolFieldSlot "state_merkleTree_elements"
     0xd7df6c02d48ad87762ead6689b0b308617a10b99ac21276cc6fd199681dcb002 &&
-  hasPoolFieldSlot "stateRootSeen"
+  hasPoolFieldSlot "state_rootSeen"
     0xd7df6c02d48ad87762ead6689b0b308617a10b99ac21276cc6fd199681dcb003 &&
-  hasPoolFieldSlot "stateNullifierHashes"
+  hasPoolFieldSlot "state_nullifierHashes"
     0xd7df6c02d48ad87762ead6689b0b308617a10b99ac21276cc6fd199681dcb004 &&
-  hasPoolFieldSlot "stateVerifierRouter"
+  hasPoolFieldSlot "state_verifierRouter"
     0xd7df6c02d48ad87762ead6689b0b308617a10b99ac21276cc6fd199681dcb005 &&
   hasPoolFieldSlot "relayersSlot"
     0xd8b607728433c567965c4023813a35a19b26751353d5652c8798f8eea4b19b00
