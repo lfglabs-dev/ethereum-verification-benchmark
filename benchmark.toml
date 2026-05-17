@@ -33,6 +33,5 @@ active_cases = [
   "kleros/sortition_trees",
 ]
 backlog_cases = [
-  "unlink_xyz/placeholder",
   "usual/placeholder",
 ]

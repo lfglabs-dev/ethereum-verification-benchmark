@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 19
-- Implementations: 19
-- Active cases: 16
-- Buildable active cases: 16
-- Active tasks: 98
+- Families: 18
+- Implementations: 18
+- Active cases: 15
+- Buildable active cases: 15
+- Active tasks: 97
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -142,16 +142,6 @@ This report is generated from the benchmark manifests.
 - Selected functions: `swapExactTokenToToken`, `_swapAndUpdateReserves`, `_buyToken`, `_buyXt`, `_buyXtStep`, `buyXt`, `cutsReverseIter`, `calcIntervalProps`, `plusInt256`
 - Source artifact: `contracts/v2/TermMaxOrderV2.sol`
 - Notes: TermMax range-order AMM slice for pricing-state transition correctness. The proof target is the highest-signal easy theorem in this family: on the successful single-segment `debtToken -> XT` exact-input path, the stored `virtualXtReserve` decreases by exactly the XT amount implied by the curve.
-
-### `unlink_xyz/pool`
-- Family / implementation: `unlink_xyz` / `monorepo`
-- Stage: `build_green`
-- Status dimensions: translation=`translated`, spec=`draft`, proof=`not_started`
-- Lean target: `Benchmark.Cases.UnlinkXyz.Pool.Compile`
-- Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
-- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `emergencyWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`, `VerifierRouter.owner`, `VerifierRouter.pendingOwner`, `VerifierRouter.transferOwnership`, `VerifierRouter.acceptOwnership`, `VerifierRouter.renounceOwnership`, `VerifierRouter.setCircuit`, `VerifierRouter.pauseCircuit`, `VerifierRouter.getCircuit`, `VerifierRouter.verifierToCircuitId`
-- Source artifact: `protocol/contracts/src/UnlinkPool.sol`
-- Notes: This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case targets the pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.
 
 ### `wildcat/borrow_liquidity_safety`
 - Family / implementation: `wildcat` / `v2_protocol`
@@ -1028,16 +1018,6 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/termmax/order_v2_buy_xt_single_segment/verity/Specs.lean`, `Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Specs.lean`
 - Editable proof file: `Benchmark/Generated/TermMax/OrderV2BuyXtSingleSegment/Tasks/SwapDebtTokenToXtUpdatesVirtualXtReserve.lean`
 - Hidden reference solution: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs`
-
-### `unlink_xyz/pool/build_green`
-- Track / property class / proof family: `translation-only` / `compilation` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`blocked`, reference_solution=`blocked`
-- Theorem target: `Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/unlink_xyz/pool/verity/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean`
-- Specification files: `cases/unlink_xyz/pool/verity/Specs.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Specs.lean`
-- Editable proof file: `Benchmark/Generated/UnlinkXyz/Pool/Tasks/BuildGreen.lean`
-- Hidden reference solution: `Benchmark.Cases.UnlinkXyz.Pool.Proofs`
 
 ### `wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`

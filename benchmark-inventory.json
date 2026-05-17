@@ -10,32 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 19,
-    "implementation_count": 19,
-    "active_case_count": 16,
+    "family_count": 18,
+    "implementation_count": 18,
+    "active_case_count": 15,
     "backlog_case_count": 3,
-    "active_task_count": 98,
+    "active_task_count": 97,
     "backlog_task_count": 8,
-    "buildable_case_count": 18,
+    "buildable_case_count": 17,
     "runnable_task_count": 105,
     "case_stage_counts": {
-      "build_green": 16,
+      "build_green": 15,
       "candidate": 1,
       "proof_complete": 2
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 18
+      "translated": 17
     },
     "proof_status_counts": {
       "blocked": 1,
       "complete": 10,
-      "not_started": 1,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 105,
-      "translation-only": 1
+      "proof-only": 105
     },
     "task_property_class_counts": {
       "accounting_bound": 16,
@@ -47,7 +45,6 @@
       "balance_conservation": 2,
       "balance_credit_update": 2,
       "balance_update": 1,
-      "compilation": 1,
       "exploit_trace": 1,
       "frame_property": 2,
       "guarded_solvency": 7,
@@ -77,13 +74,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 14,
-      "functional_correctness": 28,
+      "functional_correctness": 27,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 9,
       "state_preservation_local_effects": 33
     },
     "family_split_counts": {
-      "active": 16,
+      "active": 15,
       "backlog": 3
     }
   },
@@ -342,23 +339,6 @@
         "solidity"
       ],
       "manifest_path": "families/uniswap_v2/family.yaml"
-    },
-    {
-      "family_id": "unlink_xyz",
-      "display_name": "unlink.xyz",
-      "split": "active",
-      "status": "active",
-      "description": "Unlink.xyz privacy pool and atomic-DeFi adapter, modeled as Verity contracts against unlink-xyz/monorepo. Protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier) live in `unlink-verity` as package-local assumed-status boundaries per the package-split policy.",
-      "implementation_ids": [
-        "monorepo"
-      ],
-      "case_ids": [
-        "unlink_xyz/pool"
-      ],
-      "source_languages": [
-        "solidity"
-      ],
-      "manifest_path": "families/unlink_xyz/family.yaml"
     },
     {
       "family_id": "usual",
@@ -652,22 +632,6 @@
       ],
       "notes": "Backlog implementation entry for the canonical Uniswap V2 pair contract, scoped to a compact swap invariant and reserve-update slice.",
       "manifest_path": "families/uniswap_v2/implementations/v2_core/implementation.yaml"
-    },
-    {
-      "family_id": "unlink_xyz",
-      "implementation_id": "monorepo",
-      "display_name": "unlink.xyz Monorepo",
-      "split": "active",
-      "status": "scoped",
-      "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
-      "source_language": "solidity",
-      "source_artifact_path": "protocol/contracts/src",
-      "case_ids": [
-        "unlink_xyz/pool"
-      ],
-      "notes": "Pinned against the `4bc46c1f` commit of `unlink-xyz/monorepo`. Cases under this implementation translate Solidity contracts in `protocol/contracts/src` and route the protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier) through the `unlink-verity` package-local assumed-status boundaries declared inside each case's `Specs.lean`.",
-      "manifest_path": "families/unlink_xyz/implementations/monorepo/implementation.yaml"
     },
     {
       "family_id": "usual",
@@ -1302,78 +1266,6 @@
       ],
       "spec_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Specs",
       "proof_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs"
-    },
-    {
-      "case_id": "unlink_xyz/pool",
-      "project": "unlink_xyz",
-      "case_name": "pool",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/unlink_xyz/pool/case.yaml",
-      "split": "active",
-      "family_id": "unlink_xyz",
-      "implementation_id": "monorepo",
-      "stage": "build_green",
-      "translation_status": "translated",
-      "spec_status": "draft",
-      "proof_status": "not_started",
-      "source_language": "solidity",
-      "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
-      "original_contract_path": "protocol/contracts/src/UnlinkPool.sol",
-      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
-      "selected_functions": [
-        "constructor",
-        "initialize",
-        "deposit",
-        "transfer",
-        "withdraw",
-        "emergencyWithdraw",
-        "hashNote",
-        "isRelayer",
-        "addRelayer",
-        "removeRelayer",
-        "setVerifierRouter",
-        "transferOwnership",
-        "acceptOwnership",
-        "renounceOwnership",
-        "VerifierRouter.owner",
-        "VerifierRouter.pendingOwner",
-        "VerifierRouter.transferOwnership",
-        "VerifierRouter.acceptOwnership",
-        "VerifierRouter.renounceOwnership",
-        "VerifierRouter.setCircuit",
-        "VerifierRouter.pauseCircuit",
-        "VerifierRouter.getCircuit",
-        "VerifierRouter.verifierToCircuitId"
-      ],
-      "lean_target": "Benchmark.Cases.UnlinkXyz.Pool.Compile",
-      "failure_reason": null,
-      "notes": "This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case targets the pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.",
-      "buildable": true,
-      "verity_commit": "820553c7f88e2b7605392a6f822ea373d029f3e3",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
-      "abstraction_level": "protocol_slice",
-      "abstraction_tags": [
-        "uups_proxy_modeled_as_implementation",
-        "permit2_assumed_boundary",
-        "poseidon_assumed_boundary",
-        "groth16_assumed_boundary",
-        "bn254_precompile_ecm",
-        "erc7201_storage_namespace",
-        "named_errors",
-        "initializer_modeled",
-        "nonreentrant_modeled",
-        "keccak256_literal_typehash",
-        "macro_event_declarations",
-        "verifier_router_contract",
-        "mapping_struct_storage",
-        "internal_helper_bytes"
-      ],
-      "abstraction_notes": "Verity model of `UnlinkPool` (Unlink privacy pool implementation) plus the sibling `VerifierRouter` Groth16 circuit registry. Protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier contracts reached through the router) are routed through explicit external or opaque boundaries, per the `unlink-verity` package split documented in `docs/ROADMAP.md` \"Unlink Audit Readiness\". UUPS proxy semantics are modeled as the implementation contract itself (proxy storage rotation is host-level and tracked under verity#1420). The model uses every Solidity-feature-parity primitive that landed in verity through PRs #1782 (selfbalance), #1795 (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254 precompile ECMs + `keccak256_lit` literal sugar), plus #1870 (memory-array helper lowering), #1871 (dynamic-array event sources), #1872 (array values in executable emit calls), #1873 (projected static-struct event payloads), #1874 (multi-result ECM binding), and #1900 (internal helper fidelity, ERC-7201 storage namespaces, and mapping-struct support needed by this case). The public ZK entry points (`deposit`, `transfer`, `withdraw`, and `emergencyWithdraw`) now build against source-shaped array parameters. The transfer/withdraw paths use `Array Transaction` / `Array WithdrawalTransaction` parameters with dynamic struct-array member projections and projected dynamic-array forwarding to linked externals / internal helpers. They now use `_realCommitments` / `_realNullifiers`-shaped memory-array helpers, pass the resulting memory array into an `_insertLeaves`-shaped helper, and emit source-shaped dynamic array and withdrawal-note payloads. The deposit path validates static `Note[]` elements, computes the source-shaped deposit witness hash, routes the Permit2 transfer through the linked external boundary, inserts leaves, and emits the source-shaped `Deposited` payload. Poseidon, Permit2, external Groth16 verifier contracts, and host-level UUPS proxy behavior remain explicit modeling boundaries, not unsupported Verity translation features. `_executeWithdrawal(_transactions[i], bool)` is routed through an internal helper call. The deploy-time BN254 precompile probe in `initialize` is wired through the 0x06/0x07/0x08 precompile ECMs and the multi-result ECM binder. Source confirmation (pinned commit 4bc46c1f): there is NO `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` - `UnlinkAdapter` was deleted upstream in `d9c8948 chore(contracts): delete UnlinkAdapter + strip adapter surface (UE-425)` predating our pin. The umbrella verity#1760 references the older multi-relayer release that still carried the adapter surface. With the adapter removed, the case scope is `UnlinkPool` plus `VerifierRouter`. The top-level inherited `StateStorage` / `LazyIMTData` storage structs are represented directly with Verity `StorageStruct` storage. The translated case checks LazyIMT's packed `uint40` leaves and mapping leaf against their ERC-7201-derived source slots. Spec modules ported from the local scratchpad:   - `InternalLazyIMT.lean`: full LazyIMT spec (Z_0..Z_32 tower,     `_init`, `_insert`, `_update`, `_root`, `_rootWithDepth`,     `_levels`, `_merkleProofElements`). Pure Lean spec used by the     pool's `_insertLeaves` path.   - `State.lean`: `StateStorage` record + `_initializeState`,     `_insertLeaves`, `_spend`, `_setVerifierRouter` helpers operating     over the LazyIMT spine + nullifier set + verifier-router. `verity_contract UnlinkPool` ships in `Contract.lean` covering:   - all admin / view / lifecycle functions: `constructor`,     `initialize`, `addRelayer`, `removeRelayer`, `setVerifierRouter`,     `transferOwnership`, `acceptOwnership`, `renounceOwnership`,     `isRelayer`, `nextLeafIndex`, `hashNote`, `_checkRelayer`.   - `deposit`, `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired. `verity_contract VerifierRouter` ships in `VerifierRouter.lean` covering Ownable2Step state, circuit registration, circuit pause, circuit lookup, and verifier-to-circuit-id lookup with the Solidity `mapping(bytes32 => Circuit)` represented as `MappingStruct(Uint256, [...])`.",
-      "unsupported_feature_codes": [],
-      "spec_target": "Benchmark.Cases.UnlinkXyz.Pool.Specs",
-      "proof_target": "Benchmark.Cases.UnlinkXyz.Pool.Proofs"
     },
     {
       "case_id": "wildcat/borrow_liquidity_safety",
@@ -5470,52 +5362,6 @@
       }
     },
     {
-      "task_ref": "unlink_xyz/pool/build_green",
-      "task_id": "build_green",
-      "case_id": "unlink_xyz/pool",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/unlink_xyz/pool/tasks/build_green.yaml",
-      "split": "active",
-      "family_id": "unlink_xyz",
-      "implementation_id": "monorepo",
-      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
-      "task_interface_version": 2,
-      "track": "translation-only",
-      "property_class": "compilation",
-      "category": "build",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles",
-      "proof_family": "functional_correctness",
-      "translation_status": "translated",
-      "proof_status": "not_started",
-      "implementation_files": [
-        "cases/unlink_xyz/pool/verity/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean"
-      ],
-      "specification_files": [
-        "cases/unlink_xyz/pool/verity/Specs.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UnlinkXyz/Pool/Tasks/BuildGreen.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "First buildable target for the case: the `verity_contract UnlinkPool` declaration in `Contract.lean` and sibling `verity_contract VerifierRouter` declaration in `VerifierRouter.lean` must elaborate cleanly through `lake build` on the lakefile-pinned Verity revision. The pool entry points now elaborate with source-shaped dynamic-array projections, LazyIMT insertion over nested `StorageStruct` state, and PoseidonT3/T4 routed through explicit linked-external cryptographic boundaries; `VerifierRouter` covers the source Groth16 circuit registry with `mapping(bytes32 => Circuit)` represented as `MappingStruct(Uint256, [...])`.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UnlinkXyz.Pool.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "blocked",
-        "reference_solution": "blocked"
-      }
-    },
-    {
       "task_ref": "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity",
       "task_id": "positive_borrow_preserves_required_liquidity",
       "case_id": "wildcat/borrow_liquidity_safety",
@@ -6418,5 +6264,5 @@
       }
     }
   ],
-  "generated_at": "2026-05-16T17:24:17.199530+00:00"
+  "generated_at": "2026-05-17T01:20:05.622809+00:00"
 }
