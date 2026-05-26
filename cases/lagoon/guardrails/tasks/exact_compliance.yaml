@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: exact_compliance
+case_id: lagoon/guardrails
+split: active
+family_id: lagoon
+implementation_id: v0_6_0
+source_ref: https://github.com/hopperlabsxyz/lagoon-v0/blob/a8e73f5a5276aa4047b901083cbce127d7f7b470/src/v0.6.0/libraries/GuardrailsLib.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance
+proof_family: functional_correctness
+property_class: compliance_boundary
+difficulty: medium
+category: arithmetic-invariant
+track: proof-only
+translation_status: translated
+proof_status: proved
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/lagoon/guardrails/verity/Contract.lean
+  - Benchmark/Cases/Lagoon/Guardrails/Contract.lean
+specification_files:
+  - cases/lagoon/guardrails/verity/Specs.lean
+  - Benchmark/Cases/Lagoon/Guardrails/Specs.lean
+editable_files:
+  - Benchmark/Generated/Lagoon/Guardrails/Tasks/ExactCompliance.lean
+reference_solution_module: Benchmark.Cases.Lagoon.Guardrails.Proofs
+reference_solution_declaration: Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance
+abstraction_level: protocol_slice
+abstraction_notes: >
+  The task proves the source-shaped branch predicate under
+  successfulSolidityArithmeticScope: lowerRate is not int256.min, currentPps and
+  timePast are nonzero, and the branch-specific variation multiplications do not
+  overflow Solidity 0.8 checked arithmetic.
+unsupported_feature_codes: []

@@ -1,0 +1,9 @@
+manifest_kind: implementation
+family_id: lagoon
+implementation_id: v0_6_0
+schema_version: 1
+display_name: Lagoon v0.6.0
+repo: https://github.com/hopperlabsxyz/lagoon-v0
+commit: a8e73f5a5276aa4047b901083cbce127d7f7b470
+language: solidity
+notes: GuardrailsLib pure compliance decision for v0.6.0 vault valuation guardrails.

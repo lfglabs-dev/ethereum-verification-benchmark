@@ -1,0 +1,40 @@
+manifest_kind: case
+project: lagoon
+case_id: guardrails
+schema_version: 1
+split: active
+family_id: lagoon
+implementation_id: v0_6_0
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: proved
+upstream_repo: https://github.com/hopperlabsxyz/lagoon-v0
+upstream_commit: a8e73f5a5276aa4047b901083cbce127d7f7b470
+original_contract_path: src/v0.6.0/libraries/GuardrailsLib.sol
+source_ref: https://github.com/hopperlabsxyz/lagoon-v0/blob/a8e73f5a5276aa4047b901083cbce127d7f7b470/src/v0.6.0/libraries/GuardrailsLib.sol
+lean_target: Benchmark.Cases.Lagoon.Guardrails.Compile
+selected_functions:
+  - isCompliant
+source_language: solidity
+verity_version: d71bf23d908a7a952bf041ee5ebe41ba68b54426
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - pure_function_slice
+  - successful_solidity_arithmetic
+  - signed_guardrail_bounds
+abstraction_notes: >
+  This benchmark models the pure arithmetic decision in GuardrailsLib.isCompliant
+  for successful Solidity executions. Storage, events, activation status,
+  updateGuardrails state mutation, and role checks are out of scope. The
+  updateGuardrails int256-min rejection is captured as lowerRateNotMin. The
+  successfulSolidityArithmeticScope predicate also requires nonzero divisors and
+  branch-specific multiplication safety for Solidity 0.8 checked arithmetic.
+unsupported_feature_codes: []
+spec_target: Benchmark.Cases.Lagoon.Guardrails.Specs
+proof_target: Benchmark.Cases.Lagoon.Guardrails.Proofs
+notes: >
+  Proves that Lagoon guardrail compliance accepts exactly the annualized PPS
+  variations admitted by the configured 1e18-scaled upper and signed lower bounds
+  under the encoded successfulSolidityArithmeticScope.

@@ -1,0 +1,7 @@
+manifest_kind: family
+family_id: lagoon
+schema_version: 1
+display_name: Lagoon
+description: ERC-7540 vault infrastructure with guardrails for vault valuation updates.
+website: https://www.lagoon.finance/
+repo: https://github.com/hopperlabsxyz/lagoon-v0
