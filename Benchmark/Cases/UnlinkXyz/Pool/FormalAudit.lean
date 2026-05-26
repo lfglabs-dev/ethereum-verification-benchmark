@@ -190,6 +190,70 @@ example :
        "IC-T1", "IC-C1", "IC-C2", "IC-C3", "IC-PR1", "IC-E3"] := by
   native_decide
 
+/-- Coarse evidence labels used by the report to avoid treating AP/IC aliases
+as independent proofs. -/
+inductive EvidenceKind where
+  | structuralScan
+  | behavioralStateTheorem
+  | constantManifest
+  | artifactImport
+  deriving Repr, DecidableEq
+
+/-- A deduplicated evidence atom and the AP/IC rows it supports.  The 24 green
+manifest rows intentionally remain useful report labels, but this table is the
+machine-checked retally of distinct load-bearing evidence surfaces. -/
+structure EvidenceAtom where
+  id   : String
+  kind : EvidenceKind
+  rows : List String
+  deriving Repr
+
+def concreteEvidenceAtoms : List EvidenceAtom := [
+  { id := "transferAndWithdrawalVerifyBeforeSpendConcrete", kind := .structuralScan,
+    rows := ["AP-G1", "AP-G2", "AP-G3", "AP-S2", "IC-T2", "IC-BV1", "IC-BV2", "IC-S3", "IC-S5", "IC-E4", "IC-E6"] },
+  { id := "permitWitnessBindingConcrete", kind := .structuralScan,
+    rows := ["AP-G1", "AP-S5", "IC-TB1"] },
+  { id := "withdrawalBalanceDeltaConcrete", kind := .structuralScan,
+    rows := ["AP-G1", "AP-S5"] },
+  { id := "ownershipAndAdminWriteSetsExcludeProtocolStateConcrete", kind := .structuralScan,
+    rows := ["AP-G1", "AP-T1", "IC-E4"] },
+  { id := "depositValidationAndInsertionConcrete", kind := .structuralScan,
+    rows := ["AP-S1"] },
+  { id := "state_spend_success_marks_nullifier", kind := .behavioralStateTheorem,
+    rows := ["AP-S3", "IC-S1"] },
+  { id := "spendNullifiersHelperConcrete", kind := .structuralScan,
+    rows := ["AP-G3", "AP-S3", "AP-S6", "IC-S1"] },
+  { id := "executeWithdrawalSlotBindingConcrete", kind := .structuralScan,
+    rows := ["AP-S7", "IC-S4"] },
+  { id := "authorizeUpgradeOwnerGatedNoWriteSetConcrete", kind := .structuralScan,
+    rows := ["AP-T2a"] },
+  { id := "ownableOwnerSlotMatchesOZNamespaceConcrete", kind := .structuralScan,
+    rows := ["AP-T2a"] },
+  { id := "generatedRelayerEntrypointsConcrete", kind := .structuralScan,
+    rows := ["AP-L1", "IC-S6"] },
+  { id := "snarkScalarFieldMatchesManifestConcrete", kind := .constantManifest,
+    rows := ["IC-X1"] },
+  { id := "maxNoteValueMatchesManifestConcrete", kind := .constantManifest,
+    rows := ["IC-X1"] },
+  { id := "circuitIdMatchesManifestConcrete", kind := .constantManifest,
+    rows := ["IC-X1"] },
+  { id := "lazyImtZ7MatchesManifestConcrete", kind := .constantManifest,
+    rows := ["IC-X1"] },
+  { id := "generatedArtifactSurfaceImported", kind := .artifactImport,
+    rows := ["delivery"] },
+  { id := "initializerStateSeedGenerated", kind := .structuralScan,
+    rows := ["delivery"] }
+]
+
+private def countEvidenceKind (kind : EvidenceKind) : Nat :=
+  (concreteEvidenceAtoms.filter (fun atom => atom.kind == kind)).length
+
+example : concreteEvidenceAtoms.length = 17 := by native_decide
+example : countEvidenceKind .structuralScan = 11 := by native_decide
+example : countEvidenceKind .behavioralStateTheorem = 1 := by native_decide
+example : countEvidenceKind .constantManifest = 4 := by native_decide
+example : countEvidenceKind .artifactImport = 1 := by native_decide
+
 structure OutOfModelItem where
   id       : String
   evidence : String

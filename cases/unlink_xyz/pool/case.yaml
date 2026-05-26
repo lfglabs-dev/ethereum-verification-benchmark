@@ -5,14 +5,14 @@ schema_version: 1
 split: active
 family_id: unlink_xyz
 implementation_id: pool
-stage: build_green
+stage: proof_ready
 translation_status: translated
 spec_status: draft
-proof_status: not_started
+proof_status: build_green
 upstream_repo: https://github.com/unlink-xyz/monorepo
-upstream_commit: 4bc46c1fffbc0e146dccfff5b9fe00167121b27b
+upstream_commit: 7617b3eebcf37ab42124fe570eb7e065cf8c8461
 original_contract_path: protocol/contracts/src/UnlinkPool.sol
-source_ref: https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol
+source_ref: https://github.com/unlink-xyz/monorepo@7617b3eebcf37ab42124fe570eb7e065cf8c8461:protocol/contracts/src/UnlinkPool.sol
 lean_target: Benchmark.Cases.UnlinkXyz.Pool.Compile
 spec_target: Benchmark.Cases.UnlinkXyz.Pool.Specs
 proof_target: Benchmark.Cases.UnlinkXyz.Pool.Proofs
@@ -41,7 +41,7 @@ selected_functions:
   - VerifierRouter.getCircuit
   - VerifierRouter.verifierToCircuitId
 source_language: solidity
-verity_version: 820553c7f88e2b7605392a6f822ea373d029f3e3
+verity_version: d71bf23d908a7a952bf041ee5ebe41ba68b54426
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -97,7 +97,7 @@ abstraction_notes: >
   helper call. The deploy-time BN254 precompile probe in `initialize` is wired
   through the 0x06/0x07/0x08 precompile ECMs and the multi-result ECM binder.
 
-  Source confirmation (pinned commit 4bc46c1f): there is NO
+  Source confirmation (audit target 7617b3e): there is NO
   `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` -
   `UnlinkAdapter` was deleted upstream in `d9c8948 chore(contracts):
   delete UnlinkAdapter + strip adapter surface (UE-425)` predating our
