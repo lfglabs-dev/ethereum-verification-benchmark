@@ -1,0 +1,52 @@
+manifest_kind: case
+project: polaris
+case_id: bonding_curve
+schema_version: 1
+split: active
+family_id: polaris
+implementation_id: bonding_curve
+stage: build_green
+translation_status: translated
+spec_status: draft
+proof_status: complete
+proof_terminal_condition: axiom
+upstream_repo: https://github.com/Polaris-Finance/bonding-curve
+upstream_commit: 540c4ba5d0b86c0f42399d214f02120f3f8719b0
+original_contract_path: src/BaseBondingCurve.sol
+source_ref: https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol
+lean_target: Benchmark.Cases.Polaris.BondingCurve.Compile
+spec_target: Benchmark.Cases.Polaris.BondingCurve.Specs
+proof_target: Benchmark.Cases.Polaris.BondingCurve.Proofs
+selected_functions:
+  - init
+  - buy
+  - sell
+  - floorSellAndBurn
+source_language: solidity
+verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - fixed_point_pow_abstracted
+  - computed_helper_result_inputs
+  - erc20_aggregate_supply
+  - external_transfers_omitted
+  - checked_uint256_overflow_preconditions
+abstraction_notes: >
+  The benchmark targets Polaris' own primary invariant: reserve ratio deviation
+  is zero for both the current curve point and the floor point. The model keeps
+  the state variables and state-changing function boundaries from
+  BaseBondingCurve. The fixed-point exponentiation and ceil division helper is
+  represented as opaque curveBalance because the proof target is operation-level
+  drift: each transition must write the reserve balance corresponding to the
+  resulting supply, including fee minting, sell fee handling, and floor fee
+  burns. Executable transitions receive the source helper result as an input,
+  and proof hypotheses tie those inputs back to curveBalance.
+unsupported_feature_codes:
+  - fixed_point_exponentiation_abstracted
+  - erc20_per_account_balances_omitted
+notes: >
+  Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same
+  predicate for floorSupply/floorBalance. This case proves the corresponding
+  state-transition preservation property over the bonding curve accounting
+  slice.

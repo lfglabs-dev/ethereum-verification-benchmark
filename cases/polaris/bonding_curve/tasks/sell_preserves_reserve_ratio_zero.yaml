@@ -1,0 +1,11 @@
+manifest_kind: task
+schema_version: 1
+project: polaris
+case_id: bonding_curve
+task_id: sell_preserves_reserve_ratio_zero
+name: sell preserves zero reserve-ratio deviation
+description: Prove that a sell burns only the net pETH amount and moves virtual reserve to the matching curve point.
+entrypoint: Benchmark.Generated.Polaris.BondingCurve.Tasks.sell_preserves_reserve_ratio_zero_task
+proof_target: Benchmark.Cases.Polaris.BondingCurve.Proofs.sell_preserves_reserve_ratio_zero
+status: open
+

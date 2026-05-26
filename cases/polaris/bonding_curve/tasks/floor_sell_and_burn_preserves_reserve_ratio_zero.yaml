@@ -1,0 +1,11 @@
+manifest_kind: task
+schema_version: 1
+project: polaris
+case_id: bonding_curve
+task_id: floor_sell_and_burn_preserves_reserve_ratio_zero
+name: floorSellAndBurn preserves zero reserve-ratio deviation
+description: Prove that fee-router pETH burns move the floor point without drifting from the curve function.
+entrypoint: Benchmark.Generated.Polaris.BondingCurve.Tasks.floor_sell_and_burn_preserves_reserve_ratio_zero_task
+proof_target: Benchmark.Cases.Polaris.BondingCurve.Proofs.floorSellAndBurn_preserves_reserve_ratio_zero
+status: open
+
