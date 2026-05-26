@@ -1,0 +1,17 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: onedelta
+implementation_id: ethereum-composer
+display_name: OneDeltaComposerEthereum
+split: active
+status: translated
+upstream_repo: https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba
+upstream_commit: verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba
+source_language: solidity
+source_artifact_path: contracts/1delta/composer/chains/ethereum/Composer.sol
+case_ids:
+  - onedelta/caller_address_integrity
+notes: >
+  Ethereum deployment of the 1delta composer. This implementation entry covers
+  the BaseComposer dispatch surface, Ethereum callback inheritance, and
+  transfer command paths used by the caller-address integrity case.

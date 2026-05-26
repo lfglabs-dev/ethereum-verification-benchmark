@@ -1,0 +1,55 @@
+manifest_kind: case
+project: onedelta
+case_id: caller_address_integrity
+schema_version: 1
+split: active
+family_id: onedelta
+implementation_id: ethereum-composer
+stage: build_green
+translation_status: translated
+spec_status: draft
+proof_status: complete
+upstream_repo: https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba
+upstream_commit: verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba
+original_contract_path: contracts/1delta/composer/chains/ethereum/Composer.sol
+source_ref: https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol
+lean_target: Benchmark.Cases.OneDelta.CallerAddressIntegrity.Compile
+spec_target: Benchmark.Cases.OneDelta.CallerAddressIntegrity.Specs
+proof_target: Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs
+selected_functions:
+  - deltaCompose
+  - _deltaComposeInternal
+  - _transfers
+  - _transferFrom
+  - _permit2TransferFrom
+  - flashLoanCallback
+  - swapCallback
+  - clSwapCallback
+source_language: solidity
+verity_version: d71bf23d908a7a952bf041ee5ebe41ba68b54426
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - packed_calldata_decoded_commands
+  - external_call_arguments_as_event_log
+  - callback_authentication_as_precondition
+  - transfer_commands_only
+  - occurrence_flags_for_modeled_pulls
+abstraction_notes: >
+  The benchmark targets caller-address integrity for user-fund pulls in
+  OneDeltaComposerEthereum. The model preserves the key function boundaries:
+  deltaCompose captures msg.sender, BaseComposer-style dispatch passes an explicit
+  callerAddress, transfer command ids select ERC20 or Permit2 transferFrom, and
+  flash-loan and swap callbacks continue dispatch with the same callerAddress.
+  It also covers the V3 callback calldataLength == 0 shortcut that directly
+  pays a pool with ERC20 transferFrom(callerAddress, ...).
+  Packed calldata offsets are abstracted into decoded command ids. External token
+  calls are represented by event-log slots recording the from argument.
+unsupported_feature_codes: []
+notes: >
+  This is a caller-identity benchmark, not an accounting benchmark. It proves
+  that every modeled ERC20 and Permit2 fund-pull path uses the outer
+  deltaCompose caller rather than an intermediate callback contract, the
+  composer itself, or an embedded calldata address. The scope is transfer-command
+  pulls plus the V3 callback direct-pull shortcut, not every transferFrom in the
+  full composer source tree.
