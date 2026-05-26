@@ -47,6 +47,8 @@ unsupported_feature_codes:
   - erc20_per_account_balances_omitted
 notes: >
   Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same
-  predicate for floorSupply/floorBalance. This case proves the corresponding
+  predicate for floorSupply/floorBalance. This case records the corresponding
   state-transition preservation property over the bonding curve accounting
-  slice.
+  slice as an AXIOM terminal result. The generated task files remain open
+  challenge entrypoints for agents; they do not contradict the reference
+  terminal condition.
