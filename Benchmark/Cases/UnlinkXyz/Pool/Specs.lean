@@ -1,7 +1,7 @@
 /-
   Verity model of `UnlinkPool` — opaque boundaries and pure structural specs.
 
-  Upstream: unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b
+  Upstream: unlink-xyz/monorepo@7617b3eebcf37ab42124fe570eb7e065cf8c8461
   Solidity files:
     - protocol/contracts/src/lib/Models.sol            (struct shapes)
     - protocol/contracts/src/lib/Poseidon.sol          (PoseidonT3 / PoseidonT4)

@@ -6,12 +6,12 @@ display_name: unlink.xyz Monorepo
 split: active
 status: scoped
 upstream_repo: https://github.com/unlink-xyz/monorepo
-upstream_commit: 4bc46c1fffbc0e146dccfff5b9fe00167121b27b
+upstream_commit: 7617b3eebcf37ab42124fe570eb7e065cf8c8461
 source_language: solidity
 source_artifact_path: protocol/contracts/src
 case_ids: []
 notes: >
-  Pinned against the `4bc46c1f` commit of `unlink-xyz/monorepo`. Cases under
+  Pinned against the `7617b3e` commit of `unlink-xyz/monorepo`. Cases under
   this implementation translate Solidity contracts in `protocol/contracts/src`
   and route the protocol-specific cryptographic primitives (Poseidon, Permit2,
   Lazy-IMT, Groth16 verifier) through the `unlink-verity` package-local

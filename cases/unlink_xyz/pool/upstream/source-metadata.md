@@ -1,12 +1,12 @@
 # Upstream metadata
 
 - Repository: https://github.com/unlink-xyz/monorepo
-- Pinned commit: `4bc46c1fffbc0e146dccfff5b9fe00167121b27b`
+- Pinned commit: `7617b3eebcf37ab42124fe570eb7e065cf8c8461`
 - Contract files:
   - `protocol/contracts/src/UnlinkPool.sol`
   - `protocol/contracts/src/VerifierRouter.sol`
-- Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
-- VerifierRouter source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/VerifierRouter.sol`
+- Source ref: `https://github.com/unlink-xyz/monorepo@7617b3eebcf37ab42124fe570eb7e065cf8c8461:protocol/contracts/src/UnlinkPool.sol`
+- VerifierRouter source ref: `https://github.com/unlink-xyz/monorepo@7617b3eebcf37ab42124fe570eb7e065cf8c8461:protocol/contracts/src/VerifierRouter.sol`
 
 ## Companion files
 

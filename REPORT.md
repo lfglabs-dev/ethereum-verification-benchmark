@@ -5,10 +5,10 @@ This report is generated from the benchmark manifests.
 ## Summary
 
 - Families: 19
-- Implementations: 19
+- Implementations: 20
 - Active cases: 16
 - Buildable active cases: 16
-- Active tasks: 99
+- Active tasks: 100
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -145,14 +145,13 @@ This report is generated from the benchmark manifests.
 
 ### `unlink_xyz/pool`
 - Family / implementation: `unlink_xyz` / `pool`
-- Stage: `build_green`
-- Status dimensions: translation=`generated`, spec=`frozen`, proof=`partial`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
 - Lean target: `Benchmark.Cases.UnlinkXyz.Pool.Compile`
-- Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
-- Selected functions: `initialize`, `deposit`, `transfer`, `withdraw`, `emergencyWithdraw`, `addRelayer`, `removeRelayer`, `setVerifierRouter`
+- Source ref: `https://github.com/unlink-xyz/monorepo@7617b3eebcf37ab42124fe570eb7e065cf8c8461:protocol/contracts/src/UnlinkPool.sol`
+- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `emergencyWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`, `VerifierRouter.owner`, `VerifierRouter.pendingOwner`, `VerifierRouter.transferOwnership`, `VerifierRouter.acceptOwnership`, `VerifierRouter.renounceOwnership`, `VerifierRouter.setCircuit`, `VerifierRouter.pauseCircuit`, `VerifierRouter.getCircuit`, `VerifierRouter.verifierToCircuitId`
 - Upstream source artifact: `protocol/contracts/src/UnlinkPool.sol`
-- Generated execution artifact: `artifacts/yul/UnlinkPool.yul`
-- Notes: Build-green case for the generated UnlinkPool artifact and its boundary catalog. The upstream Solidity source remains the audit reference, not the executed artifact claimed by the harness.
+- Notes: This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case targets the pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.
 
 ### `wildcat/borrow_liquidity_safety`
 - Family / implementation: `wildcat` / `v2_protocol`
@@ -1039,6 +1038,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/unlink_xyz/pool/verity/Specs.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Specs.lean`
 - Editable proof file: `Benchmark/Generated/UnlinkXyz/Pool/Tasks/ArtifactBuilds.lean`
 - Hidden reference solution: `Benchmark.Generated.UnlinkXyz.Pool.Tasks.ArtifactBuilds`
+
+### `unlink_xyz/pool/build_green`
+- Track / property class / proof family: `translation-only` / `compilation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Theorem target: `Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/unlink_xyz/pool/verity/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean`
+- Specification files: `cases/unlink_xyz/pool/verity/Specs.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UnlinkXyz/Pool/Tasks/BuildGreen.lean`
+- Hidden reference solution: `Benchmark.Cases.UnlinkXyz.Pool.Proofs`
 
 ### `unlink_xyz/pool/formal_audit_ready`
 - Track / property class / proof family: `proof-only` / `formal_audit_ap_ic_delivery` / `protocol_transition_correctness`

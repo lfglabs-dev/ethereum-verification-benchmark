@@ -2,7 +2,7 @@
   Verity model of `InternalLazyIMT` — the append-only Lazy Incremental
   Merkle Tree used by `UnlinkPool` for note commitments.
 
-  Upstream: unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b
+  Upstream: unlink-xyz/monorepo@7617b3eebcf37ab42124fe570eb7e065cf8c8461
   Source:   protocol/contracts/src/lib/InternalLazyIMT.sol
             (vendored from @zk-kit/lazy-imt.sol@2.0.0-beta.12)
 

@@ -56,7 +56,7 @@ their ERC-7201-derived source slots in the compile target.
 `UnlinkAdapter`, `adapterDeposit`, and `adapterWithdraw` were deleted
 upstream in `d9c8948 chore(contracts): delete UnlinkAdapter + strip
 adapter surface (UE-425)`, which predates our pin
-`4bc46c1fffbc0e146dccfff5b9fe00167121b27b`. The umbrella verity#1760
+`7617b3eebcf37ab42124fe570eb7e065cf8c8461`. The umbrella verity#1760
 references the older multi-relayer release that still carried the
 adapter; at the current pin, the case scope is `UnlinkPool` plus
 `VerifierRouter`.

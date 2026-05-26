@@ -201,10 +201,21 @@ def main() -> int:
                 errors.append(f"{rel}: family_id must match project for current layout")
         source_ref = data.get("source_ref")
         expected_ref = expected_source_ref(data)
+        audit_target_commit = data.get("audit_target_commit")
         if not isinstance(source_ref, str) or not source_ref:
             errors.append(f"{rel}: source_ref must be a non-empty string")
         elif expected_ref is not None and source_ref != expected_ref:
             errors.append(f"{rel}: source_ref must match pinned upstream source {expected_ref!r}")
+        if audit_target_commit is not None:
+            upstream_commit = data.get("upstream_commit")
+            if not isinstance(audit_target_commit, str) or not audit_target_commit:
+                errors.append(f"{rel}: audit_target_commit must be a non-empty string when present")
+            elif upstream_commit != audit_target_commit:
+                errors.append(
+                    f"{rel}: upstream_commit must match audit_target_commit {audit_target_commit!r}"
+                )
+            elif isinstance(source_ref, str) and f"@{audit_target_commit}:" not in source_ref:
+                errors.append(f"{rel}: source_ref must include audit_target_commit {audit_target_commit!r}")
         if not isinstance(family_id, str) or family_id not in families:
             errors.append(f"{rel}: unknown family_id {family_id!r}")
         if not isinstance(family_id, str) or not isinstance(implementation_id, str):

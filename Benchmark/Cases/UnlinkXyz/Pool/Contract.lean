@@ -1,7 +1,7 @@
 /-
   Verity model of `UnlinkPool` — main `verity_contract` declaration.
 
-  Upstream: unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b
+  Upstream: unlink-xyz/monorepo@7617b3eebcf37ab42124fe570eb7e065cf8c8461
   Source:   protocol/contracts/src/UnlinkPool.sol
 
   Solidity contract inheritance (modeled as inherited storage roots + helpers

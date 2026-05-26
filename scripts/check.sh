@@ -181,5 +181,6 @@ fi
 python3 scripts/check_reference_solutions.py
 python3 scripts/check_verity_pin_staleness.py --warn-only
 python3 scripts/validate_manifests.py
+python3 scripts/check_unlink_formal_audit.py
 python3 scripts/generate_metadata.py
 ./scripts/run_all.sh

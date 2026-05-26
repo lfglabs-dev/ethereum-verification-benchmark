@@ -1,12 +1,18 @@
 name: check
 
 on:
+  repository_dispatch:
+    types:
+      - unlink-solidity-changed
+      - unlink-zk-changed
+      - benchmark-case-changed
   push:
     branches:
       - main
       - master
       - codex/**
   pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

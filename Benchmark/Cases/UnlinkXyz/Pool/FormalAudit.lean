@@ -63,7 +63,7 @@ def apAuditItems : List AuditItem := [
   { id := "AP-G5", classification := .residualBoundary, proofState := .outOfModel,
     summary := "public batch atomicity is an EVM transaction semantics boundary, not a generated artifact fact; arbitrary Step claims are rejected" },
   { id := "AP-Ax1", classification := .assumption, proofState := .assumed,
-    summary := "Groth16 knowledge/soundness for the deployed verification key; production ceremony provenance is tracked outside this formal model" },
+    summary := "Groth16 knowledge/soundness for the deployed phase-2 verification key; production ceremony provenance is tracked outside this formal model" },
   { id := "AP-Ax2", classification := .assumption, proofState := .assumed,
     summary := "spend_10x4_v1 and Merkle constraints match R_spend" },
   { id := "AP-Ax3", classification := .assumption, proofState := .assumed,

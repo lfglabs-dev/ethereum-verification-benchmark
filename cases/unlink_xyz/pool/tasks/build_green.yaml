@@ -5,7 +5,7 @@ case_id: unlink_xyz/pool
 split: active
 family_id: unlink_xyz
 implementation_id: pool
-source_ref: https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol
+source_ref: https://github.com/unlink-xyz/monorepo@7617b3eebcf37ab42124fe570eb7e065cf8c8461:protocol/contracts/src/UnlinkPool.sol
 task_interface_version: 2
 theorem_name: Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles
 proof_family: functional_correctness
@@ -14,7 +14,7 @@ difficulty: easy
 category: build
 track: translation-only
 translation_status: translated
-proof_status: not_started
+proof_status: complete
 evaluation_engine: lean_proof_generation
 implementation_files:
   - cases/unlink_xyz/pool/verity/Contract.lean
