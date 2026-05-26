@@ -44,7 +44,7 @@ abstraction_notes: >
   message side effects after nullifier consumption are elided.
 unsupported_feature_codes: []
 notes: >
-  The proved property is split into public claim theorems that show successful
-  claims validate the leaf and reach the nullifier helper, plus a helper theorem
-  that proves the nullifier helper consumes the source-network/leaf-index bitmap
-  entry.
+  The public claim theorems show successful claims validate the leaf and consume
+  the source-network/leaf-index bitmap entry. A private reachability lemma feeds
+  the shared helper theorem that proves successful nullifier-helper execution
+  flips the expected bitmap bit.

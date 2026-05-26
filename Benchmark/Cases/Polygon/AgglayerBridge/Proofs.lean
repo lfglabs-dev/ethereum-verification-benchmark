@@ -73,7 +73,7 @@ private theorem setAndCheckClaimed_consumes_of_success
   simp [Contract.run, h] at hmatch
   exact hmatch
 
-theorem claimAsset_valid_leaf_and_consumes_unique_nullifier
+private theorem claimAsset_valid_leaf_and_reaches_nullifier_helper
     (s : ContractState)
     (smtProofLocalExitRoot smtProofRollupExitRoot : Array Uint256)
     (globalIndex mainnetExitRoot rollupExitRoot originNetwork : Uint256)
@@ -87,7 +87,7 @@ theorem claimAsset_valid_leaf_and_consumes_unique_nullifier
         originNetwork originTokenAddress destinationNetwork destinationAddress amount metadataHash).run s
     with
     | ContractResult.success _ s' =>
-        claimAsset_valid_leaf_and_consumes_unique_nullifier_spec
+        claimAsset_valid_leaf_and_reaches_nullifier_helper_spec
           s s' smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
           originNetwork originTokenAddress destinationNetwork destinationAddress amount metadataHash
     | ContractResult.revert _ _ => True := by
@@ -103,7 +103,7 @@ theorem claimAsset_valid_leaf_and_consumes_unique_nullifier
         AgglayerBridge.hashPair,
         AgglayerBridge._validateAndDecodeGlobalIndex,
         AgglayerBridge._bitmapPositions,
-        claimAsset_valid_leaf_and_consumes_unique_nullifier_spec,
+        claimAsset_valid_leaf_and_reaches_nullifier_helper_spec,
         validClaimLeaf_spec,
         isClaimed_spec,
         nullifierConsumable_spec,
@@ -147,6 +147,41 @@ theorem claimAsset_valid_leaf_and_consumes_unique_nullifier
         | split
         | contradiction
       all_goals aesop
+  | «revert» msg s' =>
+      simp [hrun]
+
+theorem claimAsset_valid_leaf_and_consumes_unique_nullifier
+    (s : ContractState)
+    (smtProofLocalExitRoot smtProofRollupExitRoot : Array Uint256)
+    (globalIndex mainnetExitRoot rollupExitRoot originNetwork : Uint256)
+    (originTokenAddress : Address)
+    (destinationNetwork : Uint256)
+    (destinationAddress : Address)
+    (amount metadataHash : Uint256) :
+    match
+      (AgglayerBridge.claimAsset
+        smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
+        originNetwork originTokenAddress destinationNetwork destinationAddress amount metadataHash).run s
+    with
+    | ContractResult.success _ s' =>
+        claimAsset_valid_leaf_and_consumes_unique_nullifier_spec
+          s s' smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
+          originNetwork originTokenAddress destinationNetwork destinationAddress amount metadataHash
+    | ContractResult.revert _ _ => True := by
+  cases hrun :
+    ((AgglayerBridge.claimAsset
+      smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
+      originNetwork originTokenAddress destinationNetwork destinationAddress amount metadataHash).run s) with
+  | success value s' =>
+      have hclaim := claimAsset_valid_leaf_and_reaches_nullifier_helper
+        s smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
+        originNetwork originTokenAddress destinationNetwork destinationAddress amount metadataHash
+      simp [hrun, claimAsset_valid_leaf_and_reaches_nullifier_helper_spec, nullifierHelperSucceeded_spec] at hclaim
+      rcases hclaim with ⟨hdest, hleaf, helperValue, hhelper⟩
+      refine ⟨hdest, hleaf, ?_⟩
+      exact setAndCheckClaimed_consumes_of_success
+        s (_validateAndDecodeGlobalIndex_leafIndex globalIndex)
+        (_validateAndDecodeGlobalIndex_sourceBridgeNetwork globalIndex) helperValue s' hhelper
   | «revert» msg s' =>
       simp [hrun]
 
@@ -174,14 +209,9 @@ theorem claimAsset_valid_leaf_and_nullifier_consumed_direct
   have hclaim := claimAsset_valid_leaf_and_consumes_unique_nullifier
     s smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
     originNetwork originTokenAddress destinationNetwork destinationAddress amount metadataHash
-  simp [h, claimAsset_valid_leaf_and_consumes_unique_nullifier_spec, nullifierHelperSucceeded_spec] at hclaim
-  rcases hclaim with ⟨hdest, hleaf, value, hhelper⟩
-  refine ⟨hdest, hleaf, ?_⟩
-  exact setAndCheckClaimed_consumes_of_success
-    s (_validateAndDecodeGlobalIndex_leafIndex globalIndex)
-    (_validateAndDecodeGlobalIndex_sourceBridgeNetwork globalIndex) value s' hhelper
+  simpa [h, claimAsset_valid_leaf_and_consumes_unique_nullifier_spec] using hclaim
 
-theorem claimMessage_valid_leaf_and_consumes_unique_nullifier
+private theorem claimMessage_valid_leaf_and_reaches_nullifier_helper
     (s : ContractState)
     (smtProofLocalExitRoot smtProofRollupExitRoot : Array Uint256)
     (globalIndex mainnetExitRoot rollupExitRoot originNetwork : Uint256)
@@ -195,7 +225,7 @@ theorem claimMessage_valid_leaf_and_consumes_unique_nullifier
         originNetwork originAddress destinationNetwork destinationAddress amount metadataHash).run s
     with
     | ContractResult.success _ s' =>
-        claimMessage_valid_leaf_and_consumes_unique_nullifier_spec
+        claimMessage_valid_leaf_and_reaches_nullifier_helper_spec
           s s' smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
           originNetwork originAddress destinationNetwork destinationAddress amount metadataHash
     | ContractResult.revert _ _ => True := by
@@ -211,7 +241,7 @@ theorem claimMessage_valid_leaf_and_consumes_unique_nullifier
         AgglayerBridge.hashPair,
         AgglayerBridge._validateAndDecodeGlobalIndex,
         AgglayerBridge._bitmapPositions,
-        claimMessage_valid_leaf_and_consumes_unique_nullifier_spec,
+        claimMessage_valid_leaf_and_reaches_nullifier_helper_spec,
         validClaimLeaf_spec,
         isClaimed_spec,
         nullifierConsumable_spec,
@@ -258,6 +288,41 @@ theorem claimMessage_valid_leaf_and_consumes_unique_nullifier
   | «revert» msg s' =>
       simp [hrun]
 
+theorem claimMessage_valid_leaf_and_consumes_unique_nullifier
+    (s : ContractState)
+    (smtProofLocalExitRoot smtProofRollupExitRoot : Array Uint256)
+    (globalIndex mainnetExitRoot rollupExitRoot originNetwork : Uint256)
+    (originAddress : Address)
+    (destinationNetwork : Uint256)
+    (destinationAddress : Address)
+    (amount metadataHash : Uint256) :
+    match
+      (AgglayerBridge.claimMessage
+        smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
+        originNetwork originAddress destinationNetwork destinationAddress amount metadataHash).run s
+    with
+    | ContractResult.success _ s' =>
+        claimMessage_valid_leaf_and_consumes_unique_nullifier_spec
+          s s' smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
+          originNetwork originAddress destinationNetwork destinationAddress amount metadataHash
+    | ContractResult.revert _ _ => True := by
+  cases hrun :
+    ((AgglayerBridge.claimMessage
+      smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
+      originNetwork originAddress destinationNetwork destinationAddress amount metadataHash).run s) with
+  | success value s' =>
+      have hclaim := claimMessage_valid_leaf_and_reaches_nullifier_helper
+        s smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
+        originNetwork originAddress destinationNetwork destinationAddress amount metadataHash
+      simp [hrun, claimMessage_valid_leaf_and_reaches_nullifier_helper_spec, nullifierHelperSucceeded_spec] at hclaim
+      rcases hclaim with ⟨hdest, hleaf, helperValue, hhelper⟩
+      refine ⟨hdest, hleaf, ?_⟩
+      exact setAndCheckClaimed_consumes_of_success
+        s (_validateAndDecodeGlobalIndex_leafIndex globalIndex)
+        (_validateAndDecodeGlobalIndex_sourceBridgeNetwork globalIndex) helperValue s' hhelper
+  | «revert» msg s' =>
+      simp [hrun]
+
 theorem claimMessage_valid_leaf_and_nullifier_consumed_direct
     (s s' : ContractState)
     (smtProofLocalExitRoot smtProofRollupExitRoot : Array Uint256)
@@ -282,11 +347,6 @@ theorem claimMessage_valid_leaf_and_nullifier_consumed_direct
   have hclaim := claimMessage_valid_leaf_and_consumes_unique_nullifier
     s smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot
     originNetwork originAddress destinationNetwork destinationAddress amount metadataHash
-  simp [h, claimMessage_valid_leaf_and_consumes_unique_nullifier_spec, nullifierHelperSucceeded_spec] at hclaim
-  rcases hclaim with ⟨hdest, hleaf, value, hhelper⟩
-  refine ⟨hdest, hleaf, ?_⟩
-  exact setAndCheckClaimed_consumes_of_success
-    s (_validateAndDecodeGlobalIndex_leafIndex globalIndex)
-    (_validateAndDecodeGlobalIndex_sourceBridgeNetwork globalIndex) value s' hhelper
+  simpa [h, claimMessage_valid_leaf_and_consumes_unique_nullifier_spec] using hclaim
 
 end Benchmark.Cases.Polygon.AgglayerBridge

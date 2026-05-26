@@ -33,10 +33,12 @@ def _validateAndDecodeGlobalIndex_sourceBridgeNetwork (globalIndex : Uint256) : 
 
 def _validateAndDecodeGlobalIndex_valid (globalIndex : Uint256) : Prop :=
   let leafIndex := _validateAndDecodeGlobalIndex_leafIndex globalIndex
+  let indexRollup := _validateAndDecodeGlobalIndex_indexRollup globalIndex
   if and globalIndex GLOBAL_INDEX_MAINNET_FLAG != 0 then
     add GLOBAL_INDEX_MAINNET_FLAG leafIndex = globalIndex
   else
-    add (shl 32 (_validateAndDecodeGlobalIndex_indexRollup globalIndex)) leafIndex = globalIndex
+    indexRollup != LOW_32_MASK ∧
+    add (shl 32 indexRollup) leafIndex = globalIndex
 
 def _bitmapPositions_wordPos (index : Uint256) : Uint256 := shr 8 index
 def _bitmapPositions_bitPos (index : Uint256) : Uint256 := and index LOW_8_MASK
@@ -93,6 +95,36 @@ def validClaimLeaf_spec
       smtProofRollupExitRoot
       indexRollup = rollupExitRoot
 
+def claimAsset_valid_leaf_and_reaches_nullifier_helper_spec
+    (s s' : ContractState)
+    (smtProofLocalExitRoot smtProofRollupExitRoot : Array Uint256)
+    (globalIndex mainnetExitRoot rollupExitRoot originNetwork : Uint256)
+    (originTokenAddress : Address)
+    (destinationNetwork : Uint256)
+    (destinationAddress : Address)
+    (amount metadataHash : Uint256) : Prop :=
+  let leafIndex := _validateAndDecodeGlobalIndex_leafIndex globalIndex
+  let sourceBridgeNetwork := _validateAndDecodeGlobalIndex_sourceBridgeNetwork globalIndex
+  let leafValue := getLeafValue_spec LEAF_TYPE_ASSET originNetwork originTokenAddress destinationAddress destinationNetwork amount metadataHash
+  destinationNetwork = s.storage 2 ∧
+  validClaimLeaf_spec s smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot leafValue ∧
+  nullifierHelperSucceeded_spec s s' leafIndex sourceBridgeNetwork
+
+def claimMessage_valid_leaf_and_reaches_nullifier_helper_spec
+    (s s' : ContractState)
+    (smtProofLocalExitRoot smtProofRollupExitRoot : Array Uint256)
+    (globalIndex mainnetExitRoot rollupExitRoot originNetwork : Uint256)
+    (originAddress : Address)
+    (destinationNetwork : Uint256)
+    (destinationAddress : Address)
+    (amount metadataHash : Uint256) : Prop :=
+  let leafIndex := _validateAndDecodeGlobalIndex_leafIndex globalIndex
+  let sourceBridgeNetwork := _validateAndDecodeGlobalIndex_sourceBridgeNetwork globalIndex
+  let leafValue := getLeafValue_spec LEAF_TYPE_MESSAGE originNetwork originAddress destinationAddress destinationNetwork amount metadataHash
+  destinationNetwork = s.storage 2 ∧
+  validClaimLeaf_spec s smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot leafValue ∧
+  nullifierHelperSucceeded_spec s s' leafIndex sourceBridgeNetwork
+
 /--
 Every successful `claimAsset` has a valid accepted Merkle leaf and leaves the
 corresponding `(sourceBridgeNetwork, leafIndex)` nullifier claimed.
@@ -110,7 +142,7 @@ def claimAsset_valid_leaf_and_consumes_unique_nullifier_spec
   let leafValue := getLeafValue_spec LEAF_TYPE_ASSET originNetwork originTokenAddress destinationAddress destinationNetwork amount metadataHash
   destinationNetwork = s.storage 2 ∧
   validClaimLeaf_spec s smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot leafValue ∧
-  nullifierHelperSucceeded_spec s s' leafIndex sourceBridgeNetwork
+  nullifierConsumed_spec s s' (s.storage 2) leafIndex sourceBridgeNetwork
 
 /--
 Every successful `claimMessage` has a valid accepted Merkle leaf and leaves the
@@ -129,6 +161,6 @@ def claimMessage_valid_leaf_and_consumes_unique_nullifier_spec
   let leafValue := getLeafValue_spec LEAF_TYPE_MESSAGE originNetwork originAddress destinationAddress destinationNetwork amount metadataHash
   destinationNetwork = s.storage 2 ∧
   validClaimLeaf_spec s smtProofLocalExitRoot smtProofRollupExitRoot globalIndex mainnetExitRoot rollupExitRoot leafValue ∧
-  nullifierHelperSucceeded_spec s s' leafIndex sourceBridgeNetwork
+  nullifierConsumed_spec s s' (s.storage 2) leafIndex sourceBridgeNetwork
 
 end Benchmark.Cases.Polygon.AgglayerBridge

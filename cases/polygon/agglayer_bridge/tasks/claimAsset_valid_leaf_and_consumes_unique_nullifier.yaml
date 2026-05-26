@@ -29,6 +29,6 @@ reference_solution_declaration: Benchmark.Cases.Polygon.AgglayerBridge.claimAsse
 abstraction_level: protocol_slice
 abstraction_notes: >
   Asset claims are proved to validate the modeled leaf against an accepted global
-  exit root and successfully reach the nullifier helper. A shared helper theorem
-  proves that successful helper execution consumes the bitmap nullifier.
+  exit root and consume the source-network/leaf-index bitmap nullifier. A private
+  reachability lemma feeds the shared helper-consumption theorem.
 unsupported_feature_codes: []

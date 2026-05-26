@@ -20,7 +20,7 @@ AgglayerBridge Merkle/nullifier model.
 | Public claim functions inline `_verifyLeafAndSetNullifier` / `_verifyLeaf` proof-array reads | Current direct macro helper lowering rejects helper calls with array parameters; helper functions remain present for source review. |
 | `globalExitRootManager.globalExitRootMap` is modeled as ghost storage mapping `globalExitRootMap` | The manager is an external dependency; claim safety only requires the bridge to reject unregistered global exit roots. |
 | Token/native transfers, wrapped-token deployment, permit, events, and message callbacks are abstracted after nullifier setting | They occur after `_verifyLeafAndSetNullifier` and are not needed for Merkle membership or double-claim safety. |
-| Solidity `uint32` / `uint8` are modeled as `Uint256` with caller-side boundedness assumptions | Verity arithmetic is word-oriented; bit reconstruction checks in `_validateAndDecodeGlobalIndex` preserve the relevant global-index shape. |
+| Solidity `uint32` / `uint8` are modeled as `Uint256` with explicit range guards where checked arithmetic matters | Verity arithmetic is word-oriented; bit reconstruction and the rollup-index overflow check in `_validateAndDecodeGlobalIndex` preserve the relevant global-index shape. |
 
 Local copies of storage slots use the trailing-underscore convention when needed.
 -/
@@ -193,7 +193,7 @@ verity_contract AgglayerBridge where
     else
       let indexRollup := shr 32 globalIndex
       let sourceBridgeNetwork := add indexRollup 1
-      require (add (shl 32 indexRollup) leafIndex == globalIndex) "InvalidGlobalIndex"
+      require (indexRollup != 4294967295 && add (shl 32 indexRollup) leafIndex == globalIndex) "InvalidGlobalIndex"
       return (leafIndex, indexRollup, sourceBridgeNetwork)
 
   function _verifyLeaf (

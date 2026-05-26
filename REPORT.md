@@ -101,7 +101,7 @@ This report is generated from the benchmark manifests.
 - Source ref: `https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol`
 - Selected functions: `claimAsset`, `claimMessage`, `_verifyLeafAndSetNullifier`, `_verifyLeaf`, `_setAndCheckClaimed`, `isClaimed`, `_validateAndDecodeGlobalIndex`, `_bitmapPositions`, `_addLeafBridge`, `_updateGlobalExitRoot`
 - Source artifact: `contracts/AgglayerBridge.sol`
-- Notes: The proved property is split into public claim theorems that show successful claims validate the leaf and reach the nullifier helper, plus a helper theorem that proves the nullifier helper consumes the source-network/leaf-index bitmap entry.
+- Notes: The public claim theorems show successful claims validate the leaf and consume the source-network/leaf-index bitmap entry. A private reachability lemma feeds the shared helper theorem that proves successful nullifier-helper execution flips the expected bitmap bit.
 
 ### `reserve/auction_price_band`
 - Family / implementation: `reserve` / `dtfs`
