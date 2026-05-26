@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: piku
+implementation_id: inverter_oracle_queue
+display_name: Inverter Oracle Queue Funding Manager
+split: active
+status: translated
+upstream_repo: https://github.com/InverterNetwork/contracts
+upstream_commit: 8b7bc438344d646bab05b751c8eb4a7f0c8ca588
+source_language: solidity
+source_artifact_path: src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol
+case_ids:
+  - piku/fund_conservation
+notes: >
+  Docs-matching Piku workflow implementation: oracle-priced funding manager,
+  manual queue payment processor, and manual oracle price module.

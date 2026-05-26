@@ -10,34 +10,35 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 18,
-    "implementation_count": 18,
-    "active_case_count": 15,
+    "family_count": 19,
+    "implementation_count": 19,
+    "active_case_count": 16,
     "backlog_case_count": 3,
-    "active_task_count": 97,
+    "active_task_count": 101,
     "backlog_task_count": 8,
-    "buildable_case_count": 17,
-    "runnable_task_count": 105,
+    "buildable_case_count": 18,
+    "runnable_task_count": 109,
     "case_stage_counts": {
-      "build_green": 15,
+      "build_green": 16,
       "candidate": 1,
       "proof_complete": 2
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 17
+      "translated": 18
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 10,
+      "complete": 11,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 105
+      "proof-only": 109
     },
     "task_property_class_counts": {
       "accounting_bound": 16,
-      "accounting_conservation": 10,
+      "accounting_conservation": 12,
+      "accounting_effect": 2,
       "accounting_invariant_break": 1,
       "accounting_update": 6,
       "arithmetic_rounding": 1,
@@ -77,10 +78,10 @@
       "functional_correctness": 27,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 9,
-      "state_preservation_local_effects": 33
+      "state_preservation_local_effects": 37
     },
     "family_split_counts": {
-      "active": 15,
+      "active": 16,
       "backlog": 3
     }
   },
@@ -271,6 +272,23 @@
         "solidity"
       ],
       "manifest_path": "families/paladin_votes/family.yaml"
+    },
+    {
+      "family_id": "piku",
+      "display_name": "Piku",
+      "split": "active",
+      "status": "active",
+      "description": "Piku USP accounting benchmarks over the Inverter oracle-priced funding manager and queued redemption processor.",
+      "implementation_ids": [
+        "inverter_oracle_queue"
+      ],
+      "case_ids": [
+        "piku/fund_conservation"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/piku/family.yaml"
     },
     {
       "family_id": "reserve",
@@ -568,6 +586,22 @@
       ],
       "notes": "Claim accounting contract translated as a single-round slice with Merkle verification abstracted away from the benchmark.",
       "manifest_path": "families/paladin_votes/implementations/stream_recovery_claim/implementation.yaml"
+    },
+    {
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "display_name": "Inverter Oracle Queue Funding Manager",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/InverterNetwork/contracts",
+      "upstream_commit": "8b7bc438344d646bab05b751c8eb4a7f0c8ca588",
+      "source_language": "solidity",
+      "source_artifact_path": "src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "case_ids": [
+        "piku/fund_conservation"
+      ],
+      "notes": "Docs-matching Piku workflow implementation: oracle-priced funding manager, manual queue payment processor, and manual oracle price module.",
+      "manifest_path": "families/piku/implementations/inverter_oracle_queue/implementation.yaml"
     },
     {
       "family_id": "reserve",
@@ -1127,6 +1161,60 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Specs",
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
+    },
+    {
+      "case_id": "piku/fund_conservation",
+      "project": "piku",
+      "case_name": "fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/case.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/InverterNetwork/contracts",
+      "upstream_commit": "8b7bc438344d646bab05b751c8eb4a7f0c8ca588",
+      "original_contract_path": "src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "selected_functions": [
+        "_sellOrder",
+        "_createAndEmitOrder",
+        "_addToOpenRedemptionAmount",
+        "amountPaid",
+        "processPayments",
+        "executePaymentQueue"
+      ],
+      "lean_target": "Benchmark.Cases.Piku.FundConservation.Compile",
+      "failure_reason": null,
+      "notes": "Fund-conservation benchmark for Piku's oracle-priced queued redemption flow: distributed backing + queued redemption backing + remaining backing + protocol treasury fees + project treasury fees equals initial backing. Queue execution functions are source context; the modeled settlement transition is the successful `amountPaid` callback.",
+      "buildable": true,
+      "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "ghost_accounting_slots",
+        "oracle_price_abstracted",
+        "queue_shape_elided",
+        "external_calls_opaque",
+        "access_control_elided",
+        "erc20_transfers_abstracted",
+        "protocol_fee_recalculation_abstracted",
+        "ghost_solvency_precondition"
+      ],
+      "abstraction_notes": "Piku's docs-matching Inverter implementation stores `_openRedemptionAmount` but does not store cumulative distributed backing, remaining backing, or protocol/project treasury fee counters. The model introduces those as ghost slots so the team-proposed fund-conservation invariant is state-readable. Oracle pricing and decimal conversion are represented by the already-computed redemption amount. Queue linked-list shape, roles, ERC20 transfer mechanics, blacklisting fallback, and event payloads are elided.",
+      "unsupported_feature_codes": [
+        "event_only_fee_accounting_requires_ghost_slot",
+        "external_oracle_pricing_abstracted",
+        "protocol_fee_recalculation_abstracted",
+        "ghost_solvency_precondition"
+      ],
+      "spec_target": "Benchmark.Cases.Piku.FundConservation.Specs",
+      "proof_target": "Benchmark.Cases.Piku.FundConservation.Proofs"
     },
     {
       "case_id": "reserve/auction_price_band",
@@ -4459,6 +4547,198 @@
       }
     },
     {
+      "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation",
+      "task_id": "amount_paid_preserves_fund_conservation",
+      "case_id": "piku/fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_preserves_fund_conservation.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "fund_conservation",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation.amountPaid_preserves_fund_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidPreservesFundConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves conservation for queue payment execution once queued collateral is split between the recipient and protocol treasury.",
+      "unsupported_feature_codes": [
+        "erc20_transfers_abstracted",
+        "protocol_fee_recalculation_abstracted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "piku/fund_conservation/amount_paid_records_distribution",
+      "task_id": "amount_paid_records_distribution",
+      "case_id": "piku/fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_records_distribution.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_effect",
+      "category": "fund_conservation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation.amountPaid_records_distribution",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidRecordsDistribution.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Records the local accounting effect of queue settlement: queued redemption backing is split into user distribution and protocol treasury buckets.",
+      "unsupported_feature_codes": [
+        "erc20_transfers_abstracted",
+        "protocol_fee_recalculation_abstracted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "piku/fund_conservation/sell_order_preserves_fund_conservation",
+      "task_id": "sell_order_preserves_fund_conservation",
+      "case_id": "piku/fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/tasks/sell_order_preserves_fund_conservation.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "fund_conservation",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation._sellOrder_preserves_fund_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderPreservesFundConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves conservation for redemption-order creation under an explicit fee split arithmetic hypothesis. Ghost accounting slots expose event-only fee and distribution effects.",
+      "unsupported_feature_codes": [
+        "event_only_fee_accounting_requires_ghost_slot",
+        "ghost_solvency_precondition"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "piku/fund_conservation/sell_order_records_redemption_buckets",
+      "task_id": "sell_order_records_redemption_buckets",
+      "case_id": "piku/fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/tasks/sell_order_records_redemption_buckets.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_effect",
+      "category": "fund_conservation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation._sellOrder_records_redemption_buckets",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderRecordsRedemptionBuckets.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Records the local accounting effect of redemption-order creation: backing moves from the remaining bucket into queued redemption and project-fee buckets.",
+      "unsupported_feature_codes": [
+        "event_only_fee_accounting_requires_ghost_slot",
+        "ghost_solvency_precondition"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "reserve/auction_price_band/price_at_end_time",
       "task_id": "price_at_end_time",
       "case_id": "reserve/auction_price_band",
@@ -6264,5 +6544,5 @@
       }
     }
   ],
-  "generated_at": "2026-05-17T01:20:05.622809+00:00"
+  "generated_at": "2026-05-25T17:58:10.900470+00:00"
 }
