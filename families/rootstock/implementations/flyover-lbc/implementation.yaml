@@ -1,0 +1,18 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: rootstock
+implementation_id: flyover-lbc
+display_name: Rootstock Flyover LBC
+split: active
+status: translated
+upstream_repo: https://github.com/rsksmart/liquidity-bridge-contract
+upstream_commit: 88a6d1ad64aeb3ad24e01042f4211ad8649784b9
+source_language: solidity
+source_artifact_path: src/PegOutContract.sol
+case_ids:
+  - rootstock/flyover_quote_lifecycle
+notes: >
+  Flyover's Liquidity Bridge Contract accelerates Rootstock peg-ins and
+  peg-outs through liquidity providers. This implementation entry covers the
+  peg-out quote lifecycle in PegOutContract.
+

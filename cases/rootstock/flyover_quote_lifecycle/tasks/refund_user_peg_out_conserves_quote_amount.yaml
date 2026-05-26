@@ -1,0 +1,39 @@
+manifest_kind: task
+schema_version: 1
+task_id: refund_user_peg_out_conserves_quote_amount
+case_id: rootstock/flyover_quote_lifecycle
+split: active
+family_id: rootstock
+implementation_id: flyover-lbc
+source_ref: https://github.com/rsksmart/liquidity-bridge-contract@88a6d1ad64aeb3ad24e01042f4211ad8649784b9:src/PegOutContract.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.refundUserPegOut_conserves_quote_amount
+proof_family: state_preservation_local_effects
+property_class: lifecycle_accounting
+difficulty: medium
+category: bridge_quote_lifecycle
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/rootstock/flyover_quote_lifecycle/verity/Contract.lean
+  - Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Contract.lean
+specification_files:
+  - cases/rootstock/flyover_quote_lifecycle/verity/Specs.lean
+  - Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Specs.lean
+editable_files:
+  - Benchmark/Generated/Rootstock/FlyoverQuoteLifecycle/Tasks/RefundUserPegOutConservesQuoteAmount.lean
+reference_solution_module: Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs
+reference_solution_declaration: Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.refundUserPegOut_conserves_quote_amount
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves the successful user refund path completes and clears a registered
+  quote, assigns the registered amount either to the user transfer witness or
+  recipient fallback balance, and records the external collateral slash-call
+  amount with the quote penalty.
+unsupported_feature_codes:
+  - bytes32_quote_hash_modeled_as_address_key
+  - external_bridge_calls_as_preconditions
+  - external_value_transfer_as_boolean
+  - external_collateral_slash_call_as_witness

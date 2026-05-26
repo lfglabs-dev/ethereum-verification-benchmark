@@ -1,0 +1,16 @@
+manifest_kind: family
+schema_version: 1
+family_id: rootstock
+display_name: Rootstock
+split: active
+status: active
+description: >
+  Benchmark family for Rootstock bridge and Flyover liquidity accounting
+  invariants.
+implementation_ids:
+  - flyover-lbc
+case_ids:
+  - rootstock/flyover_quote_lifecycle
+source_languages:
+  - solidity
+

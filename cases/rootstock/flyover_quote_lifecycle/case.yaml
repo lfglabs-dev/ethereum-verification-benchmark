@@ -1,0 +1,57 @@
+manifest_kind: case
+project: rootstock
+case_id: flyover_quote_lifecycle
+schema_version: 1
+split: active
+family_id: rootstock
+implementation_id: flyover-lbc
+stage: build_green
+translation_status: translated
+spec_status: draft
+proof_status: complete
+upstream_repo: https://github.com/rsksmart/liquidity-bridge-contract
+upstream_commit: 88a6d1ad64aeb3ad24e01042f4211ad8649784b9
+original_contract_path: src/PegOutContract.sol
+source_ref: https://github.com/rsksmart/liquidity-bridge-contract@88a6d1ad64aeb3ad24e01042f4211ad8649784b9:src/PegOutContract.sol
+lean_target: Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Compile
+spec_target: Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Specs
+proof_target: Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs
+selected_functions:
+  - depositPegOut
+  - refundPegOut
+  - refundUserPegOut
+  - _increaseBalance
+source_language: solidity
+verity_version: d71bf23d908a7a952bf041ee5ebe41ba68b54426
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - quote_hash_address_keyed
+  - quote_struct_flattened_to_accounting_fields
+  - bridge_and_signature_checks_as_preconditions
+  - external_call_success_as_boolean
+  - deposit_checked_addition_guards
+  - deposit_change_refund_branch
+  - computed_lp_penalty_timing
+abstraction_notes: >
+  The benchmark targets the compact peg-out quote lifecycle in PegOutContract:
+  depositPegOut registers the Rootstock-side quote amount, refundPegOut settles
+  it to the LP or fallback balance, and refundUserPegOut settles it to the user
+  or fallback balance while recording the external collateral slash call amount
+  as separate penalty accounting. Cryptographic quote validation, Bitcoin transaction
+  parsing, and bridge confirmation checks are modeled as success preconditions
+  because they gate the lifecycle but do not change the conserved Rootstock-side
+  amount after a quote is accepted. Deposit overpayment refund behavior and the
+  LP penalty timing predicate are modeled explicitly.
+unsupported_feature_codes:
+  - bytes32_quote_hash_modeled_as_address_key
+  - struct_calldata_flattened
+  - external_bridge_calls_as_preconditions
+  - external_collateral_slash_call_as_witness
+  - external_value_transfer_as_boolean
+  - quote_hash_address_keyed
+notes: >
+  This case focuses on quote lifecycle conservation and single settlement for
+  Rootstock Flyover / LBC peg-outs. The property proved here is not a Bitcoin
+  proof verifier; it is the Rootstock-side accounting guarantee for the amount
+  already registered by depositPegOut.

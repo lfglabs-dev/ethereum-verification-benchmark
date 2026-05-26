@@ -1,0 +1,38 @@
+manifest_kind: task
+schema_version: 1
+task_id: deposit_peg_out_registers_required_amount
+case_id: rootstock/flyover_quote_lifecycle
+split: active
+family_id: rootstock
+implementation_id: flyover-lbc
+source_ref: https://github.com/rsksmart/liquidity-bridge-contract@88a6d1ad64aeb3ad24e01042f4211ad8649784b9:src/PegOutContract.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.depositPegOut_registers_required_amount
+proof_family: state_preservation_local_effects
+property_class: lifecycle_accounting
+difficulty: medium
+category: bridge_quote_lifecycle
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/rootstock/flyover_quote_lifecycle/verity/Contract.lean
+  - Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Contract.lean
+specification_files:
+  - cases/rootstock/flyover_quote_lifecycle/verity/Specs.lean
+  - Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Specs.lean
+editable_files:
+  - Benchmark/Generated/Rootstock/FlyoverQuoteLifecycle/Tasks/DepositPegOutRegistersRequiredAmount.lean
+reference_solution_module: Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs
+reference_solution_declaration: Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.depositPegOut_registers_required_amount
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves the successful deposit path records the required quote amount and
+  deposit timestamp after checked-addition guards and dust/change-refund
+  handling. Signature, provider, and quote-hash validation are outside this
+  proof task and handled as benchmark scope assumptions.
+unsupported_feature_codes:
+  - bytes32_quote_hash_modeled_as_address_key
+  - struct_calldata_flattened
+  - external_bridge_calls_as_preconditions
