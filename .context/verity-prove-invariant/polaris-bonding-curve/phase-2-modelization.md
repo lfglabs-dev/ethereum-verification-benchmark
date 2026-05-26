@@ -32,7 +32,7 @@ Modeled storage:
 
 ## Simplifications
 
-- `_getBalanceFromReserveRatio` is represented by opaque `curveBalance : Uint256 -> Uint256`. The executable transition functions receive the Solidity helper's computed result as an input, and theorem hypotheses tie that value to `curveBalance` at the resulting supply. This avoids treating the reserve helper as an identity function while keeping PRB/ABDK fixed-point exponentiation outside the executable model.
+- `_getBalanceFromReserveRatio` is represented by opaque `curveBalance : Uint256 -> Uint256` plus `trustedCurveHelperOutput supply reserve`. Executable transitions receive the Solidity helper result as an input because the `verity_contract` macro cannot call the opaque helper directly. Theorems assume only the labeled trusted-helper predicate, not the post-state reserve/curve equality; the equality is recovered through the explicit trusted-library axiom in the proof file.
 - ERC20 per-account balances and reserve-token custody are omitted. Aggregate `totalSupply` is kept because it determines `virtualSupply`.
 - External calls and token transfers are omitted from the state transition because the selected invariant is the contract's own curve-point deviation check, not token custody.
 - Caller-dependent behavior is represented by successful-path inputs: `buy` carries the fee-router branch through a caller marker plus fee amount hypothesis, and `floorSellAndBurn` carries the fee-router authorization guard.
@@ -59,14 +59,14 @@ environment contention.
 
 ## Known Risk
 
-The main semantic risk is still the fixed-point exponentiation abstraction. The model no longer uses an identity reserve helper; it assumes the source helper output as an explicit transition input and proves/axiomatizes preservation under hypotheses that bind that input to opaque `curveBalance`. The public claim must say the current terminal result proves operation-level preservation under this abstraction, not the full PRB/ABDK pow formula.
+The main semantic risk is still the fixed-point exponentiation abstraction. The model no longer uses an identity reserve helper. Init, buy, sell, and floor-burn preservation now prove operation-level storage alignment from direct helper-result writes plus bounded Uint256 arithmetic assumptions. The public claim must say the current terminal result proves operation-level preservation under the explicit trusted-helper axiom, not the full PRB/ABDK pow formula.
 
 ## Review Resolution
 
 Phase 2 modelization review initially blocked the identity-helper encoding and several missing successful-path guards. The model was updated to:
 
 - replace `curveBalance supply := supply` with an opaque `curveBalance`;
-- pass computed helper results into `init`, `buy`, `sell`, and `floorSellAndBurn`;
+- represent computed reserve-helper values with `trustedCurveHelperOutput` instead of direct equality assumptions;
 - add source-aligned nonzero amount guards for `buy`, net-amount `sell`, and `floorSellAndBurn`;
 - add the `buy` fee-router branch as an explicit fee amount hypothesis;
 - add `floorSellAndBurn` fee-router authorization as a transition guard;

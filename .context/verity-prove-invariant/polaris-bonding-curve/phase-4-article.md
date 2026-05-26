@@ -17,21 +17,22 @@ as math matching `Specs.lean`:
 - `virtualBalance = curveBalance(virtualSupply)`
 - `floorBalance = curveBalance(floorSupply)`
 
-Proof status is stated as an AXIOM terminal result. The article does not claim
-a fully closed proof of PRB/ABDK fixed-point exponentiation, reserve-token
-custody, external transfers, or ERC20 per-account accounting.
+Proof status is stated as a proof under one trusted helper-output axiom. The
+article does not claim a fully closed proof of PRB/ABDK fixed-point
+exponentiation, reserve-token custody, external transfers, or ERC20 per-account
+accounting.
 
 Review findings were resolved:
 
 - The verification command clones the benchmark branch
   `polaris-bonding-curve-reserve-ratio`.
-- The top guarantee sentence now qualifies the claim with the AXIOM terminal
-  assumptions before readers reach the proof-status section.
+- The top guarantee sentence now states the reserve equation as the transition
+  conclusion, while the proof-status section names the trusted helper boundary.
 
 Build:
 
 ```bash
-npm run build
+bun run build
 ```
 
 Result: success.

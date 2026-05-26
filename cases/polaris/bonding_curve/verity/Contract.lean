@@ -29,8 +29,9 @@ open Verity.EVM.Uint256
   - `curveBalance supply` abstracts `_getBalanceFromReserveRatio(supply)`,
     i.e. `ceil(A * pow(supply, B + 1) / (B + 1))`. Verity does not currently
     expose a faithful PRB/ABDK fixed-point exponentiation model. The executable
-    transitions receive the Solidity helper's computed result as an input, while
-    theorem hypotheses tie that input to this opaque reserve function.
+    transitions receive the Solidity helper's computed result as an input,
+    while proof hypotheses use a labeled trusted-helper predicate rather than a
+    direct post-reserve equality premise.
   - ERC20 per-account balances, allowances, permit, and events are omitted.
     Aggregate `totalSupply` is modeled because it determines `virtualSupply`.
   - Reserve-token transfers are omitted. The selected invariant concerns the

@@ -4,7 +4,7 @@ project: polaris
 case_id: bonding_curve
 task_id: buy_preserves_reserve_ratio_zero
 name: buy preserves zero reserve-ratio deviation
-description: Prove, or replace the reference axiom, that a buy, including pETH buy fees, moves virtual supply and reserve together.
+description: Prove that a buy, including pETH buy fees, moves virtual supply and reserve together under bounded arithmetic assumptions.
 entrypoint: Benchmark.Generated.Polaris.BondingCurve.Tasks.buy_preserves_reserve_ratio_zero_task
 proof_target: Benchmark.Cases.Polaris.BondingCurve.Proofs.buy_preserves_reserve_ratio_zero
 status: open

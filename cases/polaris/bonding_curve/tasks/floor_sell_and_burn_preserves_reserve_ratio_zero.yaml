@@ -4,7 +4,7 @@ project: polaris
 case_id: bonding_curve
 task_id: floor_sell_and_burn_preserves_reserve_ratio_zero
 name: floorSellAndBurn preserves zero reserve-ratio deviation
-description: Prove, or replace the reference axiom, that fee-router pETH burns move the floor point without drifting from the curve function.
+description: Prove that fee-router pETH burns reduce aggregate supply, raise floor supply, and write floor reserve to the curve point after the full supply change.
 entrypoint: Benchmark.Generated.Polaris.BondingCurve.Tasks.floor_sell_and_burn_preserves_reserve_ratio_zero_task
 proof_target: Benchmark.Cases.Polaris.BondingCurve.Proofs.floorSellAndBurn_preserves_reserve_ratio_zero
 status: open

@@ -11,8 +11,10 @@ theorem init_reserve_ratio_zero_task
     (s : ContractState)
     (hFloorNonZero : floorSupply_ != 0)
     (hFloorLeVirtual : floorSupply_ <= virtualSupply_)
-    (hComputedVirtual : computedVirtualBalance = curveBalance virtualSupply_)
-    (hComputedFloor : computedFloorBalance = curveBalance floorSupply_) :
+    (hComputedVirtual :
+      trustedCurveHelperOutput virtualSupply_ computedVirtualBalance)
+    (hComputedFloor :
+      trustedCurveHelperOutput floorSupply_ computedFloorBalance) :
     let s' :=
       ((BaseBondingCurve.init
         virtualSupply_ floorSupply_ computedVirtualBalance computedFloorBalance).run s).snd

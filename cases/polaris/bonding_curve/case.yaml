@@ -9,7 +9,7 @@ stage: build_green
 translation_status: translated
 spec_status: draft
 proof_status: complete
-proof_terminal_condition: axiom
+proof_terminal_condition: proof_with_trusted_helper_axiom
 upstream_repo: https://github.com/Polaris-Finance/bonding-curve
 upstream_commit: 540c4ba5d0b86c0f42399d214f02120f3f8719b0
 original_contract_path: src/BaseBondingCurve.sol
@@ -23,7 +23,7 @@ selected_functions:
   - sell
   - floorSellAndBurn
 source_language: solidity
-verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
+verity_version: d71bf23d908a7a952bf041ee5ebe41ba68b54426
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -40,8 +40,9 @@ abstraction_notes: >
   represented as opaque curveBalance because the proof target is operation-level
   drift: each transition must write the reserve balance corresponding to the
   resulting supply, including fee minting, sell fee handling, and floor fee
-  burns. Executable transitions receive the source helper result as an input,
-  and proof hypotheses tie those inputs back to curveBalance.
+  burns. Computed helper outputs are represented by the labeled
+  trustedCurveHelperOutput predicate; theorem conclusions establish the
+  post-state reserve to curve match rather than taking that match as a premise.
 unsupported_feature_codes:
   - fixed_point_exponentiation_abstracted
   - erc20_per_account_balances_omitted
@@ -49,6 +50,6 @@ notes: >
   Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same
   predicate for floorSupply/floorBalance. This case records the corresponding
   state-transition preservation property over the bonding curve accounting
-  slice as an AXIOM terminal result. The generated task files remain open
-  challenge entrypoints for agents; they do not contradict the reference
-  terminal condition.
+  slice as Lean theorems under the explicit trustedCurveHelperOutput axiom for
+  the rounded PRB/ABDK reserve helper. The generated task files remain open
+  challenge entrypoints for agents; they do not contradict the reference proof.

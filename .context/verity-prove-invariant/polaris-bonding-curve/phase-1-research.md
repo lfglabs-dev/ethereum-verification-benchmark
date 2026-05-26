@@ -47,13 +47,13 @@ It is not too weak: drift in either the current curve point or the floor point d
 | `virtualSupply() = floorSupply + totalSupply()` | `BaseBondingCurve.sol: virtualSupply` | `virtualSupplyOf` helper | no issue | syntax-only |
 | `_getBalanceFromReserveRatio(supply)` | `left = A * pow(supply, B_PLUS_1); ceil(left / B_PLUS_1)` | `curveBalance` opaque helper | proof-gap-only | semantics risk is documented: proof assumes helper computes the same rounded reserve function |
 | `buy` | sets `virtualBalance = _getBalanceFromReserveRatio(oldVirtualSupply + net + fee)` | state transition with same branch and state target | no issue except external token transfer omitted | syntax-only for invariant |
-| `sell` | burns net amount and sets `virtualBalance = _getBalanceFromReserveRatio(oldVirtualSupply - net)` | state transition with sell fee and net burn | no issue | syntax-only |
-| `floorSellAndBurn` | increases `floorSupply`, burns fee-router pETH, sets `floorBalance = _getBalanceFromReserveRatio(newFloorSupply)` | state transition preserving floor invariant | no issue | syntax-only |
+| `sell` | burns net amount, transfers the sell fee to the fee router, and sets `virtualBalance = _getBalanceFromReserveRatio(oldVirtualSupply - net)` | state transition with explicit sell fee and net burn | no issue | syntax-only |
+| `floorSellAndBurn` | increases `floorSupply`, burns fee-router pETH, sets `floorBalance = _getBalanceFromReserveRatio(newFloorSupply)` | fee-burn transition preserving floor invariant after the full floor-supply change | no issue | syntax-only |
 | ERC20 balances and external reserve-token transfers | `_mint`, `_burn`, `_transfer`, `safeTransfer` | omitted except aggregate total supply | proof-gap-only | outside selected reserve-ratio invariant |
 
 ## Draft Simplifications
 
-- PRB/ABDK exponentiation and decimal fixed-point rounding are represented by `curveBalance : Uint256 -> Uint256`. This is necessary because Verity has no faithful Solidity fixed-point pow surface for PRB/ABDK in this benchmark. The invariant being proven is that all state transitions write the exact result of that reserve-function helper, so no drift is introduced by operation sequencing, fee minting, sell-fee transfer, or fee-router burns.
+- PRB/ABDK exponentiation and decimal fixed-point rounding are represented by `curveBalance : Uint256 -> Uint256`. This is necessary because Verity has no faithful Solidity fixed-point pow surface for PRB/ABDK in this benchmark. The invariant being proven is that all state transitions write the exact result of that reserve-function helper, so no drift is introduced by operation sequencing, fee minting, sell-fee transfer, or fee-router burns. The sell/floor-burn specs now name fee, net burn, post-sell virtual supply, and post-floor-burn supply directly; reserve equality after those supply changes is a theorem conclusion, not a premise.
 - ERC20 per-account balances, allowances, `permit`, external token transfers, and access-control addresses are omitted. Aggregate `totalSupply` is kept because it determines `virtualSupply`.
 - Solidity checked arithmetic is represented by successful-path hypotheses in the proof where needed.
 

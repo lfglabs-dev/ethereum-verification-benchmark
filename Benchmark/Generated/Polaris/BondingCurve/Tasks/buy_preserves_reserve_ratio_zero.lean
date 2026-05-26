@@ -9,6 +9,8 @@ open Verity.EVM.Uint256
 theorem buy_preserves_reserve_ratio_zero_task
     (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount computedNewVirtualBalance : Uint256)
     (s : ContractState)
+    (hInitialized : initializedOf s = 1)
+    (hAmountNonZero : bcTokenAmount != 0)
     (hFeeAmount :
       buyFeeAmount =
         if isFeeRouter then
@@ -16,10 +18,22 @@ theorem buy_preserves_reserve_ratio_zero_task
         else
           div (mul bcTokenAmount (feePercentageOf s)) (sub decimalPrecision (feePercentageOf s)))
     (hComputedNewVirtual :
-      computedNewVirtualBalance =
-        curveBalance
-          (add (add (floorSupplyOf s) (totalSupplyOf s))
-            (add bcTokenAmount buyFeeAmount))) :
+      trustedCurveHelperOutput
+        (add (add (floorSupplyOf s) (totalSupplyOf s))
+          (add bcTokenAmount buyFeeAmount))
+        computedNewVirtualBalance)
+    (hOldSupplyNoOverflow :
+      (floorSupplyOf s).val + (totalSupplyOf s).val < Verity.Core.Uint256.modulus)
+    (hMintNoOverflow :
+      bcTokenAmount.val + buyFeeAmount.val < Verity.Core.Uint256.modulus)
+    (hSupplyMintNoOverflow :
+      (add (floorSupplyOf s) (totalSupplyOf s)).val +
+        (add bcTokenAmount buyFeeAmount).val <
+          Verity.Core.Uint256.modulus)
+    (hTotalSupplyMintNoOverflow :
+      (totalSupplyOf s).val +
+        (add bcTokenAmount buyFeeAmount).val <
+          Verity.Core.Uint256.modulus) :
     let s' :=
       ((BaseBondingCurve.buy
         isFeeRouter bcTokenAmount buyFeeAmount computedNewVirtualBalance).run s).snd
