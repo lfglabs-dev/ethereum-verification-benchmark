@@ -13,7 +13,7 @@ theorem swap_callback_permit2_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer.swapCallbackPermit2TransferFrom callerAddress).run s).snd
     swap_callback_preserves_outer_caller_spec {s with sender := callerAddress} s' ∧
-    permit2_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
+    permit2_caller_spec {s with sender := callerAddress} s' := by
   exact ?_
 
 end Benchmark.Cases.OneDelta.CallerAddressIntegrity

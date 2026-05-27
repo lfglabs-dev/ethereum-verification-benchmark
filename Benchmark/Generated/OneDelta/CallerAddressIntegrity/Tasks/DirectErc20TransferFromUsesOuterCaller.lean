@@ -12,7 +12,7 @@ Direct `TRANSFER_FROM` operations must pull ERC20 funds from the outer
 theorem direct_erc20_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer._transferFrom callerAddress).run s).snd
-    erc20_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
+    erc20_caller_spec {s with sender := callerAddress} s' := by
   exact ?_
 
 end Benchmark.Cases.OneDelta.CallerAddressIntegrity

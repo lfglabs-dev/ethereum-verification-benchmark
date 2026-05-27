@@ -14,7 +14,7 @@ theorem v3_callback_direct_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer.v3SwapCallbackDirectTransferFrom callerAddress).run s).snd
     swap_callback_preserves_outer_caller_spec {s with sender := callerAddress} s' ∧
-    v3_callback_direct_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
+    v3_direct_caller_spec {s with sender := callerAddress} s' := by
   exact ?_
 
 end Benchmark.Cases.OneDelta.CallerAddressIntegrity

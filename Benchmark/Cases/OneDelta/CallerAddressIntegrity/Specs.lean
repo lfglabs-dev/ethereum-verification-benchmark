@@ -22,10 +22,10 @@ def outerCallerWord (s : ContractState) : Uint256 :=
 def delta_compose_captures_outer_caller_spec (s s' : ContractState) : Prop :=
   outerCaller s' = outerCallerWord s
 
-def erc20_pull_uses_outer_caller_spec (s s' : ContractState) : Prop :=
+def erc20_caller_spec (s s' : ContractState) : Prop :=
   erc20PullOccurred s' = 1 → erc20PullFrom s' = outerCallerWord s
 
-def permit2_pull_uses_outer_caller_spec (s s' : ContractState) : Prop :=
+def permit2_caller_spec (s s' : ContractState) : Prop :=
   permit2PullOccurred s' = 1 → permit2PullFrom s' = outerCallerWord s
 
 def flash_callback_preserves_outer_caller_spec (s s' : ContractState) : Prop :=
@@ -34,7 +34,7 @@ def flash_callback_preserves_outer_caller_spec (s s' : ContractState) : Prop :=
 def swap_callback_preserves_outer_caller_spec (s s' : ContractState) : Prop :=
   swapCallbackCaller s' = outerCallerWord s
 
-def v3_callback_direct_pull_uses_outer_caller_spec (s s' : ContractState) : Prop :=
+def v3_direct_caller_spec (s s' : ContractState) : Prop :=
   v3CallbackPullOccurred s' = 1 → v3CallbackPullFrom s' = outerCallerWord s
 
 def all_path_batch_caller_integrity_spec (s s' : ContractState) : Prop :=

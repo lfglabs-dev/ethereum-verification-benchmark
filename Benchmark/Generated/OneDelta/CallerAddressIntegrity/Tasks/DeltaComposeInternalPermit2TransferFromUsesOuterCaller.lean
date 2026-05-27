@@ -13,7 +13,7 @@ theorem delta_compose_internal_permit2_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer._deltaComposeInternal_permit2TransferFrom callerAddress).run s).snd
     outerCaller s' = outerCallerWord {s with sender := callerAddress} ∧
-    permit2_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
+    permit2_caller_spec {s with sender := callerAddress} s' := by
   exact ?_
 
 end Benchmark.Cases.OneDelta.CallerAddressIntegrity

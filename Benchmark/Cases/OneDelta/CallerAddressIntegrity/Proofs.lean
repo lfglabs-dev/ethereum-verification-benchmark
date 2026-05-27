@@ -17,8 +17,8 @@ theorem delta_compose_captures_outer_caller
 theorem direct_erc20_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer._transferFrom callerAddress).run s).snd
-    erc20_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
-  simp [erc20_pull_uses_outer_caller_spec, erc20PullOccurred, erc20PullFrom,
+    erc20_caller_spec {s with sender := callerAddress} s' := by
+  simp [erc20_caller_spec, erc20PullOccurred, erc20PullFrom,
     outerCallerWord, OneDeltaComposer._transferFrom,
     OneDeltaComposer.erc20TransferFromOccurred, OneDeltaComposer.erc20TransferFromWord,
     setStorage, Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
@@ -26,8 +26,8 @@ theorem direct_erc20_transferFrom_uses_outer_caller
 theorem transfers_erc20_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer._transfers_transferFrom callerAddress).run s).snd
-    erc20_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
-  simp [erc20_pull_uses_outer_caller_spec, erc20PullOccurred, erc20PullFrom,
+    erc20_caller_spec {s with sender := callerAddress} s' := by
+  simp [erc20_caller_spec, erc20PullOccurred, erc20PullFrom,
     outerCallerWord, OneDeltaComposer._transfers_transferFrom,
     OneDeltaComposer.erc20TransferFromOccurred, OneDeltaComposer.erc20TransferFromWord,
     setStorage, Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
@@ -36,8 +36,8 @@ theorem delta_compose_internal_erc20_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer._deltaComposeInternal_transferFrom callerAddress).run s).snd
     outerCaller s' = outerCallerWord {s with sender := callerAddress} ∧
-    erc20_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
-  simp [erc20_pull_uses_outer_caller_spec, erc20PullOccurred, erc20PullFrom,
+    erc20_caller_spec {s with sender := callerAddress} s' := by
+  simp [erc20_caller_spec, erc20PullOccurred, erc20PullFrom,
     outerCaller, outerCallerWord, OneDeltaComposer._deltaComposeInternal_transferFrom,
     OneDeltaComposer.outerCallerWord, OneDeltaComposer.erc20TransferFromOccurred,
     OneDeltaComposer.erc20TransferFromWord, setStorage, Verity.bind, Bind.bind,
@@ -46,8 +46,8 @@ theorem delta_compose_internal_erc20_transferFrom_uses_outer_caller
 theorem direct_permit2_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer._permit2TransferFrom callerAddress).run s).snd
-    permit2_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
-  simp [permit2_pull_uses_outer_caller_spec, permit2PullOccurred, permit2PullFrom,
+    permit2_caller_spec {s with sender := callerAddress} s' := by
+  simp [permit2_caller_spec, permit2PullOccurred, permit2PullFrom,
     outerCallerWord, OneDeltaComposer._permit2TransferFrom,
     OneDeltaComposer.permit2TransferFromOccurred, OneDeltaComposer.permit2TransferFromWord,
     setStorage, Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
@@ -55,8 +55,8 @@ theorem direct_permit2_transferFrom_uses_outer_caller
 theorem transfers_permit2_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer._transfers_permit2TransferFrom callerAddress).run s).snd
-    permit2_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
-  simp [permit2_pull_uses_outer_caller_spec, permit2PullOccurred, permit2PullFrom,
+    permit2_caller_spec {s with sender := callerAddress} s' := by
+  simp [permit2_caller_spec, permit2PullOccurred, permit2PullFrom,
     outerCallerWord, OneDeltaComposer._transfers_permit2TransferFrom,
     OneDeltaComposer.permit2TransferFromOccurred, OneDeltaComposer.permit2TransferFromWord,
     setStorage, Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
@@ -65,8 +65,8 @@ theorem delta_compose_internal_permit2_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer._deltaComposeInternal_permit2TransferFrom callerAddress).run s).snd
     outerCaller s' = outerCallerWord {s with sender := callerAddress} ∧
-    permit2_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
-  simp [permit2_pull_uses_outer_caller_spec, permit2PullOccurred, permit2PullFrom,
+    permit2_caller_spec {s with sender := callerAddress} s' := by
+  simp [permit2_caller_spec, permit2PullOccurred, permit2PullFrom,
     outerCaller, outerCallerWord, OneDeltaComposer._deltaComposeInternal_permit2TransferFrom,
     OneDeltaComposer.outerCallerWord, OneDeltaComposer.permit2TransferFromOccurred,
     OneDeltaComposer.permit2TransferFromWord, setStorage, Verity.bind, Bind.bind,
@@ -80,8 +80,8 @@ theorem flash_callback_erc20_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer.flashLoanCallbackTransferFrom callerAddress).run s).snd
     flash_callback_preserves_outer_caller_spec {s with sender := callerAddress} s' ∧
-    erc20_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
-  simp [flash_callback_preserves_outer_caller_spec, erc20_pull_uses_outer_caller_spec,
+    erc20_caller_spec {s with sender := callerAddress} s' := by
+  simp [flash_callback_preserves_outer_caller_spec, erc20_caller_spec,
     flashCallbackCaller, erc20PullOccurred, erc20PullFrom, outerCallerWord,
     OneDeltaComposer.flashLoanCallbackTransferFrom,
     OneDeltaComposer.flashCallbackCallerWord, OneDeltaComposer.erc20TransferFromOccurred,
@@ -92,8 +92,8 @@ theorem swap_callback_permit2_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer.swapCallbackPermit2TransferFrom callerAddress).run s).snd
     swap_callback_preserves_outer_caller_spec {s with sender := callerAddress} s' ∧
-    permit2_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
-  simp [swap_callback_preserves_outer_caller_spec, permit2_pull_uses_outer_caller_spec,
+    permit2_caller_spec {s with sender := callerAddress} s' := by
+  simp [swap_callback_preserves_outer_caller_spec, permit2_caller_spec,
     swapCallbackCaller, permit2PullOccurred, permit2PullFrom, outerCallerWord,
     OneDeltaComposer.swapCallbackPermit2TransferFrom,
     OneDeltaComposer.swapCallbackCallerWord, OneDeltaComposer.permit2TransferFromOccurred,
@@ -104,9 +104,9 @@ theorem v3_callback_direct_transferFrom_uses_outer_caller
     (callerAddress : Address) (s : ContractState) :
     let s' := ((OneDeltaComposer.v3SwapCallbackDirectTransferFrom callerAddress).run s).snd
     swap_callback_preserves_outer_caller_spec {s with sender := callerAddress} s' ∧
-    v3_callback_direct_pull_uses_outer_caller_spec {s with sender := callerAddress} s' := by
+    v3_direct_caller_spec {s with sender := callerAddress} s' := by
   simp [swap_callback_preserves_outer_caller_spec,
-    v3_callback_direct_pull_uses_outer_caller_spec, swapCallbackCaller,
+    v3_direct_caller_spec, swapCallbackCaller,
     v3CallbackPullOccurred, v3CallbackPullFrom, outerCallerWord,
     OneDeltaComposer.v3SwapCallbackDirectTransferFrom,
     OneDeltaComposer.swapCallbackCallerWord, OneDeltaComposer.v3CallbackTransferFromOccurred,
