@@ -69,10 +69,9 @@ loud-but-useless global registration. -/
 attribute [grind =]
   Verity.Proofs.Stdlib.ListSum.countOcc_cons_eq
   Verity.Proofs.Stdlib.ListSum.countOccU_cons_eq
--- Conditional (`a ≠ t → …`) equalities: forward-only per the audit.
-attribute [grind →]
-  Verity.Proofs.Stdlib.ListSum.countOcc_cons_ne
-  Verity.Proofs.Stdlib.ListSum.countOccU_cons_ne
+-- Conditional (`a ≠ t → …`) equalities do not expose antecedent patterns that
+-- Lean 4.22's grind can register globally. Callers can still pass them
+-- explicitly with `grind [...]` when the local context has the needed names.
 
 
 /-! ## 3. sumBalances preservation over FiniteAddressSet
@@ -159,12 +158,9 @@ Groups:
                                  and `→` for bound-producing lemmas).
 -/
 
--- 5a. Nat bridges (conditional on a `fits_within` hypothesis, forward-only per the audit).
-attribute [grind →]
-  Verity.Proofs.Stdlib.Math.mulDivDown_nat_eq
-  Verity.Proofs.Stdlib.Math.mulDivUp_nat_eq
-  Verity.Proofs.Stdlib.Math.wMulDown_nat_eq
-  Verity.Proofs.Stdlib.Math.wDivUp_nat_eq
+-- 5a. Nat bridges. These are conditional on a `fits_within` hypothesis and
+-- one theorem lacks extractable antecedent patterns for global `[grind →]`.
+-- Keep them available as ordinary public lemmas rather than failing import.
 
 -- 5b. Unconditional zero identities
 attribute [grind =]

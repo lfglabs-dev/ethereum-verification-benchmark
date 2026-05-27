@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import sys
+import tomllib
 
 from manifest_utils import load_manifest_data
 
@@ -17,6 +19,7 @@ PROOF_FAMILIES = {
     "protocol_transition_correctness",
     "refinement_equivalence",
 }
+FULL_GIT_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
 def load_json(path: Path) -> object:
@@ -103,6 +106,22 @@ def expected_source_ref(data: dict) -> str | None:
     return f"{upstream_repo}@{upstream_commit}:{original_contract_path}"
 
 
+def validate_upstream_pin(data: dict, rel: str) -> list[str]:
+    upstream_repo = data.get("upstream_repo")
+    upstream_commit = data.get("upstream_commit")
+    if not isinstance(upstream_repo, str) or not upstream_repo:
+        return []
+    if "github.com" not in upstream_repo:
+        return []
+    if not isinstance(upstream_commit, str) or not upstream_commit:
+        return [f"{rel}: GitHub upstream_commit must be a full immutable commit hash"]
+    if not FULL_GIT_SHA_RE.match(upstream_commit):
+        return [
+            f"{rel}: GitHub upstream_commit must be a 40-character lowercase hex commit hash, got {upstream_commit!r}"
+        ]
+    return []
+
+
 def resolve_repo_file(candidate: object) -> Path | None:
     if not isinstance(candidate, str) or not candidate.strip():
         return None
@@ -135,6 +154,8 @@ def main() -> int:
     discovered_case_ids: dict[str, list[str]] = {}
     discovered_task_refs: dict[str, list[str]] = {}
 
+    benchmark_config = tomllib.loads((ROOT / "benchmark.toml").read_text(encoding="utf-8"))
+
     for path in family_manifests:
         data = load_manifest(path)
         rel = str(path.relative_to(ROOT))
@@ -150,6 +171,7 @@ def main() -> int:
         data = load_manifest(path)
         rel = str(path.relative_to(ROOT))
         errors.extend(validate(data, schema_files["implementation"], rel))
+        errors.extend(validate_upstream_pin(data, rel))
         family_id = data.get("family_id")
         implementation_id = data.get("implementation_id")
         expected_family_id = path.parent.parent.parent.name
@@ -202,6 +224,7 @@ def main() -> int:
         source_ref = data.get("source_ref")
         expected_ref = expected_source_ref(data)
         audit_target_commit = data.get("audit_target_commit")
+        errors.extend(validate_upstream_pin(data, rel))
         if not isinstance(source_ref, str) or not source_ref:
             errors.append(f"{rel}: source_ref must be a non-empty string")
         elif expected_ref is not None and source_ref != expected_ref:
@@ -400,6 +423,35 @@ def main() -> int:
         if len(paths) > 1:
             joined = ", ".join(paths)
             errors.append(f"duplicate case id {case_id}: {joined}")
+
+    configured_active_cases = benchmark_config.get("active_cases")
+    configured_backlog_cases = benchmark_config.get("backlog_cases")
+    actual_active_cases = {
+        case_id for case_id, case_data in cases.items() if case_data.get("split") == "active"
+    }
+    actual_backlog_cases = {
+        case_id for case_id, case_data in cases.items() if case_data.get("split") == "backlog"
+    }
+    if not isinstance(configured_active_cases, list) or not all(
+        isinstance(case_id, str) for case_id in configured_active_cases
+    ):
+        errors.append("benchmark.toml: active_cases must be a list of strings")
+    else:
+        configured = set(configured_active_cases)
+        for case_id in sorted(actual_active_cases - configured):
+            errors.append(f"benchmark.toml: active_cases is missing {case_id}")
+        for case_id in sorted(configured - actual_active_cases):
+            errors.append(f"benchmark.toml: active_cases references non-active case {case_id}")
+    if not isinstance(configured_backlog_cases, list) or not all(
+        isinstance(case_id, str) for case_id in configured_backlog_cases
+    ):
+        errors.append("benchmark.toml: backlog_cases must be a list of strings")
+    else:
+        configured = set(configured_backlog_cases)
+        for case_id in sorted(actual_backlog_cases - configured):
+            errors.append(f"benchmark.toml: backlog_cases is missing {case_id}")
+        for case_id in sorted(configured - actual_backlog_cases):
+            errors.append(f"benchmark.toml: backlog_cases references non-backlog case {case_id}")
 
     if errors:
         print("manifest validation failed", file=sys.stderr)

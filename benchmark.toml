@@ -1,24 +1,17 @@
 name = "verity-benchmark"
 version = "0.1.0"
-primary_unit = "task"
-primary_track = "proof-only"
+primary_unit = "group"
+primary_track = "group/lean_tools"
 build_command = "./scripts/run_all.sh"
 task_command = "./scripts/run_task.sh <project/case_id/task_id>"
-default_agent_command = "./scripts/run_default_agent.sh <project/case_id/task_id>"
-default_agent_case_command = "./scripts/run_default_agent_case.sh <project/case_id>"
-default_agent_suite_command = "./scripts/run_default_agent_all.sh"
-custom_agent_command = "./scripts/run_custom_agent.sh <project/case_id/task_id>"
-custom_agent_case_command = "./scripts/run_custom_agent_case.sh <project/case_id>"
-custom_agent_suite_command = "./scripts/run_custom_agent_all.sh"
-default_agent_profiles_dir = "harness/agents"
-default_agent_default_profile = "default"
-custom_agent_default_profile = "openai-compatible"
-default_agent_config = "harness/agents/default.json"
-default_agent_result_schema = "schemas/agent-run.schema.json"
-# Canonical summaries are written under results/agent_summaries/<track>/<run_slug>.json.
-# These two paths name the benchmark-owned reference defaults for the repo and generic external tracks.
-default_agent_summary = "results/agent_summaries/reference/default.json"
-custom_agent_summary = "results/agent_summaries/custom/openai-compatible.json"
+group_list_command = "python3 -m harness.cli list --suite active --unit group"
+default_harness_group_command = "./scripts/run_default_harness_group.sh <project/case>"
+default_harness_suite_command = "./scripts/run_default_harness_suite.sh"
+grok_build_group_command = "./scripts/run_grok_build_group.sh <project/case>"
+grok_build_suite_command = "./scripts/run_grok_build_suite.sh"
+# Canonical group runs are written under results/runs/<timestamp>-<harness>-<group>.
+default_harness_summary = "results/runs"
+grok_build_summary = "results/runs"
 inventory = "benchmark-inventory.json"
 report = "REPORT.md"
 manifest_glob = "cases/*/*/case.yaml"
@@ -27,11 +20,29 @@ backlog_glob = "backlog/*/*/case.yaml"
 backlog_task_glob = "backlog/*/*/tasks/*.yaml"
 result_schema = "schemas/run-result.schema.json"
 active_cases = [
-  "paladin_votes/stream_recovery_claim_usdc",
+  "alchemix/earmark_conservation",
+  "balancer/reclamm_swap_rounding",
+  "cork/pool_solvency",
+  "damn_vulnerable_defi/side_entrance",
   "ethereum/deposit_contract_minimal",
-  "nexus_mutual/ramm_price_band",
+  "forgeyields/global_solvency",
   "kleros/sortition_trees",
+  "lagoon/guardrails",
+  "lido/vaulthub_locked",
+  "nexus_mutual/ramm_price_band",
+  "onedelta/caller_address_integrity",
+  "paladin_votes/stream_recovery_claim_usdc",
+  "piku/fund_conservation",
+  "polygon/agglayer_bridge",
+  "reserve/auction_price_band",
+  "safe/owner_manager_reach",
+  "termmax/order_v2_buy_xt_single_segment",
+  "usual/dao_collateral",
+  "wildcat/borrow_liquidity_safety",
+  "zama/erc7984_confidential_token",
 ]
 backlog_cases = [
+  "openzeppelin/erc4626_virtual_offset_deposit",
+  "uniswap_v2/pair_fee_adjusted_swap",
   "usual/placeholder",
 ]

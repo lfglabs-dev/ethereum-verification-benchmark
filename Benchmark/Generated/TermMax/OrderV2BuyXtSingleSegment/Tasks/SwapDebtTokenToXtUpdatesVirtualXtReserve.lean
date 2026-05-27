@@ -12,16 +12,11 @@ Executing the single-segment exact-input `debtToken -> XT` pricing path updates
 theorem swapDebtTokenToXt_updates_virtual_xt_reserve
     (daysToMaturity debtTokenAmtIn minTokenOut : Uint256)
     (borrowTakerFeeRatio lendMakerFeeRatio : Uint256)
-    (cutXtReserve cutLiqSquare cutOffsetWord : Uint256)
+    (cutLiqSquare : Uint256) (cutOffset : Int256)
     (s : ContractState)
     (hNonZeroInput : debtTokenAmtIn != 0)
-    (hBaseCut : cutXtReserve = 0)
-    (hSignedOffsetSafe :
-      if isNegativeInt256Word cutOffsetWord then
-        sub 0 cutOffsetWord <= s.storage 0
-      else
-        add (s.storage 0) cutOffsetWord >= s.storage 0)
-    (hVXtNonZero : signedReserveOffset (s.storage 0) cutOffsetWord != 0)
+    (hLockOpen : s.storage 1 = 0)
+    (hVXtNonZero : plusInt256 (s.storage 0) cutOffset != 0)
     (hNoCross :
       singleSegmentBuyXtTokenAmtOut
           daysToMaturity
@@ -29,7 +24,7 @@ theorem swapDebtTokenToXt_updates_virtual_xt_reserve
           debtTokenAmtIn
           borrowTakerFeeRatio
           cutLiqSquare
-          cutOffsetWord
+          cutOffset
         <= s.storage 0)
     (hMinOut :
       add
@@ -39,26 +34,25 @@ theorem swapDebtTokenToXt_updates_virtual_xt_reserve
             debtTokenAmtIn
             borrowTakerFeeRatio
             cutLiqSquare
-            cutOffsetWord)
+            cutOffset)
           debtTokenAmtIn
         >= minTokenOut) :
     let s' := ((
       TermMaxOrderV2BuyXtSingleSegment.swapDebtTokenToXtExactInSingleSegment
-        daysToMaturity
         debtTokenAmtIn
         minTokenOut
+        daysToMaturity
         borrowTakerFeeRatio
         lendMakerFeeRatio
-        cutXtReserve
         cutLiqSquare
-        cutOffsetWord
+        cutOffset
       ).run s).snd
     swapDebtTokenToXt_updates_virtual_xt_reserve_spec
       daysToMaturity
       debtTokenAmtIn
       borrowTakerFeeRatio
       cutLiqSquare
-      cutOffsetWord
+      cutOffset
       s
       s' := by
   exact ?_

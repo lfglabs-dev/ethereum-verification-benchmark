@@ -1,59 +1,76 @@
-# Task Harness
+# Harness
 
-The harness runs one task at a time.
+The benchmark now has two supported group harnesses:
+
+- `default`: the built-in Lean-tools harness. It builds an isolated group workspace, tries deterministic local proof candidates, asks an OpenAI-compatible chat-completions API for proof bodies when needed, and verifies the final workspace independently.
+- `grok-build`: the Grok Build shell harness. It gives Grok Build a generated group workspace and then verifies the produced proof files with the same independent verifier.
 
 Task contract:
 - fixed implementation files
 - fixed specification files
-- one editable proof file
-- one theorem name
+- one editable proof file per target
+- one theorem name per target
 
 Main entrypoints:
-- `scripts/run_default_agent.sh <task_ref>`
-- `scripts/run_default_agent_case.sh <project/case>`
-- `scripts/run_default_agent_all.sh`
-- `scripts/run_custom_agent.sh <task_ref>`
-- `scripts/run_custom_agent_case.sh <project/case>`
-- `scripts/run_custom_agent_all.sh`
+- `python3 -m harness.cli list --suite active --unit group`
+- `python3 -m harness.cli run-task <project/case/task> --harness default`
+- `python3 -m harness.cli run-group <project/case> --harness default`
+- `python3 -m harness.cli run-suite --suite active --harness default`
+- `python3 -m harness.cli run-group <project/case> --harness grok-build`
+- `python3 -m harness.cli run-suite --suite active --harness grok-build`
+- `python3 -m harness.cli compare --runs results/runs/*`
+- `scripts/run_default_harness_group.sh <project/case>`
+- `scripts/run_default_harness_suite.sh --suite active`
+- `scripts/run_grok_build_group.sh <project/case>`
+- `scripts/run_grok_build_suite.sh --suite active`
 
 Core files:
-- `harness/agent_runner.py`: task, case, and suite runner
-- `harness/default_agent.py`: profile, prompt, probe, and run logic
-- `scripts/run_agent_entrypoint.sh`: shared shell launcher
-- `harness/agents/*.json`: bundled profiles
+- `harness/manifests.py`: group/task manifest loader and scoring metadata
+- `harness/workspace_builder.py`: generated group workspaces and file manifests
+- `harness/verifier.py`: independent policy and Lean verifier
+- `harness/cli.py`: group list/run-task/run-group/run-suite/compare CLI
+- `harness/runners/lean_tools.py`: default OpenAI-compatible Lean-tools harness
+- `harness/runners/grok_build.py`: Grok Build shell harness
+- `harness/agents/default.json`: default harness profile metadata
+- `harness/agents/grok-build.json`: Grok Build profile metadata
 
-Bundled profiles:
-- `default`: repo reference profile (strict, builtin/fast via proxy)
-- `openai-compatible`: generic external OpenAI-compatible profile
-- `openai-proxy-fast`: pinned proxy profile
-- `interactive-gpt`: interactive, OpenRouter `openai/gpt-5.4`
-- `interactive-opus`: interactive, OpenRouter `anthropic/claude-opus-4.7`
-- `interactive-smart`: interactive, `builtin/smart` via configured proxy
+Runtime tracks:
+- `group/lean_tools`: built-in proof-generation harness with local Lean candidates plus API fallback
+- `group/shell`: shell-based coding-agent harness for Grok Build
 
-Runtime modes:
-- `strict`: no agent tools
-- `interactive`: small Lean-oriented tool surface
-- `custom`: external command adapter, same evaluator
+Default harness API env:
+- `DEFAULT_HARNESS_BASE_URL`
+- `DEFAULT_HARNESS_MODEL`
+- `DEFAULT_HARNESS_API_KEY`
 
-Default OpenAI-compatible env vars:
-- `VERITY_BENCHMARK_AGENT_BASE_URL`
-- `VERITY_BENCHMARK_AGENT_MODEL`
-- `VERITY_BENCHMARK_AGENT_API_KEY`
+Local runtime configuration:
+- Copy `.env.example` to `.env`.
+- Put local provider keys and model settings in `.env`.
+- `.env` is ignored by git and loaded by `harness.cli` before runner startup.
+- Existing process environment variables take precedence over values in `.env`.
 
-Env loading:
-- `.env` is encrypted with `dotenvx`
-- local runs use `.env.keys` or `DOTENV_PRIVATE_KEY`
-- CI uses `DOTENV_PRIVATE_KEY`
-- `.env.local` is a local override
+Compatibility env still accepted by the default harness:
+- `GAZELLA_BASE_URL`
+- `GAZELLA_MODEL`
+- `GAZELLA_API_KEY`
+- `OPENAI_API_KEY`
+
+Grok auth:
+- CI/local automation should set `GROK_CODE_XAI_API_KEY`.
+- Host `~/.grok/auth.json` is not copied unless `VERITY_ALLOW_HOST_GROK_AUTH=1`.
+- Without auth, the Grok runner writes a `harness_error` artifact instead of blocking on an interactive login prompt.
 
 Useful commands:
 
 ```bash
-python3 harness/agent_runner.py list --suite active
-python3 harness/default_agent.py profiles
-python3 harness/default_agent.py describe --profile default
-python3 harness/default_agent.py probe --profile default --ensure-model
-python3 scripts/analyze_benchmark_run.py attempts results/agent_runs/reference/default/ethereum__deposit_contract_minimal__deposit_count.json
-./scripts/run_default_agent.sh ethereum/deposit_contract_minimal/deposit_count
-./scripts/run_custom_agent.sh ethereum/deposit_contract_minimal/deposit_count
+python3 -m harness.cli list --suite active --unit group
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --keep-workspace
+python3 -m harness.cli run-group ethereum/deposit_contract_minimal --harness default --max-attempts 2 --keep-workspace
+python3 -m harness.cli run-suite --suite active --harness default --max-attempts 1
+VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --max-turns 20
+python3 -m harness.cli run-group ethereum/deposit_contract_minimal --harness grok-build --dry-run --max-turns 20 --keep-workspace
+python3 -m harness.cli run-suite --suite active --harness grok-build --dry-run
+python3 -m harness.cli compare --runs results/runs/<default-run> results/runs/<grok-build-run>
+python3 scripts/check_run_artifacts.py results/runs/<run_id>
+python3 scripts/check_group_workspaces.py ethereum/deposit_contract_minimal
 ```

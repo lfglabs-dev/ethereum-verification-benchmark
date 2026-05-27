@@ -24,7 +24,7 @@
 
 ## What is this?
 
-**Verity Benchmark** is an open evaluation suite that measures how well AI agents can produce **formal proofs** of smart contract correctness in [Lean 4](https://lean-lang.org/), on top of the [Verity](https://github.com/lfglabs-dev/verity) formally verified smart contract compiler. Cases are drawn from real-world Ethereum protocols (Ethereum deposit contract, Lido, Nexus Mutual, Kleros, Paladin, Damn Vulnerable DeFi).
+**Verity Benchmark** is an open evaluation suite that measures how well AI agents can produce **formal proofs** of smart contract correctness in [Lean 4](https://lean-lang.org/), on top of the [Verity](https://github.com/lfglabs-dev/verity) formally verified smart contract compiler. Cases are drawn from real-world Ethereum protocols, DeFi systems, token standards, and security challenge contracts.
 
 [Verity](https://veritylang.com) lets you write smart contracts, state what they should do, prove correctness, and compile to EVM bytecode with machine-checked proofs that compilation preserves semantics. This benchmark is an initiative made in partnership with the **Ethereum Foundation** and various protocols of the ecosystem. Full documentation lives at [**veritylang.com**](https://veritylang.com); the team behind it is [**LFG Labs**](https://lfglabs.dev).
 
@@ -33,24 +33,39 @@ Each benchmark task gives an agent:
 - A fixed formal specification
 - One editable proof file with a single theorem to prove
 
-The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`, `axiom`) allowed.
+The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) are allowed, and benchmark proof files may not introduce `axiom` declarations. A small CI-enforced trusted boundary axiom ledger documents semantic boundaries such as fixed-point `exp`/`ln` models.
 
 ---
 
 ## Benchmark suite
 
-6 cases, 30 tasks, drawn from real-world contracts:
+19 active cases, 117 active task manifests, and 8 backlog task manifests are drawn from real-world contracts. All active and backlog task manifests are currently runnable proof tasks with hidden reference proofs.
 
 | Case | Source | Tasks |
 |------|--------|-------|
+| `alchemix/earmark_conservation` | Alchemix V3 | 5 |
+| `balancer/reclamm_swap_rounding` | Balancer ReClamm | 1 |
+| `cork/pool_solvency` | Cork Phoenix | 1 |
+| `damn_vulnerable_defi/side_entrance` | Damn Vulnerable DeFi | 5 |
 | `ethereum/deposit_contract_minimal` | Ethereum deposit contract | 5 |
+| `forgeyields/global_solvency` | ForgeYields TokenGateway | 7 |
+| `kleros/sortition_trees` | Kleros sortition module | 6 |
+| `lagoon/guardrails` | Lagoon vault guardrails | 3 |
 | `lido/vaulthub_locked` | Lido VaultHub | 5 |
 | `nexus_mutual/ramm_price_band` | Nexus Mutual RAMM | 4 |
-| `kleros/sortition_trees` | Kleros sortition module | 6 |
-| `paladin_votes/stream_recovery_claim_usdc` | Paladin Votes | 5 |
-| `damn_vulnerable_defi/side_entrance` | Damn Vulnerable DeFi | 5 |
+| `onedelta/caller_address_integrity` | OneDelta callback caller integrity | 10 |
+| `paladin_votes/stream_recovery_claim_usdc` | Paladin Votes | 26 |
+| `polygon/agglayer_bridge` | Polygon Agglayer bridge | 2 |
+| `reserve/auction_price_band` | Reserve DTF | 4 |
+| `safe/owner_manager_reach` | Safe OwnerManager | 15 |
+| `termmax/order_v2_buy_xt_single_segment` | TermMax Order V2 | 1 |
+| `usual/dao_collateral` | Usual DaoCollateral | 5 |
+| `wildcat/borrow_liquidity_safety` | Wildcat V2 | 1 |
+| `zama/erc7984_confidential_token` | Zama / OpenZeppelin ERC-7984 | 11 |
 
-Most cases include a reference proof (hidden from the agent during benchmarking) that validates the task is solvable.
+Every runnable task includes a reference proof hidden from the agent during benchmarking. Case-level `proof_status: partial` means the broader case family is not fully complete; it does not imply that runnable per-task reference proofs are missing.
+
+Coverage is strongest today for accounting, local state preservation, storage effects, linked-list ownership structures, and solvency invariants. Known thinner areas include reentrancy beyond modeled guards, oracle manipulation, governance/timelock properties, temporal or liveness properties, cross-contract compositional reasoning, cryptographic assumptions, and adversarial EVM-level behavior. See [docs/evaluated-surface.md](./docs/evaluated-surface.md) for the current evaluation surface.
 
 ---
 
@@ -69,56 +84,41 @@ Most cases include a reference proof (hidden from the agent during benchmarking)
 ./scripts/run_all.sh
 ```
 
-### Run with the built-in harness
+### Run with a harness
 
-The benchmark ships with an agent harness that supports any OpenAI-compatible API. In `interactive` mode, it exposes Lean-specific tools to the agent:
+The supported benchmark harnesses are:
 
-| Tool | Purpose |
-|------|---------|
-| `read_public_file` | Read implementation and spec files |
-| `write_editable_proof` | Write the proof file |
-| `run_lean_check` | Type-check the proof, with structured error feedback and repair hints |
-| `inspect_lean_goals` | Inspect open proof goals at hole sites |
-| `try_tactic_at_hole` | Test a tactic at proof holes without committing |
-| `search_public_defs` | Search definitions across implementation and spec files |
+- `default`: built-in Lean-tools harness using local proof candidates plus an OpenAI-compatible API fallback.
+- `grok-build`: Grok Build shell harness.
 
 ```bash
-# Run a single task with the built-in agent
-./scripts/run_default_agent.sh lido/vaulthub_locked/locked_funds_solvency
+# Run a single task with the default harness
+python3 -m harness.cli run-task lido/vaulthub_locked/locked_funds_solvency --harness default
 
-# Run a full case
-./scripts/run_default_agent_case.sh lido/vaulthub_locked
+# Run a full case with the default harness
+./scripts/run_default_harness_group.sh lido/vaulthub_locked --max-attempts 2
 
-# Run the full suite
-./scripts/run_default_agent_all.sh
+# Run the full suite with the default harness
+./scripts/run_default_harness_suite.sh --suite active --max-attempts 1
+
+# Run Grok Build
+VERITY_ALLOW_HOST_GROK_AUTH=1 ./scripts/run_grok_build_group.sh ethereum/deposit_contract_minimal --max-turns 20
+./scripts/run_grok_build_suite.sh --suite active
+
+# Compare two run artifacts
+python3 -m harness.cli compare --runs results/runs/<default-run> results/runs/<grok-build-run>
 ```
 
-To test a different model, configure the agent profile:
+Default harness API configuration:
 
 ```bash
-python3 harness/default_agent.py profiles
-python3 harness/default_agent.py describe --profile openai-compatible
+cp .env.example .env
+$EDITOR .env
 ```
 
-### Use a custom harness
-
-The benchmark also supports custom agent harnesses via an external command adapter. The evaluation contract stays the same: fixed input files, one editable proof, one required theorem.
-
-```bash
-./scripts/run_custom_agent.sh ethereum/deposit_contract_minimal/deposit_count
-./scripts/run_custom_agent_case.sh ethereum/deposit_contract_minimal
-./scripts/run_custom_agent_all.sh
-```
-
-### Benchmark matrix
-
-Run multiple models/harnesses in parallel and compare results:
-
-```bash
-python3 scripts/run_benchmark_matrix.py start
-python3 scripts/run_benchmark_matrix.py status
-python3 scripts/run_benchmark_matrix.py wait
-```
+Grok Build can use `GROK_CODE_XAI_API_KEY` in CI. For local comparisons against
+an already logged-in `grok` CLI, set `VERITY_ALLOW_HOST_GROK_AUTH=1`; the runner
+copies only `~/.grok/auth.json` into an isolated temporary home for that run.
 
 ---
 
@@ -144,10 +144,3 @@ verity-benchmark/
 |----------|-------------|
 | [harness/README.md](./harness/README.md) | Harness internals and agent integration |
 | [docs/architecture/task-api.md](./docs/architecture/task-api.md) | Task contract and manifest format |
-| [docs/architecture/runtime-modes.md](./docs/architecture/runtime-modes.md) | Runtime modes (strict, interactive, custom) |
-
-<!-- BENCHMARK_MATRIX:START -->
-## Benchmark Results
-
-Run `python3 scripts/run_benchmark_matrix.py render` after the matrix finishes to refresh this section.
-<!-- BENCHMARK_MATRIX:END -->

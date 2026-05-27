@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "axioms": [
+    {
+      "path": "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean",
+      "name": "MathLib_exp",
+      "boundary": "Opaque model of PRBMath SD59x18.exp pending a Verity fixed-point exp primitive.",
+      "justification": "The Reserve auction price-band case needs the function symbol to mirror upstream control flow; proofs consume only the separately listed algebraic property."
+    },
+    {
+      "path": "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean",
+      "name": "MathLib_exp_nonpositive_le_D18",
+      "boundary": "Algebraic property of the PRBMath fixed-point exp boundary.",
+      "justification": "For non-positive inputs, exp(x) is at most exp(0), represented as D18 in the fixed-point scale."
+    },
+    {
+      "path": "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean",
+      "name": "MathLib_ln",
+      "boundary": "Opaque model of PRBMath UD60x18.ln pending a Verity fixed-point ln primitive.",
+      "justification": "The value is used only to compute the decay rate inside the translated function and is treated as opaque by the benchmark proofs."
+    }
+  ]
+}

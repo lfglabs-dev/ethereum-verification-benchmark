@@ -6,7 +6,7 @@ display_name: OpenZeppelin Confidential Contracts (ERC-7984)
 split: active
 status: translated
 upstream_repo: https://github.com/OpenZeppelin/openzeppelin-confidential-contracts
-upstream_commit: master
+upstream_commit: 83364738f0d2b1655c60627588e3493099c359f7
 source_language: solidity
 source_artifact_path: contracts/token/ERC7984/ERC7984.sol
 case_ids:

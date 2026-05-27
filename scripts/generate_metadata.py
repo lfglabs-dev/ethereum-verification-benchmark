@@ -15,6 +15,7 @@ BACKLOG_ROOT = ROOT / "backlog"
 FAMILIES_ROOT = ROOT / "families"
 INVENTORY_PATH = ROOT / "benchmark-inventory.json"
 REPORT_PATH = ROOT / "REPORT.md"
+EVALUATED_SURFACE_PATH = ROOT / "docs" / "evaluated-surface.md"
 
 ALLOWED_STAGES = {
     "candidate",
@@ -24,7 +25,7 @@ ALLOWED_STAGES = {
     "proof_complete",
 }
 BUILDABLE_STAGES = {"build_green", "proof_partial", "proof_complete"}
-RUNNABLE_TRANSLATION_STATUSES = {"generated"}
+RUNNABLE_TRANSLATION_STATUSES = {"generated", "translated"}
 RUNNABLE_PROOF_STATUSES = {"partial", "complete"}
 
 
@@ -447,6 +448,125 @@ def write_report(
     REPORT_PATH.write_text("\n".join(lines), encoding="utf-8")
 
 
+def write_evaluated_surface(
+    active_cases: list[dict],
+    backlog_cases: list[dict],
+    active_tasks: list[dict],
+    backlog_tasks: list[dict],
+) -> None:
+    active_runnable_by_case = Counter(
+        task["case_id"]
+        for task in active_tasks
+        if task["readiness"]["editable_proof"] == "ready"
+    )
+    backlog_runnable_by_case = Counter(
+        task["case_id"]
+        for task in backlog_tasks
+        if task["readiness"]["editable_proof"] == "ready"
+    )
+    active_runnable = sum(active_runnable_by_case.values())
+    backlog_runnable = sum(backlog_runnable_by_case.values())
+    active_blocked = len(active_tasks) - active_runnable
+
+    runnable_backlog_cases = [
+        case_id
+        for case_id, count in sorted(backlog_runnable_by_case.items())
+        if count > 0
+    ]
+    blocked_backlog_cases = [
+        case["case_id"]
+        for case in backlog_cases
+        if backlog_runnable_by_case[case["case_id"]] == 0
+    ]
+
+    lines = [
+        "# Evaluated Surface",
+        "",
+        "This page is generated from the benchmark manifests by `scripts/generate_metadata.py`.",
+        "The canonical machine inventory is `benchmark-inventory.json`, generated",
+        "from `cases/*/*/case.yaml`, `cases/*/*/tasks/*.yaml`, `backlog/*/*/case.yaml`,",
+        "and `backlog/*/*/tasks/*.yaml`.",
+        "",
+        "## Active Suite",
+        "",
+        (
+            f"The active suite currently contains {len(active_cases)} cases and "
+            f"{len(active_tasks)} task manifests. Of those, {active_runnable} tasks "
+            "are runnable proof tasks with hidden reference proofs"
+            + (
+                f"; the remaining {active_blocked} active task is present in manifests "
+                "but not runnable."
+                if active_blocked == 1
+                else f"; the remaining {active_blocked} active tasks are present in manifests but not runnable."
+                if active_blocked
+                else "."
+            )
+        ),
+        "",
+        "| Case | Runnable Tasks | Case Proof Status |",
+        "|------|---------------:|-------------------|",
+    ]
+
+    for case in active_cases:
+        lines.append(
+            f"| `{case['case_id']}` | {active_runnable_by_case[case['case_id']]} | `{case['proof_status']}` |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Backlog",
+            "",
+        ]
+    )
+    if backlog_cases:
+        if runnable_backlog_cases:
+            joined_runnable = " and ".join(f"`{case_id}`" for case_id in runnable_backlog_cases)
+            lines.append(
+                f"Backlog cases are not part of the default active suite, but the runnable backlog tasks are still checked for hidden reference proofs. The backlog currently has {backlog_runnable} runnable tasks across {joined_runnable}."
+            )
+        else:
+            lines.append(
+                "Backlog cases are not part of the default active suite, and none currently expose runnable proof tasks."
+            )
+        if blocked_backlog_cases:
+            joined_blocked = ", ".join(f"`{case_id}`" for case_id in blocked_backlog_cases)
+            lines.append(f"Blocked backlog cases with no runnable tasks: {joined_blocked}.")
+    else:
+        lines.append("There are currently no backlog cases.")
+
+    lines.extend(
+        [
+            "",
+            "## Non-Evaluated Preview Files",
+            "",
+            "`Benchmark/GeneratedPreview/` is a staging area produced by",
+            "`scripts/generate_task_skeletons.py --preview`. Files there are not evaluated",
+            "unless a task manifest points to a corresponding `Benchmark/Generated/...`",
+            "editable proof file. Backlog manifests are likewise outside the default active",
+            "suite until promoted into `cases/`.",
+            "",
+            "## Status Semantics",
+            "",
+            "`proof_status: complete` at case level means the case family is fully covered",
+            "by runnable tasks. `proof_status: partial` means the broader family is not yet",
+            "fully covered; it does not mean the listed runnable tasks lack hidden reference",
+            "proofs.",
+            "",
+            "## Known Coverage Gaps",
+            "",
+            "The suite is strongest on accounting, state preservation, storage effects,",
+            "linked-list ownership structures, and solvency invariants. It is thinner on",
+            "reentrancy beyond modeled guards, oracle manipulation, governance and timelock",
+            "properties, temporal or liveness properties, cross-contract compositional",
+            "reasoning, cryptographic assumptions, and adversarial EVM-level behavior.",
+            "",
+        ]
+    )
+    EVALUATED_SURFACE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    EVALUATED_SURFACE_PATH.write_text("\n".join(lines), encoding="utf-8")
+
+
 def main() -> int:
     families = load_manifest_group(FAMILIES_ROOT, "*/family.yaml", load_family_manifest)
     implementations = load_manifest_group(
@@ -467,6 +587,7 @@ def main() -> int:
 
     write_inventory(active_cases, backlog_cases, active_tasks, backlog_tasks, families, implementations)
     write_report(active_cases, backlog_cases, active_tasks, families, implementations)
+    write_evaluated_surface(active_cases, backlog_cases, active_tasks, backlog_tasks)
     return 0
 
 

@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 22
-- Implementations: 23
-- Active cases: 20
-- Buildable active cases: 20
-- Active tasks: 121
+- Families: 21
+- Implementations: 22
+- Active cases: 19
+- Buildable active cases: 19
+- Active tasks: 117
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -38,7 +38,7 @@ This report is generated from the benchmark manifests.
 - Stage: `build_green`
 - Status dimensions: translation=`translated`, spec=`frozen`, proof=`partial`
 - Lean target: `Benchmark.Cases.Cork.PoolSolvency.Compile`
-- Source ref: `https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol`
+- Source ref: `https://github.com/Cork-Technology/phoenix@40d9b173c4b2262a93f36167355b5311d5f58e6b:contracts/libraries/PoolLib.sol`
 - Selected functions: `previewUnwindExerciseOther`, `_unwindExercise`
 - Upstream source artifact: `contracts/libraries/PoolLib.sol`
 - Notes: Cork Phoenix pool solvency slice targeting the Certora P-02 gap. Based on the Certora formal verification report (September-December 2025). P-02 was verified for all functions except unwindExerciseOther (timeout).
@@ -133,16 +133,6 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `src/StreamRecoveryClaim.sol`
 - Notes: Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
 
-### `piku/fund_conservation`
-- Family / implementation: `piku` / `inverter_oracle_queue`
-- Stage: `build_green`
-- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
-- Lean target: `Benchmark.Cases.Piku.FundConservation.Compile`
-- Source ref: `https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol`
-- Selected functions: `_sellOrder`, `_createAndEmitOrder`, `_addToOpenRedemptionAmount`, `amountPaid`, `processPayments`, `executePaymentQueue`
-- Upstream source artifact: `src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol`
-- Notes: Fund-conservation benchmark for Piku's oracle-priced queued redemption flow: distributed backing + queued redemption backing + remaining backing + protocol treasury fees + project treasury fees equals initial backing. Queue execution functions are source context; the modeled settlement transition is the successful `amountPaid` callback.
-
 ### `polygon/agglayer_bridge`
 - Family / implementation: `polygon` / `agglayer_bridge`
 - Stage: `proof_complete`
@@ -208,7 +198,7 @@ This report is generated from the benchmark manifests.
 - Stage: `build_green`
 - Status dimensions: translation=`translated`, spec=`frozen`, proof=`partial`
 - Lean target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Compile`
-- Source ref: `https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol`
+- Source ref: `https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol`
 - Selected functions: `_update`, `_transfer`, `_mint`, `_burn`, `confidentialTransferFrom`, `setOperator`
 - Upstream source artifact: `contracts/token/ERC7984/ERC7984.sol`
 - Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, and functional correctness of setOperator. Eleven proof tasks cover the 5 modeled functions.
@@ -221,7 +211,7 @@ This report is generated from the benchmark manifests.
 
 ### `alchemix/earmark_conservation/earmark_preserves_invariant`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation._earmark_preserves_invariant`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
@@ -231,7 +221,7 @@ This report is generated from the benchmark manifests.
 
 ### `alchemix/earmark_conservation/redeem_preserves_invariant`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation.redeem_preserves_invariant`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
@@ -241,7 +231,7 @@ This report is generated from the benchmark manifests.
 
 ### `alchemix/earmark_conservation/sub_debt_preserves_invariant`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation._subDebt_preserves_invariant`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
@@ -251,7 +241,7 @@ This report is generated from the benchmark manifests.
 
 ### `alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation._subEarmarkedDebt_preserves_invariant`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
@@ -261,7 +251,7 @@ This report is generated from the benchmark manifests.
 
 ### `alchemix/earmark_conservation/sync_account_preserves_invariant`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Alchemix.EarmarkConservation._sync_preserves_invariant`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/alchemix/earmark_conservation/verity/Contract.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean`
@@ -271,7 +261,7 @@ This report is generated from the benchmark manifests.
 
 ### `balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing`
 - Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Balancer.ReClammSwapRounding.onSwap_fixed_virtual_balances_product_non_decreasing`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/balancer/reclamm_swap_rounding/verity/Contract.lean`, `Benchmark/Cases/Balancer/ReClammSwapRounding/Contract.lean`
@@ -281,7 +271,7 @@ This report is generated from the benchmark manifests.
 
 ### `cork/pool_solvency/solvency_preserved`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Cork.PoolSolvency.solvency_preserved`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/cork/pool_solvency/verity/Contract.lean`, `Benchmark/Cases/Cork/PoolSolvency/Contract.lean`
@@ -291,7 +281,7 @@ This report is generated from the benchmark manifests.
 
 ### `damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance`
 - Track / property class / proof family: `proof-only` / `storage_update` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.deposit_sets_pool_balance`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean`
@@ -301,7 +291,7 @@ This report is generated from the benchmark manifests.
 
 ### `damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit`
 - Track / property class / proof family: `proof-only` / `balance_credit_update` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.deposit_sets_sender_credit`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean`
@@ -311,7 +301,7 @@ This report is generated from the benchmark manifests.
 
 ### `damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool`
 - Track / property class / proof family: `proof-only` / `exploit_trace` / `refinement_equivalence`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.exploit_trace_drains_pool`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean`
@@ -321,7 +311,7 @@ This report is generated from the benchmark manifests.
 
 ### `damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance`
 - Track / property class / proof family: `proof-only` / `accounting_invariant_break` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_preserves_pool_balance`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean`
@@ -331,7 +321,7 @@ This report is generated from the benchmark manifests.
 
 ### `damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit`
 - Track / property class / proof family: `proof-only` / `balance_credit_update` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_sets_sender_credit`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean`
@@ -341,7 +331,7 @@ This report is generated from the benchmark manifests.
 
 ### `ethereum/deposit_contract_minimal/chain_start_threshold`
 - Track / property class / proof family: `proof-only` / `threshold_activation` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_starts_chain_at_threshold`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/ethereum/deposit_contract_minimal/verity/Contract.lean`, `Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean`
@@ -351,7 +341,7 @@ This report is generated from the benchmark manifests.
 
 ### `ethereum/deposit_contract_minimal/deposit_count`
 - Track / property class / proof family: `proof-only` / `monotonic_counter` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Ethereum.DepositContractMinimal.deposit_increments_deposit_count`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/ethereum/deposit_contract_minimal/verity/Contract.lean`, `Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean`
@@ -361,7 +351,7 @@ This report is generated from the benchmark manifests.
 
 ### `ethereum/deposit_contract_minimal/full_deposit_increments_full_count`
 - Track / property class / proof family: `proof-only` / `monotonic_counter` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_increments_full_count`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/ethereum/deposit_contract_minimal/verity/Contract.lean`, `Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean`
@@ -371,7 +361,7 @@ This report is generated from the benchmark manifests.
 
 ### `ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `refinement_equivalence`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_preserves_partial_gap`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/ethereum/deposit_contract_minimal/verity/Contract.lean`, `Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean`
@@ -381,7 +371,7 @@ This report is generated from the benchmark manifests.
 
 ### `ethereum/deposit_contract_minimal/small_deposit_preserves_full_count`
 - Track / property class / proof family: `proof-only` / `threshold_partition` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Ethereum.DepositContractMinimal.small_deposit_preserves_full_count`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/ethereum/deposit_contract_minimal/verity/Contract.lean`, `Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean`
@@ -391,7 +381,7 @@ This report is generated from the benchmark manifests.
 
 ### `forgeyields/global_solvency/claim_redeem_preserves_global_solvency`
 - Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.claimRedeem_preserves_global_solvency`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
@@ -401,7 +391,7 @@ This report is generated from the benchmark manifests.
 
 ### `forgeyields/global_solvency/deposit_preserves_global_solvency`
 - Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.deposit_preserves_global_solvency`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
@@ -411,7 +401,7 @@ This report is generated from the benchmark manifests.
 
 ### `forgeyields/global_solvency/handle_preserves_global_solvency`
 - Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.handle_preserves_global_solvency`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
@@ -421,7 +411,7 @@ This report is generated from the benchmark manifests.
 
 ### `forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency`
 - Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.redeemTokenGatewayDepreciated_preserves_global_solvency`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
@@ -431,7 +421,7 @@ This report is generated from the benchmark manifests.
 
 ### `forgeyields/global_solvency/report_preserves_global_solvency`
 - Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.report_preserves_global_solvency`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
@@ -441,7 +431,7 @@ This report is generated from the benchmark manifests.
 
 ### `forgeyields/global_solvency/request_redeem_preserves_global_solvency`
 - Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.requestRedeem_preserves_global_solvency`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
@@ -451,7 +441,7 @@ This report is generated from the benchmark manifests.
 
 ### `forgeyields/global_solvency/transfer_remote_preserves_global_solvency`
 - Track / property class / proof family: `proof-only` / `guarded_solvency` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.ForgeYields.GlobalSolvency.transferRemote_preserves_global_solvency`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/forgeyields/global_solvency/verity/Contract.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean`
@@ -461,7 +451,7 @@ This report is generated from the benchmark manifests.
 
 ### `kleros/sortition_trees/draw_interval_matches_weights`
 - Track / property class / proof family: `proof-only` / `weighted_selection` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Kleros.SortitionTrees.draw_interval_matches_weights`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/kleros/sortition_trees/verity/Contract.lean`, `Benchmark/Cases/Kleros/SortitionTrees/Contract.lean`
@@ -471,7 +461,7 @@ This report is generated from the benchmark manifests.
 
 ### `kleros/sortition_trees/draw_selects_valid_leaf`
 - Track / property class / proof family: `proof-only` / `output_range` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Kleros.SortitionTrees.draw_selects_valid_leaf`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/kleros/sortition_trees/verity/Contract.lean`, `Benchmark/Cases/Kleros/SortitionTrees/Contract.lean`
@@ -481,7 +471,7 @@ This report is generated from the benchmark manifests.
 
 ### `kleros/sortition_trees/node_id_bijection`
 - Track / property class / proof family: `proof-only` / `mapping_consistency` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Kleros.SortitionTrees.node_id_bijection`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/kleros/sortition_trees/verity/Contract.lean`, `Benchmark/Cases/Kleros/SortitionTrees/Contract.lean`
@@ -491,7 +481,7 @@ This report is generated from the benchmark manifests.
 
 ### `kleros/sortition_trees/parent_equals_sum_of_children`
 - Track / property class / proof family: `proof-only` / `tree_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Kleros.SortitionTrees.parent_equals_sum_of_children`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/kleros/sortition_trees/verity/Contract.lean`, `Benchmark/Cases/Kleros/SortitionTrees/Contract.lean`
@@ -501,7 +491,7 @@ This report is generated from the benchmark manifests.
 
 ### `kleros/sortition_trees/root_equals_sum_of_leaves`
 - Track / property class / proof family: `proof-only` / `total_conservation` / `refinement_equivalence`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Kleros.SortitionTrees.root_equals_sum_of_leaves`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/kleros/sortition_trees/verity/Contract.lean`, `Benchmark/Cases/Kleros/SortitionTrees/Contract.lean`
@@ -511,7 +501,7 @@ This report is generated from the benchmark manifests.
 
 ### `kleros/sortition_trees/root_minus_left_equals_right_subtree`
 - Track / property class / proof family: `proof-only` / `subtree_partition` / `refinement_equivalence`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Kleros.SortitionTrees.root_minus_left_equals_right_subtree`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/kleros/sortition_trees/verity/Contract.lean`, `Benchmark/Cases/Kleros/SortitionTrees/Contract.lean`
@@ -521,7 +511,7 @@ This report is generated from the benchmark manifests.
 
 ### `lagoon/guardrails/exact_compliance`
 - Track / property class / proof family: `proof-only` / `compliance_boundary` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/lagoon/guardrails/verity/Contract.lean`, `Benchmark/Cases/Lagoon/Guardrails/Contract.lean`
@@ -531,7 +521,7 @@ This report is generated from the benchmark manifests.
 
 ### `lagoon/guardrails/negative_variation_bounded`
 - Track / property class / proof family: `proof-only` / `compliance_boundary` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/lagoon/guardrails/verity/Contract.lean`, `Benchmark/Cases/Lagoon/Guardrails/Contract.lean`
@@ -541,7 +531,7 @@ This report is generated from the benchmark manifests.
 
 ### `lagoon/guardrails/positive_variation_bounded`
 - Track / property class / proof family: `proof-only` / `compliance_boundary` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Lagoon.Guardrails.guardrails_positive_bounded`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/lagoon/guardrails/verity/Contract.lean`, `Benchmark/Cases/Lagoon/Guardrails/Contract.lean`
@@ -551,7 +541,7 @@ This report is generated from the benchmark manifests.
 
 ### `lido/vaulthub_locked/ceildiv_sandwich`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Lido.VaulthubLocked.ceildiv_sandwich`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/lido/vaulthub_locked/verity/Contract.lean`, `Benchmark/Cases/Lido/VaulthubLocked/Contract.lean`
@@ -561,7 +551,7 @@ This report is generated from the benchmark manifests.
 
 ### `lido/vaulthub_locked/locked_funds_solvency`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Lido.VaulthubLocked.locked_funds_solvency`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/lido/vaulthub_locked/verity/Contract.lean`, `Benchmark/Cases/Lido/VaulthubLocked/Contract.lean`
@@ -571,7 +561,7 @@ This report is generated from the benchmark manifests.
 
 ### `lido/vaulthub_locked/max_liability_shares_bound`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Lido.VaulthubLocked.max_liability_shares_bound`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/lido/vaulthub_locked/verity/Contract.lean`, `Benchmark/Cases/Lido/VaulthubLocked/Contract.lean`
@@ -581,7 +571,7 @@ This report is generated from the benchmark manifests.
 
 ### `lido/vaulthub_locked/reserve_ratio_bounds`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Lido.VaulthubLocked.reserve_ratio_bounds`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/lido/vaulthub_locked/verity/Contract.lean`, `Benchmark/Cases/Lido/VaulthubLocked/Contract.lean`
@@ -591,7 +581,7 @@ This report is generated from the benchmark manifests.
 
 ### `lido/vaulthub_locked/shares_conversion_monotone`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Lido.VaulthubLocked.shares_conversion_monotone`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/lido/vaulthub_locked/verity/Contract.lean`, `Benchmark/Cases/Lido/VaulthubLocked/Contract.lean`
@@ -601,7 +591,7 @@ This report is generated from the benchmark manifests.
 
 ### `nexus_mutual/ramm_price_band/sync_sets_book_value`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_book_value`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/nexus_mutual/ramm_price_band/verity/Contract.lean`, `Benchmark/Cases/NexusMutual/RammPriceBand/Contract.lean`
@@ -611,7 +601,7 @@ This report is generated from the benchmark manifests.
 
 ### `nexus_mutual/ramm_price_band/sync_sets_buy_price`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_buy_price`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/nexus_mutual/ramm_price_band/verity/Contract.lean`, `Benchmark/Cases/NexusMutual/RammPriceBand/Contract.lean`
@@ -621,7 +611,7 @@ This report is generated from the benchmark manifests.
 
 ### `nexus_mutual/ramm_price_band/sync_sets_capital`
 - Track / property class / proof family: `proof-only` / `storage_write` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_capital`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/nexus_mutual/ramm_price_band/verity/Contract.lean`, `Benchmark/Cases/NexusMutual/RammPriceBand/Contract.lean`
@@ -631,7 +621,7 @@ This report is generated from the benchmark manifests.
 
 ### `nexus_mutual/ramm_price_band/sync_sets_sell_price`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_sell_price`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/nexus_mutual/ramm_price_band/verity/Contract.lean`, `Benchmark/Cases/NexusMutual/RammPriceBand/Contract.lean`
@@ -641,7 +631,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_erc20_transferFrom_uses_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -651,7 +641,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_permit2_transferFrom_uses_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -661,7 +651,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_erc20_transferFrom_uses_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -671,7 +661,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_permit2_transferFrom_uses_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -681,7 +671,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.flash_callback_erc20_transferFrom_uses_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -691,7 +681,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.nested_flash_and_swap_callbacks_keep_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -701,7 +691,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.swap_callback_permit2_transferFrom_uses_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -711,7 +701,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_erc20_transferFrom_uses_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -721,7 +711,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_permit2_transferFrom_uses_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -731,7 +721,7 @@ This report is generated from the benchmark manifests.
 
 ### `onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.v3_callback_direct_transferFrom_uses_outer_caller`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/onedelta/caller_address_integrity/verity/Contract.lean`, `Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean`
@@ -741,7 +731,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_marks_both_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -751,7 +741,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed`
 - Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_round_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -761,7 +751,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated`
 - Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_total_allocated`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -771,7 +761,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `refinement_equivalence`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_claimed_plus_allocated_conserved`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -781,7 +771,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims`
 - Track / property class / proof family: `proof-only` / `noninterference` / `refinement_equivalence`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_matches_independent_claims`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -791,7 +781,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_no_overclaim`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_preserves_round_bounds`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -801,7 +791,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_exceeds_total`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -811,7 +801,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_already_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -821,7 +811,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_exceeds_total`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -831,7 +821,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_already_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -841,7 +831,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_exceeds_total`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -851,7 +841,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/claim_marks_user`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_marks_user_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -861,7 +851,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed`
 - Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_round_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -871,7 +861,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated`
 - Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_total_allocated`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -881,7 +871,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `refinement_equivalence`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_claimed_plus_allocated_conserved`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -891,7 +881,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/double_claim_rejected`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_already_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -901,7 +891,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/no_overclaim`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_round_bound`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -911,7 +901,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state`
 - Track / property class / proof family: `proof-only` / `frame_property` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_weth_state`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -921,7 +911,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_exceeds_total`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -931,7 +921,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_marks_user_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -941,7 +931,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed`
 - Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_round_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -951,7 +941,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated`
 - Track / property class / proof family: `proof-only` / `accounting_update` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_total_allocated`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -961,7 +951,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `refinement_equivalence`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_claimed_plus_allocated_conserved`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -971,7 +961,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_already_claimed`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -981,7 +971,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `authorization_enablement`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_round_bound`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -991,7 +981,7 @@ This report is generated from the benchmark manifests.
 
 ### `paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state`
 - Track / property class / proof family: `proof-only` / `frame_property` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_usdc_state`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean`
@@ -999,49 +989,9 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
 
-### `piku/fund_conservation/amount_paid_preserves_fund_conservation`
-- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
-- Theorem target: `Benchmark.Cases.Piku.FundConservation.amountPaid_preserves_fund_conservation`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/piku/fund_conservation/verity/Contract.lean`, `Benchmark/Cases/Piku/FundConservation/Contract.lean`
-- Specification files: `cases/piku/fund_conservation/verity/Specs.lean`, `Benchmark/Cases/Piku/FundConservation/Specs.lean`
-- Editable proof file: `Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidPreservesFundConservation.lean`
-- Hidden reference solution: `Benchmark.Cases.Piku.FundConservation.Proofs`
-
-### `piku/fund_conservation/amount_paid_records_distribution`
-- Track / property class / proof family: `proof-only` / `accounting_effect` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
-- Theorem target: `Benchmark.Cases.Piku.FundConservation.amountPaid_records_distribution`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/piku/fund_conservation/verity/Contract.lean`, `Benchmark/Cases/Piku/FundConservation/Contract.lean`
-- Specification files: `cases/piku/fund_conservation/verity/Specs.lean`, `Benchmark/Cases/Piku/FundConservation/Specs.lean`
-- Editable proof file: `Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidRecordsDistribution.lean`
-- Hidden reference solution: `Benchmark.Cases.Piku.FundConservation.Proofs`
-
-### `piku/fund_conservation/sell_order_preserves_fund_conservation`
-- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
-- Theorem target: `Benchmark.Cases.Piku.FundConservation._sellOrder_preserves_fund_conservation`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/piku/fund_conservation/verity/Contract.lean`, `Benchmark/Cases/Piku/FundConservation/Contract.lean`
-- Specification files: `cases/piku/fund_conservation/verity/Specs.lean`, `Benchmark/Cases/Piku/FundConservation/Specs.lean`
-- Editable proof file: `Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderPreservesFundConservation.lean`
-- Hidden reference solution: `Benchmark.Cases.Piku.FundConservation.Proofs`
-
-### `piku/fund_conservation/sell_order_records_redemption_buckets`
-- Track / property class / proof family: `proof-only` / `accounting_effect` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
-- Theorem target: `Benchmark.Cases.Piku.FundConservation._sellOrder_records_redemption_buckets`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/piku/fund_conservation/verity/Contract.lean`, `Benchmark/Cases/Piku/FundConservation/Contract.lean`
-- Specification files: `cases/piku/fund_conservation/verity/Specs.lean`, `Benchmark/Cases/Piku/FundConservation/Specs.lean`
-- Editable proof file: `Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderRecordsRedemptionBuckets.lean`
-- Hidden reference solution: `Benchmark.Cases.Piku.FundConservation.Proofs`
-
 ### `polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Polygon.AgglayerBridge.claimAsset_valid_leaf_and_consumes_unique_nullifier`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/polygon/agglayer_bridge/verity/Contract.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean`
@@ -1051,7 +1001,7 @@ This report is generated from the benchmark manifests.
 
 ### `polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/polygon/agglayer_bridge/verity/Contract.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean`
@@ -1061,7 +1011,7 @@ This report is generated from the benchmark manifests.
 
 ### `reserve/auction_price_band/price_at_end_time`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_at_end_time`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
@@ -1071,7 +1021,7 @@ This report is generated from the benchmark manifests.
 
 ### `reserve/auction_price_band/price_at_start_time`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_at_start_time`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
@@ -1081,7 +1031,7 @@ This report is generated from the benchmark manifests.
 
 ### `reserve/auction_price_band/price_lower_bound`
 - Track / property class / proof family: `proof-only` / `price_band` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_lower_bound`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
@@ -1091,7 +1041,7 @@ This report is generated from the benchmark manifests.
 
 ### `reserve/auction_price_band/price_upper_bound`
 - Track / property class / proof family: `proof-only` / `price_band` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Reserve.AuctionPriceBand.price_upper_bound`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/reserve/auction_price_band/verity/Contract.lean`, `Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean`
@@ -1101,7 +1051,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/add_owner_acyclicity`
 - Track / property class / proof family: `proof-only` / `linked_list_acyclicity` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.addOwner_acyclicity`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1111,7 +1061,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/add_owner_is_owner_correctness`
 - Track / property class / proof family: `proof-only` / `isOwner_effect` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.addOwner_isOwnerCorrectness`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1121,7 +1071,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/add_owner_owner_list_invariant`
 - Track / property class / proof family: `proof-only` / `linked_list_invariant` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.addOwner_ownerListInvariant`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1131,7 +1081,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/in_list_reachable`
 - Track / property class / proof family: `proof-only` / `linked_list_invariant` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.in_list_reachable`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1141,7 +1091,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/remove_owner_acyclicity`
 - Track / property class / proof family: `proof-only` / `linked_list_acyclicity` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_acyclicity`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1151,7 +1101,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/remove_owner_in_list_reachable`
 - Track / property class / proof family: `proof-only` / `linked_list_invariant` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_inListReachable`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1161,7 +1111,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/remove_owner_is_owner_correctness`
 - Track / property class / proof family: `proof-only` / `isOwner_effect` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_isOwnerCorrectness`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1171,7 +1121,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/remove_owner_owner_list_invariant`
 - Track / property class / proof family: `proof-only` / `linked_list_invariant` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_ownerListInvariant`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1181,7 +1131,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/setup_owners_acyclicity`
 - Track / property class / proof family: `proof-only` / `linked_list_acyclicity` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_acyclicity`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1191,7 +1141,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/setup_owners_in_list_reachable`
 - Track / property class / proof family: `proof-only` / `linked_list_invariant` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_inListReachable`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1201,7 +1151,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/setup_owners_owner_list_invariant`
 - Track / property class / proof family: `proof-only` / `linked_list_invariant` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_ownerListInvariant`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1211,7 +1161,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/swap_owner_acyclicity`
 - Track / property class / proof family: `proof-only` / `linked_list_acyclicity` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_acyclicity`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1221,7 +1171,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/swap_owner_in_list_reachable`
 - Track / property class / proof family: `proof-only` / `linked_list_invariant` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_inListReachable`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1231,7 +1181,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/swap_owner_is_owner_correctness`
 - Track / property class / proof family: `proof-only` / `isOwner_effect` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_isOwnerCorrectness`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1241,7 +1191,7 @@ This report is generated from the benchmark manifests.
 
 ### `safe/owner_manager_reach/swap_owner_owner_list_invariant`
 - Track / property class / proof family: `proof-only` / `linked_list_invariant` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_ownerListInvariant`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/safe/owner_manager_reach/verity/Contract.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean`
@@ -1251,7 +1201,7 @@ This report is generated from the benchmark manifests.
 
 ### `termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve`
 - Track / property class / proof family: `proof-only` / `reserve_state_transition` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.swapDebtTokenToXt_updates_virtual_xt_reserve`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/termmax/order_v2_buy_xt_single_segment/verity/Contract.lean`, `Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Contract.lean`
@@ -1261,7 +1211,7 @@ This report is generated from the benchmark manifests.
 
 ### `usual/dao_collateral/redeem_conservation`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Usual.DaoCollateral.redeem_conservation`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/usual/dao_collateral/verity/Contract.lean`, `Benchmark/Cases/Usual/DaoCollateral/Contract.lean`
@@ -1271,7 +1221,7 @@ This report is generated from the benchmark manifests.
 
 ### `usual/dao_collateral/redeem_fee_formula`
 - Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Usual.DaoCollateral.redeem_fee_formula`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/usual/dao_collateral/verity/Contract.lean`, `Benchmark/Cases/Usual/DaoCollateral/Contract.lean`
@@ -1281,7 +1231,7 @@ This report is generated from the benchmark manifests.
 
 ### `usual/dao_collateral/redeem_return_formula`
 - Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Usual.DaoCollateral.redeem_return_formula`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/usual/dao_collateral/verity/Contract.lean`, `Benchmark/Cases/Usual/DaoCollateral/Contract.lean`
@@ -1291,7 +1241,7 @@ This report is generated from the benchmark manifests.
 
 ### `usual/dao_collateral/swap_conservation`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Usual.DaoCollateral.swap_conservation`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/usual/dao_collateral/verity/Contract.lean`, `Benchmark/Cases/Usual/DaoCollateral/Contract.lean`
@@ -1301,7 +1251,7 @@ This report is generated from the benchmark manifests.
 
 ### `usual/dao_collateral/swap_value_conservation`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Usual.DaoCollateral.swap_value_conservation`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/usual/dao_collateral/verity/Contract.lean`, `Benchmark/Cases/Usual/DaoCollateral/Contract.lean`
@@ -1311,7 +1261,7 @@ This report is generated from the benchmark manifests.
 
 ### `wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Wildcat.BorrowLiquiditySafety.positive_borrow_preserves_required_liquidity`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/wildcat/borrow_liquidity_safety/verity/Contract.lean`, `Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Contract.lean`
@@ -1321,7 +1271,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/burn_decreases_supply`
 - Track / property class / proof family: `proof-only` / `supply_update` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_decreases_supply`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1331,7 +1281,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/burn_insufficient`
 - Track / property class / proof family: `proof-only` / `silent_failure` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_insufficient`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1341,7 +1291,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/mint_increases_supply`
 - Track / property class / proof family: `proof-only` / `supply_update` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_increases_supply`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1351,7 +1301,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/mint_overflow_protection`
 - Track / property class / proof family: `proof-only` / `overflow_safety` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_overflow_protection`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1361,7 +1311,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/setOperator_updates`
 - Track / property class / proof family: `proof-only` / `storage_write` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.setOperator_updates`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1371,7 +1321,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/transferFrom_conservation`
 - Track / property class / proof family: `proof-only` / `balance_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transferFrom_conservation`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1381,7 +1331,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/transfer_conservation`
 - Track / property class / proof family: `proof-only` / `balance_conservation` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_conservation`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1391,7 +1341,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/transfer_insufficient`
 - Track / property class / proof family: `proof-only` / `silent_failure` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_insufficient`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1401,7 +1351,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/transfer_no_balance_revert`
 - Track / property class / proof family: `proof-only` / `non_leakage` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_no_balance_revert`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1411,7 +1361,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/transfer_preserves_supply`
 - Track / property class / proof family: `proof-only` / `supply_invariance` / `state_preservation_local_effects`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_preserves_supply`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
@@ -1421,7 +1371,7 @@ This report is generated from the benchmark manifests.
 
 ### `zama/erc7984_confidential_token/transfer_sufficient`
 - Track / property class / proof family: `proof-only` / `balance_update` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_sufficient`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`

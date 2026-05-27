@@ -2,13 +2,12 @@
 
 Use public operational proof patterns, not hidden case solutions.
 
-Lean 4.22's `grind` tactic is the primary closer for Verity execution proofs.
-Every generated task skeleton imports `Benchmark.Grindset`, which bundles the
-`@[grind]`-tagged operational lemmas (`getStorage`, `setStorage`,
-`setMapping`, `setMappingUint`, `Verity.require`, `Verity.bind`, `Bind.bind`,
-`Verity.pure`, `Pure.pure`, `Contract.run`, `ContractResult.snd`, and friends)
-needed to reduce Verity execution terms. You should lean on `grind` first and
-only fall back to `simp`/`by_cases` if grind leaves goals open.
+Lean 4.22's `grind` tactic is useful when the editable file already imports a
+lightweight grindset module. Do not add broad `import Benchmark.Grindset` to an
+evaluated task just to use `grind`; the umbrella can compile too much and make
+verification time out. If no grindset import is already present, prefer the
+explicit `simp`/`by_cases` fallback with the operational lemmas listed in the
+proof body.
 
 ## Primary: grind-first pattern
 
@@ -37,9 +36,9 @@ Rules of thumb for the grind hint list:
   reads or writes (when in doubt, include them all — extra hints are cheap).
 - If the spec references another helper function (e.g. `computedClaimAmount`),
   add that helper name too so `grind` can unfold it.
-- You do NOT need to hint the operational lemmas (`getStorage`, `setStorage`,
-  `Verity.bind`, `Contract.run`, `ContractResult.snd`, ...). They are already
-  tagged `@[grind]` via `Benchmark.Grindset`.
+- Do not add `import Benchmark.Grindset` unless the proof directly references
+  a declaration from that module. If a narrow helper is needed, import the
+  specific module such as `Benchmark.Grindset.Arith`, not the umbrella.
 
 If `grind` leaves the goal visibly closer but not closed, use `grind?` once
 to print the actual lemma set it chose; copy any useful additions back into

@@ -10,36 +10,35 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 22,
-    "implementation_count": 23,
-    "active_case_count": 20,
+    "family_count": 21,
+    "implementation_count": 22,
+    "active_case_count": 19,
     "backlog_case_count": 3,
-    "active_task_count": 121,
+    "active_task_count": 117,
     "backlog_task_count": 8,
-    "buildable_case_count": 22,
-    "runnable_task_count": 129,
+    "buildable_case_count": 21,
+    "runnable_task_count": 125,
     "case_stage_counts": {
-      "build_green": 19,
+      "build_green": 18,
       "candidate": 1,
       "proof_complete": 3
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 22
+      "translated": 21
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 15,
+      "complete": 14,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 129
+      "proof-only": 125
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
       "accounting_bound": 16,
-      "accounting_conservation": 15,
-      "accounting_effect": 2,
+      "accounting_conservation": 13,
       "accounting_invariant_break": 1,
       "accounting_update": 6,
       "arithmetic_rounding": 3,
@@ -80,10 +79,10 @@
       "functional_correctness": 32,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 9,
-      "state_preservation_local_effects": 42
+      "state_preservation_local_effects": 38
     },
     "family_split_counts": {
-      "active": 19,
+      "active": 18,
       "backlog": 2,
       "mixed": 1
     }
@@ -311,23 +310,6 @@
       "manifest_path": "families/paladin_votes/family.yaml"
     },
     {
-      "family_id": "piku",
-      "display_name": "Piku",
-      "split": "active",
-      "status": "active",
-      "description": "Piku USP accounting benchmarks over the Inverter oracle-priced funding manager and queued redemption processor.",
-      "implementation_ids": [
-        "inverter_oracle_queue"
-      ],
-      "case_ids": [
-        "piku/fund_conservation"
-      ],
-      "source_languages": [
-        "solidity"
-      ],
-      "manifest_path": "families/piku/family.yaml"
-    },
-    {
       "family_id": "polygon",
       "display_name": "Polygon / Agglayer",
       "split": "active",
@@ -506,7 +488,7 @@
       "split": "active",
       "status": "translated",
       "upstream_repo": "https://github.com/Cork-Technology/phoenix",
-      "upstream_commit": "40d9b173c4b",
+      "upstream_commit": "40d9b173c4b2262a93f36167355b5311d5f58e6b",
       "source_language": "solidity",
       "source_artifact_path": "contracts/libraries/PoolLib.sol",
       "case_ids": [
@@ -676,22 +658,6 @@
       "manifest_path": "families/paladin_votes/implementations/stream_recovery_claim/implementation.yaml"
     },
     {
-      "family_id": "piku",
-      "implementation_id": "inverter_oracle_queue",
-      "display_name": "Inverter Oracle Queue Funding Manager",
-      "split": "active",
-      "status": "translated",
-      "upstream_repo": "https://github.com/InverterNetwork/contracts",
-      "upstream_commit": "8b7bc438344d646bab05b751c8eb4a7f0c8ca588",
-      "source_language": "solidity",
-      "source_artifact_path": "src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
-      "case_ids": [
-        "piku/fund_conservation"
-      ],
-      "notes": "Docs-matching Piku workflow implementation: oracle-priced funding manager, manual queue payment processor, and manual oracle price module.",
-      "manifest_path": "families/piku/implementations/inverter_oracle_queue/implementation.yaml"
-    },
-    {
       "family_id": "polygon",
       "implementation_id": "agglayer_bridge",
       "display_name": "Polygon AgglayerBridge",
@@ -826,7 +792,7 @@
       "split": "active",
       "status": "translated",
       "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts",
-      "upstream_commit": "master",
+      "upstream_commit": "83364738f0d2b1655c60627588e3493099c359f7",
       "source_language": "solidity",
       "source_artifact_path": "contracts/token/ERC7984/ERC7984.sol",
       "case_ids": [
@@ -955,10 +921,10 @@
       "proof_status": "partial",
       "source_language": "solidity",
       "upstream_repo": "https://github.com/Cork-Technology/phoenix",
-      "upstream_commit": "40d9b173c4b",
+      "upstream_commit": "40d9b173c4b2262a93f36167355b5311d5f58e6b",
       "original_contract_path": "contracts/libraries/PoolLib.sol",
       "generated_artifact_path": null,
-      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol",
+      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b2262a93f36167355b5311d5f58e6b:contracts/libraries/PoolLib.sol",
       "selected_functions": [
         "previewUnwindExerciseOther",
         "_unwindExercise"
@@ -1382,61 +1348,6 @@
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
     },
     {
-      "case_id": "piku/fund_conservation",
-      "project": "piku",
-      "case_name": "fund_conservation",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/piku/fund_conservation/case.yaml",
-      "split": "active",
-      "family_id": "piku",
-      "implementation_id": "inverter_oracle_queue",
-      "stage": "build_green",
-      "translation_status": "translated",
-      "spec_status": "frozen",
-      "proof_status": "complete",
-      "source_language": "solidity",
-      "upstream_repo": "https://github.com/InverterNetwork/contracts",
-      "upstream_commit": "8b7bc438344d646bab05b751c8eb4a7f0c8ca588",
-      "original_contract_path": "src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
-      "generated_artifact_path": null,
-      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
-      "selected_functions": [
-        "_sellOrder",
-        "_createAndEmitOrder",
-        "_addToOpenRedemptionAmount",
-        "amountPaid",
-        "processPayments",
-        "executePaymentQueue"
-      ],
-      "lean_target": "Benchmark.Cases.Piku.FundConservation.Compile",
-      "failure_reason": null,
-      "notes": "Fund-conservation benchmark for Piku's oracle-priced queued redemption flow: distributed backing + queued redemption backing + remaining backing + protocol treasury fees + project treasury fees equals initial backing. Queue execution functions are source context; the modeled settlement transition is the successful `amountPaid` callback.",
-      "buildable": true,
-      "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
-      "abstraction_level": "protocol_slice",
-      "abstraction_tags": [
-        "ghost_accounting_slots",
-        "oracle_price_abstracted",
-        "queue_shape_elided",
-        "external_calls_opaque",
-        "access_control_elided",
-        "erc20_transfers_abstracted",
-        "protocol_fee_recalculation_abstracted",
-        "ghost_solvency_precondition"
-      ],
-      "abstraction_notes": "Piku's docs-matching Inverter implementation stores `_openRedemptionAmount` but does not store cumulative distributed backing, remaining backing, or protocol/project treasury fee counters. The model introduces those as ghost slots so the team-proposed fund-conservation invariant is state-readable. Oracle pricing and decimal conversion are represented by the already-computed redemption amount. Queue linked-list shape, roles, ERC20 transfer mechanics, blacklisting fallback, and event payloads are elided.",
-      "unsupported_feature_codes": [
-        "event_only_fee_accounting_requires_ghost_slot",
-        "external_oracle_pricing_abstracted",
-        "protocol_fee_recalculation_abstracted",
-        "ghost_solvency_precondition"
-      ],
-      "spec_target": "Benchmark.Cases.Piku.FundConservation.Specs",
-      "proof_target": "Benchmark.Cases.Piku.FundConservation.Proofs"
-    },
-    {
       "case_id": "polygon/agglayer_bridge",
       "project": "polygon",
       "case_name": "agglayer_bridge",
@@ -1742,10 +1653,10 @@
       "proof_status": "partial",
       "source_language": "solidity",
       "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts",
-      "upstream_commit": "master",
+      "upstream_commit": "83364738f0d2b1655c60627588e3493099c359f7",
       "original_contract_path": "contracts/token/ERC7984/ERC7984.sol",
       "generated_artifact_path": null,
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "selected_functions": [
         "_update",
         "_transfer",
@@ -1950,7 +1861,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -1998,7 +1909,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2046,7 +1957,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2094,7 +2005,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2142,7 +2053,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2192,7 +2103,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2205,7 +2116,7 @@
       "split": "active",
       "family_id": "cork",
       "implementation_id": "phoenix",
-      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol",
+      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b2262a93f36167355b5311d5f58e6b:contracts/libraries/PoolLib.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "accounting_bound",
@@ -2237,7 +2148,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2282,7 +2193,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2327,7 +2238,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2372,7 +2283,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2417,7 +2328,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2462,7 +2373,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2507,7 +2418,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2552,7 +2463,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2597,7 +2508,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2642,7 +2553,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2687,7 +2598,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2736,7 +2647,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2785,7 +2696,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2834,7 +2745,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2883,7 +2794,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2932,7 +2843,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2981,7 +2892,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3030,7 +2941,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3075,7 +2986,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3120,7 +3031,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3165,7 +3076,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3210,7 +3121,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3255,7 +3166,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3300,7 +3211,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3345,7 +3256,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3390,7 +3301,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3435,7 +3346,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3480,7 +3391,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3525,7 +3436,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3570,7 +3481,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3615,7 +3526,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3660,7 +3571,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3705,7 +3616,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3750,7 +3661,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3795,7 +3706,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3840,7 +3751,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3885,7 +3796,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3930,7 +3841,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3975,7 +3886,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4020,7 +3931,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4065,7 +3976,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4110,7 +4021,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4155,7 +4066,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4200,7 +4111,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4245,7 +4156,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4290,7 +4201,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4335,7 +4246,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4380,7 +4291,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4425,7 +4336,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4470,7 +4381,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4515,7 +4426,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4560,7 +4471,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4605,7 +4516,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4650,7 +4561,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4695,7 +4606,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4740,7 +4651,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4785,7 +4696,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4830,7 +4741,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4875,7 +4786,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4920,7 +4831,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4965,7 +4876,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5010,7 +4921,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5055,7 +4966,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5100,7 +5011,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5145,7 +5056,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5190,7 +5101,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5235,7 +5146,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5280,7 +5191,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5325,7 +5236,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5370,7 +5281,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5415,7 +5326,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5460,199 +5371,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
-      }
-    },
-    {
-      "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation",
-      "task_id": "amount_paid_preserves_fund_conservation",
-      "case_id": "piku/fund_conservation",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_preserves_fund_conservation.yaml",
-      "split": "active",
-      "family_id": "piku",
-      "implementation_id": "inverter_oracle_queue",
-      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "accounting_conservation",
-      "category": "fund_conservation",
-      "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.Piku.FundConservation.amountPaid_preserves_fund_conservation",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "cases/piku/fund_conservation/verity/Contract.lean",
-        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
-      ],
-      "specification_files": [
-        "cases/piku/fund_conservation/verity/Specs.lean",
-        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidPreservesFundConservation.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "Proves conservation for queue payment execution once queued collateral is split between the recipient and protocol treasury.",
-      "unsupported_feature_codes": [
-        "erc20_transfers_abstracted",
-        "protocol_fee_recalculation_abstracted"
-      ],
-      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "blocked"
-      }
-    },
-    {
-      "task_ref": "piku/fund_conservation/amount_paid_records_distribution",
-      "task_id": "amount_paid_records_distribution",
-      "case_id": "piku/fund_conservation",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_records_distribution.yaml",
-      "split": "active",
-      "family_id": "piku",
-      "implementation_id": "inverter_oracle_queue",
-      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "accounting_effect",
-      "category": "fund_conservation",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.Piku.FundConservation.amountPaid_records_distribution",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "cases/piku/fund_conservation/verity/Contract.lean",
-        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
-      ],
-      "specification_files": [
-        "cases/piku/fund_conservation/verity/Specs.lean",
-        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidRecordsDistribution.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "Records the local accounting effect of queue settlement: queued redemption backing is split into user distribution and protocol treasury buckets.",
-      "unsupported_feature_codes": [
-        "erc20_transfers_abstracted",
-        "protocol_fee_recalculation_abstracted"
-      ],
-      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "blocked"
-      }
-    },
-    {
-      "task_ref": "piku/fund_conservation/sell_order_preserves_fund_conservation",
-      "task_id": "sell_order_preserves_fund_conservation",
-      "case_id": "piku/fund_conservation",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/piku/fund_conservation/tasks/sell_order_preserves_fund_conservation.yaml",
-      "split": "active",
-      "family_id": "piku",
-      "implementation_id": "inverter_oracle_queue",
-      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "accounting_conservation",
-      "category": "fund_conservation",
-      "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.Piku.FundConservation._sellOrder_preserves_fund_conservation",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "cases/piku/fund_conservation/verity/Contract.lean",
-        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
-      ],
-      "specification_files": [
-        "cases/piku/fund_conservation/verity/Specs.lean",
-        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderPreservesFundConservation.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "Proves conservation for redemption-order creation under an explicit fee split arithmetic hypothesis. Ghost accounting slots expose event-only fee and distribution effects.",
-      "unsupported_feature_codes": [
-        "event_only_fee_accounting_requires_ghost_slot",
-        "ghost_solvency_precondition"
-      ],
-      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "blocked"
-      }
-    },
-    {
-      "task_ref": "piku/fund_conservation/sell_order_records_redemption_buckets",
-      "task_id": "sell_order_records_redemption_buckets",
-      "case_id": "piku/fund_conservation",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/piku/fund_conservation/tasks/sell_order_records_redemption_buckets.yaml",
-      "split": "active",
-      "family_id": "piku",
-      "implementation_id": "inverter_oracle_queue",
-      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "accounting_effect",
-      "category": "fund_conservation",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.Piku.FundConservation._sellOrder_records_redemption_buckets",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "cases/piku/fund_conservation/verity/Contract.lean",
-        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
-      ],
-      "specification_files": [
-        "cases/piku/fund_conservation/verity/Specs.lean",
-        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderRecordsRedemptionBuckets.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "Records the local accounting effect of redemption-order creation: backing moves from the remaining bucket into queued redemption and project-fee buckets.",
-      "unsupported_feature_codes": [
-        "event_only_fee_accounting_requires_ghost_slot",
-        "ghost_solvency_precondition"
-      ],
-      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5697,7 +5416,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5742,7 +5461,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5787,7 +5506,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5832,7 +5551,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5877,7 +5596,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5922,7 +5641,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5967,7 +5686,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6012,7 +5731,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6057,7 +5776,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6102,7 +5821,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6147,7 +5866,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6192,7 +5911,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6237,7 +5956,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6282,7 +6001,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6327,7 +6046,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6372,7 +6091,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6417,7 +6136,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6462,7 +6181,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6507,7 +6226,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6552,7 +6271,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6597,7 +6316,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6645,7 +6364,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6695,7 +6414,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6743,7 +6462,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6792,7 +6511,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6841,7 +6560,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6890,7 +6609,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6935,7 +6654,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6948,7 +6667,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "supply_update",
@@ -6980,7 +6699,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6993,7 +6712,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "silent_failure",
@@ -7025,7 +6744,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7038,7 +6757,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "supply_update",
@@ -7070,7 +6789,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7083,7 +6802,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "overflow_safety",
@@ -7115,7 +6834,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7128,7 +6847,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "storage_write",
@@ -7160,7 +6879,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7173,7 +6892,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "balance_conservation",
@@ -7205,7 +6924,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7218,7 +6937,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "balance_conservation",
@@ -7250,7 +6969,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7263,7 +6982,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "silent_failure",
@@ -7295,7 +7014,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7308,7 +7027,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "non_leakage",
@@ -7340,7 +7059,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7353,7 +7072,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "supply_invariance",
@@ -7385,7 +7104,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7398,7 +7117,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "balance_update",
@@ -7430,7 +7149,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     }
   ],
@@ -7477,7 +7196,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7522,7 +7241,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7567,7 +7286,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7612,7 +7331,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7657,7 +7376,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7702,7 +7421,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7747,7 +7466,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -7792,9 +7511,9 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     }
   ],
-  "generated_at": "2026-05-27T14:16:42.475702+00:00"
+  "generated_at": "2026-05-27T14:36:59.559550+00:00"
 }

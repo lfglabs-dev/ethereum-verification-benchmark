@@ -10,9 +10,9 @@ translation_status: translated
 spec_status: frozen
 proof_status: partial
 upstream_repo: https://github.com/OpenZeppelin/openzeppelin-confidential-contracts
-upstream_commit: master
+upstream_commit: 83364738f0d2b1655c60627588e3493099c359f7
 original_contract_path: contracts/token/ERC7984/ERC7984.sol
-source_ref: https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol
+source_ref: https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol
 lean_target: Benchmark.Cases.Zama.ERC7984ConfidentialToken.Compile
 spec_target: Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs
 proof_target: Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs

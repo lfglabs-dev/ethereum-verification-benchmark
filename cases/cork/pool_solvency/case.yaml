@@ -10,9 +10,9 @@ translation_status: translated
 spec_status: frozen
 proof_status: partial
 upstream_repo: https://github.com/Cork-Technology/phoenix
-upstream_commit: 40d9b173c4b
+upstream_commit: 40d9b173c4b2262a93f36167355b5311d5f58e6b
 original_contract_path: contracts/libraries/PoolLib.sol
-source_ref: https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol
+source_ref: https://github.com/Cork-Technology/phoenix@40d9b173c4b2262a93f36167355b5311d5f58e6b:contracts/libraries/PoolLib.sol
 lean_target: Benchmark.Cases.Cork.PoolSolvency.Compile
 spec_target: Benchmark.Cases.Cork.PoolSolvency.Specs
 proof_target: Benchmark.Cases.Cork.PoolSolvency.Proofs
