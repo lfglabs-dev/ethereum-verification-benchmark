@@ -23,10 +23,12 @@ Core files:
 - `harness/agents/*.json`: bundled profiles
 
 Bundled profiles:
-- `default`: repo reference profile
-- `interactive`: minimal-tool interactive profile
+- `default`: repo reference profile (strict, builtin/fast via proxy)
 - `openai-compatible`: generic external OpenAI-compatible profile
 - `openai-proxy-fast`: pinned proxy profile
+- `interactive-gpt`: interactive, OpenRouter `openai/gpt-5.4`
+- `interactive-opus`: interactive, OpenRouter `anthropic/claude-opus-4.7`
+- `interactive-smart`: interactive, `builtin/smart` via configured proxy
 
 Runtime modes:
 - `strict`: no agent tools

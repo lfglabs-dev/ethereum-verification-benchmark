@@ -39,9 +39,9 @@ class BenchmarkTarget:
 
 TARGET_CONFIGS: dict[str, Path] = {
     "builtin-fast": ROOT / "harness/agents/default.json",
-    "builtin-smart": ROOT / "harness/agents/builtin-smart.json",
-    "openrouter-gemini-3.1-flash-lite-preview": ROOT / "harness/agents/openrouter-gemini-3.1-flash-lite-preview.json",
-    "leanstral": ROOT / "harness/agents/leanstral.json",
+    "interactive-gpt": ROOT / "harness/agents/interactive-gpt.json",
+    "interactive-opus": ROOT / "harness/agents/interactive-opus.json",
+    "interactive-smart": ROOT / "harness/agents/interactive-smart.json",
 }
 
 
@@ -154,9 +154,9 @@ def target_specs(args: argparse.Namespace) -> list[BenchmarkTarget]:
     requested_keys = list(args.target_key) if getattr(args, "target_key", None) else list(TARGET_CONFIGS)
     repeat_map = {
         "builtin-fast": args.fast_repeats,
-        "builtin-smart": args.smart_repeats,
-        "openrouter-gemini-3.1-flash-lite-preview": args.openrouter_repeats,
-        "leanstral": args.leanstral_repeats,
+        "interactive-gpt": args.interactive_gpt_repeats,
+        "interactive-opus": args.interactive_opus_repeats,
+        "interactive-smart": args.interactive_smart_repeats,
     }
     return [benchmark_target(key, repeat_map[key]) for key in requested_keys]
 
@@ -783,9 +783,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     start_parser = subparsers.add_parser("start", help="Start a new matrix run in the background")
     start_parser.add_argument("--fast-repeats", type=int, default=3)
-    start_parser.add_argument("--smart-repeats", type=int, default=3)
-    start_parser.add_argument("--openrouter-repeats", type=int, default=1)
-    start_parser.add_argument("--leanstral-repeats", type=int, default=1)
+    start_parser.add_argument("--interactive-gpt-repeats", type=int, default=1)
+    start_parser.add_argument("--interactive-opus-repeats", type=int, default=1)
+    start_parser.add_argument("--interactive-smart-repeats", type=int, default=1)
     start_parser.add_argument(
         "--target-key",
         action="append",

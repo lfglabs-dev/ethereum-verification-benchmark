@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 19
+- Families: 20
 - Implementations: 21
-- Active cases: 17
-- Buildable active cases: 17
-- Active tasks: 105
+- Active cases: 18
+- Buildable active cases: 18
+- Active tasks: 107
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -83,6 +83,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/src/libraries/SortitionTrees.sol`
 - Notes: Sortition-tree slice focused on additive parent invariants, root conservation, interval-based draws, and ID/index correspondence.
 
+### `lagoon/guardrails`
+- Family / implementation: `lagoon` / `v0_6_0`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Lagoon.Guardrails.Compile`
+- Source ref: `https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol`
+- Selected functions: `isCompliant`
+- Upstream source artifact: `src/v0.6.0/libraries/GuardrailsLib.sol`
+- Notes: Proves that Lagoon guardrail compliance accepts exactly the annualized PPS variations admitted by the configured 1e18-scaled upper and signed lower bounds under the encoded successfulSolidityArithmeticScope.
+
 ### `lido/vaulthub_locked`
 - Family / implementation: `lido` / `core`
 - Stage: `build_green`
@@ -113,6 +123,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `src/StreamRecoveryClaim.sol`
 - Notes: Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
 
+### `polygon/agglayer_bridge`
+- Family / implementation: `polygon` / `agglayer_bridge`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Polygon.AgglayerBridge.Compile`
+- Source ref: `https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol`
+- Selected functions: `claimAsset`, `claimMessage`, `_verifyLeafAndSetNullifier`, `_verifyLeaf`, `_setAndCheckClaimed`, `isClaimed`, `_validateAndDecodeGlobalIndex`, `_bitmapPositions`, `_addLeafBridge`, `_updateGlobalExitRoot`
+- Upstream source artifact: `contracts/AgglayerBridge.sol`
+- Notes: The public claim theorems show successful claims validate the leaf and consume the source-network/leaf-index bitmap entry. A private reachability lemma feeds the shared helper theorem that proves successful nullifier-helper execution flips the expected bitmap bit.
+
 ### `reserve/auction_price_band`
 - Family / implementation: `reserve` / `dtfs`
 - Stage: `build_green`
@@ -142,16 +162,6 @@ This report is generated from the benchmark manifests.
 - Selected functions: `swapExactTokenToToken`, `_swapAndUpdateReserves`, `_buyToken`, `_buyXt`, `_buyXtStep`, `buyXt`, `cutsReverseIter`, `calcIntervalProps`, `plusInt256`
 - Upstream source artifact: `contracts/v2/TermMaxOrderV2.sol`
 - Notes: TermMax range-order AMM slice for pricing-state transition correctness. The proof target is the highest-signal easy theorem in this family: on the successful single-segment `debtToken -> XT` exact-input path, the stored `virtualXtReserve` decreases by exactly the XT amount implied by the curve.
-
-### `unlink_xyz/pool`
-- Family / implementation: `unlink_xyz` / `pool`
-- Stage: `build_green`
-- Status dimensions: translation=`translated`, spec=`draft`, proof=`not_started`
-- Lean target: `Benchmark.Cases.UnlinkXyz.Pool.Compile`
-- Source ref: `https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol`
-- Selected functions: `constructor`, `initialize`, `deposit`, `transfer`, `withdraw`, `emergencyWithdraw`, `hashNote`, `isRelayer`, `addRelayer`, `removeRelayer`, `setVerifierRouter`, `transferOwnership`, `acceptOwnership`, `renounceOwnership`, `VerifierRouter.owner`, `VerifierRouter.pendingOwner`, `VerifierRouter.transferOwnership`, `VerifierRouter.acceptOwnership`, `VerifierRouter.renounceOwnership`, `VerifierRouter.setCircuit`, `VerifierRouter.pauseCircuit`, `VerifierRouter.getCircuit`, `VerifierRouter.verifierToCircuitId`
-- Upstream source artifact: `protocol/contracts/src/UnlinkPool.sol`
-- Notes: This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case targets the pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.
 
 ### `usual/dao_collateral`
 - Family / implementation: `usual` / `verified_proxy`
@@ -488,6 +498,36 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/kleros/sortition_trees/verity/Specs.lean`, `Benchmark/Cases/Kleros/SortitionTrees/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Kleros/SortitionTrees/Tasks/RootMinusLeftEqualsRightSubtree.lean`
 - Hidden reference solution: `Benchmark.Cases.Kleros.SortitionTrees.Proofs`
+
+### `lagoon/guardrails/exact_compliance`
+- Track / property class / proof family: `proof-only` / `compliance_boundary` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Theorem target: `Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lagoon/guardrails/verity/Contract.lean`, `Benchmark/Cases/Lagoon/Guardrails/Contract.lean`
+- Specification files: `cases/lagoon/guardrails/verity/Specs.lean`, `Benchmark/Cases/Lagoon/Guardrails/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Lagoon/Guardrails/Tasks/ExactCompliance.lean`
+- Hidden reference solution: `Benchmark.Cases.Lagoon.Guardrails.Proofs`
+
+### `lagoon/guardrails/negative_variation_bounded`
+- Track / property class / proof family: `proof-only` / `compliance_boundary` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Theorem target: `Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lagoon/guardrails/verity/Contract.lean`, `Benchmark/Cases/Lagoon/Guardrails/Contract.lean`
+- Specification files: `cases/lagoon/guardrails/verity/Specs.lean`, `Benchmark/Cases/Lagoon/Guardrails/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Lagoon/Guardrails/Tasks/NegativeVariationBounded.lean`
+- Hidden reference solution: `Benchmark.Cases.Lagoon.Guardrails.Proofs`
+
+### `lagoon/guardrails/positive_variation_bounded`
+- Track / property class / proof family: `proof-only` / `compliance_boundary` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Theorem target: `Benchmark.Cases.Lagoon.Guardrails.guardrails_positive_bounded`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lagoon/guardrails/verity/Contract.lean`, `Benchmark/Cases/Lagoon/Guardrails/Contract.lean`
+- Specification files: `cases/lagoon/guardrails/verity/Specs.lean`, `Benchmark/Cases/Lagoon/Guardrails/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Lagoon/Guardrails/Tasks/PositiveVariationBounded.lean`
+- Hidden reference solution: `Benchmark.Cases.Lagoon.Guardrails.Proofs`
 
 ### `lido/vaulthub_locked/ceildiv_sandwich`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
@@ -839,6 +879,26 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
 
+### `polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Theorem target: `Benchmark.Cases.Polygon.AgglayerBridge.claimAsset_valid_leaf_and_consumes_unique_nullifier`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/polygon/agglayer_bridge/verity/Contract.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean`
+- Specification files: `cases/polygon/agglayer_bridge/verity/Specs.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.lean`
+- Hidden reference solution: `Benchmark.Cases.Polygon.AgglayerBridge.Proofs`
+
+### `polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier`
+- Track / property class / proof family: `proof-only` / `authorization_state` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
+- Theorem target: `Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/polygon/agglayer_bridge/verity/Contract.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean`
+- Specification files: `cases/polygon/agglayer_bridge/verity/Specs.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.lean`
+- Hidden reference solution: `Benchmark.Cases.Polygon.AgglayerBridge.Proofs`
+
 ### `reserve/auction_price_band/price_at_end_time`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`blocked`
@@ -1038,36 +1098,6 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/termmax/order_v2_buy_xt_single_segment/verity/Specs.lean`, `Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Specs.lean`
 - Editable proof file: `Benchmark/Generated/TermMax/OrderV2BuyXtSingleSegment/Tasks/SwapDebtTokenToXtUpdatesVirtualXtReserve.lean`
 - Hidden reference solution: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs`
-
-### `unlink_xyz/pool/artifact_builds`
-- Track / property class / proof family: `proof-only` / `generated_artifact_integrity` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.UnlinkXyz.Pool.artifactBuilds_compile_gate`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/unlink_xyz/pool/verity/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Compile.lean`, `Benchmark/Cases/UnlinkXyz/Pool/UnlinkPoolArtifact/UnlinkPoolArtifact.lean`
-- Specification files: `cases/unlink_xyz/pool/verity/Specs.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Specs.lean`
-- Editable proof file: `Benchmark/Generated/UnlinkXyz/Pool/Tasks/ArtifactBuilds.lean`
-- Hidden reference solution: `Benchmark.Generated.UnlinkXyz.Pool.Tasks.ArtifactBuilds`
-
-### `unlink_xyz/pool/build_green`
-- Track / property class / proof family: `translation-only` / `compilation` / `functional_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`blocked`, reference_solution=`blocked`
-- Theorem target: `Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/unlink_xyz/pool/verity/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean`
-- Specification files: `cases/unlink_xyz/pool/verity/Specs.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Specs.lean`
-- Editable proof file: `Benchmark/Generated/UnlinkXyz/Pool/Tasks/BuildGreen.lean`
-- Hidden reference solution: `Benchmark.Cases.UnlinkXyz.Pool.Proofs`
-
-### `unlink_xyz/pool/formal_audit_ready`
-- Track / property class / proof family: `proof-only` / `formal_audit_ap_ic_delivery` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.UnlinkXyz.Pool.FormalAudit.formal_audit_ready_for_delivery`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/unlink_xyz/pool/verity/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Contract.lean`, `Benchmark/Cases/UnlinkXyz/Pool/State.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Compile.lean`, `Benchmark/Cases/UnlinkXyz/Pool/UnlinkPoolArtifact/UnlinkPoolArtifact.lean`, `Benchmark/Cases/UnlinkXyz/Pool/VerifierRouterArtifact/VerifierRouterArtifact.lean`
-- Specification files: `cases/unlink_xyz/pool/verity/Specs.lean`, `Benchmark/Cases/UnlinkXyz/Pool/Specs.lean`, `Benchmark/Cases/UnlinkXyz/Pool/FormalAudit.lean`
-- Editable proof file: `Benchmark/Generated/UnlinkXyz/Pool/Tasks/FormalAuditReady.lean`
-- Hidden reference solution: `Benchmark.Cases.UnlinkXyz.Pool.FormalAudit`
 
 ### `usual/dao_collateral/redeem_conservation`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`

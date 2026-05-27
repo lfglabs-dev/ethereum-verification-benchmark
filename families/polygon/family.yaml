@@ -1,0 +1,14 @@
+manifest_kind: family
+schema_version: 1
+family_id: polygon
+display_name: Polygon / Agglayer
+split: active
+status: active
+description: >
+  Polygon Agglayer bridge and interoperability verification cases.
+implementation_ids:
+  - agglayer_bridge
+case_ids:
+  - polygon/agglayer_bridge
+source_languages:
+  - solidity

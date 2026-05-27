@@ -2,61 +2,125 @@
 
 Use public operational proof patterns, not hidden case solutions.
 
-Verity execution proofs often reduce with `simp` once the execution path is fixed.
-Typical symbols to unfold or simplify are:
+Lean 4.22's `grind` tactic is the primary closer for Verity execution proofs.
+Every generated task skeleton imports `Benchmark.Grindset`, which bundles the
+`@[grind]`-tagged operational lemmas (`getStorage`, `setStorage`,
+`setMapping`, `setMappingUint`, `Verity.require`, `Verity.bind`, `Bind.bind`,
+`Verity.pure`, `Pure.pure`, `Contract.run`, `ContractResult.snd`, and friends)
+needed to reduce Verity execution terms. You should lean on `grind` first and
+only fall back to `simp`/`by_cases` if grind leaves goals open.
 
-- `getStorage`, `setStorage`, `setMapping`, `setMappingUint`
-- `Verity.require`, `Verity.bind`, `Bind.bind`
-- `Verity.pure`, `Pure.pure`
-- `Contract.run`, `ContractResult.snd`
-- the contract's storage labels, such as `ContractName.counter`
+## Primary: grind-first pattern
 
-The simp set MUST include ALL storage field definitions from the contract. Storage fields are declared as `fieldName : Uint256 := slot N` inside `verity_contract`. Include each one by name (e.g., `ContractName.depositCount`, `ContractName.chainStarted`) so that `.slot` reduces to the concrete slot number. Without these, simp leaves unresolved `if` expressions comparing `s.storage ContractName.field.slot` against constants.
-
-Common pattern for a successful-path slot-write theorem:
+Start with `unfold` on the spec name followed by `grind [...]` passing the
+contract function you are reasoning about and every storage field it touches.
+Storage fields are declared as `fieldName : Uint256 := slot N` inside
+`verity_contract`; hint each one by its fully-qualified name
+(e.g. `ContractName.depositCount`, `ContractName.chainStarted`) so `grind` can
+reduce `.slot` to the concrete slot number.
 
 ```lean
-private theorem slot_write_helper
+theorem slot_write_theorem
     (x : Uint256) (s : ContractState)
     (hGuard : ...) :
     let s' := ((ContractName.fn x).run s).snd
-    s'.storage slot = expected := by
-  simp [ContractName.fn, hGuard, ContractName.slotField,
-    getStorage, setStorage, Verity.require, Verity.bind, Bind.bind,
-    Verity.pure, Pure.pure, Contract.run, ContractResult.snd]
+    spec_name x s s' := by
+  unfold spec_name
+  grind [ContractName.fn,
+         ContractName.fieldA, ContractName.fieldB, ContractName.fieldC]
 ```
 
-Common pattern for a branch theorem:
+Rules of thumb for the grind hint list:
+
+- Always include `ContractName.fn` for the contract function under test.
+- Always include every storage field of `ContractName` that the function
+  reads or writes (when in doubt, include them all — extra hints are cheap).
+- If the spec references another helper function (e.g. `computedClaimAmount`),
+  add that helper name too so `grind` can unfold it.
+- You do NOT need to hint the operational lemmas (`getStorage`, `setStorage`,
+  `Verity.bind`, `Contract.run`, `ContractResult.snd`, ...). They are already
+  tagged `@[grind]` via `Benchmark.Grindset`.
+
+If `grind` leaves the goal visibly closer but not closed, use `grind?` once
+to print the actual lemma set it chose; copy any useful additions back into
+your `grind [...]` hint list, then retry.
+
+## Branching with grind
+
+When the contract has a case split (an `ite`, a `require` with a non-trivial
+condition, or nested `if`s in the spec), prove the branch facts first and
+pass them to `grind` along with the usual hints:
 
 ```lean
-by_cases hBranch : condition
-· simp [ContractName.fn, hBranch, ...]
-· have hNotBranch : ¬ condition := hBranch
-  simp [ContractName.fn, hNotBranch, ...]
+theorem branch_theorem ... := by
+  by_cases hBranch : condition
+  · unfold spec_name
+    grind [ContractName.fn, ContractName.field, hBranch]
+  · have hNotBranch : ¬ condition := hBranch
+    unfold spec_name
+    grind [ContractName.fn, ContractName.field, hNotBranch]
 ```
 
-Do not use `split` on the final post-state goal unless the goal itself is explicitly a conjunction or a sum-type elimination. Generated Verity execution terms often simplify better if you first prove the exact branch facts used by the contract and then call `simp`.
-
-For arithmetic threshold branches, the negated fact often needs to be restated in the comparator form used by the generated code. Example:
-
-```lean
-have hNotFull : ¬ 32000000000 ≤ depositAmount := Nat.not_le_of_lt hSmall
-simp [ContractName.fn, hCount, hMin, hNotFull, ...]
-```
-
-If one theorem has to work for both sides of a branch, prove two private helpers first, one per branch, then use `by_cases` in the public theorem and `simpa using` the matching helper.
-
-If `simp` leaves nested `match`/`if` expressions with free variables, use `by_cases` on each unresolved condition BEFORE calling `simp`, not `split` after. Pass all case hypotheses to `simp`. For contracts with nested conditionals (e.g., a threshold check inside a deposit-size check), nest `by_cases`:
+For nested conditionals (e.g. a threshold check inside a deposit-size check),
+nest `by_cases` the same way and put every branch hypothesis into the
+`grind [...]` list:
 
 ```lean
 by_cases hBig : depositAmount >= 32000000000
 · by_cases hThresh : add (s.storage 1) 1 = 65536
-  · simp [ContractName.fn, getStorage, setStorage, ..., hCount, hMin, hBig, hThresh]
-  · simp [ContractName.fn, getStorage, setStorage, ..., hCount, hMin, hBig, hThresh]
-· simp [ContractName.fn, getStorage, setStorage, ..., hCount, hMin, hBig]
+  · grind [ContractName.fn, ContractName.field, hCount, hMin, hBig, hThresh]
+  · grind [ContractName.fn, ContractName.field, hCount, hMin, hBig, hThresh]
+· grind [ContractName.fn, ContractName.field, hCount, hMin, hBig]
 ```
 
-If `simp` leaves unsolved goals because a hypothesis uses a spec helper name (e.g., `computedClaimAmount`) while the goal has the definition already unfolded, use `simp_all` instead of `simp`. `simp_all` rewrites hypotheses into the goal context, resolving name mismatches automatically. Pattern:
+For arithmetic threshold branches, restate the negated fact in the comparator
+form used by the generated code before handing it to `grind`:
+
+```lean
+have hNotFull : ¬ 32000000000 ≤ depositAmount := Nat.not_le_of_lt hSmall
+grind [ContractName.fn, ContractName.field, hCount, hMin, hNotFull]
+```
+
+If one theorem has to work for both sides of a branch, prove two private
+helpers first (one per branch, each closed by `grind`), then `by_cases` in
+the public theorem and finish each branch with `exact helper_branch ...`.
+
+## Fallback: simp + by_cases
+
+If `grind` still leaves goals after you have unfolded the spec and hinted the
+contract function plus every storage field, fall back to the pre-grindset
+simp-heavy recipe. This is strictly a fallback; prefer to extend the `grind`
+hint list first.
+
+```lean
+-- Fallback when grind alone does not close:
+by_cases hBranch : condition
+· simp [ContractName.fn, hBranch, ContractName.slotField,
+    getStorage, setStorage, Verity.require, Verity.bind, Bind.bind,
+    Verity.pure, Pure.pure, Contract.run, ContractResult.snd]
+· have hNotBranch : ¬ condition := hBranch
+  simp [ContractName.fn, hNotBranch, ContractName.slotField,
+    getStorage, setStorage, Verity.require, Verity.bind, Bind.bind,
+    Verity.pure, Pure.pure, Contract.run, ContractResult.snd]
+```
+
+The simp set MUST include every storage field definition from the contract.
+Without them, `simp` leaves unresolved `if` expressions comparing
+`s.storage ContractName.field.slot` against constants.
+
+Do not use `split` on the final post-state goal unless the goal itself is
+explicitly a conjunction or a sum-type elimination. Generated Verity
+execution terms often simplify better if you first prove the exact branch
+facts used by the contract and then call `simp`.
+
+If `simp` leaves nested `match`/`if` expressions with free variables, use
+`by_cases` on each unresolved condition BEFORE calling `simp`, not `split`
+after. Pass all case hypotheses to `simp`.
+
+If `simp` leaves unsolved goals because a hypothesis uses a spec helper name
+(e.g., `computedClaimAmount`) while the goal has the definition already
+unfolded, use `simp_all` instead of `simp`. `simp_all` rewrites hypotheses
+into the goal context, resolving name mismatches automatically.
 
 ```lean
 unfold specName
@@ -66,9 +130,9 @@ simp_all [ContractName.fn, getStorage, setStorage, getMapping, setMapping,
           specHelper]
 ```
 
-If `simp` reduces the goal to concrete slot equalities or a finite `if` over concrete slot numbers, `native_decide` or `decide` often closes the remaining goal.
-
-Typical shape:
+If `simp` reduces the goal to concrete slot equalities or a finite `if` over
+concrete slot numbers, `native_decide` or `decide` often closes the remaining
+goal:
 
 ```lean
 have hSlot : s'.storage slot = expected := by
@@ -76,7 +140,8 @@ have hSlot : s'.storage slot = expected := by
   native_decide
 ```
 
-If `simp` already solves the goal, do not leave a trailing `decide`, `exact`, or extra tactic line after it; Lean will report `no goals to be solved`.
+If `simp` already solves the goal, do not leave a trailing `decide`, `exact`,
+or extra tactic line after it; Lean will report `no goals to be solved`.
 
 If the public theorem is just a named spec, it is often cleaner to:
 

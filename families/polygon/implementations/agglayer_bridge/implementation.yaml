@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: polygon
+implementation_id: agglayer_bridge
+display_name: Polygon AgglayerBridge
+split: active
+status: translated
+upstream_repo: https://github.com/agglayer/agglayer-contracts
+upstream_commit: 110bda5a03e70ee7331bc06407a8e79226d3e520
+source_language: solidity
+source_artifact_path: contracts/AgglayerBridge.sol
+case_ids:
+  - polygon/agglayer_bridge
+notes: >
+  Verity model of the AgglayerBridge claim path, focused on valid exit-root
+  membership and source-network/leaf-index nullifier consumption.

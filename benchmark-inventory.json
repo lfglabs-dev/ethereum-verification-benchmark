@@ -10,32 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 19,
+    "family_count": 20,
     "implementation_count": 21,
-    "active_case_count": 17,
+    "active_case_count": 18,
     "backlog_case_count": 3,
-    "active_task_count": 105,
+    "active_task_count": 107,
     "backlog_task_count": 8,
-    "buildable_case_count": 19,
-    "runnable_task_count": 112,
+    "buildable_case_count": 20,
+    "runnable_task_count": 115,
     "case_stage_counts": {
       "build_green": 17,
       "candidate": 1,
-      "proof_complete": 2
+      "proof_complete": 3
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 19
+      "translated": 20
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 11,
-      "not_started": 1,
+      "complete": 13,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 112,
-      "translation-only": 1
+      "proof-only": 115
     },
     "task_property_class_counts": {
       "accounting_bound": 16,
@@ -43,15 +41,13 @@
       "accounting_invariant_break": 1,
       "accounting_update": 6,
       "arithmetic_rounding": 3,
-      "authorization_state": 7,
+      "authorization_state": 9,
       "balance_conservation": 2,
       "balance_credit_update": 2,
       "balance_update": 1,
-      "compilation": 1,
+      "compliance_boundary": 3,
       "exploit_trace": 1,
-      "formal_audit_ap_ic_delivery": 1,
       "frame_property": 2,
-      "generated_artifact_integrity": 1,
       "guarded_solvency": 7,
       "isOwner_effect": 3,
       "linked_list_acyclicity": 4,
@@ -79,13 +75,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 14,
-      "functional_correctness": 31,
-      "protocol_transition_correctness": 23,
+      "functional_correctness": 32,
+      "protocol_transition_correctness": 22,
       "refinement_equivalence": 9,
-      "state_preservation_local_effects": 36
+      "state_preservation_local_effects": 38
     },
     "family_split_counts": {
-      "active": 16,
+      "active": 17,
       "backlog": 2,
       "mixed": 1
     }
@@ -211,6 +207,23 @@
       "manifest_path": "families/kleros/family.yaml"
     },
     {
+      "family_id": "lagoon",
+      "display_name": "Lagoon",
+      "split": "active",
+      "status": "active",
+      "description": "ERC-7540 vault infrastructure with guardrails for vault valuation updates.",
+      "implementation_ids": [
+        "v0_6_0"
+      ],
+      "case_ids": [
+        "lagoon/guardrails"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/lagoon/family.yaml"
+    },
+    {
       "family_id": "lido",
       "display_name": "Lido",
       "split": "active",
@@ -279,6 +292,23 @@
       "manifest_path": "families/paladin_votes/family.yaml"
     },
     {
+      "family_id": "polygon",
+      "display_name": "Polygon / Agglayer",
+      "split": "active",
+      "status": "active",
+      "description": "Polygon Agglayer bridge and interoperability verification cases.",
+      "implementation_ids": [
+        "agglayer_bridge"
+      ],
+      "case_ids": [
+        "polygon/agglayer_bridge"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/polygon/family.yaml"
+    },
+    {
       "family_id": "reserve",
       "display_name": "Reserve",
       "split": "active",
@@ -345,24 +375,6 @@
         "solidity"
       ],
       "manifest_path": "families/uniswap_v2/family.yaml"
-    },
-    {
-      "family_id": "unlink_xyz",
-      "display_name": "unlink.xyz",
-      "split": "active",
-      "status": "active",
-      "description": "Unlink.xyz privacy pool and atomic-DeFi adapter, modeled as Verity contracts against unlink-xyz/monorepo. Protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier) live in `unlink-verity` as package-local assumed-status boundaries per the package-split policy.",
-      "implementation_ids": [
-        "monorepo",
-        "pool"
-      ],
-      "case_ids": [
-        "unlink_xyz/pool"
-      ],
-      "source_languages": [
-        "solidity"
-      ],
-      "manifest_path": "families/unlink_xyz/family.yaml"
     },
     {
       "family_id": "usual",
@@ -532,6 +544,22 @@
       "manifest_path": "families/kleros/implementations/kleros_v2/implementation.yaml"
     },
     {
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "display_name": "Lagoon v0.6.0",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/hopperlabsxyz/lagoon-v0",
+      "upstream_commit": "a8e73f5a5276aa4047b901083cbce127d7f7b470",
+      "source_language": "solidity",
+      "source_artifact_path": "src/v0.6.0/libraries/GuardrailsLib.sol",
+      "case_ids": [
+        "lagoon/guardrails"
+      ],
+      "notes": "GuardrailsLib pure compliance decision for v0.6.0 vault valuation guardrails.",
+      "manifest_path": "families/lagoon/implementations/v0_6_0/implementation.yaml"
+    },
+    {
       "family_id": "lido",
       "implementation_id": "core",
       "display_name": "Lido Core (V3 Vaults)",
@@ -596,6 +624,22 @@
       "manifest_path": "families/paladin_votes/implementations/stream_recovery_claim/implementation.yaml"
     },
     {
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "display_name": "Polygon AgglayerBridge",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/agglayer/agglayer-contracts",
+      "upstream_commit": "110bda5a03e70ee7331bc06407a8e79226d3e520",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/AgglayerBridge.sol",
+      "case_ids": [
+        "polygon/agglayer_bridge"
+      ],
+      "notes": "Verity model of the AgglayerBridge claim path, focused on valid exit-root membership and source-network/leaf-index nullifier consumption.",
+      "manifest_path": "families/polygon/implementations/agglayer_bridge/implementation.yaml"
+    },
+    {
       "family_id": "reserve",
       "implementation_id": "dtfs",
       "display_name": "Reserve DTF Protocol",
@@ -658,36 +702,6 @@
       ],
       "notes": "Backlog implementation entry for the canonical Uniswap V2 pair contract, scoped to a compact swap invariant and reserve-update slice.",
       "manifest_path": "families/uniswap_v2/implementations/v2_core/implementation.yaml"
-    },
-    {
-      "family_id": "unlink_xyz",
-      "implementation_id": "monorepo",
-      "display_name": "unlink.xyz Monorepo",
-      "split": "active",
-      "status": "scoped",
-      "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
-      "source_language": "solidity",
-      "source_artifact_path": "protocol/contracts/src",
-      "case_ids": [],
-      "notes": "Pinned against the `4bc46c1f` commit of `unlink-xyz/monorepo`. Cases under this implementation translate Solidity contracts in `protocol/contracts/src` and route the protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier) through the `unlink-verity` package-local assumed-status boundaries declared inside each case's `Specs.lean`.",
-      "manifest_path": "families/unlink_xyz/implementations/monorepo/implementation.yaml"
-    },
-    {
-      "family_id": "unlink_xyz",
-      "implementation_id": "pool",
-      "display_name": "Unlink Pool",
-      "split": "active",
-      "status": "generated",
-      "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
-      "source_language": "solidity",
-      "source_artifact_path": "artifacts/yul/UnlinkPool.yul",
-      "case_ids": [
-        "unlink_xyz/pool"
-      ],
-      "notes": "The benchmark artifact is the Verity-generated UnlinkPool Yul output. The linked boundary file supplies only the external Poseidon, Permit2, verifier router, and Groth16 verifier replacements required at the pool boundary.",
-      "manifest_path": "families/unlink_xyz/implementations/pool/implementation.yaml"
     },
     {
       "family_id": "usual",
@@ -1080,6 +1094,46 @@
       "proof_target": "Benchmark.Cases.Kleros.SortitionTrees.Proofs"
     },
     {
+      "case_id": "lagoon/guardrails",
+      "project": "lagoon",
+      "case_name": "guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/case.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/hopperlabsxyz/lagoon-v0",
+      "upstream_commit": "a8e73f5a5276aa4047b901083cbce127d7f7b470",
+      "original_contract_path": "src/v0.6.0/libraries/GuardrailsLib.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "selected_functions": [
+        "isCompliant"
+      ],
+      "lean_target": "Benchmark.Cases.Lagoon.Guardrails.Compile",
+      "failure_reason": null,
+      "notes": "Proves that Lagoon guardrail compliance accepts exactly the annualized PPS variations admitted by the configured 1e18-scaled upper and signed lower bounds under the encoded successfulSolidityArithmeticScope.",
+      "buildable": true,
+      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "pure_function_slice",
+        "successful_solidity_arithmetic",
+        "signed_guardrail_bounds"
+      ],
+      "abstraction_notes": "This benchmark models the pure arithmetic decision in GuardrailsLib.isCompliant for successful Solidity executions. Storage, events, activation status, updateGuardrails state mutation, and role checks are out of scope. The updateGuardrails int256-min rejection is captured as lowerRateNotMin. The successfulSolidityArithmeticScope predicate also requires nonzero divisors and branch-specific multiplication safety for Solidity 0.8 checked arithmetic.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Lagoon.Guardrails.Specs",
+      "proof_target": "Benchmark.Cases.Lagoon.Guardrails.Proofs"
+    },
+    {
       "case_id": "lido/vaulthub_locked",
       "project": "lido",
       "case_name": "vaulthub_locked",
@@ -1209,6 +1263,57 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Specs",
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
+    },
+    {
+      "case_id": "polygon/agglayer_bridge",
+      "project": "polygon",
+      "case_name": "agglayer_bridge",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polygon/agglayer_bridge/case.yaml",
+      "split": "active",
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/agglayer/agglayer-contracts",
+      "upstream_commit": "110bda5a03e70ee7331bc06407a8e79226d3e520",
+      "original_contract_path": "contracts/AgglayerBridge.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol",
+      "selected_functions": [
+        "claimAsset",
+        "claimMessage",
+        "_verifyLeafAndSetNullifier",
+        "_verifyLeaf",
+        "_setAndCheckClaimed",
+        "isClaimed",
+        "_validateAndDecodeGlobalIndex",
+        "_bitmapPositions",
+        "_addLeafBridge",
+        "_updateGlobalExitRoot"
+      ],
+      "lean_target": "Benchmark.Cases.Polygon.AgglayerBridge.Compile",
+      "failure_reason": null,
+      "notes": "The public claim theorems show successful claims validate the leaf and consume the source-network/leaf-index bitmap entry. A private reachability lemma feeds the shared helper theorem that proves successful nullifier-helper execution flips the expected bitmap bit.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "merkle_proof_summary",
+        "nullifier_bitmap",
+        "global_exit_root_ghost",
+        "metadata_hash_parameter",
+        "post_nullifier_effects_elided"
+      ],
+      "abstraction_notes": "The benchmark models the claim validation and nullifier path of AgglayerBridge. Dynamic metadata bytes are represented by a precomputed metadata hash, Merkle proof calculation is summarized by a deterministic root combiner, and token or message side effects after nullifier consumption are elided.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Polygon.AgglayerBridge.Specs",
+      "proof_target": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs"
     },
     {
       "case_id": "reserve/auction_price_band",
@@ -1351,79 +1456,6 @@
       ],
       "spec_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Specs",
       "proof_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs"
-    },
-    {
-      "case_id": "unlink_xyz/pool",
-      "project": "unlink_xyz",
-      "case_name": "pool",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/unlink_xyz/pool/case.yaml",
-      "split": "active",
-      "family_id": "unlink_xyz",
-      "implementation_id": "pool",
-      "stage": "build_green",
-      "translation_status": "translated",
-      "spec_status": "draft",
-      "proof_status": "not_started",
-      "source_language": "solidity",
-      "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
-      "original_contract_path": "protocol/contracts/src/UnlinkPool.sol",
-      "generated_artifact_path": null,
-      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
-      "selected_functions": [
-        "constructor",
-        "initialize",
-        "deposit",
-        "transfer",
-        "withdraw",
-        "emergencyWithdraw",
-        "hashNote",
-        "isRelayer",
-        "addRelayer",
-        "removeRelayer",
-        "setVerifierRouter",
-        "transferOwnership",
-        "acceptOwnership",
-        "renounceOwnership",
-        "VerifierRouter.owner",
-        "VerifierRouter.pendingOwner",
-        "VerifierRouter.transferOwnership",
-        "VerifierRouter.acceptOwnership",
-        "VerifierRouter.renounceOwnership",
-        "VerifierRouter.setCircuit",
-        "VerifierRouter.pauseCircuit",
-        "VerifierRouter.getCircuit",
-        "VerifierRouter.verifierToCircuitId"
-      ],
-      "lean_target": "Benchmark.Cases.UnlinkXyz.Pool.Compile",
-      "failure_reason": null,
-      "notes": "This case replaces the previous `backlog/unlink_xyz/placeholder` entry, which was blocked on `upstream_unavailable`. The upstream is now resolved and the case targets the pinned commit of `unlink-xyz/monorepo`. The original local research scratchpad that informed this translation lived in `lfglabs-dev/verity:Contracts/UnlinkPool/` (untracked) and was rewritten here to use the new Verity feature surface end-to-end.",
-      "buildable": true,
-      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
-      "abstraction_level": "protocol_slice",
-      "abstraction_tags": [
-        "uups_proxy_modeled_as_implementation",
-        "permit2_assumed_boundary",
-        "poseidon_assumed_boundary",
-        "groth16_assumed_boundary",
-        "bn254_precompile_ecm",
-        "erc7201_storage_namespace",
-        "named_errors",
-        "initializer_modeled",
-        "nonreentrant_modeled",
-        "keccak256_literal_typehash",
-        "macro_event_declarations",
-        "verifier_router_contract",
-        "mapping_struct_storage",
-        "internal_helper_bytes"
-      ],
-      "abstraction_notes": "Verity model of `UnlinkPool` (Unlink privacy pool implementation) plus the sibling `VerifierRouter` Groth16 circuit registry. Protocol-specific cryptographic primitives (Poseidon, Permit2, Lazy-IMT, Groth16 verifier contracts reached through the router) are routed through explicit external or opaque boundaries, per the `unlink-verity` package split documented in `docs/ROADMAP.md` \"Unlink Audit Readiness\". UUPS proxy semantics are modeled as the implementation contract itself (proxy storage rotation is host-level and tracked under verity#1420). The model uses every Solidity-feature-parity primitive that landed in verity through PRs #1782 (selfbalance), #1795 (Unlink-audit helpers), #1810 (callWithValue ECM), and #1827 (BN254 precompile ECMs + `keccak256_lit` literal sugar), plus #1870 (memory-array helper lowering), #1871 (dynamic-array event sources), #1872 (array values in executable emit calls), #1873 (projected static-struct event payloads), #1874 (multi-result ECM binding), and #1900 (internal helper fidelity, ERC-7201 storage namespaces, and mapping-struct support needed by this case). The public ZK entry points (`deposit`, `transfer`, `withdraw`, and `emergencyWithdraw`) now build against source-shaped array parameters. The transfer/withdraw paths use `Array Transaction` / `Array WithdrawalTransaction` parameters with dynamic struct-array member projections and projected dynamic-array forwarding to linked externals / internal helpers. They now use `_realCommitments` / `_realNullifiers`-shaped memory-array helpers, pass the resulting memory array into an `_insertLeaves`-shaped helper, and emit source-shaped dynamic array and withdrawal-note payloads. The deposit path validates static `Note[]` elements, computes the source-shaped deposit witness hash, routes the Permit2 transfer through the linked external boundary, inserts leaves, and emits the source-shaped `Deposited` payload. Poseidon, Permit2, external Groth16 verifier contracts, and host-level UUPS proxy behavior remain explicit modeling boundaries, not unsupported Verity translation features. `_executeWithdrawal(_transactions[i], bool)` is routed through an internal helper call. The deploy-time BN254 precompile probe in `initialize` is wired through the 0x06/0x07/0x08 precompile ECMs and the multi-result ECM binder. Source confirmation (audit target 7617b3e): there is NO `UnlinkAdapter`, no `adapterDeposit`, no `adapterWithdraw` - `UnlinkAdapter` was deleted upstream in `d9c8948 chore(contracts): delete UnlinkAdapter + strip adapter surface (UE-425)` predating our pin. The umbrella verity#1760 references the older multi-relayer release that still carried the adapter surface. With the adapter removed, the case scope is `UnlinkPool` plus `VerifierRouter`. The top-level inherited `StateStorage` / `LazyIMTData` storage structs are represented directly with Verity `StorageStruct` storage. The translated case checks LazyIMT's packed `uint40` leaves and mapping leaf against their ERC-7201-derived source slots. Spec modules ported from the local scratchpad:   - `InternalLazyIMT.lean`: full LazyIMT spec (Z_0..Z_32 tower,     `_init`, `_insert`, `_update`, `_root`, `_rootWithDepth`,     `_levels`, `_merkleProofElements`). Pure Lean spec used by the     pool's `_insertLeaves` path.   - `State.lean`: `StateStorage` record + `_initializeState`,     `_insertLeaves`, `_spend`, `_setVerifierRouter` helpers operating     over the LazyIMT spine + nullifier set + verifier-router. `verity_contract UnlinkPool` ships in `Contract.lean` covering:   - all admin / view / lifecycle functions: `constructor`,     `initialize`, `addRelayer`, `removeRelayer`, `setVerifierRouter`,     `transferOwnership`, `acceptOwnership`, `renounceOwnership`,     `isRelayer`, `nextLeafIndex`, `hashNote`, `_checkRelayer`.   - `deposit`, `transfer`, `withdraw`, and `emergencyWithdraw` bodies are wired. `verity_contract VerifierRouter` ships in `VerifierRouter.lean` covering Ownable2Step state, circuit registration, circuit pause, circuit lookup, and verifier-to-circuit-id lookup with the Solidity `mapping(bytes32 => Circuit)` represented as `MappingStruct(Uint256, [...])`.",
-      "unsupported_feature_codes": [],
-      "spec_target": "Benchmark.Cases.UnlinkXyz.Pool.Specs",
-      "proof_target": "Benchmark.Cases.UnlinkXyz.Pool.Proofs"
     },
     {
       "case_id": "usual/dao_collateral",
@@ -3100,6 +3132,141 @@
       }
     },
     {
+      "task_ref": "lagoon/guardrails/exact_compliance",
+      "task_id": "exact_compliance",
+      "case_id": "lagoon/guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/tasks/exact_compliance.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "compliance_boundary",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/ExactCompliance.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the source-shaped branch predicate under successfulSolidityArithmeticScope: lowerRate is not int256.min, currentPps and timePast are nonzero, and the branch-specific variation multiplications do not overflow Solidity 0.8 checked arithmetic.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "lagoon/guardrails/negative_variation_bounded",
+      "task_id": "negative_variation_bounded",
+      "case_id": "lagoon/guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/tasks/negative_variation_bounded.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "compliance_boundary",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/NegativeVariationBounded.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the negative-variation branch under the same successful Solidity arithmetic scope as the case manifest.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "lagoon/guardrails/positive_variation_bounded",
+      "task_id": "positive_variation_bounded",
+      "case_id": "lagoon/guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/tasks/positive_variation_bounded.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "compliance_boundary",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_positive_bounded",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/PositiveVariationBounded.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the positive-variation bounded branch under the same successful Solidity arithmetic scope as the case manifest.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
       "task_ref": "lido/vaulthub_locked/ceildiv_sandwich",
       "task_id": "ceildiv_sandwich",
       "case_id": "lido/vaulthub_locked",
@@ -4675,6 +4842,96 @@
       }
     },
     {
+      "task_ref": "polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "task_id": "claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "case_id": "polygon/agglayer_bridge",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polygon/agglayer_bridge/tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "split": "active",
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "source_ref": "https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polygon.AgglayerBridge.claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polygon/agglayer_bridge/verity/Contract.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polygon/agglayer_bridge/verity/Specs.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Asset claims are proved to validate the modeled leaf against an accepted global exit root and consume the source-network/leaf-index bitmap nullifier. A private reachability lemma feeds the shared helper-consumption theorem.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "task_id": "claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "case_id": "polygon/agglayer_bridge",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polygon/agglayer_bridge/tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "split": "active",
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "source_ref": "https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polygon/agglayer_bridge/verity/Contract.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polygon/agglayer_bridge/verity/Specs.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Message claims are proved to validate the modeled leaf against an accepted global exit root and consume the source-network/leaf-index bitmap nullifier. A private reachability lemma feeds the shared helper-consumption theorem.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
       "task_ref": "reserve/auction_price_band/price_at_end_time",
       "task_id": "price_at_end_time",
       "case_id": "reserve/auction_price_band",
@@ -5575,157 +5832,6 @@
         "prompt_context": "ready",
         "editable_proof": "ready",
         "reference_solution": "blocked"
-      }
-    },
-    {
-      "task_ref": "unlink_xyz/pool/artifact_builds",
-      "task_id": "artifact_builds",
-      "case_id": "unlink_xyz/pool",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/unlink_xyz/pool/tasks/artifact_builds.yaml",
-      "split": "active",
-      "family_id": "unlink_xyz",
-      "implementation_id": "pool",
-      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "generated_artifact_integrity",
-      "category": "build-integrity",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.UnlinkXyz.Pool.artifactBuilds_compile_gate",
-      "proof_family": "functional_correctness",
-      "translation_status": "generated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "cases/unlink_xyz/pool/verity/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Compile.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/UnlinkPoolArtifact/UnlinkPoolArtifact.lean"
-      ],
-      "specification_files": [
-        "cases/unlink_xyz/pool/verity/Specs.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UnlinkXyz/Pool/Tasks/ArtifactBuilds.lean"
-      ],
-      "abstraction_level": "generated_bytecode_with_external_boundaries",
-      "abstraction_notes": "This task keeps the generated pool artifact on the benchmark execution path. The replacement Yul is limited to external cryptographic, Permit2, router, and verifier-call boundaries.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Generated.UnlinkXyz.Pool.Tasks.ArtifactBuilds",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "unlink_xyz/pool/build_green",
-      "task_id": "build_green",
-      "case_id": "unlink_xyz/pool",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/unlink_xyz/pool/tasks/build_green.yaml",
-      "split": "active",
-      "family_id": "unlink_xyz",
-      "implementation_id": "pool",
-      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
-      "task_interface_version": 2,
-      "track": "translation-only",
-      "property_class": "compilation",
-      "category": "build",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.UnlinkXyz.Pool.unlinkPool_compiles",
-      "proof_family": "functional_correctness",
-      "translation_status": "translated",
-      "proof_status": "not_started",
-      "implementation_files": [
-        "cases/unlink_xyz/pool/verity/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean"
-      ],
-      "specification_files": [
-        "cases/unlink_xyz/pool/verity/Specs.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UnlinkXyz/Pool/Tasks/BuildGreen.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "First buildable target for the case: the `verity_contract UnlinkPool` declaration in `Contract.lean` and sibling `verity_contract VerifierRouter` declaration in `VerifierRouter.lean` must elaborate cleanly through `lake build` on the lakefile-pinned Verity revision. The pool entry points now elaborate with source-shaped dynamic-array projections, LazyIMT insertion over nested `StorageStruct` state, and PoseidonT3/T4 routed through explicit linked-external cryptographic boundaries; `VerifierRouter` covers the source Groth16 circuit registry with `mapping(bytes32 => Circuit)` represented as `MappingStruct(Uint256, [...])`.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UnlinkXyz.Pool.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "blocked",
-        "reference_solution": "blocked"
-      }
-    },
-    {
-      "task_ref": "unlink_xyz/pool/formal_audit_ready",
-      "task_id": "formal_audit_ready",
-      "case_id": "unlink_xyz/pool",
-      "suite": "active",
-      "schema_version": 1,
-      "manifest_path": "cases/unlink_xyz/pool/tasks/formal_audit_ready.yaml",
-      "split": "active",
-      "family_id": "unlink_xyz",
-      "implementation_id": "pool",
-      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "formal_audit_ap_ic_delivery",
-      "category": "generated-artifact-audit",
-      "difficulty": "hard",
-      "theorem_name": "Benchmark.Cases.UnlinkXyz.Pool.FormalAudit.formal_audit_ready_for_delivery",
-      "proof_family": "protocol_transition_correctness",
-      "translation_status": "generated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "cases/unlink_xyz/pool/verity/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/State.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Compile.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/UnlinkPoolArtifact/UnlinkPoolArtifact.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/VerifierRouterArtifact/VerifierRouterArtifact.lean"
-      ],
-      "specification_files": [
-        "cases/unlink_xyz/pool/verity/Specs.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Specs.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/FormalAudit.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UnlinkXyz/Pool/Tasks/FormalAuditReady.lean"
-      ],
-      "abstraction_level": "generated_bytecode_with_external_boundaries",
-      "abstraction_notes": "Delivery gate for the UnlinkPool AP/IC audit. The theorem packages all AP/IC items marked proved-from-concrete, proving them from generated UnlinkPool entrypoint metadata, generated StateStorage helper execution, and generated artifact structure. Items that need cryptographic, token, governance, liveness, privacy, or EVM transaction semantics remain explicit assumptions or residual boundaries rather than arbitrary Step theorems.",
-      "unsupported_feature_codes": [
-        "groth16_soundness_boundary",
-        "permit2_token_semantics_boundary",
-        "route_governance_boundary",
-        "chain_liveness_boundary",
-        "evm_transaction_atomicity_boundary",
-        "privacy_game_boundary"
-      ],
-      "reference_solution_module": "Benchmark.Cases.UnlinkXyz.Pool.FormalAudit",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
       }
     },
     {
@@ -6876,5 +6982,5 @@
       }
     }
   ],
-  "generated_at": "2026-05-26T08:55:01.641081+00:00"
+  "generated_at": "2026-05-27T13:36:02.261040+00:00"
 }

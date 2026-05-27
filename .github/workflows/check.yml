@@ -1,12 +1,16 @@
 name: check
 
 on:
+  repository_dispatch:
+    types:
+      - benchmark-case-changed
   push:
     branches:
       - main
       - master
       - codex/**
   pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

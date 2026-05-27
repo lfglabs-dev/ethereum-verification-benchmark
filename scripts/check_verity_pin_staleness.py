@@ -11,7 +11,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import subprocess
 import sys
@@ -19,9 +18,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# Match: require verity from git "...url..."@"<sha>"
+# Match both compact and formatted Lake syntax, for example:
+#   require verity from git "https://github.com/lfglabs-dev/verity.git"@"..."
+#   require verity from git
+#     "https://github.com/lfglabs-dev/verity.git" @
+#     "..."
 _PIN_RE = re.compile(
-    r'require\s+verity\s+from\s+git\s+"(?P<url>[^"]+)"@"(?P<sha>[0-9a-f]+)"'
+    r'require\s+verity\s+from\s+git\s+"(?P<url>[^"]+)"\s*@\s*"(?P<sha>[0-9a-f]+)"',
+    re.MULTILINE,
 )
 
 # Match: require verity from "../verity"
