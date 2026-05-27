@@ -2,14 +2,16 @@ manifest_kind: family
 schema_version: 1
 family_id: usual
 display_name: Usual
-split: backlog
-status: backlog
+split: mixed
+status: mixed
 description: >
-  Backlog intake for a private upstream that cannot yet be pinned to a public
-  benchmarkable contract artifact.
+  Usual stablecoin/RWA protocol cases focused on collateralized mint and redeem
+  accounting for USD0 and related collateral assets.
 implementation_ids:
   - private_repo
+  - verified_proxy
 case_ids:
   - usual/placeholder
+  - usual/dao_collateral
 source_languages:
   - solidity

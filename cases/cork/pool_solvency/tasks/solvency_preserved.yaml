@@ -5,7 +5,7 @@ case_id: cork/pool_solvency
 split: active
 family_id: cork
 implementation_id: phoenix
-source_ref: https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol
+source_ref: https://github.com/Cork-Technology/phoenix@40d9b173c4b2262a93f36167355b5311d5f58e6b:contracts/libraries/PoolLib.sol
 task_interface_version: 2
 theorem_name: Benchmark.Cases.Cork.PoolSolvency.solvency_preserved
 proof_family: functional_correctness

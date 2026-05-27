@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: amount_paid_records_distribution
+case_id: piku/fund_conservation
+split: active
+family_id: piku
+implementation_id: inverter_oracle_queue
+source_ref: https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Piku.FundConservation.amountPaid_records_distribution
+proof_family: state_preservation_local_effects
+property_class: accounting_effect
+difficulty: easy
+category: fund_conservation
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/piku/fund_conservation/verity/Contract.lean
+  - Benchmark/Cases/Piku/FundConservation/Contract.lean
+specification_files:
+  - cases/piku/fund_conservation/verity/Specs.lean
+  - Benchmark/Cases/Piku/FundConservation/Specs.lean
+editable_files:
+  - Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidRecordsDistribution.lean
+reference_solution_module: Benchmark.Cases.Piku.FundConservation.Proofs
+reference_solution_declaration: Benchmark.Cases.Piku.FundConservation.amountPaid_records_distribution
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Records the local accounting effect of queue settlement: queued redemption
+  backing is split into user distribution and protocol treasury buckets.
+unsupported_feature_codes:
+  - erc20_transfers_abstracted
+  - protocol_fee_recalculation_abstracted

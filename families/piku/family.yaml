@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: piku
+display_name: Piku
+split: active
+status: active
+description: >
+  Piku USP accounting benchmarks over the Inverter oracle-priced funding
+  manager and queued redemption processor.
+implementation_ids:
+  - inverter_oracle_queue
+case_ids:
+  - piku/fund_conservation
+source_languages:
+  - solidity

@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "agent_id": "grok-build",
+  "mode": "custom",
+  "track": "group/shell",
+  "run_slug": "grok-build",
+  "adapter": "command",
+  "command": ["python3", "-m", "harness.runners.grok_build"],
+  "model": "grok-build",
+  "base_url": null,
+  "api_key": null,
+  "chat_completions_path": null,
+  "models_path": null,
+  "system_prompt_files": ["harness/PROMPT.md", "harness/POLICY.md", "harness/TOOLS.md", "harness/PROOF_PATTERNS.md"],
+  "temperature": 0.0,
+  "max_completion_tokens": 1,
+  "headers": {},
+  "header_envs": {},
+  "extra_body": {},
+  "request_timeout_seconds": 1,
+  "secret_env": ["GROK_CODE_XAI_API_KEY"],
+  "secret_files": []
+}

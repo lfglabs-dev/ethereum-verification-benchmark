@@ -1,0 +1,37 @@
+manifest_kind: task
+schema_version: 1
+task_id: redeem_fee_formula
+case_id: usual/dao_collateral
+split: active
+family_id: usual
+implementation_id: verified_proxy
+source_ref: https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Usual.DaoCollateral.redeem_fee_formula
+proof_family: functional_correctness
+property_class: arithmetic_rounding
+difficulty: easy
+category: stablecoin_collateral_accounting
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/usual/dao_collateral/verity/Contract.lean
+  - Benchmark/Cases/Usual/DaoCollateral/Contract.lean
+specification_files:
+  - cases/usual/dao_collateral/verity/Specs.lean
+  - Benchmark/Cases/Usual/DaoCollateral/Specs.lean
+editable_files:
+  - Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemFeeFormula.lean
+reference_solution_module: Benchmark.Cases.Usual.DaoCollateral.Proofs
+reference_solution_declaration: Benchmark.Cases.Usual.DaoCollateral.redeem_fee_formula
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves the fee helper used by redeem matches the configured basis-point fee
+  and the supported-token-decimal normalization path modeled from
+  `_calculateFee`.
+unsupported_feature_codes:
+  - supported_token_unit_preconditions
+  - checked_uint256_overflow_preconditions
+  - successful_call_preconditions

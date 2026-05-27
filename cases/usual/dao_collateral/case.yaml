@@ -1,0 +1,73 @@
+manifest_kind: case
+project: usual
+case_id: dao_collateral
+schema_version: 1
+split: active
+family_id: usual
+implementation_id: verified_proxy
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: null
+upstream_commit: null
+original_contract_path: src/daoCollateral/DaoCollateral.sol
+source_ref: https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code
+lean_target: Benchmark.Cases.Usual.DaoCollateral.Compile
+spec_target: Benchmark.Cases.Usual.DaoCollateral.Specs
+proof_target: Benchmark.Cases.Usual.DaoCollateral.Proofs
+selected_functions:
+  - swap
+  - redeem
+  - _calculateFee
+  - _burnStableTokenAndTransferCollateral
+  - _getTokenAmountForAmountInUSD
+source_language: solidity
+verity_version: 9eaf64218be14b59f6253219c111a5abf958e7b7
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - oracle_price_explicit
+  - swap_quote_computed
+  - erc20_calls_ghosted
+  - usd0_supply_effect_ghosted
+  - direct_swap_redeem_only
+  - cbr_redeem_branch_modeled
+  - supported_token_decimals_0_to_18
+  - intent_paths_elided
+  - access_control_elided
+abstraction_notes: >
+  The benchmark targets DaoCollateral direct swap/redeem conservation. Oracle
+  price and token decimal scale are explicit inputs. The swap quote is computed
+  inside the model as floor(collateralAmount * price / tokenUnit), rather than
+  supplied as a free theorem parameter. The token unit is explicitly gated to
+  Solidity's supported `10 ** decimals` values for collateral decimals `0..18`;
+  larger decimal counts are outside this benchmark because Solidity's
+  normalization takes a different division branch. ERC20 transfers and USD0
+  mint/burn calls are represented by explicitly named ghost ledgers:
+  `ghostTreasuryCollateral` and `ghostUsd0Supply`. This keeps the proof scoped
+  to DaoCollateral accounting rather than USD0 or ERC20 token correctness. The
+  direct swap path credits exactly the RWA amount to the ghost collateral ledger
+  and mints exactly the computed oracle USD quote in the ghost supply ledger.
+  Successful-call
+  hypotheses expose Solidity checked-arithmetic boundaries, nonzero computed
+  quote, uint128 swap amount bound, supported token unit, ghost collateral
+  sufficiency, and configured redeem fee / CBR coefficient bounds. The redeem
+  path burns the user amount in the ghost supply ledger, remints only the
+  non-CBR fee there, and debits the exact ghost collateral amount computed from
+  net burned USD0, oracle price, token decimals, CBR flag, and floor rounding.
+  SwapperEngine, intent matching, permits, role checks, pause gates, events, and
+  registry lookups are elided because they do not alter this conservation
+  equation.
+unsupported_feature_codes:
+  - external_erc20_calls_ghosted
+  - oracle_reads_parameterized
+  - supported_token_unit_preconditions
+  - checked_uint256_overflow_preconditions
+  - successful_call_preconditions
+notes: >
+  Usual USD0 DaoCollateral conservation case. It verifies that no direct
+  swap/redeem transition can create unaccounted ghost USD0 supply or debit more
+  ghost collateral than the contract's modeled accounting permits, modulo
+  configured redeem fee, oracle price, CBR coefficient, token decimals, and
+  floor rounding.

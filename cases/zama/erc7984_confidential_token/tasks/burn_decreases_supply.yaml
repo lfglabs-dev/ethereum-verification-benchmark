@@ -5,7 +5,7 @@ case_id: zama/erc7984_confidential_token
 split: active
 family_id: zama
 implementation_id: confidential_contracts
-source_ref: https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol
+source_ref: https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol
 task_interface_version: 2
 theorem_name: Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_decreases_supply
 proof_family: functional_correctness

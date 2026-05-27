@@ -1,0 +1,41 @@
+manifest_kind: task
+schema_version: 1
+task_id: swap_value_conservation
+case_id: usual/dao_collateral
+split: active
+family_id: usual
+implementation_id: verified_proxy
+source_ref: https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Usual.DaoCollateral.swap_value_conservation
+proof_family: state_preservation_local_effects
+property_class: accounting_conservation
+difficulty: easy
+category: stablecoin_collateral_accounting
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/usual/dao_collateral/verity/Contract.lean
+  - Benchmark/Cases/Usual/DaoCollateral/Contract.lean
+specification_files:
+  - cases/usual/dao_collateral/verity/Specs.lean
+  - Benchmark/Cases/Usual/DaoCollateral/Specs.lean
+editable_files:
+  - Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapValueConservation.lean
+reference_solution_module: Benchmark.Cases.Usual.DaoCollateral.Proofs
+reference_solution_declaration: Benchmark.Cases.Usual.DaoCollateral.swap_value_conservation
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Strengthens local swap state preservation by removing the free quote
+  parameter from the modeled transition. The theorem requires a supported
+  `10 ** decimals` token unit for collateral decimals `0..18` and
+  successful-call arithmetic hypotheses, then proves the minted USD0 delta
+  equals the quote computed inside the model:
+  floor(collateralAmount * price / tokenUnit).
+unsupported_feature_codes:
+  - external_erc20_calls_ghosted
+  - oracle_reads_parameterized
+  - supported_token_unit_preconditions
+  - successful_call_preconditions

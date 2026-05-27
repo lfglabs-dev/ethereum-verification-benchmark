@@ -15,14 +15,14 @@ is less than oldValue, so tryIncrease returns (false, oldValue).
 Then FHE.select picks 0 as the transferred amount.
 -/
 theorem mint_overflow_protection
-    (to : Address) (amount : Uint256) (s : ContractState)
-    (hTo : (to != zeroAddress) = true)
+    (recipient : Address) (amount : Uint256) (s : ContractState)
+    (hTo : (recipient != zeroAddress) = true)
     (hOverflow : (tryIncrease64 (s.storage 0) amount).1 = false)
     (hAmount64 : amount < UINT64_MOD)
     (hSupply64 : s.storage 0 < UINT64_MOD)
-    (hToBal64 : s.storageMap 1 to < UINT64_MOD) :
-    let s' := ((ERC7984.mint to amount).run s).snd
-    mint_overflow_protection_spec to amount s s' := by
+    (hToBal64 : s.storageMap 1 recipient < UINT64_MOD) :
+    let s' := ((ERC7984.mint recipient amount).run s).snd
+    mint_overflow_protection_spec recipient amount s s' := by
   -- Replace this placeholder with a complete Lean proof.
   exact ?_
 

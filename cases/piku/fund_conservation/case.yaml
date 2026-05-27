@@ -1,0 +1,57 @@
+manifest_kind: case
+project: piku
+case_id: fund_conservation
+schema_version: 1
+split: active
+family_id: piku
+implementation_id: inverter_oracle_queue
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/InverterNetwork/contracts
+upstream_commit: 8b7bc438344d646bab05b751c8eb4a7f0c8ca588
+original_contract_path: src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol
+source_ref: https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol
+lean_target: Benchmark.Cases.Piku.FundConservation.Compile
+spec_target: Benchmark.Cases.Piku.FundConservation.Specs
+proof_target: Benchmark.Cases.Piku.FundConservation.Proofs
+selected_functions:
+  - _sellOrder
+  - _createAndEmitOrder
+  - _addToOpenRedemptionAmount
+  - amountPaid
+  - processPayments
+  - executePaymentQueue
+source_language: solidity
+verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - ghost_accounting_slots
+  - oracle_price_abstracted
+  - queue_shape_elided
+  - external_calls_opaque
+  - access_control_elided
+  - erc20_transfers_abstracted
+  - protocol_fee_recalculation_abstracted
+  - ghost_solvency_precondition
+abstraction_notes: >
+  Piku's docs-matching Inverter implementation stores `_openRedemptionAmount`
+  but does not store cumulative distributed backing, remaining backing, or
+  protocol/project treasury fee counters. The model introduces those as ghost
+  slots so the team-proposed fund-conservation invariant is state-readable.
+  Oracle pricing and decimal conversion are represented by the already-computed
+  redemption amount. Queue linked-list shape, roles, ERC20 transfer mechanics,
+  blacklisting fallback, and event payloads are elided.
+unsupported_feature_codes:
+  - event_only_fee_accounting_requires_ghost_slot
+  - external_oracle_pricing_abstracted
+  - protocol_fee_recalculation_abstracted
+  - ghost_solvency_precondition
+notes: >
+  Fund-conservation benchmark for Piku's oracle-priced queued redemption flow:
+  distributed backing + queued redemption backing + remaining backing +
+  protocol treasury fees + project treasury fees equals initial backing.
+  Queue execution functions are source context; the modeled settlement
+  transition is the successful `amountPaid` callback.

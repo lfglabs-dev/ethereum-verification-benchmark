@@ -10,46 +10,46 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 19,
-    "implementation_count": 19,
-    "active_case_count": 16,
+    "family_count": 22,
+    "implementation_count": 23,
+    "active_case_count": 20,
     "backlog_case_count": 3,
-    "active_task_count": 99,
+    "active_task_count": 121,
     "backlog_task_count": 8,
-    "buildable_case_count": 18,
-    "runnable_task_count": 107,
+    "buildable_case_count": 22,
+    "runnable_task_count": 129,
     "case_stage_counts": {
-      "build_green": 16,
+      "build_green": 19,
       "candidate": 1,
-      "proof_complete": 2
+      "proof_complete": 3
     },
     "translation_status_counts": {
       "blocked": 1,
-      "generated": 1,
-      "translated": 17
+      "translated": 22
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 10,
-      "partial": 8
+      "complete": 15,
+      "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 107
+      "proof-only": 129
     },
     "task_property_class_counts": {
+      "access_control_identity": 10,
       "accounting_bound": 16,
-      "accounting_conservation": 10,
+      "accounting_conservation": 15,
+      "accounting_effect": 2,
       "accounting_invariant_break": 1,
       "accounting_update": 6,
-      "arithmetic_rounding": 1,
-      "authorization_state": 7,
+      "arithmetic_rounding": 3,
+      "authorization_state": 9,
       "balance_conservation": 2,
       "balance_credit_update": 2,
       "balance_update": 1,
+      "compliance_boundary": 3,
       "exploit_trace": 1,
-      "formal_audit_ap_ic_delivery": 1,
       "frame_property": 2,
-      "generated_artifact_integrity": 1,
       "guarded_solvency": 7,
       "isOwner_effect": 3,
       "linked_list_acyclicity": 4,
@@ -76,15 +76,16 @@
       "weighted_selection": 1
     },
     "task_proof_family_counts": {
-      "authorization_enablement": 14,
-      "functional_correctness": 28,
-      "protocol_transition_correctness": 23,
+      "authorization_enablement": 24,
+      "functional_correctness": 32,
+      "protocol_transition_correctness": 22,
       "refinement_equivalence": 9,
-      "state_preservation_local_effects": 33
+      "state_preservation_local_effects": 42
     },
     "family_split_counts": {
-      "active": 16,
-      "backlog": 3
+      "active": 19,
+      "backlog": 2,
+      "mixed": 1
     }
   },
   "families": [
@@ -208,6 +209,23 @@
       "manifest_path": "families/kleros/family.yaml"
     },
     {
+      "family_id": "lagoon",
+      "display_name": "Lagoon",
+      "split": "active",
+      "status": "active",
+      "description": "ERC-7540 vault infrastructure with guardrails for vault valuation updates.",
+      "implementation_ids": [
+        "v0_6_0"
+      ],
+      "case_ids": [
+        "lagoon/guardrails"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/lagoon/family.yaml"
+    },
+    {
       "family_id": "lido",
       "display_name": "Lido",
       "split": "active",
@@ -242,6 +260,23 @@
       "manifest_path": "families/nexus_mutual/family.yaml"
     },
     {
+      "family_id": "onedelta",
+      "display_name": "1delta",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for 1delta composer routing and compact-calldata execution invariants. The initial case targets caller-address integrity for user-fund pulls through transfer commands, flash-loan callback continuations, swap-callback continuations, and the V3 direct callback-pull shortcut.",
+      "implementation_ids": [
+        "ethereum-composer"
+      ],
+      "case_ids": [
+        "onedelta/caller_address_integrity"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/onedelta/family.yaml"
+    },
+    {
       "family_id": "openzeppelin",
       "display_name": "OpenZeppelin",
       "split": "backlog",
@@ -274,6 +309,40 @@
         "solidity"
       ],
       "manifest_path": "families/paladin_votes/family.yaml"
+    },
+    {
+      "family_id": "piku",
+      "display_name": "Piku",
+      "split": "active",
+      "status": "active",
+      "description": "Piku USP accounting benchmarks over the Inverter oracle-priced funding manager and queued redemption processor.",
+      "implementation_ids": [
+        "inverter_oracle_queue"
+      ],
+      "case_ids": [
+        "piku/fund_conservation"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/piku/family.yaml"
+    },
+    {
+      "family_id": "polygon",
+      "display_name": "Polygon / Agglayer",
+      "split": "active",
+      "status": "active",
+      "description": "Polygon Agglayer bridge and interoperability verification cases.",
+      "implementation_ids": [
+        "agglayer_bridge"
+      ],
+      "case_ids": [
+        "polygon/agglayer_bridge"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/polygon/family.yaml"
     },
     {
       "family_id": "reserve",
@@ -344,34 +413,18 @@
       "manifest_path": "families/uniswap_v2/family.yaml"
     },
     {
-      "family_id": "unlink_xyz",
-      "display_name": "Unlink.xyz",
-      "split": "active",
-      "status": "active",
-      "description": "Benchmark family for the Unlink.xyz pool, using Verity-generated pool bytecode and limiting oracle replacements to external cryptographic and Permit2/router boundaries.",
-      "implementation_ids": [
-        "pool"
-      ],
-      "case_ids": [
-        "unlink_xyz/pool"
-      ],
-      "source_languages": [
-        "solidity",
-        "yul"
-      ],
-      "manifest_path": "families/unlink_xyz/family.yaml"
-    },
-    {
       "family_id": "usual",
       "display_name": "Usual",
-      "split": "backlog",
-      "status": "backlog",
-      "description": "Backlog intake for a private upstream that cannot yet be pinned to a public benchmarkable contract artifact.",
+      "split": "mixed",
+      "status": "mixed",
+      "description": "Usual stablecoin/RWA protocol cases focused on collateralized mint and redeem accounting for USD0 and related collateral assets.",
       "implementation_ids": [
-        "private_repo"
+        "private_repo",
+        "verified_proxy"
       ],
       "case_ids": [
-        "usual/placeholder"
+        "usual/placeholder",
+        "usual/dao_collateral"
       ],
       "source_languages": [
         "solidity"
@@ -453,7 +506,7 @@
       "split": "active",
       "status": "translated",
       "upstream_repo": "https://github.com/Cork-Technology/phoenix",
-      "upstream_commit": "40d9b173c4b",
+      "upstream_commit": "40d9b173c4b2262a93f36167355b5311d5f58e6b",
       "source_language": "solidity",
       "source_artifact_path": "contracts/libraries/PoolLib.sol",
       "case_ids": [
@@ -527,6 +580,22 @@
       "manifest_path": "families/kleros/implementations/kleros_v2/implementation.yaml"
     },
     {
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "display_name": "Lagoon v0.6.0",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/hopperlabsxyz/lagoon-v0",
+      "upstream_commit": "a8e73f5a5276aa4047b901083cbce127d7f7b470",
+      "source_language": "solidity",
+      "source_artifact_path": "src/v0.6.0/libraries/GuardrailsLib.sol",
+      "case_ids": [
+        "lagoon/guardrails"
+      ],
+      "notes": "GuardrailsLib pure compliance decision for v0.6.0 vault valuation guardrails.",
+      "manifest_path": "families/lagoon/implementations/v0_6_0/implementation.yaml"
+    },
+    {
       "family_id": "lido",
       "implementation_id": "core",
       "display_name": "Lido Core (V3 Vaults)",
@@ -559,6 +628,22 @@
       "manifest_path": "families/nexus_mutual/implementations/smart_contracts/implementation.yaml"
     },
     {
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "display_name": "OneDeltaComposerEthereum",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba",
+      "upstream_commit": "verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "case_ids": [
+        "onedelta/caller_address_integrity"
+      ],
+      "notes": "Ethereum deployment of the 1delta composer. This implementation entry covers the BaseComposer dispatch surface, Ethereum callback inheritance, and transfer command paths used by the caller-address integrity case.",
+      "manifest_path": "families/onedelta/implementations/ethereum-composer/implementation.yaml"
+    },
+    {
       "family_id": "openzeppelin",
       "implementation_id": "contracts",
       "display_name": "OpenZeppelin Contracts",
@@ -589,6 +674,38 @@
       ],
       "notes": "Claim accounting contract translated as a single-round slice with Merkle verification abstracted away from the benchmark.",
       "manifest_path": "families/paladin_votes/implementations/stream_recovery_claim/implementation.yaml"
+    },
+    {
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "display_name": "Inverter Oracle Queue Funding Manager",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/InverterNetwork/contracts",
+      "upstream_commit": "8b7bc438344d646bab05b751c8eb4a7f0c8ca588",
+      "source_language": "solidity",
+      "source_artifact_path": "src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "case_ids": [
+        "piku/fund_conservation"
+      ],
+      "notes": "Docs-matching Piku workflow implementation: oracle-priced funding manager, manual queue payment processor, and manual oracle price module.",
+      "manifest_path": "families/piku/implementations/inverter_oracle_queue/implementation.yaml"
+    },
+    {
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "display_name": "Polygon AgglayerBridge",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/agglayer/agglayer-contracts",
+      "upstream_commit": "110bda5a03e70ee7331bc06407a8e79226d3e520",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/AgglayerBridge.sol",
+      "case_ids": [
+        "polygon/agglayer_bridge"
+      ],
+      "notes": "Verity model of the AgglayerBridge claim path, focused on valid exit-root membership and source-network/leaf-index nullifier consumption.",
+      "manifest_path": "families/polygon/implementations/agglayer_bridge/implementation.yaml"
     },
     {
       "family_id": "reserve",
@@ -655,22 +772,6 @@
       "manifest_path": "families/uniswap_v2/implementations/v2_core/implementation.yaml"
     },
     {
-      "family_id": "unlink_xyz",
-      "implementation_id": "pool",
-      "display_name": "Unlink Pool",
-      "split": "active",
-      "status": "generated",
-      "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
-      "source_language": "solidity",
-      "source_artifact_path": "artifacts/yul/UnlinkPool.yul",
-      "case_ids": [
-        "unlink_xyz/pool"
-      ],
-      "notes": "The benchmark artifact is the Verity-generated UnlinkPool Yul output. The linked boundary file supplies only the external Poseidon, Permit2, verifier router, and Groth16 verifier replacements required at the pool boundary.",
-      "manifest_path": "families/unlink_xyz/implementations/pool/implementation.yaml"
-    },
-    {
       "family_id": "usual",
       "implementation_id": "private_repo",
       "display_name": "Usual Private Repository",
@@ -685,6 +786,22 @@
       ],
       "notes": "Intake is blocked on repository access, so no implementation artifact or case slice can be pinned yet.",
       "manifest_path": "families/usual/implementations/private_repo/implementation.yaml"
+    },
+    {
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "display_name": "Usual USD0 DaoCollateral Verified Proxy",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "source_language": "solidity",
+      "source_artifact_path": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "case_ids": [
+        "usual/dao_collateral"
+      ],
+      "notes": "Source was taken from the verified Etherscan implementation behind the public DaoCollateral proxy at 0xde6e1F680C4816446C8D515989E2358636A38b04.",
+      "manifest_path": "families/usual/implementations/verified_proxy/implementation.yaml"
     },
     {
       "family_id": "wildcat",
@@ -709,7 +826,7 @@
       "split": "active",
       "status": "translated",
       "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts",
-      "upstream_commit": "master",
+      "upstream_commit": "83364738f0d2b1655c60627588e3493099c359f7",
       "source_language": "solidity",
       "source_artifact_path": "contracts/token/ERC7984/ERC7984.sol",
       "case_ids": [
@@ -838,10 +955,10 @@
       "proof_status": "partial",
       "source_language": "solidity",
       "upstream_repo": "https://github.com/Cork-Technology/phoenix",
-      "upstream_commit": "40d9b173c4b",
+      "upstream_commit": "40d9b173c4b2262a93f36167355b5311d5f58e6b",
       "original_contract_path": "contracts/libraries/PoolLib.sol",
       "generated_artifact_path": null,
-      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol",
+      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b2262a93f36167355b5311d5f58e6b:contracts/libraries/PoolLib.sol",
       "selected_functions": [
         "previewUnwindExerciseOther",
         "_unwindExercise"
@@ -1045,6 +1162,46 @@
       "proof_target": "Benchmark.Cases.Kleros.SortitionTrees.Proofs"
     },
     {
+      "case_id": "lagoon/guardrails",
+      "project": "lagoon",
+      "case_name": "guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/case.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/hopperlabsxyz/lagoon-v0",
+      "upstream_commit": "a8e73f5a5276aa4047b901083cbce127d7f7b470",
+      "original_contract_path": "src/v0.6.0/libraries/GuardrailsLib.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "selected_functions": [
+        "isCompliant"
+      ],
+      "lean_target": "Benchmark.Cases.Lagoon.Guardrails.Compile",
+      "failure_reason": null,
+      "notes": "Proves that Lagoon guardrail compliance accepts exactly the annualized PPS variations admitted by the configured 1e18-scaled upper and signed lower bounds under the encoded successfulSolidityArithmeticScope.",
+      "buildable": true,
+      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "pure_function_slice",
+        "successful_solidity_arithmetic",
+        "signed_guardrail_bounds"
+      ],
+      "abstraction_notes": "This benchmark models the pure arithmetic decision in GuardrailsLib.isCompliant for successful Solidity executions. Storage, events, activation status, updateGuardrails state mutation, and role checks are out of scope. The updateGuardrails int256-min rejection is captured as lowerRateNotMin. The successfulSolidityArithmeticScope predicate also requires nonzero divisors and branch-specific multiplication safety for Solidity 0.8 checked arithmetic.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Lagoon.Guardrails.Specs",
+      "proof_target": "Benchmark.Cases.Lagoon.Guardrails.Proofs"
+    },
+    {
       "case_id": "lido/vaulthub_locked",
       "project": "lido",
       "case_name": "vaulthub_locked",
@@ -1132,6 +1289,55 @@
       "proof_target": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs"
     },
     {
+      "case_id": "onedelta/caller_address_integrity",
+      "project": "onedelta",
+      "case_name": "caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/case.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "draft",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba",
+      "upstream_commit": "verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba",
+      "original_contract_path": "contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "selected_functions": [
+        "deltaCompose",
+        "_deltaComposeInternal",
+        "_transfers",
+        "_transferFrom",
+        "_permit2TransferFrom",
+        "flashLoanCallback",
+        "swapCallback",
+        "clSwapCallback"
+      ],
+      "lean_target": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Compile",
+      "failure_reason": null,
+      "notes": "This is a caller-identity benchmark, not an accounting benchmark. It proves that every modeled ERC20 and Permit2 fund-pull path uses the outer deltaCompose caller rather than an intermediate callback contract, the composer itself, or an embedded calldata address. The scope is transfer-command pulls plus the V3 callback direct-pull shortcut, not every transferFrom in the full composer source tree.",
+      "buildable": true,
+      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "packed_calldata_decoded_commands",
+        "external_call_arguments_as_event_log",
+        "callback_authentication_as_precondition",
+        "transfer_commands_only",
+        "occurrence_flags_for_modeled_pulls"
+      ],
+      "abstraction_notes": "The benchmark targets caller-address integrity for user-fund pulls in OneDeltaComposerEthereum. The model preserves the key function boundaries: deltaCompose captures msg.sender, BaseComposer-style dispatch passes an explicit callerAddress, transfer command ids select ERC20 or Permit2 transferFrom, and flash-loan and swap callbacks continue dispatch with the same callerAddress. It also covers the V3 callback calldataLength == 0 shortcut that directly pays a pool with ERC20 transferFrom(callerAddress, ...). Packed calldata offsets are abstracted into decoded command ids. External token calls are represented by event-log slots recording the from argument.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Specs",
+      "proof_target": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs"
+    },
+    {
       "case_id": "paladin_votes/stream_recovery_claim_usdc",
       "project": "paladin_votes",
       "case_name": "stream_recovery_claim_usdc",
@@ -1174,6 +1380,112 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Specs",
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
+    },
+    {
+      "case_id": "piku/fund_conservation",
+      "project": "piku",
+      "case_name": "fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/case.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/InverterNetwork/contracts",
+      "upstream_commit": "8b7bc438344d646bab05b751c8eb4a7f0c8ca588",
+      "original_contract_path": "src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "selected_functions": [
+        "_sellOrder",
+        "_createAndEmitOrder",
+        "_addToOpenRedemptionAmount",
+        "amountPaid",
+        "processPayments",
+        "executePaymentQueue"
+      ],
+      "lean_target": "Benchmark.Cases.Piku.FundConservation.Compile",
+      "failure_reason": null,
+      "notes": "Fund-conservation benchmark for Piku's oracle-priced queued redemption flow: distributed backing + queued redemption backing + remaining backing + protocol treasury fees + project treasury fees equals initial backing. Queue execution functions are source context; the modeled settlement transition is the successful `amountPaid` callback.",
+      "buildable": true,
+      "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "ghost_accounting_slots",
+        "oracle_price_abstracted",
+        "queue_shape_elided",
+        "external_calls_opaque",
+        "access_control_elided",
+        "erc20_transfers_abstracted",
+        "protocol_fee_recalculation_abstracted",
+        "ghost_solvency_precondition"
+      ],
+      "abstraction_notes": "Piku's docs-matching Inverter implementation stores `_openRedemptionAmount` but does not store cumulative distributed backing, remaining backing, or protocol/project treasury fee counters. The model introduces those as ghost slots so the team-proposed fund-conservation invariant is state-readable. Oracle pricing and decimal conversion are represented by the already-computed redemption amount. Queue linked-list shape, roles, ERC20 transfer mechanics, blacklisting fallback, and event payloads are elided.",
+      "unsupported_feature_codes": [
+        "event_only_fee_accounting_requires_ghost_slot",
+        "external_oracle_pricing_abstracted",
+        "protocol_fee_recalculation_abstracted",
+        "ghost_solvency_precondition"
+      ],
+      "spec_target": "Benchmark.Cases.Piku.FundConservation.Specs",
+      "proof_target": "Benchmark.Cases.Piku.FundConservation.Proofs"
+    },
+    {
+      "case_id": "polygon/agglayer_bridge",
+      "project": "polygon",
+      "case_name": "agglayer_bridge",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polygon/agglayer_bridge/case.yaml",
+      "split": "active",
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/agglayer/agglayer-contracts",
+      "upstream_commit": "110bda5a03e70ee7331bc06407a8e79226d3e520",
+      "original_contract_path": "contracts/AgglayerBridge.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol",
+      "selected_functions": [
+        "claimAsset",
+        "claimMessage",
+        "_verifyLeafAndSetNullifier",
+        "_verifyLeaf",
+        "_setAndCheckClaimed",
+        "isClaimed",
+        "_validateAndDecodeGlobalIndex",
+        "_bitmapPositions",
+        "_addLeafBridge",
+        "_updateGlobalExitRoot"
+      ],
+      "lean_target": "Benchmark.Cases.Polygon.AgglayerBridge.Compile",
+      "failure_reason": null,
+      "notes": "The public claim theorems show successful claims validate the leaf and consume the source-network/leaf-index bitmap entry. A private reachability lemma feeds the shared helper theorem that proves successful nullifier-helper execution flips the expected bitmap bit.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "merkle_proof_summary",
+        "nullifier_bitmap",
+        "global_exit_root_ghost",
+        "metadata_hash_parameter",
+        "post_nullifier_effects_elided"
+      ],
+      "abstraction_notes": "The benchmark models the claim validation and nullifier path of AgglayerBridge. Dynamic metadata bytes are represented by a precomputed metadata hash, Merkle proof calculation is summarized by a deterministic root combiner, and token or message side effects after nullifier consumption are elided.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Polygon.AgglayerBridge.Specs",
+      "proof_target": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs"
     },
     {
       "case_id": "reserve/auction_price_band",
@@ -1318,53 +1630,60 @@
       "proof_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs"
     },
     {
-      "case_id": "unlink_xyz/pool",
-      "project": "unlink_xyz",
-      "case_name": "pool",
+      "case_id": "usual/dao_collateral",
+      "project": "usual",
+      "case_name": "dao_collateral",
       "suite": "active",
       "schema_version": 1,
-      "manifest_path": "cases/unlink_xyz/pool/case.yaml",
+      "manifest_path": "cases/usual/dao_collateral/case.yaml",
       "split": "active",
-      "family_id": "unlink_xyz",
-      "implementation_id": "pool",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
       "stage": "build_green",
-      "translation_status": "generated",
+      "translation_status": "translated",
       "spec_status": "frozen",
-      "proof_status": "partial",
+      "proof_status": "complete",
       "source_language": "solidity",
-      "upstream_repo": "https://github.com/unlink-xyz/monorepo",
-      "upstream_commit": "4bc46c1fffbc0e146dccfff5b9fe00167121b27b",
-      "original_contract_path": "protocol/contracts/src/UnlinkPool.sol",
-      "generated_artifact_path": "artifacts/yul/UnlinkPool.yul",
-      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "original_contract_path": "src/daoCollateral/DaoCollateral.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
       "selected_functions": [
-        "initialize",
-        "deposit",
-        "transfer",
-        "withdraw",
-        "emergencyWithdraw",
-        "addRelayer",
-        "removeRelayer",
-        "setVerifierRouter"
+        "swap",
+        "redeem",
+        "_calculateFee",
+        "_burnStableTokenAndTransferCollateral",
+        "_getTokenAmountForAmountInUSD"
       ],
-      "lean_target": "Benchmark.Cases.UnlinkXyz.Pool.Compile",
+      "lean_target": "Benchmark.Cases.Usual.DaoCollateral.Compile",
       "failure_reason": null,
-      "notes": "Build-green case for the generated UnlinkPool artifact and its boundary catalog. The upstream Solidity source remains the audit reference, not the executed artifact claimed by the harness.",
+      "notes": "Usual USD0 DaoCollateral conservation case. It verifies that no direct swap/redeem transition can create unaccounted ghost USD0 supply or debit more ghost collateral than the contract's modeled accounting permits, modulo configured redeem fee, oracle price, CBR coefficient, token decimals, and floor rounding.",
       "buildable": true,
-      "verity_commit": "820553c7f88e2b7605392a6f822ea373d029f3e3",
+      "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
-      "abstraction_level": "generated_bytecode_with_external_boundaries",
+      "abstraction_level": "protocol_slice",
       "abstraction_tags": [
-        "generated_bytecode",
-        "poseidon_boundary",
-        "permit2_boundary",
-        "verifier_router_boundary",
-        "groth16_boundary"
+        "oracle_price_explicit",
+        "swap_quote_computed",
+        "erc20_calls_ghosted",
+        "usd0_supply_effect_ghosted",
+        "direct_swap_redeem_only",
+        "cbr_redeem_branch_modeled",
+        "supported_token_decimals_0_to_18",
+        "intent_paths_elided",
+        "access_control_elided"
       ],
-      "abstraction_notes": "The whole pool is compiled from the Verity contract model. Replacement code is linked only for external cryptographic, Permit2, verifier-router, and verifier-call boundaries; pool storage, entrypoints, events, access control, and state transitions remain in the generated artifact.",
-      "unsupported_feature_codes": [],
-      "spec_target": "Benchmark.Cases.UnlinkXyz.Pool.Specs",
-      "proof_target": "Benchmark.Cases.UnlinkXyz.Pool.Proofs"
+      "abstraction_notes": "The benchmark targets DaoCollateral direct swap/redeem conservation. Oracle price and token decimal scale are explicit inputs. The swap quote is computed inside the model as floor(collateralAmount * price / tokenUnit), rather than supplied as a free theorem parameter. The token unit is explicitly gated to Solidity's supported `10 ** decimals` values for collateral decimals `0..18`; larger decimal counts are outside this benchmark because Solidity's normalization takes a different division branch. ERC20 transfers and USD0 mint/burn calls are represented by explicitly named ghost ledgers: `ghostTreasuryCollateral` and `ghostUsd0Supply`. This keeps the proof scoped to DaoCollateral accounting rather than USD0 or ERC20 token correctness. The direct swap path credits exactly the RWA amount to the ghost collateral ledger and mints exactly the computed oracle USD quote in the ghost supply ledger. Successful-call hypotheses expose Solidity checked-arithmetic boundaries, nonzero computed quote, uint128 swap amount bound, supported token unit, ghost collateral sufficiency, and configured redeem fee / CBR coefficient bounds. The redeem path burns the user amount in the ghost supply ledger, remints only the non-CBR fee there, and debits the exact ghost collateral amount computed from net burned USD0, oracle price, token decimals, CBR flag, and floor rounding. SwapperEngine, intent matching, permits, role checks, pause gates, events, and registry lookups are elided because they do not alter this conservation equation.",
+      "unsupported_feature_codes": [
+        "external_erc20_calls_ghosted",
+        "oracle_reads_parameterized",
+        "supported_token_unit_preconditions",
+        "checked_uint256_overflow_preconditions",
+        "successful_call_preconditions"
+      ],
+      "spec_target": "Benchmark.Cases.Usual.DaoCollateral.Specs",
+      "proof_target": "Benchmark.Cases.Usual.DaoCollateral.Proofs"
     },
     {
       "case_id": "wildcat/borrow_liquidity_safety",
@@ -1426,10 +1745,10 @@
       "proof_status": "partial",
       "source_language": "solidity",
       "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts",
-      "upstream_commit": "master",
+      "upstream_commit": "83364738f0d2b1655c60627588e3493099c359f7",
       "original_contract_path": "contracts/token/ERC7984/ERC7984.sol",
       "generated_artifact_path": null,
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "selected_functions": [
         "_update",
         "_transfer",
@@ -1634,7 +1953,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -1682,7 +2001,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -1730,7 +2049,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -1778,7 +2097,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -1826,7 +2145,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -1876,7 +2195,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -1889,7 +2208,7 @@
       "split": "active",
       "family_id": "cork",
       "implementation_id": "phoenix",
-      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol",
+      "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b2262a93f36167355b5311d5f58e6b:contracts/libraries/PoolLib.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "accounting_bound",
@@ -1921,7 +2240,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -1966,7 +2285,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2011,7 +2330,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2056,7 +2375,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2101,7 +2420,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2146,7 +2465,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2191,7 +2510,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2236,7 +2555,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2281,7 +2600,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2326,7 +2645,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2371,7 +2690,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2420,7 +2739,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2469,7 +2788,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2518,7 +2837,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2567,7 +2886,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2616,7 +2935,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2665,7 +2984,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2714,7 +3033,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2759,7 +3078,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2804,7 +3123,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2849,7 +3168,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2894,7 +3213,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2939,7 +3258,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -2984,7 +3303,142 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lagoon/guardrails/exact_compliance",
+      "task_id": "exact_compliance",
+      "case_id": "lagoon/guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/tasks/exact_compliance.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "compliance_boundary",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/ExactCompliance.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the source-shaped branch predicate under successfulSolidityArithmeticScope: lowerRate is not int256.min, currentPps and timePast are nonzero, and the branch-specific variation multiplications do not overflow Solidity 0.8 checked arithmetic.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lagoon/guardrails/negative_variation_bounded",
+      "task_id": "negative_variation_bounded",
+      "case_id": "lagoon/guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/tasks/negative_variation_bounded.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "compliance_boundary",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/NegativeVariationBounded.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the negative-variation branch under the same successful Solidity arithmetic scope as the case manifest.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lagoon/guardrails/positive_variation_bounded",
+      "task_id": "positive_variation_bounded",
+      "case_id": "lagoon/guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/tasks/positive_variation_bounded.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "compliance_boundary",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_positive_bounded",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/PositiveVariationBounded.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the positive-variation bounded branch under the same successful Solidity arithmetic scope as the case manifest.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
       }
     },
     {
@@ -3029,7 +3483,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3074,7 +3528,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3119,7 +3573,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3164,7 +3618,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3209,7 +3663,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3254,7 +3708,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3299,7 +3753,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3344,7 +3798,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3389,7 +3843,457 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller",
+      "task_id": "delta_compose_internal_erc20_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_erc20_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_erc20_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DeltaComposeInternalErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the decoded BaseComposer._deltaComposeInternal transfer command records the outer deltaCompose sender as the ERC20 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller",
+      "task_id": "delta_compose_internal_permit2_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_permit2_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_permit2_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DeltaComposeInternalPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the decoded BaseComposer._deltaComposeInternal permit2 command records the outer deltaCompose sender as the Permit2 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller",
+      "task_id": "direct_erc20_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_erc20_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_erc20_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DirectErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the direct transfer command records the outer deltaCompose sender as the ERC20 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller",
+      "task_id": "direct_permit2_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_permit2_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_permit2_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DirectPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the direct Permit2 transfer command records the outer deltaCompose sender as the Permit2 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller",
+      "task_id": "flash_callback_erc20_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/flash_callback_erc20_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "callback_caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.flash_callback_erc20_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/FlashCallbackErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that an ERC20 transferFrom reached through a modeled flash-loan callback uses the original deltaCompose caller.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller",
+      "task_id": "nested_flash_and_swap_callbacks_keep_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/nested_flash_and_swap_callbacks_keep_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "nested_callback_caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.nested_flash_and_swap_callbacks_keep_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/NestedFlashAndSwapCallbacksKeepOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves one modeled batch containing a direct ERC20 pull, a flash-callback ERC20 pull, and a swap-callback Permit2 pull keeps all sources equal to the outer deltaCompose caller.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller",
+      "task_id": "swap_callback_permit2_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/swap_callback_permit2_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "callback_caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.swap_callback_permit2_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/SwapCallbackPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that a Permit2 transferFrom reached through a modeled swap callback uses the original deltaCompose caller.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller",
+      "task_id": "transfers_erc20_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_erc20_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_erc20_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/TransfersErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the decoded Transfers._transfers transfer command records the outer deltaCompose sender as the ERC20 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller",
+      "task_id": "transfers_permit2_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_permit2_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_permit2_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/TransfersPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the decoded Transfers._transfers permit2 command records the outer deltaCompose sender as the Permit2 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller",
+      "task_id": "v3_callback_direct_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/v3_callback_direct_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "callback_direct_pull_caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.v3_callback_direct_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/V3CallbackDirectTransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the Uniswap V3-style callback shortcut for calldataLength == 0 uses the outer caller as the ERC20 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
       }
     },
     {
@@ -3434,7 +4338,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3479,7 +4383,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3524,7 +4428,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3569,7 +4473,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3614,7 +4518,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3659,7 +4563,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3704,7 +4608,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3749,7 +4653,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3794,7 +4698,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3839,7 +4743,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3884,7 +4788,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3929,7 +4833,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -3974,7 +4878,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4019,7 +4923,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4064,7 +4968,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4109,7 +5013,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4154,7 +5058,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4199,7 +5103,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4244,7 +5148,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4289,7 +5193,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4334,7 +5238,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4379,7 +5283,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4424,7 +5328,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4469,7 +5373,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4514,7 +5418,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4559,7 +5463,289 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation",
+      "task_id": "amount_paid_preserves_fund_conservation",
+      "case_id": "piku/fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_preserves_fund_conservation.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "fund_conservation",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation.amountPaid_preserves_fund_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidPreservesFundConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves conservation for queue payment execution once queued collateral is split between the recipient and protocol treasury.",
+      "unsupported_feature_codes": [
+        "erc20_transfers_abstracted",
+        "protocol_fee_recalculation_abstracted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "piku/fund_conservation/amount_paid_records_distribution",
+      "task_id": "amount_paid_records_distribution",
+      "case_id": "piku/fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_records_distribution.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_effect",
+      "category": "fund_conservation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation.amountPaid_records_distribution",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidRecordsDistribution.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Records the local accounting effect of queue settlement: queued redemption backing is split into user distribution and protocol treasury buckets.",
+      "unsupported_feature_codes": [
+        "erc20_transfers_abstracted",
+        "protocol_fee_recalculation_abstracted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "piku/fund_conservation/sell_order_preserves_fund_conservation",
+      "task_id": "sell_order_preserves_fund_conservation",
+      "case_id": "piku/fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/tasks/sell_order_preserves_fund_conservation.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "fund_conservation",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation._sellOrder_preserves_fund_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderPreservesFundConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves conservation for redemption-order creation under an explicit fee split arithmetic hypothesis. Ghost accounting slots expose event-only fee and distribution effects.",
+      "unsupported_feature_codes": [
+        "event_only_fee_accounting_requires_ghost_slot",
+        "ghost_solvency_precondition"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "piku/fund_conservation/sell_order_records_redemption_buckets",
+      "task_id": "sell_order_records_redemption_buckets",
+      "case_id": "piku/fund_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/piku/fund_conservation/tasks/sell_order_records_redemption_buckets.yaml",
+      "split": "active",
+      "family_id": "piku",
+      "implementation_id": "inverter_oracle_queue",
+      "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_effect",
+      "category": "fund_conservation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation._sellOrder_records_redemption_buckets",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderRecordsRedemptionBuckets.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Records the local accounting effect of redemption-order creation: backing moves from the remaining bucket into queued redemption and project-fee buckets.",
+      "unsupported_feature_codes": [
+        "event_only_fee_accounting_requires_ghost_slot",
+        "ghost_solvency_precondition"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "task_id": "claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "case_id": "polygon/agglayer_bridge",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polygon/agglayer_bridge/tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "split": "active",
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "source_ref": "https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polygon.AgglayerBridge.claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polygon/agglayer_bridge/verity/Contract.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polygon/agglayer_bridge/verity/Specs.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Asset claims are proved to validate the modeled leaf against an accepted global exit root and consume the source-network/leaf-index bitmap nullifier. A private reachability lemma feeds the shared helper-consumption theorem.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "task_id": "claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "case_id": "polygon/agglayer_bridge",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polygon/agglayer_bridge/tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "split": "active",
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "source_ref": "https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polygon/agglayer_bridge/verity/Contract.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polygon/agglayer_bridge/verity/Specs.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Message claims are proved to validate the modeled leaf against an accepted global exit root and consume the source-network/leaf-index bitmap nullifier. A private reachability lemma feeds the shared helper-consumption theorem.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
       }
     },
     {
@@ -4604,7 +5790,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4649,7 +5835,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4694,7 +5880,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4739,7 +5925,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4784,7 +5970,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4829,7 +6015,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4874,7 +6060,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4919,7 +6105,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -4964,7 +6150,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5009,7 +6195,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5054,7 +6240,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5099,7 +6285,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5144,7 +6330,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5189,7 +6375,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5234,7 +6420,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5279,7 +6465,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5324,7 +6510,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5369,7 +6555,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5414,7 +6600,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5462,47 +6648,50 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
-      "task_ref": "unlink_xyz/pool/artifact_builds",
-      "task_id": "artifact_builds",
-      "case_id": "unlink_xyz/pool",
+      "task_ref": "usual/dao_collateral/redeem_conservation",
+      "task_id": "redeem_conservation",
+      "case_id": "usual/dao_collateral",
       "suite": "active",
       "schema_version": 1,
-      "manifest_path": "cases/unlink_xyz/pool/tasks/artifact_builds.yaml",
+      "manifest_path": "cases/usual/dao_collateral/tasks/redeem_conservation.yaml",
       "split": "active",
-      "family_id": "unlink_xyz",
-      "implementation_id": "pool",
-      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
       "task_interface_version": 2,
       "track": "proof-only",
-      "property_class": "generated_artifact_integrity",
-      "category": "build-integrity",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.UnlinkXyz.Pool.artifactBuilds_compile_gate",
-      "proof_family": "functional_correctness",
-      "translation_status": "generated",
+      "property_class": "accounting_conservation",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.redeem_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
       "proof_status": "complete",
       "implementation_files": [
-        "cases/unlink_xyz/pool/verity/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/VerifierRouter.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Compile.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/UnlinkPoolArtifact/UnlinkPoolArtifact.lean"
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
       ],
       "specification_files": [
-        "cases/unlink_xyz/pool/verity/Specs.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Specs.lean"
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
       ],
       "editable_files": [
-        "Benchmark/Generated/UnlinkXyz/Pool/Tasks/ArtifactBuilds.lean"
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemConservation.lean"
       ],
-      "abstraction_level": "generated_bytecode_with_external_boundaries",
-      "abstraction_notes": "This task keeps the generated pool artifact on the benchmark execution path. The replacement Yul is limited to external cryptographic, Permit2, router, and verifier-call boundaries.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Generated.UnlinkXyz.Pool.Tasks.ArtifactBuilds",
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that a successful direct `redeem` decreases ghosted USD0 supply by the user amount net of the explicitly reminted non-CBR fee, and debits treasury ghost collateral by the exact returned amount computed from net burned USD0, oracle price, supported token decimals `0..18`, CBR state, and floor rounding. Successful-call hypotheses expose fee bounds, checked arithmetic, supported token unit, and ghost collateral sufficiency.",
+      "unsupported_feature_codes": [
+        "external_erc20_calls_ghosted",
+        "oracle_reads_parameterized",
+        "supported_token_unit_preconditions",
+        "checked_uint256_overflow_preconditions",
+        "successful_call_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -5514,52 +6703,194 @@
       }
     },
     {
-      "task_ref": "unlink_xyz/pool/formal_audit_ready",
-      "task_id": "formal_audit_ready",
-      "case_id": "unlink_xyz/pool",
+      "task_ref": "usual/dao_collateral/redeem_fee_formula",
+      "task_id": "redeem_fee_formula",
+      "case_id": "usual/dao_collateral",
       "suite": "active",
       "schema_version": 1,
-      "manifest_path": "cases/unlink_xyz/pool/tasks/formal_audit_ready.yaml",
+      "manifest_path": "cases/usual/dao_collateral/tasks/redeem_fee_formula.yaml",
       "split": "active",
-      "family_id": "unlink_xyz",
-      "implementation_id": "pool",
-      "source_ref": "https://github.com/unlink-xyz/monorepo@4bc46c1fffbc0e146dccfff5b9fe00167121b27b:protocol/contracts/src/UnlinkPool.sol",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
       "task_interface_version": 2,
       "track": "proof-only",
-      "property_class": "formal_audit_ap_ic_delivery",
-      "category": "generated-artifact-audit",
-      "difficulty": "hard",
-      "theorem_name": "Benchmark.Cases.UnlinkXyz.Pool.FormalAudit.formal_audit_ready_for_delivery",
-      "proof_family": "protocol_transition_correctness",
-      "translation_status": "generated",
+      "property_class": "arithmetic_rounding",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.redeem_fee_formula",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
       "proof_status": "complete",
       "implementation_files": [
-        "cases/unlink_xyz/pool/verity/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Contract.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/State.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Compile.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/UnlinkPoolArtifact/UnlinkPoolArtifact.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/VerifierRouterArtifact/VerifierRouterArtifact.lean"
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
       ],
       "specification_files": [
-        "cases/unlink_xyz/pool/verity/Specs.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/Specs.lean",
-        "Benchmark/Cases/UnlinkXyz/Pool/FormalAudit.lean"
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
       ],
       "editable_files": [
-        "Benchmark/Generated/UnlinkXyz/Pool/Tasks/FormalAuditReady.lean"
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemFeeFormula.lean"
       ],
-      "abstraction_level": "generated_bytecode_with_external_boundaries",
-      "abstraction_notes": "Delivery gate for the UnlinkPool AP/IC audit. The theorem packages all AP/IC items marked proved-from-concrete, proving them from generated UnlinkPool entrypoint metadata, generated StateStorage helper execution, and generated artifact structure. Items that need cryptographic, token, governance, liveness, privacy, or EVM transaction semantics remain explicit assumptions or residual boundaries rather than arbitrary Step theorems.",
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the fee helper used by redeem matches the configured basis-point fee and the supported-token-decimal normalization path modeled from `_calculateFee`.",
       "unsupported_feature_codes": [
-        "groth16_soundness_boundary",
-        "permit2_token_semantics_boundary",
-        "route_governance_boundary",
-        "chain_liveness_boundary",
-        "evm_transaction_atomicity_boundary",
-        "privacy_game_boundary"
+        "supported_token_unit_preconditions",
+        "checked_uint256_overflow_preconditions",
+        "successful_call_preconditions"
       ],
-      "reference_solution_module": "Benchmark.Cases.UnlinkXyz.Pool.FormalAudit",
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "usual/dao_collateral/redeem_return_formula",
+      "task_id": "redeem_return_formula",
+      "case_id": "usual/dao_collateral",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/usual/dao_collateral/tasks/redeem_return_formula.yaml",
+      "split": "active",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "arithmetic_rounding",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.redeem_return_formula",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemReturnFormula.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the returned collateral value is exactly the modeled formula: floor((stableAmount - fee) * tokenUnit / price), with the CBR coefficient applied by floor multiplication when CBR is active, under successful-call arithmetic, supported token-unit, and configuration-bound hypotheses.",
+      "unsupported_feature_codes": [
+        "oracle_reads_parameterized",
+        "supported_token_unit_preconditions",
+        "checked_uint256_overflow_preconditions",
+        "successful_call_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "usual/dao_collateral/swap_conservation",
+      "task_id": "swap_conservation",
+      "case_id": "usual/dao_collateral",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/usual/dao_collateral/tasks/swap_conservation.yaml",
+      "split": "active",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.swap_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that a successful direct `swap` computes the oracle quote from explicit price and supported token-unit inputs, increases ghosted USD0 supply by that computed quote, and credits the ghost treasury-collateral ledger by the exact RWA amount received, under explicit successful-call assumptions for nonzero computed quote, uint128 amount bound, supported token unit, and checked addition.",
+      "unsupported_feature_codes": [
+        "external_erc20_calls_ghosted",
+        "oracle_reads_parameterized",
+        "supported_token_unit_preconditions",
+        "successful_call_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "usual/dao_collateral/swap_value_conservation",
+      "task_id": "swap_value_conservation",
+      "case_id": "usual/dao_collateral",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/usual/dao_collateral/tasks/swap_value_conservation.yaml",
+      "split": "active",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.swap_value_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapValueConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Strengthens local swap state preservation by removing the free quote parameter from the modeled transition. The theorem requires a supported `10 ** decimals` token unit for collateral decimals `0..18` and successful-call arithmetic hypotheses, then proves the minted USD0 delta equals the quote computed inside the model: floor(collateralAmount * price / tokenUnit).",
+      "unsupported_feature_codes": [
+        "external_erc20_calls_ghosted",
+        "oracle_reads_parameterized",
+        "supported_token_unit_preconditions",
+        "successful_call_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -5612,7 +6943,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5625,7 +6956,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "supply_update",
@@ -5657,7 +6988,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5670,7 +7001,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "silent_failure",
@@ -5702,7 +7033,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5715,7 +7046,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "supply_update",
@@ -5747,7 +7078,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5760,7 +7091,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "overflow_safety",
@@ -5792,7 +7123,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5805,7 +7136,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "storage_write",
@@ -5837,7 +7168,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5850,7 +7181,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "balance_conservation",
@@ -5882,7 +7213,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5895,7 +7226,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "balance_conservation",
@@ -5927,7 +7258,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5940,7 +7271,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "silent_failure",
@@ -5972,7 +7303,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -5985,7 +7316,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "non_leakage",
@@ -6017,7 +7348,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6030,7 +7361,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "supply_invariance",
@@ -6062,7 +7393,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6075,7 +7406,7 @@
       "split": "active",
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "balance_update",
@@ -6107,7 +7438,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     }
   ],
@@ -6154,7 +7485,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6199,7 +7530,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6244,7 +7575,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6289,7 +7620,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6334,7 +7665,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6379,7 +7710,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6424,7 +7755,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     },
     {
@@ -6469,9 +7800,9 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "blocked"
+        "reference_solution": "ready"
       }
     }
   ],
-  "generated_at": "2026-05-22T17:44:22.927002+00:00"
+  "generated_at": "2026-05-27T15:52:31.506038+00:00"
 }

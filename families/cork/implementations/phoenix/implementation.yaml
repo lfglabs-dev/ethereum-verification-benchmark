@@ -6,7 +6,7 @@ display_name: Cork Phoenix
 split: active
 status: translated
 upstream_repo: https://github.com/Cork-Technology/phoenix
-upstream_commit: 40d9b173c4b
+upstream_commit: 40d9b173c4b2262a93f36167355b5311d5f58e6b
 source_language: solidity
 source_artifact_path: contracts/libraries/PoolLib.sol
 case_ids:

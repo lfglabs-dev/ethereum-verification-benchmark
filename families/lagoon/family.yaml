@@ -1,0 +1,13 @@
+manifest_kind: family
+family_id: lagoon
+schema_version: 1
+display_name: Lagoon
+split: active
+status: active
+description: ERC-7540 vault infrastructure with guardrails for vault valuation updates.
+implementation_ids:
+  - v0_6_0
+case_ids:
+  - lagoon/guardrails
+source_languages:
+  - solidity

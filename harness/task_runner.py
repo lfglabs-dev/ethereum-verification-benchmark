@@ -22,7 +22,7 @@ if str(ROOT / "scripts") not in sys.path:
 from manifest_utils import load_manifest_data
 
 RUNNABLE_STAGES = {"build_green", "proof_partial", "proof_complete"}
-RUNNABLE_TRANSLATION_STATUSES = {"generated"}
+RUNNABLE_TRANSLATION_STATUSES = {"generated", "translated"}
 PROOF_READY_STATUSES = {"partial", "complete"}
 PLACEHOLDER_TOKENS = ("sorry", "admit", "axiom")
 

@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: nested_flash_and_swap_callbacks_keep_outer_caller
+case_id: onedelta/caller_address_integrity
+split: active
+family_id: onedelta
+implementation_id: ethereum-composer
+source_ref: https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.OneDelta.CallerAddressIntegrity.nested_flash_and_swap_callbacks_keep_outer_caller
+proof_family: authorization_enablement
+property_class: access_control_identity
+difficulty: medium
+category: nested_callback_caller_address_integrity
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/onedelta/caller_address_integrity/verity/Contract.lean
+  - Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean
+specification_files:
+  - cases/onedelta/caller_address_integrity/verity/Specs.lean
+  - Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean
+editable_files:
+  - Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/NestedFlashAndSwapCallbacksKeepOuterCaller.lean
+reference_solution_module: Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs
+reference_solution_declaration: Benchmark.Cases.OneDelta.CallerAddressIntegrity.nested_flash_and_swap_callbacks_keep_outer_caller
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves one modeled batch containing a direct ERC20 pull, a flash-callback
+  ERC20 pull, and a swap-callback Permit2 pull keeps all sources equal to the
+  outer deltaCompose caller.
+unsupported_feature_codes: []

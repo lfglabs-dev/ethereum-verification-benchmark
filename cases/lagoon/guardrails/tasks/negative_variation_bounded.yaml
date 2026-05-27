@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: negative_variation_bounded
+case_id: lagoon/guardrails
+split: active
+family_id: lagoon
+implementation_id: v0_6_0
+source_ref: https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded
+proof_family: functional_correctness
+property_class: compliance_boundary
+difficulty: easy
+category: arithmetic-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/lagoon/guardrails/verity/Contract.lean
+  - Benchmark/Cases/Lagoon/Guardrails/Contract.lean
+specification_files:
+  - cases/lagoon/guardrails/verity/Specs.lean
+  - Benchmark/Cases/Lagoon/Guardrails/Specs.lean
+editable_files:
+  - Benchmark/Generated/Lagoon/Guardrails/Tasks/NegativeVariationBounded.lean
+reference_solution_module: Benchmark.Cases.Lagoon.Guardrails.Proofs
+reference_solution_declaration: Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded
+abstraction_level: protocol_slice
+abstraction_notes: >
+  The task proves the negative-variation branch under the same successful
+  Solidity arithmetic scope as the case manifest.
+unsupported_feature_codes: []

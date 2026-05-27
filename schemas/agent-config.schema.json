@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://verity-benchmark.local/schemas/agent-config.schema.json",
-  "title": "Default Benchmark Agent Config",
-  "description": "Adapter-backed config for the benchmark's default-agent path. The current adapter contract is OpenAI-compatible chat completions.",
+  "title": "Benchmark Harness Profile",
+  "description": "Metadata for the two supported benchmark harnesses: default Lean-tools and Grok Build.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -32,10 +32,10 @@
     },
     "mode": {
       "description": "Runtime interaction mode for the benchmark harness.",
-      "enum": ["strict", "interactive", "custom"]
+      "enum": ["custom"]
     },
     "track": {
-      "enum": ["reference", "custom"]
+      "enum": ["group/shell", "group/lean_tools"]
     },
     "run_slug": {
       "type": "string",
@@ -43,7 +43,7 @@
     },
     "adapter": {
       "description": "Transport adapter contract used by the benchmark agent path.",
-      "enum": ["openai_compatible", "command"]
+      "enum": ["command"]
     },
     "base_url": {
       "description": "Pinned OpenAI-compatible API base URL, for example https://agent-backend.thomas.md/v1.",
@@ -106,7 +106,7 @@
       "minimum": 1
     },
     "max_tool_calls": {
-      "description": "Maximum number of tool calls allowed during one interactive task run.",
+      "description": "Maximum number of tool calls allowed by harnesses that expose tools.",
       "type": "integer",
       "minimum": 1
     },
@@ -140,6 +140,34 @@
       "description": "HTTP timeout for both model probe and chat-completions requests.",
       "type": "integer",
       "minimum": 1
+    },
+    "secret_env": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "optional_secret_env": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "secret_files": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "default_base_url": {
+      "type": ["string", "null"],
+      "minLength": 1
     }
   }
 }

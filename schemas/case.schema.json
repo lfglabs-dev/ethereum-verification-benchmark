@@ -72,6 +72,9 @@
     "upstream_commit": {
       "type": ["string", "null"]
     },
+    "audit_target_commit": {
+      "type": ["string", "null"]
+    },
     "original_contract_path": {
       "type": "string"
     },

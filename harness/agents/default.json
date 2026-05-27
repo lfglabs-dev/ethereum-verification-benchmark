@@ -1,34 +1,26 @@
 {
   "schema_version": 1,
-  "agent_id": "verity-benchmark-default",
-  "track": "reference",
+  "agent_id": "default",
+  "mode": "custom",
+  "track": "group/lean_tools",
   "run_slug": "default",
-  "adapter": "openai_compatible",
-  "base_url": "https://agent-backend.thomas.md/v1",
-  "base_url_env": null,
-  "model": "builtin/fast",
-  "model_env": null,
+  "adapter": "command",
+  "command": ["python3", "-m", "harness.runners.lean_tools", "run-group"],
+  "base_url": "https://spark-de79.gazella-vector.ts.net/v1",
+  "base_url_env": "DEFAULT_HARNESS_BASE_URL",
+  "default_base_url": "https://spark-de79.gazella-vector.ts.net/v1",
+  "model": "qwen3.5-397b",
+  "model_env": "DEFAULT_HARNESS_MODEL",
   "api_key": null,
-  "api_key_env": "VERITY_BENCHMARK_AGENT_API_KEY",
+  "api_key_env": "DEFAULT_HARNESS_API_KEY",
   "chat_completions_path": "/chat/completions",
   "models_path": "/models",
-  "system_prompt_files": [
-    "harness/PROMPT.md",
-    "harness/POLICY.md",
-    "harness/TOOLS.md",
-    "harness/PROOF_PATTERNS.md"
-  ],
-  "mode": "strict",
+  "system_prompt_files": ["harness/PROMPT.md", "harness/POLICY.md", "harness/TOOLS.md", "harness/PROOF_PATTERNS.md"],
   "temperature": 0.0,
-  "max_completion_tokens": 2000,
-  "max_attempts": 8,
-  "max_tool_calls": 24,
+  "max_completion_tokens": 1,
   "headers": {},
   "header_envs": {},
-  "extra_body": {
-    "thinking": {
-      "type": "disabled"
-    }
-  },
-  "request_timeout_seconds": 120
+  "extra_body": {},
+  "request_timeout_seconds": 60,
+  "optional_secret_env": ["DEFAULT_HARNESS_API_KEY", "GAZELLA_API_KEY", "OPENAI_API_KEY"]
 }
