@@ -11,3 +11,4 @@ import Benchmark.Cases.Cork
 import Benchmark.Cases.Balancer
 import Benchmark.Cases.Usual
 import Benchmark.Cases.Lagoon
+import Benchmark.Cases.OneDelta
