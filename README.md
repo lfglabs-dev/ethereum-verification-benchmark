@@ -112,9 +112,8 @@ python3 -m harness.cli compare --runs results/runs/<default-run> results/runs/<g
 Default harness API configuration:
 
 ```bash
-export DEFAULT_HARNESS_BASE_URL=https://spark-de79.gazella-vector.ts.net/v1
-export DEFAULT_HARNESS_MODEL=qwen3.5-397b
-export DEFAULT_HARNESS_API_KEY=...
+cp .env.example .env
+$EDITOR .env
 ```
 
 Grok Build can use `GROK_CODE_XAI_API_KEY` in CI. For local comparisons against

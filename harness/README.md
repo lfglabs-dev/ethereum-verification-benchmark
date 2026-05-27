@@ -43,6 +43,12 @@ Default harness API env:
 - `DEFAULT_HARNESS_MODEL`
 - `DEFAULT_HARNESS_API_KEY`
 
+Local runtime configuration:
+- Copy `.env.example` to `.env`.
+- Put local provider keys and model settings in `.env`.
+- `.env` is ignored by git and loaded by `harness.cli` before runner startup.
+- Existing process environment variables take precedence over values in `.env`.
+
 Compatibility env still accepted by the default harness:
 - `GAZELLA_BASE_URL`
 - `GAZELLA_MODEL`

@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ "${VERITY_BENCHMARK_DOTENVX_LOADED:-}" != "1" ]]; then
-  exec "$(dirname "$0")/exec_with_dotenvx.sh" "$0" "$@"
-fi
-
 cd "$(dirname "$0")/.."
+source scripts/load_env.sh
 
 python3 -m py_compile harness/*.py harness/runners/*.py scripts/check_group_workspaces.py scripts/check_verifier_policy.py scripts/check_run_artifacts.py
 python3 -m harness.cli list --suite active --unit group >/dev/null

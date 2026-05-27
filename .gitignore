@@ -2,6 +2,9 @@
 .lean/
 build/
 lake-packages/
+.env
+.env.*
+!.env.example
 results/*.json
 results/tasks/*.json
 results/agent_runs/*.json
@@ -10,7 +13,3 @@ results/agent_summaries/**/*.json
 results/comparisons/
 results/runs/
 __pycache__/
-.env.keys
-.env.local
-.env.*
-!.env
