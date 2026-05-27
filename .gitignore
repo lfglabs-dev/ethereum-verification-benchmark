@@ -1,5 +1,6 @@
 .lake/
 .lean/
+.context/
 build/
 lake-packages/
 results/*.json
