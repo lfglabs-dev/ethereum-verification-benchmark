@@ -1,0 +1,62 @@
+manifest_kind: case
+project: usual
+case_id: dao_collateral
+schema_version: 1
+split: active
+family_id: usual
+implementation_id: verified_proxy
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: null
+upstream_commit: null
+original_contract_path: src/daoCollateral/DaoCollateral.sol
+source_ref: https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code
+lean_target: Benchmark.Cases.Usual.DaoCollateral.Compile
+spec_target: Benchmark.Cases.Usual.DaoCollateral.Specs
+proof_target: Benchmark.Cases.Usual.DaoCollateral.Proofs
+selected_functions:
+  - swap
+  - redeem
+  - _calculateFee
+  - _burnStableTokenAndTransferCollateral
+  - _getTokenAmountForAmountInUSD
+source_language: solidity
+verity_version: d71bf23d908a7a952bf041ee5ebe41ba68b54426
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - oracle_quote_explicit
+  - erc20_calls_ghosted
+  - usd0_supply_effect_ghosted
+  - direct_swap_redeem_only
+  - cbr_redeem_branch_modeled
+  - intent_paths_elided
+  - access_control_elided
+abstraction_notes: >
+  The benchmark targets DaoCollateral direct swap/redeem conservation. Oracle
+  quotes and token decimal scale are explicit inputs. ERC20 transfers and USD0
+  mint/burn calls are represented by the treasury collateral balance and a
+  ghosted USD0 supply effect, keeping the proof scoped to DaoCollateral rather
+  than USD0 token correctness. The direct swap path credits exactly the RWA
+  amount and mints exactly the oracle USD quote; a separate theorem ties that
+  quote to the explicit floor(collateralAmount * price / tokenUnit) formula
+  when oracle parameters are supplied. Successful-call hypotheses expose
+  Solidity checked-arithmetic boundaries, nonzero quote, uint128 swap amount
+  bound, treasury collateral sufficiency, and configured redeem fee / CBR
+  coefficient bounds. The redeem path burns the user amount, remints only the
+  non-CBR fee, and debits the exact collateral amount computed from net burned
+  USD0, oracle price, token decimals, CBR flag, and floor rounding. SwapperEngine,
+  intent matching, permits, role checks, pause gates, events, and registry
+  lookups are elided because they do not alter this conservation equation.
+unsupported_feature_codes:
+  - external_erc20_calls_ghosted
+  - oracle_reads_parameterized
+  - checked_uint256_overflow_preconditions
+  - successful_call_preconditions
+notes: >
+  Usual USD0 DaoCollateral conservation case. It verifies that no direct
+  swap/redeem transition can create unaccounted USD0 or debit more collateral
+  than the contract's modeled accounting permits, modulo configured redeem fee,
+  oracle price, CBR coefficient, token decimals, and floor rounding.

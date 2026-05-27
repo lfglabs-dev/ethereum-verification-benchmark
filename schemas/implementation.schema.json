@@ -39,7 +39,7 @@
       "enum": ["active", "backlog"]
     },
     "status": {
-      "enum": ["candidate", "scoped", "translated", "blocked"]
+      "enum": ["candidate", "scoped", "translated", "generated", "blocked"]
     },
     "upstream_repo": {
       "type": ["string", "null"]

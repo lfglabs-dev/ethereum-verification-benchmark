@@ -11,7 +11,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import json
 import re
 import subprocess
 import sys
@@ -19,22 +18,69 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# Match: require verity from git "...url..."@"<sha>"
+# Match both compact and formatted Lake syntax, for example:
+#   require verity from git "https://github.com/lfglabs-dev/verity.git"@"..."
+#   require verity from git
+#     "https://github.com/lfglabs-dev/verity.git" @
+#     "..."
 _PIN_RE = re.compile(
-    r'require\s+verity\s+from\s+git\s+"(?P<url>[^"]+)"@"(?P<sha>[0-9a-f]+)"'
+    r'require\s+verity\s+from\s+git\s+"(?P<url>[^"]+)"\s*@\s*"(?P<sha>[0-9a-f]+)"',
+    re.MULTILINE,
+)
+
+# Match: require verity from "../verity"
+_PATH_DEP_RE = re.compile(
+    r'require\s+verity\s+from\s+"(?P<path>[^"]+)"'
 )
 
 DEFAULT_MAX_COMMITS = 100
 
 
 def extract_pin(lakefile: Path) -> tuple[str, str]:
-    """Return (repo_url, sha) from lakefile.lean."""
+    """Return (repo_url, sha) from lakefile.lean.
+
+    The benchmark is normally pinned to a verity Git SHA. Local development
+    workspaces may use a path dependency instead; in that case, treat the
+    referenced checkout's current HEAD as the effective pin.
+    """
     text = lakefile.read_text(encoding="utf-8")
     m = _PIN_RE.search(text)
-    if not m:
-        print("ERROR: could not find verity git pin in lakefile.lean", file=sys.stderr)
+    if m:
+        return m.group("url"), m.group("sha")
+
+    path_dep = _PATH_DEP_RE.search(text)
+    if path_dep:
+        dep_path = (lakefile.parent / path_dep.group("path")).resolve()
+        sha = git_output(dep_path, ["rev-parse", "HEAD"])
+        url = git_output(dep_path, ["remote", "get-url", "origin"])
+        if sha and url:
+            return url, sha
+        if not sha:
+            print(
+                f"ERROR: verity path dependency is not a git checkout: {dep_path}",
+                file=sys.stderr,
+            )
+        else:
+            print(
+                f"ERROR: could not determine origin URL for verity path dependency: {dep_path}",
+                file=sys.stderr,
+            )
         sys.exit(1)
-    return m.group("url"), m.group("sha")
+
+    print("ERROR: could not find verity git pin or path dependency in lakefile.lean", file=sys.stderr)
+    sys.exit(1)
+
+
+def git_output(cwd: Path, args: list[str]) -> str | None:
+    """Return stripped git output for args in cwd, or None on error."""
+    result = subprocess.run(
+        ["git", "-C", str(cwd), *args],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip() or None
 
 
 def github_nwo_from_url(url: str) -> str:

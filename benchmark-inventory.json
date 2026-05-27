@@ -10,42 +10,44 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 19,
-    "implementation_count": 19,
-    "active_case_count": 16,
+    "family_count": 22,
+    "implementation_count": 23,
+    "active_case_count": 20,
     "backlog_case_count": 3,
-    "active_task_count": 101,
+    "active_task_count": 121,
     "backlog_task_count": 8,
-    "buildable_case_count": 18,
-    "runnable_task_count": 109,
+    "buildable_case_count": 22,
+    "runnable_task_count": 129,
     "case_stage_counts": {
-      "build_green": 16,
+      "build_green": 19,
       "candidate": 1,
-      "proof_complete": 2
+      "proof_complete": 3
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 18
+      "translated": 22
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 11,
+      "complete": 15,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 109
+      "proof-only": 129
     },
     "task_property_class_counts": {
+      "access_control_identity": 10,
       "accounting_bound": 16,
-      "accounting_conservation": 12,
+      "accounting_conservation": 15,
       "accounting_effect": 2,
       "accounting_invariant_break": 1,
       "accounting_update": 6,
-      "arithmetic_rounding": 1,
-      "authorization_state": 7,
+      "arithmetic_rounding": 3,
+      "authorization_state": 9,
       "balance_conservation": 2,
       "balance_credit_update": 2,
       "balance_update": 1,
+      "compliance_boundary": 3,
       "exploit_trace": 1,
       "frame_property": 2,
       "guarded_solvency": 7,
@@ -74,15 +76,16 @@
       "weighted_selection": 1
     },
     "task_proof_family_counts": {
-      "authorization_enablement": 14,
-      "functional_correctness": 27,
+      "authorization_enablement": 24,
+      "functional_correctness": 32,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 9,
-      "state_preservation_local_effects": 37
+      "state_preservation_local_effects": 42
     },
     "family_split_counts": {
-      "active": 16,
-      "backlog": 3
+      "active": 19,
+      "backlog": 2,
+      "mixed": 1
     }
   },
   "families": [
@@ -206,6 +209,23 @@
       "manifest_path": "families/kleros/family.yaml"
     },
     {
+      "family_id": "lagoon",
+      "display_name": "Lagoon",
+      "split": "active",
+      "status": "active",
+      "description": "ERC-7540 vault infrastructure with guardrails for vault valuation updates.",
+      "implementation_ids": [
+        "v0_6_0"
+      ],
+      "case_ids": [
+        "lagoon/guardrails"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/lagoon/family.yaml"
+    },
+    {
       "family_id": "lido",
       "display_name": "Lido",
       "split": "active",
@@ -238,6 +258,23 @@
         "solidity"
       ],
       "manifest_path": "families/nexus_mutual/family.yaml"
+    },
+    {
+      "family_id": "onedelta",
+      "display_name": "1delta",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for 1delta composer routing and compact-calldata execution invariants. The initial case targets caller-address integrity for user-fund pulls through transfer commands, flash-loan callback continuations, swap-callback continuations, and the V3 direct callback-pull shortcut.",
+      "implementation_ids": [
+        "ethereum-composer"
+      ],
+      "case_ids": [
+        "onedelta/caller_address_integrity"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/onedelta/family.yaml"
     },
     {
       "family_id": "openzeppelin",
@@ -289,6 +326,23 @@
         "solidity"
       ],
       "manifest_path": "families/piku/family.yaml"
+    },
+    {
+      "family_id": "polygon",
+      "display_name": "Polygon / Agglayer",
+      "split": "active",
+      "status": "active",
+      "description": "Polygon Agglayer bridge and interoperability verification cases.",
+      "implementation_ids": [
+        "agglayer_bridge"
+      ],
+      "case_ids": [
+        "polygon/agglayer_bridge"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/polygon/family.yaml"
     },
     {
       "family_id": "reserve",
@@ -361,14 +415,16 @@
     {
       "family_id": "usual",
       "display_name": "Usual",
-      "split": "backlog",
-      "status": "backlog",
-      "description": "Backlog intake for a private upstream that cannot yet be pinned to a public benchmarkable contract artifact.",
+      "split": "mixed",
+      "status": "mixed",
+      "description": "Usual stablecoin/RWA protocol cases focused on collateralized mint and redeem accounting for USD0 and related collateral assets.",
       "implementation_ids": [
-        "private_repo"
+        "private_repo",
+        "verified_proxy"
       ],
       "case_ids": [
-        "usual/placeholder"
+        "usual/placeholder",
+        "usual/dao_collateral"
       ],
       "source_languages": [
         "solidity"
@@ -524,6 +580,22 @@
       "manifest_path": "families/kleros/implementations/kleros_v2/implementation.yaml"
     },
     {
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "display_name": "Lagoon v0.6.0",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/hopperlabsxyz/lagoon-v0",
+      "upstream_commit": "a8e73f5a5276aa4047b901083cbce127d7f7b470",
+      "source_language": "solidity",
+      "source_artifact_path": "src/v0.6.0/libraries/GuardrailsLib.sol",
+      "case_ids": [
+        "lagoon/guardrails"
+      ],
+      "notes": "GuardrailsLib pure compliance decision for v0.6.0 vault valuation guardrails.",
+      "manifest_path": "families/lagoon/implementations/v0_6_0/implementation.yaml"
+    },
+    {
       "family_id": "lido",
       "implementation_id": "core",
       "display_name": "Lido Core (V3 Vaults)",
@@ -554,6 +626,22 @@
       ],
       "notes": "Active implementation entry for the Nexus Mutual smart-contract repository, currently benchmarking the RAMM price-band slice.",
       "manifest_path": "families/nexus_mutual/implementations/smart_contracts/implementation.yaml"
+    },
+    {
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "display_name": "OneDeltaComposerEthereum",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba",
+      "upstream_commit": "verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "case_ids": [
+        "onedelta/caller_address_integrity"
+      ],
+      "notes": "Ethereum deployment of the 1delta composer. This implementation entry covers the BaseComposer dispatch surface, Ethereum callback inheritance, and transfer command paths used by the caller-address integrity case.",
+      "manifest_path": "families/onedelta/implementations/ethereum-composer/implementation.yaml"
     },
     {
       "family_id": "openzeppelin",
@@ -602,6 +690,22 @@
       ],
       "notes": "Docs-matching Piku workflow implementation: oracle-priced funding manager, manual queue payment processor, and manual oracle price module.",
       "manifest_path": "families/piku/implementations/inverter_oracle_queue/implementation.yaml"
+    },
+    {
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "display_name": "Polygon AgglayerBridge",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/agglayer/agglayer-contracts",
+      "upstream_commit": "110bda5a03e70ee7331bc06407a8e79226d3e520",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/AgglayerBridge.sol",
+      "case_ids": [
+        "polygon/agglayer_bridge"
+      ],
+      "notes": "Verity model of the AgglayerBridge claim path, focused on valid exit-root membership and source-network/leaf-index nullifier consumption.",
+      "manifest_path": "families/polygon/implementations/agglayer_bridge/implementation.yaml"
     },
     {
       "family_id": "reserve",
@@ -684,6 +788,22 @@
       "manifest_path": "families/usual/implementations/private_repo/implementation.yaml"
     },
     {
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "display_name": "Usual USD0 DaoCollateral Verified Proxy",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "source_language": "solidity",
+      "source_artifact_path": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "case_ids": [
+        "usual/dao_collateral"
+      ],
+      "notes": "Source was taken from the verified Etherscan implementation behind the public DaoCollateral proxy at 0xde6e1F680C4816446C8D515989E2358636A38b04.",
+      "manifest_path": "families/usual/implementations/verified_proxy/implementation.yaml"
+    },
+    {
       "family_id": "wildcat",
       "implementation_id": "v2_protocol",
       "display_name": "Wildcat V2 Protocol",
@@ -735,6 +855,7 @@
       "upstream_repo": "https://github.com/alchemix-finance/v3",
       "upstream_commit": "117c95b6ee11a75221d6fbdc79f16ac6acdb96f5",
       "original_contract_path": "src/AlchemistV3.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/alchemix-finance/v3@117c95b6ee11a75221d6fbdc79f16ac6acdb96f5:src/AlchemistV3.sol",
       "selected_functions": [
         "_earmark",
@@ -786,6 +907,7 @@
       "upstream_repo": "https://github.com/balancer/reclamm",
       "upstream_commit": "cff18033d401a61326a2d6c078507084cbdc864b",
       "original_contract_path": "contracts/lib/ReClammMath.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/balancer/reclamm@cff18033d401a61326a2d6c078507084cbdc864b:contracts/lib/ReClammMath.sol",
       "selected_functions": [
         "computeOutGivenIn",
@@ -835,6 +957,7 @@
       "upstream_repo": "https://github.com/Cork-Technology/phoenix",
       "upstream_commit": "40d9b173c4b",
       "original_contract_path": "contracts/libraries/PoolLib.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/Cork-Technology/phoenix@40d9b173c4b:contracts/libraries/PoolLib.sol",
       "selected_functions": [
         "previewUnwindExerciseOther",
@@ -877,6 +1000,7 @@
       "upstream_repo": "https://github.com/OpenZeppelin/damn-vulnerable-defi",
       "upstream_commit": "6797353c7cb5409e3d388e9e8f13954f9bb5f609",
       "original_contract_path": "contracts/side-entrance/SideEntranceLenderPool.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/OpenZeppelin/damn-vulnerable-defi@6797353c7cb5409e3d388e9e8f13954f9bb5f609:contracts/side-entrance/SideEntranceLenderPool.sol",
       "selected_functions": [
         "deposit",
@@ -920,6 +1044,7 @@
       "upstream_repo": "https://github.com/ethereum/deposit_contract",
       "upstream_commit": "691feb18330d3d102b5a4b3d4434fac7571f51b8",
       "original_contract_path": "deposit_contract/contracts/validator_registration.v.py",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/ethereum/deposit_contract@691feb18330d3d102b5a4b3d4434fac7571f51b8:deposit_contract/contracts/validator_registration.v.py",
       "selected_functions": [
         "deposit"
@@ -960,6 +1085,7 @@
       "upstream_repo": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code",
       "upstream_commit": "etherscan-verified-source",
       "original_contract_path": "TokenGateway.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://etherscan.io/address/0xf1d326d806fa5d0d1f3747505397553cd31b191a#code@etherscan-verified-source:TokenGateway.sol",
       "selected_functions": [
         "deposit",
@@ -1010,6 +1136,7 @@
       "upstream_repo": "https://github.com/kleros/kleros-v2",
       "upstream_commit": "75125dfa54eee723cac239f20e5746d15786196b",
       "original_contract_path": "contracts/src/libraries/SortitionTrees.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/kleros/kleros-v2@75125dfa54eee723cac239f20e5746d15786196b:contracts/src/libraries/SortitionTrees.sol",
       "selected_functions": [
         "set",
@@ -1035,6 +1162,46 @@
       "proof_target": "Benchmark.Cases.Kleros.SortitionTrees.Proofs"
     },
     {
+      "case_id": "lagoon/guardrails",
+      "project": "lagoon",
+      "case_name": "guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/case.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/hopperlabsxyz/lagoon-v0",
+      "upstream_commit": "a8e73f5a5276aa4047b901083cbce127d7f7b470",
+      "original_contract_path": "src/v0.6.0/libraries/GuardrailsLib.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "selected_functions": [
+        "isCompliant"
+      ],
+      "lean_target": "Benchmark.Cases.Lagoon.Guardrails.Compile",
+      "failure_reason": null,
+      "notes": "Proves that Lagoon guardrail compliance accepts exactly the annualized PPS variations admitted by the configured 1e18-scaled upper and signed lower bounds under the encoded successfulSolidityArithmeticScope.",
+      "buildable": true,
+      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "pure_function_slice",
+        "successful_solidity_arithmetic",
+        "signed_guardrail_bounds"
+      ],
+      "abstraction_notes": "This benchmark models the pure arithmetic decision in GuardrailsLib.isCompliant for successful Solidity executions. Storage, events, activation status, updateGuardrails state mutation, and role checks are out of scope. The updateGuardrails int256-min rejection is captured as lowerRateNotMin. The successfulSolidityArithmeticScope predicate also requires nonzero divisors and branch-specific multiplication safety for Solidity 0.8 checked arithmetic.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Lagoon.Guardrails.Specs",
+      "proof_target": "Benchmark.Cases.Lagoon.Guardrails.Proofs"
+    },
+    {
       "case_id": "lido/vaulthub_locked",
       "project": "lido",
       "case_name": "vaulthub_locked",
@@ -1052,6 +1219,7 @@
       "upstream_repo": "https://github.com/lidofinance/core",
       "upstream_commit": "96738395ca3bffd6513700a45d4c9389662c5835",
       "original_contract_path": "contracts/0.8.25/vaults/VaultHub.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/lidofinance/core@96738395ca3bffd6513700a45d4c9389662c5835:contracts/0.8.25/vaults/VaultHub.sol",
       "selected_functions": [
         "_locked",
@@ -1094,6 +1262,7 @@
       "upstream_repo": "https://github.com/NexusMutual/smart-contracts",
       "upstream_commit": "ad212043a78953a2cd98cd02b06c8e3e354c6023",
       "original_contract_path": "contracts/modules/capital/Ramm.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/NexusMutual/smart-contracts@ad212043a78953a2cd98cd02b06c8e3e354c6023:contracts/modules/capital/Ramm.sol",
       "selected_functions": [
         "calculateNxm",
@@ -1120,6 +1289,55 @@
       "proof_target": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs"
     },
     {
+      "case_id": "onedelta/caller_address_integrity",
+      "project": "onedelta",
+      "case_name": "caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/case.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "draft",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba",
+      "upstream_commit": "verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba",
+      "original_contract_path": "contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "selected_functions": [
+        "deltaCompose",
+        "_deltaComposeInternal",
+        "_transfers",
+        "_transferFrom",
+        "_permit2TransferFrom",
+        "flashLoanCallback",
+        "swapCallback",
+        "clSwapCallback"
+      ],
+      "lean_target": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Compile",
+      "failure_reason": null,
+      "notes": "This is a caller-identity benchmark, not an accounting benchmark. It proves that every modeled ERC20 and Permit2 fund-pull path uses the outer deltaCompose caller rather than an intermediate callback contract, the composer itself, or an embedded calldata address. The scope is transfer-command pulls plus the V3 callback direct-pull shortcut, not every transferFrom in the full composer source tree.",
+      "buildable": true,
+      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "packed_calldata_decoded_commands",
+        "external_call_arguments_as_event_log",
+        "callback_authentication_as_precondition",
+        "transfer_commands_only",
+        "occurrence_flags_for_modeled_pulls"
+      ],
+      "abstraction_notes": "The benchmark targets caller-address integrity for user-fund pulls in OneDeltaComposerEthereum. The model preserves the key function boundaries: deltaCompose captures msg.sender, BaseComposer-style dispatch passes an explicit callerAddress, transfer command ids select ERC20 or Permit2 transferFrom, and flash-loan and swap callbacks continue dispatch with the same callerAddress. It also covers the V3 callback calldataLength == 0 shortcut that directly pays a pool with ERC20 transferFrom(callerAddress, ...). Packed calldata offsets are abstracted into decoded command ids. External token calls are represented by event-log slots recording the from argument.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Specs",
+      "proof_target": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs"
+    },
+    {
       "case_id": "paladin_votes/stream_recovery_claim_usdc",
       "project": "paladin_votes",
       "case_name": "stream_recovery_claim_usdc",
@@ -1137,6 +1355,7 @@
       "upstream_repo": "https://github.com/Figu3/sonic-earn-recovery-system",
       "upstream_commit": "699cbbc79def374cab9739e451acbbf866293d12",
       "original_contract_path": "src/StreamRecoveryClaim.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/Figu3/sonic-earn-recovery-system@699cbbc79def374cab9739e451acbbf866293d12:src/StreamRecoveryClaim.sol",
       "selected_functions": [
         "claimUsdc",
@@ -1180,6 +1399,7 @@
       "upstream_repo": "https://github.com/InverterNetwork/contracts",
       "upstream_commit": "8b7bc438344d646bab05b751c8eb4a7f0c8ca588",
       "original_contract_path": "src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/InverterNetwork/contracts@8b7bc438344d646bab05b751c8eb4a7f0c8ca588:src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol",
       "selected_functions": [
         "_sellOrder",
@@ -1217,6 +1437,57 @@
       "proof_target": "Benchmark.Cases.Piku.FundConservation.Proofs"
     },
     {
+      "case_id": "polygon/agglayer_bridge",
+      "project": "polygon",
+      "case_name": "agglayer_bridge",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polygon/agglayer_bridge/case.yaml",
+      "split": "active",
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/agglayer/agglayer-contracts",
+      "upstream_commit": "110bda5a03e70ee7331bc06407a8e79226d3e520",
+      "original_contract_path": "contracts/AgglayerBridge.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol",
+      "selected_functions": [
+        "claimAsset",
+        "claimMessage",
+        "_verifyLeafAndSetNullifier",
+        "_verifyLeaf",
+        "_setAndCheckClaimed",
+        "isClaimed",
+        "_validateAndDecodeGlobalIndex",
+        "_bitmapPositions",
+        "_addLeafBridge",
+        "_updateGlobalExitRoot"
+      ],
+      "lean_target": "Benchmark.Cases.Polygon.AgglayerBridge.Compile",
+      "failure_reason": null,
+      "notes": "The public claim theorems show successful claims validate the leaf and consume the source-network/leaf-index bitmap entry. A private reachability lemma feeds the shared helper theorem that proves successful nullifier-helper execution flips the expected bitmap bit.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "merkle_proof_summary",
+        "nullifier_bitmap",
+        "global_exit_root_ghost",
+        "metadata_hash_parameter",
+        "post_nullifier_effects_elided"
+      ],
+      "abstraction_notes": "The benchmark models the claim validation and nullifier path of AgglayerBridge. Dynamic metadata bytes are represented by a precomputed metadata hash, Merkle proof calculation is summarized by a deterministic root combiner, and token or message side effects after nullifier consumption are elided.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Polygon.AgglayerBridge.Specs",
+      "proof_target": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs"
+    },
+    {
       "case_id": "reserve/auction_price_band",
       "project": "reserve",
       "case_name": "auction_price_band",
@@ -1234,6 +1505,7 @@
       "upstream_repo": "https://github.com/reserve-protocol/dtfs",
       "upstream_commit": "14f75d18856d587adfaff24e77e5b20dda7c7267",
       "original_contract_path": "contracts/utils/RebalancingLib.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/reserve-protocol/dtfs@14f75d18856d587adfaff24e77e5b20dda7c7267:contracts/utils/RebalancingLib.sol",
       "selected_functions": [
         "_price"
@@ -1274,6 +1546,7 @@
       "upstream_repo": "https://github.com/safe-global/safe-smart-account",
       "upstream_commit": "a2e19c6aa42a45ceec68057f3fa387f169c5b321",
       "original_contract_path": "contracts/base/OwnerManager.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/safe-global/safe-smart-account@a2e19c6aa42a45ceec68057f3fa387f169c5b321:contracts/base/OwnerManager.sol",
       "selected_functions": [
         "addOwnerWithThreshold",
@@ -1315,6 +1588,7 @@
       "upstream_repo": "https://github.com/term-structure/termmax-contract-v2",
       "upstream_commit": "64bd47b98e064c7fb91ab4a59b70520e0ec285d5",
       "original_contract_path": "contracts/v2/TermMaxOrderV2.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/term-structure/termmax-contract-v2@64bd47b98e064c7fb91ab4a59b70520e0ec285d5:contracts/v2/TermMaxOrderV2.sol",
       "selected_functions": [
         "swapExactTokenToToken",
@@ -1356,6 +1630,59 @@
       "proof_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs"
     },
     {
+      "case_id": "usual/dao_collateral",
+      "project": "usual",
+      "case_name": "dao_collateral",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/usual/dao_collateral/case.yaml",
+      "split": "active",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "original_contract_path": "src/daoCollateral/DaoCollateral.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "selected_functions": [
+        "swap",
+        "redeem",
+        "_calculateFee",
+        "_burnStableTokenAndTransferCollateral",
+        "_getTokenAmountForAmountInUSD"
+      ],
+      "lean_target": "Benchmark.Cases.Usual.DaoCollateral.Compile",
+      "failure_reason": null,
+      "notes": "Usual USD0 DaoCollateral conservation case. It verifies that no direct swap/redeem transition can create unaccounted USD0 or debit more collateral than the contract's modeled accounting permits, modulo configured redeem fee, oracle price, CBR coefficient, token decimals, and floor rounding.",
+      "buildable": true,
+      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "oracle_quote_explicit",
+        "erc20_calls_ghosted",
+        "usd0_supply_effect_ghosted",
+        "direct_swap_redeem_only",
+        "cbr_redeem_branch_modeled",
+        "intent_paths_elided",
+        "access_control_elided"
+      ],
+      "abstraction_notes": "The benchmark targets DaoCollateral direct swap/redeem conservation. Oracle quotes and token decimal scale are explicit inputs. ERC20 transfers and USD0 mint/burn calls are represented by the treasury collateral balance and a ghosted USD0 supply effect, keeping the proof scoped to DaoCollateral rather than USD0 token correctness. The direct swap path credits exactly the RWA amount and mints exactly the oracle USD quote; a separate theorem ties that quote to the explicit floor(collateralAmount * price / tokenUnit) formula when oracle parameters are supplied. Successful-call hypotheses expose Solidity checked-arithmetic boundaries, nonzero quote, uint128 swap amount bound, treasury collateral sufficiency, and configured redeem fee / CBR coefficient bounds. The redeem path burns the user amount, remints only the non-CBR fee, and debits the exact collateral amount computed from net burned USD0, oracle price, token decimals, CBR flag, and floor rounding. SwapperEngine, intent matching, permits, role checks, pause gates, events, and registry lookups are elided because they do not alter this conservation equation.",
+      "unsupported_feature_codes": [
+        "external_erc20_calls_ghosted",
+        "oracle_reads_parameterized",
+        "checked_uint256_overflow_preconditions",
+        "successful_call_preconditions"
+      ],
+      "spec_target": "Benchmark.Cases.Usual.DaoCollateral.Specs",
+      "proof_target": "Benchmark.Cases.Usual.DaoCollateral.Proofs"
+    },
+    {
       "case_id": "wildcat/borrow_liquidity_safety",
       "project": "wildcat",
       "case_name": "borrow_liquidity_safety",
@@ -1373,6 +1700,7 @@
       "upstream_repo": "https://github.com/wildcat-finance/v2-protocol",
       "upstream_commit": "a70f297fbd1b1ab597e0e9a3458a2d13a34b4657",
       "original_contract_path": "src/market/WildcatMarket.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/wildcat-finance/v2-protocol@a70f297fbd1b1ab597e0e9a3458a2d13a34b4657:src/market/WildcatMarket.sol",
       "selected_functions": [
         "borrow",
@@ -1416,6 +1744,7 @@
       "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts",
       "upstream_commit": "master",
       "original_contract_path": "contracts/token/ERC7984/ERC7984.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@master:contracts/token/ERC7984/ERC7984.sol",
       "selected_functions": [
         "_update",
@@ -1468,6 +1797,7 @@
       "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-contracts",
       "upstream_commit": "45f032d1bcf1a88b7bc90154d7eef76c87bf9d45",
       "original_contract_path": "contracts/token/ERC20/extensions/ERC4626.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
       "selected_functions": [
         "previewDeposit",
@@ -1510,6 +1840,7 @@
       "upstream_repo": "https://github.com/Uniswap/v2-core",
       "upstream_commit": "ee547b17853e71ed4e0101ccfd52e70d5acded58",
       "original_contract_path": "contracts/UniswapV2Pair.sol",
+      "generated_artifact_path": null,
       "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
       "selected_functions": [
         "swap"
@@ -1551,6 +1882,7 @@
       "upstream_repo": null,
       "upstream_commit": null,
       "original_contract_path": "TBD",
+      "generated_artifact_path": null,
       "source_ref": "unresolved:usual/private_repo@unknown:TBD",
       "selected_functions": [],
       "lean_target": null,
@@ -1618,7 +1950,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -1666,7 +1998,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -1714,7 +2046,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -1762,7 +2094,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -1810,7 +2142,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -1860,7 +2192,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -1905,7 +2237,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -1950,7 +2282,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -1995,7 +2327,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2040,7 +2372,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2085,7 +2417,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2130,7 +2462,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2175,7 +2507,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2220,7 +2552,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2265,7 +2597,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2310,7 +2642,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2355,7 +2687,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2404,7 +2736,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2453,7 +2785,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2502,7 +2834,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2551,7 +2883,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2600,7 +2932,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2649,7 +2981,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2698,7 +3030,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2743,7 +3075,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2788,7 +3120,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2833,7 +3165,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2878,7 +3210,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2923,7 +3255,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -2968,7 +3300,142 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "lagoon/guardrails/exact_compliance",
+      "task_id": "exact_compliance",
+      "case_id": "lagoon/guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/tasks/exact_compliance.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "compliance_boundary",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/ExactCompliance.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the source-shaped branch predicate under successfulSolidityArithmeticScope: lowerRate is not int256.min, currentPps and timePast are nonzero, and the branch-specific variation multiplications do not overflow Solidity 0.8 checked arithmetic.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "lagoon/guardrails/negative_variation_bounded",
+      "task_id": "negative_variation_bounded",
+      "case_id": "lagoon/guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/tasks/negative_variation_bounded.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "compliance_boundary",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/NegativeVariationBounded.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the negative-variation branch under the same successful Solidity arithmetic scope as the case manifest.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "lagoon/guardrails/positive_variation_bounded",
+      "task_id": "positive_variation_bounded",
+      "case_id": "lagoon/guardrails",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lagoon/guardrails/tasks/positive_variation_bounded.yaml",
+      "split": "active",
+      "family_id": "lagoon",
+      "implementation_id": "v0_6_0",
+      "source_ref": "https://github.com/hopperlabsxyz/lagoon-v0@a8e73f5a5276aa4047b901083cbce127d7f7b470:src/v0.6.0/libraries/GuardrailsLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "compliance_boundary",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_positive_bounded",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/PositiveVariationBounded.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the positive-variation bounded branch under the same successful Solidity arithmetic scope as the case manifest.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3013,7 +3480,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3058,7 +3525,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3103,7 +3570,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3148,7 +3615,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3193,7 +3660,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3238,7 +3705,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3283,7 +3750,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3328,7 +3795,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3373,7 +3840,457 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller",
+      "task_id": "delta_compose_internal_erc20_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_erc20_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_erc20_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DeltaComposeInternalErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the decoded BaseComposer._deltaComposeInternal transfer command records the outer deltaCompose sender as the ERC20 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller",
+      "task_id": "delta_compose_internal_permit2_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_permit2_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_permit2_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DeltaComposeInternalPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the decoded BaseComposer._deltaComposeInternal permit2 command records the outer deltaCompose sender as the Permit2 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller",
+      "task_id": "direct_erc20_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_erc20_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_erc20_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DirectErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the direct transfer command records the outer deltaCompose sender as the ERC20 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller",
+      "task_id": "direct_permit2_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_permit2_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_permit2_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DirectPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the direct Permit2 transfer command records the outer deltaCompose sender as the Permit2 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller",
+      "task_id": "flash_callback_erc20_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/flash_callback_erc20_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "callback_caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.flash_callback_erc20_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/FlashCallbackErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that an ERC20 transferFrom reached through a modeled flash-loan callback uses the original deltaCompose caller.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller",
+      "task_id": "nested_flash_and_swap_callbacks_keep_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/nested_flash_and_swap_callbacks_keep_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "nested_callback_caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.nested_flash_and_swap_callbacks_keep_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/NestedFlashAndSwapCallbacksKeepOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves one modeled batch containing a direct ERC20 pull, a flash-callback ERC20 pull, and a swap-callback Permit2 pull keeps all sources equal to the outer deltaCompose caller.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller",
+      "task_id": "swap_callback_permit2_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/swap_callback_permit2_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "callback_caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.swap_callback_permit2_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/SwapCallbackPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that a Permit2 transferFrom reached through a modeled swap callback uses the original deltaCompose caller.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller",
+      "task_id": "transfers_erc20_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_erc20_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_erc20_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/TransfersErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the decoded Transfers._transfers transfer command records the outer deltaCompose sender as the ERC20 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller",
+      "task_id": "transfers_permit2_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_permit2_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_permit2_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/TransfersPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the decoded Transfers._transfers permit2 command records the outer deltaCompose sender as the Permit2 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller",
+      "task_id": "v3_callback_direct_transfer_from_uses_outer_caller",
+      "case_id": "onedelta/caller_address_integrity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/v3_callback_direct_transfer_from_uses_outer_caller.yaml",
+      "split": "active",
+      "family_id": "onedelta",
+      "implementation_id": "ethereum-composer",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x97648606fcc22bd96f87345ac83bd6cfcdf0acba@verified-source-0x97648606fcc22bd96f87345ac83bd6cfcdf0acba:contracts/1delta/composer/chains/ethereum/Composer.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_identity",
+      "category": "callback_direct_pull_caller_address_integrity",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.v3_callback_direct_transferFrom_uses_outer_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/V3CallbackDirectTransferFromUsesOuterCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the Uniswap V3-style callback shortcut for calldataLength == 0 uses the outer caller as the ERC20 transferFrom source.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3418,7 +4335,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3463,7 +4380,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3508,7 +4425,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3553,7 +4470,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3598,7 +4515,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3643,7 +4560,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3688,7 +4605,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3733,7 +4650,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3778,7 +4695,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3823,7 +4740,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3868,7 +4785,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3913,7 +4830,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -3958,7 +4875,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4003,7 +4920,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4048,7 +4965,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4093,7 +5010,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4138,7 +5055,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4183,7 +5100,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4228,7 +5145,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4273,7 +5190,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4318,7 +5235,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4363,7 +5280,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4408,7 +5325,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4453,7 +5370,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4498,7 +5415,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4543,7 +5460,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4591,7 +5508,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4639,7 +5556,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4687,7 +5604,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4735,7 +5652,97 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "task_id": "claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "case_id": "polygon/agglayer_bridge",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polygon/agglayer_bridge/tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "split": "active",
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "source_ref": "https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polygon.AgglayerBridge.claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polygon/agglayer_bridge/verity/Contract.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polygon/agglayer_bridge/verity/Specs.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Asset claims are proved to validate the modeled leaf against an accepted global exit root and consume the source-network/leaf-index bitmap nullifier. A private reachability lemma feeds the shared helper-consumption theorem.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "task_id": "claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "case_id": "polygon/agglayer_bridge",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polygon/agglayer_bridge/tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "split": "active",
+      "family_id": "polygon",
+      "implementation_id": "agglayer_bridge",
+      "source_ref": "https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authorization_state",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polygon/agglayer_bridge/verity/Contract.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polygon/agglayer_bridge/verity/Specs.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Message claims are proved to validate the modeled leaf against an accepted global exit root and consume the source-network/leaf-index bitmap nullifier. A private reachability lemma feeds the shared helper-consumption theorem.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4780,7 +5787,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4825,7 +5832,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4870,7 +5877,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4915,7 +5922,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -4960,7 +5967,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5005,7 +6012,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5050,7 +6057,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5095,7 +6102,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5140,7 +6147,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5185,7 +6192,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5230,7 +6237,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5275,7 +6282,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5320,7 +6327,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5365,7 +6372,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5410,7 +6417,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5455,7 +6462,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5500,7 +6507,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5545,7 +6552,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5590,7 +6597,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5638,7 +6645,252 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "usual/dao_collateral/redeem_conservation",
+      "task_id": "redeem_conservation",
+      "case_id": "usual/dao_collateral",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/usual/dao_collateral/tasks/redeem_conservation.yaml",
+      "split": "active",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.redeem_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that a successful direct `redeem` decreases ghosted USD0 supply by the user amount net of the explicitly reminted non-CBR fee, and debits treasury collateral by the exact returned amount computed from net burned USD0, oracle price, token decimals, CBR state, and floor rounding. Successful-call hypotheses expose fee bounds, checked arithmetic, and treasury collateral sufficiency.",
+      "unsupported_feature_codes": [
+        "external_erc20_calls_ghosted",
+        "oracle_reads_parameterized",
+        "checked_uint256_overflow_preconditions",
+        "successful_call_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "usual/dao_collateral/redeem_fee_formula",
+      "task_id": "redeem_fee_formula",
+      "case_id": "usual/dao_collateral",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/usual/dao_collateral/tasks/redeem_fee_formula.yaml",
+      "split": "active",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "arithmetic_rounding",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.redeem_fee_formula",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemFeeFormula.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the fee helper used by redeem matches the configured basis-point fee and the token-decimal normalization path modeled from `_calculateFee`.",
+      "unsupported_feature_codes": [
+        "checked_uint256_overflow_preconditions",
+        "successful_call_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "usual/dao_collateral/redeem_return_formula",
+      "task_id": "redeem_return_formula",
+      "case_id": "usual/dao_collateral",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/usual/dao_collateral/tasks/redeem_return_formula.yaml",
+      "split": "active",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "arithmetic_rounding",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.redeem_return_formula",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemReturnFormula.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the returned collateral value is exactly the modeled formula: floor((stableAmount - fee) * tokenUnit / price), with the CBR coefficient applied by floor multiplication when CBR is active, under successful-call arithmetic and configuration-bound hypotheses.",
+      "unsupported_feature_codes": [
+        "oracle_reads_parameterized",
+        "checked_uint256_overflow_preconditions",
+        "successful_call_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "usual/dao_collateral/swap_conservation",
+      "task_id": "swap_conservation",
+      "case_id": "usual/dao_collateral",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/usual/dao_collateral/tasks/swap_conservation.yaml",
+      "split": "active",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.swap_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that a successful direct `swap` increases ghosted USD0 supply by the oracle quote and credits treasury collateral by the exact RWA amount received, under explicit successful-call assumptions for nonzero quote, uint128 amount bound, and checked addition.",
+      "unsupported_feature_codes": [
+        "external_erc20_calls_ghosted",
+        "oracle_reads_parameterized",
+        "successful_call_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
+      }
+    },
+    {
+      "task_ref": "usual/dao_collateral/swap_value_conservation",
+      "task_id": "swap_value_conservation",
+      "case_id": "usual/dao_collateral",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/usual/dao_collateral/tasks/swap_value_conservation.yaml",
+      "split": "active",
+      "family_id": "usual",
+      "implementation_id": "verified_proxy",
+      "source_ref": "https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.swap_value_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapValueConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Strengthens local swap state preservation with an oracle-parameterized value condition: the theorem requires a nonzero token unit and successful-call arithmetic hypotheses, then proves the minted USD0 delta equals floor(collateralAmount * price / tokenUnit).",
+      "unsupported_feature_codes": [
+        "external_erc20_calls_ghosted",
+        "oracle_reads_parameterized",
+        "successful_call_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5683,7 +6935,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5728,7 +6980,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5773,7 +7025,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5818,7 +7070,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5863,7 +7115,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5908,7 +7160,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5953,7 +7205,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -5998,7 +7250,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6043,7 +7295,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6088,7 +7340,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6133,7 +7385,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6178,7 +7430,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     }
   ],
@@ -6225,7 +7477,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6270,7 +7522,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6315,7 +7567,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6360,7 +7612,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6405,7 +7657,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6450,7 +7702,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6495,7 +7747,7 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     },
     {
@@ -6540,9 +7792,9 @@
       "readiness": {
         "prompt_context": "ready",
         "editable_proof": "ready",
-        "reference_solution": "ready"
+        "reference_solution": "blocked"
       }
     }
   ],
-  "generated_at": "2026-05-25T17:58:10.900470+00:00"
+  "generated_at": "2026-05-27T14:16:42.475702+00:00"
 }

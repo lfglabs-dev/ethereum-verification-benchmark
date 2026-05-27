@@ -22,6 +22,7 @@ if str(ROOT / "scripts") not in sys.path:
 from manifest_utils import load_manifest_data
 
 RUNNABLE_STAGES = {"build_green", "proof_partial", "proof_complete"}
+RUNNABLE_TRANSLATION_STATUSES = {"generated"}
 PROOF_READY_STATUSES = {"partial", "complete"}
 PLACEHOLDER_TOKENS = ("sorry", "admit", "axiom")
 
@@ -57,7 +58,7 @@ def lean_module_path(module_name: str) -> Path:
 def editable_ready(task: dict[str, Any]) -> bool:
     return (
         task["stage"] in RUNNABLE_STAGES
-        and task["translation_status"] == "translated"
+        and task["translation_status"] in RUNNABLE_TRANSLATION_STATUSES
         and task["proof_status"] in PROOF_READY_STATUSES
         and len(task["editable_files"]) == 1
         and bool(task["theorem_name"])
@@ -68,7 +69,7 @@ def reference_solution_ready(task: dict[str, Any]) -> bool:
     reference = task["reference_solution"]
     return (
         task["stage"] in RUNNABLE_STAGES
-        and task["translation_status"] == "translated"
+        and task["translation_status"] in RUNNABLE_TRANSLATION_STATUSES
         and task["proof_status"] in PROOF_READY_STATUSES
         and bool(reference["module"] and reference["declaration"])
         and lean_module_path(reference["module"]).is_file()
@@ -99,7 +100,7 @@ def resolve_task_manifest(task_ref: str) -> Path:
 def task_is_runnable(task: dict[str, Any]) -> bool:
     return (
         task["stage"] in RUNNABLE_STAGES
-        and task["translation_status"] == "translated"
+        and task["translation_status"] in RUNNABLE_TRANSLATION_STATUSES
         and task["proof_status"] in PROOF_READY_STATUSES
     )
 

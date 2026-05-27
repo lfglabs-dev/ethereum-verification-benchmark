@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: usual
+implementation_id: verified_proxy
+display_name: Usual USD0 DaoCollateral Verified Proxy
+split: active
+status: translated
+upstream_repo: null
+upstream_commit: null
+source_language: solidity
+source_artifact_path: https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code
+case_ids:
+  - usual/dao_collateral
+notes: >
+  Source was taken from the verified Etherscan implementation behind the public
+  DaoCollateral proxy at 0xde6e1F680C4816446C8D515989E2358636A38b04.

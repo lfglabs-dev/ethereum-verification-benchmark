@@ -167,6 +167,14 @@ def main() -> int:
                 implementation_case_refs[(family_id, implementation_id)] = {
                     case_id for case_id in case_ids if isinstance(case_id, str)
                 }
+        if data.get("status") == "generated":
+            artifact_path = resolve_repo_file(data.get("source_artifact_path"))
+            if artifact_path is None:
+                errors.append(f"{rel}: generated source_artifact_path must resolve inside the repository")
+            elif not artifact_path.is_file():
+                errors.append(f"{rel}: generated source_artifact_path must exist: {data.get('source_artifact_path')}")
+            elif artifact_path.suffix == ".sol":
+                errors.append(f"{rel}: generated source_artifact_path must not point at a Solidity oracle artifact")
 
     for path in case_manifests:
         data = load_manifest(path)
@@ -193,16 +201,43 @@ def main() -> int:
                 errors.append(f"{rel}: family_id must match project for current layout")
         source_ref = data.get("source_ref")
         expected_ref = expected_source_ref(data)
+        audit_target_commit = data.get("audit_target_commit")
         if not isinstance(source_ref, str) or not source_ref:
             errors.append(f"{rel}: source_ref must be a non-empty string")
         elif expected_ref is not None and source_ref != expected_ref:
             errors.append(f"{rel}: source_ref must match pinned upstream source {expected_ref!r}")
+        if audit_target_commit is not None:
+            upstream_commit = data.get("upstream_commit")
+            if not isinstance(audit_target_commit, str) or not audit_target_commit:
+                errors.append(f"{rel}: audit_target_commit must be a non-empty string when present")
+            elif upstream_commit != audit_target_commit:
+                errors.append(
+                    f"{rel}: upstream_commit must match audit_target_commit {audit_target_commit!r}"
+                )
+            elif isinstance(source_ref, str) and f"@{audit_target_commit}:" not in source_ref:
+                errors.append(f"{rel}: source_ref must include audit_target_commit {audit_target_commit!r}")
         if not isinstance(family_id, str) or family_id not in families:
             errors.append(f"{rel}: unknown family_id {family_id!r}")
         if not isinstance(family_id, str) or not isinstance(implementation_id, str):
             errors.append(f"{rel}: implementation reference is incomplete")
         elif (family_id, implementation_id) not in implementations:
             errors.append(f"{rel}: unknown implementation {(family_id, implementation_id)!r}")
+        elif data.get("translation_status") == "generated" and implementations[(family_id, implementation_id)].get("status") != "generated":
+            errors.append(f"{rel}: generated cases require implementation status 'generated'")
+        if data.get("translation_status") == "generated":
+            generated_artifact = data.get("generated_artifact_path")
+            if not isinstance(generated_artifact, str) or not generated_artifact:
+                errors.append(f"{rel}: generated cases require generated_artifact_path")
+            else:
+                generated_path = resolve_repo_file(generated_artifact)
+                if generated_path is None or not generated_path.is_file():
+                    errors.append(f"{rel}: generated_artifact_path must be an existing repository file")
+                elif isinstance(family_id, str) and isinstance(implementation_id, str) and (family_id, implementation_id) in implementations:
+                    implementation_artifact = implementations[(family_id, implementation_id)].get("source_artifact_path")
+                    if generated_artifact != implementation_artifact:
+                        errors.append(
+                            f"{rel}: generated_artifact_path must match implementation source_artifact_path"
+                        )
 
     for path in task_manifests:
         data = load_manifest(path)
@@ -250,6 +285,8 @@ def main() -> int:
             errors.append(f"{rel}: implementation reference is incomplete")
         elif (family_id, implementation_id) not in implementations:
             errors.append(f"{rel}: unknown implementation {(family_id, implementation_id)!r}")
+        elif data.get("translation_status") == "generated" and implementations[(family_id, implementation_id)].get("status") != "generated":
+            errors.append(f"{rel}: generated tasks require implementation status 'generated'")
         interface_version = data.get("task_interface_version")
         if not isinstance(interface_version, int) or interface_version < 1:
             errors.append(f"{rel}: task_interface_version must be an integer >= 1")

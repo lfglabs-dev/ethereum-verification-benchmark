@@ -58,7 +58,7 @@
       "enum": ["candidate", "scoped", "build_green", "proof_partial", "proof_complete"]
     },
     "translation_status": {
-      "enum": ["not_started", "scoped", "translated", "blocked"]
+      "enum": ["not_started", "scoped", "translated", "generated", "blocked"]
     },
     "spec_status": {
       "enum": ["not_started", "draft", "frozen", "blocked"]
@@ -72,8 +72,14 @@
     "upstream_commit": {
       "type": ["string", "null"]
     },
+    "audit_target_commit": {
+      "type": ["string", "null"]
+    },
     "original_contract_path": {
       "type": "string"
+    },
+    "generated_artifact_path": {
+      "type": ["string", "null"]
     },
     "source_ref": {
       "type": "string"

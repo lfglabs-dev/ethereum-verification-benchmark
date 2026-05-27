@@ -1,0 +1,38 @@
+manifest_kind: task
+schema_version: 1
+task_id: swap_conservation
+case_id: usual/dao_collateral
+split: active
+family_id: usual
+implementation_id: verified_proxy
+source_ref: https://etherscan.io/address/0x0eec861d49f15f585d6bb4301fc4f89bce22af4e#code
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Usual.DaoCollateral.swap_conservation
+proof_family: state_preservation_local_effects
+property_class: accounting_conservation
+difficulty: easy
+category: stablecoin_collateral_accounting
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/usual/dao_collateral/verity/Contract.lean
+  - Benchmark/Cases/Usual/DaoCollateral/Contract.lean
+specification_files:
+  - cases/usual/dao_collateral/verity/Specs.lean
+  - Benchmark/Cases/Usual/DaoCollateral/Specs.lean
+editable_files:
+  - Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapConservation.lean
+reference_solution_module: Benchmark.Cases.Usual.DaoCollateral.Proofs
+reference_solution_declaration: Benchmark.Cases.Usual.DaoCollateral.swap_conservation
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves that a successful direct `swap` increases ghosted USD0 supply by the
+  oracle quote and credits treasury collateral by the exact RWA amount received,
+  under explicit successful-call assumptions for nonzero quote, uint128 amount
+  bound, and checked addition.
+unsupported_feature_codes:
+  - external_erc20_calls_ghosted
+  - oracle_reads_parameterized
+  - successful_call_preconditions

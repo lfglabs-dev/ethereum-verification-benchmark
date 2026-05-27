@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: claimMessage_valid_leaf_and_consumes_unique_nullifier
+case_id: polygon/agglayer_bridge
+split: active
+family_id: polygon
+implementation_id: agglayer_bridge
+source_ref: https://github.com/agglayer/agglayer-contracts@110bda5a03e70ee7331bc06407a8e79226d3e520:contracts/AgglayerBridge.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier
+proof_family: state_preservation_local_effects
+property_class: authorization_state
+difficulty: medium
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/polygon/agglayer_bridge/verity/Contract.lean
+  - Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean
+specification_files:
+  - cases/polygon/agglayer_bridge/verity/Specs.lean
+  - Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean
+editable_files:
+  - Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.lean
+reference_solution_module: Benchmark.Cases.Polygon.AgglayerBridge.Proofs
+reference_solution_declaration: Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Message claims are proved to validate the modeled leaf against an accepted
+  global exit root and consume the source-network/leaf-index bitmap nullifier. A
+  private reachability lemma feeds the shared helper-consumption theorem.
+unsupported_feature_codes: []

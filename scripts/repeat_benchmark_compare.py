@@ -3,7 +3,7 @@
 
 Usage:
     python3 scripts/repeat_benchmark_compare.py run \
-        --profiles openrouter-gemini-3.1-flash-lite-preview combined-lean-tools \
+        --profiles interactive-gpt interactive-opus \
         --tasks ethereum/deposit_contract_minimal/deposit_count \
                kleros/sortition_trees/node_id_bijection \
         --repeats 3

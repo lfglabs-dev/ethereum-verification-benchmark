@@ -283,6 +283,12 @@
     },
     "analysis": {
       "type": "object"
+    },
+    "prebuild_reports": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
     }
   }
 }

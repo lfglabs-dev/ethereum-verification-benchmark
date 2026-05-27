@@ -1,0 +1,17 @@
+manifest_kind: family
+schema_version: 1
+family_id: onedelta
+display_name: 1delta
+split: active
+status: active
+description: >
+  Benchmark family for 1delta composer routing and compact-calldata execution
+  invariants. The initial case targets caller-address integrity for user-fund
+  pulls through transfer commands, flash-loan callback continuations,
+  swap-callback continuations, and the V3 direct callback-pull shortcut.
+implementation_ids:
+  - ethereum-composer
+case_ids:
+  - onedelta/caller_address_integrity
+source_languages:
+  - solidity

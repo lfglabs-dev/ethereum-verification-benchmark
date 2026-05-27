@@ -30,12 +30,13 @@ runs:
         LEAN_TOOLCHAIN_HASH: ${{ hashFiles('lean-toolchain') }}
         LAKEFILE_HASH: ${{ hashFiles('lakefile.lean') }}
         LAKE_MANIFEST_HASH: ${{ hashFiles('lake-manifest.json') }}
+        CACHE_SALT_HASH: ${{ hashFiles('.github/cache-salt') }}
       run: |
-        elan_key="elan-benchmark-${CACHE_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}"
-        packages_key="lake-packages-benchmark-${CACHE_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}-${LAKEFILE_HASH}-${LAKE_MANIFEST_HASH}"
-        packages_main_key="lake-packages-benchmark-${MAIN_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}-${LAKEFILE_HASH}-${LAKE_MANIFEST_HASH}"
-        build_key="lake-build-benchmark-${CACHE_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}-${LAKEFILE_HASH}-${LAKE_MANIFEST_HASH}"
-        build_main_key="lake-build-benchmark-${MAIN_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}-${LAKEFILE_HASH}-${LAKE_MANIFEST_HASH}"
+        elan_key="elan-benchmark-${CACHE_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}-${CACHE_SALT_HASH}"
+        packages_key="lake-packages-benchmark-${CACHE_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}-${LAKEFILE_HASH}-${LAKE_MANIFEST_HASH}-${CACHE_SALT_HASH}"
+        packages_main_key="lake-packages-benchmark-${MAIN_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}-${LAKEFILE_HASH}-${LAKE_MANIFEST_HASH}-${CACHE_SALT_HASH}"
+        build_key="lake-build-benchmark-${CACHE_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}-${LAKEFILE_HASH}-${LAKE_MANIFEST_HASH}-${CACHE_SALT_HASH}"
+        build_main_key="lake-build-benchmark-${MAIN_BUCKET}-${RUNNER_OS_NAME}-${LEAN_TOOLCHAIN_HASH}-${LAKEFILE_HASH}-${LAKE_MANIFEST_HASH}-${CACHE_SALT_HASH}"
         {
           echo "use_sticky=${USE_STICKY}"
           echo "use_build_sticky=${USE_BUILD_STICKY}"

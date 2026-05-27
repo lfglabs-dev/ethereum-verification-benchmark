@@ -24,7 +24,7 @@ ALLOWED_STAGES = {
     "proof_complete",
 }
 BUILDABLE_STAGES = {"build_green", "proof_partial", "proof_complete"}
-RUNNABLE_TRANSLATION_STATUSES = {"translated"}
+RUNNABLE_TRANSLATION_STATUSES = {"generated"}
 RUNNABLE_PROOF_STATUSES = {"partial", "complete"}
 
 
@@ -122,6 +122,7 @@ def load_case_manifest(path: Path, suite: str) -> dict:
         "upstream_repo": data.get("upstream_repo"),
         "upstream_commit": data.get("upstream_commit"),
         "original_contract_path": data.get("original_contract_path"),
+        "generated_artifact_path": normalize_optional_string(data.get("generated_artifact_path")),
         "source_ref": normalize_optional_string(data.get("source_ref")),
         "selected_functions": selected_functions,
         "lean_target": normalize_optional_string(data.get("lean_target")),
@@ -274,7 +275,9 @@ def render_case(entry: dict) -> list[str]:
         joined = ", ".join(f"`{name}`" for name in entry["selected_functions"])
         lines.append(f"- Selected functions: {joined}")
     if entry["original_contract_path"]:
-        lines.append(f"- Source artifact: `{entry['original_contract_path']}`")
+        lines.append(f"- Upstream source artifact: `{entry['original_contract_path']}`")
+    if entry["generated_artifact_path"]:
+        lines.append(f"- Generated execution artifact: `{entry['generated_artifact_path']}`")
     lines.append(f"- Notes: {entry['notes']}")
     return lines
 

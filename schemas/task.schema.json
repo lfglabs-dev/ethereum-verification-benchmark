@@ -85,7 +85,7 @@
       "type": "string"
     },
     "translation_status": {
-      "enum": ["not_started", "scoped", "translated", "blocked"]
+      "enum": ["not_started", "scoped", "translated", "generated", "blocked"]
     },
     "proof_status": {
       "enum": ["not_started", "in_progress", "partial", "complete", "blocked"]
