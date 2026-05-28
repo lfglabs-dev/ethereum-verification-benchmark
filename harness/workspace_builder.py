@@ -40,6 +40,54 @@ def agent_group_to_json(group: Group) -> dict[str, object]:
     return payload
 
 
+def _read_if_present(workspace: Path, rel_path: str, *, limit: int = 6000) -> str:
+    path = workspace / rel_path
+    if not path.is_file():
+        return ""
+    text = path.read_text(encoding="utf-8")
+    if len(text) > limit:
+        return text[:limit] + "\n/- truncated in task summary -/\n"
+    return text
+
+
+def _task_summary_markdown(group: Group, workspace: Path, *, include_group_grindset: bool) -> str:
+    lines = [
+        "# Verity Task Summary",
+        "",
+        f"- group: `{group.group_id}`",
+        f"- suite: `{group.suite}`",
+        f"- tasks: `{len(group.tasks)}`",
+        f"- group-specific Grindset helpers included: `{str(include_group_grindset).lower()}`",
+        "- check command: `./harness/check.sh`",
+        "",
+        "## Policy",
+        "",
+        "- Edit only files listed under editable files.",
+        "- Do not import hidden Proofs modules or Benchmark/GeneratedPreview.",
+        "- Do not use `sorry`, `admit`, or new `axiom` declarations.",
+        "- In fair comparisons, do not rely on benchmark-specific Grindset helpers or task-name-specific proof knowledge.",
+        "",
+    ]
+    for index, task in enumerate(group.tasks, start=1):
+        lines.extend(
+            [
+                f"## Task {index}: `{task.task_ref}`",
+                "",
+                f"- theorem: `{task.theorem_name}`",
+                f"- target module: `{task.target_module}`",
+                f"- editable files: `{', '.join(task.editable_files)}`",
+                f"- implementation files: `{', '.join(task.implementation_files)}`",
+                f"- specification files: `{', '.join(task.specification_files)}`",
+                "",
+            ]
+        )
+        for rel in task.editable_files:
+            content = _read_if_present(workspace, rel)
+            if content:
+                lines.extend(["### Current Editable File", "", f"`{rel}`", "", "```lean", content.rstrip(), "```", ""])
+    return "\n".join(lines).rstrip() + "\n"
+
+
 def _copy_file(rel_path: str, workspace: Path, copied: dict[str, str]) -> None:
     if rel_path.startswith(".env") or "Benchmark/GeneratedPreview" in rel_path:
         raise ValueError(f"refusing to copy forbidden workspace path {rel_path}")
@@ -148,6 +196,11 @@ def build_group_workspace(
     harness_dir.mkdir(parents=True, exist_ok=True)
     (harness_dir / "TASKS.json").write_text(json.dumps(agent_group_to_json(group), indent=2) + "\n", encoding="utf-8")
     copied["harness/TASKS.json"] = sha256_file(harness_dir / "TASKS.json")
+    (harness_dir / "TASK_SUMMARY.md").write_text(
+        _task_summary_markdown(group, workspace, include_group_grindset=include_group_grindset),
+        encoding="utf-8",
+    )
+    copied["harness/TASK_SUMMARY.md"] = sha256_file(harness_dir / "TASK_SUMMARY.md")
     check = "#!/usr/bin/env bash\nset -euo pipefail\nfor module in $(python3 - <<'PY'\nimport json\nfor task in json.load(open('harness/TASKS.json'))['tasks']:\n    print(task['target_module'])\nPY\n); do\n  lake build \"$module\"\ndone\n"
     (harness_dir / "check.sh").write_text(check, encoding="utf-8")
     os.chmod(harness_dir / "check.sh", 0o755)

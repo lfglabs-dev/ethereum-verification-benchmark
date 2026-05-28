@@ -10,6 +10,7 @@ import subprocess
 import time
 import urllib.request
 import urllib.error
+from urllib.parse import urlparse
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -38,6 +39,7 @@ LEAN_CHECK_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_LEAN_CHECK_TIME
 REQUEST_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_REQUEST_TIMEOUT_SECONDS", os.environ.get("GAZELLA_REQUEST_TIMEOUT_SECONDS", "180")))
 DEFAULT_CONTEXT_TOKENS = 32768
 DEFAULT_MAX_TOOL_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_TOOL_CALLS", "24"))
+DEFAULT_MAX_RESPONSE_TOKENS = int(os.environ.get("DEFAULT_HARNESS_MAX_RESPONSE_TOKENS", "4096"))
 GRINDSET_IMPORT = "import Benchmark.Grindset"
 
 
@@ -71,7 +73,7 @@ def chat_completion(
     *,
     base_url: str,
     model: str = DEFAULT_MODEL,
-    max_tokens: int = 4096,
+    max_tokens: int = DEFAULT_MAX_RESPONSE_TOKENS,
     tools: list[dict[str, Any]] | None = None,
     tool_choice: object | None = None,
 ) -> dict[str, object]:
@@ -1680,6 +1682,11 @@ def _task_public_view(task: dict[str, object]) -> dict[str, object]:
     }
 
 
+def _local_no_auth_endpoint(base_url: str) -> bool:
+    host = urlparse(base_url).hostname
+    return host in {"127.0.0.1", "localhost", "::1"}
+
+
 def _search_declarations(workspace: Path, query: str, *, limit: int = 20) -> list[dict[str, object]]:
     results: list[dict[str, object]] = []
     pattern = query.lower()
@@ -1693,8 +1700,7 @@ def _search_declarations(workspace: Path, query: str, *, limit: int = 20) -> lis
             continue
         for lineno, line in enumerate(lines, start=1):
             stripped = line.strip()
-            is_decl = bool(re.match(r"(def|theorem|lemma|abbrev|structure|inductive|verity_contract|function)\s+", stripped))
-            if pattern in stripped.lower() or (is_decl and pattern in stripped.lower()):
+            if pattern in stripped.lower():
                 results.append({"path": rel, "line": lineno, "text": stripped[:240]})
                 if len(results) >= limit:
                     return results
@@ -1738,7 +1744,9 @@ def _execute_fair_tool(
     attempts: list[dict[str, object]],
 ) -> dict[str, object]:
     if name == "show_task":
-        return {"ok": True, "task": _task_public_view(task)}
+        summary_path = workspace / "harness" / "TASK_SUMMARY.md"
+        summary = summary_path.read_text(encoding="utf-8") if summary_path.is_file() else ""
+        return {"ok": True, "task": _task_public_view(task), "task_summary": summary[-8000:]}
     if name == "read_file":
         rel = args.get("path")
         if not isinstance(rel, str):
@@ -1883,7 +1891,8 @@ def _attempt_task_fair(
             "role": "system",
             "content": (
                 "You are an agent solving one public Lean benchmark task through tools only. "
-                "Inspect the task and files with show_task, read_file, show_goal, and search_declarations. "
+                "Call show_task first; it returns the shared TASK_SUMMARY.md used by all harnesses. "
+                "Then inspect files with read_file, show_goal, and search_declarations. "
                 "Use check_proof or try_tactics for every proof attempt. Do not use sorry, admit, axiom, hidden imports, "
                 "Benchmark.GeneratedPreview, or reference Proofs modules. Do not assume a hardcoded solution from the task name. "
                 "If native tool calling is unavailable, return JSON like {\"tool\":\"show_task\",\"arguments\":{}}."
@@ -1897,9 +1906,11 @@ def _attempt_task_fair(
             ),
         },
     ]
-    request_limit = max(1, max_attempts)
+    no_tool_response_limit = max(3, min(20, max_tool_calls))
+    request_limit = max_tool_calls + max_attempts + no_tool_response_limit
     tool_calls_executed = 0
-    for request_index in range(1, request_limit + max_tool_calls + 1):
+    no_tool_responses = 0
+    for request_index in range(1, request_limit + 1):
         if _proof_attempt_count(attempts) >= max_attempts:
             break
         if tool_calls_executed >= max_tool_calls:
@@ -1954,6 +1965,18 @@ def _attempt_task_fair(
         if not isinstance(tool_calls, list) or not tool_calls:
             text = _response_text(response)
             if text.strip():
+                no_tool_responses += 1
+                if no_tool_responses >= no_tool_response_limit:
+                    _append_jsonl(
+                        conversation_log_path,
+                        {
+                            "task_ref": task.get("task_ref"),
+                            "request_index": request_index,
+                            "status": "no_tool_response_limit_exceeded",
+                            "no_tool_responses": no_tool_responses,
+                        },
+                    )
+                    break
                 messages.append(
                     {
                         "role": "user",
@@ -2060,11 +2083,17 @@ def _attempt_task_fair(
                 }
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
+    final_status = (
+        "failed_no_tool_calls"
+        if no_tool_responses >= no_tool_response_limit
+        else ("failed_submitted" if attempts else "failed_no_attempt")
+    )
     return {
         "task_ref": task.get("task_ref"),
-        "status": "failed_submitted" if attempts else "failed_no_attempt",
+        "status": final_status,
         "attempts": attempts,
         "tool_calls_executed": tool_calls_executed,
+        "no_tool_responses": no_tool_responses,
         "tool_log": str(tool_log_path),
         "conversation_log": str(conversation_log_path),
     }
@@ -2077,6 +2106,8 @@ def _attempt_task(
     base_url: str,
     max_attempts: int,
     attempts_dir: Path,
+    allow_local_candidates: bool,
+    allow_grindset_import: bool,
 ) -> dict[str, object]:
     editable_files = task.get("editable_files")
     implementation_files = task.get("implementation_files")
@@ -2107,8 +2138,10 @@ def _attempt_task(
             return {"task_ref": task.get("task_ref"), "status": "lean_passed", "attempts": attempts}
         feedback = output
 
-    local_candidates = _local_tactic_candidates(task)
-    local_candidates.extend(_heuristic_tactic_candidates(task, workspace, original, implementation_files))
+    local_candidates = []
+    if allow_local_candidates:
+        local_candidates.extend(_local_tactic_candidates(task))
+        local_candidates.extend(_heuristic_tactic_candidates(task, workspace, original, implementation_files))
 
     for name, tactic_body in local_candidates:
         candidate = _candidate_from_local(original, tactic_body, task.get("theorem_name"))
@@ -2178,7 +2211,8 @@ def _attempt_task(
                     }
                 )
                 break
-            candidate = _candidate_from_comparison_response(original, _response_text(response), task.get("theorem_name"))
+            patcher = _candidate_from_comparison_response if allow_grindset_import else _candidate_from_response
+            candidate = patcher(original, _response_text(response), task.get("theorem_name"))
         except Exception as exc:
             if "exceeds the available context size" not in str(exc):
                 attempts.append({"attempt": attempt_index, "status": "request_failed", "error": str(exc)})
@@ -2207,7 +2241,8 @@ def _attempt_task(
                         }
                     )
                     break
-                candidate = _candidate_from_comparison_response(original, _response_text(response), task.get("theorem_name"))
+                patcher = _candidate_from_comparison_response if allow_grindset_import else _candidate_from_response
+                candidate = patcher(original, _response_text(response), task.get("theorem_name"))
             except Exception as fallback_exc:
                 attempts.append({"attempt": attempt_index, "status": "request_failed", "error": str(fallback_exc)})
                 break
@@ -2261,7 +2296,7 @@ def run_group(
     group = load_group(group_id, suite)
     if task_ref:
         group = filter_group_to_task(group, task_ref)
-    built = build_group_workspace(group, run_id=run_id, include_group_grindset=(mode != "fair"))
+    built = build_group_workspace(group, run_id=run_id, include_group_grindset=(mode == "legacy"))
     assert_workspace_isolated(built.path)
     base_url = os.environ.get("DEFAULT_HARNESS_BASE_URL", os.environ.get("GAZELLA_BASE_URL", DEFAULT_BASE_URL))
     response: dict[str, object]
@@ -2273,6 +2308,15 @@ def run_group(
             "mode": mode,
             "max_attempts": max_attempts,
             "max_tool_calls": max_tool_calls,
+        }
+    elif mode in {"fair", "tuned"} and not _api_key() and not _local_no_auth_endpoint(base_url):
+        response = {
+            "status": "missing_credentials",
+            "base_url": base_url,
+            "model": DEFAULT_MODEL,
+            "mode": mode,
+            "error": f"{mode} mode requires DEFAULT_HARNESS_API_KEY, GAZELLA_API_KEY, OPENAI_API_KEY, or a localhost-compatible no-auth endpoint",
+            "tasks": [],
         }
     else:
         task_results: list[dict[str, object]] = []
@@ -2301,6 +2345,8 @@ def run_group(
                                 base_url=base_url,
                                 max_attempts=max_attempts,
                                 attempts_dir=run_dir / "attempts",
+                                allow_local_candidates=(mode == "legacy"),
+                                allow_grindset_import=(mode == "legacy"),
                             )
                         )
             response = {"status": "completed", "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "tasks": task_results}
@@ -2308,6 +2354,7 @@ def run_group(
             response = {"status": "harness_error", "error": str(exc), "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "tasks": task_results}
 
     (run_dir / "workspace-manifest.json").write_text((built.path / "workspace-manifest.json").read_text(encoding="utf-8"), encoding="utf-8")
+    shutil.copy2(built.path / "harness" / "TASK_SUMMARY.md", run_dir / "TASK_SUMMARY.md")
     (run_dir / "harness-request.json").write_text(
         json.dumps(
             {

@@ -55,23 +55,23 @@ def main() -> int:
 
     group = load_group("lido/vaulthub_locked", "active")
     fair = build_group_workspace(group, run_id="fair-policy", include_group_grindset=False)
-    tuned = build_group_workspace(group, run_id="tuned-policy", include_group_grindset=True)
-    tuned_task = build_group_workspace(
+    legacy = build_group_workspace(group, run_id="legacy-policy", include_group_grindset=True)
+    legacy_task = build_group_workspace(
         filter_group_to_task(group, "lido/vaulthub_locked/ceildiv_sandwich"),
-        run_id="tuned-task-policy",
+        run_id="legacy-task-policy",
         include_group_grindset=True,
     )
     try:
         fair_files = _manifest_files(fair.path)
-        tuned_files = _manifest_files(tuned.path)
-        tuned_task_files = _manifest_files(tuned_task.path)
+        legacy_files = _manifest_files(legacy.path)
+        legacy_task_files = _manifest_files(legacy_task.path)
         leaked = sorted(fair_files & GROUP_SPECIFIC_GRINDSET)
         if leaked:
             errors.append(f"fair workspace includes group-specific Grindset modules: {', '.join(leaked)}")
-        if "Benchmark/Grindset/Arith.lean" not in tuned_files:
-            errors.append("comparison workspace no longer includes expected tuned Grindset helper")
-        if "Benchmark/Grindset/Arith.lean" not in tuned_task_files:
-            errors.append("comparison task workspace no longer includes expected tuned Grindset helper")
+        if "Benchmark/Grindset/Arith.lean" not in legacy_files:
+            errors.append("legacy workspace no longer includes expected Grindset helper")
+        if "Benchmark/Grindset/Arith.lean" not in legacy_task_files:
+            errors.append("legacy task workspace no longer includes expected Grindset helper")
         fair_root = (fair.path / "Benchmark" / "Grindset.lean").read_text(encoding="utf-8")
         if "Benchmark.Grindset.Arith" in fair_root:
             errors.append("fair Grindset umbrella imports a group-specific helper")
@@ -91,8 +91,8 @@ def main() -> int:
             errors.append(".grok/rules.md still allows Benchmark/User helper files")
     finally:
         shutil.rmtree(fair.path, ignore_errors=True)
-        shutil.rmtree(tuned.path, ignore_errors=True)
-        shutil.rmtree(tuned_task.path, ignore_errors=True)
+        shutil.rmtree(legacy.path, ignore_errors=True)
+        shutil.rmtree(legacy_task.path, ignore_errors=True)
 
     temp_workspace = Path(tempfile.mkdtemp(prefix="verity-fair-policy-tools-"))
     original_chat_completion = lean_tools.chat_completion

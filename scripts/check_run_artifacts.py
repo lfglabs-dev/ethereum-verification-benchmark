@@ -64,6 +64,8 @@ def check_run(run_dir: Path) -> list[str]:
     if run.get("run_mode") not in {"task", "group", "suite"}:
         errors.append(f"{run_dir}: invalid run_mode {run.get('run_mode')!r}")
     if run.get("run_mode") in {"task", "group"}:
+        if not (run_dir / "TASK_SUMMARY.md").is_file():
+            errors.append(f"{run_dir}: missing TASK_SUMMARY.md")
         submitted = verifier.get("submitted_files")
         if not isinstance(submitted, list):
             errors.append(f"{run_dir}: verifier missing submitted_files")
@@ -81,9 +83,13 @@ def check_run(run_dir: Path) -> list[str]:
         if "max_tool_calls" not in request:
             errors.append(f"{run_dir}: fair default request missing max_tool_calls")
     if run.get("harness_id") == "grok-build" and run.get("run_mode") in {"task", "group"}:
-        for key in ("max_turns", "auth_mode"):
+        for key in ("max_turns", "auth_mode", "timeout_seconds"):
             if key not in request:
                 errors.append(f"{run_dir}: grok-build request missing {key}")
+        if run.get("harness_status") == "timeout" and not (run_dir / "timeout.json").is_file():
+            errors.append(f"{run_dir}: timeout grok-build run missing timeout.json")
+        if not (run_dir / "workspace.diff").is_file():
+            errors.append(f"{run_dir}: grok-build run missing workspace.diff")
     score = verifier.get("score")
     if not isinstance(score, dict):
         errors.append(f"{run_dir}: verifier missing score")

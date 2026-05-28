@@ -95,13 +95,24 @@ The supported benchmark harnesses are:
 
 Default harness modes:
 
-- `fair`: OpenAI-compatible tool loop with `show_task`, `read_file`, `show_goal`, `check_proof`, `try_tactics`, and `search_declarations`. Fair workspaces exclude group-specific Grindset helpers and fair proof patching does not add broad `Benchmark.Grindset` imports. Native tool calls and JSON-encoded text tool calls are both supported.
-- `tuned`: comparison mode with the previous local candidate and heuristic path enabled before API fallback.
-- `legacy`: compatibility alias for the previous default harness behavior.
+- `fair`: OpenAI-compatible tool loop with `show_task`, `read_file`, `show_goal`, `check_proof`, `try_tactics`, and `search_declarations`. Fair workspaces exclude group-specific Grindset helpers and fair proof patching does not add broad `Benchmark.Grindset` imports. Native tool calls and JSON-encoded text tool calls are both supported. This is the headline comparison mode.
+- `tuned`: generic heuristic/API comparison mode without hardcoded local proof candidates or group-specific Grindset helpers.
+- `legacy`: compatibility mode for the previous local-candidate and group-specific Grindset behavior. Use this only as an upper-bound/debug signal, not as the headline comparison.
+
+Both `default --mode fair` and `grok-build` receive the same generated `harness/TASK_SUMMARY.md` in each run workspace. It lists the target theorem, editable files, implementation/specification files, check command, and policy. Grok also gets the initial `./harness/check.sh` result in that summary so it does not spend turns rediscovering the first Lean failure.
+
+Budget profiles:
+
+- `--budget quick`: CI-sized smoke budget.
+- `--budget normal`: small comparison budget.
+- `--budget deep`: long agent budget for real attempts.
 
 ```bash
 # Run a single task with the default harness
 python3 -m harness.cli run-task lido/vaulthub_locked/locked_funds_solvency --harness default --mode fair
+
+# Run a deeper fair agent attempt
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair --budget deep
 
 # Run a full case with the default harness
 ./scripts/run_default_harness_group.sh lido/vaulthub_locked --mode fair --max-attempts 2
@@ -111,9 +122,10 @@ python3 -m harness.cli run-task lido/vaulthub_locked/locked_funds_solvency --har
 
 # Run Grok Build
 VERITY_ALLOW_HOST_GROK_AUTH=1 ./scripts/run_grok_build_group.sh ethereum/deposit_contract_minimal --max-turns 20
+VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget deep
 ./scripts/run_grok_build_suite.sh --suite active
 
-# Compare fair/tuned/legacy runs
+# Compare fair/tuned/legacy runs. Treat legacy as a debug upper bound.
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode tuned
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode legacy
