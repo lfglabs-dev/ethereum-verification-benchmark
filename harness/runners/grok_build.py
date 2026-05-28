@@ -15,13 +15,13 @@ try:
     from ..manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from ..reports import write_run_report
     from ..verifier import verify_group
-    from ..workspace_builder import assert_workspace_isolated, build_group_workspace
+    from ..workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
     from ..paths import RESULTS_DIR
 except ImportError:
     from manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from reports import write_run_report
     from verifier import verify_group
-    from workspace_builder import assert_workspace_isolated, build_group_workspace
+    from workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
     from paths import RESULTS_DIR
 
 
@@ -40,12 +40,21 @@ def _auth_mode() -> str:
 def _prompt(group: Group) -> str:
     return (
         "You are solving a Verity Lean benchmark group.\n"
-        "Edit only files listed as editable in harness/TASKS.json, plus optional helper files under Benchmark/User/.\n"
+        "Edit only files listed as editable in harness/TASKS.json.\n"
         "Do not import hidden Proofs modules or Benchmark/GeneratedPreview.\n"
         "Do not add broad `import Benchmark.Grindset`; use existing imports or narrow helper modules only.\n"
         "Run ./harness/check.sh before stopping. Stop when Lean verifies or the turn budget is exhausted.\n\n"
-        f"Tasks:\n{json.dumps(group_to_json(group), indent=2)}\n"
+        f"Tasks:\n{json.dumps(agent_group_to_json(group), indent=2)}\n"
     )
+
+
+def _json_or_raw_stdout(stdout: str) -> str:
+    if stdout.strip():
+        try:
+            return json.dumps(json.loads(stdout), indent=2) + "\n"
+        except json.JSONDecodeError:
+            pass
+    return json.dumps({"raw_stdout": stdout}, indent=2) + "\n"
 
 
 def run_group(
@@ -74,7 +83,17 @@ def run_group(
     prompt_file.write_text(_prompt(group), encoding="utf-8")
     shutil.copy2(built.manifest_path, run_dir / "workspace-manifest.json")
     (run_dir / "harness-request.json").write_text(
-        json.dumps({"group": group_to_json(group), "prompt_file": str(prompt_file), "dry_run": dry_run}, indent=2) + "\n",
+        json.dumps(
+            {
+                "group": group_to_json(group),
+                "prompt_file": str(prompt_file),
+                "dry_run": dry_run,
+                "max_turns": max_turns,
+                "auth_mode": _auth_mode(),
+            },
+            indent=2,
+        )
+        + "\n",
         encoding="utf-8",
     )
 
@@ -149,7 +168,7 @@ def run_group(
 
     (run_dir / "stdout.txt").write_text(stdout, encoding="utf-8")
     (run_dir / "stderr.txt").write_text(stderr, encoding="utf-8")
-    (run_dir / "grok-output.json").write_text(stdout if stdout.strip().startswith("{") else json.dumps({"raw_stdout": stdout}, indent=2), encoding="utf-8")
+    (run_dir / "grok-output.json").write_text(_json_or_raw_stdout(stdout), encoding="utf-8")
     (run_dir / "harness-response.json").write_text(json.dumps(harness_response, indent=2) + "\n", encoding="utf-8")
     submitted_dir = run_dir / "submitted"
     submitted_dir.mkdir(exist_ok=True)

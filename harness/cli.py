@@ -28,6 +28,8 @@ def _load_dotenv() -> None:
 
 _load_dotenv()
 
+DEFAULT_MAX_TOOL_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_TOOL_CALLS", "24"))
+
 try:
     from .manifests import group_id_from_task_ref, group_to_json, list_groups
     from .paths import RESULTS_DIR
@@ -50,6 +52,8 @@ def run_group(
     dry_run: bool,
     max_attempts: int,
     max_turns: int,
+    mode: str,
+    max_tool_calls: int,
     task_ref: str | None = None,
 ) -> tuple[int, Path]:
     if harness == "grok-build":
@@ -62,7 +66,16 @@ def run_group(
             task_ref=task_ref,
         )
     if harness == "default":
-        return run_lean_tools_group(group_id, suite=suite, keep_workspace=keep_workspace, dry_run=dry_run, max_attempts=max_attempts, task_ref=task_ref)
+        return run_lean_tools_group(
+            group_id,
+            suite=suite,
+            keep_workspace=keep_workspace,
+            dry_run=dry_run,
+            max_attempts=max_attempts,
+            max_tool_calls=max_tool_calls,
+            mode=mode,
+            task_ref=task_ref,
+        )
     raise SystemExit(f"unknown harness: {harness} (expected: default, grok-build)")
 
 
@@ -91,10 +104,13 @@ def run_suite(
     dry_run: bool,
     max_attempts: int,
     max_turns: int,
+    mode: str,
+    max_tool_calls: int,
 ) -> tuple[int, Path]:
     start = time.time()
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{harness}-suite-{suite}"
+    mode_slug = f"-{mode}" if harness == "default" else ""
+    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{harness}{mode_slug}-suite-{suite}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "verifier").mkdir(exist_ok=True)
@@ -105,7 +121,7 @@ def run_suite(
     total_groups = len(groups)
     for index, group in enumerate(groups, start=1):
         print(f"[{index}/{total_groups}] start {group.group_id}", flush=True)
-        code, child_dir = run_group(group.group_id, harness, suite, keep_workspace, dry_run, max_attempts, max_turns)
+        code, child_dir = run_group(group.group_id, harness, suite, keep_workspace, dry_run, max_attempts, max_turns, mode, max_tool_calls)
         child_run = _load_child_run(child_dir)
         score = child_run.get("verifier", {}).get("score", {})
         passed = score.get("passed_targets", 0)
@@ -120,6 +136,7 @@ def run_suite(
                 "artifact": str(child_dir),
                 "track": child_run.get("track"),
                 "model": child_run.get("model"),
+                "mode": child_run.get("mode"),
                 "harness_status": child_run.get("harness_status"),
                 "score": child_run.get("verifier", {}).get("score", {}),
             }
@@ -157,6 +174,7 @@ def run_suite(
         "harness_id": harness,
         "model": child_models[0] if len(child_models) == 1 else "suite-aggregate",
         "track": child_tracks[0] if len(child_tracks) == 1 else "mixed",
+        "mode": mode if harness == "default" else None,
         "run_mode": "suite",
         "group_id": None,
         "task_ref": None,
@@ -178,6 +196,8 @@ def run_suite(
                 "dry_run": dry_run,
                 "max_attempts": max_attempts,
                 "max_turns": max_turns,
+                "mode": mode if harness == "default" else None,
+                "max_tool_calls": max_tool_calls if harness == "default" else None,
                 "groups": [group_to_json(group) for group in groups],
             },
             indent=2,
@@ -224,6 +244,8 @@ def main() -> int:
     group_parser.add_argument("--dry-run", action="store_true")
     group_parser.add_argument("--max-attempts", type=int, default=1)
     group_parser.add_argument("--max-turns", type=int, default=20)
+    group_parser.add_argument("--mode", choices=["fair", "tuned", "legacy"], default="fair")
+    group_parser.add_argument("--max-tool-calls", type=int, default=DEFAULT_MAX_TOOL_CALLS)
 
     task_parser = sub.add_parser("run-task")
     task_parser.add_argument("task_ref")
@@ -233,6 +255,8 @@ def main() -> int:
     task_parser.add_argument("--dry-run", action="store_true")
     task_parser.add_argument("--max-attempts", type=int, default=1)
     task_parser.add_argument("--max-turns", type=int, default=20)
+    task_parser.add_argument("--mode", choices=["fair", "tuned", "legacy"], default="fair")
+    task_parser.add_argument("--max-tool-calls", type=int, default=DEFAULT_MAX_TOOL_CALLS)
 
     suite_parser = sub.add_parser("run-suite")
     suite_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
@@ -241,6 +265,8 @@ def main() -> int:
     suite_parser.add_argument("--dry-run", action="store_true")
     suite_parser.add_argument("--max-attempts", type=int, default=1)
     suite_parser.add_argument("--max-turns", type=int, default=20)
+    suite_parser.add_argument("--mode", choices=["fair", "tuned", "legacy"], default="fair")
+    suite_parser.add_argument("--max-tool-calls", type=int, default=DEFAULT_MAX_TOOL_CALLS)
 
     compare_parser = sub.add_parser("compare")
     compare_parser.add_argument("--runs", nargs="+", required=True)
@@ -267,6 +293,8 @@ def main() -> int:
             args.dry_run,
             args.max_attempts,
             args.max_turns,
+            args.mode,
+            args.max_tool_calls,
         )
         print(run_dir)
         return code
@@ -280,6 +308,8 @@ def main() -> int:
             args.dry_run,
             args.max_attempts,
             args.max_turns,
+            args.mode,
+            args.max_tool_calls,
             task_ref=args.task_ref,
         )
         print(run_dir)
@@ -292,6 +322,8 @@ def main() -> int:
             dry_run=args.dry_run,
             max_attempts=args.max_attempts,
             max_turns=args.max_turns,
+            mode=args.mode,
+            max_tool_calls=args.max_tool_calls,
         )
         print(run_dir)
         return exit_code

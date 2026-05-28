@@ -12,6 +12,7 @@ import urllib.request
 import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 try:
     from ..manifests import filter_group_to_task, group_to_json, load_group
@@ -28,12 +29,15 @@ except ImportError:
 
 HARNESS_ID = "default"
 RUN_SLUG = "default"
+VALID_MODES = ("fair", "tuned", "legacy")
 DEFAULT_BASE_URL = os.environ.get("DEFAULT_HARNESS_BASE_URL", os.environ.get("GAZELLA_BASE_URL", "https://spark-de79.gazella-vector.ts.net/v1"))
 DEFAULT_MODEL = os.environ.get("DEFAULT_HARNESS_MODEL", os.environ.get("GAZELLA_MODEL", "qwen3.5-397b"))
 MAX_FILE_CHARS = int(os.environ.get("DEFAULT_HARNESS_MAX_FILE_CHARS", os.environ.get("GAZELLA_MAX_FILE_CHARS", "6000")))
 PROMPT_CONTEXT_CHARS = int(os.environ.get("DEFAULT_HARNESS_PROMPT_CONTEXT_CHARS", os.environ.get("GAZELLA_PROMPT_CONTEXT_CHARS", "8000")))
 LEAN_CHECK_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_LEAN_CHECK_TIMEOUT_SECONDS", os.environ.get("GAZELLA_LEAN_CHECK_TIMEOUT_SECONDS", "60")))
+REQUEST_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_REQUEST_TIMEOUT_SECONDS", os.environ.get("GAZELLA_REQUEST_TIMEOUT_SECONDS", "180")))
 DEFAULT_CONTEXT_TOKENS = 32768
+DEFAULT_MAX_TOOL_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_TOOL_CALLS", "24"))
 GRINDSET_IMPORT = "import Benchmark.Grindset"
 
 
@@ -63,27 +67,32 @@ def endpoint_smoke(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MODEL)
 
 
 def chat_completion(
-    messages: list[dict[str, str]],
+    messages: list[dict[str, Any]],
     *,
     base_url: str,
     model: str = DEFAULT_MODEL,
     max_tokens: int = 4096,
+    tools: list[dict[str, Any]] | None = None,
+    tool_choice: object | None = None,
 ) -> dict[str, object]:
-    body = json.dumps(
-        {
-            "model": model,
-            "messages": messages,
-            "max_tokens": max_tokens,
-            "temperature": 0,
-            "n_ctx": int(os.environ.get("GAZELLA_N_CTX", DEFAULT_CONTEXT_TOKENS)),
-        }
-    ).encode("utf-8")
+    payload: dict[str, Any] = {
+        "model": model,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": 0,
+        "n_ctx": int(os.environ.get("GAZELLA_N_CTX", DEFAULT_CONTEXT_TOKENS)),
+    }
+    if tools is not None:
+        payload["tools"] = tools
+    if tool_choice is not None:
+        payload["tool_choice"] = tool_choice
+    body = json.dumps(payload).encode("utf-8")
     request = urllib.request.Request(f"{base_url.rstrip('/')}/chat/completions", data=body, headers={"Content-Type": "application/json"}, method="POST")
     api_key = _api_key()
     if api_key:
         request.add_header("Authorization", f"Bearer {api_key}")
     try:
-        with urllib.request.urlopen(request, timeout=180) as response:
+        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
             return json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
@@ -179,6 +188,10 @@ def _decl_basename(theorem_name: object) -> str | None:
 
 
 def _candidate_from_response(original: str, response_text: str, theorem_name: object) -> str:
+    return _patch_proof_body(original, response_text)
+
+
+def _candidate_from_comparison_response(original: str, response_text: str, theorem_name: object) -> str:
     return _ensure_grindset_import(_patch_proof_body(original, response_text))
 
 
@@ -1563,6 +1576,500 @@ def _retry_feedback(output: str) -> str:
     return text[-240:]
 
 
+FAIR_TOOLS: list[dict[str, Any]] = [
+    {
+        "type": "function",
+        "function": {
+            "name": "show_task",
+            "description": "Show the benchmark task metadata and allowed files.",
+            "parameters": {"type": "object", "properties": {}, "additionalProperties": False},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "read_file",
+            "description": "Read a public workspace file by relative path.",
+            "parameters": {
+                "type": "object",
+                "properties": {"path": {"type": "string"}},
+                "required": ["path"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "show_goal",
+            "description": "Run Lean on the current editable proof file and return compact goal/error output.",
+            "parameters": {"type": "object", "properties": {}, "additionalProperties": False},
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "check_proof",
+            "description": "Replace the editable theorem placeholder with a tactic body under := by and check the target Lean module.",
+            "parameters": {
+                "type": "object",
+                "properties": {"proof": {"type": "string"}},
+                "required": ["proof"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "try_tactics",
+            "description": "Check one or more tactic bodies under := by. This is a Lean check helper, not a source of hardcoded task solutions.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "tactics": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "minItems": 1,
+                        "maxItems": 5,
+                    }
+                },
+                "required": ["tactics"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "search_declarations",
+            "description": "Search public Lean files in the workspace for declarations or text.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {"type": "string"},
+                    "limit": {"type": "integer", "minimum": 1, "maximum": 50},
+                },
+                "required": ["query"],
+                "additionalProperties": False,
+            },
+        },
+    },
+]
+
+
+def _safe_workspace_path(workspace: Path, rel: str) -> Path:
+    if rel.startswith("/") or ".." in Path(rel).parts:
+        raise ValueError("path must be a relative workspace path")
+    path = (workspace / rel).resolve()
+    root = workspace.resolve()
+    if path != root and root not in path.parents:
+        raise ValueError("path escapes workspace")
+    return path
+
+
+def _task_public_view(task: dict[str, object]) -> dict[str, object]:
+    return {
+        "task_ref": task.get("task_ref"),
+        "task_id": task.get("task_id"),
+        "target_module": task.get("target_module"),
+        "editable_files": task.get("editable_files"),
+        "specification_files": task.get("specification_files"),
+        "implementation_files": task.get("implementation_files"),
+        "manifest_path": task.get("manifest_path"),
+    }
+
+
+def _search_declarations(workspace: Path, query: str, *, limit: int = 20) -> list[dict[str, object]]:
+    results: list[dict[str, object]] = []
+    pattern = query.lower()
+    for path in sorted(workspace.glob("**/*.lean")):
+        rel = path.relative_to(workspace).as_posix()
+        if "/Proofs" in rel or rel.startswith("Benchmark/GeneratedPreview/"):
+            continue
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except UnicodeDecodeError:
+            continue
+        for lineno, line in enumerate(lines, start=1):
+            stripped = line.strip()
+            is_decl = bool(re.match(r"(def|theorem|lemma|abbrev|structure|inductive|verity_contract|function)\s+", stripped))
+            if pattern in stripped.lower() or (is_decl and pattern in stripped.lower()):
+                results.append({"path": rel, "line": lineno, "text": stripped[:240]})
+                if len(results) >= limit:
+                    return results
+    return results
+
+
+def _write_attempt_artifact(
+    attempts_dir: Path,
+    task: dict[str, object],
+    label: str,
+    candidate: str,
+) -> Path:
+    safe_task = str(task.get("task_id") or task.get("task_ref") or "task").replace("/", "__")
+    safe_label = re.sub(r"[^A-Za-z0-9_.-]+", "-", label).strip("-") or "attempt"
+    candidate_path = attempts_dir / f"{safe_task}-{safe_label}.lean"
+    candidate_path.parent.mkdir(parents=True, exist_ok=True)
+    candidate_path.write_text(candidate, encoding="utf-8")
+    return candidate_path
+
+
+def _append_jsonl(path: Path, payload: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, sort_keys=True) + "\n")
+
+
+def _proof_attempt_count(attempts: list[dict[str, object]]) -> int:
+    return sum(1 for attempt in attempts if str(attempt.get("attempt", "")).startswith("tool:"))
+
+
+def _execute_fair_tool(
+    name: str,
+    args: dict[str, object],
+    *,
+    task: dict[str, object],
+    workspace: Path,
+    original: str,
+    proof_path: Path,
+    target_module: str,
+    attempts_dir: Path,
+    attempts: list[dict[str, object]],
+) -> dict[str, object]:
+    if name == "show_task":
+        return {"ok": True, "task": _task_public_view(task)}
+    if name == "read_file":
+        rel = args.get("path")
+        if not isinstance(rel, str):
+            return {"ok": False, "error": "path must be a string"}
+        try:
+            path = _safe_workspace_path(workspace, rel)
+        except ValueError as exc:
+            return {"ok": False, "error": str(exc)}
+        if not path.is_file():
+            return {"ok": False, "error": "file not found"}
+        try:
+            content = _read_workspace_file(workspace, rel)
+        except UnicodeDecodeError:
+            return {"ok": False, "error": "file is not valid utf-8 text"}
+        except OSError as exc:
+            return {"ok": False, "error": str(exc)}
+        return {"ok": True, "path": rel, "content": content}
+    if name == "show_goal":
+        code, output = _run_lean_module(workspace, target_module)
+        return {"ok": True, "exit_code": code, "output": _compact_lean_output(output)}
+    if name in {"check_proof", "try_tactics"}:
+        proofs: list[tuple[str, str]] = []
+        if name == "check_proof":
+            proof = args.get("proof")
+            if not isinstance(proof, str):
+                return {"ok": False, "error": "proof must be a string"}
+            proofs.append(("check_proof", proof))
+        else:
+            raw_tactics = args.get("tactics")
+            if not isinstance(raw_tactics, list) or not raw_tactics:
+                return {"ok": False, "error": "tactics must be a non-empty array"}
+            for index, tactic in enumerate(raw_tactics[:5], start=1):
+                if isinstance(tactic, str):
+                    proofs.append((f"try_tactics-{index}", tactic))
+            if not proofs:
+                return {"ok": False, "error": "tactics must contain at least one string"}
+        results: list[dict[str, object]] = []
+        for label, proof in proofs:
+            candidate = _candidate_from_response(original, proof, task.get("theorem_name"))
+            proof_path.write_text(candidate, encoding="utf-8")
+            candidate_path = _write_attempt_artifact(attempts_dir, task, f"fair-{len(attempts) + 1}-{label}", candidate)
+            lean_start = time.time()
+            code, output = _run_lean_module(workspace, target_module)
+            attempt = {
+                "attempt": f"tool:{name}",
+                "status": "lean_passed" if code == 0 else "lean_failed",
+                "exit_code": code,
+                "candidate_path": str(candidate_path),
+                "output": _compact_lean_output(output),
+                "duration_seconds": round(time.time() - lean_start, 3),
+                "response_usage": None,
+            }
+            attempts.append(attempt)
+            results.append(attempt)
+            if code == 0:
+                return {"ok": True, "passed": True, "results": results}
+        return {"ok": True, "passed": False, "results": results}
+    if name == "search_declarations":
+        query = args.get("query")
+        if not isinstance(query, str) or not query:
+            return {"ok": False, "error": "query must be a non-empty string"}
+        limit = args.get("limit")
+        return {"ok": True, "results": _search_declarations(workspace, query, limit=int(limit) if isinstance(limit, int) else 20)}
+    return {"ok": False, "error": f"unknown tool: {name}"}
+
+
+def _json_payload_from_text(text: str) -> object | None:
+    stripped = _strip_thinking(text).strip()
+    fenced = re.search(r"```(?:json)?\s*(.*?)```", stripped, flags=re.DOTALL | re.IGNORECASE)
+    if fenced:
+        stripped = fenced.group(1).strip()
+    try:
+        return json.loads(stripped)
+    except json.JSONDecodeError:
+        return None
+
+
+def _normalise_text_tool_call(raw: object, index: int) -> dict[str, object] | None:
+    if not isinstance(raw, dict):
+        return None
+    function = raw.get("function")
+    if isinstance(function, dict):
+        name = function.get("name")
+        arguments = function.get("arguments", {})
+    else:
+        name = raw.get("name") or raw.get("tool")
+        arguments = raw.get("arguments", raw.get("args", {}))
+    if not isinstance(name, str):
+        return None
+    return {
+        "id": raw.get("id") if isinstance(raw.get("id"), str) else f"text-call-{index}",
+        "function": {
+            "name": name,
+            "arguments": arguments,
+        },
+        "text_protocol": True,
+    }
+
+
+def _tool_calls_from_text(text: str) -> list[dict[str, object]]:
+    payload = _json_payload_from_text(text)
+    if isinstance(payload, dict):
+        raw_calls = payload.get("tool_calls", payload.get("calls"))
+        if raw_calls is None and ("tool" in payload or "name" in payload or "function" in payload):
+            raw_calls = [payload]
+    elif isinstance(payload, list):
+        raw_calls = payload
+    else:
+        raw_calls = None
+    if not isinstance(raw_calls, list):
+        return []
+    calls: list[dict[str, object]] = []
+    for index, raw in enumerate(raw_calls, start=1):
+        call = _normalise_text_tool_call(raw, index)
+        if call is not None:
+            calls.append(call)
+    return calls
+
+
+def _attempt_task_fair(
+    task: dict[str, object],
+    workspace: Path,
+    *,
+    base_url: str,
+    max_attempts: int,
+    max_tool_calls: int,
+    attempts_dir: Path,
+    tool_log_path: Path,
+    conversation_log_path: Path,
+) -> dict[str, object]:
+    editable_files = task.get("editable_files")
+    target_module = task.get("target_module")
+    if not isinstance(editable_files, list) or len(editable_files) != 1 or not isinstance(target_module, str):
+        return {"task_ref": task.get("task_ref"), "status": "unsupported_task_shape"}
+    editable = str(editable_files[0])
+    proof_path = workspace / editable
+    original = proof_path.read_text(encoding="utf-8")
+    attempts: list[dict[str, object]] = []
+
+    messages: list[dict[str, Any]] = [
+        {
+            "role": "system",
+            "content": (
+                "You are an agent solving one public Lean benchmark task through tools only. "
+                "Inspect the task and files with show_task, read_file, show_goal, and search_declarations. "
+                "Use check_proof or try_tactics for every proof attempt. Do not use sorry, admit, axiom, hidden imports, "
+                "Benchmark.GeneratedPreview, or reference Proofs modules. Do not assume a hardcoded solution from the task name. "
+                "If native tool calling is unavailable, return JSON like {\"tool\":\"show_task\",\"arguments\":{}}."
+            ),
+        },
+        {
+            "role": "user",
+            "content": (
+                f"Solve the Lean task in editable file {editable}. "
+                "Call show_task first, then inspect the public files and check proof bodies until Lean passes."
+            ),
+        },
+    ]
+    request_limit = max(1, max_attempts)
+    tool_calls_executed = 0
+    for request_index in range(1, request_limit + max_tool_calls + 1):
+        if _proof_attempt_count(attempts) >= max_attempts:
+            break
+        if tool_calls_executed >= max_tool_calls:
+            break
+        try:
+            response = chat_completion(messages, base_url=base_url, tools=FAIR_TOOLS, tool_choice="auto")
+        except Exception as exc:
+            _append_jsonl(
+                conversation_log_path,
+                {
+                    "task_ref": task.get("task_ref"),
+                    "request_index": request_index,
+                    "status": "request_failed",
+                    "error": str(exc),
+                },
+            )
+            return {
+                "task_ref": task.get("task_ref"),
+                "status": "request_failed",
+                "error": str(exc),
+                "attempts": attempts,
+                "tool_calls_executed": tool_calls_executed,
+                "tool_log": str(tool_log_path),
+                "conversation_log": str(conversation_log_path),
+            }
+        response_message = {}
+        choices = response.get("choices")
+        if isinstance(choices, list) and choices and isinstance(choices[0], dict):
+            message = choices[0].get("message")
+            if isinstance(message, dict):
+                response_message = message
+        tool_calls = response_message.get("tool_calls")
+        _append_jsonl(
+            conversation_log_path,
+            {
+                "task_ref": task.get("task_ref"),
+                "request_index": request_index,
+                "message": {k: v for k, v in response_message.items() if k in {"role", "content", "tool_calls"}},
+                "usage": response.get("usage") if isinstance(response, dict) else None,
+            },
+        )
+        assistant_message = {k: v for k, v in response_message.items() if k in {"role", "content", "tool_calls"}}
+        if assistant_message:
+            assistant_message.setdefault("role", "assistant")
+            if "tool_calls" in assistant_message:
+                assistant_message.setdefault("content", None)
+        messages.append(assistant_message or {"role": "assistant", "content": _response_text(response)})
+        if not isinstance(tool_calls, list) or not tool_calls:
+            text = _response_text(response)
+            tool_calls = _tool_calls_from_text(text)
+        text_protocol = bool(tool_calls and all(isinstance(call, dict) and call.get("text_protocol") is True for call in tool_calls))
+        if not isinstance(tool_calls, list) or not tool_calls:
+            text = _response_text(response)
+            if text.strip():
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": "Fair mode requires Lean proof attempts through check_proof or try_tactics. Call a tool next.",
+                    }
+                )
+                continue
+            break
+        for tool_call in tool_calls:
+            if not isinstance(tool_call, dict):
+                continue
+            function = tool_call.get("function")
+            if not isinstance(function, dict):
+                continue
+            name = function.get("name")
+            raw_args = function.get("arguments") or "{}"
+            try:
+                args = json.loads(raw_args) if isinstance(raw_args, str) else raw_args
+            except json.JSONDecodeError:
+                args = {}
+            if not isinstance(args, dict):
+                args = {}
+            if not isinstance(name, str):
+                continue
+            if tool_calls_executed >= max_tool_calls:
+                _append_jsonl(
+                    tool_log_path,
+                    {
+                        "task_ref": task.get("task_ref"),
+                        "tool": name,
+                        "arguments": args,
+                        "result": {"ok": False, "error": "max_tool_calls_exceeded"},
+                        "tool_call_id": tool_call.get("id"),
+                        "duration_seconds": 0,
+                    },
+                )
+                break
+            if name in {"check_proof", "try_tactics"} and _proof_attempt_count(attempts) >= max_attempts:
+                _append_jsonl(
+                    tool_log_path,
+                    {
+                        "task_ref": task.get("task_ref"),
+                        "tool": name,
+                        "arguments": args,
+                        "result": {"ok": False, "error": "max_attempts_exceeded"},
+                        "tool_call_id": tool_call.get("id"),
+                        "duration_seconds": 0,
+                    },
+                )
+                continue
+            if name == "try_tactics":
+                remaining = max(0, max_attempts - _proof_attempt_count(attempts))
+                raw_tactics = args.get("tactics")
+                if isinstance(raw_tactics, list):
+                    args["tactics"] = raw_tactics[:remaining]
+            tool_start = time.time()
+            result = _execute_fair_tool(
+                name,
+                args,
+                task=task,
+                workspace=workspace,
+                original=original,
+                proof_path=proof_path,
+                target_module=target_module,
+                attempts_dir=attempts_dir,
+                attempts=attempts,
+            )
+            tool_calls_executed += 1
+            _append_jsonl(
+                tool_log_path,
+                {
+                    "task_ref": task.get("task_ref"),
+                    "tool": name,
+                    "arguments": args,
+                    "result": result,
+                    "tool_call_id": tool_call.get("id"),
+                    "duration_seconds": round(time.time() - tool_start, 3),
+                },
+            )
+            if text_protocol:
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": f"Tool result for {name}: {json.dumps(result)[-6000:]}",
+                    }
+                )
+            else:
+                messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": tool_call.get("id") or f"call-{request_index}",
+                        "name": name,
+                        "content": json.dumps(result)[-6000:],
+                    }
+                )
+            if result.get("passed") is True:
+                return {
+                    "task_ref": task.get("task_ref"),
+                    "status": "lean_passed",
+                    "attempts": attempts,
+                    "tool_calls_executed": tool_calls_executed,
+                    "tool_log": str(tool_log_path),
+                    "conversation_log": str(conversation_log_path),
+                }
+    if not attempts:
+        proof_path.write_text(original, encoding="utf-8")
+    return {
+        "task_ref": task.get("task_ref"),
+        "status": "failed_submitted" if attempts else "failed_no_attempt",
+        "attempts": attempts,
+        "tool_calls_executed": tool_calls_executed,
+        "tool_log": str(tool_log_path),
+        "conversation_log": str(conversation_log_path),
+    }
+
+
 def _attempt_task(
     task: dict[str, object],
     workspace: Path,
@@ -1671,7 +2178,7 @@ def _attempt_task(
                     }
                 )
                 break
-            candidate = _candidate_from_response(original, _response_text(response), task.get("theorem_name"))
+            candidate = _candidate_from_comparison_response(original, _response_text(response), task.get("theorem_name"))
         except Exception as exc:
             if "exceeds the available context size" not in str(exc):
                 attempts.append({"attempt": attempt_index, "status": "request_failed", "error": str(exc)})
@@ -1700,7 +2207,7 @@ def _attempt_task(
                         }
                     )
                     break
-                candidate = _candidate_from_response(original, _response_text(response), task.get("theorem_name"))
+                candidate = _candidate_from_comparison_response(original, _response_text(response), task.get("theorem_name"))
             except Exception as fallback_exc:
                 attempts.append({"attempt": attempt_index, "status": "request_failed", "error": str(fallback_exc)})
                 break
@@ -1735,44 +2242,87 @@ def run_group(
     keep_workspace: bool = False,
     dry_run: bool = False,
     max_attempts: int = 1,
+    max_tool_calls: int = DEFAULT_MAX_TOOL_CALLS,
+    mode: str = "fair",
     task_ref: str | None = None,
 ) -> tuple[int, Path]:
+    if mode not in VALID_MODES:
+        raise ValueError(f"unknown default harness mode: {mode} (expected one of {', '.join(VALID_MODES)})")
+    if max_attempts < 0:
+        raise ValueError("max_attempts must be non-negative")
+    if max_tool_calls < 0:
+        raise ValueError("max_tool_calls must be non-negative")
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_subject = task_ref or group_id
-    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{RUN_SLUG}-{run_subject.replace('/', '__')}"
+    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{RUN_SLUG}-{mode}-{run_subject.replace('/', '__')}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     start = time.time()
     group = load_group(group_id, suite)
     if task_ref:
         group = filter_group_to_task(group, task_ref)
-    built = build_group_workspace(group, run_id=run_id)
+    built = build_group_workspace(group, run_id=run_id, include_group_grindset=(mode != "fair"))
     assert_workspace_isolated(built.path)
     base_url = os.environ.get("DEFAULT_HARNESS_BASE_URL", os.environ.get("GAZELLA_BASE_URL", DEFAULT_BASE_URL))
     response: dict[str, object]
     if dry_run:
-        response = {"status": "dry_run", "base_url": base_url, "model": DEFAULT_MODEL, "max_attempts": max_attempts}
+        response = {
+            "status": "dry_run",
+            "base_url": base_url,
+            "model": DEFAULT_MODEL,
+            "mode": mode,
+            "max_attempts": max_attempts,
+            "max_tool_calls": max_tool_calls,
+        }
     else:
         task_results: list[dict[str, object]] = []
         try:
             tasks_payload = json.loads((built.path / "harness" / "TASKS.json").read_text(encoding="utf-8"))
             for task in tasks_payload.get("tasks", []):
                 if isinstance(task, dict):
-                    task_results.append(
-                        _attempt_task(
-                            task,
-                            built.path,
-                            base_url=base_url,
-                            max_attempts=max_attempts,
-                            attempts_dir=run_dir / "attempts",
+                    if mode == "fair":
+                        task_results.append(
+                            _attempt_task_fair(
+                                task,
+                                built.path,
+                                base_url=base_url,
+                                max_attempts=max_attempts,
+                                max_tool_calls=max_tool_calls,
+                                attempts_dir=run_dir / "attempts",
+                                tool_log_path=run_dir / "tool-calls" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
+                                conversation_log_path=run_dir / "conversations" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
+                            )
                         )
-                    )
-            response = {"status": "completed", "base_url": base_url, "model": DEFAULT_MODEL, "tasks": task_results}
+                    else:
+                        task_results.append(
+                            _attempt_task(
+                                task,
+                                built.path,
+                                base_url=base_url,
+                                max_attempts=max_attempts,
+                                attempts_dir=run_dir / "attempts",
+                            )
+                        )
+            response = {"status": "completed", "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "tasks": task_results}
         except Exception as exc:
-            response = {"status": "harness_error", "error": str(exc), "base_url": base_url, "model": DEFAULT_MODEL, "tasks": task_results}
+            response = {"status": "harness_error", "error": str(exc), "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "tasks": task_results}
 
     (run_dir / "workspace-manifest.json").write_text((built.path / "workspace-manifest.json").read_text(encoding="utf-8"), encoding="utf-8")
-    (run_dir / "harness-request.json").write_text(json.dumps({"group": group_to_json(group), "base_url": base_url, "model": DEFAULT_MODEL}, indent=2) + "\n", encoding="utf-8")
+    (run_dir / "harness-request.json").write_text(
+        json.dumps(
+            {
+                "group": group_to_json(group),
+                "base_url": base_url,
+                "model": DEFAULT_MODEL,
+                "mode": mode,
+                "max_attempts": max_attempts,
+                "max_tool_calls": max_tool_calls,
+            },
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
     (run_dir / "harness-response.json").write_text(json.dumps(response, indent=2) + "\n", encoding="utf-8")
     (run_dir / "stdout.txt").write_text("", encoding="utf-8")
     (run_dir / "stderr.txt").write_text("", encoding="utf-8")
@@ -1791,10 +2341,12 @@ def run_group(
         "harness_id": HARNESS_ID,
         "model": DEFAULT_MODEL,
         "track": "group/lean_tools",
+        "mode": mode,
         "run_mode": "task" if task_ref else "group",
         "group_id": group_id,
         "task_ref": task_ref,
         "suite": suite,
+        "started_at": started_at,
         "base_url": base_url,
         "auth_mode": "env" if _api_key() else "none",
         "duration_seconds": round(time.time() - start, 3),
@@ -1819,6 +2371,8 @@ def main() -> int:
     run.add_argument("--keep-workspace", action="store_true")
     run.add_argument("--dry-run", action="store_true")
     run.add_argument("--max-attempts", type=int, default=1)
+    run.add_argument("--max-tool-calls", type=int, default=DEFAULT_MAX_TOOL_CALLS)
+    run.add_argument("--mode", choices=VALID_MODES, default="fair")
     run.add_argument("--task-ref")
     args = parser.parse_args()
     if args.command == "smoke":
@@ -1830,6 +2384,8 @@ def main() -> int:
         keep_workspace=args.keep_workspace,
         dry_run=args.dry_run,
         max_attempts=args.max_attempts,
+        max_tool_calls=args.max_tool_calls,
+        mode=args.mode,
         task_ref=args.task_ref,
     )
     print(run_dir)

@@ -81,10 +81,11 @@ def _policy_failure(task: Task, submitted_file: Path) -> str | None:
         return "theorem_missing"
     text = submitted_file.read_text(encoding="utf-8")
     for import_line in IMPORT_RE.findall(text):
-        if "GeneratedPreview" in import_line or (
-            import_line.strip().startswith("Benchmark.Cases.") and ".Proofs" in import_line
-        ):
-            return "hidden_import"
+        for import_module in import_line.strip().split():
+            if "GeneratedPreview" in import_module or (
+                import_module.startswith("Benchmark.Cases.") and import_module.split(".")[-1].endswith("Proofs")
+            ):
+                return "hidden_import"
     original_file = ROOT / task.editable_files[0]
     original_sig = _theorem_signature(original_file.read_text(encoding="utf-8"), task.theorem_name)
     submitted_sig = _theorem_signature(text, task.theorem_name)
