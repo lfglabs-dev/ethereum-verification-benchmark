@@ -14,3 +14,4 @@ import Benchmark.Cases.Piku
 import Benchmark.Cases.Usual
 import Benchmark.Cases.Lagoon
 import Benchmark.Cases.OneDelta
+import Benchmark.Cases.IPOR

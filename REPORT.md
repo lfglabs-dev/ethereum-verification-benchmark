@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 23
-- Implementations: 24
-- Active cases: 21
-- Buildable active cases: 21
-- Active tasks: 124
+- Families: 24
+- Implementations: 25
+- Active cases: 22
+- Buildable active cases: 22
+- Active tasks: 125
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -72,6 +72,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `deposit`, `requestRedeem`, `claimRedeem`, `redeemTokenGatewayDepreciated`, `transferRemote`, `handle`, `report`
 - Upstream source artifact: `TokenGateway.sol`
 - Notes: Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.
+
+### `ipor/plasma_vault_redeem_split`
+- Family / implementation: `ipor` / `fusion`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`draft`, proof=`complete`
+- Lean target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Compile`
+- Source ref: `https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol`
+- Selected functions: `_redeem`, `_convertToAssets`, `previewRedeem`, `WithdrawManager.canWithdrawFromUnallocated`
+- Upstream source artifact: `contracts/vaults/PlasmaVault.sol`
+- Notes: Terminal condition: COUNTEREXAMPLE. The raw approved split-redeem kernel has a concrete counterexample in the arithmetic model: with A=1000, n=2, M=1, withdrawFee=0.5e18, and s1=s2=1, the combined redeem pays 333 while the split redeem pays 333+334. The case also includes a conditional helper theorem showing which extra payout bounds would be needed for non-extraction. The dominant mechanism is withdraw-fee floor avoidance at small share granularity.
 
 ### `kleros/sortition_trees`
 - Family / implementation: `kleros` / `kleros_v2`
@@ -468,6 +478,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
 - Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean`
 - Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `ipor/plasma_vault_redeem_split/split_redeem_non_extractive`
+- Track / property class / proof family: `proof-only` / `redeem_non_extraction` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.split_redeem_non_extractive`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/ipor/plasma_vault_redeem_split/verity/Contract.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean`
+- Specification files: `cases/ipor/plasma_vault_redeem_split/verity/Specs.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean`
+- Editable proof file: `Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/SplitRedeemNonExtractive.lean`
+- Hidden reference solution: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs`
 
 ### `kleros/sortition_trees/draw_interval_matches_weights`
 - Track / property class / proof family: `proof-only` / `weighted_selection` / `functional_correctness`

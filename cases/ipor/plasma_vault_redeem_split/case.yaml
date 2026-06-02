@@ -1,0 +1,48 @@
+manifest_kind: case
+project: ipor
+case_id: plasma_vault_redeem_split
+schema_version: 1
+split: active
+family_id: ipor
+implementation_id: ipor_fusion
+stage: proof_in_progress
+translation_status: translated
+spec_status: revised_after_counterexample
+proof_status: partial
+upstream_repo: https://github.com/IPOR-Labs/ipor-fusion
+upstream_commit: 3a83157ee75a7c1752d9151aff43eb92a50cb346
+original_contract_path: contracts/vaults/PlasmaVault.sol
+source_ref: https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol
+lean_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Compile
+spec_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Specs
+proof_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs
+selected_functions:
+  - redeem
+  - withdraw
+  - _redeem
+  - _convertToAssets
+  - withdrawFee
+source_language: solidity
+verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: arithmetic_slice
+abstraction_tags:
+  - erc4626_virtual_offset
+  - withdraw_fee_rounding
+  - retained_fee_pps_recapture
+  - counterexample_documented
+abstraction_notes: >
+  Focused arithmetic model of PlasmaVault redeem: fee shares are rounded down,
+  all requested shares are burned, only net shares are converted to assets, and
+  retained fee value remains in vault assets. The original split-payout bound is
+  documented as false. The revised safety target is PPS non-decrease; the old
+  split bound is available only under an explicit bounded-advantage assumption.
+unsupported_feature_codes:
+  - markets_elided_total_assets_ghosted
+  - release_queue_elided
+  - access_control_elided
+notes: >
+  This case is intentionally honest about the counterexample. It should not be
+  published as a completed vulnerability proof. The useful FV result is the
+  remaining-holder no-principal-dilution theorem once the Nat arithmetic proof is
+  discharged.

@@ -26,6 +26,7 @@ active_cases = [
   "damn_vulnerable_defi/side_entrance",
   "ethereum/deposit_contract_minimal",
   "forgeyields/global_solvency",
+  "ipor/plasma_vault_redeem_split",
   "kleros/sortition_trees",
   "lagoon/guardrails",
   "lido/vaulthub_locked",

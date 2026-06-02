@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 23,
-    "implementation_count": 24,
-    "active_case_count": 21,
+    "family_count": 24,
+    "implementation_count": 25,
+    "active_case_count": 22,
     "backlog_case_count": 3,
-    "active_task_count": 124,
+    "active_task_count": 125,
     "backlog_task_count": 8,
-    "buildable_case_count": 23,
-    "runnable_task_count": 132,
+    "buildable_case_count": 24,
+    "runnable_task_count": 133,
     "case_stage_counts": {
-      "build_green": 20,
+      "build_green": 21,
       "candidate": 1,
       "proof_complete": 3
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 23
+      "translated": 24
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 16,
+      "complete": 17,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 132
+      "proof-only": 133
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -63,6 +63,7 @@
       "overflow_safety": 1,
       "price_band": 2,
       "price_computation": 5,
+      "redeem_non_extraction": 1,
       "reserve_state_transition": 1,
       "silent_failure": 2,
       "storage_update": 1,
@@ -81,10 +82,10 @@
       "functional_correctness": 32,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 9,
-      "state_preservation_local_effects": 45
+      "state_preservation_local_effects": 46
     },
     "family_split_counts": {
-      "active": 20,
+      "active": 21,
       "backlog": 2,
       "mixed": 1
     }
@@ -191,6 +192,23 @@
         "solidity"
       ],
       "manifest_path": "families/forgeyields/family.yaml"
+    },
+    {
+      "family_id": "ipor",
+      "display_name": "IPOR Fusion",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for IPOR Fusion vault accounting invariants. The initial case targets PlasmaVault ERC-4626 redeem rounding and withdraw-fee accounting.",
+      "implementation_ids": [
+        "fusion"
+      ],
+      "case_ids": [
+        "ipor/plasma_vault_redeem_split"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/ipor/family.yaml"
     },
     {
       "family_id": "kleros",
@@ -580,6 +598,22 @@
       ],
       "notes": "Focused TokenGateway accounting implementation entry for the guarded global-solvency benchmark.",
       "manifest_path": "families/forgeyields/implementations/contracts/implementation.yaml"
+    },
+    {
+      "family_id": "ipor",
+      "implementation_id": "fusion",
+      "display_name": "IPOR Fusion PlasmaVault",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/IPOR-Labs/ipor-fusion",
+      "upstream_commit": "3a83157ee75a7c1752d9151aff43eb92a50cb346",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/vaults/PlasmaVault.sol",
+      "case_ids": [
+        "ipor/plasma_vault_redeem_split"
+      ],
+      "notes": "IPOR Fusion PlasmaVault is the ERC-4626 entry point for managed vaults using external fuses and managers. This implementation entry covers the redeem conversion, unallocated withdraw-fee share burn, and virtual-offset rounding arithmetic used by the split-redeem non-extraction case.",
+      "manifest_path": "families/ipor/implementations/fusion/implementation.yaml"
     },
     {
       "family_id": "kleros",
@@ -1151,6 +1185,55 @@
       ],
       "spec_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Specs",
       "proof_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs"
+    },
+    {
+      "case_id": "ipor/plasma_vault_redeem_split",
+      "project": "ipor",
+      "case_name": "plasma_vault_redeem_split",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/ipor/plasma_vault_redeem_split/case.yaml",
+      "split": "active",
+      "family_id": "ipor",
+      "implementation_id": "fusion",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "draft",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/IPOR-Labs/ipor-fusion",
+      "upstream_commit": "3a83157ee75a7c1752d9151aff43eb92a50cb346",
+      "original_contract_path": "contracts/vaults/PlasmaVault.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol",
+      "selected_functions": [
+        "_redeem",
+        "_convertToAssets",
+        "previewRedeem",
+        "WithdrawManager.canWithdrawFromUnallocated"
+      ],
+      "lean_target": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Compile",
+      "failure_reason": null,
+      "notes": "Terminal condition: COUNTEREXAMPLE. The raw approved split-redeem kernel has a concrete counterexample in the arithmetic model: with A=1000, n=2, M=1, withdrawFee=0.5e18, and s1=s2=1, the combined redeem pays 333 while the split redeem pays 333+334. The case also includes a conditional helper theorem showing which extra payout bounds would be needed for non-extraction. The dominant mechanism is withdraw-fee floor avoidance at small share granularity.",
+      "buildable": true,
+      "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "arithmetic_kernel",
+      "abstraction_tags": [
+        "erc4626_virtual_offset",
+        "redeem_rounding",
+        "withdraw_fee_floor",
+        "market_calls_abstracted",
+        "fee_timing_fixed"
+      ],
+      "abstraction_notes": "This case isolates the PlasmaVault redeem arithmetic kernel: withdraw-fee shares are burned using floor division, redeem payout uses the ERC-4626 virtual-offset `convertToAssets` floor formula, and successful split redeems are compared against one combined redeem. Market fuses, the top-up retry loop, access control, ERC20 transfer details, and time-dependent fee accrual are modeled as explicit successful-execution assumptions.",
+      "unsupported_feature_codes": [
+        "external_market_fuses_abstracted",
+        "time_dependent_fee_accrual_out_of_scope",
+        "checked_uint256_overflow_out_of_scope"
+      ],
+      "spec_target": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Specs",
+      "proof_target": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs"
     },
     {
       "case_id": "kleros/sortition_trees",
@@ -3116,6 +3199,55 @@
         "bytes_report_parsing_decoded"
       ],
       "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "ipor/plasma_vault_redeem_split/split_redeem_non_extractive",
+      "task_id": "split_redeem_non_extractive",
+      "case_id": "ipor/plasma_vault_redeem_split",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/ipor/plasma_vault_redeem_split/tasks/split_redeem_non_extractive.yaml",
+      "split": "active",
+      "family_id": "ipor",
+      "implementation_id": "fusion",
+      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "redeem_non_extraction",
+      "category": "erc4626_redeem_rounding",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.split_redeem_non_extractive",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Contract.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Specs.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/SplitRedeemNonExtractive.lean"
+      ],
+      "abstraction_level": "arithmetic_kernel",
+      "abstraction_notes": "Terminal condition: COUNTEREXAMPLE. The raw split-redeem non-extraction claim is refuted by a concrete arithmetic counterexample. A conditional helper theorem remains as an agent task showing that non-extraction follows if the initial split payout and second-leg payout bounds are supplied explicitly.",
+      "unsupported_feature_codes": [
+        "external_market_fuses_abstracted",
+        "time_dependent_fee_accrual_out_of_scope",
+        "checked_uint256_overflow_out_of_scope"
+      ],
+      "reference_solution_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -8043,5 +8175,5 @@
       }
     }
   ],
-  "generated_at": "2026-05-27T16:38:28.487739+00:00"
+  "generated_at": "2026-06-02T15:58:52.798813+00:00"
 }

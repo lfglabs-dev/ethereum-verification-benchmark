@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 21 cases and 124 task manifests. Of those, 124 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 22 cases and 125 task manifests. Of those, 125 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -17,6 +17,7 @@ The active suite currently contains 21 cases and 124 task manifests. Of those, 1
 | `damn_vulnerable_defi/side_entrance` | 5 | `partial` |
 | `ethereum/deposit_contract_minimal` | 5 | `partial` |
 | `forgeyields/global_solvency` | 7 | `complete` |
+| `ipor/plasma_vault_redeem_split` | 1 | `complete` |
 | `kleros/sortition_trees` | 6 | `partial` |
 | `lagoon/guardrails` | 3 | `complete` |
 | `lido/vaulthub_locked` | 5 | `partial` |
