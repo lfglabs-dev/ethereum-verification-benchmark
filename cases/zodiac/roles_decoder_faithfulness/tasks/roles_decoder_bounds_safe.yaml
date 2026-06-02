@@ -1,0 +1,37 @@
+manifest_kind: task
+schema_version: 1
+task_id: roles_decoder_bounds_safe
+case_id: zodiac/roles_decoder_faithfulness
+split: active
+family_id: zodiac
+implementation_id: roles-v3
+source_ref: https://github.com/gnosisguild/zodiac-modifier-roles@172723b165d482c5565e413e9927604b0dc168b6:packages/evm/contracts/common/AbiLocation.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_bounds_safe
+proof_family: authorization_enablement
+property_class: calldata_decoder_bounds
+difficulty: hard
+category: authorization_decoder
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean
+  - Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean
+specification_files:
+  - cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean
+  - Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean
+editable_files:
+  - Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/RolesDecoderBoundsSafe.lean
+reference_solution_module: Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs
+reference_solution_declaration: Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_bounds_safe
+abstraction_level: protocol_slice
+abstraction_notes: >
+  States that every successful Roles decoder byte region emitted at the
+  ConditionEvaluator.__input extraction boundary lies inside calldata, with
+  malformed guarded reads and non-forward or out-of-range tail offsets mapped to
+  overflow in the focused model. The reference proof is discharged by induction
+  over the fuel-bounded Roles walker.
+unsupported_feature_codes:
+  - condition_packer_integrity_roundtrip_assumed

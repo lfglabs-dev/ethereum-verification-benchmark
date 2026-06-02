@@ -1,0 +1,36 @@
+manifest_kind: task
+schema_version: 1
+task_id: metadata_bridge
+case_id: zodiac/roles_decoder_faithfulness
+split: active
+family_id: zodiac
+implementation_id: roles-v3
+source_ref: https://github.com/gnosisguild/zodiac-modifier-roles@172723b165d482c5565e413e9927604b0dc168b6:packages/evm/contracts/common/AbiLocation.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.metadata_bridge
+proof_family: refinement_equivalence
+property_class: calldata_decoder_metadata
+difficulty: hard
+category: authorization_decoder
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean
+  - Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean
+specification_files:
+  - cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean
+  - Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean
+editable_files:
+  - Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/MetadataBridge.lean
+reference_solution_module: Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs
+reference_solution_declaration: Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.metadata_bridge
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Checks the bridge between Roles decoder metadata and ABI staticness/static
+  byte size for the focused ABI tree model. The reference proof is discharged
+  structurally over the ABI type tree; the flat ConditionFlat parent-pointer
+  traversal and pack/unpack integrity bridge remain manifest-level hypotheses.
+unsupported_feature_codes:
+  - condition_packer_integrity_roundtrip_assumed
