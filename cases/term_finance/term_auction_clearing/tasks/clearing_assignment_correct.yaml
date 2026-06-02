@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: clearing_assignment_correct
+case_id: term_finance/term_auction_clearing
+split: active
+family_id: term_finance
+implementation_id: term_finance_contracts
+source_ref: https://github.com/term-finance/term-finance-contracts/blob/127b74d871fc74e3a03d6d3b0f1fafe7e5d10275/contracts/TermAuction.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct_task
+proof_family: auction_clearing_correctness
+property_class: accounting_and_rate_guard
+difficulty: medium
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: axiom
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/term_finance/term_auction_clearing/verity/Contract.lean
+  - Benchmark/Cases/TermFinance/TermAuctionClearing/Contract.lean
+specification_files:
+  - cases/term_finance/term_auction_clearing/verity/Specs.lean
+  - Benchmark/Cases/TermFinance/TermAuctionClearing/Specs.lean
+editable_files:
+  - Benchmark/Generated/TermFinance/TermAuctionClearing/Tasks/ClearingAssignmentCorrect.lean
+reference_solution_module: Benchmark.Cases.TermFinance.TermAuctionClearing.Proofs
+reference_solution_declaration: Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Assignment-only slice over a valid clearing point. The reference proof closes
+  with the documented residual-sweep axiom.
+unsupported_feature_codes:
+  - residual_sweep_lemma_axiomatized

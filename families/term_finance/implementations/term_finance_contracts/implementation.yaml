@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: term_finance
+implementation_id: term_finance_contracts
+display_name: Term Finance Contracts
+split: active
+status: translated
+upstream_repo: https://github.com/term-finance/term-finance-contracts
+upstream_commit: 127b74d871fc74e3a03d6d3b0f1fafe7e5d10275
+source_language: solidity
+source_artifact_path: contracts/TermAuction.sol
+case_ids:
+  - term_finance/term_auction_clearing
+notes: >
+  Implementation entry for the Term Finance protocol contracts repository,
+  currently covering TermAuction clearing assignment correctness.
