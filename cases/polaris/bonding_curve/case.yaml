@@ -9,7 +9,7 @@ stage: build_green
 translation_status: translated
 spec_status: draft
 proof_status: complete
-proof_terminal_condition: proof_with_trusted_helper_axiom
+proof_terminal_condition: proof_with_helper_output_precondition
 upstream_repo: https://github.com/Polaris-Finance/bonding-curve
 upstream_commit: 540c4ba5d0b86c0f42399d214f02120f3f8719b0
 original_contract_path: src/BaseBondingCurve.sol
@@ -23,7 +23,7 @@ selected_functions:
   - sell
   - floorSellAndBurn
 source_language: solidity
-verity_version: d71bf23d908a7a952bf041ee5ebe41ba68b54426
+verity_version: 9eaf64218be14b59f6253219c111a5abf958e7b7
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
@@ -41,8 +41,9 @@ abstraction_notes: >
   drift: each transition must write the reserve balance corresponding to the
   resulting supply, including fee minting, sell fee handling, and floor fee
   burns. Computed helper outputs are represented by the labeled
-  trustedCurveHelperOutput predicate; theorem conclusions establish the
-  post-state reserve to curve match rather than taking that match as a premise.
+  trustedCurveHelperOutput predicate, now defined as the exact equality to
+  curveBalance for the relevant supply; theorem conclusions establish the
+  post-state reserve to curve match for the modeled storage transition.
 unsupported_feature_codes:
   - fixed_point_exponentiation_abstracted
   - erc20_per_account_balances_omitted
@@ -50,6 +51,8 @@ notes: >
   Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same
   predicate for floorSupply/floorBalance. This case records the corresponding
   state-transition preservation property over the bonding curve accounting
-  slice as Lean theorems under the explicit trustedCurveHelperOutput axiom for
-  the rounded PRB/ABDK reserve helper. The generated task files remain open
-  challenge entrypoints for agents; they do not contradict the reference proof.
+  slice as Lean theorems with zero Lean axioms. The helper-output boundary is
+  still explicit: the proof assumes each supplied helper result satisfies
+  trustedCurveHelperOutput for the target supply, and this benchmark does not
+  bit-prove PRB/ABDK pow. The generated task files remain open challenge
+  entrypoints for agents; they do not contradict the reference proof.

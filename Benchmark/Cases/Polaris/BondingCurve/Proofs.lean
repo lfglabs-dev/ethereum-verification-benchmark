@@ -6,16 +6,6 @@ namespace Benchmark.Cases.Polaris.BondingCurve
 open Verity
 open Verity.EVM.Uint256
 
-/--
-  Trusted library/rounding policy assumption.
-  `trustedCurveHelperOutput supply reserve` means `reserve` is the Solidity
-  `_getBalanceFromReserveRatio(supply)` result under the PRB/ABDK fixed-point
-  implementation and rounding policy abstracted by `curveBalance`.
--/
-axiom trustedCurveHelperOutput_correct
-    (supply reserve : Uint256) :
-    trustedCurveHelperOutput supply reserve -> reserve = curveBalance supply
-
 private theorem virtual_supply_after_sell_net_burn
     (floor total net : Uint256)
     (hOldSupplyNoOverflow : floor.val + total.val < Verity.Core.Uint256.modulus)
@@ -282,8 +272,7 @@ theorem init_reserve_ratio_zero
   · rw [hVirtualBalance]
     calc
       computedVirtualBalance = curveBalance virtualSupply_ :=
-        trustedCurveHelperOutput_correct
-          virtualSupply_ computedVirtualBalance hComputedVirtual
+        hComputedVirtual
       _ = curveBalance (virtualSupplyOf s') := by
         congr 1
         dsimp [virtualSupplyOf]
@@ -291,8 +280,7 @@ theorem init_reserve_ratio_zero
         exact (virtual_supply_after_init virtualSupply_ floorSupply_
           hFloorLeVirtualVal).symm
   · rw [hFloorBalance, hFloorSupply]
-    exact trustedCurveHelperOutput_correct
-      floorSupply_ computedFloorBalance hComputedFloor
+    exact hComputedFloor
 
 /--
   Successful `buy` preserves zero reserve-ratio deviation.
@@ -358,10 +346,7 @@ theorem buy_preserves_reserve_ratio_zero
           curveBalance
             (add (add (floorSupplyOf s) (totalSupplyOf s))
               (add bcTokenAmount buyFeeAmount)) :=
-        trustedCurveHelperOutput_correct
-          (add (add (floorSupplyOf s) (totalSupplyOf s))
-            (add bcTokenAmount buyFeeAmount))
-          computedNewVirtualBalance hComputedNewVirtual
+        hComputedNewVirtual
       _ = curveBalance (virtualSupplyOf s') := by
         congr 1
         dsimp [virtualSupplyOf]
@@ -418,8 +403,7 @@ theorem sell_preserves_reserve_ratio_zero
     calc
       computedNewVirtualBalance =
           curveBalance (sellVirtualSupplyAfter bcTokenAmount s) :=
-        trustedCurveHelperOutput_correct
-        (sellVirtualSupplyAfter bcTokenAmount s) computedNewVirtualBalance hComputedNewVirtual
+        hComputedNewVirtual
       _ = curveBalance (add (floorSupplyOf s') (totalSupplyOf s')) := by
         congr 1
         dsimp [sellVirtualSupplyAfter, virtualSupplyOf]
@@ -487,8 +471,7 @@ theorem floorSellAndBurn_preserves_reserve_ratio_zero
     calc
       computedNewFloorBalance =
           curveBalance (floorSupplyAfterFeeBurn bcTokenAmount s) :=
-        trustedCurveHelperOutput_correct
-        (floorSupplyAfterFeeBurn bcTokenAmount s) computedNewFloorBalance hComputedNewFloor
+        hComputedNewFloor
       _ = curveBalance (floorSupplyOf s') := by
         congr 1
         exact hFloorSupply.symm

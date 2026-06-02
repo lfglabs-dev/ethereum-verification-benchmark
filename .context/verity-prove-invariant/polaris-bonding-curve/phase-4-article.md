@@ -17,8 +17,8 @@ as math matching `Specs.lean`:
 - `virtualBalance = curveBalance(virtualSupply)`
 - `floorBalance = curveBalance(floorSupply)`
 
-Proof status is stated as a proof under one trusted helper-output axiom. The
-article does not claim a fully closed proof of PRB/ABDK fixed-point
+Proof status is stated as a zero-axiom proof under explicit helper-output
+preconditions. The article does not claim a fully closed proof of PRB/ABDK fixed-point
 exponentiation, reserve-token custody, external transfers, or ERC20 per-account
 accounting.
 
@@ -32,7 +32,7 @@ Review findings were resolved:
 Build:
 
 ```bash
-bun run build
+npm run build
 ```
 
 Result: success.

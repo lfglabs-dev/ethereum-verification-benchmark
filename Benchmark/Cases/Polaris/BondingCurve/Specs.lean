@@ -14,13 +14,14 @@ def feePercentageOf (s : ContractState) : Uint256 := s.storage 4
 def initializedOf (s : ContractState) : Uint256 := s.storage 5
 
 /--
-  Trusted helper policy: the executable model receives the Solidity
-  `_getBalanceFromReserveRatio` result as an input because Verity does not model
-  PRB/ABDK fixed-point exponentiation here. Proofs may assume this predicate for
-  helper outputs, then use the labeled trust axiom in `Proofs.lean` to recover
-  the rounded curve equation.
+  Helper-output policy: the executable model receives the Solidity
+  `_getBalanceFromReserveRatio` result as an input because this benchmark does
+  not model PRB/ABDK fixed-point exponentiation bit-for-bit. The predicate
+  states the exact proof obligation for such an input: it must equal the
+  benchmark's rounded reserve abstraction at the same supply.
 -/
-opaque trustedCurveHelperOutput : Uint256 -> Uint256 -> Prop
+def trustedCurveHelperOutput (supply reserve : Uint256) : Prop :=
+  reserve = curveBalance supply
 
 /-- Source helper: `virtualSupply() = floorSupply + totalSupply()`. -/
 def virtualSupplyOf (s : ContractState) : Uint256 :=

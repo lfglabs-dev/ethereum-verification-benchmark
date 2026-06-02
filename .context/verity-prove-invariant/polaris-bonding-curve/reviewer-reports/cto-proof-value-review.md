@@ -1,5 +1,8 @@
 status: pass_with_minor_findings
 
+superseded_note:
+- This report reviewed the earlier AXIOM-terminal branch state. Later post-axiom-elimination work removed the custom Lean axiom and replaced it with explicit helper-output preconditions. The PRB/ABDK pow, rounding, custody, and solvency scope limitations in this report still apply.
+
 critical_findings:
 - None.
 

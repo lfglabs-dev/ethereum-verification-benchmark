@@ -32,7 +32,7 @@ Modeled storage:
 
 ## Simplifications
 
-- `_getBalanceFromReserveRatio` is represented by opaque `curveBalance : Uint256 -> Uint256` plus `trustedCurveHelperOutput supply reserve`. Executable transitions receive the Solidity helper result as an input because the `verity_contract` macro cannot call the opaque helper directly. Theorems assume only the labeled trusted-helper predicate, not the post-state reserve/curve equality; the equality is recovered through the explicit trusted-library axiom in the proof file.
+- `_getBalanceFromReserveRatio` is represented by opaque `curveBalance : Uint256 -> Uint256` plus `trustedCurveHelperOutput supply reserve`, defined as `reserve = curveBalance supply`. Executable transitions receive the Solidity helper result as an input because the `verity_contract` macro cannot call the opaque helper directly. Theorems assume only this labeled helper-output predicate, not the whole post-state invariant.
 - ERC20 per-account balances and reserve-token custody are omitted. Aggregate `totalSupply` is kept because it determines `virtualSupply`.
 - External calls and token transfers are omitted from the state transition because the selected invariant is the contract's own curve-point deviation check, not token custody.
 - Caller-dependent behavior is represented by successful-path inputs: `buy` carries the fee-router branch through a caller marker plus fee amount hypothesis, and `floorSellAndBurn` carries the fee-router authorization guard.
@@ -59,7 +59,7 @@ environment contention.
 
 ## Known Risk
 
-The main semantic risk is still the fixed-point exponentiation abstraction. The model no longer uses an identity reserve helper. Init, buy, sell, and floor-burn preservation now prove operation-level storage alignment from direct helper-result writes plus bounded Uint256 arithmetic assumptions. The public claim must say the current terminal result proves operation-level preservation under the explicit trusted-helper axiom, not the full PRB/ABDK pow formula.
+The main semantic risk is still the fixed-point exponentiation abstraction. The model no longer uses an identity reserve helper. Init, buy, sell, and floor-burn preservation now prove operation-level storage alignment from direct helper-result writes plus bounded Uint256 arithmetic assumptions. The public claim must say the current terminal result proves operation-level preservation with zero Lean axioms but under explicit helper-output preconditions, not the full PRB/ABDK pow formula.
 
 ## Review Resolution
 
