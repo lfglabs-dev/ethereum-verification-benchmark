@@ -1,25 +1,8 @@
 import Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Specs
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 namespace Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit
-
-theorem old_split_bound_under_no_recapture
-    (s1 s2 feeRate roundingSlack : Nat) (s : VaultState) (m : Nat := virtualShares) :
-    old_split_bound_under_no_recapture_spec s1 s2 feeRate roundingSlack s m := by
-  intro h
-  exact h
-
-/-!
-This is the non-tautological form we want to discharge in a Lean-enabled
-environment. It replaces the old unconditional target with an explicit
-`splitAdvantage <= roundingSlack` assumption. For deployed PlasmaVault, that
-assumption is false for `roundingSlack = 1` in the handoff counterexample.
--/
-theorem old_split_bound_under_bounded_advantage
-    (s1 s2 feeRate roundingSlack : Nat) (s : VaultState) (m : Nat := virtualShares) :
-    old_split_bound_under_bounded_advantage_spec s1 s2 feeRate roundingSlack s m := by
-  intro h
-  unfold boundedSplitAdvantageAssumption oldBound splitAdvantage at *
-  exact (Nat.le_add_of_sub_le h).trans_eq (Nat.add_comm roundingSlack (combinedPayout s1 s2 feeRate s m))
 
 theorem fee_payout_bounded_by_fee_free
     (amountShares feeRate : Nat) (s : VaultState) (m : Nat := virtualShares) :
@@ -40,13 +23,41 @@ prove:
 
   (A' + 1) * (T + m) >= (A + 1) * (T' + m)
 
-The proof follows from `payout * (T + m) <= amountShares * (A + 1)`.
-It is left as the next theorem-prover task because the remaining work is the
-natural-number subtraction algebra around the post-redeem state.
+The proof follows from `payout * (T + m) <= amountShares * (A + 1)`,
+then normalizes the natural-number subtractions introduced by the post-redeem
+state update.
 -/
 theorem redeem_preserves_pps
     (amountShares feeRate : Nat) (s : VaultState) (m : Nat := virtualShares) :
     redeem_preserves_pps_spec amountShares feeRate s m := by
-  sorry
+  intro hValid
+  rcases hValid with ⟨hm, hAmountLe, _hFeeRate, _hFeeSharesLe, hPayoutLe⟩
+  unfold ppsCrossNondecreasing redeem redeemPayout convertToAssets
+  dsimp
+  set payout :=
+    (amountShares - feeShares amountShares feeRate) * (s.assets + 1) /
+      (s.shares + m)
+  set denominator := s.shares + m
+  set numerator := s.assets + 1
+  have hPayoutMul :
+      payout * denominator <=
+        (amountShares - feeShares amountShares feeRate) * numerator := by
+    subst payout
+    subst denominator
+    subst numerator
+    exact Nat.div_mul_le_self
+      ((amountShares - feeShares amountShares feeRate) * (s.assets + 1))
+      (s.shares + m)
+  have hNetLe : amountShares - feeShares amountShares feeRate <= amountShares :=
+    Nat.sub_le amountShares (feeShares amountShares feeRate)
+  have hPayoutMulAmount : payout * denominator <= amountShares * numerator := by
+    exact hPayoutMul.trans (Nat.mul_le_mul_right numerator hNetLe)
+  have hPayoutLeAssets : payout <= s.assets := by
+    subst payout
+    exact hPayoutLe
+  subst denominator
+  subst numerator
+  nlinarith [Nat.sub_add_cancel hPayoutLeAssets, Nat.sub_add_cancel hAmountLe,
+    hPayoutMulAmount]
 
 end Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit

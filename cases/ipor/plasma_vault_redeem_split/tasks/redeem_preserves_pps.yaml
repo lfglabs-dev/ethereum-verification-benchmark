@@ -14,7 +14,7 @@ difficulty: medium
 category: invariant
 track: proof-only
 translation_status: translated
-proof_status: open
+proof_status: complete
 evaluation_engine: lean_proof_generation
 implementation_files:
   - cases/ipor/plasma_vault_redeem_split/verity/Contract.lean

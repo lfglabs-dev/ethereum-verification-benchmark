@@ -1,18 +1,22 @@
-import Mathlib
+import Mathlib.Data.Nat.Basic
 
 /-!
 Minimal arithmetic model of IPOR PlasmaVault redeem fee behavior.
 
 Simplifications:
 * This model keeps only `totalAssets`, `totalSupply`, virtual-share offset, and
-  the redeem transition. Token transfers, access control, release queues, and
-  market accounting are intentionally outside this case.
+  the public fee-charging redeem transition. Token transfers, access control,
+  release queues, withdraw, request redemption, and market accounting are
+  intentionally outside this case.
 * Arithmetic is modeled over `Nat`, not `Uint256`. Overflow is excluded by the
   intended theorem preconditions in `Specs.lean`.
+* The model uses the nonzero-supply conversion branch because a successful
+  public redeem with existing shares is the modeled path.
+* The Solidity zero-share revert is abstracted into the successful-path boundary;
+  allowing a zero-share no-op does not affect the PPS theorem.
 * The model preserves the load-bearing PlasmaVault behavior: redeem burns all
   requested shares, pays assets for `shares - feeShares`, and keeps the fee value
-  inside vault assets. That retained value is what makes the old split-payout
-  bound false.
+  inside vault assets.
 * `m = 100` matches `DECIMALS_OFFSET = 2`.
 -/
 
@@ -47,34 +51,5 @@ def feeFreePayout (amountShares : Nat) (s : VaultState) (m : Nat := virtualShare
 def ppsCrossNondecreasing (before after : VaultState) (m : Nat := virtualShares) : Prop :=
   (after.assets + 1) * (before.shares + m) >=
     (before.assets + 1) * (after.shares + m)
-
-def twoStepSplitPayout
-    (s1 s2 feeRate : Nat) (s : VaultState) (m : Nat := virtualShares) : Nat :=
-  let p1 := redeemPayout s1 feeRate s m
-  let s' := redeem s1 feeRate s m
-  p1 + redeemPayout s2 feeRate s' m
-
-def twoStepFrozenPayout
-    (s1 s2 feeRate : Nat) (s : VaultState) (m : Nat := virtualShares) : Nat :=
-  redeemPayout s1 feeRate s m + redeemPayout s2 feeRate s m
-
-def combinedPayout
-    (s1 s2 feeRate : Nat) (s : VaultState) (m : Nat := virtualShares) : Nat :=
-  redeemPayout (s1 + s2) feeRate s m
-
-def splitAdvantage
-    (s1 s2 feeRate : Nat) (s : VaultState) (m : Nat := virtualShares) : Nat :=
-  twoStepSplitPayout s1 s2 feeRate s m -
-    combinedPayout s1 s2 feeRate s m
-
-def retainedFeeRecapture
-    (s1 s2 feeRate : Nat) (s : VaultState) (m : Nat := virtualShares) : Nat :=
-  twoStepSplitPayout s1 s2 feeRate s m -
-    twoStepFrozenPayout s1 s2 feeRate s m
-
-def oldBound
-    (s1 s2 feeRate roundingSlack : Nat) (s : VaultState) (m : Nat := virtualShares) : Prop :=
-  twoStepSplitPayout s1 s2 feeRate s m <=
-    combinedPayout s1 s2 feeRate s m + roundingSlack
 
 end Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit

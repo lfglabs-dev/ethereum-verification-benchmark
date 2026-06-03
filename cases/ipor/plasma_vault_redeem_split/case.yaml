@@ -5,10 +5,10 @@ schema_version: 1
 split: active
 family_id: ipor
 implementation_id: ipor_fusion
-stage: proof_in_progress
+stage: proof_complete
 translation_status: translated
-spec_status: revised_after_counterexample
-proof_status: partial
+spec_status: revised_after_failed_fairness_target
+proof_status: complete
 upstream_repo: https://github.com/IPOR-Labs/ipor-fusion
 upstream_commit: 3a83157ee75a7c1752d9151aff43eb92a50cb346
 original_contract_path: contracts/vaults/PlasmaVault.sol
@@ -18,7 +18,6 @@ spec_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Specs
 proof_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs
 selected_functions:
   - redeem
-  - withdraw
   - _redeem
   - _convertToAssets
   - withdrawFee
@@ -30,19 +29,20 @@ abstraction_tags:
   - erc4626_virtual_offset
   - withdraw_fee_rounding
   - retained_fee_pps_recapture
-  - counterexample_documented
+  - pps_nondecrease
 abstraction_notes: >
   Focused arithmetic model of PlasmaVault redeem: fee shares are rounded down,
   all requested shares are burned, only net shares are converted to assets, and
-  retained fee value remains in vault assets. The original split-payout bound is
-  documented as false. The revised safety target is PPS non-decrease; the old
-  split bound is available only under an explicit bounded-advantage assumption.
+  retained fee value remains in vault assets. An earlier split-payout fairness
+  target was rejected as too strong for these semantics. The completed proof
+  target is PPS non-decrease, plus a one-step fee-payout upper bound.
 unsupported_feature_codes:
   - markets_elided_total_assets_ghosted
   - release_queue_elided
   - access_control_elided
 notes: >
-  This case is intentionally honest about the counterexample. It should not be
-  published as a completed vulnerability proof. The useful FV result is the
-  remaining-holder no-principal-dilution theorem once the Nat arithmetic proof is
-  discharged.
+  This case is intentionally scoped to the safety property that remains true
+  after the failed split-fairness target: a successful modeled redeem cannot
+  decrease PPS. It should be described as no remaining-holder principal dilution,
+  not as a proof that fee-splitting is impossible or that the whole vault is
+  bug-free.
