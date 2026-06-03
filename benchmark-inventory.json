@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 23,
-    "implementation_count": 24,
-    "active_case_count": 21,
+    "family_count": 24,
+    "implementation_count": 25,
+    "active_case_count": 22,
     "backlog_case_count": 3,
-    "active_task_count": 124,
+    "active_task_count": 127,
     "backlog_task_count": 8,
-    "buildable_case_count": 23,
-    "runnable_task_count": 132,
+    "buildable_case_count": 24,
+    "runnable_task_count": 135,
     "case_stage_counts": {
-      "build_green": 20,
+      "build_green": 21,
       "candidate": 1,
       "proof_complete": 3
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 23
+      "translated": 24
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 16,
+      "complete": 17,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 132
+      "proof-only": 135
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -47,6 +47,9 @@
       "balance_conservation": 2,
       "balance_credit_update": 2,
       "balance_update": 1,
+      "calldata_decoder_bounds": 1,
+      "calldata_decoder_faithfulness": 1,
+      "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
       "exploit_trace": 1,
       "frame_property": 2,
@@ -77,14 +80,14 @@
       "weighted_selection": 1
     },
     "task_proof_family_counts": {
-      "authorization_enablement": 24,
+      "authorization_enablement": 25,
       "functional_correctness": 32,
       "protocol_transition_correctness": 22,
-      "refinement_equivalence": 9,
+      "refinement_equivalence": 11,
       "state_preservation_local_effects": 45
     },
     "family_split_counts": {
-      "active": 20,
+      "active": 21,
       "backlog": 2,
       "mixed": 1
     }
@@ -482,6 +485,23 @@
         "solidity"
       ],
       "manifest_path": "families/zama/family.yaml"
+    },
+    {
+      "family_id": "zodiac",
+      "display_name": "Zodiac Roles",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Gnosis Guild Zodiac Roles permissioning logic, starting with the Roles v3 lazy ABI decoder and condition field-extraction surface.",
+      "implementation_ids": [
+        "roles-v3"
+      ],
+      "case_ids": [
+        "zodiac/roles_decoder_faithfulness"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/zodiac/family.yaml"
     }
   ],
   "implementations": [
@@ -868,6 +888,22 @@
       ],
       "notes": "OpenZeppelin's reference implementation of ERC-7984, the confidential fungible token standard for Zama's fhEVM. Uses FHESafeMath for overflow-safe encrypted arithmetic and the FHE.select pattern for branchless conditional transfers.",
       "manifest_path": "families/zama/implementations/confidential_contracts/implementation.yaml"
+    },
+    {
+      "family_id": "zodiac",
+      "implementation_id": "roles-v3",
+      "display_name": "Zodiac Roles v3 ABI Decoder",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/gnosisguild/zodiac-modifier-roles",
+      "upstream_commit": "172723b165d482c5565e413e9927604b0dc168b6",
+      "source_language": "solidity",
+      "source_artifact_path": "packages/evm/contracts/common/AbiLocation.sol",
+      "case_ids": [
+        "zodiac/roles_decoder_faithfulness"
+      ],
+      "notes": "Contracts-v3 branch decoder libraries for scoped permissions and ABI field extraction. The v3 architecture is deliberately targeted even though the currently deployed mastercopy is v2.1.",
+      "manifest_path": "families/zodiac/implementations/roles-v3/implementation.yaml"
     }
   ],
   "cases": [
@@ -1869,6 +1905,56 @@
       ],
       "spec_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs",
       "proof_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs"
+    },
+    {
+      "case_id": "zodiac/roles_decoder_faithfulness",
+      "project": "zodiac",
+      "case_name": "roles_decoder_faithfulness",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zodiac/roles_decoder_faithfulness/case.yaml",
+      "split": "active",
+      "family_id": "zodiac",
+      "implementation_id": "roles-v3",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/gnosisguild/zodiac-modifier-roles",
+      "upstream_commit": "172723b165d482c5565e413e9927604b0dc168b6",
+      "original_contract_path": "packages/evm/contracts/common/AbiLocation.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/gnosisguild/zodiac-modifier-roles@172723b165d482c5565e413e9927604b0dc168b6:packages/evm/contracts/common/AbiLocation.sol",
+      "selected_functions": [
+        "AbiLocation.children",
+        "AbiLocation.size",
+        "AbiLocation._tailLocation",
+        "Topology.isInlined",
+        "Topology.inlinedSize",
+        "ConditionEvaluator.__input"
+      ],
+      "lean_target": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Compile",
+      "failure_reason": null,
+      "notes": "This case targets the v3 decoder/callee mismatch class that required custom verifiers in Zodiac Roles v2. The theorem scope covers static values, dynamic bytes/string, tuples, dynamic arrays, nested AbiEncoded, and transparent logical wrappers. Operator.Custom, Zip, Slice, Pluck, MultiSendUnwrapper, comparison consumption, and external calls are intentionally out of scope.",
+      "buildable": true,
+      "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "lazy_abi_decoder",
+        "guarded_calldata_word_reader",
+        "head_tail_offsets",
+        "non_forward_tail_rejection",
+        "integrity_metadata_assumed"
+      ],
+      "abstraction_notes": "The benchmark models the Roles v3 ABI decoder as a guarded byte-region walker. The reference decoder is an independent canonical Solidity ABI v2 layout model using HEAD/TAIL regions, block-relative offsets, length words, dynamic array element blocks, and ceil32-padded dynamic payloads. The reference solution proves the metadata bridge, recursive leaf-region faithfulness, and bounds-safety without case-specific axioms.",
+      "unsupported_feature_codes": [
+        "condition_packer_integrity_roundtrip_assumed",
+        "keccak_injectivity_for_hash_comparison_paths"
+      ],
+      "spec_target": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Specs",
+      "proof_target": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs"
     }
   ],
   "backlog": [
@@ -7679,6 +7765,148 @@
         "editable_proof": "ready",
         "reference_solution": "ready"
       }
+    },
+    {
+      "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge",
+      "task_id": "metadata_bridge",
+      "case_id": "zodiac/roles_decoder_faithfulness",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/metadata_bridge.yaml",
+      "split": "active",
+      "family_id": "zodiac",
+      "implementation_id": "roles-v3",
+      "source_ref": "https://github.com/gnosisguild/zodiac-modifier-roles@172723b165d482c5565e413e9927604b0dc168b6:packages/evm/contracts/common/AbiLocation.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "calldata_decoder_metadata",
+      "category": "authorization_decoder",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.metadata_bridge",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/MetadataBridge.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Checks the bridge between Roles decoder metadata and ABI staticness/static byte size for the focused ABI tree model. The reference proof is discharged structurally over the ABI type tree; the flat ConditionFlat parent-pointer traversal and pack/unpack integrity bridge remain manifest-level hypotheses.",
+      "unsupported_feature_codes": [
+        "condition_packer_integrity_roundtrip_assumed"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe",
+      "task_id": "roles_decoder_bounds_safe",
+      "case_id": "zodiac/roles_decoder_faithfulness",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/roles_decoder_bounds_safe.yaml",
+      "split": "active",
+      "family_id": "zodiac",
+      "implementation_id": "roles-v3",
+      "source_ref": "https://github.com/gnosisguild/zodiac-modifier-roles@172723b165d482c5565e413e9927604b0dc168b6:packages/evm/contracts/common/AbiLocation.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "calldata_decoder_bounds",
+      "category": "authorization_decoder",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_bounds_safe",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/RolesDecoderBoundsSafe.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "States that every successful Roles decoder byte region emitted at the ConditionEvaluator.__input extraction boundary lies inside calldata, with malformed guarded reads and non-forward or out-of-range tail offsets mapped to overflow in the focused model. The reference proof is discharged by induction over the fuel-bounded Roles walker.",
+      "unsupported_feature_codes": [
+        "condition_packer_integrity_roundtrip_assumed"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_faithful",
+      "task_id": "roles_decoder_faithful",
+      "case_id": "zodiac/roles_decoder_faithfulness",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/roles_decoder_faithful.yaml",
+      "split": "active",
+      "family_id": "zodiac",
+      "implementation_id": "roles-v3",
+      "source_ref": "https://github.com/gnosisguild/zodiac-modifier-roles@172723b165d482c5565e413e9927604b0dc168b6:packages/evm/contracts/common/AbiLocation.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "calldata_decoder_faithfulness",
+      "category": "authorization_decoder",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_faithful",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/RolesDecoderFaithful.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "States that the modeled Roles v3 lazy decoder isolates the same leaf byte region as an independent canonical Solidity ABI v2 reference decoder over static words, dynamic bytes/string, tuple, dynamic array, nested AbiEncoded, and transparent logical wrappers. The reference proof is discharged by structural metadata bridge lemmas plus fuel-bounded recursive walker equivalence. Pack/unpack integrity and hash-comparison semantics are explicitly out-of-model assumptions.",
+      "unsupported_feature_codes": [
+        "condition_packer_integrity_roundtrip_assumed",
+        "keccak_injectivity_for_hash_comparison_paths"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
     }
   ],
   "backlog_tasks": [
@@ -8043,5 +8271,5 @@
       }
     }
   ],
-  "generated_at": "2026-05-27T16:38:28.487739+00:00"
+  "generated_at": "2026-06-03T09:07:51.734304+00:00"
 }

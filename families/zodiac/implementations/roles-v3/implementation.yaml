@@ -1,0 +1,17 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: zodiac
+implementation_id: roles-v3
+display_name: Zodiac Roles v3 ABI Decoder
+split: active
+status: translated
+upstream_repo: https://github.com/gnosisguild/zodiac-modifier-roles
+upstream_commit: 172723b165d482c5565e413e9927604b0dc168b6
+source_language: solidity
+source_artifact_path: packages/evm/contracts/common/AbiLocation.sol
+case_ids:
+  - zodiac/roles_decoder_faithfulness
+notes: >
+  Contracts-v3 branch decoder libraries for scoped permissions and ABI field
+  extraction. The v3 architecture is deliberately targeted even though the
+  currently deployed mastercopy is v2.1.

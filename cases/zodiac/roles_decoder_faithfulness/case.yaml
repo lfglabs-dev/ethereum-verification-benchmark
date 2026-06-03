@@ -1,0 +1,51 @@
+manifest_kind: case
+project: zodiac
+case_id: roles_decoder_faithfulness
+schema_version: 1
+split: active
+family_id: zodiac
+implementation_id: roles-v3
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/gnosisguild/zodiac-modifier-roles
+upstream_commit: 172723b165d482c5565e413e9927604b0dc168b6
+original_contract_path: packages/evm/contracts/common/AbiLocation.sol
+source_ref: https://github.com/gnosisguild/zodiac-modifier-roles@172723b165d482c5565e413e9927604b0dc168b6:packages/evm/contracts/common/AbiLocation.sol
+lean_target: Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Compile
+spec_target: Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Specs
+proof_target: Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs
+selected_functions:
+  - AbiLocation.children
+  - AbiLocation.size
+  - AbiLocation._tailLocation
+  - Topology.isInlined
+  - Topology.inlinedSize
+  - ConditionEvaluator.__input
+source_language: solidity
+verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - lazy_abi_decoder
+  - guarded_calldata_word_reader
+  - head_tail_offsets
+  - non_forward_tail_rejection
+  - integrity_metadata_assumed
+abstraction_notes: >
+  The benchmark models the Roles v3 ABI decoder as a guarded byte-region walker.
+  The reference decoder is an independent canonical Solidity ABI v2 layout
+  model using HEAD/TAIL regions, block-relative offsets, length words, dynamic
+  array element blocks, and ceil32-padded dynamic payloads. The reference
+  solution proves the metadata bridge, recursive leaf-region faithfulness, and
+  bounds-safety without case-specific axioms.
+unsupported_feature_codes:
+  - condition_packer_integrity_roundtrip_assumed
+  - keccak_injectivity_for_hash_comparison_paths
+notes: >
+  This case targets the v3 decoder/callee mismatch class that required custom
+  verifiers in Zodiac Roles v2. The theorem scope covers static values,
+  dynamic bytes/string, tuples, dynamic arrays, nested AbiEncoded, and transparent
+  logical wrappers. Operator.Custom, Zip, Slice, Pluck, MultiSendUnwrapper,
+  comparison consumption, and external calls are intentionally out of scope.

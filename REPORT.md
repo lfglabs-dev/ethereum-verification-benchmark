@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 23
-- Implementations: 24
-- Active cases: 21
-- Buildable active cases: 21
-- Active tasks: 124
+- Families: 24
+- Implementations: 25
+- Active cases: 22
+- Buildable active cases: 22
+- Active tasks: 127
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -222,6 +222,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_update`, `_transfer`, `_mint`, `_burn`, `confidentialTransferFrom`, `setOperator`
 - Upstream source artifact: `contracts/token/ERC7984/ERC7984.sol`
 - Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, and functional correctness of setOperator. Eleven proof tasks cover the 5 modeled functions.
+
+### `zodiac/roles_decoder_faithfulness`
+- Family / implementation: `zodiac` / `roles-v3`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Compile`
+- Source ref: `https://github.com/gnosisguild/zodiac-modifier-roles@172723b165d482c5565e413e9927604b0dc168b6:packages/evm/contracts/common/AbiLocation.sol`
+- Selected functions: `AbiLocation.children`, `AbiLocation.size`, `AbiLocation._tailLocation`, `Topology.isInlined`, `Topology.inlinedSize`, `ConditionEvaluator.__input`
+- Upstream source artifact: `packages/evm/contracts/common/AbiLocation.sol`
+- Notes: This case targets the v3 decoder/callee mismatch class that required custom verifiers in Zodiac Roles v2. The theorem scope covers static values, dynamic bytes/string, tuples, dynamic arrays, nested AbiEncoded, and transparent logical wrappers. Operator.Custom, Zip, Slice, Pluck, MultiSendUnwrapper, comparison consumption, and external calls are intentionally out of scope.
 
 ## Non-buildable active cases
 
@@ -1468,6 +1478,36 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferSufficient.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zodiac/roles_decoder_faithfulness/metadata_bridge`
+- Track / property class / proof family: `proof-only` / `calldata_decoder_metadata` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.metadata_bridge`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean`, `Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean`
+- Specification files: `cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean`, `Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/MetadataBridge.lean`
+- Hidden reference solution: `Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs`
+
+### `zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe`
+- Track / property class / proof family: `proof-only` / `calldata_decoder_bounds` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_bounds_safe`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean`, `Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean`
+- Specification files: `cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean`, `Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/RolesDecoderBoundsSafe.lean`
+- Hidden reference solution: `Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs`
+
+### `zodiac/roles_decoder_faithfulness/roles_decoder_faithful`
+- Track / property class / proof family: `proof-only` / `calldata_decoder_faithfulness` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_faithful`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean`, `Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean`
+- Specification files: `cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean`, `Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/RolesDecoderFaithful.lean`
+- Hidden reference solution: `Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs`
 
 ## Backlog
 

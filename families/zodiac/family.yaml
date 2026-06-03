@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: zodiac
+display_name: Zodiac Roles
+split: active
+status: active
+description: >
+  Benchmark family for Gnosis Guild Zodiac Roles permissioning logic, starting
+  with the Roles v3 lazy ABI decoder and condition field-extraction surface.
+implementation_ids:
+  - roles-v3
+case_ids:
+  - zodiac/roles_decoder_faithfulness
+source_languages:
+  - solidity
