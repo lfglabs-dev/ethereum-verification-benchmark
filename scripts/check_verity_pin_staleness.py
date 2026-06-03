@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -139,6 +140,12 @@ def main() -> None:
     nwo = github_nwo_from_url(url)
 
     print(f"Verity pin: {sha[:12]} (from {nwo})")
+
+    if shutil.which("gh") is None:
+        print("WARNING: could not determine commit distance (gh CLI not found)", file=sys.stderr)
+        if not args.warn_only:
+            sys.exit(1)
+        return
 
     date = pinned_commit_date(nwo, sha)
     if date:

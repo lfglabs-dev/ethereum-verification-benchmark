@@ -37,7 +37,7 @@ _DECL_RE = re.compile(
     r"^\s*(?:private\s+)?(?:theorem|lemma|def|abbrev|opaque|axiom)\s+([A-Za-z_][A-Za-z0-9_'.]*)\b"
 )
 _NAMESPACE_RE = re.compile(r"^\s*namespace\s+([A-Za-z_][A-Za-z0-9_'.]*(?:\.[A-Za-z_][A-Za-z0-9_'.]*)*)\b")
-_END_RE = re.compile(r"^\s*end(?:\s+[A-Za-z_][A-Za-z0-9_'.]*(?:\.[A-Za-z_][A-Za-z0-9_'.]*)*)?\s*$")
+_END_RE = re.compile(r"^\s*end(?:\s+([A-Za-z_][A-Za-z0-9_'.]*(?:\.[A-Za-z_][A-Za-z0-9_'.]*)*))?\s*$")
 
 
 def lean_module_path(module_name: str) -> Path:
@@ -73,8 +73,9 @@ def declared_names(path: Path) -> set[str]:
         if namespace_match:
             namespaces.append(namespace_match.group(1))
             continue
-        if _END_RE.match(cleaned):
-            if namespaces:
+        end_match = _END_RE.match(cleaned)
+        if end_match:
+            if namespaces and end_match.group(1):
                 namespaces.pop()
             continue
         decl_match = _DECL_RE.match(cleaned)
