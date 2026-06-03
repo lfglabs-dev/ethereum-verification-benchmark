@@ -6,8 +6,9 @@ namespace Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit
 The original split-payout fairness target was too strong for the real redeem
 transition because fee value is retained in assets while the redeemer may still
 hold shares for later tranches. This case therefore proves the safety statement
-that remains true for the modeled code: redeem does not decrease price per
-share. It also proves the one-step fee sanity bound against the fee-free path.
+that remains true for the modeled code: redeem does not decrease virtualized
+conversion PPS. It also proves the one-step fee sanity bound against the
+fee-free path.
 -/
 
 def validRedeemInput

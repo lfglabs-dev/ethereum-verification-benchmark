@@ -8,8 +8,8 @@ Proved theorem:
 - `fee_payout_bounded_by_fee_free`
 
 Main theorem statement:
-For a successful modeled public redeem, post-redeem price per share is
-non-decreasing:
+For a successful modeled public redeem, post-redeem virtualized conversion PPS
+is non-decreasing:
 
 ```text
 (A' + 1) * (T + m) >= (A + 1) * (T' + m)

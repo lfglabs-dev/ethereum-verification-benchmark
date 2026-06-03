@@ -4,8 +4,9 @@ conversion with virtual offsets, withdraw-fee shares, burning requested shares,
 and transferring assets for post-fee shares.
 
 Candidate invariants:
-1. PPS non-decrease after successful public redeem. Selected. This is the
-   safety property that remains true after the failed split-payout target.
+1. Virtualized conversion PPS non-decrease after successful public redeem.
+   Selected. This is the safety property that remains true after the failed
+   split-payout target.
 2. Fee-charging payout is bounded by fee-free payout. Selected as a sanity
    theorem.
 3. Split payout is bounded by combined payout plus one rounding unit. Rejected.
@@ -22,6 +23,6 @@ Translation fidelity audit:
   redemption are outside this arithmetic slice.
 
 Reviewer outcome:
-Research and invariant reviewers agreed the pivot to PPS non-decrease is honest.
-They blocked on stale metadata and the old split-bound task. Those items were
-removed or updated.
+Research and invariant reviewers agreed the pivot to virtualized conversion PPS
+non-decrease is honest. They blocked on stale metadata and the old split-bound
+task. Those items were removed or updated.

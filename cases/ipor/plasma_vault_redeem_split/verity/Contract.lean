@@ -13,7 +13,7 @@ Simplifications:
 * The model uses the nonzero-supply conversion branch because a successful
   public redeem with existing shares is the modeled path.
 * The Solidity zero-share revert is abstracted into the successful-path boundary;
-  allowing a zero-share no-op does not affect the PPS theorem.
+  allowing a zero-share no-op does not affect the virtualized-PPS theorem.
 * The model preserves the load-bearing PlasmaVault behavior: redeem burns all
   requested shares, pays assets for `shares - feeShares`, and keeps the fee value
   inside vault assets.
