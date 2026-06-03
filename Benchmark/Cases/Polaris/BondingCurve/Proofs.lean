@@ -94,15 +94,12 @@ private theorem virtual_supply_after_buy_mint
   omega
 
 private theorem init_slot_writes
-    (virtualSupply_ floorSupply_ computedVirtualPow computedFloorPow : Uint256)
+    (virtualSupply_ floorSupply_ : Uint256)
     (s : ContractState)
     (hFloorNonZero : floorSupply_ != 0)
-    (hFloorLeVirtual : floorSupply_ <= virtualSupply_)
-    (hComputedVirtualPow : computedVirtualPow = curvePow virtualSupply_ (bPlusOneOf s))
-    (hComputedFloorPow : computedFloorPow = curvePow floorSupply_ (bPlusOneOf s)) :
+    (hFloorLeVirtual : floorSupply_ <= virtualSupply_) :
     let s' :=
-      ((BaseBondingCurve.init
-        virtualSupply_ floorSupply_ computedVirtualPow computedFloorPow).run s).snd
+      ((BaseBondingCurve.init virtualSupply_ floorSupply_).run s).snd
     virtualBalanceOf s' =
       getBalanceFromReserveRatio (alphaOf s) (bPlusOneOf s) virtualSupply_ ∧
     floorSupplyOf s' = floorSupply_ ∧
@@ -123,24 +120,19 @@ private theorem init_slot_writes
       BaseBondingCurve.floorBalance, BaseBondingCurve.totalSupply,
       BaseBondingCurve.initialized, BaseBondingCurve.alpha, BaseBondingCurve.bPlusOne,
       alphaOf, bPlusOneOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision,
-      hComputedVirtualPow, hComputedFloorPow, hFloorNeZero, hFloorLeVirtualVal,
+      curvePow, Contracts.ExternalArg.toWord,
+      hFloorNeZero, hFloorLeVirtualVal,
       setStorage, Verity.require, Verity.bind, Bind.bind,
       getStorage, Contract.run, ContractResult.snd]
 
 private theorem buy_slot_writes
-    (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount computedNewVirtualPow : Uint256)
+    (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount : Uint256)
     (s : ContractState)
     (hInitialized : initializedOf s = 1)
-    (hAmountNonZero : bcTokenAmount != 0)
-    (hComputedNewVirtualPow :
-      computedNewVirtualPow =
-        curvePow
-          (add (add (floorSupplyOf s) (totalSupplyOf s))
-            (add bcTokenAmount buyFeeAmount))
-          (bPlusOneOf s)) :
+    (hAmountNonZero : bcTokenAmount != 0) :
     let s' :=
       ((BaseBondingCurve.buy
-        isFeeRouter bcTokenAmount buyFeeAmount computedNewVirtualPow).run s).snd
+        isFeeRouter bcTokenAmount buyFeeAmount).run s).snd
     virtualBalanceOf s' =
       getBalanceFromReserveRatio (alphaOf s) (bPlusOneOf s)
         (add (add (floorSupplyOf s) (totalSupplyOf s))
@@ -162,18 +154,16 @@ private theorem buy_slot_writes
       BaseBondingCurve.virtualBalance, BaseBondingCurve.floorSupply,
       BaseBondingCurve.totalSupply, BaseBondingCurve.alpha, BaseBondingCurve.bPlusOne,
       BaseBondingCurve.initialized,
-      hComputedNewVirtualPow, hInitialized', hAmountNeZero, getStorage, setStorage, Verity.require,
+      curvePow, Contracts.ExternalArg.toWord,
+      hInitialized', hAmountNeZero, getStorage, setStorage, Verity.require,
       Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
 
 private theorem sell_slot_writes
-    (bcTokenAmount computedNewVirtualPow : Uint256) (s : ContractState)
+    (bcTokenAmount : Uint256) (s : ContractState)
     (hNetAmountNonZero : sellNetBurnAmount bcTokenAmount s != 0)
     (hNetLeOldSupply : sellNetBurnAmount bcTokenAmount s <= virtualSupplyOf s)
-    (hNetLeTotalSupply : sellNetBurnAmount bcTokenAmount s <= totalSupplyOf s)
-    (hComputedNewVirtualPow :
-      computedNewVirtualPow =
-        curvePow (sellVirtualSupplyAfter bcTokenAmount s) (bPlusOneOf s)) :
-    let s' := ((BaseBondingCurve.sell bcTokenAmount computedNewVirtualPow).run s).snd
+    (hNetLeTotalSupply : sellNetBurnAmount bcTokenAmount s <= totalSupplyOf s) :
+    let s' := ((BaseBondingCurve.sell bcTokenAmount).run s).snd
     virtualBalanceOf s' =
       getBalanceFromReserveRatio (alphaOf s) (bPlusOneOf s)
         (sellVirtualSupplyAfter bcTokenAmount s) ∧
@@ -209,28 +199,27 @@ private theorem sell_slot_writes
     simp [BaseBondingCurve.sell, sellNetBurnAmount,
       sellFeeAmount, virtualBalanceOf, floorSupplyOf,
       floorBalanceOf, totalSupplyOf, feePercentageOf, alphaOf, bPlusOneOf,
-      getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision, sellVirtualSupplyAfter,
+      getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision,
+      sellVirtualSupplyAfter, virtualSupplyOf,
       BaseBondingCurve.virtualBalance, BaseBondingCurve.floorSupply,
       BaseBondingCurve.totalSupply, BaseBondingCurve.feePercentage,
       BaseBondingCurve.alpha, BaseBondingCurve.bPlusOne,
-      decimalPrecision, hComputedNewVirtualPow, hNetNeZero',
+      curvePow, Contracts.ExternalArg.toWord,
+      decimalPrecision, hNetNeZero',
       hNetLeOldSupplyVal', hNetLeTotalSupplyVal', getStorage, setStorage, Verity.require,
       Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
 
 private theorem floor_sell_and_burn_slot_writes
-    (authorizedFeeRouter : Bool) (bcTokenAmount computedNewFloorPow : Uint256)
+    (authorizedFeeRouter : Bool) (bcTokenAmount : Uint256)
     (s : ContractState)
     (hAuthorized : authorizedFeeRouter = true)
     (hAmountNonZero : bcTokenAmount != 0)
     (hNewFloorLeOldSupply :
       floorSupplyAfterFeeBurn bcTokenAmount s <= virtualSupplyOf s)
-    (hBurnLeTotalSupply : bcTokenAmount <= totalSupplyOf s)
-    (hComputedNewFloorPow :
-      computedNewFloorPow =
-        curvePow (floorSupplyAfterFeeBurn bcTokenAmount s) (bPlusOneOf s)) :
+    (hBurnLeTotalSupply : bcTokenAmount <= totalSupplyOf s) :
     let s' :=
       ((BaseBondingCurve.floorSellAndBurn
-        authorizedFeeRouter bcTokenAmount computedNewFloorPow).run s).snd
+        authorizedFeeRouter bcTokenAmount).run s).snd
     virtualBalanceOf s' = virtualBalanceOf s ∧
     floorSupplyOf s' = floorSupplyAfterFeeBurn bcTokenAmount s ∧
     floorBalanceOf s' =
@@ -262,7 +251,8 @@ private theorem floor_sell_and_burn_slot_writes
       alphaOf, bPlusOneOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision,
       BaseBondingCurve.floorSupply, BaseBondingCurve.floorBalance, BaseBondingCurve.totalSupply,
       BaseBondingCurve.alpha, BaseBondingCurve.bPlusOne,
-      hComputedNewFloorPow, hAuthorizedTrue, hAmountNeZero, hNewFloorLeOldSupplyVal',
+      curvePow, Contracts.ExternalArg.toWord,
+      hAuthorizedTrue, hAmountNeZero, hNewFloorLeOldSupplyVal',
       hBurnLeTotalSupplyVal', getStorage, setStorage, Verity.require,
       Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
 
@@ -278,36 +268,26 @@ private theorem floor_sell_and_burn_slot_writes
   - `floorBalance = getBalanceFromReserveRatio A B_PLUS_1 floorSupply_`
   - `totalSupply = virtualSupply_ - floorSupply_`
 
-  This is exactly the source sequence in `BaseBondingCurve.init`, modulo the
-  documented `curvePow` boundary for PRB/ABDK fixed-point exponentiation.
+  This is exactly the source sequence in `BaseBondingCurve.init`, with only the
+  imported PRB/ABDK fixed-point exponentiation abstracted by `curvePow`.
 -/
 theorem init_reserve_ratio_zero
-    (virtualSupply_ floorSupply_ computedVirtualPow computedFloorPow : Uint256)
+    (virtualSupply_ floorSupply_ : Uint256)
     (s : ContractState)
     (hFloorNonZero : floorSupply_ != 0)
-    (hFloorLeVirtual : floorSupply_ <= virtualSupply_)
-    (hComputedVirtualPow :
-      trustedCurvePowOutput s virtualSupply_ computedVirtualPow)
-    (hComputedFloorPow :
-      trustedCurvePowOutput s floorSupply_ computedFloorPow) :
+    (hFloorLeVirtual : floorSupply_ <= virtualSupply_) :
     let s' :=
-      ((BaseBondingCurve.init
-        virtualSupply_ floorSupply_ computedVirtualPow computedFloorPow).run s).snd
+      ((BaseBondingCurve.init virtualSupply_ floorSupply_).run s).snd
     init_reserve_ratio_zero_spec s s' := by
   dsimp [init_reserve_ratio_zero_spec]
-  let s' :=
-    ((BaseBondingCurve.init
-      virtualSupply_ floorSupply_ computedVirtualPow computedFloorPow).run s).snd
+  let s' := ((BaseBondingCurve.init virtualSupply_ floorSupply_).run s).snd
   change reserveRatioDeviationZero s'
   dsimp [reserveRatioDeviationZero, currentReserveRatioDeviationZero,
     floorReserveRatioDeviationZero]
   have hFloorLeVirtualVal : floorSupply_.val <= virtualSupply_.val := by
     simpa [Verity.Core.Uint256.le_def] using hFloorLeVirtual
   have hw := init_slot_writes
-    virtualSupply_ floorSupply_ computedVirtualPow computedFloorPow s
-    hFloorNonZero hFloorLeVirtual
-    (by simpa [trustedCurvePowOutput] using hComputedVirtualPow)
-    (by simpa [trustedCurvePowOutput] using hComputedFloorPow)
+    virtualSupply_ floorSupply_ s hFloorNonZero hFloorLeVirtual
   rcases hw with
     ⟨hVirtualBalance, hFloorSupply, hFloorBalance, hTotalSupply, hAlpha, hBPlusOne⟩
   constructor
@@ -333,11 +313,10 @@ theorem init_reserve_ratio_zero
   `virtualSupply`. `floorSupply` and `floorBalance` are unchanged.
 
   The caller branch is carried by the supplied `buyFeeAmount` hypothesis. The
-  storage-alignment invariant itself only needs the resulting minted amount and
-  the pow output for the resulting virtual supply.
+  storage-alignment invariant itself only needs the resulting minted amount.
 -/
 theorem buy_preserves_reserve_ratio_zero
-    (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount computedNewVirtualPow : Uint256)
+    (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount : Uint256)
     (s : ContractState)
     (hInitialized : initializedOf s = 1)
     (hAmountNonZero : bcTokenAmount != 0)
@@ -347,11 +326,6 @@ theorem buy_preserves_reserve_ratio_zero
           0
         else
           div (mul bcTokenAmount (feePercentageOf s)) (sub decimalPrecision (feePercentageOf s)))
-    (hComputedNewVirtualPow :
-      trustedCurvePowOutput s
-        (add (add (floorSupplyOf s) (totalSupplyOf s))
-          (add bcTokenAmount buyFeeAmount))
-        computedNewVirtualPow)
     (hOldSupplyNoOverflow :
       (floorSupplyOf s).val + (totalSupplyOf s).val < Verity.Core.Uint256.modulus)
     (_hMintNoOverflow :
@@ -366,21 +340,17 @@ theorem buy_preserves_reserve_ratio_zero
           Verity.Core.Uint256.modulus) :
     let s' :=
       ((BaseBondingCurve.buy
-        isFeeRouter bcTokenAmount buyFeeAmount computedNewVirtualPow).run s).snd
+        isFeeRouter bcTokenAmount buyFeeAmount).run s).snd
     buy_preserves_reserve_ratio_zero_spec s s' := by
   dsimp [buy_preserves_reserve_ratio_zero_spec]
   intro hInv
-  let s' :=
-    ((BaseBondingCurve.buy
-      isFeeRouter bcTokenAmount buyFeeAmount computedNewVirtualPow).run s).snd
+  let s' := ((BaseBondingCurve.buy isFeeRouter bcTokenAmount buyFeeAmount).run s).snd
   change reserveRatioDeviationZero s'
   rcases hInv with ⟨_hCurrent, hFloor⟩
   dsimp [reserveRatioDeviationZero, currentReserveRatioDeviationZero,
     floorReserveRatioDeviationZero]
   have hw := buy_slot_writes
-    isFeeRouter bcTokenAmount buyFeeAmount computedNewVirtualPow s
-    hInitialized hAmountNonZero
-    (by simpa [trustedCurvePowOutput] using hComputedNewVirtualPow)
+    isFeeRouter bcTokenAmount buyFeeAmount s hInitialized hAmountNonZero
   rcases hw with
     ⟨hVirtualBalance, hFloorSupply, hFloorBalance, hTotalSupply, hAlpha, hBPlusOne⟩
   constructor
@@ -402,43 +372,41 @@ theorem buy_preserves_reserve_ratio_zero
 
 /-!
   Trusted assumptions retained below:
-  - bounded Uint256 arithmetic for the source-level checked operations;
-  - `curvePow` is the opaque boundary for the PRB/ABDK fixed-point pow
-    implementation used by `_getBalanceFromReserveRatio`.
+  - bounded Uint256 arithmetic for the source-level checked operations.
+
+  `curvePow` remains the linked external boundary for the imported PRB/ABDK
+  fixed-point pow implementation used by `_getBalanceFromReserveRatio`; it is
+  no longer a per-transition assumption or supplied witness.
 -/
 
 /--
   Successful `sell` preserves current and floor reserve-ratio alignment.
 
   The theorem no longer assumes the post-reserve equality. The executable model
-  writes `virtualBalance` to the trusted helper result for the post-sell virtual
+  writes `virtualBalance` to the modeled helper result for the post-sell virtual
   supply, and the arithmetic lemma `virtual_supply_after_sell_net_burn` proves
   that the stored post-state supply is the same full supply point.
 -/
 theorem sell_preserves_reserve_ratio_zero
-    (bcTokenAmount computedNewVirtualPow : Uint256) (s : ContractState)
+    (bcTokenAmount : Uint256) (s : ContractState)
     (hNetAmountNonZero : sellNetBurnAmount bcTokenAmount s != 0)
-    (hComputedNewVirtualPow :
-      trustedCurvePowOutput s (sellVirtualSupplyAfter bcTokenAmount s)
-        computedNewVirtualPow)
     (hOldSupplyNoOverflow :
       (floorSupplyOf s).val + (totalSupplyOf s).val < Verity.Core.Uint256.modulus)
     (hNetLeOldSupply : sellNetBurnAmount bcTokenAmount s <= virtualSupplyOf s)
     (hNetLeTotalSupply : sellNetBurnAmount bcTokenAmount s <= totalSupplyOf s)
     (hNetValLeTotalSupply :
       (sellNetBurnAmount bcTokenAmount s).val <= (totalSupplyOf s).val) :
-    let s' := ((BaseBondingCurve.sell bcTokenAmount computedNewVirtualPow).run s).snd
+    let s' := ((BaseBondingCurve.sell bcTokenAmount).run s).snd
     sell_preserves_reserve_ratio_zero_spec s s' := by
   dsimp [sell_preserves_reserve_ratio_zero_spec]
   intro hInv
-  let s' := ((BaseBondingCurve.sell bcTokenAmount computedNewVirtualPow).run s).snd
+  let s' := ((BaseBondingCurve.sell bcTokenAmount).run s).snd
   change reserveRatioDeviationZero s'
   rcases hInv with ⟨hCurrent, hFloor⟩
   dsimp [reserveRatioDeviationZero,
     currentReserveRatioDeviationZero, floorReserveRatioDeviationZero]
-  have hw := sell_slot_writes bcTokenAmount computedNewVirtualPow s
+  have hw := sell_slot_writes bcTokenAmount s
     hNetAmountNonZero hNetLeOldSupply hNetLeTotalSupply
-    (by simpa [trustedCurvePowOutput] using hComputedNewVirtualPow)
   rcases hw with
     ⟨hVirtualBalance, hFloorSupply, hFloorBalance, hTotalSupply, hAlpha, hBPlusOne⟩
   constructor
@@ -468,13 +436,10 @@ theorem sell_preserves_reserve_ratio_zero
   supply change, which is proved by `virtual_supply_after_floor_fee_burn`.
 -/
 theorem floorSellAndBurn_preserves_reserve_ratio_zero
-    (authorizedFeeRouter : Bool) (bcTokenAmount computedNewFloorPow : Uint256)
+    (authorizedFeeRouter : Bool) (bcTokenAmount : Uint256)
     (s : ContractState)
     (hAuthorized : authorizedFeeRouter = true)
     (hAmountNonZero : bcTokenAmount != 0)
-    (hComputedNewFloorPow :
-      trustedCurvePowOutput s (floorSupplyAfterFeeBurn bcTokenAmount s)
-        computedNewFloorPow)
     (hOldSupplyNoOverflow :
       (floorSupplyOf s).val + (totalSupplyOf s).val < Verity.Core.Uint256.modulus)
     (hNewFloorNoOverflow :
@@ -485,21 +450,20 @@ theorem floorSellAndBurn_preserves_reserve_ratio_zero
     (hBurnValLeTotalSupply : bcTokenAmount.val <= (totalSupplyOf s).val) :
     let s' :=
       ((BaseBondingCurve.floorSellAndBurn
-        authorizedFeeRouter bcTokenAmount computedNewFloorPow).run s).snd
+        authorizedFeeRouter bcTokenAmount).run s).snd
     floorSellAndBurn_preserves_reserve_ratio_zero_spec s s' := by
   dsimp [floorSellAndBurn_preserves_reserve_ratio_zero_spec]
   intro hInv
   let s' :=
     ((BaseBondingCurve.floorSellAndBurn
-      authorizedFeeRouter bcTokenAmount computedNewFloorPow).run s).snd
+      authorizedFeeRouter bcTokenAmount).run s).snd
   change reserveRatioDeviationZero s'
   rcases hInv with ⟨hCurrent, _hFloor⟩
   dsimp [reserveRatioDeviationZero, currentReserveRatioDeviationZero,
     floorReserveRatioDeviationZero]
   have hw := floor_sell_and_burn_slot_writes
-    authorizedFeeRouter bcTokenAmount computedNewFloorPow s
+    authorizedFeeRouter bcTokenAmount s
     hAuthorized hAmountNonZero hNewFloorLeOldSupply hBurnLeTotalSupply
-    (by simpa [trustedCurvePowOutput] using hComputedNewFloorPow)
   rcases hw with
     ⟨hVirtualBalance, hFloorSupply, hFloorBalance, hTotalSupply, hAlpha, hBPlusOne⟩
   constructor

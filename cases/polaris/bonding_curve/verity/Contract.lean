@@ -26,16 +26,16 @@ open Verity.EVM.Uint256
   - `floorBalance` equals the rounded reserve function at `floorSupply`.
 
   Simplifications:
-  - `_getBalanceFromReserveRatio(supply)` is modeled through its source-shaped
-    outer arithmetic:
+  - `_getBalanceFromReserveRatio(supply)` is modeled directly through its
+    source-shaped outer arithmetic:
       `(A * curvePow(supply, B_PLUS_1) + DECIMAL_PRECISION - 1) / B_PLUS_1`.
-    `curvePow` is an opaque boundary for the virtual `pow` implementation in
-    `PRBBondingCurve.sol` / `ABDKBondingCurve.sol`. Verity does not currently
-    expose a faithful PRB `SD59x18.pow` or ABDK `64x64 exp_2(log_2(...))`
-    fixed-point model. The broad helper-output precondition is intentionally
-    gone; executable transitions receive only the raw pow result and compute
-    the helper's multiplication and decimal-precision rounding division
-    themselves.
+    `curvePow` is the linked-external boundary for the virtual `pow`
+    implementation in `PRBBondingCurve.sol` / `ABDKBondingCurve.sol`. Verity
+    does not currently expose a faithful PRB `SD59x18.pow` or ABDK `64x64
+    exp_2(log_2(...))` fixed-point model. The broad helper-output and raw-pow
+    input preconditions are intentionally gone; executable transitions call the
+    linked external boundary and compute the Polaris-owned multiplication and
+    decimal-precision rounding division themselves.
   - ERC20 per-account balances, allowances, permit, and events are omitted.
     Aggregate `totalSupply` is modeled because it determines `virtualSupply`.
   - Reserve-token transfers are omitted. The selected invariant concerns the
@@ -55,8 +55,9 @@ open Verity.EVM.Uint256
 
 def decimalPrecision : Uint256 := 1000000000000000000
 
-/-- Opaque boundary for the concrete PRB/ABDK fixed-point pow implementation. -/
-opaque curvePow : Uint256 -> Uint256 -> Uint256
+/-- Linked-external boundary for the concrete PRB/ABDK fixed-point pow implementation. -/
+def curvePow (supply bPlusOne : Uint256) : Uint256 :=
+  Contracts.externalCallWords "curvePow" [supply, bPlusOne]
 
 /--
   Source-shaped final division from `_getBalanceFromReserveRatio`:
@@ -70,7 +71,7 @@ def reserveRatioLeftFormula
     (alpha bPlusOne supply : Uint256) : Uint256 :=
   mul alpha (curvePow supply bPlusOne)
 
-/-- Mirrors `_getBalanceFromReserveRatio` modulo the opaque pow implementation. -/
+/-- Mirrors `_getBalanceFromReserveRatio` modulo the linked pow boundary. -/
 def getBalanceFromReserveRatio
     (alpha bPlusOne supply : Uint256) : Uint256 :=
   let left := mul alpha (curvePow supply bPlusOne)
@@ -87,17 +88,21 @@ verity_contract BaseBondingCurve where
     alpha : Uint256 := slot 6
     bPlusOne : Uint256 := slot 7
 
-  function init
-      (virtualSupply_ : Uint256, floorSupply_ : Uint256,
-        computedVirtualPow : Uint256, computedFloorPow : Uint256) : Unit := do
+  linked_externals
+    external curvePow(Uint256, Uint256) -> (Uint256)
+
+  function allow_post_interaction_writes init
+      (virtualSupply_ : Uint256, floorSupply_ : Uint256) : Unit := do
     require (floorSupply_ != 0) "Floor cannot be zero"
     require (floorSupply_ <= virtualSupply_) "Floor cannot be above current state"
     let alpha_ ← getStorage alpha
     let bPlusOne_ ← getStorage bPlusOne
-    let initialVirtualLeft := mul alpha_ computedVirtualPow
+    let initialVirtualPow := externalCall "curvePow" [virtualSupply_, bPlusOne_]
+    let initialVirtualLeft := mul alpha_ initialVirtualPow
     let computedVirtualBalance :=
       div (sub (add initialVirtualLeft 1000000000000000000) 1) bPlusOne_
-    let initialFloorLeft := mul alpha_ computedFloorPow
+    let initialFloorPow := externalCall "curvePow" [floorSupply_, bPlusOne_]
+    let initialFloorLeft := mul alpha_ initialFloorPow
     let computedFloorBalance :=
       div (sub (add initialFloorLeft 1000000000000000000) 1) bPlusOne_
 
@@ -107,9 +112,8 @@ verity_contract BaseBondingCurve where
     setStorage totalSupply (sub virtualSupply_ floorSupply_)
     setStorage initialized 1
 
-  function buy
-      (_isFeeRouter : Bool, bcTokenAmount : Uint256, buyFeeAmount : Uint256,
-        computedNewVirtualPow : Uint256) : Unit := do
+  function allow_post_interaction_writes buy
+      (_isFeeRouter : Bool, bcTokenAmount : Uint256, buyFeeAmount : Uint256) : Unit := do
     let initialized_ ← getStorage initialized
     require (initialized_ == 1) "BC not initialized yet"
     require (bcTokenAmount != 0) "BC: Zero amount"
@@ -120,15 +124,16 @@ verity_contract BaseBondingCurve where
     let bPlusOne_ ← getStorage bPlusOne
 
     let totalMinted := add bcTokenAmount buyFeeAmount
-    let _newVirtualSupply := add (add floorSupply_ totalSupply_) totalMinted
-    let newVirtualLeft := mul alpha_ computedNewVirtualPow
+    let newVirtualSupply := add (add floorSupply_ totalSupply_) totalMinted
+    let newVirtualPow := externalCall "curvePow" [newVirtualSupply, bPlusOne_]
+    let newVirtualLeft := mul alpha_ newVirtualPow
     let computedNewVirtualBalance :=
       div (sub (add newVirtualLeft 1000000000000000000) 1) bPlusOne_
 
     setStorage virtualBalance computedNewVirtualBalance
     setStorage totalSupply (add totalSupply_ totalMinted)
 
-  function sell (bcTokenAmount : Uint256, computedNewVirtualPow : Uint256) : Unit := do
+  function allow_post_interaction_writes sell (bcTokenAmount : Uint256) : Unit := do
     let feePercentage_ ← getStorage feePercentage
     let floorSupply_ ← getStorage floorSupply
     let totalSupply_ ← getStorage totalSupply
@@ -141,17 +146,17 @@ verity_contract BaseBondingCurve where
     let oldVirtualSupply := add floorSupply_ totalSupply_
     require (netAmount <= oldVirtualSupply) "BC: Amount greater than supply"
     require (netAmount <= totalSupply_) "BC: Burn amount exceeds supply"
-    let _newVirtualSupply := sub oldVirtualSupply netAmount
-    let newVirtualLeft := mul alpha_ computedNewVirtualPow
+    let newVirtualSupply := sub oldVirtualSupply netAmount
+    let newVirtualPow := externalCall "curvePow" [newVirtualSupply, bPlusOne_]
+    let newVirtualLeft := mul alpha_ newVirtualPow
     let computedNewVirtualBalance :=
       div (sub (add newVirtualLeft 1000000000000000000) 1) bPlusOne_
 
     setStorage virtualBalance computedNewVirtualBalance
     setStorage totalSupply (sub totalSupply_ netAmount)
 
-  function floorSellAndBurn
-      (authorizedFeeRouter : Bool, bcTokenAmount : Uint256,
-        computedNewFloorPow : Uint256) : Unit := do
+  function allow_post_interaction_writes floorSellAndBurn
+      (authorizedFeeRouter : Bool, bcTokenAmount : Uint256) : Unit := do
     require authorizedFeeRouter "BC: Not allowed"
     require (bcTokenAmount != 0) "BC: Zero amount"
     let floorSupply_ ← getStorage floorSupply
@@ -162,7 +167,8 @@ verity_contract BaseBondingCurve where
     let newFloorSupply := add floorSupply_ bcTokenAmount
     require (newFloorSupply <= oldVirtualSupply) "Floor cannot surpass virtual state"
     require (bcTokenAmount <= totalSupply_) "BC: Burn amount exceeds supply"
-    let newFloorLeft := mul alpha_ computedNewFloorPow
+    let newFloorPow := externalCall "curvePow" [newFloorSupply, bPlusOne_]
+    let newFloorLeft := mul alpha_ newFloorPow
     let computedNewFloorBalance :=
       div (sub (add newFloorLeft 1000000000000000000) 1) bPlusOne_
 

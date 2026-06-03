@@ -7,7 +7,7 @@ open Verity
 open Verity.EVM.Uint256
 
 theorem buy_preserves_reserve_ratio_zero_task
-    (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount computedNewVirtualPow : Uint256)
+    (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount : Uint256)
     (s : ContractState)
     (hInitialized : initializedOf s = 1)
     (hAmountNonZero : bcTokenAmount != 0)
@@ -17,11 +17,6 @@ theorem buy_preserves_reserve_ratio_zero_task
           0
         else
           div (mul bcTokenAmount (feePercentageOf s)) (sub decimalPrecision (feePercentageOf s)))
-    (hComputedNewVirtualPow :
-      trustedCurvePowOutput s
-        (add (add (floorSupplyOf s) (totalSupplyOf s))
-          (add bcTokenAmount buyFeeAmount))
-        computedNewVirtualPow)
     (hOldSupplyNoOverflow :
       (floorSupplyOf s).val + (totalSupplyOf s).val < Verity.Core.Uint256.modulus)
     (hMintNoOverflow :
@@ -36,7 +31,7 @@ theorem buy_preserves_reserve_ratio_zero_task
           Verity.Core.Uint256.modulus) :
     let s' :=
       ((BaseBondingCurve.buy
-        isFeeRouter bcTokenAmount buyFeeAmount computedNewVirtualPow).run s).snd
+        isFeeRouter bcTokenAmount buyFeeAmount).run s).snd
     buy_preserves_reserve_ratio_zero_spec s s' := by
   exact ?_
 

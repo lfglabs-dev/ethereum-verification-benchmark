@@ -18,15 +18,6 @@ def bPlusOneOf (s : ContractState) : Uint256 := s.storage 7
 def curveBalanceAt (s : ContractState) (supply : Uint256) : Uint256 :=
   getBalanceFromReserveRatio (alphaOf s) (bPlusOneOf s) supply
 
-/--
-  Narrow residual math boundary: the executable model receives only the raw
-  fixed-point pow result because `verity_contract` cannot call opaque Lean
-  helpers in the function body. The helper's multiplication and
-  `(left + DECIMAL_PRECISION - 1) / B_PLUS_1` division are modeled directly.
--/
-def trustedCurvePowOutput (s : ContractState) (supply powOut : Uint256) : Prop :=
-  powOut = curvePow supply (bPlusOneOf s)
-
 /-- Source helper: `virtualSupply() = floorSupply + totalSupply()`. -/
 def virtualSupplyOf (s : ContractState) : Uint256 :=
   add (floorSupplyOf s) (totalSupplyOf s)
@@ -58,7 +49,7 @@ def virtualSupplyAfterFeeBurn (bcTokenAmount : Uint256) (s : ContractState) : Ui
 /--
   Readable form of `reserveRatioDeviation(virtualSupply(), virtualBalance) == 0`.
   The model computes the source-shaped reserve helper directly, except for the
-  low-level opaque `curvePow` boundary.
+  linked external `curvePow` boundary.
 -/
 def currentReserveRatioDeviationZero (s : ContractState) : Prop :=
   virtualBalanceOf s = curveBalanceAt s (virtualSupplyOf s)
