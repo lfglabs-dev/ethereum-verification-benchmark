@@ -43,6 +43,13 @@ open Verity.EVM.Uint256
   - Access-control addresses are represented by Boolean successful-path inputs
     where they affect the selected state transition. Address identity itself is
     omitted.
+  - `initialized` is a Boolean storage abstraction for the source condition
+    `initializerAccount == address(0)` after `init` deletes the initializer.
+  - Buy/sell slippage checks are omitted because they do not write the reserve
+    checkpoints. This widens the successful path for preservation. The buy
+    nonzero guard and burn-supply guards model checks reached through source
+    helper/ERC20 paths, so those theorem statements cover the nonzero,
+    successful execution slice.
   - Solidity checked arithmetic is surfaced as explicit theorem hypotheses.
 -/
 
@@ -83,7 +90,7 @@ verity_contract BaseBondingCurve where
   function init
       (virtualSupply_ : Uint256, floorSupply_ : Uint256,
         computedVirtualPow : Uint256, computedFloorPow : Uint256) : Unit := do
-    require (floorSupply_ != 0) "Floor must be nonzero"
+    require (floorSupply_ != 0) "Floor cannot be zero"
     require (floorSupply_ <= virtualSupply_) "Floor cannot be above current state"
     let alpha_ ← getStorage alpha
     let bPlusOne_ ← getStorage bPlusOne
@@ -145,7 +152,7 @@ verity_contract BaseBondingCurve where
   function floorSellAndBurn
       (authorizedFeeRouter : Bool, bcTokenAmount : Uint256,
         computedNewFloorPow : Uint256) : Unit := do
-    require authorizedFeeRouter "Caller is not fee router"
+    require authorizedFeeRouter "BC: Not allowed"
     require (bcTokenAmount != 0) "BC: Zero amount"
     let floorSupply_ ← getStorage floorSupply
     let totalSupply_ ← getStorage totalSupply

@@ -7,7 +7,7 @@ family_id: polaris
 implementation_id: bonding_curve
 stage: build_green
 translation_status: translated
-spec_status: draft
+spec_status: complete
 proof_status: complete
 proof_terminal_condition: proof_with_curve_pow_precondition
 upstream_repo: https://github.com/Polaris-Finance/bonding-curve
@@ -51,8 +51,8 @@ notes: >
   Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same
   predicate for floorSupply/floorBalance. This case records the corresponding
   state-transition preservation property over the bonding curve accounting
-  slice as Lean theorems with zero Lean axioms. The broad helper-output boundary
-  has been removed: the proof now computes the helper's multiply and
+  slice as Lean theorems with no custom axioms and no sorry/admit. The broad
+  helper-output boundary has been removed: the proof now computes the helper's multiply and
   `(left + DECIMAL_PRECISION - 1) / B_PLUS_1` path and assumes only that each
   supplied raw pow result satisfies
   trustedCurvePowOutput for the target supply. This benchmark still does not

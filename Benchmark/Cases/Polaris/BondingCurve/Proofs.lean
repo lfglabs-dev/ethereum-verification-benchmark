@@ -332,8 +332,9 @@ theorem init_reserve_ratio_zero
   writes `virtualBalance` to the curve balance of the resulting
   `virtualSupply`. `floorSupply` and `floorBalance` are unchanged.
 
-  This matches `BaseBondingCurve.buy`: callers other than the fee router mint fee
-  tokens to the fee router, while the fee-router path pays no fee.
+  The caller branch is carried by the supplied `buyFeeAmount` hypothesis. The
+  storage-alignment invariant itself only needs the resulting minted amount and
+  the pow output for the resulting virtual supply.
 -/
 theorem buy_preserves_reserve_ratio_zero
     (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount computedNewVirtualPow : Uint256)

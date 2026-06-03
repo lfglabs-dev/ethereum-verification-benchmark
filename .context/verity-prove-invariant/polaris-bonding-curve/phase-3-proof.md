@@ -1,6 +1,7 @@
 # Phase 3 - Proof Terminal Result
 
-Terminal condition: PROOF with zero Lean axioms and an explicit raw pow-output precondition.
+Terminal condition: PROOF with no custom Lean axioms, no sorry/admit, and an
+explicit raw pow-output precondition.
 
 The broad helper-output boundary has been removed. The model no longer accepts
 `_getBalanceFromReserveRatio` balances as trusted inputs. Instead, each
