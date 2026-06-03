@@ -14,7 +14,7 @@ difficulty: medium
 category: invariant
 track: proof-only
 translation_status: translated
-proof_status: axiom
+proof_status: proof
 evaluation_engine: lean_proof_generation
 implementation_files:
   - cases/term_finance/term_auction_clearing/verity/Contract.lean
@@ -29,6 +29,7 @@ reference_solution_declaration: Benchmark.Cases.TermFinance.TermAuctionClearing.
 abstraction_level: protocol_slice
 abstraction_notes: >
   Assignment-only slice over a valid clearing point. The reference proof closes
-  with the documented residual-sweep axiom.
-unsupported_feature_codes:
-  - residual_sweep_lemma_axiomatized
+  by induction over the residual bid and offer sweeps. Sortedness is retained as
+  the production input-boundary hypothesis, but the assignment proof itself is
+  order-insensitive after eligible demand/supply capacity is assumed.
+unsupported_feature_codes: []

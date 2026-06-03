@@ -8,7 +8,7 @@ implementation_id: term_finance_contracts
 stage: build_green
 translation_status: translated
 spec_status: frozen
-proof_status: axiom
+proof_status: proof
 upstream_repo: https://github.com/term-finance/term-finance-contracts
 upstream_commit: 127b74d871fc74e3a03d6d3b0f1fafe7e5d10275
 original_contract_path: contracts/TermAuction.sol
@@ -29,16 +29,17 @@ abstraction_tags:
   - assignment_only
   - sorted_input_hypothesis
   - purchase_token_principal
-  - residual_sweep_axiom
+  - residual_sweep_proved
 abstraction_notes: >
   This benchmark proves the TermAuction assignment correctness property for a
-  valid clearing point. It models bids and offers as sorted abstract lists,
-  treats `clearingPrice` and `maxAssignable` as clearing outputs satisfying
-  eligible demand/supply capacity, and proves the assignment guarantee under a
-  narrow residual-sweep axiom. It does not prove the `_calculateClearingPrice`
-  search loop or downstream repurchase-value rounding.
-unsupported_feature_codes:
-  - residual_sweep_lemma_axiomatized
+  valid clearing point. It models bids and offers as abstract lists with
+  sortedness kept as the real auction input-boundary hypothesis, although the
+  assignment proof is order-insensitive once capacity is assumed. It treats
+  `clearingPrice` and `maxAssignable` as clearing outputs satisfying eligible
+  demand/supply capacity, and proves the assignment guarantee by induction over
+  the residual sweeps. It does not prove the `_calculateClearingPrice` search
+  loop or downstream repurchase-value rounding.
+unsupported_feature_codes: []
 notes: >
   Clearing assignment correctness for the weekly sealed-bid uniform-price double
   auction: positive bid assignments respect the clearing rate floor, positive

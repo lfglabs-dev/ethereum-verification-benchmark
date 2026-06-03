@@ -25,9 +25,10 @@ namespace Benchmark.Cases.TermFinance.TermAuctionClearing
     direction of `_assignBids` and `_assignOffers`.
   - The pro-rata floor arithmetic inside a marginal price group is abstracted to
     a residual sweep. This preserves the property under proof: each side's
-    running total reaches exactly `maxAssignable`, and the final marginal tender
-    absorbs the residual. It does not claim to prove the per-tender distribution
-    or an `assigned <= tender.amount` bound for each individual marginal tender.
+    running total reaches exactly `maxAssignable`. The model assigns the residual
+    directly to the first tender that crosses the remaining cap instead of modeling
+    the Solidity group's internal pro-rata floor redistribution. It does not claim
+    to prove the per-tender distribution within a marginal price group.
   - Sortedness is tracked because it is a real input-boundary condition, but the
     v1 total and rate-guard properties are order-insensitive once clearing-point
     capacity is assumed.
