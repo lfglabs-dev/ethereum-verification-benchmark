@@ -1,0 +1,10 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: polaris
+implementation_id: bonding_curve
+name: Polaris Bonding Curve
+upstream_repo: https://github.com/Polaris-Finance/bonding-curve
+upstream_commit: 540c4ba5d0b86c0f42399d214f02120f3f8719b0
+language: solidity
+description: BaseBondingCurve reserve-ratio accounting for pETH buys, sells, and fee-router burns.
+

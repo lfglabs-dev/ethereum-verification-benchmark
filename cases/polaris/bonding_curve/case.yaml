@@ -1,0 +1,60 @@
+manifest_kind: case
+project: polaris
+case_id: bonding_curve
+schema_version: 1
+split: active
+family_id: polaris
+implementation_id: bonding_curve
+stage: build_green
+translation_status: translated
+spec_status: complete
+proof_status: complete
+proof_terminal_condition: proof_with_linked_curve_pow_boundary
+upstream_repo: https://github.com/Polaris-Finance/bonding-curve
+upstream_commit: 540c4ba5d0b86c0f42399d214f02120f3f8719b0
+original_contract_path: src/BaseBondingCurve.sol
+source_ref: https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol
+lean_target: Benchmark.Cases.Polaris.BondingCurve.Compile
+spec_target: Benchmark.Cases.Polaris.BondingCurve.Specs
+proof_target: Benchmark.Cases.Polaris.BondingCurve.Proofs
+selected_functions:
+  - init
+  - buy
+  - sell
+  - floorSellAndBurn
+source_language: solidity
+verity_version: 9eaf64218be14b59f6253219c111a5abf958e7b7
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - fixed_point_pow_linked_external_boundary
+  - reserve_helper_outer_arithmetic_modeled
+  - erc20_aggregate_supply
+  - external_transfers_omitted
+  - checked_uint256_overflow_preconditions
+abstraction_notes: >
+  The benchmark targets Polaris' own primary invariant: reserve ratio deviation
+  is zero for both the current curve point and the floor point. The model keeps
+  the state variables and state-changing function boundaries from
+  BaseBondingCurve. `_getBalanceFromReserveRatio` is modeled through its outer
+  arithmetic: `(A * pow(supply, B_PLUS_1) + DECIMAL_PRECISION - 1) / B_PLUS_1`.
+  The remaining explicit boundary is only the PRB/ABDK fixed-point `pow`
+  implementation, represented as a linked external library boundary; the helper
+  multiplication and decimal-precision rounding division are no longer trusted
+  as a unit or supplied through theorem hypotheses.
+  Theorems establish the post-state reserve to
+  curve match for the modeled storage transition.
+unsupported_feature_codes:
+  - fixed_point_exponentiation_abstracted
+  - erc20_per_account_balances_omitted
+notes: >
+  Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same
+  predicate for floorSupply/floorBalance. This case records the corresponding
+  state-transition preservation property over the bonding curve accounting
+  slice as Lean theorems with no custom axioms and no sorry/admit. The broad
+  helper-output and raw-pow witness boundaries have been removed from the
+  theorem statements: the proof now computes the helper's multiply and
+  `(left + DECIMAL_PRECISION - 1) / B_PLUS_1` path around a linked external
+  `curvePow` boundary. This benchmark still does not bit-prove PRB/ABDK pow.
+  The generated task files remain open challenge entrypoints for agents; they
+  do not contradict the reference proof.

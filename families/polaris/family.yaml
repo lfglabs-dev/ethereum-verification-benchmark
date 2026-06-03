@@ -1,0 +1,6 @@
+manifest_kind: family
+schema_version: 1
+family_id: polaris
+name: Polaris
+description: Polaris bonding curve and reserve-accounting benchmarks.
+
