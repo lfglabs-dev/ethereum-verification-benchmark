@@ -45,7 +45,7 @@ It is not too weak: drift in either the current curve point or the floor point d
 | --- | --- | --- | --- | --- |
 | `virtualBalance`, `floorSupply`, `floorBalance`, ERC20 `totalSupply` | `BaseBondingCurve.sol` storage | Scalar storage slots | no issue | syntax-only |
 | `virtualSupply() = floorSupply + totalSupply()` | `BaseBondingCurve.sol: virtualSupply` | `virtualSupplyOf` helper | no issue | syntax-only |
-| `_getBalanceFromReserveRatio(supply)` | `left = A * pow(supply, B_PLUS_1); ceil(left / B_PLUS_1)` | `curveBalance` opaque helper | proof-gap-only | semantics risk is documented: proof assumes helper computes the same rounded reserve function |
+| `_getBalanceFromReserveRatio(supply)` | `left = A * pow(supply, B_PLUS_1); (left + DECIMAL_PRECISION - 1) / B_PLUS_1` | `curveBalance` opaque helper | proof-gap-only | semantics risk is documented: proof assumes helper computes the same rounded reserve function |
 | `buy` | sets `virtualBalance = _getBalanceFromReserveRatio(oldVirtualSupply + net + fee)` | state transition with same branch and state target | no issue except external token transfer omitted | syntax-only for invariant |
 | `sell` | burns net amount, transfers the sell fee to the fee router, and sets `virtualBalance = _getBalanceFromReserveRatio(oldVirtualSupply - net)` | state transition with explicit sell fee and net burn | no issue | syntax-only |
 | `floorSellAndBurn` | increases `floorSupply`, burns fee-router pETH, sets `floorBalance = _getBalanceFromReserveRatio(newFloorSupply)` | fee-burn transition preserving floor invariant after the full floor-supply change | no issue | syntax-only |
@@ -60,3 +60,11 @@ It is not too weak: drift in either the current curve point or the floor point d
 ## Proposed Verity Issues
 
 None opened. The relevant limitation is already handled as a model simplification: fixed-point exponentiation over PRB/ABDK is outside the current practical Verity proof surface for this case.
+
+## Supersession Note - Helper Modeling Pass
+
+The earlier `curveBalance` helper-output abstraction has been narrowed. Current
+files model `_getBalanceFromReserveRatio` through its outer arithmetic:
+`(A * pow(supply, B_PLUS_1) + DECIMAL_PRECISION - 1) / B_PLUS_1`. The remaining
+residual is only the raw PRB/ABDK fixed-point `pow` result, represented by
+`trustedCurvePowOutput`.

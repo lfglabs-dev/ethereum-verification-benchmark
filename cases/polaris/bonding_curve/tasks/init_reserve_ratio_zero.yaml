@@ -4,7 +4,7 @@ project: polaris
 case_id: bonding_curve
 task_id: init_reserve_ratio_zero
 name: init establishes zero reserve-ratio deviation
-description: Prove that initialization writes both current and floor balances to the rounded curve reserve function under the trusted helper-output boundary.
+description: Prove that initialization computes the source-shaped helper arithmetic from raw pow outputs and writes both current and floor balances to the rounded curve reserve function.
 entrypoint: Benchmark.Generated.Polaris.BondingCurve.Tasks.init_reserve_ratio_zero_task
 proof_target: Benchmark.Cases.Polaris.BondingCurve.Proofs.init_reserve_ratio_zero
 status: open

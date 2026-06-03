@@ -14,20 +14,20 @@ Files:
 The article presents the Polaris reserve-ratio guarantee in plain English and
 as math matching `Specs.lean`:
 
-- `virtualBalance = curveBalance(virtualSupply)`
-- `floorBalance = curveBalance(floorSupply)`
+- `virtualBalance = curveBalanceAt(state, virtualSupply)`
+- `floorBalance = curveBalanceAt(state, floorSupply)`
 
-Proof status is stated as a zero-axiom proof under explicit helper-output
-preconditions. The article does not claim a fully closed proof of PRB/ABDK fixed-point
-exponentiation, reserve-token custody, external transfers, or ERC20 per-account
-accounting.
+Proof status is stated as a zero-axiom proof under explicit raw pow-output
+preconditions. The article does not claim a fully closed proof of PRB/ABDK
+fixed-point exponentiation, reserve-token custody, external transfers, or ERC20
+per-account accounting.
 
 Review findings were resolved:
 
 - The verification command clones the benchmark branch
   `polaris-bonding-curve-reserve-ratio`.
 - The top guarantee sentence now states the reserve equation as the transition
-  conclusion, while the proof-status section names the trusted helper boundary.
+  conclusion, while the proof-status section names the raw pow boundary.
 
 Build:
 

@@ -79,3 +79,12 @@ The benchmark starts from the successful initialized curve-parameter path and
 tracks the storage variables needed for the selected reserve-ratio invariant.
 
 The Verity reviewer confirmed the opaque-helper-in-contract-body limitation is real, but storage normalization and Uint256 cancellation should be described as unresolved proof obligations in this benchmark, not general Verity defects.
+
+## Supersession Note - Helper Modeling Pass
+
+The modelization note above describes the earlier helper-output proof. The
+current model removes that broad helper-output input. It accepts only raw pow
+outputs, computes `A * pow(supply, B_PLUS_1)`, and performs the helper's
+`(left + DECIMAL_PRECISION - 1) / B_PLUS_1` division in the executable model.
+The residual predicate is now
+`trustedCurvePowOutput`, not `trustedCurveHelperOutput`.

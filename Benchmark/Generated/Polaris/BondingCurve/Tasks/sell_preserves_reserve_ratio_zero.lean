@@ -7,18 +7,18 @@ open Verity
 open Verity.EVM.Uint256
 
 theorem sell_preserves_reserve_ratio_zero_task
-    (bcTokenAmount computedNewVirtualBalance : Uint256) (s : ContractState)
+    (bcTokenAmount computedNewVirtualPow : Uint256) (s : ContractState)
     (hNetAmountNonZero : sellNetBurnAmount bcTokenAmount s != 0)
-    (hComputedNewVirtual :
-      trustedCurveHelperOutput (sellVirtualSupplyAfter bcTokenAmount s)
-        computedNewVirtualBalance)
+    (hComputedNewVirtualPow :
+      trustedCurvePowOutput s (sellVirtualSupplyAfter bcTokenAmount s)
+        computedNewVirtualPow)
     (hOldSupplyNoOverflow :
       (floorSupplyOf s).val + (totalSupplyOf s).val < Verity.Core.Uint256.modulus)
     (hNetLeOldSupply : sellNetBurnAmount bcTokenAmount s <= virtualSupplyOf s)
     (hNetLeTotalSupply : sellNetBurnAmount bcTokenAmount s <= totalSupplyOf s)
     (hNetValLeTotalSupply :
       (sellNetBurnAmount bcTokenAmount s).val <= (totalSupplyOf s).val) :
-    let s' := ((BaseBondingCurve.sell bcTokenAmount computedNewVirtualBalance).run s).snd
+    let s' := ((BaseBondingCurve.sell bcTokenAmount computedNewVirtualPow).run s).snd
     sell_preserves_reserve_ratio_zero_spec s s' := by
   exact ?_
 

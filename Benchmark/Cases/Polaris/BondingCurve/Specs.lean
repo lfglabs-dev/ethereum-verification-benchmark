@@ -12,16 +12,20 @@ def floorBalanceOf (s : ContractState) : Uint256 := s.storage 2
 def totalSupplyOf (s : ContractState) : Uint256 := s.storage 3
 def feePercentageOf (s : ContractState) : Uint256 := s.storage 4
 def initializedOf (s : ContractState) : Uint256 := s.storage 5
+def alphaOf (s : ContractState) : Uint256 := s.storage 6
+def bPlusOneOf (s : ContractState) : Uint256 := s.storage 7
+
+def curveBalanceAt (s : ContractState) (supply : Uint256) : Uint256 :=
+  getBalanceFromReserveRatio (alphaOf s) (bPlusOneOf s) supply
 
 /--
-  Helper-output policy: the executable model receives the Solidity
-  `_getBalanceFromReserveRatio` result as an input because this benchmark does
-  not model PRB/ABDK fixed-point exponentiation bit-for-bit. The predicate
-  states the exact proof obligation for such an input: it must equal the
-  benchmark's rounded reserve abstraction at the same supply.
+  Narrow residual math boundary: the executable model receives only the raw
+  fixed-point pow result because `verity_contract` cannot call opaque Lean
+  helpers in the function body. The helper's multiplication and
+  `(left + DECIMAL_PRECISION - 1) / B_PLUS_1` division are modeled directly.
 -/
-def trustedCurveHelperOutput (supply reserve : Uint256) : Prop :=
-  reserve = curveBalance supply
+def trustedCurvePowOutput (s : ContractState) (supply powOut : Uint256) : Prop :=
+  powOut = curvePow supply (bPlusOneOf s)
 
 /-- Source helper: `virtualSupply() = floorSupply + totalSupply()`. -/
 def virtualSupplyOf (s : ContractState) : Uint256 :=
@@ -53,16 +57,17 @@ def virtualSupplyAfterFeeBurn (bcTokenAmount : Uint256) (s : ContractState) : Ui
 
 /--
   Readable form of `reserveRatioDeviation(virtualSupply(), virtualBalance) == 0`.
-  The model names the rounded reserve function directly as `curveBalance`.
+  The model computes the source-shaped reserve helper directly, except for the
+  low-level opaque `curvePow` boundary.
 -/
 def currentReserveRatioDeviationZero (s : ContractState) : Prop :=
-  virtualBalanceOf s = curveBalance (virtualSupplyOf s)
+  virtualBalanceOf s = curveBalanceAt s (virtualSupplyOf s)
 
 /--
   Readable form of `reserveRatioDeviation(floorSupply, floorBalance) == 0`.
 -/
 def floorReserveRatioDeviationZero (s : ContractState) : Prop :=
-  floorBalanceOf s = curveBalance (floorSupplyOf s)
+  floorBalanceOf s = curveBalanceAt s (floorSupplyOf s)
 
 def reserveRatioDeviationZero (s : ContractState) : Prop :=
   currentReserveRatioDeviationZero s ∧ floorReserveRatioDeviationZero s
