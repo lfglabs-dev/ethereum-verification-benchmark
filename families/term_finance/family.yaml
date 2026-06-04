@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: term_finance
+display_name: Term Finance
+split: active
+status: active
+description: >
+  Active benchmark family for Term Finance fixed-rate lending auction
+  correctness properties.
+implementation_ids:
+  - term_finance_contracts
+case_ids:
+  - term_finance/term_auction_clearing
+source_languages:
+  - solidity
