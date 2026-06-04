@@ -1,0 +1,28 @@
+manifest_kind: task
+schema_version: 1
+task_id: fee_payout_bounded_by_fee_free
+case_id: ipor/plasma_vault_redeem_split
+split: active
+family_id: ipor
+implementation_id: ipor_fusion
+source_ref: https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free_task
+proof_family: arithmetic_accounting
+property_class: fee_payout_bound
+difficulty: low
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/ipor/plasma_vault_redeem_split/verity/Contract.lean
+  - Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean
+specification_files:
+  - cases/ipor/plasma_vault_redeem_split/verity/Specs.lean
+  - Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean
+editable_files:
+  - Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/FeePayoutBoundedByFeeFree.lean
+reference_solution_module: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs
+reference_solution_declaration: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free

@@ -1,0 +1,49 @@
+manifest_kind: case
+project: ipor
+case_id: plasma_vault_redeem_split
+schema_version: 1
+split: active
+family_id: ipor
+implementation_id: ipor_fusion
+stage: proof_complete
+translation_status: translated
+spec_status: revised_after_failed_fairness_target
+proof_status: complete
+upstream_repo: https://github.com/IPOR-Labs/ipor-fusion
+upstream_commit: 3a83157ee75a7c1752d9151aff43eb92a50cb346
+original_contract_path: contracts/vaults/PlasmaVault.sol
+source_ref: https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol
+lean_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Compile
+spec_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Specs
+proof_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs
+selected_functions:
+  - redeem
+  - _redeem
+  - _convertToAssets
+  - withdrawFee
+source_language: solidity
+verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: arithmetic_slice
+abstraction_tags:
+  - erc4626_virtual_offset
+  - withdraw_fee_rounding
+  - retained_fee_pps_recapture
+  - pps_nondecrease
+abstraction_notes: >
+  Focused arithmetic model of PlasmaVault redeem: fee shares are rounded down,
+  all requested shares are burned, only net shares are converted to assets, and
+  retained fee value remains in vault assets. An earlier split-payout fairness
+  target was rejected as too strong for these semantics. The completed proof
+  target is virtualized conversion PPS non-decrease, plus a one-step fee-payout
+  upper bound.
+unsupported_feature_codes:
+  - markets_elided_total_assets_ghosted
+  - release_queue_elided
+  - access_control_elided
+notes: >
+  This case is intentionally scoped to the safety property that remains true
+  after the failed split-fairness target: a successful modeled redeem cannot
+  decrease virtualized conversion PPS. It should be described as no decrease in
+  the modeled ERC4626 redeemable-value ratio, not as a proof that fee-splitting
+  is impossible or that the whole vault is bug-free.

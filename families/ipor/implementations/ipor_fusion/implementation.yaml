@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: ipor
+implementation_id: ipor_fusion
+display_name: IPOR Fusion
+split: active
+status: translated
+upstream_repo: https://github.com/IPOR-Labs/ipor-fusion
+upstream_commit: 3a83157ee75a7c1752d9151aff43eb92a50cb346
+source_language: solidity
+source_artifact_path: contracts/vaults/PlasmaVault.sol
+case_ids:
+  - ipor/plasma_vault_redeem_split
+notes: >
+  Focused PlasmaVault redeem accounting implementation entry for the split
+  redemption fee-rounding benchmark.

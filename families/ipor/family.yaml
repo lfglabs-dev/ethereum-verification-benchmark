@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: ipor
+display_name: IPOR
+split: active
+status: active
+description: IPOR protocol verification cases.
+implementation_ids:
+  - ipor_fusion
+case_ids:
+  - ipor/plasma_vault_redeem_split
+source_languages:
+  - solidity

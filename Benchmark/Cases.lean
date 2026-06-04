@@ -16,3 +16,4 @@ import Benchmark.Cases.Lagoon
 import Benchmark.Cases.OneDelta
 import Benchmark.Cases.Zodiac
 import Benchmark.Cases.Polaris
+import Benchmark.Cases.IPOR

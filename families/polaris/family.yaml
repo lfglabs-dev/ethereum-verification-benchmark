@@ -1,6 +1,13 @@
 manifest_kind: family
 schema_version: 1
 family_id: polaris
-name: Polaris
+display_name: Polaris
+split: active
+status: active
 description: Polaris bonding curve and reserve-accounting benchmarks.
-
+implementation_ids:
+  - bonding_curve
+case_ids:
+  - polaris/bonding_curve
+source_languages:
+  - solidity

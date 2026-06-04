@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 24
-- Implementations: 25
-- Active cases: 22
-- Buildable active cases: 22
-- Active tasks: 127
+- Families: 27
+- Implementations: 28
+- Active cases: 25
+- Buildable active cases: 25
+- Active tasks: 134
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -72,6 +72,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `deposit`, `requestRedeem`, `claimRedeem`, `redeemTokenGatewayDepreciated`, `transferRemote`, `handle`, `report`
 - Upstream source artifact: `TokenGateway.sol`
 - Notes: Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.
+
+### `ipor/plasma_vault_redeem_split`
+- Family / implementation: `ipor` / `ipor_fusion`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`revised_after_failed_fairness_target`, proof=`complete`
+- Lean target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Compile`
+- Source ref: `https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol`
+- Selected functions: `redeem`, `_redeem`, `_convertToAssets`, `withdrawFee`
+- Upstream source artifact: `contracts/vaults/PlasmaVault.sol`
+- Notes: This case is intentionally scoped to the safety property that remains true after the failed split-fairness target: a successful modeled redeem cannot decrease virtualized conversion PPS. It should be described as no decrease in the modeled ERC4626 redeemable-value ratio, not as a proof that fee-splitting is impossible or that the whole vault is bug-free.
 
 ### `kleros/sortition_trees`
 - Family / implementation: `kleros` / `kleros_v2`
@@ -143,6 +153,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `src/modules/fundingManager/oracle/FM_PC_Oracle_Redeeming_v1.sol`
 - Notes: Fund-conservation benchmark for Piku's oracle-priced queued redemption flow: distributed backing + queued redemption backing + remaining backing + protocol treasury fees + project treasury fees equals initial backing. Queue execution functions are source context; the modeled settlement transition is the successful `amountPaid` callback.
 
+### `polaris/bonding_curve`
+- Family / implementation: `polaris` / `bonding_curve`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`complete`, proof=`complete`
+- Lean target: `Benchmark.Cases.Polaris.BondingCurve.Compile`
+- Source ref: `https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol`
+- Selected functions: `init`, `buy`, `sell`, `floorSellAndBurn`
+- Upstream source artifact: `src/BaseBondingCurve.sol`
+- Notes: Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same predicate for floorSupply/floorBalance. This case records the corresponding state-transition preservation property over the bonding curve accounting slice as Lean theorems with no custom axioms and no sorry/admit. The broad helper-output and raw-pow witness boundaries have been removed from the theorem statements: the proof now computes the helper's multiply and `(left + DECIMAL_PRECISION - 1) / B_PLUS_1` path around a linked external `curvePow` boundary. This benchmark still does not bit-prove PRB/ABDK pow. The generated task files remain open challenge entrypoints for agents; they do not contradict the reference proof.
+
 ### `polygon/agglayer_bridge`
 - Family / implementation: `polygon` / `agglayer_bridge`
 - Stage: `proof_complete`
@@ -182,6 +202,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `addOwnerWithThreshold`, `removeOwner`, `swapOwner`, `setupOwners`
 - Upstream source artifact: `contracts/base/OwnerManager.sol`
 - Notes: Linked list reachability invariant preservation and functional correctness for the Safe OwnerManager. Based on the Certora OwnerReach.spec which defines the inListReachable and reachableInList invariants. All 15 proof tasks are complete (0 sorry) covering acyclicity, inListReachable, ownerListInvariant preservation, and isOwner functional correctness for all four operations. The unprovable stronglyAcyclic axiom was replaced with the provable uniquePredecessor property. Functional correctness proofs verify that each operation changes exactly the intended owners and leaves all others unchanged.
+
+### `term_finance/term_auction_clearing`
+- Family / implementation: `term_finance` / `term_finance_contracts`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`proof`
+- Lean target: `Benchmark.Cases.TermFinance.TermAuctionClearing.Compile`
+- Source ref: `https://github.com/term-finance/term-finance-contracts/blob/127b74d871fc74e3a03d6d3b0f1fafe7e5d10275/contracts/TermAuction.sol`
+- Selected functions: `_calculateClearingPrice`, `_assignBids`, `_assignOffers`
+- Upstream source artifact: `contracts/TermAuction.sol`
+- Notes: Clearing assignment correctness for the weekly sealed-bid uniform-price double auction: positive bid assignments respect the clearing rate floor, positive offer assignments respect the clearing rate ceiling, and assigned purchase-token principal balances exactly across both sides.
 
 ### `termmax/order_v2_buy_xt_single_segment`
 - Family / implementation: `termmax` / `contracts_v2`
@@ -478,6 +508,26 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
 - Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean`
 - Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free`
+- Track / property class / proof family: `proof-only` / `fee_payout_bound` / `arithmetic_accounting`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free_task`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/ipor/plasma_vault_redeem_split/verity/Contract.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean`
+- Specification files: `cases/ipor/plasma_vault_redeem_split/verity/Specs.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean`
+- Editable proof file: `Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/FeePayoutBoundedByFeeFree.lean`
+- Hidden reference solution: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs`
+
+### `ipor/plasma_vault_redeem_split/redeem_preserves_pps`
+- Track / property class / proof family: `proof-only` / `pps_nondecrease` / `arithmetic_accounting`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps_task`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/ipor/plasma_vault_redeem_split/verity/Contract.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean`
+- Specification files: `cases/ipor/plasma_vault_redeem_split/verity/Specs.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean`
+- Editable proof file: `Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/RedeemPreservesPps.lean`
+- Hidden reference solution: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs`
 
 ### `kleros/sortition_trees/draw_interval_matches_weights`
 - Track / property class / proof family: `proof-only` / `weighted_selection` / `functional_correctness`
@@ -1059,6 +1109,46 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderRecordsRedemptionBuckets.lean`
 - Hidden reference solution: `Benchmark.Cases.Piku.FundConservation.Proofs`
 
+### `polaris/bonding_curve/buy_preserves_reserve_ratio_zero`
+- Track / property class / proof family: `proof-only` / `reserve_state_transition` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero_task`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/polaris/bonding_curve/verity/Contract.lean`, `Benchmark/Cases/Polaris/BondingCurve/Contract.lean`
+- Specification files: `cases/polaris/bonding_curve/verity/Specs.lean`, `Benchmark/Cases/Polaris/BondingCurve/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Polaris/BondingCurve/Tasks/buy_preserves_reserve_ratio_zero.lean`
+- Hidden reference solution: `Benchmark.Cases.Polaris.BondingCurve.Proofs`
+
+### `polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero`
+- Track / property class / proof family: `proof-only` / `reserve_state_transition` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.floor_sell_and_burn_preserves_reserve_ratio_zero_task`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/polaris/bonding_curve/verity/Contract.lean`, `Benchmark/Cases/Polaris/BondingCurve/Contract.lean`
+- Specification files: `cases/polaris/bonding_curve/verity/Specs.lean`, `Benchmark/Cases/Polaris/BondingCurve/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Polaris/BondingCurve/Tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.lean`
+- Hidden reference solution: `Benchmark.Cases.Polaris.BondingCurve.Proofs`
+
+### `polaris/bonding_curve/init_reserve_ratio_zero`
+- Track / property class / proof family: `proof-only` / `reserve_state_transition` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.init_reserve_ratio_zero_task`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/polaris/bonding_curve/verity/Contract.lean`, `Benchmark/Cases/Polaris/BondingCurve/Contract.lean`
+- Specification files: `cases/polaris/bonding_curve/verity/Specs.lean`, `Benchmark/Cases/Polaris/BondingCurve/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Polaris/BondingCurve/Tasks/init_reserve_ratio_zero.lean`
+- Hidden reference solution: `Benchmark.Cases.Polaris.BondingCurve.Proofs`
+
+### `polaris/bonding_curve/sell_preserves_reserve_ratio_zero`
+- Track / property class / proof family: `proof-only` / `reserve_state_transition` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.sell_preserves_reserve_ratio_zero_task`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/polaris/bonding_curve/verity/Contract.lean`, `Benchmark/Cases/Polaris/BondingCurve/Contract.lean`
+- Specification files: `cases/polaris/bonding_curve/verity/Specs.lean`, `Benchmark/Cases/Polaris/BondingCurve/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Polaris/BondingCurve/Tasks/sell_preserves_reserve_ratio_zero.lean`
+- Hidden reference solution: `Benchmark.Cases.Polaris.BondingCurve.Proofs`
+
 ### `polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -1298,6 +1388,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/safe/owner_manager_reach/verity/Specs.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerOwnerListInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Safe.OwnerManagerReach.Proofs`
+
+### `term_finance/term_auction_clearing/clearing_assignment_correct`
+- Track / property class / proof family: `proof-only` / `accounting_and_rate_guard` / `auction_clearing_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`blocked`, reference_solution=`blocked`
+- Theorem target: `Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct_task`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/term_finance/term_auction_clearing/verity/Contract.lean`, `Benchmark/Cases/TermFinance/TermAuctionClearing/Contract.lean`
+- Specification files: `cases/term_finance/term_auction_clearing/verity/Specs.lean`, `Benchmark/Cases/TermFinance/TermAuctionClearing/Specs.lean`
+- Editable proof file: `Benchmark/Generated/TermFinance/TermAuctionClearing/Tasks/ClearingAssignmentCorrect.lean`
+- Hidden reference solution: `Benchmark.Cases.TermFinance.TermAuctionClearing.Proofs`
 
 ### `termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve`
 - Track / property class / proof family: `proof-only` / `reserve_state_transition` / `protocol_transition_correctness`

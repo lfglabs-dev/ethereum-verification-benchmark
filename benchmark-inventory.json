@@ -10,33 +10,35 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 24,
-    "implementation_count": 25,
-    "active_case_count": 22,
+    "family_count": 27,
+    "implementation_count": 28,
+    "active_case_count": 25,
     "backlog_case_count": 3,
-    "active_task_count": 127,
+    "active_task_count": 134,
     "backlog_task_count": 8,
-    "buildable_case_count": 24,
-    "runnable_task_count": 135,
+    "buildable_case_count": 27,
+    "runnable_task_count": 141,
     "case_stage_counts": {
-      "build_green": 21,
+      "build_green": 23,
       "candidate": 1,
-      "proof_complete": 3
+      "proof_complete": 4
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 24
+      "translated": 27
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 17,
-      "partial": 7
+      "complete": 19,
+      "partial": 7,
+      "proof": 1
     },
     "task_track_counts": {
-      "proof-only": 135
+      "proof-only": 142
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
+      "accounting_and_rate_guard": 1,
       "accounting_bound": 16,
       "accounting_conservation": 15,
       "accounting_effect": 2,
@@ -52,6 +54,7 @@
       "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
       "exploit_trace": 1,
+      "fee_payout_bound": 1,
       "frame_property": 2,
       "guarded_solvency": 7,
       "isOwner_effect": 3,
@@ -64,9 +67,10 @@
       "noninterference": 1,
       "output_range": 2,
       "overflow_safety": 1,
+      "pps_nondecrease": 1,
       "price_band": 2,
       "price_computation": 5,
-      "reserve_state_transition": 1,
+      "reserve_state_transition": 5,
       "silent_failure": 2,
       "storage_update": 1,
       "storage_write": 6,
@@ -80,14 +84,16 @@
       "weighted_selection": 1
     },
     "task_proof_family_counts": {
+      "arithmetic_accounting": 2,
+      "auction_clearing_correctness": 1,
       "authorization_enablement": 25,
       "functional_correctness": 32,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 11,
-      "state_preservation_local_effects": 45
+      "state_preservation_local_effects": 49
     },
     "family_split_counts": {
-      "active": 21,
+      "active": 24,
       "backlog": 2,
       "mixed": 1
     }
@@ -194,6 +200,23 @@
         "solidity"
       ],
       "manifest_path": "families/forgeyields/family.yaml"
+    },
+    {
+      "family_id": "ipor",
+      "display_name": "IPOR",
+      "split": "active",
+      "status": "active",
+      "description": "IPOR protocol verification cases.",
+      "implementation_ids": [
+        "ipor_fusion"
+      ],
+      "case_ids": [
+        "ipor/plasma_vault_redeem_split"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/ipor/family.yaml"
     },
     {
       "family_id": "kleros",
@@ -332,6 +355,23 @@
       "manifest_path": "families/piku/family.yaml"
     },
     {
+      "family_id": "polaris",
+      "display_name": "Polaris",
+      "split": "active",
+      "status": "active",
+      "description": "Polaris bonding curve and reserve-accounting benchmarks.",
+      "implementation_ids": [
+        "bonding_curve"
+      ],
+      "case_ids": [
+        "polaris/bonding_curve"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/polaris/family.yaml"
+    },
+    {
       "family_id": "polygon",
       "display_name": "Polygon / Agglayer",
       "split": "active",
@@ -398,6 +438,23 @@
         "solidity"
       ],
       "manifest_path": "families/safe/family.yaml"
+    },
+    {
+      "family_id": "term_finance",
+      "display_name": "Term Finance",
+      "split": "active",
+      "status": "active",
+      "description": "Active benchmark family for Term Finance fixed-rate lending auction correctness properties.",
+      "implementation_ids": [
+        "term_finance_contracts"
+      ],
+      "case_ids": [
+        "term_finance/term_auction_clearing"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/term_finance/family.yaml"
     },
     {
       "family_id": "termmax",
@@ -602,6 +659,22 @@
       "manifest_path": "families/forgeyields/implementations/contracts/implementation.yaml"
     },
     {
+      "family_id": "ipor",
+      "implementation_id": "ipor_fusion",
+      "display_name": "IPOR Fusion",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/IPOR-Labs/ipor-fusion",
+      "upstream_commit": "3a83157ee75a7c1752d9151aff43eb92a50cb346",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/vaults/PlasmaVault.sol",
+      "case_ids": [
+        "ipor/plasma_vault_redeem_split"
+      ],
+      "notes": "Focused PlasmaVault redeem accounting implementation entry for the split redemption fee-rounding benchmark.",
+      "manifest_path": "families/ipor/implementations/ipor_fusion/implementation.yaml"
+    },
+    {
       "family_id": "kleros",
       "implementation_id": "kleros_v2",
       "display_name": "Kleros V2",
@@ -730,6 +803,22 @@
       "manifest_path": "families/piku/implementations/inverter_oracle_queue/implementation.yaml"
     },
     {
+      "family_id": "polaris",
+      "implementation_id": "bonding_curve",
+      "display_name": "Polaris Bonding Curve",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/Polaris-Finance/bonding-curve",
+      "upstream_commit": "540c4ba5d0b86c0f42399d214f02120f3f8719b0",
+      "source_language": "solidity",
+      "source_artifact_path": "src/BaseBondingCurve.sol",
+      "case_ids": [
+        "polaris/bonding_curve"
+      ],
+      "notes": "BaseBondingCurve reserve-ratio accounting for pETH buys, sells, and fee-router burns.",
+      "manifest_path": "families/polaris/implementations/bonding_curve/implementation.yaml"
+    },
+    {
       "family_id": "polygon",
       "implementation_id": "agglayer_bridge",
       "display_name": "Polygon AgglayerBridge",
@@ -792,6 +881,22 @@
       ],
       "notes": "Implementation entry for the Safe smart account OwnerManager module, benchmarking linked list invariant preservation under addOwnerWithThreshold, removeOwner, swapOwner, and setupOwners.",
       "manifest_path": "families/safe/implementations/smart_account/implementation.yaml"
+    },
+    {
+      "family_id": "term_finance",
+      "implementation_id": "term_finance_contracts",
+      "display_name": "Term Finance Contracts",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/term-finance/term-finance-contracts",
+      "upstream_commit": "127b74d871fc74e3a03d6d3b0f1fafe7e5d10275",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/TermAuction.sol",
+      "case_ids": [
+        "term_finance/term_auction_clearing"
+      ],
+      "notes": "Implementation entry for the Term Finance protocol contracts repository, currently covering TermAuction clearing assignment correctness.",
+      "manifest_path": "families/term_finance/implementations/term_finance_contracts/implementation.yaml"
     },
     {
       "family_id": "termmax",
@@ -1189,6 +1294,54 @@
       "proof_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs"
     },
     {
+      "case_id": "ipor/plasma_vault_redeem_split",
+      "project": "ipor",
+      "case_name": "plasma_vault_redeem_split",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/ipor/plasma_vault_redeem_split/case.yaml",
+      "split": "active",
+      "family_id": "ipor",
+      "implementation_id": "ipor_fusion",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "revised_after_failed_fairness_target",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/IPOR-Labs/ipor-fusion",
+      "upstream_commit": "3a83157ee75a7c1752d9151aff43eb92a50cb346",
+      "original_contract_path": "contracts/vaults/PlasmaVault.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol",
+      "selected_functions": [
+        "redeem",
+        "_redeem",
+        "_convertToAssets",
+        "withdrawFee"
+      ],
+      "lean_target": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Compile",
+      "failure_reason": null,
+      "notes": "This case is intentionally scoped to the safety property that remains true after the failed split-fairness target: a successful modeled redeem cannot decrease virtualized conversion PPS. It should be described as no decrease in the modeled ERC4626 redeemable-value ratio, not as a proof that fee-splitting is impossible or that the whole vault is bug-free.",
+      "buildable": true,
+      "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "arithmetic_slice",
+      "abstraction_tags": [
+        "erc4626_virtual_offset",
+        "withdraw_fee_rounding",
+        "retained_fee_pps_recapture",
+        "pps_nondecrease"
+      ],
+      "abstraction_notes": "Focused arithmetic model of PlasmaVault redeem: fee shares are rounded down, all requested shares are burned, only net shares are converted to assets, and retained fee value remains in vault assets. An earlier split-payout fairness target was rejected as too strong for these semantics. The completed proof target is virtualized conversion PPS non-decrease, plus a one-step fee-payout upper bound.",
+      "unsupported_feature_codes": [
+        "markets_elided_total_assets_ghosted",
+        "release_queue_elided",
+        "access_control_elided"
+      ],
+      "spec_target": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Specs",
+      "proof_target": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs"
+    },
+    {
       "case_id": "kleros/sortition_trees",
       "project": "kleros",
       "case_name": "sortition_trees",
@@ -1507,6 +1660,54 @@
       "proof_target": "Benchmark.Cases.Piku.FundConservation.Proofs"
     },
     {
+      "case_id": "polaris/bonding_curve",
+      "project": "polaris",
+      "case_name": "bonding_curve",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polaris/bonding_curve/case.yaml",
+      "split": "active",
+      "family_id": "polaris",
+      "implementation_id": "bonding_curve",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "complete",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/Polaris-Finance/bonding-curve",
+      "upstream_commit": "540c4ba5d0b86c0f42399d214f02120f3f8719b0",
+      "original_contract_path": "src/BaseBondingCurve.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol",
+      "selected_functions": [
+        "init",
+        "buy",
+        "sell",
+        "floorSellAndBurn"
+      ],
+      "lean_target": "Benchmark.Cases.Polaris.BondingCurve.Compile",
+      "failure_reason": null,
+      "notes": "Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same predicate for floorSupply/floorBalance. This case records the corresponding state-transition preservation property over the bonding curve accounting slice as Lean theorems with no custom axioms and no sorry/admit. The broad helper-output and raw-pow witness boundaries have been removed from the theorem statements: the proof now computes the helper's multiply and `(left + DECIMAL_PRECISION - 1) / B_PLUS_1` path around a linked external `curvePow` boundary. This benchmark still does not bit-prove PRB/ABDK pow. The generated task files remain open challenge entrypoints for agents; they do not contradict the reference proof.",
+      "buildable": true,
+      "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "fixed_point_pow_linked_external_boundary",
+        "reserve_helper_outer_arithmetic_modeled",
+        "erc20_aggregate_supply",
+        "external_transfers_omitted",
+        "checked_uint256_overflow_preconditions"
+      ],
+      "abstraction_notes": "The benchmark targets Polaris' own primary invariant: reserve ratio deviation is zero for both the current curve point and the floor point. The model keeps the state variables and state-changing function boundaries from BaseBondingCurve. `_getBalanceFromReserveRatio` is modeled through its outer arithmetic: `(A * pow(supply, B_PLUS_1) + DECIMAL_PRECISION - 1) / B_PLUS_1`. The remaining explicit boundary is only the PRB/ABDK fixed-point `pow` implementation, represented as a linked external library boundary; the helper multiplication and decimal-precision rounding division are no longer trusted as a unit or supplied through theorem hypotheses. Theorems establish the post-state reserve to curve match for the modeled storage transition.",
+      "unsupported_feature_codes": [
+        "fixed_point_exponentiation_abstracted",
+        "erc20_per_account_balances_omitted"
+      ],
+      "spec_target": "Benchmark.Cases.Polaris.BondingCurve.Specs",
+      "proof_target": "Benchmark.Cases.Polaris.BondingCurve.Proofs"
+    },
+    {
       "case_id": "polygon/agglayer_bridge",
       "project": "polygon",
       "case_name": "agglayer_bridge",
@@ -1695,6 +1896,50 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Safe.OwnerManagerReach.Specs",
       "proof_target": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs"
+    },
+    {
+      "case_id": "term_finance/term_auction_clearing",
+      "project": "term_finance",
+      "case_name": "term_auction_clearing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/term_finance/term_auction_clearing/case.yaml",
+      "split": "active",
+      "family_id": "term_finance",
+      "implementation_id": "term_finance_contracts",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "proof",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/term-finance/term-finance-contracts",
+      "upstream_commit": "127b74d871fc74e3a03d6d3b0f1fafe7e5d10275",
+      "original_contract_path": "contracts/TermAuction.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/term-finance/term-finance-contracts/blob/127b74d871fc74e3a03d6d3b0f1fafe7e5d10275/contracts/TermAuction.sol",
+      "selected_functions": [
+        "_calculateClearingPrice",
+        "_assignBids",
+        "_assignOffers"
+      ],
+      "lean_target": "Benchmark.Cases.TermFinance.TermAuctionClearing.Compile",
+      "failure_reason": null,
+      "notes": "Clearing assignment correctness for the weekly sealed-bid uniform-price double auction: positive bid assignments respect the clearing rate floor, positive offer assignments respect the clearing rate ceiling, and assigned purchase-token principal balances exactly across both sides.",
+      "buildable": true,
+      "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "clearing_offset_zero",
+        "assignment_only",
+        "sorted_input_hypothesis",
+        "purchase_token_principal",
+        "residual_sweep_proved"
+      ],
+      "abstraction_notes": "This benchmark proves the TermAuction assignment correctness property for a valid clearing point. It models bids and offers as abstract lists with sortedness kept as the real auction input-boundary hypothesis, although the assignment proof is order-insensitive once capacity is assumed. It treats `clearingPrice` and `maxAssignable` as clearing outputs satisfying eligible demand/supply capacity, and proves the assignment guarantee by induction over the residual sweeps. It does not prove the `_calculateClearingPrice` search loop or downstream repurchase-value rounding.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.TermFinance.TermAuctionClearing.Specs",
+      "proof_target": "Benchmark.Cases.TermFinance.TermAuctionClearing.Proofs"
     },
     {
       "case_id": "termmax/order_v2_buy_xt_single_segment",
@@ -3202,6 +3447,96 @@
         "bytes_report_parsing_decoded"
       ],
       "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free",
+      "task_id": "fee_payout_bounded_by_fee_free",
+      "case_id": "ipor/plasma_vault_redeem_split",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/ipor/plasma_vault_redeem_split/tasks/fee_payout_bounded_by_fee_free.yaml",
+      "split": "active",
+      "family_id": "ipor",
+      "implementation_id": "ipor_fusion",
+      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_payout_bound",
+      "category": "invariant",
+      "difficulty": "low",
+      "theorem_name": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free_task",
+      "proof_family": "arithmetic_accounting",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Contract.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Specs.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/FeePayoutBoundedByFeeFree.lean"
+      ],
+      "abstraction_level": null,
+      "abstraction_notes": "",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "ipor/plasma_vault_redeem_split/redeem_preserves_pps",
+      "task_id": "redeem_preserves_pps",
+      "case_id": "ipor/plasma_vault_redeem_split",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/ipor/plasma_vault_redeem_split/tasks/redeem_preserves_pps.yaml",
+      "split": "active",
+      "family_id": "ipor",
+      "implementation_id": "ipor_fusion",
+      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "pps_nondecrease",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps_task",
+      "proof_family": "arithmetic_accounting",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Contract.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Specs.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/RedeemPreservesPps.lean"
+      ],
+      "abstraction_level": null,
+      "abstraction_notes": "",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -5835,6 +6170,186 @@
       }
     },
     {
+      "task_ref": "polaris/bonding_curve/buy_preserves_reserve_ratio_zero",
+      "task_id": "buy_preserves_reserve_ratio_zero",
+      "case_id": "bonding_curve",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polaris/bonding_curve/tasks/buy_preserves_reserve_ratio_zero.yaml",
+      "split": "active",
+      "family_id": "polaris",
+      "implementation_id": "bonding_curve",
+      "source_ref": "https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "reserve_state_transition",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero_task",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polaris/bonding_curve/verity/Contract.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polaris/bonding_curve/verity/Specs.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polaris/BondingCurve/Tasks/buy_preserves_reserve_ratio_zero.lean"
+      ],
+      "abstraction_level": null,
+      "abstraction_notes": "",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero",
+      "task_id": "floor_sell_and_burn_preserves_reserve_ratio_zero",
+      "case_id": "bonding_curve",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polaris/bonding_curve/tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.yaml",
+      "split": "active",
+      "family_id": "polaris",
+      "implementation_id": "bonding_curve",
+      "source_ref": "https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "reserve_state_transition",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.floor_sell_and_burn_preserves_reserve_ratio_zero_task",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polaris/bonding_curve/verity/Contract.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polaris/bonding_curve/verity/Specs.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polaris/BondingCurve/Tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.lean"
+      ],
+      "abstraction_level": null,
+      "abstraction_notes": "",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "polaris/bonding_curve/init_reserve_ratio_zero",
+      "task_id": "init_reserve_ratio_zero",
+      "case_id": "bonding_curve",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polaris/bonding_curve/tasks/init_reserve_ratio_zero.yaml",
+      "split": "active",
+      "family_id": "polaris",
+      "implementation_id": "bonding_curve",
+      "source_ref": "https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "reserve_state_transition",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.init_reserve_ratio_zero_task",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polaris/bonding_curve/verity/Contract.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polaris/bonding_curve/verity/Specs.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polaris/BondingCurve/Tasks/init_reserve_ratio_zero.lean"
+      ],
+      "abstraction_level": null,
+      "abstraction_notes": "",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "polaris/bonding_curve/sell_preserves_reserve_ratio_zero",
+      "task_id": "sell_preserves_reserve_ratio_zero",
+      "case_id": "bonding_curve",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/polaris/bonding_curve/tasks/sell_preserves_reserve_ratio_zero.yaml",
+      "split": "active",
+      "family_id": "polaris",
+      "implementation_id": "bonding_curve",
+      "source_ref": "https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "reserve_state_transition",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.sell_preserves_reserve_ratio_zero_task",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/polaris/bonding_curve/verity/Contract.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/polaris/bonding_curve/verity/Specs.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Polaris/BondingCurve/Tasks/sell_preserves_reserve_ratio_zero.lean"
+      ],
+      "abstraction_level": null,
+      "abstraction_notes": "",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier",
       "task_id": "claimAsset_valid_leaf_and_consumes_unique_nullifier",
       "case_id": "polygon/agglayer_bridge",
@@ -6926,6 +7441,51 @@
         "prompt_context": "ready",
         "editable_proof": "ready",
         "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "term_finance/term_auction_clearing/clearing_assignment_correct",
+      "task_id": "clearing_assignment_correct",
+      "case_id": "term_finance/term_auction_clearing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/term_finance/term_auction_clearing/tasks/clearing_assignment_correct.yaml",
+      "split": "active",
+      "family_id": "term_finance",
+      "implementation_id": "term_finance_contracts",
+      "source_ref": "https://github.com/term-finance/term-finance-contracts/blob/127b74d871fc74e3a03d6d3b0f1fafe7e5d10275/contracts/TermAuction.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_and_rate_guard",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct_task",
+      "proof_family": "auction_clearing_correctness",
+      "translation_status": "translated",
+      "proof_status": "proof",
+      "implementation_files": [
+        "cases/term_finance/term_auction_clearing/verity/Contract.lean",
+        "Benchmark/Cases/TermFinance/TermAuctionClearing/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/term_finance/term_auction_clearing/verity/Specs.lean",
+        "Benchmark/Cases/TermFinance/TermAuctionClearing/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/TermFinance/TermAuctionClearing/Tasks/ClearingAssignmentCorrect.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Assignment-only slice over a valid clearing point. The reference proof closes by induction over the residual bid and offer sweeps. Sortedness is retained as the production input-boundary hypothesis, but the assignment proof itself is order-insensitive after eligible demand/supply capacity is assumed.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.TermFinance.TermAuctionClearing.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "blocked",
+        "reference_solution": "blocked"
       }
     },
     {
@@ -8271,5 +8831,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-03T09:07:51.734304+00:00"
+  "generated_at": "2026-06-04T14:16:46.965853+00:00"
 }
