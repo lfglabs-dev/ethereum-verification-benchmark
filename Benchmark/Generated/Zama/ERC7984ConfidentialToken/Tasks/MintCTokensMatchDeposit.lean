@@ -7,27 +7,22 @@ open Verity
 open Verity.EVM.Uint256
 
 /--
-Mint overflow protection: when totalSupply + amount overflows uint64,
-no tokens are minted.
-
-FHESafeMath.tryIncrease detects overflow by checking whether
-(oldValue + delta) mod 2^64 >= oldValue. On overflow, the wrapped sum
-is less than oldValue, so tryIncrease returns (false, oldValue).
-Then FHE.select picks 0 as the transferred amount.
+Successful mint/deposit credits exactly `amount` confidential tokens to the
+recipient.
 -/
-theorem mint_overflow_protection
+theorem mint_ctokens_match_deposit
     (recipient : Address) (amount : Uint256) (s : ContractState)
     (hTo : (recipient != zeroAddress) = true)
-    (hOverflow : (tryIncrease64WithInit (s.storage 4) (s.storage 0) amount).1 = false)
+    (hNoOverflow : (tryIncrease64WithInit (s.storage 4) (s.storage 0) amount).1 = true)
     (hAmount64 : amount < UINT64_MOD)
     (hSupply64 : s.storage 0 < UINT64_MOD)
     (hToBal64 : s.storageMap 1 recipient < UINT64_MOD) :
     let s' := ((ERC7984.mint recipient amount).run s).snd
-    mint_overflow_protection_spec recipient amount s s' := by
+    mint_ctokens_match_deposit_spec recipient amount s s' := by
   -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
   -- Try `grind` with contract symbol hints; fall back to `simp` /
   -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold mint_overflow_protection_spec
+  unfold mint_ctokens_match_deposit_spec
   grind [ERC7984.mint, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized, ERC7984.operators, ERC7984.totalSupplyInitialized]
 
 end Benchmark.Cases.Zama.ERC7984ConfidentialToken

@@ -1,4 +1,5 @@
 import Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Zama.ERC7984ConfidentialToken
 
@@ -22,7 +23,10 @@ theorem transfer_preserves_supply
     (hToBal64 : s.storageMap 1 recipient < UINT64_MOD) :
     let s' := ((ERC7984.transfer sender recipient amount).run s).snd
     transfer_preserves_supply_spec s s' := by
-  -- Replace this placeholder with a complete Lean proof.
-  exact ?_
+  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
+  -- Try `grind` with contract symbol hints; fall back to `simp` /
+  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
+  unfold transfer_preserves_supply_spec
+  grind [ERC7984.transfer, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized, ERC7984.operators, ERC7984.totalSupplyInitialized]
 
 end Benchmark.Cases.Zama.ERC7984ConfidentialToken

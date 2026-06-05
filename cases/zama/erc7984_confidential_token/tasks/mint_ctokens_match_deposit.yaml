@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: mint_ctokens_match_deposit
+case_id: zama/erc7984_confidential_token
+split: active
+family_id: zama
+implementation_id: confidential_contracts
+source_ref: https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_ctokens_match_deposit
+proof_family: functional_correctness
+property_class: deposit_mint_exactness
+difficulty: easy
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: partial
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/zama/erc7984_confidential_token/verity/Contract.lean
+  - Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean
+specification_files:
+  - cases/zama/erc7984_confidential_token/verity/Specs.lean
+  - Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean
+editable_files:
+  - Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintCTokensMatchDeposit.lean
+reference_solution_module: Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs
+reference_solution_declaration: Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_ctokens_match_deposit
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Successful mint/deposit credits exactly the deposited amount of confidential
+  tokens to the recipient balance under the initialized-aware
+  FHESafeMath.tryIncrease path.
+unsupported_feature_codes: []

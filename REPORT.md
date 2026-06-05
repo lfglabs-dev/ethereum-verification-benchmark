@@ -8,7 +8,7 @@ This report is generated from the benchmark manifests.
 - Implementations: 28
 - Active cases: 25
 - Buildable active cases: 25
-- Active tasks: 134
+- Active tasks: 135
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -251,7 +251,7 @@ This report is generated from the benchmark manifests.
 - Source ref: `https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol`
 - Selected functions: `_update`, `_transfer`, `_mint`, `_burn`, `confidentialTransferFrom`, `setOperator`
 - Upstream source artifact: `contracts/token/ERC7984/ERC7984.sol`
-- Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, and functional correctness of setOperator. Eleven proof tasks cover the 5 modeled functions.
+- Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.
 
 ### `zodiac/roles_decoder_faithfulness`
 - Family / implementation: `zodiac` / `roles-v3`
@@ -1487,6 +1487,16 @@ This report is generated from the benchmark manifests.
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
 - Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/BurnInsufficient.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/mint_ctokens_match_deposit`
+- Track / property class / proof family: `proof-only` / `deposit_mint_exactness` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_ctokens_match_deposit`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintCTokensMatchDeposit.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
 
 ### `zama/erc7984_confidential_token/mint_increases_supply`

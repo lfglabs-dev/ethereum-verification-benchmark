@@ -19,7 +19,7 @@ open Verity.Stdlib.Math
   - Transfers with insufficient balance silently transfer 0 (no revert)
   - Uses operator model (time-bounded) instead of approve/allowance
   - All arithmetic is modular at 2^64 (euint64)
-  - FHE.isInitialized gates transfers from uninitialized accounts
+  - Uninitialized euint64 handles are handled inside FHESafeMath
 
   Upstream: OpenZeppelin/openzeppelin-confidential-contracts (master)
   File: contracts/token/ERC7984/ERC7984.sol
@@ -36,8 +36,8 @@ open Verity.Stdlib.Math
   - Disclosure/decryption flow omitted — requires off-chain gateway interaction
   - ERC1363-style callbacks (AndCall variants) omitted — external contract calls
   - Events omitted — not modeled in Verity
-  - FHE.isInitialized modeled via a separate boolean mapping (balanceInitialized)
-    since uninitialized euint64 (zero handle) is distinct from an explicit zero value
+  - FHE.isInitialized modeled via explicit initialized flags since an
+    uninitialized euint64 handle is distinct from an explicit encrypted zero
 -/
 
 /-! ## Constants -/
@@ -64,23 +64,54 @@ def sub64 (a b : Uint256) : Uint256 := (sub a b) % UINT64_MOD
   contracts/utils/FHESafeMath.sol.
 
   tryIncrease(oldValue, delta):
+    if oldValue is uninitialized:
+      success = true
+      updated = delta
     newValue = (oldValue + delta) mod 2^64
     success  = newValue >= oldValue  (overflow detection)
     updated  = success ? newValue : oldValue
 
   tryDecrease(oldValue, delta):
+    if oldValue is uninitialized:
+      success = delta == 0
+      updated = 0
     success  = oldValue >= delta
     updated  = success ? (oldValue - delta) : oldValue
 -/
 
+def tryIncrease64SuccessWithInit (oldInit oldValue delta : Uint256) : Bool :=
+  if oldInit == 0 then true
+  else add64 oldValue delta >= oldValue
+
+def tryIncrease64UpdatedWithInit (oldInit oldValue delta : Uint256) : Uint256 :=
+  if oldInit == 0 then delta
+  else
+    let newValue := add64 oldValue delta
+    if newValue >= oldValue then newValue else oldValue
+
+def tryIncrease64WithInit (oldInit oldValue delta : Uint256) : Bool × Uint256 :=
+  (tryIncrease64SuccessWithInit oldInit oldValue delta,
+    tryIncrease64UpdatedWithInit oldInit oldValue delta)
+
 def tryIncrease64 (oldValue delta : Uint256) : Bool × Uint256 :=
-  let newValue := add64 oldValue delta
-  if newValue >= oldValue then (true, newValue)
-  else (false, oldValue)
+  tryIncrease64WithInit 1 oldValue delta
+
+def tryDecrease64SuccessWithInit (oldInit oldValue delta : Uint256) : Bool :=
+  if oldInit == 0 then
+    delta == 0
+  else oldValue >= delta
+
+def tryDecrease64UpdatedWithInit (oldInit oldValue delta : Uint256) : Uint256 :=
+  if oldInit == 0 then 0
+  else if oldValue >= delta then sub oldValue delta
+  else oldValue
+
+def tryDecrease64WithInit (oldInit oldValue delta : Uint256) : Bool × Uint256 :=
+  (tryDecrease64SuccessWithInit oldInit oldValue delta,
+    tryDecrease64UpdatedWithInit oldInit oldValue delta)
 
 def tryDecrease64 (oldValue delta : Uint256) : Bool × Uint256 :=
-  if oldValue >= delta then (true, sub oldValue delta)
-  else (false, oldValue)
+  tryDecrease64WithInit 1 oldValue delta
 
 /-! ## Contract -/
 
@@ -95,40 +126,66 @@ verity_contract ERC7984 where
     balanceInitialized : Address → Uint256 := slot 2
     -- Nested operator mapping: mapping(holder => mapping(spender => uint48 expiry))
     operators : Address → Address → Uint256 := slot 3
+    -- Tracks whether _totalSupply holds an initialized euint64 handle.
+    totalSupplyInitialized : Uint256 := slot 4
 
   /-
-    Models the transfer path: _transfer(from, to, amount) → _update(from, to, amount)
-    where from != address(0) and to != address(0).
+    Models Solidity `_update(from, to, amount)`.
 
-    Solidity (_update, from != 0 && to != 0 path):
-      euint64 fromBalance = _balances[from];
-      require(FHE.isInitialized(fromBalance), ERC7984ZeroBalance(from));
-      (success, ptr) = FHESafeMath.tryDecrease(fromBalance, amount);
-      _balances[from] = ptr;
-      transferred = FHE.select(success, amount, FHE.asEuint64(0));
-      ptr = FHE.add(_balances[to], transferred);
-      _balances[to] = ptr;
+    ACL calls, transient allowances, and events are elided because they do not
+    affect balance or supply accounting.
+  -/
+  function _update (src : Address, dst : Address, amount : Uint256) : Uint256 := do
+    if src == zeroAddress then
+      let currentSupply ← getStorage totalSupply
+      let supplyInit ← getStorage totalSupplyInitialized
+      let newSupplyCandidate := (add currentSupply amount) % 18446744073709551616
+      let success := ite (supplyInit == 0) true (newSupplyCandidate >= currentSupply)
+      let ptr := ite (supplyInit == 0) amount
+        (ite (newSupplyCandidate >= currentSupply) newSupplyCandidate currentSupply)
+      setStorage totalSupply ptr
+      setStorage totalSupplyInitialized 1
+      let transferred := ite success amount 0
+      if dst == zeroAddress then
+        let currentSupplyAfterMint ← getStorage totalSupply
+        let newSupply := (sub currentSupplyAfterMint transferred) % 18446744073709551616
+        setStorage totalSupply newSupply
+        setStorage totalSupplyInitialized 1
+      else
+        let toBalance ← getMapping balances dst
+        let newToBalance := (add toBalance transferred) % 18446744073709551616
+        setMapping balances dst newToBalance
+        setMapping balanceInitialized dst 1
+      return transferred
+    else
+      let fromBalance ← getMapping balances src
+      let fromInit ← getMapping balanceInitialized src
+      let success := ite (fromInit == 0) (amount == 0) (fromBalance >= amount)
+      let ptr := ite (fromInit == 0) 0
+        (ite (fromBalance >= amount) (sub fromBalance amount) fromBalance)
+      setMapping balances src ptr
+      setMapping balanceInitialized src 1
+      let transferred := ite success amount 0
+      if dst == zeroAddress then
+        let currentSupply ← getStorage totalSupply
+        let newSupply := (sub currentSupply transferred) % 18446744073709551616
+        setStorage totalSupply newSupply
+        setStorage totalSupplyInitialized 1
+      else
+        let toBalance ← getMapping balances dst
+        let newToBalance := (add toBalance transferred) % 18446744073709551616
+        setMapping balances dst newToBalance
+        setMapping balanceInitialized dst 1
+      return transferred
+
+  /-
+    Models `_transfer(from, to, amount)`: plaintext zero-address checks followed
+    by `_update(from, to, amount)`.
   -/
   function transfer (sender : Address, recipient : Address, amount : Uint256) : Uint256 := do
     require (sender != zeroAddress) "ERC7984InvalidSender"
     require (recipient != zeroAddress) "ERC7984InvalidReceiver"
-
-    let fromBalance ← getMapping balances sender
-    let fromInit ← getMapping balanceInitialized sender
-    require (fromInit != 0) "ERC7984ZeroBalance"
-
-    let success := fromBalance >= amount
-    let newFromBalance := ite success (sub fromBalance amount) fromBalance
-    setMapping balances sender newFromBalance
-    setMapping balanceInitialized sender 1
-
-    let transferred := ite success amount 0
-
-    let toBalance ← getMapping balances recipient
-    let newToBalance := (add toBalance transferred) % 18446744073709551616
-    setMapping balances recipient newToBalance
-    setMapping balanceInitialized recipient 1
-
+    let transferred ← _update sender recipient amount
     return transferred
 
   /-
@@ -154,22 +211,7 @@ verity_contract ERC7984 where
     require (holder != zeroAddress) "ERC7984InvalidSender"
     require (recipient != zeroAddress) "ERC7984InvalidReceiver"
 
-    let fromBalance ← getMapping balances holder
-    let fromInit ← getMapping balanceInitialized holder
-    require (fromInit != 0) "ERC7984ZeroBalance"
-
-    let success := fromBalance >= amount
-    let newFromBalance := ite success (sub fromBalance amount) fromBalance
-    setMapping balances holder newFromBalance
-    setMapping balanceInitialized holder 1
-
-    let transferred := ite success amount 0
-
-    let toBalance ← getMapping balances recipient
-    let newToBalance := (add toBalance transferred) % 18446744073709551616
-    setMapping balances recipient newToBalance
-    setMapping balanceInitialized recipient 1
-
+    let transferred ← _update holder recipient amount
     return transferred
 
   /-
@@ -202,20 +244,7 @@ verity_contract ERC7984 where
   -- `_mint(to, amount)` / `_update(address(0), to, amount)` path.
   function mint (recipient : Address, amount : Uint256) : Uint256 := do
     require (recipient != zeroAddress) "ERC7984InvalidReceiver"
-
-    let currentSupply ← getStorage totalSupply
-    let newSupplyCandidate := (add currentSupply amount) % 18446744073709551616
-    let success := newSupplyCandidate >= currentSupply
-    let newSupply := ite success newSupplyCandidate currentSupply
-    setStorage totalSupply newSupply
-
-    let transferred := ite success amount 0
-
-    let toBalance ← getMapping balances recipient
-    let newToBalance := (add toBalance transferred) % 18446744073709551616
-    setMapping balances recipient newToBalance
-    setMapping balanceInitialized recipient 1
-
+    let transferred ← _update zeroAddress recipient amount
     return transferred
 
   /-
@@ -233,21 +262,7 @@ verity_contract ERC7984 where
   function burn (holder : Address, amount : Uint256) : Uint256 := do
     require (holder != zeroAddress) "ERC7984InvalidSender"
 
-    let fromBalance ← getMapping balances holder
-    let fromInit ← getMapping balanceInitialized holder
-    require (fromInit != 0) "ERC7984ZeroBalance"
-
-    let success := fromBalance >= amount
-    let newFromBalance := ite success (sub fromBalance amount) fromBalance
-    setMapping balances holder newFromBalance
-    setMapping balanceInitialized holder 1
-
-    let transferred := ite success amount 0
-
-    let currentSupply ← getStorage totalSupply
-    let newSupply := (sub currentSupply transferred) % 18446744073709551616
-    setStorage totalSupply newSupply
-
+    let transferred ← _update holder zeroAddress amount
     return transferred
 
 end Benchmark.Cases.Zama.ERC7984ConfidentialToken

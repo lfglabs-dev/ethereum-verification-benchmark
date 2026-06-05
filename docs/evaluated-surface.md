@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 25 cases and 134 task manifests. Of those, 133 tasks are runnable proof tasks with hidden reference proofs; the remaining 1 active task is present in manifests but not runnable.
+The active suite currently contains 25 cases and 135 task manifests. Of those, 134 tasks are runnable proof tasks with hidden reference proofs; the remaining 1 active task is present in manifests but not runnable.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -34,7 +34,7 @@ The active suite currently contains 25 cases and 134 task manifests. Of those, 1
 | `termmax/order_v2_buy_xt_single_segment` | 1 | `complete` |
 | `usual/dao_collateral` | 5 | `complete` |
 | `wildcat/borrow_liquidity_safety` | 1 | `complete` |
-| `zama/erc7984_confidential_token` | 11 | `partial` |
+| `zama/erc7984_confidential_token` | 12 | `partial` |
 | `zodiac/roles_decoder_faithfulness` | 3 | `complete` |
 
 ## Backlog

@@ -1,4 +1,5 @@
 import Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Zama.ERC7984ConfidentialToken
 
@@ -8,20 +9,23 @@ open Verity.EVM.Uint256
 /--
 Successful mint increases totalSupply and receiver balance by amount.
 
-When totalSupply + amount does not overflow uint64 (tryIncrease64 succeeds),
-minting produces exactly `amount` new tokens: totalSupply increases by amount
-and balances[to] increases by amount (mod 2^64).
+When FHESafeMath.tryIncrease succeeds, minting produces exactly `amount`
+new tokens: totalSupply follows the initialized-aware safe-math result and
+balances[to] increases by amount (mod 2^64).
 -/
 theorem mint_increases_supply
     (recipient : Address) (amount : Uint256) (s : ContractState)
     (hTo : (recipient != zeroAddress) = true)
-    (hNoOverflow : (tryIncrease64 (s.storage 0) amount).1 = true)
+    (hNoOverflow : (tryIncrease64WithInit (s.storage 4) (s.storage 0) amount).1 = true)
     (hAmount64 : amount < UINT64_MOD)
     (hSupply64 : s.storage 0 < UINT64_MOD)
     (hToBal64 : s.storageMap 1 recipient < UINT64_MOD) :
     let s' := ((ERC7984.mint recipient amount).run s).snd
     mint_increases_supply_spec recipient amount s s' := by
-  -- Replace this placeholder with a complete Lean proof.
-  exact ?_
+  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
+  -- Try `grind` with contract symbol hints; fall back to `simp` /
+  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
+  unfold mint_increases_supply_spec
+  grind [ERC7984.mint, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized, ERC7984.operators, ERC7984.totalSupplyInitialized]
 
 end Benchmark.Cases.Zama.ERC7984ConfidentialToken

@@ -14,10 +14,10 @@
     "implementation_count": 28,
     "active_case_count": 25,
     "backlog_case_count": 3,
-    "active_task_count": 134,
+    "active_task_count": 135,
     "backlog_task_count": 8,
     "buildable_case_count": 27,
-    "runnable_task_count": 141,
+    "runnable_task_count": 142,
     "case_stage_counts": {
       "build_green": 23,
       "candidate": 1,
@@ -34,7 +34,7 @@
       "proof": 1
     },
     "task_track_counts": {
-      "proof-only": 142
+      "proof-only": 143
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -53,6 +53,7 @@
       "calldata_decoder_faithfulness": 1,
       "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
+      "deposit_mint_exactness": 1,
       "exploit_trace": 1,
       "fee_payout_bound": 1,
       "frame_property": 2,
@@ -87,7 +88,7 @@
       "arithmetic_accounting": 2,
       "auction_clearing_correctness": 1,
       "authorization_enablement": 25,
-      "functional_correctness": 32,
+      "functional_correctness": 33,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 11,
       "state_preservation_local_effects": 49
@@ -2130,7 +2131,7 @@
       ],
       "lean_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Compile",
       "failure_reason": null,
-      "notes": "ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance \u2192 silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, and functional correctness of setOperator. Eleven proof tasks cover the 5 modeled functions.",
+      "notes": "ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance \u2192 silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
@@ -2142,7 +2143,7 @@
         "callbacks_elided",
         "block_timestamp_as_parameter"
       ],
-      "abstraction_notes": "The benchmark models the core accounting logic of ERC-7984: transfer, transferFrom, setOperator, mint, and burn. FHE operations are modeled as plaintext equivalents justified by homomorphism (FHE.add \u2192 mod-2^64 addition, FHE.select \u2192 if/then/else, FHESafeMath.tryDecrease/tryIncrease \u2192 inlined conditional arithmetic). The ACL system (FHE.allow/allowThis), cryptographic proof verification (fromExternal + inputProof), async disclosure/decryption via the off-chain gateway, and ERC1363-style receiver callbacks are omitted as they cannot be modeled in Verity. The nested operator mapping (address \u2192 address \u2192 uint48) is modeled faithfully using Verity's storageMap2 / getMapping2 / setMapping2. block.timestamp is passed as a parameter to transferFrom because the verity_contract DSL macro does not currently expose blockTimestamp as a bind source. FHE.isInitialized is modeled via a separate boolean mapping. All arithmetic uses explicit mod 2^64 to faithfully capture euint64 wrapping semantics.",
+      "abstraction_notes": "The benchmark models the core accounting logic of ERC-7984: transfer, transferFrom, setOperator, mint, and burn. FHE operations are modeled as plaintext equivalents justified by homomorphism (FHE.add \u2192 mod-2^64 addition, FHE.select \u2192 if/then/else, FHESafeMath.tryDecrease/tryIncrease \u2192 inlined conditional arithmetic including uninitialized-handle branches). The ACL system (FHE.allow/allowThis), cryptographic proof verification (fromExternal + inputProof), async disclosure/decryption via the off-chain gateway, and ERC1363-style receiver callbacks are omitted as they cannot be modeled in Verity. The nested operator mapping (address \u2192 address \u2192 uint48) is modeled faithfully using Verity's storageMap2 / getMapping2 / setMapping2. block.timestamp is passed as a parameter to transferFrom because the verity_contract DSL macro does not currently expose blockTimestamp as a bind source. FHE.isInitialized is modeled via separate boolean flags for balances and totalSupply. All arithmetic uses explicit mod 2^64 to faithfully capture euint64 wrapping semantics.",
       "unsupported_feature_codes": [
         "external_contract_call",
         "off_chain_interaction",
@@ -7922,6 +7923,51 @@
       }
     },
     {
+      "task_ref": "zama/erc7984_confidential_token/mint_ctokens_match_deposit",
+      "task_id": "mint_ctokens_match_deposit",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_ctokens_match_deposit.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "deposit_mint_exactness",
+      "category": "invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_ctokens_match_deposit",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintCTokensMatchDeposit.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful mint/deposit credits exactly the deposited amount of confidential tokens to the recipient balance under the initialized-aware FHESafeMath.tryIncrease path.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "zama/erc7984_confidential_token/mint_increases_supply",
       "task_id": "mint_increases_supply",
       "case_id": "zama/erc7984_confidential_token",
@@ -8831,5 +8877,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-04T14:16:46.965853+00:00"
+  "generated_at": "2026-06-05T07:44:08.724383+00:00"
 }

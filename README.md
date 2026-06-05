@@ -61,7 +61,7 @@ The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) ar
 | `termmax/order_v2_buy_xt_single_segment` | TermMax Order V2 | 1 |
 | `usual/dao_collateral` | Usual DaoCollateral | 5 |
 | `wildcat/borrow_liquidity_safety` | Wildcat V2 | 1 |
-| `zama/erc7984_confidential_token` | Zama / OpenZeppelin ERC-7984 | 11 |
+| `zama/erc7984_confidential_token` | Zama / OpenZeppelin ERC-7984 | 12 |
 
 Every runnable task includes a reference proof hidden from the agent during benchmarking. Case-level `proof_status: partial` means the broader case family is not fully complete; it does not imply that runnable per-task reference proofs are missing.
 

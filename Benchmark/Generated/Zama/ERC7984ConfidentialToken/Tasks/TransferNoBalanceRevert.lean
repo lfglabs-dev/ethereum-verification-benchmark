@@ -1,4 +1,5 @@
 import Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Zama.ERC7984ConfidentialToken
 
@@ -29,7 +30,10 @@ theorem transfer_no_balance_revert
     (hFromBal64 : s.storageMap 1 sender < UINT64_MOD)
     (hToBal64 : s.storageMap 1 recipient < UINT64_MOD) :
     transfer_no_balance_revert_spec sender recipient amount s := by
-  -- Replace this placeholder with a complete Lean proof.
-  exact ?_
+  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
+  -- Try `grind` with contract symbol hints; fall back to `simp` /
+  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
+  unfold transfer_no_balance_revert_spec
+  grind
 
 end Benchmark.Cases.Zama.ERC7984ConfidentialToken

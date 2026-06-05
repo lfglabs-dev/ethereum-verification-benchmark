@@ -3,6 +3,9 @@ import Verity.Proofs.Stdlib.Automation
 
 namespace Benchmark.Cases.Zama.ERC7984ConfidentialToken
 
+set_option linter.unusedSimpArgs false
+set_option linter.unusedVariables false
+
 open Verity
 open Verity.EVM.Uint256
 
@@ -77,7 +80,7 @@ theorem transfer_conservation
   · dsimp
     have hSufficient' : amount.val ≤ (s.storageMap 1 sender).val := by
       simpa using hSufficient
-    simp [ERC7984.transfer, ERC7984.balances, ERC7984.balanceInitialized,
+    simp [ERC7984.transfer, ERC7984._update, ERC7984.balances, ERC7984.balanceInitialized,
       add64, UINT64_MOD, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hSenderNZ, hRecipientNZ, hInit, hSufficient',
@@ -101,7 +104,7 @@ theorem transfer_conservation
   · dsimp
     have hInsufficient' : ¬ amount.val ≤ (s.storageMap 1 sender).val := by
       simpa using hSufficient
-    simp [ERC7984.transfer, ERC7984.balances, ERC7984.balanceInitialized,
+    simp [ERC7984.transfer, ERC7984._update, ERC7984.balances, ERC7984.balanceInitialized,
       add64, UINT64_MOD, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hSenderNZ, hRecipientNZ, hInit, hInsufficient',
@@ -139,13 +142,13 @@ theorem transfer_sufficient
   dsimp
   intro _
   constructor
-  · simp [ERC7984.transfer, ERC7984.balances, ERC7984.balanceInitialized,
+  · simp [ERC7984.transfer, ERC7984._update, ERC7984.balances, ERC7984.balanceInitialized,
       add64, UINT64_MOD, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hSenderNZ, hRecipientNZ, hInit,
       hSufficient', hDistinct]
   · have hDistinct' : recipient ≠ sender := Ne.symm hDistinct
-    simp [ERC7984.transfer, ERC7984.balances, ERC7984.balanceInitialized,
+    simp [ERC7984.transfer, ERC7984._update, ERC7984.balances, ERC7984.balanceInitialized,
       add64, UINT64_MOD, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hSenderNZ, hRecipientNZ, hInit,
@@ -178,7 +181,7 @@ theorem transfer_insufficient
   dsimp
   intro _
   constructor
-  · simp [ERC7984.transfer, ERC7984.balances, ERC7984.balanceInitialized,
+  · simp [ERC7984.transfer, ERC7984._update, ERC7984.balances, ERC7984.balanceInitialized,
       add64, UINT64_MOD, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hSenderNZ, hRecipientNZ, hInit,
@@ -186,7 +189,7 @@ theorem transfer_insufficient
     intro hEq
     exact False.elim (hDistinct hEq)
   · have hDistinct' : recipient ≠ sender := Ne.symm hDistinct
-    simp [ERC7984.transfer, ERC7984.balances, ERC7984.balanceInitialized,
+    simp [ERC7984.transfer, ERC7984._update, ERC7984.balances, ERC7984.balanceInitialized,
       add64, UINT64_MOD, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hSenderNZ, hRecipientNZ, hInit, hInsufficient',
@@ -214,7 +217,7 @@ theorem transfer_preserves_supply
   have hSenderNZ := address_ne_of_neq_zero hFrom
   have hRecipientNZ := address_ne_of_neq_zero hTo
   unfold transfer_preserves_supply_spec supply
-  simp [ERC7984.transfer, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized,
+  simp [ERC7984.transfer, ERC7984._update, ERC7984.totalSupply, ERC7984.totalSupplyInitialized, ERC7984.balances, ERC7984.balanceInitialized,
     add64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
     Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
     Contract.run, ContractResult.snd, hSenderNZ, hRecipientNZ, hInit]
@@ -251,7 +254,7 @@ theorem transfer_no_balance_revert
   have hSenderNZ := address_ne_of_neq_zero hFrom
   have hRecipientNZ := address_ne_of_neq_zero hTo
   unfold transfer_no_balance_revert_spec
-  simp [ERC7984.transfer, ERC7984.balances, ERC7984.balanceInitialized,
+  simp [ERC7984.transfer, ERC7984._update, ERC7984.balances, ERC7984.balanceInitialized,
     getMapping, setMapping, Verity.require, Verity.bind, Bind.bind,
     Verity.pure, Pure.pure, Contract.run, ContractResult.isSuccess,
     hSenderNZ, hRecipientNZ, hInit]
@@ -270,32 +273,49 @@ and balances[to] increases by amount (mod 2^64).
 theorem mint_increases_supply
     (recipient : Address) (amount : Uint256) (s : ContractState)
     (hTo : (recipient != zeroAddress) = true)
-    (hNoOverflow : (tryIncrease64 (s.storage 0) amount).1 = true)
+    (hNoOverflow : (tryIncrease64WithInit (s.storage 4) (s.storage 0) amount).1 = true)
     (hAmount64 : amount < UINT64_MOD)
     (hSupply64 : s.storage 0 < UINT64_MOD)
     (hToBal64 : s.storageMap 1 recipient < UINT64_MOD) :
     let s' := ((ERC7984.mint recipient amount).run s).snd
     mint_increases_supply_spec recipient amount s s' := by
   have hRecipientNZ := address_ne_of_neq_zero hTo
-  have hSuccess : add64 (s.storage 0) amount >= s.storage 0 := by
-    by_cases h : add64 (s.storage 0) amount >= s.storage 0
-    · exact h
-    · unfold tryIncrease64 at hNoOverflow
-      simp [h] at hNoOverflow
-  have hSuccess' : (s.storage 0).val ≤ (add (s.storage 0) amount % 18446744073709551616).val := by
-    simpa [add64, UINT64_MOD] using hSuccess
-  unfold mint_increases_supply_spec supply balanceOf
+  have hMintSuccess :
+      s.storage 4 = 0 ∨
+        (s.storage 0).val ≤ (add (s.storage 0) amount % 18446744073709551616).val := by
+    simpa [tryIncrease64WithInit, tryIncrease64SuccessWithInit, add64, UINT64_MOD]
+      using hNoOverflow
+  unfold mint_increases_supply_spec supply supplyInitialized balanceOf
   dsimp
   intro _
   constructor
-  · simp [ERC7984.mint, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized,
-      tryIncrease64, add64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
+  · simp [ERC7984.mint, ERC7984._update, ERC7984.totalSupply, ERC7984.totalSupplyInitialized, ERC7984.balances, ERC7984.balanceInitialized,
+      tryIncrease64WithInit, tryIncrease64SuccessWithInit, tryIncrease64UpdatedWithInit,
+      add64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
-      Contract.run, ContractResult.snd, hRecipientNZ, hSuccess']
-  · simp [ERC7984.mint, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized,
-      tryIncrease64, add64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
+      Contract.run, ContractResult.snd, hRecipientNZ, hNoOverflow, hMintSuccess]
+  · simp [ERC7984.mint, ERC7984._update, ERC7984.totalSupply, ERC7984.totalSupplyInitialized, ERC7984.balances, ERC7984.balanceInitialized,
+      tryIncrease64WithInit, tryIncrease64SuccessWithInit, tryIncrease64UpdatedWithInit,
+      add64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
-      Contract.run, ContractResult.snd, hRecipientNZ, hSuccess']
+      Contract.run, ContractResult.snd, hRecipientNZ, hNoOverflow, hMintSuccess]
+
+/--
+Successful mint/deposit credits exactly `amount` confidential tokens to the
+recipient.
+-/
+theorem mint_ctokens_match_deposit
+    (recipient : Address) (amount : Uint256) (s : ContractState)
+    (hTo : (recipient != zeroAddress) = true)
+    (hNoOverflow : (tryIncrease64WithInit (s.storage 4) (s.storage 0) amount).1 = true)
+    (hAmount64 : amount < UINT64_MOD)
+    (hSupply64 : s.storage 0 < UINT64_MOD)
+    (hToBal64 : s.storageMap 1 recipient < UINT64_MOD) :
+    let s' := ((ERC7984.mint recipient amount).run s).snd
+    mint_ctokens_match_deposit_spec recipient amount s s' := by
+  dsimp [mint_ctokens_match_deposit_spec]
+  intro hSuccess
+  exact (mint_increases_supply recipient amount s hTo hNoOverflow hAmount64 hSupply64 hToBal64 hSuccess).2
 
 /--
 Mint overflow protection: when totalSupply + amount overflows uint64,
@@ -309,33 +329,41 @@ Then FHE.select picks 0 as the transferred amount.
 theorem mint_overflow_protection
     (recipient : Address) (amount : Uint256) (s : ContractState)
     (hTo : (recipient != zeroAddress) = true)
-    (hOverflow : (tryIncrease64 (s.storage 0) amount).1 = false)
+    (hOverflow : (tryIncrease64WithInit (s.storage 4) (s.storage 0) amount).1 = false)
     (hAmount64 : amount < UINT64_MOD)
     (hSupply64 : s.storage 0 < UINT64_MOD)
     (hToBal64 : s.storageMap 1 recipient < UINT64_MOD) :
     let s' := ((ERC7984.mint recipient amount).run s).snd
     mint_overflow_protection_spec recipient amount s s' := by
   have hRecipientNZ := address_ne_of_neq_zero hTo
-  have hFail : ¬ add64 (s.storage 0) amount >= s.storage 0 := by
-    intro hSuccess
-    have : (tryIncrease64 (s.storage 0) amount).1 = true := by
-      simp [tryIncrease64, hSuccess]
-    rw [this] at hOverflow
-    contradiction
-  have hFail' : ¬ (s.storage 0).val ≤ (add (s.storage 0) amount % 18446744073709551616).val := by
-    simpa [add64, UINT64_MOD] using hFail
-  unfold mint_overflow_protection_spec supply balanceOf
+  have hMintFail :
+      ¬ (s.storage 4 = 0 ∨
+        (s.storage 0).val ≤ (add (s.storage 0) amount % 18446744073709551616).val) := by
+    simpa [tryIncrease64WithInit, tryIncrease64SuccessWithInit, add64, UINT64_MOD]
+      using hOverflow
+  have hSupplyInitNZ : ¬ s.storage 4 = 0 := by
+    intro h
+    exact hMintFail (Or.inl h)
+  have hAddOverflow :
+      ¬ (s.storage 0).val ≤ (add (s.storage 0) amount % 18446744073709551616).val := by
+    intro h
+    exact hMintFail (Or.inr h)
+  unfold mint_overflow_protection_spec supply supplyInitialized balanceOf
   dsimp
   intro _
   constructor
-  · simp [ERC7984.mint, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized,
-      tryIncrease64, add64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
+  · simp [ERC7984.mint, ERC7984._update, ERC7984.totalSupply, ERC7984.totalSupplyInitialized, ERC7984.balances, ERC7984.balanceInitialized,
+      tryIncrease64WithInit, tryIncrease64SuccessWithInit, tryIncrease64UpdatedWithInit,
+      add64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
-      Contract.run, ContractResult.snd, hRecipientNZ, hFail', hToBal64]
-  · simp [ERC7984.mint, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized,
-      tryIncrease64, add64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
+      Contract.run, ContractResult.snd, hRecipientNZ, hOverflow, hMintFail,
+      hSupplyInitNZ, hAddOverflow, hToBal64]
+  · simp [ERC7984.mint, ERC7984._update, ERC7984.totalSupply, ERC7984.totalSupplyInitialized, ERC7984.balances, ERC7984.balanceInitialized,
+      tryIncrease64WithInit, tryIncrease64SuccessWithInit, tryIncrease64UpdatedWithInit,
+      add64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
-      Contract.run, ContractResult.snd, hRecipientNZ, hFail', hToBal64]
+      Contract.run, ContractResult.snd, hRecipientNZ, hOverflow, hMintFail,
+      hSupplyInitNZ, hAddOverflow, hToBal64]
 
 /-! ═══════════════════════════════════════════════════════════════════
     Part 3: burn
@@ -364,11 +392,11 @@ theorem burn_decreases_supply
   dsimp
   intro _
   constructor
-  · simp [ERC7984.burn, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized,
+  · simp [ERC7984.burn, ERC7984._update, ERC7984.totalSupply, ERC7984.totalSupplyInitialized, ERC7984.balances, ERC7984.balanceInitialized,
       add64, sub64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hHolderNZ, hInit, hSufficient']
-  · simp [ERC7984.burn, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized,
+  · simp [ERC7984.burn, ERC7984._update, ERC7984.totalSupply, ERC7984.totalSupplyInitialized, ERC7984.balances, ERC7984.balanceInitialized,
       add64, sub64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hHolderNZ, hInit, hSufficient']
@@ -396,11 +424,11 @@ theorem burn_insufficient
   dsimp
   intro _
   constructor
-  · simp [ERC7984.burn, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized,
+  · simp [ERC7984.burn, ERC7984._update, ERC7984.totalSupply, ERC7984.totalSupplyInitialized, ERC7984.balances, ERC7984.balanceInitialized,
       add64, sub64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hHolderNZ, hInit, hInsufficient']
-  · simp [ERC7984.burn, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized,
+  · simp [ERC7984.burn, ERC7984._update, ERC7984.totalSupply, ERC7984.totalSupplyInitialized, ERC7984.balances, ERC7984.balanceInitialized,
       add64, sub64, UINT64_MOD, getStorage, setStorage, getMapping, setMapping,
       Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       Contract.run, ContractResult.snd, hHolderNZ, hInit, hInsufficient', hSupply64]
@@ -447,7 +475,7 @@ theorem transferFrom_conservation
   · dsimp
     have hSufficient' : amount.val ≤ (s.storageMap 1 holder).val := by
       simpa using hSufficient
-    simp [ERC7984.transferFrom, ERC7984.operators, ERC7984.balances,
+    simp [ERC7984.transferFrom, ERC7984._update, ERC7984.operators, ERC7984.balances,
       ERC7984.balanceInitialized, add64, UINT64_MOD, getMapping2, getMapping,
       setMapping, Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       msgSender, Contract.run, ContractResult.snd, hHolderNZ, hRecipientNZ, hInit,
@@ -471,7 +499,7 @@ theorem transferFrom_conservation
   · dsimp
     have hInsufficient' : ¬ amount.val ≤ (s.storageMap 1 holder).val := by
       simpa using hSufficient
-    simp [ERC7984.transferFrom, ERC7984.operators, ERC7984.balances,
+    simp [ERC7984.transferFrom, ERC7984._update, ERC7984.operators, ERC7984.balances,
       ERC7984.balanceInitialized, add64, UINT64_MOD, getMapping2, getMapping,
       setMapping, Verity.require, Verity.bind, Bind.bind, Verity.pure, Pure.pure,
       msgSender, Contract.run, ContractResult.snd, hHolderNZ, hRecipientNZ, hInit,
