@@ -42,10 +42,8 @@ open Verity.Stdlib.Math
     Function arguments are modeled as initialized euint64 handles, so the
     FHESafeMath.tryDecrease branch for an uninitialized `delta` is outside
     this slice.
-  - FHESafeMath and FHE.add/sub arithmetic is inlined in `_update` to avoid
-    adding externally callable helper functions while Verity lacks source-level
-    `internal` helpers. The specs expose the same logic through named helper
-    definitions for comparison.
+  - FHESafeMath and FHE.add/sub arithmetic is inlined in `_update`; the specs
+    expose the same logic through named helper definitions for comparison.
 -/
 
 /-! ## Constants -/
@@ -142,15 +140,14 @@ verity_contract ERC7984 where
 
     This mirrors the Solidity branches and uses helper-shaped models of
     `FHESafeMath.tryIncrease`, `FHESafeMath.tryDecrease`, `FHE.add`, and
-    `FHE.sub`. The destination update is duplicated in the two source
-    branches because current Verity source does not support the Solidity-like
-    `if (...) { ... } else { ... }; shared tail` do-block shape without adding
-    an externally callable helper function.
+    `FHE.sub`. The destination update is duplicated in the two source branches
+    because current Verity source does not support the Solidity-like
+    `if (...) { ... } else { ... }; shared tail` do-block shape.
 
     ACL calls (`FHE.allow*`), transient allowances, and events are elided
     because they do not affect balance or supply accounting.
   -/
-  function _update (src : Address, dst : Address, amount : Uint256) : Uint256 := do
+  function internal _update (src : Address, dst : Address, amount : Uint256) : Uint256 := do
     if src == zeroAddress then
       -- (success, ptr) = FHESafeMath.tryIncrease(_totalSupply, amount);
       let currentSupply ← getStorage totalSupply
@@ -208,13 +205,22 @@ verity_contract ERC7984 where
       return transferred
 
   /-
-    Models `_transfer(from, to, amount)`: plaintext zero-address checks followed
-    by `_update(from, to, amount)`.
+    Models Solidity `_transfer(from, to, amount)`: plaintext zero-address
+    checks followed by `_update(from, to, amount)`.
   -/
-  function transfer (sender : Address, recipient : Address, amount : Uint256) : Uint256 := do
+  function internal _transfer (sender : Address, recipient : Address, amount : Uint256) : Uint256 := do
     require (sender != zeroAddress) "ERC7984InvalidSender"
     require (recipient != zeroAddress) "ERC7984InvalidReceiver"
     let transferred ← _update sender recipient amount
+    return transferred
+
+  /-
+    Public benchmark wrapper for the ERC-7984 confidential transfer path.
+    Solidity exposes `confidentialTransfer`; the accounting body delegates to
+    `_transfer`.
+  -/
+  function transfer (sender : Address, recipient : Address, amount : Uint256) : Uint256 := do
+    let transferred ← _transfer sender recipient amount
     return transferred
 
   /-
@@ -237,11 +243,19 @@ verity_contract ERC7984 where
     -- isOperator: holder == spender || block.timestamp <= _operators[holder][spender]
     require (holder == spender || blockTimestamp <= expiry) "ERC7984UnauthorizedSpender"
 
-    require (holder != zeroAddress) "ERC7984InvalidSender"
-    require (recipient != zeroAddress) "ERC7984InvalidReceiver"
-
-    let transferred ← _update holder recipient amount
+    let transferred ← _transfer holder recipient amount
     return transferred
+
+  /-
+    Models `_setOperator(holder, operator, until)`.
+
+    Solidity:
+      function _setOperator(address holder, address operator, uint48 until) internal {
+          _operators[holder][operator] = until;
+      }
+  -/
+  function internal _setOperator (holder : Address, operator : Address, expiry : Uint256) : Unit := do
+    setMapping2 operators holder operator expiry
 
   /-
     Models setOperator(operator, until).
@@ -250,13 +264,10 @@ verity_contract ERC7984 where
       function setOperator(address operator, uint48 until) public virtual {
           _setOperator(msg.sender, operator, until);
       }
-      function _setOperator(address holder, address operator, uint48 until) internal {
-          _operators[holder][operator] = until;
-      }
   -/
   function setOperator (operator : Address, expiry : Uint256) : Unit := do
     let holder ← msgSender
-    setMapping2 operators holder operator expiry
+    _setOperator holder operator expiry
 
   /-
     Models the mint path: _mint(to, amount) → _update(address(0), to, amount).
@@ -271,9 +282,13 @@ verity_contract ERC7984 where
   -- NOTE: `to` is reserved by EvmYul's Yul notation, so the parameter is named
   -- `recipient` here; it still corresponds to the `to` argument of Solidity's
   -- `_mint(to, amount)` / `_update(address(0), to, amount)` path.
-  function mint (recipient : Address, amount : Uint256) : Uint256 := do
+  function internal _mint (recipient : Address, amount : Uint256) : Uint256 := do
     require (recipient != zeroAddress) "ERC7984InvalidReceiver"
     let transferred ← _update zeroAddress recipient amount
+    return transferred
+
+  function mint (recipient : Address, amount : Uint256) : Uint256 := do
+    let transferred ← _mint recipient amount
     return transferred
 
   /-
@@ -287,10 +302,13 @@ verity_contract ERC7984 where
       ptr = FHE.sub(_totalSupply, transferred);
       _totalSupply = ptr;
   -/
-  function burn (holder : Address, amount : Uint256) : Uint256 := do
+  function internal _burn (holder : Address, amount : Uint256) : Uint256 := do
     require (holder != zeroAddress) "ERC7984InvalidSender"
-
     let transferred ← _update holder zeroAddress amount
+    return transferred
+
+  function burn (holder : Address, amount : Uint256) : Uint256 := do
+    let transferred ← _burn holder amount
     return transferred
 
 end Benchmark.Cases.Zama.ERC7984ConfidentialToken
