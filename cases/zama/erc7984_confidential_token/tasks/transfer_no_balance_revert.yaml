@@ -29,8 +29,8 @@ reference_solution_declaration: Benchmark.Cases.Zama.ERC7984ConfidentialToken.tr
 abstraction_level: protocol_slice
 abstraction_notes: >
   Contract-level non-leakage: the transfer function never reverts based
-  on the encrypted balance comparison. Only plaintext checks (zero address,
-  uninitialized balance) can cause reverts. This ensures an on-chain
+  on the encrypted balance comparison. Only modeled plaintext address checks
+  can cause reverts. This ensures an on-chain
   observer cannot distinguish sufficient from insufficient transfers by
   observing transaction success/failure. Combined with FHE encryption of
   the return value and emitted events, this provides confidentiality of

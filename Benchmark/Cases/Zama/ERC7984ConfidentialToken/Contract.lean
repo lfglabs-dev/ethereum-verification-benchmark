@@ -21,7 +21,8 @@ open Verity.Stdlib.Math
   - All arithmetic is modular at 2^64 (euint64)
   - Uninitialized euint64 handles are handled inside FHESafeMath
 
-  Upstream: OpenZeppelin/openzeppelin-confidential-contracts (master)
+  Upstream: OpenZeppelin/openzeppelin-confidential-contracts
+  Commit: 83364738f0d2b1655c60627588e3493099c359f7
   File: contracts/token/ERC7984/ERC7984.sol
   Depends on: contracts/utils/FHESafeMath.sol
 
@@ -37,7 +38,8 @@ open Verity.Stdlib.Math
   - ERC1363-style callbacks (AndCall variants) omitted — external contract calls
   - Events omitted — not modeled in Verity
   - FHE.isInitialized modeled via explicit initialized flags since an
-    uninitialized euint64 handle is distinct from an explicit encrypted zero
+    uninitialized euint64 handle is distinct from an explicit encrypted zero.
+    Function arguments are modeled as initialized euint64 handles.
 -/
 
 /-! ## Constants -/
@@ -137,6 +139,7 @@ verity_contract ERC7984 where
   -/
   function _update (src : Address, dst : Address, amount : Uint256) : Uint256 := do
     if src == zeroAddress then
+      -- (success, ptr) = FHESafeMath.tryIncrease(_totalSupply, amount);
       let currentSupply ← getStorage totalSupply
       let supplyInit ← getStorage totalSupplyInitialized
       let newSupplyCandidate := (add currentSupply amount) % 18446744073709551616
@@ -147,17 +150,20 @@ verity_contract ERC7984 where
       setStorage totalSupplyInitialized 1
       let transferred := ite success amount 0
       if dst == zeroAddress then
+        -- ptr = FHE.sub(_totalSupply, transferred);
         let currentSupplyAfterMint ← getStorage totalSupply
         let newSupply := (sub currentSupplyAfterMint transferred) % 18446744073709551616
         setStorage totalSupply newSupply
         setStorage totalSupplyInitialized 1
       else
+        -- ptr = FHE.add(_balances[to], transferred);
         let toBalance ← getMapping balances dst
         let newToBalance := (add toBalance transferred) % 18446744073709551616
         setMapping balances dst newToBalance
         setMapping balanceInitialized dst 1
       return transferred
     else
+      -- (success, ptr) = FHESafeMath.tryDecrease(_balances[from], amount);
       let fromBalance ← getMapping balances src
       let fromInit ← getMapping balanceInitialized src
       let success := ite (fromInit == 0) (amount == 0) (fromBalance >= amount)
@@ -167,11 +173,13 @@ verity_contract ERC7984 where
       setMapping balanceInitialized src 1
       let transferred := ite success amount 0
       if dst == zeroAddress then
+        -- ptr = FHE.sub(_totalSupply, transferred);
         let currentSupply ← getStorage totalSupply
         let newSupply := (sub currentSupply transferred) % 18446744073709551616
         setStorage totalSupply newSupply
         setStorage totalSupplyInitialized 1
       else
+        -- ptr = FHE.add(_balances[to], transferred);
         let toBalance ← getMapping balances dst
         let newToBalance := (add toBalance transferred) % 18446744073709551616
         setMapping balances dst newToBalance
@@ -250,9 +258,8 @@ verity_contract ERC7984 where
   /-
     Models the burn path: _burn(from, amount) → _update(from, address(0), amount).
 
-    Solidity (_update, to == 0 path):
+    Solidity (_update, from != 0 and to == 0 path):
       euint64 fromBalance = _balances[from];
-      require(FHE.isInitialized(fromBalance), ERC7984ZeroBalance(from));
       (success, ptr) = FHESafeMath.tryDecrease(fromBalance, amount);
       _balances[from] = ptr;
       transferred = FHE.select(success, amount, FHE.asEuint64(0));

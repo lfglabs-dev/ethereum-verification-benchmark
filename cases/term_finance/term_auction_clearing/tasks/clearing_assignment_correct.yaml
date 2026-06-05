@@ -5,16 +5,16 @@ case_id: term_finance/term_auction_clearing
 split: active
 family_id: term_finance
 implementation_id: term_finance_contracts
-source_ref: https://github.com/term-finance/term-finance-contracts/blob/127b74d871fc74e3a03d6d3b0f1fafe7e5d10275/contracts/TermAuction.sol
+source_ref: https://github.com/term-finance/term-finance-contracts@127b74d871fc74e3a03d6d3b0f1fafe7e5d10275:contracts/TermAuction.sol
 task_interface_version: 2
-theorem_name: Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct_task
-proof_family: auction_clearing_correctness
+theorem_name: Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct
+proof_family: functional_correctness
 property_class: accounting_and_rate_guard
 difficulty: medium
 category: invariant
 track: proof-only
 translation_status: translated
-proof_status: proof
+proof_status: complete
 evaluation_engine: lean_proof_generation
 implementation_files:
   - cases/term_finance/term_auction_clearing/verity/Contract.lean

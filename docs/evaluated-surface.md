@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 25 cases and 135 task manifests. Of those, 134 tasks are runnable proof tasks with hidden reference proofs; the remaining 1 active task is present in manifests but not runnable.
+The active suite currently contains 25 cases and 135 task manifests. Of those, 135 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -25,12 +25,12 @@ The active suite currently contains 25 cases and 135 task manifests. Of those, 1
 | `onedelta/caller_address_integrity` | 10 | `complete` |
 | `paladin_votes/stream_recovery_claim_usdc` | 26 | `complete` |
 | `piku/fund_conservation` | 4 | `complete` |
-| `polaris/bonding_curve` | 0 | `complete` |
+| `polaris/bonding_curve` | 4 | `complete` |
 | `polygon/agglayer_bridge` | 2 | `complete` |
 | `reserve/auction_price_band` | 4 | `complete` |
 | `rootstock/flyover_quote_lifecycle` | 3 | `complete` |
 | `safe/owner_manager_reach` | 15 | `complete` |
-| `term_finance/term_auction_clearing` | 0 | `proof` |
+| `term_finance/term_auction_clearing` | 1 | `complete` |
 | `termmax/order_v2_buy_xt_single_segment` | 1 | `complete` |
 | `usual/dao_collateral` | 5 | `complete` |
 | `wildcat/borrow_liquidity_safety` | 1 | `complete` |

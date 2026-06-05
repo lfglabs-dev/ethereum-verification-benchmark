@@ -8,11 +8,11 @@ implementation_id: term_finance_contracts
 stage: build_green
 translation_status: translated
 spec_status: frozen
-proof_status: proof
+proof_status: complete
 upstream_repo: https://github.com/term-finance/term-finance-contracts
 upstream_commit: 127b74d871fc74e3a03d6d3b0f1fafe7e5d10275
 original_contract_path: contracts/TermAuction.sol
-source_ref: https://github.com/term-finance/term-finance-contracts/blob/127b74d871fc74e3a03d6d3b0f1fafe7e5d10275/contracts/TermAuction.sol
+source_ref: https://github.com/term-finance/term-finance-contracts@127b74d871fc74e3a03d6d3b0f1fafe7e5d10275:contracts/TermAuction.sol
 lean_target: Benchmark.Cases.TermFinance.TermAuctionClearing.Compile
 spec_target: Benchmark.Cases.TermFinance.TermAuctionClearing.Specs
 proof_target: Benchmark.Cases.TermFinance.TermAuctionClearing.Proofs

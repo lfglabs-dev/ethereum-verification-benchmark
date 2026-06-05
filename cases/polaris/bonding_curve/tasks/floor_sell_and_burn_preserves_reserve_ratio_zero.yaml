@@ -1,18 +1,13 @@
 manifest_kind: task
 schema_version: 1
-project: polaris
-case_id: bonding_curve
 task_id: floor_sell_and_burn_preserves_reserve_ratio_zero
-name: floorSellAndBurn preserves zero reserve-ratio deviation
-description: Prove that fee-router pETH burns reduce aggregate supply, raise floor supply, and write floor reserve to the curve point after the full supply change.
-entrypoint: Benchmark.Generated.Polaris.BondingCurve.Tasks.floor_sell_and_burn_preserves_reserve_ratio_zero_task
-proof_target: Benchmark.Cases.Polaris.BondingCurve.Proofs.floorSellAndBurn_preserves_reserve_ratio_zero
-status: open
+case_id: polaris/bonding_curve
 split: active
 family_id: polaris
 implementation_id: bonding_curve
+source_ref: https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol
 task_interface_version: 2
-theorem_name: Benchmark.Cases.Polaris.BondingCurve.floor_sell_and_burn_preserves_reserve_ratio_zero_task
+theorem_name: Benchmark.Cases.Polaris.BondingCurve.floorSellAndBurn_preserves_reserve_ratio_zero
 proof_family: state_preservation_local_effects
 property_class: reserve_state_transition
 difficulty: medium
@@ -30,4 +25,11 @@ specification_files:
 editable_files:
   - Benchmark/Generated/Polaris/BondingCurve/Tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.lean
 reference_solution_module: Benchmark.Cases.Polaris.BondingCurve.Proofs
-reference_solution_declaration: Benchmark.Cases.Polaris.BondingCurve.Proofs.floorSellAndBurn_preserves_reserve_ratio_zero
+reference_solution_declaration: Benchmark.Cases.Polaris.BondingCurve.floorSellAndBurn_preserves_reserve_ratio_zero
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves that fee-router pETH burns preserve the current and floor reserve-ratio
+  equations under the modeled aggregate-supply slice.
+unsupported_feature_codes:
+  - fixed_point_exponentiation_abstracted
+  - erc20_per_account_balances_omitted

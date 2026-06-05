@@ -38,7 +38,7 @@ abstraction_notes: >
   transferFrom, setOperator, mint, and burn. FHE operations are modeled
   as plaintext equivalents justified by homomorphism (FHE.add → mod-2^64
   addition, FHE.select → if/then/else, FHESafeMath.tryDecrease/tryIncrease →
-  inlined conditional arithmetic including uninitialized-handle branches).
+  helper-shaped conditional arithmetic including uninitialized-handle branches).
   The ACL system (FHE.allow/allowThis),
   cryptographic proof verification (fromExternal + inputProof), async
   disclosure/decryption via the off-chain gateway, and ERC1363-style

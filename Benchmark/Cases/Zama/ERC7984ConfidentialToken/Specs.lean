@@ -138,9 +138,9 @@ def burn_insufficient_spec
 /--
   Transfer never reverts based on balance sufficiency.
 
-  Given that all plaintext preconditions hold (non-zero addresses,
-  initialized balance), the transfer function always succeeds —
-  it never reverts due to the encrypted balance comparison.
+  Given that the modeled plaintext address preconditions hold, the transfer
+  function always succeeds — it never reverts due to the encrypted balance
+  comparison or due to whether the stored balance handle was initialized.
 
   This is the contract-level non-leakage invariant: an on-chain observer
   cannot distinguish a sufficient transfer from an insufficient one by

@@ -225,14 +225,14 @@ theorem transfer_preserves_supply
 /--
 Transfer never reverts based on balance sufficiency.
 
-Given that all plaintext preconditions hold (non-zero addresses,
-initialized sender balance), the transfer always succeeds — it
+Given that the modeled plaintext address preconditions hold, the transfer
+always succeeds — it
 returns `ContractResult.success`, never `ContractResult.revert`.
 
 This is the contract-level non-leakage invariant for ERC-7984:
 an on-chain observer cannot learn whether the sender had sufficient
-balance by checking if the transaction reverted. The only reverts
-come from plaintext checks (zero address, uninitialized balance).
+balance by checking if the transaction reverted. In this modeled entrypoint,
+the only transfer reverts come from plaintext zero-address checks.
 
 Note: NO hypothesis about `fromBalance >= amount` is provided.
 The theorem must hold for BOTH sufficient and insufficient balances.
