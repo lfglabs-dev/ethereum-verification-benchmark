@@ -26,7 +26,7 @@ open Verity.Stdlib.Math
   File: contracts/token/ERC7984/ERC7984.sol
   Depends on: contracts/utils/FHESafeMath.sol
 
-  Framework-required simplifications (cannot be modeled in Verity):
+  Current scope/tooling simplifications:
   - euint64 modeled as Uint256 with explicit mod 2^64 arithmetic
     (FHE homomorphism guarantees logical equivalence)
   - FHE.select modeled as if/then/else (logically equivalent)
@@ -39,7 +39,13 @@ open Verity.Stdlib.Math
   - Events omitted — not modeled in Verity
   - FHE.isInitialized modeled via explicit initialized flags since an
     uninitialized euint64 handle is distinct from an explicit encrypted zero.
-    Function arguments are modeled as initialized euint64 handles.
+    Function arguments are modeled as initialized euint64 handles, so the
+    FHESafeMath.tryDecrease branch for an uninitialized `delta` is outside
+    this slice.
+  - FHESafeMath and FHE.add/sub arithmetic is inlined in `_update` to avoid
+    adding externally callable helper functions while Verity lacks source-level
+    `internal` helpers. The specs expose the same logic through named helper
+    definitions for comparison.
 -/
 
 /-! ## Constants -/
@@ -134,8 +140,15 @@ verity_contract ERC7984 where
   /-
     Models Solidity `_update(from, to, amount)`.
 
-    ACL calls, transient allowances, and events are elided because they do not
-    affect balance or supply accounting.
+    This mirrors the Solidity branches and uses helper-shaped models of
+    `FHESafeMath.tryIncrease`, `FHESafeMath.tryDecrease`, `FHE.add`, and
+    `FHE.sub`. The destination update is duplicated in the two source
+    branches because current Verity source does not support the Solidity-like
+    `if (...) { ... } else { ... }; shared tail` do-block shape without adding
+    an externally callable helper function.
+
+    ACL calls (`FHE.allow*`), transient allowances, and events are elided
+    because they do not affect balance or supply accounting.
   -/
   function _update (src : Address, dst : Address, amount : Uint256) : Uint256 := do
     if src == zeroAddress then
@@ -148,19 +161,23 @@ verity_contract ERC7984 where
         (ite (newSupplyCandidate >= currentSupply) newSupplyCandidate currentSupply)
       setStorage totalSupply ptr
       setStorage totalSupplyInitialized 1
+
+      -- transferred = FHE.select(success, amount, FHE.asEuint64(0));
       let transferred := ite success amount 0
+
       if dst == zeroAddress then
         -- ptr = FHE.sub(_totalSupply, transferred);
         let currentSupplyAfterMint ← getStorage totalSupply
-        let newSupply := (sub currentSupplyAfterMint transferred) % 18446744073709551616
-        setStorage totalSupply newSupply
+        let supplyPtr := (sub currentSupplyAfterMint transferred) % 18446744073709551616
+        setStorage totalSupply supplyPtr
         setStorage totalSupplyInitialized 1
       else
         -- ptr = FHE.add(_balances[to], transferred);
         let toBalance ← getMapping balances dst
-        let newToBalance := (add toBalance transferred) % 18446744073709551616
-        setMapping balances dst newToBalance
+        let toPtr := (add toBalance transferred) % 18446744073709551616
+        setMapping balances dst toPtr
         setMapping balanceInitialized dst 1
+
       return transferred
     else
       -- (success, ptr) = FHESafeMath.tryDecrease(_balances[from], amount);
@@ -171,19 +188,23 @@ verity_contract ERC7984 where
         (ite (fromBalance >= amount) (sub fromBalance amount) fromBalance)
       setMapping balances src ptr
       setMapping balanceInitialized src 1
+
+      -- transferred = FHE.select(success, amount, FHE.asEuint64(0));
       let transferred := ite success amount 0
+
       if dst == zeroAddress then
         -- ptr = FHE.sub(_totalSupply, transferred);
         let currentSupply ← getStorage totalSupply
-        let newSupply := (sub currentSupply transferred) % 18446744073709551616
-        setStorage totalSupply newSupply
+        let supplyPtr := (sub currentSupply transferred) % 18446744073709551616
+        setStorage totalSupply supplyPtr
         setStorage totalSupplyInitialized 1
       else
         -- ptr = FHE.add(_balances[to], transferred);
         let toBalance ← getMapping balances dst
-        let newToBalance := (add toBalance transferred) % 18446744073709551616
-        setMapping balances dst newToBalance
+        let toPtr := (add toBalance transferred) % 18446744073709551616
+        setMapping balances dst toPtr
         setMapping balanceInitialized dst 1
+
       return transferred
 
   /-

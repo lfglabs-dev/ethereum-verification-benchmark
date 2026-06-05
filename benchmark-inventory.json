@@ -2140,7 +2140,7 @@
         "callbacks_elided",
         "block_timestamp_as_parameter"
       ],
-      "abstraction_notes": "The benchmark models the core accounting logic of ERC-7984: transfer, transferFrom, setOperator, mint, and burn. FHE operations are modeled as plaintext equivalents justified by homomorphism (FHE.add \u2192 mod-2^64 addition, FHE.select \u2192 if/then/else, FHESafeMath.tryDecrease/tryIncrease \u2192 helper-shaped conditional arithmetic including uninitialized-handle branches). The ACL system (FHE.allow/allowThis), cryptographic proof verification (fromExternal + inputProof), async disclosure/decryption via the off-chain gateway, and ERC1363-style receiver callbacks are omitted as they cannot be modeled in Verity. The nested operator mapping (address \u2192 address \u2192 uint48) is modeled faithfully using Verity's storageMap2 / getMapping2 / setMapping2. block.timestamp is passed as a parameter to transferFrom because the verity_contract DSL macro does not currently expose blockTimestamp as a bind source. FHE.isInitialized is modeled via separate boolean flags for balances and totalSupply. All arithmetic uses explicit mod 2^64 to faithfully capture euint64 wrapping semantics.",
+      "abstraction_notes": "The benchmark models the core accounting logic of ERC-7984: transfer, transferFrom, setOperator, mint, and burn. FHE operations are modeled as plaintext equivalents justified by homomorphism (FHE.add \u2192 mod-2^64 addition, FHE.select \u2192 if/then/else, FHESafeMath.tryDecrease/tryIncrease \u2192 helper-shaped conditional arithmetic including uninitialized-handle branches). The ACL system (FHE.allow/allowThis), cryptographic proof verification (fromExternal + inputProof), async disclosure/decryption via the off-chain gateway, and ERC1363-style receiver callbacks are omitted because they are outside this accounting slice; typed external calls and source-level internal helper factoring await Verity support. The nested operator mapping (address \u2192 address \u2192 uint48) is modeled faithfully using Verity's storageMap2 / getMapping2 / setMapping2. block.timestamp is passed as a parameter to transferFrom because the verity_contract DSL macro does not currently expose blockTimestamp as a bind source. FHE.isInitialized is modeled via separate boolean flags for balances and totalSupply. All arithmetic uses explicit mod 2^64 to faithfully capture euint64 wrapping semantics. Function arguments are modeled as initialized euint64 handles, so FHESafeMath.tryDecrease's uninitialized-delta branch is outside this slice. The contract body keeps FHESafeMath arithmetic inline to avoid adding externally callable helper functions while Verity lacks source-level internal helpers; the specs expose the same logic through named helper definitions.",
       "unsupported_feature_codes": [
         "external_contract_call",
         "off_chain_interaction",
@@ -8894,5 +8894,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-05T08:19:39.344012+00:00"
+  "generated_at": "2026-06-05T09:26:32.672156+00:00"
 }
