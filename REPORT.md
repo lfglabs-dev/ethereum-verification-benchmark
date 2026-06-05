@@ -8,7 +8,7 @@ This report is generated from the benchmark manifests.
 - Implementations: 28
 - Active cases: 25
 - Buildable active cases: 25
-- Active tasks: 134
+- Active tasks: 135
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -76,9 +76,9 @@ This report is generated from the benchmark manifests.
 ### `ipor/plasma_vault_redeem_split`
 - Family / implementation: `ipor` / `ipor_fusion`
 - Stage: `proof_complete`
-- Status dimensions: translation=`translated`, spec=`revised_after_failed_fairness_target`, proof=`complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
 - Lean target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Compile`
-- Source ref: `https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol`
+- Source ref: `https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol`
 - Selected functions: `redeem`, `_redeem`, `_convertToAssets`, `withdrawFee`
 - Upstream source artifact: `contracts/vaults/PlasmaVault.sol`
 - Notes: This case is intentionally scoped to the safety property that remains true after the failed split-fairness target: a successful modeled redeem cannot decrease virtualized conversion PPS. It should be described as no decrease in the modeled ERC4626 redeemable-value ratio, not as a proof that fee-splitting is impossible or that the whole vault is bug-free.
@@ -156,7 +156,7 @@ This report is generated from the benchmark manifests.
 ### `polaris/bonding_curve`
 - Family / implementation: `polaris` / `bonding_curve`
 - Stage: `build_green`
-- Status dimensions: translation=`translated`, spec=`complete`, proof=`complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
 - Lean target: `Benchmark.Cases.Polaris.BondingCurve.Compile`
 - Source ref: `https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol`
 - Selected functions: `init`, `buy`, `sell`, `floorSellAndBurn`
@@ -206,9 +206,9 @@ This report is generated from the benchmark manifests.
 ### `term_finance/term_auction_clearing`
 - Family / implementation: `term_finance` / `term_finance_contracts`
 - Stage: `build_green`
-- Status dimensions: translation=`translated`, spec=`frozen`, proof=`proof`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
 - Lean target: `Benchmark.Cases.TermFinance.TermAuctionClearing.Compile`
-- Source ref: `https://github.com/term-finance/term-finance-contracts/blob/127b74d871fc74e3a03d6d3b0f1fafe7e5d10275/contracts/TermAuction.sol`
+- Source ref: `https://github.com/term-finance/term-finance-contracts@127b74d871fc74e3a03d6d3b0f1fafe7e5d10275:contracts/TermAuction.sol`
 - Selected functions: `_calculateClearingPrice`, `_assignBids`, `_assignOffers`
 - Upstream source artifact: `contracts/TermAuction.sol`
 - Notes: Clearing assignment correctness for the weekly sealed-bid uniform-price double auction: positive bid assignments respect the clearing rate floor, positive offer assignments respect the clearing rate ceiling, and assigned purchase-token principal balances exactly across both sides.
@@ -251,7 +251,7 @@ This report is generated from the benchmark manifests.
 - Source ref: `https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol`
 - Selected functions: `_update`, `_transfer`, `_mint`, `_burn`, `confidentialTransferFrom`, `setOperator`
 - Upstream source artifact: `contracts/token/ERC7984/ERC7984.sol`
-- Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, and functional correctness of setOperator. Eleven proof tasks cover the 5 modeled functions.
+- Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.
 
 ### `zodiac/roles_decoder_faithfulness`
 - Family / implementation: `zodiac` / `roles-v3`
@@ -510,9 +510,9 @@ This report is generated from the benchmark manifests.
 - Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
 
 ### `ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free`
-- Track / property class / proof family: `proof-only` / `fee_payout_bound` / `arithmetic_accounting`
+- Track / property class / proof family: `proof-only` / `fee_payout_bound` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free_task`
+- Theorem target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/ipor/plasma_vault_redeem_split/verity/Contract.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean`
 - Specification files: `cases/ipor/plasma_vault_redeem_split/verity/Specs.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean`
@@ -520,9 +520,9 @@ This report is generated from the benchmark manifests.
 - Hidden reference solution: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs`
 
 ### `ipor/plasma_vault_redeem_split/redeem_preserves_pps`
-- Track / property class / proof family: `proof-only` / `pps_nondecrease` / `arithmetic_accounting`
+- Track / property class / proof family: `proof-only` / `pps_nondecrease` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps_task`
+- Theorem target: `Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/ipor/plasma_vault_redeem_split/verity/Contract.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean`
 - Specification files: `cases/ipor/plasma_vault_redeem_split/verity/Specs.lean`, `Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean`
@@ -1112,7 +1112,7 @@ This report is generated from the benchmark manifests.
 ### `polaris/bonding_curve/buy_preserves_reserve_ratio_zero`
 - Track / property class / proof family: `proof-only` / `reserve_state_transition` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero_task`
+- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/polaris/bonding_curve/verity/Contract.lean`, `Benchmark/Cases/Polaris/BondingCurve/Contract.lean`
 - Specification files: `cases/polaris/bonding_curve/verity/Specs.lean`, `Benchmark/Cases/Polaris/BondingCurve/Specs.lean`
@@ -1122,7 +1122,7 @@ This report is generated from the benchmark manifests.
 ### `polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero`
 - Track / property class / proof family: `proof-only` / `reserve_state_transition` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.floor_sell_and_burn_preserves_reserve_ratio_zero_task`
+- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.floorSellAndBurn_preserves_reserve_ratio_zero`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/polaris/bonding_curve/verity/Contract.lean`, `Benchmark/Cases/Polaris/BondingCurve/Contract.lean`
 - Specification files: `cases/polaris/bonding_curve/verity/Specs.lean`, `Benchmark/Cases/Polaris/BondingCurve/Specs.lean`
@@ -1132,7 +1132,7 @@ This report is generated from the benchmark manifests.
 ### `polaris/bonding_curve/init_reserve_ratio_zero`
 - Track / property class / proof family: `proof-only` / `reserve_state_transition` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.init_reserve_ratio_zero_task`
+- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.init_reserve_ratio_zero`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/polaris/bonding_curve/verity/Contract.lean`, `Benchmark/Cases/Polaris/BondingCurve/Contract.lean`
 - Specification files: `cases/polaris/bonding_curve/verity/Specs.lean`, `Benchmark/Cases/Polaris/BondingCurve/Specs.lean`
@@ -1142,7 +1142,7 @@ This report is generated from the benchmark manifests.
 ### `polaris/bonding_curve/sell_preserves_reserve_ratio_zero`
 - Track / property class / proof family: `proof-only` / `reserve_state_transition` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.sell_preserves_reserve_ratio_zero_task`
+- Theorem target: `Benchmark.Cases.Polaris.BondingCurve.sell_preserves_reserve_ratio_zero`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/polaris/bonding_curve/verity/Contract.lean`, `Benchmark/Cases/Polaris/BondingCurve/Contract.lean`
 - Specification files: `cases/polaris/bonding_curve/verity/Specs.lean`, `Benchmark/Cases/Polaris/BondingCurve/Specs.lean`
@@ -1390,9 +1390,9 @@ This report is generated from the benchmark manifests.
 - Hidden reference solution: `Benchmark.Cases.Safe.OwnerManagerReach.Proofs`
 
 ### `term_finance/term_auction_clearing/clearing_assignment_correct`
-- Track / property class / proof family: `proof-only` / `accounting_and_rate_guard` / `auction_clearing_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`blocked`, reference_solution=`blocked`
-- Theorem target: `Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct_task`
+- Track / property class / proof family: `proof-only` / `accounting_and_rate_guard` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/term_finance/term_auction_clearing/verity/Contract.lean`, `Benchmark/Cases/TermFinance/TermAuctionClearing/Contract.lean`
 - Specification files: `cases/term_finance/term_auction_clearing/verity/Specs.lean`, `Benchmark/Cases/TermFinance/TermAuctionClearing/Specs.lean`
@@ -1487,6 +1487,16 @@ This report is generated from the benchmark manifests.
 - Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
 - Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/BurnInsufficient.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama/erc7984_confidential_token/mint_ctokens_match_deposit`
+- Track / property class / proof family: `proof-only` / `deposit_mint_exactness` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_ctokens_match_deposit`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama/erc7984_confidential_token/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean`
+- Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintCTokensMatchDeposit.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
 
 ### `zama/erc7984_confidential_token/mint_increases_supply`

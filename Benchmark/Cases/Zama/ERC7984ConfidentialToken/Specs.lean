@@ -29,6 +29,10 @@ def balanceOf (s : ContractState) (addr : Address) : Uint256 :=
 def supply (s : ContractState) : Uint256 :=
   s.storage 0
 
+-- Read whether totalSupply is an initialized euint64 handle (slot 4).
+def supplyInitialized (s : ContractState) : Uint256 :=
+  s.storage 4
+
 /-! ## Transfer specifications
 
   The transfer function models _update(from, to, amount) for from != 0, to != 0.
@@ -84,8 +88,17 @@ def transfer_preserves_supply_spec
 -/
 def mint_increases_supply_spec
     (recipient : Address) (amount : Uint256) (s s' : ContractState) : Prop :=
-  (tryIncrease64 (supply s) amount).1 = true →
-  supply s' = add64 (supply s) amount ∧
+  (tryIncrease64WithInit (supplyInitialized s) (supply s) amount).1 = true →
+  supply s' = (tryIncrease64WithInit (supplyInitialized s) (supply s) amount).2 ∧
+  balanceOf s' recipient = add64 (balanceOf s recipient) amount
+
+/--
+  Successful mint/deposit credits exactly the same number of confidential
+  tokens to the recipient as the deposited amount.
+-/
+def mint_ctokens_match_deposit_spec
+    (recipient : Address) (amount : Uint256) (s s' : ContractState) : Prop :=
+  (tryIncrease64WithInit (supplyInitialized s) (supply s) amount).1 = true →
   balanceOf s' recipient = add64 (balanceOf s recipient) amount
 
 /--
@@ -94,7 +107,7 @@ def mint_increases_supply_spec
 -/
 def mint_overflow_protection_spec
     (recipient : Address) (amount : Uint256) (s s' : ContractState) : Prop :=
-  (tryIncrease64 (supply s) amount).1 = false →
+  (tryIncrease64WithInit (supplyInitialized s) (supply s) amount).1 = false →
   supply s' = supply s ∧
   balanceOf s' recipient = add64 (balanceOf s recipient) 0
 
@@ -125,9 +138,9 @@ def burn_insufficient_spec
 /--
   Transfer never reverts based on balance sufficiency.
 
-  Given that all plaintext preconditions hold (non-zero addresses,
-  initialized balance), the transfer function always succeeds —
-  it never reverts due to the encrypted balance comparison.
+  Given that the modeled plaintext address preconditions hold, the transfer
+  function always succeeds — it never reverts due to the encrypted balance
+  comparison or due to whether the stored balance handle was initialized.
 
   This is the contract-level non-leakage invariant: an on-chain observer
   cannot distinguish a sufficient transfer from an insufficient one by

@@ -1,18 +1,13 @@
 manifest_kind: task
 schema_version: 1
-project: polaris
-case_id: bonding_curve
 task_id: buy_preserves_reserve_ratio_zero
-name: buy preserves zero reserve-ratio deviation
-description: Prove that a buy, including pETH buy fees, moves virtual supply and reserve together under bounded arithmetic assumptions.
-entrypoint: Benchmark.Generated.Polaris.BondingCurve.Tasks.buy_preserves_reserve_ratio_zero_task
-proof_target: Benchmark.Cases.Polaris.BondingCurve.Proofs.buy_preserves_reserve_ratio_zero
-status: open
+case_id: polaris/bonding_curve
 split: active
 family_id: polaris
 implementation_id: bonding_curve
+source_ref: https://github.com/Polaris-Finance/bonding-curve@540c4ba5d0b86c0f42399d214f02120f3f8719b0:src/BaseBondingCurve.sol
 task_interface_version: 2
-theorem_name: Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero_task
+theorem_name: Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero
 proof_family: state_preservation_local_effects
 property_class: reserve_state_transition
 difficulty: medium
@@ -30,4 +25,11 @@ specification_files:
 editable_files:
   - Benchmark/Generated/Polaris/BondingCurve/Tasks/buy_preserves_reserve_ratio_zero.lean
 reference_solution_module: Benchmark.Cases.Polaris.BondingCurve.Proofs
-reference_solution_declaration: Benchmark.Cases.Polaris.BondingCurve.Proofs.buy_preserves_reserve_ratio_zero
+reference_solution_declaration: Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves that a successful buy keeps Polaris' reserve-ratio deviation at zero
+  around the linked external curve pow boundary and modeled outer arithmetic.
+unsupported_feature_codes:
+  - fixed_point_exponentiation_abstracted
+  - erc20_per_account_balances_omitted

@@ -14,10 +14,10 @@
     "implementation_count": 28,
     "active_case_count": 25,
     "backlog_case_count": 3,
-    "active_task_count": 134,
+    "active_task_count": 135,
     "backlog_task_count": 8,
     "buildable_case_count": 27,
-    "runnable_task_count": 141,
+    "runnable_task_count": 143,
     "case_stage_counts": {
       "build_green": 23,
       "candidate": 1,
@@ -29,12 +29,11 @@
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 19,
-      "partial": 7,
-      "proof": 1
+      "complete": 20,
+      "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 142
+      "proof-only": 143
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -53,6 +52,7 @@
       "calldata_decoder_faithfulness": 1,
       "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
+      "deposit_mint_exactness": 1,
       "exploit_trace": 1,
       "fee_payout_bound": 1,
       "frame_property": 2,
@@ -84,13 +84,11 @@
       "weighted_selection": 1
     },
     "task_proof_family_counts": {
-      "arithmetic_accounting": 2,
-      "auction_clearing_correctness": 1,
       "authorization_enablement": 25,
-      "functional_correctness": 32,
+      "functional_correctness": 35,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 11,
-      "state_preservation_local_effects": 49
+      "state_preservation_local_effects": 50
     },
     "family_split_counts": {
       "active": 24,
@@ -1305,14 +1303,14 @@
       "implementation_id": "ipor_fusion",
       "stage": "proof_complete",
       "translation_status": "translated",
-      "spec_status": "revised_after_failed_fairness_target",
+      "spec_status": "frozen",
       "proof_status": "complete",
       "source_language": "solidity",
       "upstream_repo": "https://github.com/IPOR-Labs/ipor-fusion",
       "upstream_commit": "3a83157ee75a7c1752d9151aff43eb92a50cb346",
       "original_contract_path": "contracts/vaults/PlasmaVault.sol",
       "generated_artifact_path": null,
-      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol",
+      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol",
       "selected_functions": [
         "redeem",
         "_redeem",
@@ -1671,7 +1669,7 @@
       "implementation_id": "bonding_curve",
       "stage": "build_green",
       "translation_status": "translated",
-      "spec_status": "complete",
+      "spec_status": "frozen",
       "proof_status": "complete",
       "source_language": "solidity",
       "upstream_repo": "https://github.com/Polaris-Finance/bonding-curve",
@@ -1910,13 +1908,13 @@
       "stage": "build_green",
       "translation_status": "translated",
       "spec_status": "frozen",
-      "proof_status": "proof",
+      "proof_status": "complete",
       "source_language": "solidity",
       "upstream_repo": "https://github.com/term-finance/term-finance-contracts",
       "upstream_commit": "127b74d871fc74e3a03d6d3b0f1fafe7e5d10275",
       "original_contract_path": "contracts/TermAuction.sol",
       "generated_artifact_path": null,
-      "source_ref": "https://github.com/term-finance/term-finance-contracts/blob/127b74d871fc74e3a03d6d3b0f1fafe7e5d10275/contracts/TermAuction.sol",
+      "source_ref": "https://github.com/term-finance/term-finance-contracts@127b74d871fc74e3a03d6d3b0f1fafe7e5d10275:contracts/TermAuction.sol",
       "selected_functions": [
         "_calculateClearingPrice",
         "_assignBids",
@@ -2130,7 +2128,7 @@
       ],
       "lean_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Compile",
       "failure_reason": null,
-      "notes": "ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance \u2192 silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, and functional correctness of setOperator. Eleven proof tasks cover the 5 modeled functions.",
+      "notes": "ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance \u2192 silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
@@ -2142,7 +2140,7 @@
         "callbacks_elided",
         "block_timestamp_as_parameter"
       ],
-      "abstraction_notes": "The benchmark models the core accounting logic of ERC-7984: transfer, transferFrom, setOperator, mint, and burn. FHE operations are modeled as plaintext equivalents justified by homomorphism (FHE.add \u2192 mod-2^64 addition, FHE.select \u2192 if/then/else, FHESafeMath.tryDecrease/tryIncrease \u2192 inlined conditional arithmetic). The ACL system (FHE.allow/allowThis), cryptographic proof verification (fromExternal + inputProof), async disclosure/decryption via the off-chain gateway, and ERC1363-style receiver callbacks are omitted as they cannot be modeled in Verity. The nested operator mapping (address \u2192 address \u2192 uint48) is modeled faithfully using Verity's storageMap2 / getMapping2 / setMapping2. block.timestamp is passed as a parameter to transferFrom because the verity_contract DSL macro does not currently expose blockTimestamp as a bind source. FHE.isInitialized is modeled via a separate boolean mapping. All arithmetic uses explicit mod 2^64 to faithfully capture euint64 wrapping semantics.",
+      "abstraction_notes": "The benchmark models the core accounting logic of ERC-7984: transfer, transferFrom, setOperator, mint, and burn. FHE operations are modeled as plaintext equivalents justified by homomorphism (FHE.add \u2192 mod-2^64 addition, FHE.select \u2192 if/then/else, FHESafeMath.tryDecrease/tryIncrease \u2192 helper-shaped conditional arithmetic including uninitialized-handle branches). The ACL system (FHE.allow/allowThis), cryptographic proof verification (fromExternal + inputProof), async disclosure/decryption via the off-chain gateway, and ERC1363-style receiver callbacks are omitted because they are outside this accounting slice; typed external calls and source-level internal helper factoring await Verity support. The nested operator mapping (address \u2192 address \u2192 uint48) is modeled faithfully using Verity's storageMap2 / getMapping2 / setMapping2. block.timestamp is passed as a parameter to transferFrom because the verity_contract DSL macro does not currently expose blockTimestamp as a bind source. FHE.isInitialized is modeled via separate boolean flags for balances and totalSupply. All arithmetic uses explicit mod 2^64 to faithfully capture euint64 wrapping semantics. Function arguments are modeled as initialized euint64 handles, so FHESafeMath.tryDecrease's uninitialized-delta branch is outside this slice. The contract body keeps FHESafeMath arithmetic inline to avoid adding externally callable helper functions while Verity lacks source-level internal helpers; the specs expose the same logic through named helper definitions.",
       "unsupported_feature_codes": [
         "external_contract_call",
         "off_chain_interaction",
@@ -3467,14 +3465,14 @@
       "split": "active",
       "family_id": "ipor",
       "implementation_id": "ipor_fusion",
-      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol",
+      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "fee_payout_bound",
       "category": "invariant",
       "difficulty": "low",
-      "theorem_name": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free_task",
-      "proof_family": "arithmetic_accounting",
+      "theorem_name": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free",
+      "proof_family": "functional_correctness",
       "translation_status": "translated",
       "proof_status": "complete",
       "implementation_files": [
@@ -3488,9 +3486,13 @@
       "editable_files": [
         "Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/FeePayoutBoundedByFeeFree.lean"
       ],
-      "abstraction_level": null,
-      "abstraction_notes": "",
-      "unsupported_feature_codes": [],
+      "abstraction_level": "arithmetic_slice",
+      "abstraction_notes": "Focused arithmetic proof that the modeled fee payout is bounded by the fee-free redeemable amount under the PlasmaVault redeem split abstraction.",
+      "unsupported_feature_codes": [
+        "markets_elided_total_assets_ghosted",
+        "release_queue_elided",
+        "access_control_elided"
+      ],
       "reference_solution_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
@@ -3512,14 +3514,14 @@
       "split": "active",
       "family_id": "ipor",
       "implementation_id": "ipor_fusion",
-      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol",
+      "source_ref": "https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "pps_nondecrease",
       "category": "invariant",
       "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps_task",
-      "proof_family": "arithmetic_accounting",
+      "theorem_name": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps",
+      "proof_family": "state_preservation_local_effects",
       "translation_status": "translated",
       "proof_status": "complete",
       "implementation_files": [
@@ -3533,9 +3535,13 @@
       "editable_files": [
         "Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/RedeemPreservesPps.lean"
       ],
-      "abstraction_level": null,
-      "abstraction_notes": "",
-      "unsupported_feature_codes": [],
+      "abstraction_level": "arithmetic_slice",
+      "abstraction_notes": "Focused arithmetic proof that successful modeled redeem does not decrease the virtualized conversion PPS after fee shares are retained in vault assets.",
+      "unsupported_feature_codes": [
+        "markets_elided_total_assets_ghosted",
+        "release_queue_elided",
+        "access_control_elided"
+      ],
       "reference_solution_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
@@ -6172,7 +6178,7 @@
     {
       "task_ref": "polaris/bonding_curve/buy_preserves_reserve_ratio_zero",
       "task_id": "buy_preserves_reserve_ratio_zero",
-      "case_id": "bonding_curve",
+      "case_id": "polaris/bonding_curve",
       "suite": "active",
       "schema_version": 1,
       "manifest_path": "cases/polaris/bonding_curve/tasks/buy_preserves_reserve_ratio_zero.yaml",
@@ -6185,7 +6191,7 @@
       "property_class": "reserve_state_transition",
       "category": "invariant",
       "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero_task",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero",
       "proof_family": "state_preservation_local_effects",
       "translation_status": "translated",
       "proof_status": "complete",
@@ -6200,9 +6206,12 @@
       "editable_files": [
         "Benchmark/Generated/Polaris/BondingCurve/Tasks/buy_preserves_reserve_ratio_zero.lean"
       ],
-      "abstraction_level": null,
-      "abstraction_notes": "",
-      "unsupported_feature_codes": [],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that a successful buy keeps Polaris' reserve-ratio deviation at zero around the linked external curve pow boundary and modeled outer arithmetic.",
+      "unsupported_feature_codes": [
+        "fixed_point_exponentiation_abstracted",
+        "erc20_per_account_balances_omitted"
+      ],
       "reference_solution_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
@@ -6217,7 +6226,7 @@
     {
       "task_ref": "polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero",
       "task_id": "floor_sell_and_burn_preserves_reserve_ratio_zero",
-      "case_id": "bonding_curve",
+      "case_id": "polaris/bonding_curve",
       "suite": "active",
       "schema_version": 1,
       "manifest_path": "cases/polaris/bonding_curve/tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.yaml",
@@ -6230,7 +6239,7 @@
       "property_class": "reserve_state_transition",
       "category": "invariant",
       "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.floor_sell_and_burn_preserves_reserve_ratio_zero_task",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.floorSellAndBurn_preserves_reserve_ratio_zero",
       "proof_family": "state_preservation_local_effects",
       "translation_status": "translated",
       "proof_status": "complete",
@@ -6245,9 +6254,12 @@
       "editable_files": [
         "Benchmark/Generated/Polaris/BondingCurve/Tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.lean"
       ],
-      "abstraction_level": null,
-      "abstraction_notes": "",
-      "unsupported_feature_codes": [],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that fee-router pETH burns preserve the current and floor reserve-ratio equations under the modeled aggregate-supply slice.",
+      "unsupported_feature_codes": [
+        "fixed_point_exponentiation_abstracted",
+        "erc20_per_account_balances_omitted"
+      ],
       "reference_solution_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
@@ -6262,7 +6274,7 @@
     {
       "task_ref": "polaris/bonding_curve/init_reserve_ratio_zero",
       "task_id": "init_reserve_ratio_zero",
-      "case_id": "bonding_curve",
+      "case_id": "polaris/bonding_curve",
       "suite": "active",
       "schema_version": 1,
       "manifest_path": "cases/polaris/bonding_curve/tasks/init_reserve_ratio_zero.yaml",
@@ -6275,7 +6287,7 @@
       "property_class": "reserve_state_transition",
       "category": "invariant",
       "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.init_reserve_ratio_zero_task",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.init_reserve_ratio_zero",
       "proof_family": "state_preservation_local_effects",
       "translation_status": "translated",
       "proof_status": "complete",
@@ -6290,9 +6302,12 @@
       "editable_files": [
         "Benchmark/Generated/Polaris/BondingCurve/Tasks/init_reserve_ratio_zero.lean"
       ],
-      "abstraction_level": null,
-      "abstraction_notes": "",
-      "unsupported_feature_codes": [],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that initialization writes current and floor reserves matching the source-shaped rounded reserve helper around the linked curve pow boundary.",
+      "unsupported_feature_codes": [
+        "fixed_point_exponentiation_abstracted",
+        "erc20_per_account_balances_omitted"
+      ],
       "reference_solution_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
@@ -6307,7 +6322,7 @@
     {
       "task_ref": "polaris/bonding_curve/sell_preserves_reserve_ratio_zero",
       "task_id": "sell_preserves_reserve_ratio_zero",
-      "case_id": "bonding_curve",
+      "case_id": "polaris/bonding_curve",
       "suite": "active",
       "schema_version": 1,
       "manifest_path": "cases/polaris/bonding_curve/tasks/sell_preserves_reserve_ratio_zero.yaml",
@@ -6320,7 +6335,7 @@
       "property_class": "reserve_state_transition",
       "category": "invariant",
       "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.sell_preserves_reserve_ratio_zero_task",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.sell_preserves_reserve_ratio_zero",
       "proof_family": "state_preservation_local_effects",
       "translation_status": "translated",
       "proof_status": "complete",
@@ -6335,9 +6350,12 @@
       "editable_files": [
         "Benchmark/Generated/Polaris/BondingCurve/Tasks/sell_preserves_reserve_ratio_zero.lean"
       ],
-      "abstraction_level": null,
-      "abstraction_notes": "",
-      "unsupported_feature_codes": [],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves that a successful sell keeps Polaris' reserve-ratio deviation at zero after the net pETH burn and modeled reserve movement.",
+      "unsupported_feature_codes": [
+        "fixed_point_exponentiation_abstracted",
+        "erc20_per_account_balances_omitted"
+      ],
       "reference_solution_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
@@ -7453,16 +7471,16 @@
       "split": "active",
       "family_id": "term_finance",
       "implementation_id": "term_finance_contracts",
-      "source_ref": "https://github.com/term-finance/term-finance-contracts/blob/127b74d871fc74e3a03d6d3b0f1fafe7e5d10275/contracts/TermAuction.sol",
+      "source_ref": "https://github.com/term-finance/term-finance-contracts@127b74d871fc74e3a03d6d3b0f1fafe7e5d10275:contracts/TermAuction.sol",
       "task_interface_version": 2,
       "track": "proof-only",
       "property_class": "accounting_and_rate_guard",
       "category": "invariant",
       "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct_task",
-      "proof_family": "auction_clearing_correctness",
+      "theorem_name": "Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct",
+      "proof_family": "functional_correctness",
       "translation_status": "translated",
-      "proof_status": "proof",
+      "proof_status": "complete",
       "implementation_files": [
         "cases/term_finance/term_auction_clearing/verity/Contract.lean",
         "Benchmark/Cases/TermFinance/TermAuctionClearing/Contract.lean"
@@ -7484,8 +7502,8 @@
       },
       "readiness": {
         "prompt_context": "ready",
-        "editable_proof": "blocked",
-        "reference_solution": "blocked"
+        "editable_proof": "ready",
+        "reference_solution": "ready"
       }
     },
     {
@@ -7922,6 +7940,51 @@
       }
     },
     {
+      "task_ref": "zama/erc7984_confidential_token/mint_ctokens_match_deposit",
+      "task_id": "mint_ctokens_match_deposit",
+      "case_id": "zama/erc7984_confidential_token",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_ctokens_match_deposit.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "confidential_contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-confidential-contracts@83364738f0d2b1655c60627588e3493099c359f7:contracts/token/ERC7984/ERC7984.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "deposit_mint_exactness",
+      "category": "invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_ctokens_match_deposit",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "partial",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintCTokensMatchDeposit.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful mint/deposit credits exactly the deposited amount of confidential tokens to the recipient balance under the initialized-aware FHESafeMath.tryIncrease path.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "zama/erc7984_confidential_token/mint_increases_supply",
       "task_id": "mint_increases_supply",
       "case_id": "zama/erc7984_confidential_token",
@@ -8223,7 +8286,7 @@
         "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferNoBalanceRevert.lean"
       ],
       "abstraction_level": "protocol_slice",
-      "abstraction_notes": "Contract-level non-leakage: the transfer function never reverts based on the encrypted balance comparison. Only plaintext checks (zero address, uninitialized balance) can cause reverts. This ensures an on-chain observer cannot distinguish sufficient from insufficient transfers by observing transaction success/failure. Combined with FHE encryption of the return value and emitted events, this provides confidentiality of transfer outcomes.",
+      "abstraction_notes": "Contract-level non-leakage: the transfer function never reverts based on the encrypted balance comparison. Only modeled plaintext address checks can cause reverts. This ensures an on-chain observer cannot distinguish sufficient from insufficient transfers by observing transaction success/failure. Combined with FHE encryption of the return value and emitted events, this provides confidentiality of transfer outcomes.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "evaluation": {
@@ -8831,5 +8894,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-04T14:16:46.965853+00:00"
+  "generated_at": "2026-06-05T09:26:32.672156+00:00"
 }

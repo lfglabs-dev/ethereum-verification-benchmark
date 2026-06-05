@@ -7,12 +7,12 @@ family_id: ipor
 implementation_id: ipor_fusion
 stage: proof_complete
 translation_status: translated
-spec_status: revised_after_failed_fairness_target
+spec_status: frozen
 proof_status: complete
 upstream_repo: https://github.com/IPOR-Labs/ipor-fusion
 upstream_commit: 3a83157ee75a7c1752d9151aff43eb92a50cb346
 original_contract_path: contracts/vaults/PlasmaVault.sol
-source_ref: https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol
+source_ref: https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol
 lean_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Compile
 spec_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Specs
 proof_target: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs

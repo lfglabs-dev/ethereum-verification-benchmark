@@ -1,4 +1,5 @@
 import Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Zama.ERC7984ConfidentialToken
 
@@ -17,7 +18,10 @@ theorem setOperator_updates
     (operator : Address) (expiry : Uint256) (s : ContractState) :
     let s' := ((ERC7984.setOperator operator expiry).run s).snd
     setOperator_updates_spec s.sender operator expiry s s' := by
-  -- Replace this placeholder with a complete Lean proof.
-  exact ?_
+  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
+  -- Try `grind` with contract symbol hints; fall back to `simp` /
+  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
+  unfold setOperator_updates_spec
+  grind [ERC7984.setOperator, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized, ERC7984.operators, ERC7984.totalSupplyInitialized]
 
 end Benchmark.Cases.Zama.ERC7984ConfidentialToken

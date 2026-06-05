@@ -7,9 +7,8 @@ family_id: polaris
 implementation_id: bonding_curve
 stage: build_green
 translation_status: translated
-spec_status: complete
+spec_status: frozen
 proof_status: complete
-proof_terminal_condition: proof_with_linked_curve_pow_boundary
 upstream_repo: https://github.com/Polaris-Finance/bonding-curve
 upstream_commit: 540c4ba5d0b86c0f42399d214f02120f3f8719b0
 original_contract_path: src/BaseBondingCurve.sol

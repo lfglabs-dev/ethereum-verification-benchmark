@@ -5,10 +5,10 @@ case_id: ipor/plasma_vault_redeem_split
 split: active
 family_id: ipor
 implementation_id: ipor_fusion
-source_ref: https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol
+source_ref: https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol
 task_interface_version: 2
-theorem_name: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps_task
-proof_family: arithmetic_accounting
+theorem_name: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps
+proof_family: state_preservation_local_effects
 property_class: pps_nondecrease
 difficulty: medium
 category: invariant
@@ -26,3 +26,11 @@ editable_files:
   - Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/RedeemPreservesPps.lean
 reference_solution_module: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs
 reference_solution_declaration: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps
+abstraction_level: arithmetic_slice
+abstraction_notes: >
+  Focused arithmetic proof that successful modeled redeem does not decrease the
+  virtualized conversion PPS after fee shares are retained in vault assets.
+unsupported_feature_codes:
+  - markets_elided_total_assets_ghosted
+  - release_queue_elided
+  - access_control_elided

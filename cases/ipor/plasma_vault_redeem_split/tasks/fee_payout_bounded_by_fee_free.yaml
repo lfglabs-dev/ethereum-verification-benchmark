@@ -5,10 +5,10 @@ case_id: ipor/plasma_vault_redeem_split
 split: active
 family_id: ipor
 implementation_id: ipor_fusion
-source_ref: https://github.com/IPOR-Labs/ipor-fusion/blob/3a83157ee75a7c1752d9151aff43eb92a50cb346/contracts/vaults/PlasmaVault.sol
+source_ref: https://github.com/IPOR-Labs/ipor-fusion@3a83157ee75a7c1752d9151aff43eb92a50cb346:contracts/vaults/PlasmaVault.sol
 task_interface_version: 2
-theorem_name: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free_task
-proof_family: arithmetic_accounting
+theorem_name: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free
+proof_family: functional_correctness
 property_class: fee_payout_bound
 difficulty: low
 category: invariant
@@ -26,3 +26,11 @@ editable_files:
   - Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/FeePayoutBoundedByFeeFree.lean
 reference_solution_module: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs
 reference_solution_declaration: Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free
+abstraction_level: arithmetic_slice
+abstraction_notes: >
+  Focused arithmetic proof that the modeled fee payout is bounded by the
+  fee-free redeemable amount under the PlasmaVault redeem split abstraction.
+unsupported_feature_codes:
+  - markets_elided_total_assets_ghosted
+  - release_queue_elided
+  - access_control_elided
