@@ -184,4 +184,37 @@ def fees_collected_eq_ops_length_spec (ops : List OpInfo) : Prop :=
 def no_fees_on_revert_spec (ops : List OpInfo) : Prop :=
   handleOpsR ops = none → feesCollectedR ops = none
 
+/-- **Refined biconditional**: in a non-reverting batch, the execution path is
+    entered at index i iff i is in bounds. (The refined model captures the
+    fact that a successful batch executes ALL ops in range, regardless of the
+    per-op `hasCallData` / `innerCallReverted` flags.) -/
+def executionR_iff_in_bounds_spec (ops : List OpInfo) (i : Nat) : Prop :=
+  handleOpsR ops ≠ none →
+  (executionAttemptedR ops i = true ↔ i < ops.length)
+
+/-- **Concat-success**: if both halves succeed, the concatenation succeeds. -/
+def validation_concat_spec (ops1 ops2 : List OpInfo) : Prop :=
+  validationPhaseSucceedsR ops1 = true →
+  validationPhaseSucceedsR ops2 = true →
+  validationPhaseSucceedsR (ops1 ++ ops2) = true
+
+/-- **Concat-failure propagation (left)**: a failure in the left half taints
+    the concatenation. -/
+def validation_concat_fail_left_spec (ops1 ops2 : List OpInfo) : Prop :=
+  validationPhaseSucceedsR ops1 = false →
+  validationPhaseSucceedsR (ops1 ++ ops2) = false
+
+/-- **Concat-failure propagation (right)**: a failure in the right half taints
+    the concatenation. -/
+def validation_concat_fail_right_spec (ops1 ops2 : List OpInfo) : Prop :=
+  validationPhaseSucceedsR ops2 = false →
+  validationPhaseSucceedsR (ops1 ++ ops2) = false
+
+/-- **Concat fee additivity**: when both halves succeed, the concatenated fee
+    equals the sum of the halves. -/
+def fees_concat_additive_spec (ops1 ops2 : List OpInfo) : Prop :=
+  validationPhaseSucceedsR ops1 = true →
+  validationPhaseSucceedsR ops2 = true →
+  feesCollectedR (ops1 ++ ops2) = some (ops1.length + ops2.length)
+
 end Benchmark.Cases.ERC4337.EntryPointInvariant

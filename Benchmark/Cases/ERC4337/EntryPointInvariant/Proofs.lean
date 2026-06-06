@@ -400,4 +400,47 @@ theorem no_fees_on_revert (ops : List OpInfo) :
   intro h
   rw [h]
 
+/-- **Refined biconditional**: in the non-reverting case, execution is attempted
+    at index i iff i is in bounds — the sharpest possible characterization. -/
+theorem executionR_iff_in_bounds (ops : List OpInfo) (i : Nat) :
+    executionR_iff_in_bounds_spec ops i := by
+  unfold executionR_iff_in_bounds_spec
+  intro hOk
+  have hValid := handleOpsR_some_means_valid ops hOk
+  unfold executionAttemptedR
+  simp [hValid]
+
+/-- **Concat validation success**: validation succeeds on the concatenation iff
+    it succeeds on both halves. -/
+theorem validation_concat (ops1 ops2 : List OpInfo) :
+    validation_concat_spec ops1 ops2 := by
+  unfold validation_concat_spec validationPhaseSucceedsR
+  intro h1 h2
+  rw [List.all_append, h1, h2]; rfl
+
+/-- **Concat failure propagation (left)**. -/
+theorem validation_concat_fail_left (ops1 ops2 : List OpInfo) :
+    validation_concat_fail_left_spec ops1 ops2 := by
+  unfold validation_concat_fail_left_spec validationPhaseSucceedsR
+  intro h1
+  rw [List.all_append, h1]; rfl
+
+/-- **Concat failure propagation (right)**. -/
+theorem validation_concat_fail_right (ops1 ops2 : List OpInfo) :
+    validation_concat_fail_right_spec ops1 ops2 := by
+  unfold validation_concat_fail_right_spec validationPhaseSucceedsR
+  intro h2
+  rw [List.all_append, h2, Bool.and_false]
+
+/-- **Fee additivity over batch concatenation**: when both halves succeed,
+    fees collected on the concatenation equal the sum of the halves' sizes. -/
+theorem fees_concat_additive (ops1 ops2 : List OpInfo) :
+    fees_concat_additive_spec ops1 ops2 := by
+  unfold fees_concat_additive_spec feesCollectedR handleOpsR
+  intro h1 h2
+  have hConcat : validationPhaseSucceedsR (ops1 ++ ops2) = true :=
+    validation_concat ops1 ops2 h1 h2
+  rw [if_pos hConcat]
+  simp [List.length_append]
+
 end Benchmark.Cases.ERC4337.EntryPointInvariant
