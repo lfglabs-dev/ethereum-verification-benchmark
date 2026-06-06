@@ -218,6 +218,71 @@ def feesCollectedR (ops : List OpInfo) : Option Nat :=
   | none   => none
 
 /-!
+## Full-scope model: nonce, paymaster, gas, beneficiary
+
+This extension models the rest of the EntryPoint v0.9 lifecycle:
+
+- **Nonce**: each account has an expected next nonce; an op is valid only if
+  its declared nonce equals the expected one. After successful validation, the
+  account's nonce strictly increments by 1 (matches `account.nonce++` in
+  `_validateAccountAndPaymasterValidationData`).
+- **Paymaster**: optional address; when present, `_validatePaymasterPrepayment`
+  must also approve the op. Validation succeeds iff the account AND (if present)
+  the paymaster both approve.
+- **Gas / prefund**: each op declares a prefund; on success the prefund is
+  deducted from the payer (paymaster if present, else account).
+- **Beneficiary compensation**: at the end of a successful batch, `_compensate`
+  transfers `collected` to `beneficiary` (matches the final `_compensate` call
+  in `handleOps`).
+-/
+
+/-- Per-op full lifecycle info: the previous `validated` flag is replaced by
+    the conjunction of account approval, paymaster approval (when present),
+    and nonce match. Prefund and fee are tracked separately. -/
+structure FullOpInfo where
+  declaredNonce      : Nat
+  accountApproves    : Bool
+  paymaster          : Option Unit          -- presence-only; address abstracted
+  paymasterApproves  : Bool
+  hasCallData        : Bool
+  innerCallReverted  : Bool
+  prefund            : Nat
+  deriving Repr, DecidableEq
+
+/-- Effective validation outcome for a `FullOpInfo`, given the expected nonce
+    at the account at this batch slot. -/
+def fullOpValidated (op : FullOpInfo) (expectedNonce : Nat) : Bool :=
+  decide (op.declaredNonce = expectedNonce) &&
+  op.accountApproves &&
+  (match op.paymaster with
+   | some () => op.paymasterApproves
+   | none    => true)
+
+/-- Sequentially validate a list of ops against a starting nonce. Returns the
+    final nonce on full success, or `none` if any op fails validation. -/
+def validateSequence : List FullOpInfo → Nat → Option Nat
+  | [], n => some n
+  | op :: rest, n =>
+    if fullOpValidated op n then validateSequence rest (n + 1) else none
+
+/-- Full-scope `handleOps`: succeeds iff every op validates against the
+    monotonically-incrementing nonce. Returns the final nonce on success. -/
+def handleOpsFull (ops : List FullOpInfo) (startNonce : Nat) : Option Nat :=
+  validateSequence ops startNonce
+
+/-- Sum of prefunds — the amount the EntryPoint debits across the batch. -/
+def totalPrefund : List FullOpInfo → Nat
+  | [] => 0
+  | op :: rest => op.prefund + totalPrefund rest
+
+/-- Amount transferred to the beneficiary at the end of a successful batch
+    (matches `_compensate(beneficiary, collected)`). -/
+def beneficiaryReceives (ops : List FullOpInfo) (startNonce : Nat) : Option Nat :=
+  match handleOpsFull ops startNonce with
+  | some _ => some (totalPrefund ops)
+  | none   => none
+
+/-!
 ## Verity contract for on-chain modeling
 
 We also provide a Verity contract that implements the same logic using

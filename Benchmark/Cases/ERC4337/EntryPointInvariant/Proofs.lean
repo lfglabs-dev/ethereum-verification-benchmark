@@ -443,4 +443,129 @@ theorem fees_concat_additive (ops1 ops2 : List OpInfo) :
   rw [if_pos hConcat]
   simp [List.length_append]
 
+/-! ## Full-scope theorems (nonce, paymaster, gas, beneficiary) -/
+
+/-- Helper: `validateSequence` advances by exactly the list length on success. -/
+private theorem validateSequence_length (ops : List FullOpInfo) (n : Nat) :
+    ∀ m, validateSequence ops n = some m → m = n + ops.length := by
+  induction ops generalizing n with
+  | nil =>
+    intro m h
+    unfold validateSequence at h
+    have : n = m := Option.some.inj h
+    simp [← this]
+  | cons op rest ih =>
+    intro m h
+    unfold validateSequence at h
+    split at h
+    · have := ih (n + 1) m h
+      simp [List.length_cons]; omega
+    · cases h
+
+/-- **Nonce monotonicity (precise)**: a successful batch advances the nonce by
+    exactly the batch size. -/
+theorem nonce_advances_by_batch_size
+    (ops : List FullOpInfo) (startNonce : Nat) :
+    handleOpsFull ops startNonce ≠ none →
+    handleOpsFull ops startNonce = some (startNonce + ops.length) := by
+  intro hne
+  cases h : handleOpsFull ops startNonce with
+  | none => exact (hne h).elim
+  | some m =>
+    have := validateSequence_length ops startNonce m h
+    rw [this]
+
+/-- **Strict nonce monotonicity**: a non-empty successful batch strictly raises
+    the nonce — replay protection at the model level. -/
+theorem nonce_strictly_increases
+    (ops : List FullOpInfo) (startNonce finalNonce : Nat) :
+    nonce_strictly_increases_spec ops startNonce finalNonce := by
+  unfold nonce_strictly_increases_spec
+  intro hne h
+  have := validateSequence_length ops startNonce finalNonce h
+  rw [this]
+  have hlen : 0 < ops.length := List.length_pos_iff.mpr hne
+  omega
+
+/-- **Account-rejection reverts**: the account is required for validation. -/
+theorem account_rejection_reverts
+    (op : FullOpInfo) (rest : List FullOpInfo) (startNonce : Nat) :
+    account_rejection_reverts_spec op rest startNonce := by
+  unfold account_rejection_reverts_spec
+  intro hAcc
+  simp [handleOpsFull, validateSequence, fullOpValidated, hAcc]
+
+/-- **Paymaster-rejection reverts when paymaster is present**. -/
+theorem paymaster_rejection_reverts_when_present
+    (op : FullOpInfo) (rest : List FullOpInfo) (startNonce : Nat) :
+    paymaster_rejection_reverts_when_present_spec op rest startNonce := by
+  unfold paymaster_rejection_reverts_when_present_spec
+  intro hPM hRej
+  simp [handleOpsFull, validateSequence, fullOpValidated, hPM, hRej]
+
+/-- **Paymaster flag is irrelevant when no paymaster is attached**. -/
+theorem paymaster_irrelevant_when_absent
+    (op : FullOpInfo) (rest : List FullOpInfo) (startNonce : Nat) :
+    paymaster_irrelevant_when_absent_spec op rest startNonce := by
+  unfold paymaster_irrelevant_when_absent_spec
+  intro hPM
+  simp [handleOpsFull, validateSequence, fullOpValidated, hPM]
+
+/-- **Nonce-mismatch reverts**: replay-prevention is by construction. -/
+theorem nonce_mismatch_reverts
+    (op : FullOpInfo) (rest : List FullOpInfo) (startNonce : Nat) :
+    nonce_mismatch_reverts_spec op rest startNonce := by
+  unfold nonce_mismatch_reverts_spec
+  intro hMis
+  simp [handleOpsFull, validateSequence, fullOpValidated, hMis]
+
+/-- **Beneficiary conservation**: collected ≡ Σ prefunds on success. -/
+theorem beneficiary_eq_total_prefund
+    (ops : List FullOpInfo) (startNonce : Nat) :
+    beneficiary_eq_total_prefund_spec ops startNonce := by
+  unfold beneficiary_eq_total_prefund_spec beneficiaryReceives
+  intro hne
+  cases h : handleOpsFull ops startNonce with
+  | none => exact (hne h).elim
+  | some _ => rfl
+
+/-- **No beneficiary payout on revert**. -/
+theorem no_beneficiary_payout_on_revert
+    (ops : List FullOpInfo) (startNonce : Nat) :
+    no_beneficiary_payout_on_revert_spec ops startNonce := by
+  unfold no_beneficiary_payout_on_revert_spec beneficiaryReceives
+  intro h
+  rw [h]
+
+/-- **Total prefund additivity over batch concatenation**. -/
+theorem total_prefund_concat (ops1 ops2 : List FullOpInfo) :
+    total_prefund_concat_spec ops1 ops2 := by
+  unfold total_prefund_concat_spec
+  induction ops1 with
+  | nil => simp [totalPrefund]
+  | cons op rest ih =>
+    simp [totalPrefund, ih]; omega
+
+/-- **Full success implies every op's account approved**: account-required is
+    a global invariant across the whole batch. -/
+theorem full_success_implies_all_account_approved
+    (ops : List FullOpInfo) (startNonce : Nat) :
+    full_success_implies_all_account_approved_spec ops startNonce := by
+  unfold full_success_implies_all_account_approved_spec
+  intro hne op hMem
+  induction ops generalizing startNonce with
+  | nil => cases hMem
+  | cons hd tl ih =>
+    unfold handleOpsFull validateSequence at hne
+    split at hne
+    · rename_i hValid
+      rcases List.mem_cons.mp hMem with hEq | hTail
+      · rw [hEq]
+        unfold fullOpValidated at hValid
+        simp at hValid
+        exact hValid.1.2
+      · have hneTl : handleOpsFull tl (startNonce + 1) ≠ none := hne
+        exact ih (startNonce + 1) hneTl hTail
+    · exact (hne rfl).elim
+
 end Benchmark.Cases.ERC4337.EntryPointInvariant

@@ -217,4 +217,73 @@ def fees_concat_additive_spec (ops1 ops2 : List OpInfo) : Prop :=
   validationPhaseSucceedsR ops2 = true →
   feesCollectedR (ops1 ++ ops2) = some (ops1.length + ops2.length)
 
+/-! ## Full-scope specs: nonce, paymaster, gas, beneficiary -/
+
+/-- **Nonce monotonicity**: on a successful batch the final nonce equals
+    `startNonce + ops.length`. Captures `account.nonce++` per validated op. -/
+def nonce_advances_by_batch_size_spec
+    (ops : List FullOpInfo) (startNonce : Nat) : Prop :=
+  handleOpsFull ops startNonce = some (startNonce + ops.length)
+
+/-- **Strict nonce monotonicity**: validation strictly increases the account
+    nonce — a stale nonce can never replay. -/
+def nonce_strictly_increases_spec
+    (ops : List FullOpInfo) (startNonce finalNonce : Nat) : Prop :=
+  ops ≠ [] →
+  handleOpsFull ops startNonce = some finalNonce →
+  startNonce < finalNonce
+
+/-- **Account-required**: validation fails if the account rejects any op,
+    regardless of paymaster decisions. -/
+def account_rejection_reverts_spec
+    (op : FullOpInfo) (rest : List FullOpInfo) (startNonce : Nat) : Prop :=
+  op.accountApproves = false →
+  handleOpsFull (op :: rest) startNonce = none
+
+/-- **Paymaster-required-when-present**: when an op has a paymaster, paymaster
+    rejection fails validation even if the account approves. -/
+def paymaster_rejection_reverts_when_present_spec
+    (op : FullOpInfo) (rest : List FullOpInfo) (startNonce : Nat) : Prop :=
+  op.paymaster = some () →
+  op.paymasterApproves = false →
+  handleOpsFull (op :: rest) startNonce = none
+
+/-- **Paymaster-irrelevant-when-absent**: if no paymaster is attached, paymaster
+    approval flag has no effect on validation. -/
+def paymaster_irrelevant_when_absent_spec
+    (op : FullOpInfo) (rest : List FullOpInfo) (startNonce : Nat) : Prop :=
+  op.paymaster = none →
+  handleOpsFull (op :: rest) startNonce =
+    handleOpsFull ({ op with paymasterApproves := !op.paymasterApproves } :: rest)
+      startNonce
+
+/-- **Nonce-mismatch reverts**: a wrong declared nonce always reverts. -/
+def nonce_mismatch_reverts_spec
+    (op : FullOpInfo) (rest : List FullOpInfo) (startNonce : Nat) : Prop :=
+  op.declaredNonce ≠ startNonce →
+  handleOpsFull (op :: rest) startNonce = none
+
+/-- **Beneficiary conservation**: the amount sent to the beneficiary equals
+    the sum of per-op prefunds when the batch succeeds. -/
+def beneficiary_eq_total_prefund_spec
+    (ops : List FullOpInfo) (startNonce : Nat) : Prop :=
+  handleOpsFull ops startNonce ≠ none →
+  beneficiaryReceives ops startNonce = some (totalPrefund ops)
+
+/-- **No beneficiary payout on revert**: a reverted batch transfers nothing. -/
+def no_beneficiary_payout_on_revert_spec
+    (ops : List FullOpInfo) (startNonce : Nat) : Prop :=
+  handleOpsFull ops startNonce = none →
+  beneficiaryReceives ops startNonce = none
+
+/-- **Total prefund is additive**: `totalPrefund` distributes over concatenation. -/
+def total_prefund_concat_spec (ops1 ops2 : List FullOpInfo) : Prop :=
+  totalPrefund (ops1 ++ ops2) = totalPrefund ops1 + totalPrefund ops2
+
+/-- **Full-scope safety**: success implies every op's account approved. -/
+def full_success_implies_all_account_approved_spec
+    (ops : List FullOpInfo) (startNonce : Nat) : Prop :=
+  handleOpsFull ops startNonce ≠ none →
+  ∀ op ∈ ops, op.accountApproves = true
+
 end Benchmark.Cases.ERC4337.EntryPointInvariant
