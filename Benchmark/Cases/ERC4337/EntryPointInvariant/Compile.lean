@@ -1,5 +1,6 @@
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Contract
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs
+import Benchmark.Cases.ERC4337.EntryPointInvariant.Frame
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 
