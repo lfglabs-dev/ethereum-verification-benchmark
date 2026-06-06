@@ -196,6 +196,148 @@ theorem opInfos_frame
     Verity.pure, Pure.pure, hMatch]
   simp [call]
 
+/-! ## Memory-frame lemma (2'): the real opInfos-in-memory argument
+
+In Solidity, `opInfos[]` is allocated in **memory**, not storage. Memory in
+the EVM is per-call-frame: each `CALL` opcode gives the callee a *fresh*
+memory region. The only way a callee can affect the caller's memory is the
+caller's own output-buffer parameters `outOff` / `outSize` passed to `CALL`:
+the EVM copies up to `outSize` bytes from the callee's returndata into
+caller memory at `[outOff, outOff + outSize)`. Outside that range the
+caller's memory is untouched.
+
+Verity's contract-level `mstore` / `mload` are nominal (they bottom out in
+the EvmYul layer), so to write this proof at the right granularity we
+model a word-addressed memory region directly and prove the non-aliasing
+argument: as long as the EntryPoint's chosen output-buffer range does not
+overlap with the memory range holding `opInfos[]`, every callee invocation
+preserves `opInfos[i]` regardless of what the callee returns.
+-/
+
+namespace MemFrame
+
+/-- A word-addressed EVM memory region. -/
+abbrev MemState := Nat → Uint256
+
+def myMload (m : MemState) (off : Nat) : Uint256 := m off
+
+def myMstore (m : MemState) (off : Nat) (v : Uint256) : MemState :=
+  fun i => if i = off then v else m i
+
+/-- Model of a CALL that writes `outSize` words of returndata into the
+    caller's memory starting at `outOff`. `returnedData i` is the `i`-th word
+    the callee returned; words outside the returndata window stay untouched. -/
+def callWithReturnBuffer
+    (m : MemState) (outOff outSize : Nat) (returnedData : Nat → Uint256) : MemState :=
+  fun i => if outOff ≤ i ∧ i < outOff + outSize then returnedData (i - outOff)
+           else m i
+
+/-- Two half-open ranges are disjoint. -/
+def Disjoint (lo1 hi1 lo2 hi2 : Nat) : Prop :=
+  hi1 ≤ lo2 ∨ hi2 ≤ lo1
+
+/-- **Non-aliasing memory frame**: a CALL with output buffer
+    `[outOff, outOff+outSize)` cannot disturb any word in a disjoint region
+    `[opInfosOff, opInfosOff + opInfosSize)`. -/
+theorem call_preserves_disjoint_region
+    (m : MemState) (outOff outSize opInfosOff opInfosSize : Nat)
+    (returnedData : Nat → Uint256)
+    (hDisj : Disjoint outOff (outOff + outSize) opInfosOff (opInfosOff + opInfosSize))
+    (i : Nat) (hLo : opInfosOff ≤ i) (hHi : i < opInfosOff + opInfosSize) :
+    (callWithReturnBuffer m outOff outSize returnedData) i = m i := by
+  unfold callWithReturnBuffer
+  by_cases hIn : outOff ≤ i ∧ i < outOff + outSize
+  · -- Disjointness excludes this branch.
+    rcases hDisj with h | h
+    · -- outOff+outSize ≤ opInfosOff, but i < outOff+outSize ≤ opInfosOff ≤ i, contradiction.
+      omega
+    · -- opInfosOff+opInfosSize ≤ outOff, but i ≥ opInfosOff and i < opInfosOff+opInfosSize ≤ outOff ≤ i, contradiction.
+      omega
+  · simp [hIn]
+
+/-- **Iterated non-aliasing**: a sequence of CALLs, each with a disjoint output
+    buffer, preserves the entire `opInfos` region pointwise. -/
+theorem repeated_calls_preserve_region
+    (m : MemState) (opInfosOff opInfosSize : Nat) (i : Nat)
+    (hLo : opInfosOff ≤ i) (hHi : i < opInfosOff + opInfosSize)
+    (calls : List (Nat × Nat × (Nat → Uint256)))
+    (hAllDisj : ∀ c ∈ calls,
+      Disjoint c.1 (c.1 + c.2.1) opInfosOff (opInfosOff + opInfosSize)) :
+    (calls.foldl (fun acc c => callWithReturnBuffer acc c.1 c.2.1 c.2.2) m) i = m i := by
+  induction calls generalizing m with
+  | nil => rfl
+  | cons c rest ih =>
+    have hcDisj : Disjoint c.1 (c.1 + c.2.1) opInfosOff (opInfosOff + opInfosSize) :=
+      hAllDisj c (List.mem_cons_self ..)
+    have hRestDisj : ∀ d ∈ rest,
+        Disjoint d.1 (d.1 + d.2.1) opInfosOff (opInfosOff + opInfosSize) := by
+      intro d hd
+      exact hAllDisj d (List.mem_cons_of_mem _ hd)
+    -- Apply IH to the post-call memory.
+    have hStep := call_preserves_disjoint_region m c.1 c.2.1 opInfosOff opInfosSize
+      c.2.2 hcDisj i hLo hHi
+    have hIh := ih (callWithReturnBuffer m c.1 c.2.1 c.2.2) hRestDisj
+    -- Now combine: foldl over (c :: rest) m = foldl over rest (callWithReturnBuffer m ...)
+    simp [List.foldl]
+    rw [hIh]; exact hStep
+
+/-- A concrete EntryPoint-shaped scenario: `opInfos` occupies a memory region
+    `[opInfosBase, opInfosBase + N)`. The EntryPoint always passes the same
+    fixed scratch buffer `[scratchOff, scratchOff + scratchSize)` as the
+    output range to `call(account.validateUserOp, ...)`. If the two ranges
+    are statically disjoint, no callee invocation can disturb `opInfos[i]`.
+-/
+theorem entrypoint_opInfos_frame
+    (opInfosBase N scratchOff scratchSize : Nat)
+    (hDisj : Disjoint scratchOff (scratchOff + scratchSize) opInfosBase (opInfosBase + N))
+    (m₀ : MemState) (validateData executeData : Nat → Uint256)
+    (i : Nat) (hLo : opInfosBase ≤ i) (hHi : i < opInfosBase + N) :
+    -- After validation call (writes scratch) then execution call (writes scratch),
+    -- the memory word at i in the opInfos region equals its pre-call value.
+    let m₁ := callWithReturnBuffer m₀ scratchOff scratchSize validateData
+    let m₂ := callWithReturnBuffer m₁ scratchOff scratchSize executeData
+    m₂ i = m₀ i := by
+  have hStep1 := call_preserves_disjoint_region m₀ scratchOff scratchSize
+    opInfosBase N validateData hDisj i hLo hHi
+  have hStep2 := call_preserves_disjoint_region
+    (callWithReturnBuffer m₀ scratchOff scratchSize validateData)
+    scratchOff scratchSize opInfosBase N executeData hDisj i hLo hHi
+  simp only
+  rw [hStep2, hStep1]
+
+/-- **Lemma (2) — the real memory-aliasing argument**: if `opInfos[i]` is
+    written to memory at offset `opInfosBase + i` BEFORE the external
+    account call, and the EntryPoint's chosen call-output buffer
+    `[scratchOff, scratchOff + scratchSize)` is statically disjoint from the
+    opInfos region, then after the call returns, reading the same memory
+    word yields the value originally written — for ANY callee bytecode (the
+    callee appears only as its returndata, which fills the scratch buffer
+    but cannot escape it).
+
+    This is the formal counterpart of "no inner CALL exposes a pointer/offset
+    that aliases `opInfos[i]` after the validation loop has finished." -/
+theorem opInfos_memory_frame_under_arbitrary_callee
+    (opInfosBase N scratchOff scratchSize : Nat)
+    (hDisj : Disjoint scratchOff (scratchOff + scratchSize) opInfosBase (opInfosBase + N))
+    (m₀ : MemState) (writtenValue : Uint256) (i : Nat)
+    (hLo : opInfosBase ≤ i) (hHi : i < opInfosBase + N)
+    (returnedData : Nat → Uint256) :
+    -- Step 1: validation phase writes opInfos[i] := writtenValue.
+    let mAfterWrite := myMstore m₀ i writtenValue
+    -- Step 2: the account call runs with the disjoint scratch buffer; the
+    -- callee's returned data can fill the scratch buffer but nothing else.
+    let mAfterCall := callWithReturnBuffer mAfterWrite scratchOff scratchSize returnedData
+    -- Step 3: the execution phase reads opInfos[i] back.
+    myMload mAfterCall i = writtenValue := by
+  unfold myMload myMstore callWithReturnBuffer
+  -- Reduce the read at position i.
+  by_cases hIn : scratchOff ≤ i ∧ i < scratchOff + scratchSize
+  · -- Disjointness contradicts hIn vs. (hLo, hHi).
+    rcases hDisj with h | h <;> omega
+  · simp [hIn]
+
+end MemFrame
+
 /-! ## Bringing it together: the bytecode-level biconditional
 
 Combining the three frame lemmas with the abstract control-flow biconditional
