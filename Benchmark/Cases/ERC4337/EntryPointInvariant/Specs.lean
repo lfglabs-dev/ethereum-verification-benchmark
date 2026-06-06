@@ -113,4 +113,75 @@ successfully processed operation.
 def single_op_fee_collected_spec (s s' : ContractState) : Prop :=
   s'.storage 2 = add (s.storage 2) 1
 
+/-! ## Deeper specs over the pure model
+
+These specs sharpen the control-flow claim into properties that
+correspond more directly to the EntryPoint Solidity source. -/
+
+/-- **Determinism**: `handleOps` is a pure function of the validation list. -/
+def handleOps_deterministic_spec (vr1 vr2 : List ValidationResult) : Prop :=
+  vr1 = vr2 → handleOps vr1 = handleOps vr2
+
+/-- **Empty batch**: an empty UserOp batch is a successful no-op. -/
+def handleOps_empty_spec : Prop :=
+  handleOps [] = some []
+
+/-- **Length invariant**: when the batch succeeds, the execution-attempt list
+    has exactly one entry per UserOp. -/
+def execution_length_eq_validation_length_spec
+    (validationResults : List ValidationResult) : Prop :=
+  ∀ results, handleOps validationResults = some results →
+    results.length = validationResults.length
+
+/-- **Bounded executions**: any execution attempt records an index strictly less
+    than the batch size. -/
+def executed_index_in_bounds_spec
+    (validationResults : List ValidationResult) (i : Nat) : Prop :=
+  wasExecuted (handleOps validationResults) i = true → i < validationResults.length
+
+/-- **Single failure suffices**: if any validation fails the whole batch reverts. -/
+def single_failure_reverts_spec
+    (validationResults : List ValidationResult) : Prop :=
+  (∃ i, i < validationResults.length ∧ wasValidated validationResults i = false) →
+  handleOps validationResults = none
+
+/-- **Count conservation**: the number of execution attempts equals the number
+    of validated ops on a successful batch. -/
+def count_executed_eq_validated_spec
+    (validationResults : List ValidationResult) : Prop :=
+  ∀ results, handleOps validationResults = some results →
+    (results.filter id).length = (validationResults.filter id).length
+
+/-! ## Refined specs (sender call vs. execution attempt, fee conservation) -/
+
+/-- **Sender-call iff (validated ∧ hasCallData)**: the inner sender-call branch
+    of `innerHandleOp` is entered exactly when validation passed AND callData is
+    non-empty. -/
+def sender_call_iff_validated_and_calldata_spec
+    (ops : List OpInfo) (i : Nat) : Prop :=
+  i < ops.length →
+  handleOpsR ops ≠ none →
+  (senderCallAttempted ops i = true ↔
+    (ops[i]?.map (·.validated) = some true ∧
+     ops[i]?.map (·.hasCallData) = some true))
+
+/-- **Inner-revert independence**: an inner sender-call revert does NOT affect
+    whether the execution path was entered (the try/catch absorbs the revert). -/
+def execution_independent_of_inner_revert_spec
+    (ops1 ops2 : List OpInfo) (i : Nat) : Prop :=
+  ops1.length = ops2.length →
+  (∀ j, j < ops1.length →
+    (ops1[j]?.map (·.validated) = ops2[j]?.map (·.validated) ∧
+     ops1[j]?.map (·.hasCallData) = ops2[j]?.map (·.hasCallData))) →
+  executionAttemptedR ops1 i = executionAttemptedR ops2 i
+
+/-- **Fee conservation**: on a successful batch, the collected fee equals the
+    number of UserOps (one unit per executed op). -/
+def fees_collected_eq_ops_length_spec (ops : List OpInfo) : Prop :=
+  handleOpsR ops ≠ none → feesCollectedR ops = some ops.length
+
+/-- **All-or-nothing fees**: on a failed batch, no fee is collected. -/
+def no_fees_on_revert_spec (ops : List OpInfo) : Prop :=
+  handleOpsR ops = none → feesCollectedR ops = none
+
 end Benchmark.Cases.ERC4337.EntryPointInvariant

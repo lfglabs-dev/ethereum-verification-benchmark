@@ -21,6 +21,7 @@ active_cases = [
   "balancer/reclamm_swap_rounding",
   "cork/pool_solvency",
   "damn_vulnerable_defi/side_entrance",
+  "erc4337/entry_point_invariant",
   "ethereum/deposit_contract_minimal",
   "forgeyields/global_solvency",
   "ipor/plasma_vault_redeem_split",

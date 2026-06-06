@@ -169,6 +169,55 @@ def wasExecuted (executionResults : Option (List ExecutionAttempted)) (i : Nat) 
   | none => false
 
 /-!
+## Refined model: sender call vs. execution attempt
+
+In the real EntryPoint, `_executeUserOp` always runs once per validated op
+(execution attempt), but the inner `innerHandleOp` only calls the account when
+`callData.length > 0`. We add a per-op `hasCallData` flag to model that branch
+faithfully. We also add a per-op `innerCallReverted` flag: even when the inner
+account call reverts, the surrounding try/catch absorbs the revert and the
+op's execution attempt + fee accounting still occurs.
+-/
+
+/-- Per-op refined info: validation outcome, whether callData is non-empty,
+    and whether the inner sender-call reverted. -/
+structure OpInfo where
+  validated : Bool
+  hasCallData : Bool
+  innerCallReverted : Bool
+  deriving Repr, DecidableEq
+
+/-- Refined validation phase: succeeds iff every op's `validated` flag is true. -/
+def validationPhaseSucceedsR (ops : List OpInfo) : Bool :=
+  ops.all (fun op => op.validated)
+
+/-- Refined: was the sender-call branch in `innerHandleOp` entered for index i?
+    This is true iff validation passed AND callData is non-empty. The branch is
+    entered regardless of whether the call later reverts. -/
+def senderCallAttempted (ops : List OpInfo) (i : Nat) : Bool :=
+  match ops[i]? with
+  | some op => op.validated && op.hasCallData
+  | none => false
+
+/-- Refined: was the execution path entered for index i?
+    The two-loop structure means: execution is attempted iff the batch succeeded
+    and the index is in range, independent of `hasCallData` or inner revert. -/
+def executionAttemptedR (ops : List OpInfo) (i : Nat) : Bool :=
+  validationPhaseSucceedsR ops && decide (i < ops.length)
+
+/-- Refined handleOps: returns `none` on validation failure, else `some opsLen`
+    indicating that opsLen execution attempts were made. -/
+def handleOpsR (ops : List OpInfo) : Option Nat :=
+  if validationPhaseSucceedsR ops then some ops.length else none
+
+/-- Fees collected by a successful batch — one unit per op (matches the
+    `collected += 1` in the Verity contract execution loop). -/
+def feesCollectedR (ops : List OpInfo) : Option Nat :=
+  match handleOpsR ops with
+  | some n => some n
+  | none   => none
+
+/-!
 ## Verity contract for on-chain modeling
 
 We also provide a Verity contract that implements the same logic using
