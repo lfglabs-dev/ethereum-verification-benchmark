@@ -22,6 +22,6 @@ theorem setOperator_updates
   -- Try `grind` with contract symbol hints; fall back to `simp` /
   -- `by_cases` if grind leaves goals. Use `grind?` for hints.
   unfold setOperator_updates_spec
-  grind [ERC7984.setOperator, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized, ERC7984.operators, ERC7984.totalSupplyInitialized]
+  grind [ERC7984.setOperator, ERC7984._setOperator, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized, ERC7984.operators, ERC7984.totalSupplyInitialized]
 
 end Benchmark.Cases.Zama.ERC7984ConfidentialToken
