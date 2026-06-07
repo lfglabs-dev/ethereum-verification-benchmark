@@ -51,6 +51,9 @@ def opExecutable (ops : List PackedUserOperation) (i : Nat) (hi : i < ops.length
 
 /-! ## C1 — validation succeeded ∧ op has callData ⇒ count = 1 -/
 
+/-- **CRITICAL_PATH L9** — bridging lemma: when validation succeeded and
+    op `i` has non-empty callData, `countExecCalls = 1` exactly. The
+    composition of L6 (upper bound) and L7 (lower bound). -/
 theorem yoav_count_eq_one_when_validated_and_executable
     (ops : List PackedUserOperation)
     (hDistinct : List.Pairwise
@@ -107,6 +110,8 @@ theorem yoav_count_eq_zero_when_validated_and_not_executable
 
 /-! ## C3 — validation failed ⇒ count = 0 -/
 
+/-- **CRITICAL_PATH L10** — failure side: when validation fails, no
+    execution events are emitted regardless of any other state. -/
 theorem yoav_count_eq_zero_when_validation_fails
     (ops : List PackedUserOperation) (table : Nonce2DTable)
     (approvals : List Bool) (s : Address) (c : List Uint256)
@@ -176,8 +181,12 @@ theorem yoav_counting_biconditional
 open EvmYulFrame
 open Layout
 
-/-- **Top-level (bytecode-level form)**: the Yoav counting biconditional
-    holds for any sequence of arbitrary EVM callee invocations. -/
+/-- **CRITICAL_PATH T** — the headline theorem. Top-level (bytecode-level
+    form): the Yoav counting biconditional holds for any sequence of
+    arbitrary EVM callee invocations. Composes L1–L10 with the upstream
+    frame, layout, and reentrancy lemmas (`Verity.EVM.Frame`,
+    `Verity.EVM.Layout`, `Verity.Core.nonReentrantTransient_locked_reverts`)
+    into the literal counting form of Yoav Weis's English claim. -/
 theorem yoav_counting_biconditional_under_arbitrary_callees
     (ops : List PackedUserOperation)
     (hDistinct : List.Pairwise

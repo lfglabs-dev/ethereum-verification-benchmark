@@ -10,6 +10,7 @@ import Benchmark.Cases.ERC4337.EntryPointInvariant.UserOp
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Trace
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Yoav
 import Benchmark.Cases.ERC4337.EntryPointInvariant.LayoutWitness
+import Benchmark.Cases.ERC4337.EntryPointInvariant.Refinement
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 

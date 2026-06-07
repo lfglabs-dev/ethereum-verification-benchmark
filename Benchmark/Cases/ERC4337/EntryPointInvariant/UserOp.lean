@@ -128,10 +128,10 @@ def nonceMatches (table : Nonce2DTable) (sender : Address) (n : Uint256) : Bool 
 
 /-! ## Replay-protection lemmas (critical-path) -/
 
-/-- **Strict monotonicity per `(sender, key)`**: a successful nonce check
-    strictly increases the stored sequence number. This is the
-    replay-protection primitive — once `(sender, key, seq)` has been
-    accepted, it can never be accepted again. -/
+/-- **CRITICAL_PATH L1** — Strict monotonicity per `(sender, key)`: a
+    successful nonce check strictly increases the stored sequence number.
+    Replay-protection primitive — once `(sender, key, seq)` is accepted,
+    it can never be accepted again. -/
 theorem bump_strictly_increases
     (table : Nonce2DTable) (sender : Address) (key : Nat) :
     readNonceSeq (bumpNonceSeq table sender key) sender key =
@@ -160,5 +160,100 @@ theorem bump_preserves_other_keys
     readNonceSeq table sender' k' := by
   unfold readNonceSeq bumpNonceSeq
   simp [h]
+
+/-! ## `ValidationData` packed-word decomposition (item E)
+
+Real Solidity packs three fields into a 256-bit `validationData` word
+returned by `IAccount.validateUserOp` and `IPaymaster.validatePaymasterUserOp`:
+
+```
+uint160 aggregator        -- low 160 bits
+uint48  validUntil        -- next  48 bits
+uint48  validAfter        -- high  48 bits
+```
+
+The `aggregator` low half encodes:
+
+* `address(0)` (= `SIG_VALIDATION_SUCCESS`) when the account fully approves.
+* `address(1)` (= `SIG_VALIDATION_FAILED`) when the signature is invalid.
+* any other address = "trusted aggregator address" — the bundler must
+  invoke `handleAggregatedOps` with that aggregator.
+
+The time window `[validAfter, validUntil]` (inclusive) constrains when
+the op may be executed. `validUntil == 0` means "no upper bound".
+EntryPoint's `_getValidationData` checks both fields after the call.
+
+This module decomposes the packed word and proves the "validated" iff
+"aggregator OK AND time window holds" biconditional.
+-/
+
+def TWO_POW_160 : Nat := 1461501637330902918203684832716283019655932542976
+def TWO_POW_48  : Nat := 281474976710656
+
+/-- The low-160 aggregator field. -/
+def vdAggregator (w : Uint256) : Nat := (w : Nat) % TWO_POW_160
+
+/-- The middle-48 `validUntil` field. -/
+def vdValidUntil (w : Uint256) : Nat := ((w : Nat) / TWO_POW_160) % TWO_POW_48
+
+/-- The high-48 `validAfter` field. -/
+def vdValidAfter (w : Uint256) : Nat :=
+  ((w : Nat) / TWO_POW_160 / TWO_POW_48) % TWO_POW_48
+
+/-- The two sentinel values from `_packValidationData(uint256(SIG_VALIDATION_*))`. -/
+def SIG_VALIDATION_SUCCESS : Nat := 0
+def SIG_VALIDATION_FAILED  : Nat := 1
+
+/-- A `validationData` word reflects "success" iff its aggregator field is 0. -/
+def vdAggregatorSuccess (w : Uint256) : Bool :=
+  decide (vdAggregator w = SIG_VALIDATION_SUCCESS)
+
+/-- A `validationData` word's time window covers `now` iff
+    `validAfter ≤ now ∧ (validUntil = 0 ∨ now ≤ validUntil)`. -/
+def vdTimeWindowOk (w : Uint256) (now : Nat) : Bool :=
+  decide (vdValidAfter w ≤ now ∧ (vdValidUntil w = 0 ∨ now ≤ vdValidUntil w))
+
+/-- The full "validated" predicate: aggregator success AND time window. -/
+def vdValid (w : Uint256) (now : Nat) : Bool :=
+  vdAggregatorSuccess w && vdTimeWindowOk w now
+
+/-! ### Lemmas about the packed-word decomposition -/
+
+/-- A pure-success word (aggregator = 0, no time bounds) yields validation. -/
+theorem vdValid_of_success_word (now : Nat) :
+    vdValid 0 now = true := by
+  unfold vdValid vdAggregatorSuccess vdTimeWindowOk
+  unfold vdAggregator vdValidUntil vdValidAfter
+  simp [SIG_VALIDATION_SUCCESS]
+
+/-- An aggregator-failure word never validates. -/
+theorem vdValid_false_if_aggregator_nonzero (w : Uint256) (now : Nat)
+    (h : vdAggregator w ≠ SIG_VALIDATION_SUCCESS) :
+    vdValid w now = false := by
+  unfold vdValid vdAggregatorSuccess
+  simp [h]
+
+/-- A `now` outside the window invalidates the word. -/
+theorem vdValid_false_if_time_after_until (w : Uint256) (now : Nat)
+    (hUntil : vdValidUntil w ≠ 0) (hOOB : vdValidUntil w < now) :
+    vdValid w now = false := by
+  unfold vdValid vdTimeWindowOk
+  apply Bool.and_eq_false_iff.mpr
+  right
+  apply decide_eq_false
+  rintro ⟨_, hcase⟩
+  rcases hcase with hu | hn
+  · exact hUntil hu
+  · omega
+
+theorem vdValid_false_if_time_before_after (w : Uint256) (now : Nat)
+    (hOOB : now < vdValidAfter w) :
+    vdValid w now = false := by
+  unfold vdValid vdTimeWindowOk
+  apply Bool.and_eq_false_iff.mpr
+  right
+  apply decide_eq_false
+  rintro ⟨h, _⟩
+  omega
 
 end Benchmark.Cases.ERC4337.EntryPointInvariant

@@ -72,6 +72,17 @@ verity_contract EntryPointV09 where
     VALIDATION_SUCCESS : Uint256 := 0
     OP_INFO_VALIDATED : Uint256 := 1
     OP_INFO_EXECUTED  : Uint256 := 2
+    -- callData.length predicate: caller passes 1 if op.callData is non-empty,
+    -- 0 otherwise. The Solidity branch is `if (callData.length > 0)`.
+    HAS_CALLDATA : Uint256 := 1
+    NO_CALLDATA  : Uint256 := 0
+    -- initCode.length predicate: caller passes 1 if op.initCode is non-empty.
+    HAS_INITCODE : Uint256 := 1
+    NO_INITCODE  : Uint256 := 0
+    -- postOp mode sentinels matching IPaymaster.PostOpMode in Solidity.
+    POSTOP_OP_SUCCEEDED   : Uint256 := 0
+    POSTOP_OP_REVERTED    : Uint256 := 1
+    POSTOP_POSTOP_REVERTED : Uint256 := 2
 
   -- Mirrors `_validateAccountAndPaymasterValidationData` partially: nonce
   -- check + account.validateUserOp call. The result is the validation word.
@@ -93,10 +104,24 @@ verity_contract EntryPointV09 where
     let validation := externalCall "validatePaymasterUserOp" [key]
     return validation
 
-  -- Mirrors `_validatePrepayment`: account + paymaster combined.
+  -- Mirrors `SenderCreator.createSender`: when `initCode.length > 0`, the
+  -- EntryPoint deploys the account via an external call. The result is the
+  -- newly-deployed account address (we model the success-or-revert outcome
+  -- with the same sentinel shape as validation calls).
+  function internal _createSender (key : Uint256, hasInitCode : Uint256) : Uint256 := do
+    if hasInitCode == HAS_INITCODE then
+      let deployResult := externalCall "createSender" [key]
+      require (deployResult != VALIDATION_SUCCESS) "AA13 initCode failed or OOG"
+      return deployResult
+    else
+      return 0
+
+  -- Mirrors `_validatePrepayment`: optional createSender + account + paymaster.
   function internal _validatePrepayment
       (sender : Address, paymaster : Address,
-       key : Uint256, declaredNonce : Uint256) : Uint256 := do
+       key : Uint256, declaredNonce : Uint256,
+       hasInitCode : Uint256) : Uint256 := do
+    let _deployResult ← _createSender key hasInitCode
     let accountValid ← _validateAccount sender key declaredNonce
     require (accountValid == VALIDATION_SUCCESS) "AA23 reverted (or OOG)"
     let pmValid ← _validatePaymaster paymaster key
@@ -104,16 +129,40 @@ verity_contract EntryPointV09 where
     setMappingUint opInfoRecord key OP_INFO_VALIDATED
     return VALIDATION_SUCCESS
 
-  -- Mirrors `_executeUserOp`: enters innerHandleOp via a self-call that is
-  -- caught by tryCatch, then increments collected. Even when the inner call
-  -- reverts the EntryPoint still records the execution-path attempt and
-  -- accounts the fee — this is the load-bearing fact for the biconditional.
-  function internal _executeUserOp (key : Uint256) : Uint256 := do
-    tryCatch (call 0 key 0 0 0 0 0) (do
-      -- innerHandleOp reverted; EntryPoint catches and records anyway.
-      pure ())
+  -- Mirrors `innerHandleOp`: the self-call to the sender happens iff
+  -- `callData.length > 0`. The outer `_executeUserOp` always records an
+  -- execution-path attempt and accrues the fee, regardless of whether the
+  -- inner sender call ran or reverted (try/catch absorption).
+  function internal _innerHandleOp
+      (sender : Address, key : Uint256, hasCallData : Uint256) : Uint256 := do
+    if hasCallData == HAS_CALLDATA then
+      tryCatch (call 0 sender 0 0 0 0 0) (do
+        pure ())
+      return 1
+    else
+      return 0
+
+  -- Mirrors `_executeUserOp`: enters `this.innerHandleOp(...)` via a self-call,
+  -- catches its revert, then records the execution attempt and increments
+  -- collected fees.
+  function internal _executeUserOp
+      (sender : Address, key : Uint256, hasCallData : Uint256) : Uint256 := do
+    let _innerResult ← _innerHandleOp sender key hasCallData
     setMappingUint opInfoRecord key OP_INFO_EXECUTED
     return 1
+
+  -- Mirrors `paymaster.postOp(mode, context, actualGasCost, ...)`.
+  -- The postOp callback is only invoked when a paymaster is attached; we
+  -- model the call as an externalCall returning the new mode word. The
+  -- biconditional does not depend on postOp's result, but completeness of
+  -- the model does.
+  function internal _postOp
+      (paymaster : Address, mode : Uint256) : Uint256 := do
+    if paymaster != 0 then
+      let result := externalCall "postOp" [mode]
+      return result
+    else
+      return mode
 
   -- Mirrors `_compensate`: transfer the collected wei to the beneficiary.
   -- We model the deposit ledger update; the actual ETH transfer is an
@@ -132,13 +181,18 @@ verity_contract EntryPointV09 where
   -- theorems in Frame.lean discharge re-entry directly.
   function handleOp
       (sender : Address, paymaster : Address,
-       key : Uint256, declaredNonce : Uint256, beneficiary : Address)
+       key : Uint256, declaredNonce : Uint256, beneficiary : Address,
+       hasInitCode : Uint256, hasCallData : Uint256)
       : Uint256 := do
-    -- Phase 1: validation. Reverts on any failure → atomic batch behaviour.
-    let _validationResult ← _validatePrepayment sender paymaster key declaredNonce
-    -- Phase 2: execution. Always attempted after validation passes.
-    let exec ← _executeUserOp key
-    -- Phase 3: compensation. Constant 1 wei per op in the abstract model.
+    -- Phase 1: validation. Optional createSender + account + paymaster.
+    let _validationResult ←
+      _validatePrepayment sender paymaster key declaredNonce hasInitCode
+    -- Phase 2: execution. Inner self-call gated by callData.length > 0,
+    -- but the execution-path attempt + fee are recorded either way.
+    let exec ← _executeUserOp sender key hasCallData
+    -- Phase 3: paymaster postOp (when present).
+    let _postOpResult ← _postOp paymaster POSTOP_OP_SUCCEEDED
+    -- Phase 4: compensation. Constant 1 wei per op in the abstract model.
     _compensate beneficiary 1
     return exec
 

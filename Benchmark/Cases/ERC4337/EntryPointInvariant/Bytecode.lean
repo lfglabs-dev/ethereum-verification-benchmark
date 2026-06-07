@@ -35,17 +35,20 @@ This module closes the loop on the original session goals. It:
 /-- The `nonReentrant`-wrapped entry point at the EntryPointV09 level. -/
 def entryPointV09Guarded
     (sender paymaster : Address) (key declaredNonce : Uint256)
-    (beneficiary : Address) : Contract Uint256 :=
+    (beneficiary : Address) (hasInitCode hasCallData : Uint256) : Contract Uint256 :=
   Verity.nonReentrant ⟨0⟩
-    (EntryPointV09.handleOp sender paymaster key declaredNonce beneficiary)
+    (EntryPointV09.handleOp sender paymaster key declaredNonce
+       beneficiary hasInitCode hasCallData)
 
 /-- **Step 4 (lemma 3 against real EntryPointV09)**: re-entry into the guarded
     `EntryPointV09.handleOp` reverts when the lock slot is set. -/
 theorem entryPointV09_reentrancy_guard_blocks_reentry
     (sender paymaster : Address) (key declaredNonce : Uint256)
-    (beneficiary : Address) (s : ContractState)
+    (beneficiary : Address) (hasInitCode hasCallData : Uint256)
+    (s : ContractState)
     (hLocked : s.storage 0 ≠ 0) :
-    (entryPointV09Guarded sender paymaster key declaredNonce beneficiary).run s =
+    (entryPointV09Guarded sender paymaster key declaredNonce beneficiary
+       hasInitCode hasCallData).run s =
       ContractResult.revert "ReentrancyGuard: reentrant call" s := by
   unfold entryPointV09Guarded
   exact Verity.nonReentrant_locked_reverts ⟨0⟩ _ s hLocked
@@ -53,11 +56,12 @@ theorem entryPointV09_reentrancy_guard_blocks_reentry
 /-- Corollary: the storage roll-back property for the real contract. -/
 theorem entryPointV09_reentrancy_revert_preserves_storage
     (sender paymaster : Address) (key declaredNonce : Uint256)
-    (beneficiary : Address) (s : ContractState)
+    (beneficiary : Address) (hasInitCode hasCallData : Uint256)
+    (s : ContractState)
     (hLocked : s.storage 0 ≠ 0) :
-    ((entryPointV09Guarded sender paymaster key declaredNonce beneficiary).run s).snd
-      = s := by
-  rw [entryPointV09_reentrancy_guard_blocks_reentry _ _ _ _ _ _ hLocked]
+    ((entryPointV09Guarded sender paymaster key declaredNonce beneficiary
+       hasInitCode hasCallData).run s).snd = s := by
+  rw [entryPointV09_reentrancy_guard_blocks_reentry _ _ _ _ _ _ _ _ hLocked]
   rfl
 
 /-! ## Step 5: top-level theorem universally quantified over callee bytecode

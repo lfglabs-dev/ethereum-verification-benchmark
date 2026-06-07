@@ -74,7 +74,9 @@ def countExecCalls (trace : Trace) (s : Address) (c : List Uint256) : Nat :=
 
 /-! ## Core lemmas -/
 
-/-- Every event in `executionLoop ops` originates from some op in ops. -/
+/-- **CRITICAL_PATH L2** — Every event in `executionLoop ops` originates
+    from some op in `ops` with non-empty callData. Backs the at-most-once
+    bound by giving the head-distinctness argument something to bite on. -/
 theorem executionLoop_event_origin
     (ops : List PackedUserOperation) (e : CallEvent)
     (he : e ∈ executionLoop ops) :
@@ -110,9 +112,9 @@ theorem executionLoop_contains_op_event
       · exact List.mem_cons_of_mem _ (ih hTail)
       · exact ih hTail
 
-/-- The trace contains at most one event matching `(s, c)` when all ops in
-    the batch have distinct `(sender, callData)` pairs. This is the
-    "exactly once" bound Yoav describes. -/
+/-- **CRITICAL_PATH L6** — The trace contains at most one event matching
+    `(s, c)` when all ops in the batch have distinct `(sender, callData)`
+    pairs. This is the "exactly once" upper bound Yoav describes. -/
 theorem executionLoop_count_le_one
     (ops : List PackedUserOperation)
     (hDistinct : List.Pairwise
@@ -164,7 +166,8 @@ theorem executionLoop_count_le_one
         exact ih hRestDistinct
     · exact ih hRestDistinct
 
-/-- `countExecCalls = 1` whenever exactly one op matches. -/
+/-- **CRITICAL_PATH L7** — `countExecCalls ≥ 1` whenever a validated op
+    with non-empty callData matches. The companion lower bound to L6. -/
 theorem executionLoop_count_ge_one
     (ops : List PackedUserOperation) (op : PackedUserOperation)
     (hMem : op ∈ ops) (hHas : hasCallData op = true)
