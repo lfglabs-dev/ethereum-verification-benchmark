@@ -5,6 +5,11 @@ import Benchmark.Cases.ERC4337.EntryPointInvariant.EntryPointV09
 import Benchmark.Cases.ERC4337.EntryPointInvariant.EvmYulFrame
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Bytecode
+import Benchmark.Cases.ERC4337.EntryPointInvariant.TransientGuard
+import Benchmark.Cases.ERC4337.EntryPointInvariant.UserOp
+import Benchmark.Cases.ERC4337.EntryPointInvariant.Trace
+import Benchmark.Cases.ERC4337.EntryPointInvariant.Yoav
+import Benchmark.Cases.ERC4337.EntryPointInvariant.LayoutWitness
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 
