@@ -305,7 +305,8 @@ verity_contract EntryPointModel where
     executionStatus : Uint256 → Uint256 := slot 5
 
   constants
-    STATUS_NOT_VALIDATED : Uint256 := 0
+    VALIDATION_SUCCESS : Uint256 := 0
+    VALIDATION_FAILED : Uint256 := 1
     STATUS_VALIDATED : Uint256 := 1
     STATUS_EXECUTED : Uint256 := 2
 
@@ -316,18 +317,19 @@ verity_contract EntryPointModel where
   function handleOpsNative (opslen : Uint256) : Unit := do
     setStorage opsCount opslen
 
-    -- Phase 1: validate every operation. A zero oracle word models validation
-    -- failure and reverts the whole batch.
+    -- Phase 1: validate every operation. EntryPoint v0.9 uses validation-data
+    -- sentinel 0 for success; nonzero words model validation failure.
     forEach "i" opslen (do
       let validationWord := externalCall "validateUserOp" [i]
-      require (validationWord != STATUS_NOT_VALIDATED) "AA validation failed"
+      require (validationWord == VALIDATION_SUCCESS) "AA validation failed"
       setMappingUint validationStatus i STATUS_VALIDATED)
 
     -- Phase 2: attempt execution for every validated operation. The inner call
     -- can fail independently; `tryCatch` catches that failure and the attempt is
     -- still recorded.
     forEach "i" opslen (do
-      tryCatch (call 0 i 0 0 0 0 0) (do
+      let sender := externalCall "senderAt" [i]
+      tryCatch (call 0 sender 0 0 0 0 0) (do
         pure ())
       setMappingUint executionStatus i STATUS_EXECUTED
       let currentCollected ← getStorage collected

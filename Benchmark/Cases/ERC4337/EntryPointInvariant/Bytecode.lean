@@ -21,12 +21,12 @@ This module closes the loop on the original session goals. It:
   `Frame.lean`. Where the proof shape is identical, we cite the source
   contract's storage layout.
 
-* (Step 5) States the top-level claim universally quantified over EvmYul
-  callee programs — the headline Yoav-grade theorem. The universal
+* (Step 5) States the top-level claim universally quantified over the
+  non-self EvmYul callees used for account/paymaster calls. The universal
   quantification ranges over `EvmYulFrame.CalleeResult`, which is the
-  full observational interface of an arbitrary EVM callee (its return
-  word + its returned-data function). Storage and memory effects on the
-  caller are bounded by the lemmas in `EvmYulFrame.lean` and
+  full observational interface of an arbitrary external EVM callee (its
+  return word + its returned-data function). Storage and memory effects
+  on the caller are bounded by the lemmas in `EvmYulFrame.lean` and
   `Layout.lean`.
 -/
 
@@ -64,12 +64,17 @@ theorem entryPointV09_reentrancy_revert_preserves_storage
   rw [entryPointV09_reentrancy_guard_blocks_reentry _ _ _ _ _ _ _ _ hLocked]
   rfl
 
-/-! ## Step 5: top-level theorem universally quantified over callee bytecode
+/-! ## Step 5: top-level theorem universally quantified over external callee bytecode
 
 The headline statement: for any EVM-conforming callee result (which is the
-universal-quantification range over arbitrary callee bytecode at the
+universal-quantification range over arbitrary non-self callee bytecode at the
 position of `account.validateUserOp` and `paymaster.validatePaymasterUserOp`),
 the EntryPointV09 control-flow biconditional and frame invariants hold.
+
+The self-call to `this.innerHandleOp` is deliberately not included in this
+frame-preservation theorem. A self-call can mutate EntryPoint storage and must
+be handled by the source-level `EntryPointV09` model and reentrancy/frame
+lemmas, not by `applyCallToCaller`, whose premise is a non-self CALL boundary.
 
 This is the structural shape of the Yoav-grade theorem. Its premises are:
 
@@ -80,19 +85,22 @@ This is the structural shape of the Yoav-grade theorem. Its premises are:
 3. The Verity reentrancy-guard model that EntryPointV09 imports.
 
 We state the theorem as a structure containing all the simultaneously-true
-post-conditions for any number of inner external calls.
+post-conditions for any number of non-self external calls.
 -/
 
 open EvmYulFrame
 open Layout
 
-/-- The universal-quantification surface: any list of arbitrary
-    callee invocations (account, paymaster, inner self-call), each producing
-    an arbitrary `CalleeResult`, using the EntryPoint's chosen call sites. -/
-abbrev BytecodeCalleeSequence := List CalleeResult
+/-- The universal-quantification surface: any list of arbitrary non-self
+    external callee invocations (account/paymaster), each producing an
+    arbitrary `CalleeResult`, using the EntryPoint's chosen external call
+    sites. -/
+abbrev BytecodeExternalCalleeSequence := List CalleeResult
+
+abbrev BytecodeCalleeSequence := BytecodeExternalCalleeSequence
 
 /-- **Step 5 — Top-level bytecode-level theorem**: in any non-reverting
-    `EntryPointV09.handleOp` invocation, with any number of inner external
+    `EntryPointV09.handleOp` invocation, with any number of non-self external
     calls each producing an arbitrary `CalleeResult`, the EVM-level
     invariants hold simultaneously:
 
@@ -102,11 +110,11 @@ abbrev BytecodeCalleeSequence := List CalleeResult
     3. Every word in the `opInfos[]` memory region is preserved by every
        external call.
 
-    This is the universal quantification over callee EVM bytecode the goal
-    calls out. `CalleeResult` is precisely the observational interface of
-    an arbitrary EVM program at a CALL boundary; quantifying over its
-    inhabitants is equivalent to quantifying over all callee programs that
-    return any (success, returndata) pair.
+    This is the universal quantification over non-self callee EVM bytecode the
+    goal calls out. `CalleeResult` is precisely the observational interface of
+    an arbitrary EVM program at such a CALL boundary; quantifying over its
+    inhabitants is equivalent to quantifying over all external callee programs
+    that return any (success, returndata) pair.
 -/
 theorem entryPointV09_invariants_under_arbitrary_callees
     (caller : CallerFrame)
@@ -147,7 +155,6 @@ theorem entryPointV09_execution_iff_validation_against_arbitrary_callees
     (L : SolcLayout) (S : EntryPointCallSites L)
     (callees : BytecodeCalleeSequence)
     (validationResults : List ValidationResult) (i : Nat) :
-    let opCount := callees.length
     let calls := callees.map fun c => (S.outOff_eq_scratchLo, S.outSize_le_scratch, c)
     let finalFrame :=
       calls.foldl (fun st c => applyCallToCaller st c.1 c.2.1 c.2.2) caller
@@ -162,7 +169,7 @@ theorem entryPointV09_execution_iff_validation_against_arbitrary_callees
     -- Plus: the opInfos memory region is untouched.
     (∀ j, L.opInfosBase ≤ j → j < L.opInfosBase + L.opInfosWords →
       finalFrame.memory j = caller.memory j) := by
-  intro opCount calls finalFrame hSome hi
+  intro calls finalFrame hSome hi
   refine ⟨?_, ?_⟩
   · exact execution_iff_validation validationResults i hSome hi
   · intro j hLo hHi

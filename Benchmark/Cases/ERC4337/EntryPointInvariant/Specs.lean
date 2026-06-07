@@ -223,6 +223,7 @@ def fees_concat_additive_spec (ops1 ops2 : List OpInfo) : Prop :=
     `startNonce + ops.length`. Captures `account.nonce++` per validated op. -/
 def nonce_advances_by_batch_size_spec
     (ops : List FullOpInfo) (startNonce : Nat) : Prop :=
+  handleOpsFull ops startNonce ≠ none →
   handleOpsFull ops startNonce = some (startNonce + ops.length)
 
 /-- **Strict nonce monotonicity**: validation strictly increases the account

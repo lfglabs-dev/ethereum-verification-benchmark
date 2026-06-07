@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.28;
 
-import "forge-std/Test.sol";
+interface Vm {
+    function envBytes(string calldata name) external returns (bytes memory value);
+}
 
 /// @notice Minimal subset of the PackedUserOperation struct as used by
 /// EntryPoint v0.9.
@@ -97,10 +99,28 @@ contract ReentrantAccount {
 /// — the original solc-compiled one and the Verity-compiled one — and runs
 /// the same scenarios against both, asserting equivalent observable
 /// outcomes.
-contract EntryPointDifferential is Test {
+contract EntryPointDifferential {
+    Vm internal constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
+
     IEntryPoint solcEP;
     IEntryPoint verityEP;
     address constant BENEFICIARY = address(0xBEEF);
+
+    function assertTrue(bool condition, string memory reason) internal pure {
+        require(condition, reason);
+    }
+
+    function assertEq(uint256 left, uint256 right, string memory reason) internal pure {
+        require(left == right, reason);
+    }
+
+    function assertEq(bool left, bool right, string memory reason) internal pure {
+        require(left == right, reason);
+    }
+
+    function assertEq(bytes32 left, bytes32 right, string memory reason) internal pure {
+        require(left == right, reason);
+    }
 
     function setUp() public {
         bytes memory solcCode = vm.envBytes("SOLC_ENTRYPOINT_BYTECODE");

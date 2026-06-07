@@ -96,13 +96,18 @@ verity_contract EntryPointV09 where
     let validation := externalCall "validateUserOp" [key, declaredNonce]
     return validation
 
-  -- Mirrors `_validatePaymasterPrepayment`: external paymaster call. The
-  -- result is the paymaster validation word; sentinel 0 means accept.
+  -- Mirrors `_validatePaymasterPrepayment`: the paymaster branch is skipped
+  -- when no paymaster is attached (`address(0)`). Otherwise the external
+  -- paymaster validation word is checked by the caller; sentinel 0 means
+  -- accept.
   function internal _validatePaymaster
       (paymaster : Address, key : Uint256) : Uint256 := do
-    -- paymaster.validatePaymasterUserOp(userOp, userOpHash, requiredPreFund)
-    let validation := externalCall "validatePaymasterUserOp" [key]
-    return validation
+    if paymaster != 0 then
+      -- paymaster.validatePaymasterUserOp(userOp, userOpHash, requiredPreFund)
+      let validation := externalCall "validatePaymasterUserOp" [key]
+      return validation
+    else
+      return VALIDATION_SUCCESS
 
   -- Mirrors `SenderCreator.createSender`: when `initCode.length > 0`, the
   -- EntryPoint deploys the account via an external call. The result is the
@@ -134,7 +139,7 @@ verity_contract EntryPointV09 where
   -- execution-path attempt and accrues the fee, regardless of whether the
   -- inner sender call ran or reverted (try/catch absorption).
   function internal _innerHandleOp
-      (sender : Address, key : Uint256, hasCallData : Uint256) : Uint256 := do
+      (sender : Address, _key : Uint256, hasCallData : Uint256) : Uint256 := do
     if hasCallData == HAS_CALLDATA then
       tryCatch (call 0 sender 0 0 0 0 0) (do
         pure ())

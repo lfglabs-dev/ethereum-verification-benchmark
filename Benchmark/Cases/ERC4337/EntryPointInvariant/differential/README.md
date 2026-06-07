@@ -29,12 +29,14 @@ test case.
    ```
 4. Run the differential suite:
    ```
-   forge test --root differential -vv
+   forge test --root Benchmark/Cases/ERC4337/EntryPointInvariant/differential -vv
    ```
 
-`differential/EntryPointDifferential.t.sol` (sibling file) is the Foundry
-test that deploys both bytecodes at fresh addresses and asserts equivalent
-behaviour across the chosen test scenarios.
+`EntryPointDifferential.t.sol` is the Foundry test that deploys both bytecodes
+at fresh addresses and asserts equivalent behaviour across the chosen test
+scenarios. This directory is a self-contained Foundry project; the test uses a
+minimal local cheatcode/assertion interface instead of depending on
+`forge-std`.
 
 ## Test scope
 
@@ -62,7 +64,7 @@ Out of scope (documented divergences, ignored in assertions):
 ## Running locally
 
 ```
-make test-differential-entrypoint
+bash Benchmark/Cases/ERC4337/EntryPointInvariant/differential/run.sh
 ```
 
 The `Makefile` target wraps the four pipeline steps above and reports any

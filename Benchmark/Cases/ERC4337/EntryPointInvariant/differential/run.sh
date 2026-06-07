@@ -18,6 +18,7 @@ CASE_NS="Benchmark.Cases.ERC4337.EntryPointInvariant"
 ROOT=$(cd "$(dirname "$0")/../../../../.." && pwd)
 BUILD="$ROOT/build/differential"
 VENDOR="$ROOT/vendor/account-abstraction"
+DIFF_ROOT="$ROOT/Benchmark/Cases/ERC4337/EntryPointInvariant/differential"
 
 mkdir -p "$BUILD"
 
@@ -50,5 +51,6 @@ export SOLC_ENTRYPOINT_BYTECODE="0x$SOLC_BYTECODE"
 export VERITY_ENTRYPOINT_BYTECODE="0x$VERITY_BYTECODE"
 
 forge test \
-  --match-path "Benchmark/Cases/ERC4337/EntryPointInvariant/differential/EntryPointDifferential.t.sol" \
+  --root "$DIFF_ROOT" \
+  --match-path "EntryPointDifferential.t.sol" \
   -vv
