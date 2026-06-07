@@ -1819,7 +1819,7 @@ def _first_meaningful_lean_error(output: str) -> str:
 
 def _classify_lean_failure(output: str) -> str:
     lowered = output.lower()
-    if "unexpected token" in lowered or "expected" in lowered and "error:" in lowered:
+    if ("unexpected token" in lowered or "expected" in lowered) and "error:" in lowered:
         return "lean_parse_error"
     if "unknown identifier" in lowered or "unknown constant" in lowered or "unknown namespace" in lowered:
         return "lean_unknown_name"
