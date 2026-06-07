@@ -11,6 +11,20 @@ open Verity.EVM.Uint256
 open Contracts
 
 /-!
+# Steps 4 & 5 — Bytecode-level frame proofs against EntryPointV09 (corollaries)
+
+> **Status: corollary tier.** The theorems here compose the upstream
+> frame conditions (now in `Verity.EVM.Frame`) with the abstract
+> biconditional. The current headline result is
+> `IndexedCounting.lean::yoav_indexed_counting_biconditional`; the
+> bytecode-shaped statement here is a direct consequence — useful as a
+> presentation form ("the biconditional holds against arbitrary
+> CalleeResult inputs"), not a new mathematical content.
+>
+> Keep this file when reviewing the bytecode interpretation of the
+> biconditional. Skip it when reviewing the load-bearing path; jump to
+> `IndexedCounting.lean` and `Aggregator.lean` instead.
+
 # Steps 4 & 5 — Bytecode-level frame proofs against EntryPointV09
 
 This module closes the loop on the original session goals. It:

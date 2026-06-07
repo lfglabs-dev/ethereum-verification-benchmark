@@ -67,6 +67,31 @@ verity_contract EntryPointV09 where
     -- statement is given as the memory-frame theorem in Frame.lean.
     opInfoRecord : Uint256 → Uint256 := slot 4
 
+  errors
+    -- Mirrors EntryPoint v0.9's typed custom errors. Declaring them here
+    -- gives the Verity compiler the right selector and ABI encoding for
+    -- the revert path, so the differential test sees byte-equivalent
+    -- revert data against the solc-compiled artifact.
+    --
+    -- `revert FailedOp(opIndex, reason)` — opIndex < ops.length, reason
+    -- is the canonical "AAxx ..." string per `account-abstraction/contracts/core/Helpers.sol`.
+    error FailedOp(Uint256, Uint256)
+    -- `revert FailedOpWithRevert(opIndex, reason, innerRevertData)` —
+    -- carries the original revert data from the account / paymaster call.
+    error FailedOpWithRevert(Uint256, Uint256, Uint256)
+    -- `revert PostOpReverted(returnData)` — emitted by `_executeUserOp`
+    -- when the paymaster's postOp callback reverted.
+    error PostOpReverted(Uint256)
+    -- `revert SignatureValidationFailed(aggregator)` — the aggregator
+    -- path rejected the bundle.
+    error SignatureValidationFailed(Address)
+    -- `revert SenderAddressResult(sender)` — emitted by
+    -- `getSenderAddress` to expose the computed sender via a revert.
+    error SenderAddressResult(Address)
+    -- `revert DelegateAndRevert(success, ret)` — emitted at the end of
+    -- `delegateAndRevert` so the caller can read the inner returndata.
+    error DelegateAndRevert(Uint256, Uint256)
+
   constants
     -- ValidationData sentinel: 0 = success, nonzero = failure code.
     VALIDATION_SUCCESS : Uint256 := 0

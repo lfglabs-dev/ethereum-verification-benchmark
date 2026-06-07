@@ -1,14 +1,12 @@
 name: erc4337 differential
 
 # Differential-test runner for the ERC-4337 EntryPoint v0.9 case. Compares
-# Verity-compiled EntryPointV09 against the original solc-compiled
-# EntryPoint.sol on the four scenarios in
+# the Verity-compiled EntryPointV09 against the original solc-compiled
+# EntryPoint.sol on the scenarios in
 # Benchmark/Cases/ERC4337/EntryPointInvariant/differential/EntryPointDifferential.t.sol.
 #
-# The job is gated on PRs that actually touch the case so the rest of the
-# benchmark suite is not blocked while verity-cli packaging is still
-# landing. Once verity-cli ships a stable release, the gate can be widened
-# to run on every PR.
+# No `verity-cli` binary needed — the Verity compile driver is invoked
+# directly via `lake env lean --run`, mirroring the unlink-monorepo pattern.
 
 on:
   pull_request:
@@ -21,7 +19,7 @@ on:
 jobs:
   differential:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     steps:
       - name: Checkout benchmark
@@ -29,49 +27,37 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Check verity-cli availability
-        id: cli_check
+      - name: Install elan + lake
         run: |
-          if command -v verity-cli >/dev/null 2>&1; then
-            echo "available=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "::warning::verity-cli is not yet packaged for CI; differential harness will be skipped."
-            echo "::warning::Track packaging at https://github.com/lfglabs-dev/verity/issues (search 'verity-cli release')"
-            echo "available=false" >> "$GITHUB_OUTPUT"
-          fi
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+               -sSf -o elan-init.sh
+          sh elan-init.sh -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Install Foundry
-        if: steps.cli_check.outputs.available == 'true'
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly
 
       - name: Install solc 0.8.28
-        if: steps.cli_check.outputs.available == 'true'
         run: |
-          curl -sL https://github.com/ethereum/solidity/releases/download/v0.8.28/solc-static-linux \
-               -o /usr/local/bin/solc
-          chmod +x /usr/local/bin/solc
+          sudo curl -sL \
+            https://github.com/ethereum/solidity/releases/download/v0.8.28/solc-static-linux \
+            -o /usr/local/bin/solc
+          sudo chmod +x /usr/local/bin/solc
           solc --version
 
-      - name: Vendor EntryPoint v0.9 source
-        if: steps.cli_check.outputs.available == 'true'
+      - name: Cache lake build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .lake
+          key: ${{ runner.os }}-erc4337-lake-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Build EntryPointV09 case
         run: |
-          mkdir -p vendor
-          git clone --depth=1 \
-            https://github.com/eth-infinitism/account-abstraction.git \
-            vendor/account-abstraction
-          (cd vendor/account-abstraction && git checkout b36a1ed52ae00da6f8a4c8d50181e2877e4fa410)
+          lake build Benchmark.Cases.ERC4337.EntryPointInvariant.EntryPointV09
 
       - name: Run differential harness
-        if: steps.cli_check.outputs.available == 'true'
         run: |
           bash Benchmark/Cases/ERC4337/EntryPointInvariant/differential/run.sh
-
-      - name: Mark job as skipped (verity-cli missing)
-        if: steps.cli_check.outputs.available != 'true'
-        run: |
-          echo "Differential harness skipped (verity-cli not on PATH)."
-          echo "This is expected until verity-cli ships a release artifact. See"
-          echo "Benchmark/Cases/ERC4337/EntryPointInvariant/differential/README.md"
-          echo "for the manual run instructions."

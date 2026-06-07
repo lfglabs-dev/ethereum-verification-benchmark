@@ -13,6 +13,8 @@ import Benchmark.Cases.ERC4337.EntryPointInvariant.LayoutWitness
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Refinement
 import Benchmark.Cases.ERC4337.EntryPointInvariant.IndexedCounting
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Aggregator
+import Benchmark.Cases.ERC4337.EntryPointInvariant.InnerHandleOpIntrinsic
+import Benchmark.Cases.ERC4337.EntryPointInvariant.LoopRefinement
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 

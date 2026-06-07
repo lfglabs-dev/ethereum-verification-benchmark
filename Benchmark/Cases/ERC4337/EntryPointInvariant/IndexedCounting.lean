@@ -62,16 +62,6 @@ def countByIndex (trace : IndexedTrace) (idx : Nat) : Nat :=
 
 /-! ## Core lemmas — no distinctness premise -/
 
-/-- Helper: `executionLoopIndexed.go` with a non-zero offset adjusts each
-    emitted index by the offset. -/
-private theorem executionLoopIndexed_go_offset
-    (i : Nat) (ops : List PackedUserOperation) (target : Nat) :
-    (executionLoopIndexed.go i ops).filter (fun e => decide (e.opIdx = target)) =
-    if target ≥ i then
-      (executionLoopIndexed.go i ops).filter (fun e => decide (e.opIdx = target))
-    else [] := by
-  split <;> rfl
-
 /-- The indexed loop emits the event for op `i` exactly when op `i` has
     non-empty callData. The index of that event equals `i`. -/
 theorem executionLoopIndexed_count_eq_one_of_executable
@@ -90,7 +80,7 @@ theorem executionLoopIndexed_count_eq_one_of_executable
     simpa using this
   intro start xs
   induction xs generalizing start with
-  | nil => intros; omega
+  | nil => intro j hj _; simp at hj
   | cons hd rest ih =>
     intro j hj hHas
     cases j with
@@ -163,7 +153,7 @@ theorem executionLoopIndexed_count_eq_zero_of_not_executable
     simpa using this
   intro start xs
   induction xs generalizing start with
-  | nil => intros; omega
+  | nil => intro j hj _; simp at hj
   | cons hd rest ih =>
     intro j hj hHas
     cases j with

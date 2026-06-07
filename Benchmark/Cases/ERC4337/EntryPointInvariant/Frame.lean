@@ -8,6 +8,17 @@ open Verity.EVM.Uint256
 open Contracts
 
 /-!
+# EntryPoint frame conditions over Verity's EVM semantics — historical scaffold
+
+> **Status: superseded by upstream.** The frame conditions in this file
+> were originally landed here in advance of the upstream port. They now
+> live in `Verity.EVM.Frame` (shipped in `lfglabs-dev/verity#1969`) where
+> they are proved once and consumed by every benchmark.
+>
+> The theorems here remain compiled for archival completeness and so the
+> earlier section of the proof history continues to typecheck. New code
+> should import `Verity.EVM.Frame` directly.
+
 # EntryPoint frame conditions over Verity's EVM semantics
 
 These three lemmas are the bytecode-level claims that make the abstract

@@ -7,6 +7,24 @@ open Verity
 open Verity.EVM.Uint256
 
 /-!
+# ERC-4337 EntryPoint Invariant Proofs — historical record
+
+> **Status: archival.** The 33 theorems below were the original abstract
+> control-flow proof set, before the case grew to include the bytecode-level
+> frame conditions, the indexed counting form, and the aggregator path.
+>
+> The current critical path is in `IndexedCounting.lean` (headline biconditional
+> without pairwise distinctness), `Aggregator.lean` (aggregator-path reuse),
+> and `Bytecode.lean` (bytecode-level composition). See `CRITICAL_PATH.md` for
+> the load-bearing map.
+>
+> The theorems in this file are now **corollaries of the indexed-counting
+> biconditional** specialised to the safety/liveness/all-or-nothing forms.
+> They are preserved here because they document the original Yoav-grade
+> claim shape and because they are independently informative; downstream
+> consumers (the `CRITICAL_PATH.md` headline theorem in particular) do not
+> depend on them.
+
 # ERC-4337 EntryPoint Invariant Proofs
 
 These proofs establish the selected ERC-4337 EntryPoint control-flow property:
