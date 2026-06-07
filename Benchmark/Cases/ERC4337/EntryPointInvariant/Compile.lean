@@ -11,6 +11,8 @@ import Benchmark.Cases.ERC4337.EntryPointInvariant.Trace
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Yoav
 import Benchmark.Cases.ERC4337.EntryPointInvariant.LayoutWitness
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Refinement
+import Benchmark.Cases.ERC4337.EntryPointInvariant.IndexedCounting
+import Benchmark.Cases.ERC4337.EntryPointInvariant.Aggregator
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 

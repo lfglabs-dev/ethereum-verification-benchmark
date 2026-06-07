@@ -8,12 +8,21 @@ Use this map to navigate the proof for review.
 
 ## Headline theorem
 
-`Yoav.lean::yoav_counting_biconditional_under_arbitrary_callees`
+`IndexedCounting.lean::yoav_indexed_counting_biconditional`
 
-> In any non-reverting `handleOps` batch, for any sequence of arbitrary
-> EVM callee invocations, `countExecCalls trace ops[i].sender
-> ops[i].callData = 1` iff `batchValidated ∧ opExecutable i`. Otherwise
-> the count is `0`.
+> For each op index `i`, the execution-event count is `1` iff the batch
+> validated AND op `i` has non-empty callData. Otherwise the count is `0`.
+> **No pairwise-distinctness premise** — op indices are inherently unique,
+> so two ops with identical `(sender, callData)` are still counted
+> separately by index.
+
+For aggregated batches (BLS aggregator path),
+`Aggregator.lean::yoav_aggregated_biconditional` applies the same
+theorem to `handleAggregatedOps` via `combinedApprovals`. No proof
+duplication.
+
+For the `(sender, callData)` form (which requires pairwise distinctness),
+see `Yoav.lean::yoav_counting_biconditional_under_arbitrary_callees`.
 
 ## Critical path (10 lemmas + 1 theorem)
 
