@@ -300,7 +300,7 @@ def _extract_lean_file(text: str) -> str:
 
 def _indent_proof_body(text: str) -> str:
     body = _extract_lean_file(text)
-    theorem_body = re.search(r"(?s)\b(?:theorem|lemma)\s+[A-Za-z0-9_'.]+.*?:=\s*by\s*", body)
+    theorem_body = re.search(r"(?s)\b(?:theorem|lemma)\s+[A-Za-z0-9_'.]+.*?:=\s*by[ \t]*(?:\n)?", body)
     if theorem_body:
         body = body[theorem_body.end() :]
     body = re.sub(r"(?m)^\s*end\s+[A-Za-z0-9_'.]+\s*$.*", "", body, flags=re.DOTALL)
@@ -316,8 +316,21 @@ def _indent_proof_body(text: str) -> str:
             break
         if stripped.startswith(("Explanation", "This proof", "The proof", "Note:", "```")):
             break
-        lines.append(stripped)
-    return "\n".join(f"  {line}" for line in lines) + "\n"
+        lines.append(line)
+    if not lines:
+        return ""
+    min_indent = min(len(line) - len(line.lstrip()) for line in lines)
+    normalized = [line[min_indent:] for line in lines]
+    for index in range(1, len(normalized)):
+        previous = normalized[index - 1]
+        current = normalized[index]
+        previous_indent = len(previous) - len(previous.lstrip())
+        current_indent = len(current) - len(current.lstrip())
+        previous_stripped = previous.strip()
+        opens_nested_block = previous_stripped.endswith((" by", ":= by", " then", " else"))
+        if current_indent > previous_indent and not opens_nested_block:
+            normalized[index] = " " * previous_indent + current.lstrip()
+    return "\n".join(f"  {line}" for line in normalized) + "\n"
 
 
 def _patch_proof_body(original: str, proof_body: str) -> str:
@@ -2284,7 +2297,20 @@ def _append_jsonl(path: Path, payload: dict[str, object]) -> None:
 
 
 def _tool_result_content(result: dict[str, object]) -> str:
-    return json.dumps(result, sort_keys=True)[-DEFAULT_TOOL_RESULT_CHARS:]
+    serialized = json.dumps(result, sort_keys=True)
+    if len(serialized) <= DEFAULT_TOOL_RESULT_CHARS:
+        return serialized
+    tail_budget = max(0, DEFAULT_TOOL_RESULT_CHARS - 160)
+    while True:
+        payload = {
+            "original_chars": len(serialized),
+            "tail": serialized[-tail_budget:] if tail_budget else "",
+            "truncated": True,
+        }
+        compact = json.dumps(payload, sort_keys=True)
+        if len(compact) <= DEFAULT_TOOL_RESULT_CHARS or tail_budget == 0:
+            return compact
+        tail_budget = max(0, tail_budget - (len(compact) - DEFAULT_TOOL_RESULT_CHARS))
 
 
 def _proof_attempt_count(attempts: list[dict[str, object]]) -> int:
