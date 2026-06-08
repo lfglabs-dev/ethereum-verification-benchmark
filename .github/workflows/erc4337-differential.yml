@@ -29,9 +29,13 @@ jobs:
 
       - name: Install elan + lake
         run: |
+          ELAN_URL="https://github.com/leanprover/elan/releases/latest/download/elan-x86_64-unknown-linux-gnu.tar.gz"
           for attempt in 1 2 3 4 5; do
-            if curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o elan-init.sh &&
-               sh elan-init.sh -y --default-toolchain none; then
+            rm -rf /tmp/elan-install
+            mkdir -p /tmp/elan-install
+            if curl -sSfL --retry 3 --retry-all-errors "$ELAN_URL" -o /tmp/elan.tar.gz &&
+               tar -xzf /tmp/elan.tar.gz -C /tmp/elan-install &&
+               /tmp/elan-install/elan-init -y --default-toolchain none; then
               break
             fi
             if [ "$attempt" = 5 ]; then
