@@ -44,10 +44,14 @@ jobs:
       - name: Install Foundry
         run: |
           curl -sSfL https://foundry.paradigm.xyz | bash
-          echo "$HOME/.foundry/bin" >> "$GITHUB_PATH"
+          # The installer updates the shell profile; source it so this same CI
+          # step can find foundryup before GitHub starts a fresh shell.
+          source "$HOME/.bashrc"
+          FOUNDRYUP="$(command -v foundryup)"
+          echo "$(dirname "$FOUNDRYUP")" >> "$GITHUB_PATH"
           for attempt in 1 2 3 4 5; do
-            if "$HOME/.foundry/bin/foundryup" --install 1.6.0-rc1; then
-              "$HOME/.foundry/bin/forge" --version
+            if "$FOUNDRYUP" --install 1.6.0-rc1; then
+              forge --version
               break
             fi
             if [ "$attempt" = 5 ]; then
