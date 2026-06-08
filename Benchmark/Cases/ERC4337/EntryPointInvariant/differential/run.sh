@@ -60,10 +60,11 @@ if [ -z "$VERITY_BYTECODE" ]; then
 fi
 
 # --- 2. Original EntryPoint.sol via solc ---------------------------------------
-if [ ! -d "$VENDOR" ]; then
+if [ ! -d "$VENDOR/.git" ]; then
+  rm -rf "$VENDOR"
   git clone --depth 1 https://github.com/eth-infinitism/account-abstraction.git "$VENDOR"
-  (cd "$VENDOR" && git fetch --depth 1 origin "$AA_COMMIT" && git checkout "$AA_COMMIT")
 fi
+(cd "$VENDOR" && git fetch --depth 1 origin "$AA_COMMIT" && git checkout --detach "$AA_COMMIT")
 (cd "$VENDOR" && forge build --use 0.8.28 --via-ir --optimizer-runs 200 --silent)
 SOLC_ARTIFACT="$VENDOR/out/EntryPoint.sol/EntryPoint.json"
 if [ -f "$SOLC_ARTIFACT" ]; then

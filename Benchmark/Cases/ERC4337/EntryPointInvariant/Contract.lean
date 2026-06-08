@@ -336,7 +336,9 @@ verity_contract EntryPointModel where
       require ((hasCallData == HAS_CALLDATA) || (hasCallData == NO_CALLDATA))
         "bad callData predicate"
       if hasCallData == HAS_CALLDATA then
-        let _callResult := call 100000 sender 0 0 4 0 0
+        unsafe "EntryPoint native sender call boundary" do
+          tryCatch (call 100000 sender 0 0 4 0 0) (do
+            pure ())
         pure ()
       else
         pure ()

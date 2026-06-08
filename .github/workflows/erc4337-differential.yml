@@ -29,9 +29,16 @@ jobs:
 
       - name: Install elan + lake
         run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
-               -sSf -o elan-init.sh
-          sh elan-init.sh -y --default-toolchain none
+          for attempt in 1 2 3 4 5; do
+            if curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o elan-init.sh &&
+               sh elan-init.sh -y --default-toolchain none; then
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Install Foundry
