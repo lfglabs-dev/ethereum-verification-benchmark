@@ -46,13 +46,12 @@ This module closes the loop on the original session goals. It:
 
 /-! ## Step 4: frame lemmas against `EntryPointV09` -/
 
-/-- The `nonReentrant`-wrapped entry point at the EntryPointV09 level. -/
+/-- The guarded public entry point at the EntryPointV09 level. -/
 def entryPointV09Guarded
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256) : Contract Uint256 :=
-  Verity.nonReentrant ⟨0⟩
-    (EntryPointV09.handleOp sender paymaster key declaredNonce
-       beneficiary hasInitCode hasCallData)
+  EntryPointV09.handleOp sender paymaster key declaredNonce
+    beneficiary hasInitCode hasCallData
 
 /-- **Step 4 (lemma 3 against real EntryPointV09)**: re-entry into the guarded
     `EntryPointV09.handleOp` reverts when the lock slot is set. -/
@@ -63,9 +62,12 @@ theorem entryPointV09_reentrancy_guard_blocks_reentry
     (hLocked : s.storage 0 ≠ 0) :
     (entryPointV09Guarded sender paymaster key declaredNonce beneficiary
        hasInitCode hasCallData).run s =
-      ContractResult.revert "ReentrancyGuard: reentrant call" s := by
+      ContractResult.revert "ReentrancyGuardTransient: reentrant call" s := by
   unfold entryPointV09Guarded
-  exact Verity.nonReentrant_locked_reverts ⟨0⟩ _ s hLocked
+  have hNe : (s.storage 0 == 0) = false := by
+    simp [hLocked]
+  simp [Contract.run, EntryPointV09.handleOp, EntryPointV09.reentrancyLock,
+    getStorage, Verity.require, Verity.bind, Bind.bind, hNe]
 
 /-- Corollary: the storage roll-back property for the real contract. -/
 theorem entryPointV09_reentrancy_revert_preserves_storage
