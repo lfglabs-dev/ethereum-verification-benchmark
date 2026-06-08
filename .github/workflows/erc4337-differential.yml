@@ -52,8 +52,8 @@ jobs:
           export PATH="$(dirname "$FOUNDRYUP"):$PATH"
           echo "$(dirname "$FOUNDRYUP")" >> "$GITHUB_PATH"
           for attempt in 1 2 3 4 5; do
-            if "$FOUNDRYUP" --install 1.6.0-rc1; then
-              forge --version
+            "$FOUNDRYUP" --install 1.6.0-rc1 || true
+            if command -v forge >/dev/null 2>&1 && forge --version; then
               break
             fi
             if [ "$attempt" = 5 ]; then
