@@ -2332,6 +2332,30 @@ def _proof_attempt_count(attempts: list[dict[str, object]]) -> int:
     return sum(1 for attempt in attempts if str(attempt.get("attempt", "")).startswith("tool:"))
 
 
+def _task_summary_with_live_editable(summary: str, *, task: dict[str, object], workspace: Path) -> str:
+    editable_files = task.get("editable_files")
+    if not isinstance(editable_files, list) or len(editable_files) != 1:
+        return summary
+    rel = editable_files[0]
+    if not isinstance(rel, str):
+        return summary
+    try:
+        path = _safe_workspace_path(workspace, rel)
+        content = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError, ValueError):
+        return summary
+    block = f"### Current Editable File\n\n`{rel}`\n\n```lean\n{content.rstrip()}\n```"
+    pattern = (
+        r"### Current Editable File\n\n"
+        r"`[^`\n]+`\n\n"
+        r"```lean\n.*?\n```"
+    )
+    refreshed, count = re.subn(pattern, block, summary, count=1, flags=re.S)
+    if count:
+        return refreshed
+    return summary.rstrip() + "\n\n" + block + "\n"
+
+
 def _execute_fair_tool(
     name: str,
     args: dict[str, object],
@@ -2349,6 +2373,7 @@ def _execute_fair_tool(
     if name == "show_task":
         summary_path = workspace / "harness" / "TASK_SUMMARY.md"
         summary = summary_path.read_text(encoding="utf-8") if summary_path.is_file() else ""
+        summary = _task_summary_with_live_editable(summary, task=task, workspace=workspace)
         return {"ok": True, "task": _task_public_view(task), "task_summary": summary[-DEFAULT_TASK_SUMMARY_CHARS:]}
     if name == "read_file":
         rel = args.get("path")
@@ -2894,6 +2919,7 @@ def _attempt_task(
     max_attempts: int,
     attempts_dir: Path,
     allow_local_candidates: bool,
+    allow_heuristic_candidates: bool,
     allow_grindset_import: bool,
 ) -> dict[str, object]:
     editable_files = task.get("editable_files")
@@ -2928,6 +2954,7 @@ def _attempt_task(
     local_candidates = []
     if allow_local_candidates:
         local_candidates.extend(_local_tactic_candidates(task))
+    if allow_heuristic_candidates:
         local_candidates.extend(_heuristic_tactic_candidates(task, workspace, original, implementation_files))
 
     for name, tactic_body in local_candidates:
@@ -3137,6 +3164,7 @@ def run_group(
                                 max_attempts=max_attempts,
                                 attempts_dir=run_dir / "attempts",
                                 allow_local_candidates=(mode == "legacy"),
+                                allow_heuristic_candidates=(mode in {"legacy", "tuned"}),
                                 allow_grindset_import=(mode == "legacy"),
                             )
                         )
