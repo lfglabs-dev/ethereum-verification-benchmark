@@ -109,6 +109,12 @@ verity_contract EntryPointV09 where
     POSTOP_OP_REVERTED    : Uint256 := 1
     POSTOP_POSTOP_REVERTED : Uint256 := 2
 
+  linked_externals
+    external validateUserOp(Uint256, Uint256) -> (Uint256)
+    external validatePaymasterUserOp(Uint256) -> (Uint256)
+    external createSender(Uint256) -> (Uint256)
+    external postOp(Uint256) -> (Uint256)
+
   -- Mirrors `_validateAccountAndPaymasterValidationData` partially: nonce
   -- check + account.validateUserOp call. The result is the validation word.
   function internal _validateAccount
@@ -147,7 +153,7 @@ verity_contract EntryPointV09 where
       return 0
 
   -- Mirrors `_validatePrepayment`: optional createSender + account + paymaster.
-  function internal _validatePrepayment
+  function allow_post_interaction_writes internal _validatePrepayment
       (sender : Address, paymaster : Address,
        key : Uint256, declaredNonce : Uint256,
        hasInitCode : Uint256) : Uint256 := do
@@ -166,8 +172,9 @@ verity_contract EntryPointV09 where
   function internal _innerHandleOp
       (sender : Address, _key : Uint256, hasCallData : Uint256) : Uint256 := do
     if hasCallData == HAS_CALLDATA then
-      tryCatch (call 0 sender 0 0 0 0 0) (do
-        pure ())
+      unsafe "EntryPoint innerHandleOp sender call boundary" do
+        tryCatch (call 100000 sender 0 0 4 0 0) (do
+          pure ())
       return 1
     else
       return 0
@@ -175,7 +182,7 @@ verity_contract EntryPointV09 where
   -- Mirrors `_executeUserOp`: enters `this.innerHandleOp(...)` via a self-call,
   -- catches its revert, then records the execution attempt and increments
   -- collected fees.
-  function internal _executeUserOp
+  function allow_post_interaction_writes internal _executeUserOp
       (sender : Address, key : Uint256, hasCallData : Uint256) : Uint256 := do
     let _innerResult ← _innerHandleOp sender key hasCallData
     setMappingUint opInfoRecord key OP_INFO_EXECUTED
@@ -205,11 +212,7 @@ verity_contract EntryPointV09 where
   -- The single-op slice of `handleOps`. The real function takes
   -- `PackedUserOperation[] calldata ops`; we expose the per-op body so the
   -- per-op invariants can be stated without modelling calldata layout.
-  --
-  -- Reentrancy: wrapped at the lemma level via `Verity.nonReentrant` because
-  -- Solidity uses ReentrancyGuardTransient. The lemma `entrypoint_v09_*`
-  -- theorems in Frame.lean discharge re-entry directly.
-  function handleOp
+  function allow_post_interaction_writes internal _handleOpUnchecked
       (sender : Address, paymaster : Address,
        key : Uint256, declaredNonce : Uint256, beneficiary : Address,
        hasInitCode : Uint256, hasCallData : Uint256)
@@ -224,6 +227,35 @@ verity_contract EntryPointV09 where
     let _postOpResult ← _postOp paymaster POSTOP_OP_SUCCEEDED
     -- Phase 4: compensation. Constant 1 wei per op in the abstract model.
     _compensate beneficiary 1
+    return exec
+
+  -- Public single-op projection of `handleOps`, guarded like the Solidity
+  -- `external nonReentrant` entry point. This keeps the compiled Verity artifact
+  -- honest for differential tests while the benchmark remains explicit that it
+  -- does not model dynamic calldata array decoding.
+  function allow_post_interaction_writes handleOp
+      (sender : Address, paymaster : Address,
+       key : Uint256, declaredNonce : Uint256, beneficiary : Address,
+       hasInitCode : Uint256, hasCallData : Uint256)
+      : Uint256 := do
+    let locked ← getStorage reentrancyLock
+    require (locked == 0) "ReentrancyGuardTransient: reentrant call"
+    setStorage reentrancyLock 1
+    let exec ← _handleOpUnchecked sender paymaster key declaredNonce
+      beneficiary hasInitCode hasCallData
+    setStorage reentrancyLock 0
+    return exec
+
+  -- Flattened one-op `handleOps` projection. The Solidity ABI accepts a dynamic
+  -- array of packed structs; this model exposes the decoded fields directly.
+  -- Differential tests must call this projection through its own interface, not
+  -- through `IEntryPoint.handleOps(PackedUserOperation[],address)`.
+  function handleOps
+      (sender : Address, paymaster : Address,
+       key : Uint256, declaredNonce : Uint256, beneficiary : Address,
+       hasInitCode : Uint256, hasCallData : Uint256)
+      : Uint256 := do
+    let exec ← handleOp sender paymaster key declaredNonce beneficiary hasInitCode hasCallData
     return exec
 
 end Benchmark.Cases.ERC4337.EntryPointInvariant

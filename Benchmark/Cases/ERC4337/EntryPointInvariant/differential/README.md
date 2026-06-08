@@ -1,25 +1,26 @@
 # EntryPoint v0.9 differential test harness
 
-This directory contains the differential-testing scaffold that compares the
-Verity-compiled `EntryPointV09` bytecode against the original
-`EntryPoint.sol` v0.9 compiled by solc. The goal is empirical
-certification of the hand translation: same input → same output for every
-test case.
+This directory contains the differential-testing scaffold for the
+Verity-compiled `EntryPointV09` projection and the original `EntryPoint.sol`
+v0.9 bytecode. The Verity contract intentionally exposes a flattened one-op
+`handleOps` projection instead of Solidity's dynamic
+`handleOps(PackedUserOperation[],address)` ABI, so the tests compare the
+selected control-flow observations rather than claiming byte-for-byte
+equivalence of the full contract interface.
 
 ## Pipeline
 
 1. Compile the Verity source:
    ```
-   verity-cli compile \
-     --case Benchmark.Cases.ERC4337.EntryPointInvariant.EntryPointV09 \
-     --emit yul \
-     --output build/EntryPointV09.yul
+   lake env lean --run \
+     Benchmark/Cases/ERC4337/EntryPointInvariant/differential/compile-entrypoint.lean \
+     build/differential/yul \
+     build/differential/entrypoint-abi-adapters.yul
    ```
 2. Compile the Yul output to EVM bytecode:
    ```
-   solc --strict-assembly build/EntryPointV09.yul \
-        --bin --bin-runtime \
-        -o build/
+   solc --strict-assembly build/differential/EntryPointV09.linked.yul \
+        --bin
    ```
 3. Compile the original EntryPoint v0.9 source pinned to commit
    `b36a1ed52ae00da6f8a4c8d50181e2877e4fa410`:
@@ -32,11 +33,11 @@ test case.
    forge test --root Benchmark/Cases/ERC4337/EntryPointInvariant/differential -vv
    ```
 
-`EntryPointDifferential.t.sol` is the Foundry test that deploys both bytecodes
-at fresh addresses and asserts equivalent behaviour across the chosen test
-scenarios. This directory is a self-contained Foundry project; the test uses a
-minimal local cheatcode/assertion interface instead of depending on
-`forge-std`.
+`EntryPointDifferential.t.sol` deploys both bytecodes at fresh addresses. The
+original EntryPoint is exercised through its real ABI; the Verity artifact is
+exercised through the flattened projection interface. Validation/paymaster
+callbacks are linked as explicit deterministic ECM stubs, while the sender
+execution path remains a real low-level EVM call.
 
 ## Test scope
 
@@ -46,12 +47,10 @@ about:
 
 | Test | Asserts |
 |------|---------|
-| `testValidateAndExecuteSingleOp` | one op, callData non-empty: sender called once with op.callData |
+| `testValidateAndExecuteSingleOp` | one op, callData non-empty: upstream executes once; Verity projection reaches its execution path without revert |
 | `testNonceReplayRejected` | re-submitting the same `(sender, nonce)` reverts |
-| `testPaymasterRejectedReverts` | paymaster returning a failure word reverts the whole batch |
-| `testReentrancyBlocked` | callee re-entering `handleOps` reverts with the guard message |
-| `testEmptyCallDataNoExec` | op with empty callData: no `Exec.call` is recorded |
-| `testHandleOpsBatchPreservesOrder` | execution events match validation order |
+| `testReentrancyBlocked` | re-entry into each entry point reverts |
+| `testEmptyCallDataNoExec` | op with empty callData: neither path records a sender execution call |
 
 Out of scope (documented divergences, ignored in assertions):
 
@@ -60,6 +59,8 @@ Out of scope (documented divergences, ignored in assertions):
   reverts; we compare revert *occurrence* and *selector*, not full bytes).
 - Aggregator path (`handleAggregatedOps`) — not in the Verity translation.
 - `EntryPoint.simulateValidation` / off-chain helpers — out of scope.
+- Dynamic calldata-array decoding and byte-for-byte calldata forwarding are out
+  of scope for this projection; those remain Verity ABI support work.
 
 ## Running locally
 
@@ -67,20 +68,19 @@ Out of scope (documented divergences, ignored in assertions):
 bash Benchmark/Cases/ERC4337/EntryPointInvariant/differential/run.sh
 ```
 
-The `Makefile` target wraps the four pipeline steps above and reports any
-divergence as a test failure. CI runs the same target on PRs touching
-`Benchmark/Cases/ERC4337/EntryPointInvariant/EntryPointV09.lean`.
+The `run.sh` target wraps the four pipeline steps above and reports any
+divergence as a test failure. CI runs the same target on PRs touching the
+EntryPoint benchmark or differential harness.
 
 ## What this discharges
 
 Differential testing is empirical, not formal — it cannot replace the
-Lean proof. But it gives an independent line of evidence: the
-hand-translated Verity contract behaves identically to the original
-Solidity contract on the chosen scenarios. Combined with the Lean proof
-of `yoav_counting_biconditional_under_arbitrary_callees`, the residual
-trust assumption "the hand translation is faithful" is reduced to
-"on the chosen scenarios, the hand translation matches solc output
-byte-for-byte (modulo documented divergences)."
+Lean proof. But it gives an independent line of evidence that the compiled
+projection reaches the same selected control-flow outcomes as the upstream
+EntryPoint on the chosen scenarios. Combined with the Lean proof of
+`yoav_counting_biconditional_under_arbitrary_callees`, the residual trust
+assumption is narrowed to the explicitly documented projection and ECM
+boundaries, not the full Solidity ABI.
 
 A failing test is a model bug. Fix the Verity contract, re-run the proof,
 re-run the test.

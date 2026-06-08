@@ -309,6 +309,8 @@ verity_contract EntryPointModel where
     VALIDATION_FAILED : Uint256 := 1
     STATUS_VALIDATED : Uint256 := 1
     STATUS_EXECUTED : Uint256 := 2
+    HAS_CALLDATA : Uint256 := 1
+    NO_CALLDATA : Uint256 := 0
 
   -- Batch lifecycle model using the executable ERC-4337 primitives in Verity:
   -- `forEach` runs once per index and binds `i`, `externalCall` reads from the
@@ -325,12 +327,19 @@ verity_contract EntryPointModel where
       setMappingUint validationStatus i STATUS_VALIDATED)
 
     -- Phase 2: attempt execution for every validated operation. The inner call
-    -- can fail independently; `tryCatch` catches that failure and the attempt is
-    -- still recorded.
+    -- can fail independently; `tryCatch` catches that failure. Solidity only
+    -- performs the sender call when the effective callData is non-empty, so the
+    -- oracle exposes that branch predicate separately from the sender address.
     forEach "i" opslen (do
       let sender := externalCall "senderAt" [i]
-      tryCatch (call 0 sender 0 0 0 0 0) (do
-        pure ())
+      let hasCallData := externalCall "hasCallDataAt" [i]
+      require ((hasCallData == HAS_CALLDATA) || (hasCallData == NO_CALLDATA))
+        "bad callData predicate"
+      if hasCallData == HAS_CALLDATA then
+        let _callResult := call 100000 sender 0 0 4 0 0
+        pure ()
+      else
+        pure ()
       setMappingUint executionStatus i STATUS_EXECUTED
       let currentCollected ← getStorage collected
       setStorage collected (add currentCollected 1))
