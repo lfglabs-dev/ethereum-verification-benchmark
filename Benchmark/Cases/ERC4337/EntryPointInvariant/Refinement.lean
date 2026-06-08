@@ -60,14 +60,24 @@ batch sits at the abstract level). The composition step glues them.
     `_validateAccount` does not revert. -/
 theorem validateAccount_refines_abstract
     (sender : Address) (key declaredNonce : Uint256)
-    (approves : Bool) (s : ContractState)
+    (approves : Bool) (s s' : ContractState)
     (hNonce : s.storageMap 2 sender = declaredNonce)
+    (hConcrete :
+      (EntryPointV09._validateAccount sender key declaredNonce).run s =
+        ContractResult.success EntryPointV09.VALIDATION_SUCCESS s')
     (hWord  : abstractMatchesValidationWord approves
                 EntryPointV09.VALIDATION_SUCCESS = true) :
-    approves = true := by
+    approves = true ∧
+      s.storageMap EntryPointV09.nonces.slot sender = declaredNonce ∧
+      ((EntryPointV09._validateAccount sender key declaredNonce).run s).isSuccess = true := by
   unfold abstractMatchesValidationWord at hWord
-  simp at hWord
-  exact hWord
+  constructor
+  · simp at hWord
+    exact hWord
+  · constructor
+    · exact hNonce
+    · rw [hConcrete]
+      rfl
 
 /-- **Per-op execution refinement (callData branch)**: when the concrete
     `hasCallData` Uint256 parameter equals `HAS_CALLDATA` (= 1) and the

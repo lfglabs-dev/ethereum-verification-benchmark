@@ -59,22 +59,22 @@ theorem entryPointV09_reentrancy_guard_blocks_reentry
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256)
     (s : ContractState)
-    (hLocked : s.storage 0 ≠ 0) :
+    (hLocked : s.transientStorage 0 ≠ 0) :
     (entryPointV09Guarded sender paymaster key declaredNonce beneficiary
        hasInitCode hasCallData).run s =
       ContractResult.revert "ReentrancyGuardTransient: reentrant call" s := by
   unfold entryPointV09Guarded
-  have hNe : (s.storage 0 == 0) = false := by
+  have hNe : (s.transientStorage 0 == 0) = false := by
     simp [hLocked]
-  simp [Contract.run, EntryPointV09.handleOp, EntryPointV09.reentrancyLock,
-    getStorage, Verity.require, Verity.bind, Bind.bind, hNe]
+  simp [Contract.run, EntryPointV09.handleOp, tload, Verity.require,
+    Verity.bind, Bind.bind, hNe]
 
 /-- Corollary: the storage roll-back property for the real contract. -/
 theorem entryPointV09_reentrancy_revert_preserves_storage
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256)
     (s : ContractState)
-    (hLocked : s.storage 0 ≠ 0) :
+    (hLocked : s.transientStorage 0 ≠ 0) :
     ((entryPointV09Guarded sender paymaster key declaredNonce beneficiary
        hasInitCode hasCallData).run s).snd = s := by
   rw [entryPointV09_reentrancy_guard_blocks_reentry _ _ _ _ _ _ _ _ hLocked]

@@ -117,14 +117,16 @@ verity_contract EntryPointV09 where
 
   -- Mirrors `_validateAccountAndPaymasterValidationData` partially: nonce
   -- check + account.validateUserOp call. The result is the validation word.
-  function internal _validateAccount
+  function allow_post_interaction_writes internal _validateAccount
       (sender : Address, key : Uint256, declaredNonce : Uint256) : Uint256 := do
-    -- nonces[sender] is the next expected nonce. NonceManager.incrementNonce.
+    -- nonces[sender] is the next expected nonce. EntryPoint validates the
+    -- account first, then advances the nonce on the accepted path.
     let expected ← getMapping nonces sender
     require (declaredNonce == expected) "AA25 invalid account nonce"
-    setMapping nonces sender (add expected 1)
     -- account.validateUserOp(userOp, userOpHash, missingFunds)
     let validation := externalCall "validateUserOp" [key, declaredNonce]
+    require (validation == VALIDATION_SUCCESS) "AA23 reverted (or OOG)"
+    setMapping nonces sender (add expected 1)
     return validation
 
   -- Mirrors `_validatePaymasterPrepayment`: the paymaster branch is skipped
@@ -238,13 +240,14 @@ verity_contract EntryPointV09 where
        key : Uint256, declaredNonce : Uint256, beneficiary : Address,
        hasInitCode : Uint256, hasCallData : Uint256)
       : Uint256 := do
-    let locked ← getStorage reentrancyLock
-    require (locked == 0) "ReentrancyGuardTransient: reentrant call"
-    setStorage reentrancyLock 1
-    let exec ← _handleOpUnchecked sender paymaster key declaredNonce
-      beneficiary hasInitCode hasCallData
-    setStorage reentrancyLock 0
-    return exec
+    unsafe "EntryPoint transient reentrancy guard boundary" do
+      let locked ← tload 0
+      require (locked == 0) "ReentrancyGuardTransient: reentrant call"
+      tstore 0 1
+      let exec ← _handleOpUnchecked sender paymaster key declaredNonce
+        beneficiary hasInitCode hasCallData
+      tstore 0 0
+      return exec
 
   -- Flattened one-op `handleOps` projection. The Solidity ABI accepts a dynamic
   -- array of packed structs; this model exposes the decoded fields directly.
