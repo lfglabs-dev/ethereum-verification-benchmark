@@ -2347,7 +2347,7 @@ def _task_summary_with_live_editable(summary: str, *, task: dict[str, object], w
     block = f"### Current Editable File\n\n`{rel}`\n\n```lean\n{content.rstrip()}\n```"
     pattern = (
         r"### Current Editable File\n\n"
-        r"`[^`\n]+`\n\n"
+        rf"`{re.escape(rel)}`\n\n"
         r"```lean\n.*?\n```"
     )
     refreshed, count = re.subn(pattern, block, summary, count=1, flags=re.S)
@@ -2395,9 +2395,13 @@ def _execute_fair_tool(
             return {"ok": False, "error": str(exc)}
         return {"ok": True, "path": rel, "content": content}
     if name == "show_goal":
+        try:
+            current = proof_path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            current = original
         code, output = _run_lean_module(workspace, target_module)
         normalized = _run_tactic_snapshot(
-            original=original,
+            original=current,
             proof_path=proof_path,
             workspace=workspace,
             target_module=target_module,
@@ -2406,7 +2410,7 @@ def _execute_fair_tool(
         return {
             "ok": True,
             "exit_code": code,
-            "theorem_statement": _theorem_statement(original, task.get("theorem_name")),
+            "theorem_statement": _theorem_statement(current, task.get("theorem_name")),
             "diagnostics": _goal_diagnostics(output),
             "normalized_once": normalized.get("diagnostics") if normalized.get("ok") else normalized,
         }
