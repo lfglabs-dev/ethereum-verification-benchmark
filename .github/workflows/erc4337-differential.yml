@@ -42,9 +42,19 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
 
       - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: v1.6.0-rc1
+        run: |
+          curl -sSfL https://foundry.paradigm.xyz | bash
+          echo "$HOME/.foundry/bin" >> "$GITHUB_PATH"
+          for attempt in 1 2 3 4 5; do
+            if "$HOME/.foundry/bin/foundryup" --install 1.6.0-rc1; then
+              "$HOME/.foundry/bin/forge" --version
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
 
       - name: Install solc 0.8.28
         run: |
