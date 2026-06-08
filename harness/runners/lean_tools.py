@@ -2690,30 +2690,62 @@ def _attempt_task_fair(
             if not isinstance(name, str):
                 continue
             if tool_calls_executed >= max_tool_calls:
+                result = {"ok": False, "error": "max_tool_calls_exceeded"}
                 _append_jsonl(
                     tool_log_path,
                     {
                         "task_ref": task.get("task_ref"),
                         "tool": name,
                         "arguments": args,
-                        "result": {"ok": False, "error": "max_tool_calls_exceeded"},
+                        "result": result,
                         "tool_call_id": tool_call.get("id"),
                         "duration_seconds": 0,
                     },
                 )
-                break
+                if text_protocol:
+                    content = f"Tool result for {name}: {_tool_result_content(result)}"
+                    if DEFAULT_NATIVE_TOOLS:
+                        messages.append({"role": "user", "content": content})
+                    else:
+                        set_compact_user_context(content)
+                else:
+                    messages.append(
+                        {
+                            "role": "tool",
+                            "tool_call_id": tool_call.get("id") or f"call-{request_index}",
+                            "name": name,
+                            "content": _tool_result_content(result),
+                        }
+                    )
+                continue
             if name in {"check_proof", "try_tactics"} and _proof_attempt_count(attempts) >= max_attempts:
+                result = {"ok": False, "error": "max_attempts_exceeded"}
                 _append_jsonl(
                     tool_log_path,
                     {
                         "task_ref": task.get("task_ref"),
                         "tool": name,
                         "arguments": args,
-                        "result": {"ok": False, "error": "max_attempts_exceeded"},
+                        "result": result,
                         "tool_call_id": tool_call.get("id"),
                         "duration_seconds": 0,
                     },
                 )
+                if text_protocol:
+                    content = f"Tool result for {name}: {_tool_result_content(result)}"
+                    if DEFAULT_NATIVE_TOOLS:
+                        messages.append({"role": "user", "content": content})
+                    else:
+                        set_compact_user_context(content)
+                else:
+                    messages.append(
+                        {
+                            "role": "tool",
+                            "tool_call_id": tool_call.get("id") or f"call-{request_index}",
+                            "name": name,
+                            "content": _tool_result_content(result),
+                        }
+                    )
                 continue
             if name not in {"check_proof", "try_tactics", "tactic_sandbox"} and non_proof_tool_calls >= non_proof_tool_limit:
                 result = {
