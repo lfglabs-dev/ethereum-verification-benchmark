@@ -574,6 +574,21 @@ def _run_tactic_snapshot(
     }
 
 
+def _run_lean_module_with_proof_content(
+    *,
+    proof_path: Path,
+    workspace: Path,
+    target_module: str,
+    content: str,
+) -> tuple[int, str]:
+    previous = proof_path.read_text(encoding="utf-8") if proof_path.is_file() else content
+    try:
+        proof_path.write_text(content, encoding="utf-8")
+        return _run_lean_module(workspace, target_module)
+    finally:
+        proof_path.write_text(previous, encoding="utf-8")
+
+
 def _proof_result_diagnostics(output: str, *, baseline_goal: str = "") -> dict[str, object]:
     diagnostics = _goal_diagnostics(output)
     target = str(diagnostics.get("target") or "")
@@ -2388,7 +2403,12 @@ def _execute_fair_tool(
             tactic=prefix,
         ) | {"sandbox_calls_used": state["count"], "sandbox_calls_max": limit}
     if name in {"check_proof", "try_tactics"}:
-        baseline_code, baseline_output = _run_lean_module(workspace, target_module)
+        baseline_code, baseline_output = _run_lean_module_with_proof_content(
+            proof_path=proof_path,
+            workspace=workspace,
+            target_module=target_module,
+            content=original,
+        )
         baseline_diag = _goal_diagnostics(baseline_output)
         baseline_goal = str(baseline_diag.get("target") or "")
         proofs: list[tuple[str, str]] = []
