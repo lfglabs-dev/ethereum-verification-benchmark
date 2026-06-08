@@ -90,7 +90,16 @@ def run_group(
             path = built.path / rel
             if path.is_file():
                 initial_editable[rel] = path.read_text(encoding="utf-8")
-    initial_check = _run_initial_check(built.path) if not dry_run else {"status": "skipped_dry_run"}
+    grok = shutil.which("grok")
+    auth_mode = _auth_mode()
+    if dry_run:
+        initial_check = {"status": "skipped_dry_run"}
+    elif not grok:
+        initial_check = {"status": "skipped_missing_grok"}
+    elif auth_mode == "none":
+        initial_check = {"status": "skipped_missing_auth"}
+    else:
+        initial_check = _run_initial_check(built.path)
     _append_initial_check(built.path / "harness" / "TASK_SUMMARY.md", initial_check)
     prompt_file = built.path / "harness" / "PROMPT.grok.md"
     prompt_file.write_text(_prompt(group), encoding="utf-8")
@@ -104,7 +113,7 @@ def run_group(
                 "dry_run": dry_run,
                 "max_turns": max_turns,
                 "timeout_seconds": timeout_seconds,
-                "auth_mode": _auth_mode(),
+                "auth_mode": auth_mode,
                 "initial_check": initial_check,
             },
             indent=2,
@@ -113,7 +122,6 @@ def run_group(
         encoding="utf-8",
     )
 
-    grok = shutil.which("grok")
     command = [
         grok or "grok",
         "--model",
@@ -143,7 +151,7 @@ def run_group(
         return_code = 127
         harness_status = "harness_error"
         harness_response = {"status": harness_status, "error": "grok executable not found", "command": command}
-    elif _auth_mode() == "none":
+    elif auth_mode == "none":
         return_code = 2
         harness_status = "harness_error"
         harness_response = {
@@ -157,7 +165,7 @@ def run_group(
         env["HOME"] = str(fake_home)
         if os.environ.get("GROK_CODE_XAI_API_KEY"):
             env["GROK_CODE_XAI_API_KEY"] = os.environ["GROK_CODE_XAI_API_KEY"]
-        elif _auth_mode() == "explicit-host-grok-auth":
+        elif auth_mode == "explicit-host-grok-auth":
             auth_dst = fake_home / ".grok" / "auth.json"
             auth_dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(Path.home() / ".grok" / "auth.json", auth_dst)

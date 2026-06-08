@@ -2424,8 +2424,12 @@ def _execute_fair_tool(
         if used >= limit:
             return {"ok": False, "error": "tactic_sandbox_budget_exceeded", "max_calls": limit}
         state["count"] = used + 1
+        try:
+            current = proof_path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            current = original
         return _run_tactic_snapshot(
-            original=original,
+            original=current,
             proof_path=proof_path,
             workspace=workspace,
             target_module=target_module,
