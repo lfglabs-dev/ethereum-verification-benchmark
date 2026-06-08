@@ -64,10 +64,20 @@ jobs:
 
       - name: Install solc 0.8.28
         run: |
-          sudo curl -sL \
-            https://github.com/ethereum/solidity/releases/download/v0.8.28/solc-static-linux \
-            -o /usr/local/bin/solc
-          sudo chmod +x /usr/local/bin/solc
+          SOLC_URL="https://github.com/ethereum/solidity/releases/download/v0.8.28/solc-static-linux"
+          for attempt in 1 2 3 4 5; do
+            if curl -sSfL "$SOLC_URL" -o /tmp/solc; then
+              chmod +x /tmp/solc
+            fi
+            if [ -x /tmp/solc ] && /tmp/solc --version; then
+              sudo mv /tmp/solc /usr/local/bin/solc
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
           solc --version
 
       - name: Cache lake build
