@@ -152,8 +152,10 @@ def run_group(
     command = [_expand(str(part), substitutions) for part in profile["command"]]
     env = os.environ.copy()
     env["HOME"] = str(fake_home)
+    env["PWD"] = str(built.path)  # some CLIs trust $PWD over getcwd
+    env["OLDPWD"] = str(built.path)
     for key in list(env):
-        if key.startswith(("DEFAULT_HARNESS_", "OPENAI_", "GAZELLA_")):
+        if key.startswith(("DEFAULT_HARNESS_", "OPENAI_", "GAZELLA_", "OPENCODE_")):
             env.pop(key)
     for key, template in (profile.get("env") or {}).items():
         env[str(key)] = _expand(str(template), substitutions)
