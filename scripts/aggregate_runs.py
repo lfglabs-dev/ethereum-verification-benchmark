@@ -94,7 +94,7 @@ def _dedupe_latest(rows: list[dict[str, object]]) -> list[dict[str, object]]:
 def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
     passed = [row for row in rows if row["passed"]]
     completion = [row["completion_tokens"] for row in passed if isinstance(row["completion_tokens"], (int, float))]
-    attempts = [row["attempts"] for row in passed if isinstance(row["attempts"], int)]
+    attempts = [row["attempts"] for row in passed if isinstance(row["attempts"], int) and row["attempts"] > 0]
     return {
         "tasks": len(rows),
         "passed": len(passed),
