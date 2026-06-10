@@ -100,6 +100,16 @@ def run_group(
     group = load_group(group_id, suite)
     if task_ref:
         group = filter_group_to_task(group, task_ref)
+    # Refuse to benchmark from a dirty source tree: a previous harness escape
+    # (or manual edit) could pre-solve the editable file and contaminate runs.
+    dirty = [
+        rel
+        for task in group.tasks
+        for rel in task.editable_files
+        if subprocess.run(["git", "diff", "--quiet", "HEAD", "--", rel], cwd=ROOT, check=False).returncode != 0
+    ]
+    if dirty:
+        raise RuntimeError(f"editable files modified in source repo (restore before benchmarking): {', '.join(dirty)}")
     built = build_group_workspace(group, run_id=run_id, include_group_grindset=False)
     assert_workspace_isolated(built.path)
     initial_editable: dict[str, str] = {}
