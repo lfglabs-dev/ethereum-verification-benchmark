@@ -102,11 +102,19 @@ def _copy_repo_for_verification() -> Path:
     temp_root = Path(tempfile.mkdtemp(prefix="verity-verifier-"))
     dst = temp_root / "repo"
 
-    def ignore(dir_path: str, names: list[str]) -> set[str]:
-        ignored = {".git", ".lake", "results", "__pycache__"}
-        return ignored.intersection(names)
+    needed_roots = {
+        "Benchmark", "Benchmark.lean", "cases", "families", "harness", "scripts",
+        "lakefile.lean", "lake-manifest.json", "lean-toolchain", "benchmark.toml",
+        "trusted-axioms.json", "schemas",
+    }
 
-    shutil.copytree(ROOT, dst, ignore=ignore)
+    def ignore(dir_path: str, names: list[str]) -> set[str]:
+        ignored = {name for name in names if name in {".git", ".lake", "results", "__pycache__"}}
+        if Path(dir_path).resolve() == ROOT.resolve():
+            ignored.update(name for name in names if name not in needed_roots)
+        return ignored
+
+    shutil.copytree(ROOT, dst, ignore=ignore, symlinks=True, ignore_dangling_symlinks=True)
     lake_cache = ROOT / ".lake"
     if lake_cache.exists():
         (dst / ".lake").symlink_to(lake_cache, target_is_directory=True)

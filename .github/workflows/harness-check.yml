@@ -1,0 +1,48 @@
+name: Harness check
+
+# Lightweight sanity check for harness changes: Python syntax, proof-patcher
+# behavior, and the results aggregator. No Lean toolchain required.
+on:
+  pull_request:
+    paths: ["harness/**", "scripts/aggregate_runs.py", ".github/workflows/benchmark.yml"]
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile harness modules
+        run: python3 -m compileall -q harness scripts/aggregate_runs.py
+      - name: Proof patcher unit checks
+        run: |
+          python3 - <<'EOF'
+          import sys
+          sys.path.insert(0, "harness/runners"); sys.path.insert(0, "harness")
+          from lean_tools import _patch_proof_body, _looks_like_full_file
+
+          # Relative indentation must survive patching verbatim.
+          proof = "constructor\n· simp [Foo.bar,\n    Foo.baz]\n· calc a = b := by rw [h]\n    _ = c := by\n      simp [x]\n"
+          patched = _patch_proof_body("theorem t : True := by\n  sorry\n\nend Foo\n", proof)
+          assert "    Foo.baz]" in patched, patched
+          assert "    _ = c := by" in patched, patched
+
+          # Full-file submissions pass through untouched.
+          full = "import A.B\nnamespace Foo\ntheorem t : True := by trivial\nend Foo\n"
+          assert _looks_like_full_file(full)
+          assert _patch_proof_body("theorem t : True := by\n  sorry\n", full) == full
+          print("patcher ok")
+          EOF
+      - name: Aggregator smoke
+        run: |
+          mkdir -p /tmp/r/x
+          cat > /tmp/r/x/run.json <<'EOF'
+          {"harness_id":"default","run_id":"x","model":"m","task_ref":"a/b/c","mode":"fair",
+           "usage":{"prompt_tokens":10,"completion_tokens":5,"total_tokens":15,"requests":1},
+           "duration_seconds":1.0,"started_at":"2026-01-01T00:00:00Z",
+           "verifier":{"score":{"passed_targets":1,"total_targets":1,"points_earned":1,"points_possible":1}}}
+          EOF
+          python3 scripts/aggregate_runs.py --runs-dir /tmp/r --out /tmp/o --names "m=Model"
+          grep -q "Model" /tmp/o/leaderboard.md
+          python3 -c "import json; b=json.load(open('/tmp/o/badges/m.json')); assert b['message'].startswith('1/1'), b"
+          echo "aggregator ok"

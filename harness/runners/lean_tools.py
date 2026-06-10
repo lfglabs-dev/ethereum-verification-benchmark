@@ -78,20 +78,24 @@ DEFAULT_BASE_URL = _harness_env("BASE_URL", "https://spark-de79.gazella-vector.t
 DEFAULT_MODEL = _harness_env("MODEL", "qwen3.5-397b", legacy_name="GAZELLA_MODEL")
 MAX_FILE_CHARS = int(os.environ.get("DEFAULT_HARNESS_MAX_FILE_CHARS", os.environ.get("GAZELLA_MAX_FILE_CHARS", "6000")))
 PROMPT_CONTEXT_CHARS = int(os.environ.get("DEFAULT_HARNESS_PROMPT_CONTEXT_CHARS", os.environ.get("GAZELLA_PROMPT_CONTEXT_CHARS", "8000")))
-LEAN_CHECK_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_LEAN_CHECK_TIMEOUT_SECONDS", os.environ.get("GAZELLA_LEAN_CHECK_TIMEOUT_SECONDS", "60")))
+LEAN_CHECK_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_LEAN_CHECK_TIMEOUT_SECONDS", os.environ.get("GAZELLA_LEAN_CHECK_TIMEOUT_SECONDS", "240")))
 REQUEST_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_REQUEST_TIMEOUT_SECONDS", os.environ.get("GAZELLA_REQUEST_TIMEOUT_SECONDS", "180")))
-REQUEST_RETRIES = int(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRIES", os.environ.get("GAZELLA_REQUEST_RETRIES", "2")))
+REQUEST_RETRIES = int(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRIES", os.environ.get("GAZELLA_REQUEST_RETRIES", "5")))
 REQUEST_RETRY_BACKOFF_SECONDS = float(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRY_BACKOFF_SECONDS", os.environ.get("GAZELLA_REQUEST_RETRY_BACKOFF_SECONDS", "2")))
 DEFAULT_CONTEXT_TOKENS = os.environ.get("DEFAULT_HARNESS_CONTEXT_TOKENS", os.environ.get("GAZELLA_N_CTX"))
 DEFAULT_MAX_TOOL_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_TOOL_CALLS", "24"))
-DEFAULT_MAX_RESPONSE_TOKENS = int(os.environ.get("DEFAULT_HARNESS_MAX_RESPONSE_TOKENS", "4096"))
+DEFAULT_MAX_RESPONSE_TOKENS = int(os.environ.get("DEFAULT_HARNESS_MAX_RESPONSE_TOKENS", "8192"))
 DEFAULT_NATIVE_TOOLS = os.environ.get("DEFAULT_HARNESS_NATIVE_TOOLS", "1").lower() not in {"0", "false", "no"}
 DEFAULT_TOOL_RESULT_CHARS = int(os.environ.get("DEFAULT_HARNESS_TOOL_RESULT_CHARS", "6000"))
 DEFAULT_TASK_SUMMARY_CHARS = int(os.environ.get("DEFAULT_HARNESS_TASK_SUMMARY_CHARS", "8000"))
-DEFAULT_MAX_NON_PROOF_TOOL_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_NON_PROOF_TOOL_CALLS", "8"))
-DEFAULT_MAX_SANDBOX_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_SANDBOX_CALLS", "8"))
+DEFAULT_MAX_NON_PROOF_TOOL_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_NON_PROOF_TOOL_CALLS", "24"))
+DEFAULT_MAX_SANDBOX_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_SANDBOX_CALLS", "16"))
+DEFAULT_TOKEN_BUDGET = int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0"))  # 0 = unlimited; counts completion tokens per task
 DEFAULT_ALLOW_GRINDSET_TOOLS = os.environ.get("DEFAULT_HARNESS_ALLOW_GRINDSET_TOOLS", "0").lower() in {"1", "true", "yes"}
 GRINDSET_IMPORT = "import Benchmark.Grindset"
+HTTP_USER_AGENT = os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", "verity-benchmark-harness/1.0")
+LEAN_CHECK_MODE = os.environ.get("DEFAULT_HARNESS_CHECK_MODE", "file").strip().lower()  # "file" = lake env lean <editable>, "module" = lake build
+STUCK_NUDGE = os.environ.get("DEFAULT_HARNESS_STUCK_NUDGE", "1").lower() not in {"0", "false", "no"}
 
 
 class ChatCompletionError(RuntimeError):
@@ -145,7 +149,7 @@ def endpoint_smoke(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MODEL)
             "temperature": 0,
         }
     ).encode("utf-8")
-    request = urllib.request.Request(f"{base_url.rstrip('/')}/chat/completions", data=body, headers={"Content-Type": "application/json"}, method="POST")
+    request = urllib.request.Request(f"{base_url.rstrip('/')}/chat/completions", data=body, headers={"Content-Type": "application/json", "User-Agent": HTTP_USER_AGENT}, method="POST")
     api_key = _api_key()
     if api_key:
         request.add_header("Authorization", f"Bearer {api_key}")
@@ -179,9 +183,10 @@ def chat_completion(
     body = json.dumps(payload).encode("utf-8")
     max_request_attempts = max(1, REQUEST_RETRIES + 1)
     last_error: ChatCompletionError | None = None
+    retry_after_seconds: float | None = None
     for attempt in range(1, max_request_attempts + 1):
         started = time.time()
-        request = urllib.request.Request(f"{base_url.rstrip('/')}/chat/completions", data=body, headers={"Content-Type": "application/json"}, method="POST")
+        request = urllib.request.Request(f"{base_url.rstrip('/')}/chat/completions", data=body, headers={"Content-Type": "application/json", "User-Agent": HTTP_USER_AGENT}, method="POST")
         api_key = _api_key()
         if api_key:
             request.add_header("Authorization", f"Bearer {api_key}")
@@ -201,7 +206,11 @@ def chat_completion(
                 return decoded
         except urllib.error.HTTPError as exc:
             detail = exc.read().decode("utf-8", errors="replace")
-            transient = exc.code in {408, 409, 425, 429, 500, 502, 503, 504}
+            transient = exc.code in {408, 409, 425, 429, 500, 502, 503, 504, 520, 521, 522, 523, 524}
+            try:
+                retry_after_seconds = float(exc.headers.get("Retry-After")) if exc.headers.get("Retry-After") else None
+            except (TypeError, ValueError):
+                retry_after_seconds = None
             kind = "context_length_exceeded" if "exceeds the available context size" in detail else ("http_transient" if transient else "http_error")
             message = f"HTTP {exc.code}: {detail[:1200]}"
             last_error = ChatCompletionError(
@@ -242,7 +251,10 @@ def chat_completion(
             )
         if last_error is None or not last_error.transient or attempt >= max_request_attempts:
             break
-        time.sleep(REQUEST_RETRY_BACKOFF_SECONDS * attempt)
+        delay = min(120.0, REQUEST_RETRY_BACKOFF_SECONDS * (2 ** (attempt - 1)))
+        if retry_after_seconds is not None:
+            delay = min(300.0, max(delay, retry_after_seconds))
+        time.sleep(delay)
     if last_error is None:
         raise ChatCompletionError(
             "request_failed_without_error",
@@ -298,49 +310,49 @@ def _extract_lean_file(text: str) -> str:
     return text.strip() + "\n"
 
 
+def _looks_like_full_file(body: str) -> bool:
+    return bool(re.search(r"(?m)^\s*(?:import|namespace)\s+\S", body)) and bool(
+        re.search(r"(?m)^\s*(?:theorem|lemma)\s+\S", body)
+    )
+
+
 def _indent_proof_body(text: str) -> str:
     body = _extract_lean_file(text)
     theorem_body = re.search(r"(?s)\b(?:theorem|lemma)\s+[A-Za-z0-9_'.]+.*?:=\s*by[ \t]*(?:\n)?", body)
     if theorem_body:
         body = body[theorem_body.end() :]
-    body = re.sub(r"(?m)^\s*end\s+[A-Za-z0-9_'.]+\s*$.*", "", body, flags=re.DOTALL)
-    lines = []
+    body = re.sub(r"(?m)^end\s+[A-Za-z0-9_'.]+\s*$.*", "", body, flags=re.DOTALL)
+    lines: list[str] = []
     for raw_line in body.splitlines():
         line = raw_line.rstrip()
-        if not line.strip():
-            continue
         stripped = line.strip()
-        if stripped.startswith(("import ", "namespace ", "open ", "theorem ", "lemma ", "/--", "-/")):
-            continue
-        if stripped in {"<;", "<;>", ";"}:
-            break
         if stripped.startswith(("Explanation", "This proof", "The proof", "Note:", "```")):
             break
         lines.append(line)
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    while lines and not lines[-1].strip():
+        lines.pop()
     if not lines:
         return ""
-    min_indent = min(len(line) - len(line.lstrip()) for line in lines)
-    normalized = [line[min_indent:] for line in lines]
-    for index in range(1, len(normalized)):
-        previous = normalized[index - 1]
-        current = normalized[index]
-        previous_indent = len(previous) - len(previous.lstrip())
-        current_indent = len(current) - len(current.lstrip())
-        previous_stripped = previous.strip()
-        opens_nested_block = previous_stripped.endswith((" by", ":= by", " then", " else"))
-        if current_indent > previous_indent and not opens_nested_block:
-            normalized[index] = " " * previous_indent + current.lstrip()
-    return "\n".join(f"  {line}" for line in normalized) + "\n"
+    # Preserve the proof's relative indentation exactly; only normalize the
+    # common left margin so the body sits two spaces under `:= by`.
+    min_indent = min(len(line) - len(line.lstrip()) for line in lines if line.strip())
+    normalized = [line[min_indent:] if line.strip() else "" for line in lines]
+    return "\n".join(f"  {line}" if line else "" for line in normalized) + "\n"
 
 
 def _patch_proof_body(original: str, proof_body: str) -> str:
+    extracted = _extract_lean_file(proof_body)
+    if _looks_like_full_file(extracted):
+        return extracted
     replacement = ":= by\n" + _indent_proof_body(proof_body)
     pattern = re.compile(
         r":=\s*by\s*(?:--[^\n]*\n\s*)?(?:exact\s+\?_[A-Za-z0-9_']*|sorry|admit)\b",
         re.MULTILINE,
     )
     if pattern.search(original):
-        return pattern.sub(replacement.rstrip(), original, count=1) + ("\n" if original.endswith("\n") else "")
+        return pattern.sub(lambda _match: replacement.rstrip(), original, count=1) + ("\n" if original.endswith("\n") else "")
     marker = ":= by"
     index = original.find(marker)
     if index == -1:
@@ -484,13 +496,31 @@ def _read_workspace_file(workspace: Path, rel: str) -> str:
     return text[:MAX_FILE_CHARS] + "\n/- file truncated for prompt -/\n"
 
 
-def _run_lean_module(workspace: Path, module: str, timeout_seconds: int | None = None) -> tuple[int, str]:
+def _run_lean_module(
+    workspace: Path,
+    module: str,
+    timeout_seconds: int | None = None,
+    *,
+    file_rel: str | None = None,
+) -> tuple[int, str]:
     if timeout_seconds is None:
         timeout_seconds = LEAN_CHECK_TIMEOUT_SECONDS
+    if file_rel and LEAN_CHECK_MODE == "file":
+        code, output = _run_lean_command(workspace, ["lake", "env", "lean", file_rel], timeout_seconds)
+        # Fall back to a module build when the file check fails for build-graph
+        # reasons (stale or missing dependency oleans), not proof reasons.
+        lowered = output.lower()
+        if code not in (0, 124) and ("unknown module" in lowered or "no such file" in lowered or "object file" in lowered or "olean" in lowered):
+            return _run_lean_command(workspace, ["lake", "build", module], timeout_seconds)
+        return code, output
+    return _run_lean_command(workspace, ["lake", "build", module], timeout_seconds)
+
+
+def _run_lean_command(workspace: Path, command: list[str], timeout_seconds: int) -> tuple[int, str]:
     process: subprocess.Popen[str] | None = None
     try:
         process = subprocess.Popen(
-            ["lake", "build", module],
+            command,
             cwd=workspace,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -562,7 +592,7 @@ def _run_tactic_snapshot(
         return {"ok": False, "error": "sandbox tactic contains sorry, admit, axiom, or a placeholder"}
     try:
         proof_path.write_text(candidate, encoding="utf-8")
-        code, output = _run_lean_module(workspace, target_module)
+        code, output = _run_lean_module(workspace, target_module, file_rel=_workspace_rel(workspace, proof_path))
     finally:
         proof_path.write_text(previous, encoding="utf-8")
     diagnostics = _goal_diagnostics(output)
@@ -572,6 +602,13 @@ def _run_tactic_snapshot(
         "changed_goal": bool(diagnostics.get("goals")),
         "diagnostics": diagnostics,
     }
+
+
+def _workspace_rel(workspace: Path, path: Path) -> str | None:
+    try:
+        return path.relative_to(workspace).as_posix()
+    except ValueError:
+        return None
 
 
 def _run_lean_module_with_proof_content(
@@ -584,7 +621,7 @@ def _run_lean_module_with_proof_content(
     previous = proof_path.read_text(encoding="utf-8") if proof_path.is_file() else content
     try:
         proof_path.write_text(content, encoding="utf-8")
-        return _run_lean_module(workspace, target_module)
+        return _run_lean_module(workspace, target_module, file_rel=_workspace_rel(workspace, proof_path))
     finally:
         proof_path.write_text(previous, encoding="utf-8")
 
@@ -1949,6 +1986,51 @@ def _failure_taxonomy(status: str, attempts: list[dict[str, object]], *, tool_ca
     return "unknown_failure"
 
 
+FAILURE_HINTS: dict[str, str] = {
+    "lean_unsolved_goals": (
+        "Unsolved goals: inspect the remaining goal in this result. Typical Verity closers: unfold the *_spec and the contract function, "
+        "simp with the contract's storage field names (ContractName.field), getStorage/setStorage/getMapping/setMapping, "
+        "Verity.require/Verity.bind/Bind.bind/Verity.pure/Pure.pure/Contract.run/ContractResult.snd, and the boolean guard hypotheses. "
+        "If the goal contains an `if`/`ite`/`match` on a condition (including boolean `==` tests like (add x 1 == k)), "
+        "case-split with by_cases on that exact condition and include the resulting hypothesis in the simp set of each branch. "
+        "Prefer one combined `simp [contract fn, storage fields, guard hypotheses, monadic plumbing]` per branch over chained simp only + simp."
+    ),
+    "lean_unknown_name": (
+        "Unknown identifier: use only names visible in the provided files; verify exact spelling with search_declarations before reusing it. "
+        "Do not invent Verity.Storage.* helpers, storage_set lemmas, or ContractState methods."
+    ),
+    "lean_parse_error": (
+        "Syntax error: check tactic-block indentation (bullets `·` need consistent two-space nesting) and that brackets/parentheses balance. "
+        "You may submit the complete file (imports + namespace + theorem) instead of a bare tactic body."
+    ),
+    "lean_type_error": (
+        "Type mismatch: compare both sides' types in the error; Uint256 comparisons often need `.val` forms or `Verity.Core.Uint256` lemmas. "
+        "Use simp lemmas to normalize before exact/rw."
+    ),
+    "lean_timeout": (
+        "Lean timed out: avoid broad recursive simp (never put ContractResult.snd in a bare simp list with the whole contract); "
+        "prefer `simp only` with an explicit lemma list, or unfold the spec and case-split before simplifying."
+    ),
+    "lean_error": (
+        "If 'failed to unfold': that name is not reducible by unfold; use simp [name] instead, or unfold only *_spec definitions and the concrete contract function. "
+        "If 'maximum recursion depth': shrink the simp set and split branches with by_cases."
+    ),
+}
+
+
+def _hint_for_failure(failure_kind: object, output: str) -> str | None:
+    hint = FAILURE_HINTS.get(str(failure_kind)) if failure_kind else None
+    if "maximum recursion depth" in output:
+        extra = "Avoid broad recursive simp; use simp only with explicit lemmas and case-split contract branches with by_cases."
+        hint = f"{hint} {extra}" if hint else extra
+    return hint
+
+
+def _stuck_signature(first_error: object) -> str:
+    text = re.sub(r"\d+", "#", str(first_error or "")).strip()
+    return text[:200]
+
+
 def _retry_feedback(output: str) -> str:
     compact = _compact_lean_output(output, limit=900)
     lines = [line for line in compact.splitlines() if "error:" in line.lower() or "unsolved goals" in line.lower()]
@@ -2315,17 +2397,17 @@ def _tool_result_content(result: dict[str, object]) -> str:
     serialized = json.dumps(result, sort_keys=True)
     if len(serialized) <= DEFAULT_TOOL_RESULT_CHARS:
         return serialized
-    tail_budget = max(0, DEFAULT_TOOL_RESULT_CHARS - 160)
+    head_budget = max(0, DEFAULT_TOOL_RESULT_CHARS - 160)
     while True:
         payload = {
             "original_chars": len(serialized),
-            "tail": serialized[-tail_budget:] if tail_budget else "",
+            "head": serialized[:head_budget] if head_budget else "",
             "truncated": True,
         }
         compact = json.dumps(payload, sort_keys=True)
-        if len(compact) <= DEFAULT_TOOL_RESULT_CHARS or tail_budget == 0:
+        if len(compact) <= DEFAULT_TOOL_RESULT_CHARS or head_budget == 0:
             return compact
-        tail_budget = max(0, tail_budget - (len(compact) - DEFAULT_TOOL_RESULT_CHARS))
+        head_budget = max(0, head_budget - (len(compact) - DEFAULT_TOOL_RESULT_CHARS))
 
 
 def _proof_attempt_count(attempts: list[dict[str, object]]) -> int:
@@ -2374,7 +2456,14 @@ def _execute_fair_tool(
         summary_path = workspace / "harness" / "TASK_SUMMARY.md"
         summary = summary_path.read_text(encoding="utf-8") if summary_path.is_file() else ""
         summary = _task_summary_with_live_editable(summary, task=task, workspace=workspace)
-        return {"ok": True, "task": _task_public_view(task), "task_summary": summary[-DEFAULT_TASK_SUMMARY_CHARS:]}
+        patterns_path = workspace / "harness" / "PROOF_PATTERNS.md"
+        patterns = patterns_path.read_text(encoding="utf-8")[:4000] if patterns_path.is_file() else ""
+        return {
+            "ok": True,
+            "task": _task_public_view(task),
+            "task_summary": summary[-DEFAULT_TASK_SUMMARY_CHARS:],
+            "proof_patterns": patterns,
+        }
     if name == "read_file":
         rel = args.get("path")
         if not isinstance(rel, str):
@@ -2399,7 +2488,7 @@ def _execute_fair_tool(
             current = proof_path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             current = original
-        code, output = _run_lean_module(workspace, target_module)
+        code, output = _run_lean_module(workspace, target_module, file_rel=_workspace_rel(workspace, proof_path))
         normalized = _run_tactic_snapshot(
             original=current,
             proof_path=proof_path,
@@ -2460,8 +2549,30 @@ def _execute_fair_tool(
             if not proofs:
                 return {"ok": False, "error": "tactics must contain at least one string"}
         results: list[dict[str, object]] = []
+        original_statement = " ".join(_theorem_statement(original, task.get("theorem_name")).split())
         for label, proof in proofs:
             candidate = _candidate_from_response(original, proof, task.get("theorem_name"))
+            candidate_statement = " ".join(_theorem_statement(candidate, task.get("theorem_name")).split())
+            if original_statement and candidate_statement != original_statement:
+                attempt = {
+                    "attempt": f"tool:{name}",
+                    "status": "rejected_statement_mismatch",
+                    "exit_code": None,
+                    "candidate_path": None,
+                    "output": "the submitted file changes or drops the target theorem statement; keep the theorem signature byte-identical and only change the proof after := by",
+                    "failure_kind": "statement_mismatch",
+                    "diagnostics": {
+                        "changed_goal": False,
+                        "new_goal": baseline_goal,
+                        "first_error": "theorem statement mismatch",
+                        "failure_kind": "statement_mismatch",
+                    },
+                    "duration_seconds": 0,
+                    "response_usage": None,
+                }
+                attempts.append(attempt)
+                results.append(attempt)
+                continue
             if _contains_forbidden_proof_token(candidate):
                 candidate_path = _write_attempt_artifact(attempts_dir, task, f"fair-{len(attempts) + 1}-{label}", candidate)
                 attempt = {
@@ -2486,18 +2597,37 @@ def _execute_fair_tool(
             proof_path.write_text(candidate, encoding="utf-8")
             candidate_path = _write_attempt_artifact(attempts_dir, task, f"fair-{len(attempts) + 1}-{label}", candidate)
             lean_start = time.time()
-            code, output = _run_lean_module(workspace, target_module)
+            code, output = _run_lean_module(workspace, target_module, file_rel=_workspace_rel(workspace, proof_path))
+            failure_kind = None if code == 0 else _classify_lean_failure(output)
+            diagnostics = _proof_result_diagnostics(output, baseline_goal=baseline_goal)
             attempt = {
                 "attempt": f"tool:{name}",
                 "status": "lean_passed" if code == 0 else "lean_failed",
                 "exit_code": code,
                 "candidate_path": str(candidate_path),
                 "output": _compact_lean_output(output),
-                "failure_kind": None if code == 0 else _classify_lean_failure(output),
-                "diagnostics": _proof_result_diagnostics(output, baseline_goal=baseline_goal),
+                "failure_kind": failure_kind,
+                "diagnostics": diagnostics,
                 "duration_seconds": round(time.time() - lean_start, 3),
                 "response_usage": None,
             }
+            if code != 0:
+                hint = _hint_for_failure(failure_kind, output)
+                if hint:
+                    attempt["hint"] = hint
+                if STUCK_NUDGE:
+                    signature = _stuck_signature(diagnostics.get("first_error"))
+                    previous_signatures = [
+                        _stuck_signature(prior.get("diagnostics", {}).get("first_error"))
+                        for prior in attempts
+                        if isinstance(prior, dict) and prior.get("status") == "lean_failed"
+                    ]
+                    if signature and signature in previous_signatures:
+                        attempt["stuck"] = (
+                            "Same error as a previous attempt - do not retry a minor variation. "
+                            "Change strategy: use show_goal or tactic_sandbox to inspect the goal state, "
+                            "case-split differently, or build the proof stepwise with have/calc."
+                        )
             attempts.append(attempt)
             results.append(attempt)
             if code == 0:
@@ -2595,10 +2725,15 @@ def _attempt_task_fair(
     if DEFAULT_NATIVE_TOOLS:
         system_prompt = (
             "You are an agent solving one public Lean benchmark task through tools only. "
-            "Call show_task first; it returns the shared TASK_SUMMARY.md used by all harnesses. "
+            "Call show_task first; it returns the shared TASK_SUMMARY.md and a proof_patterns guide with the Verity-specific "
+            "simp/unfold recipe (contract function + storage field names + getStorage/setStorage/Verity.require/Verity.bind/Bind.bind/"
+            "Verity.pure/Pure.pure/Contract.run/ContractResult.snd) that closes most goals; follow it before inventing your own approach. "
             "Then inspect files with read_file, show_goal, definition_outline, and search_declarations. "
-            "Use tactic_sandbox for small exploratory tactic prefixes and check_proof or try_tactics for proof attempts. "
-            "Non-proof tools are capped; after a few inspection calls, try a tactic or proof and learn from Lean diagnostics. "
+            "Use tactic_sandbox for exploratory tactic prefixes (it shows the resulting goal and does not count as a proof attempt), "
+            "show_goal to see the current goal state, and check_proof or try_tactics for proof attempts. "
+            "check_proof accepts either a tactic body to place under `:= by`, or a complete Lean file "
+            "(with imports, namespace, helper lemmas, and the target theorem); the theorem statement must stay byte-identical. "
+            "Iterate: submit, read the Lean error, fix, resubmit. "
             "Do not use sorry, admit, axiom, hidden imports, "
             "Benchmark.GeneratedPreview, or reference Proofs modules. Do not assume a hardcoded solution from the task name. "
             "If native tool calling is unavailable, return JSON like {\"tool\":\"show_task\",\"arguments\":{}}."
@@ -2639,10 +2774,25 @@ def _attempt_task_fair(
     )
     no_tool_responses = 0
     sandbox_state = {"count": 0, "limit": min(DEFAULT_MAX_SANDBOX_CALLS, max(1, max_tool_calls // 4))}
+    usage_totals = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
+
+    def _accumulate_usage(response: dict[str, object]) -> None:
+        usage = response.get("usage") if isinstance(response, dict) else None
+        if isinstance(usage, dict):
+            usage_totals["requests"] += 1
+            for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
+                value = usage.get(key)
+                if isinstance(value, (int, float)):
+                    usage_totals[key] += int(value)
+
+    token_budget_exhausted = False
     for request_index in range(1, request_limit + 1):
         if _proof_attempt_count(attempts) >= max_attempts:
             break
         if tool_calls_executed >= max_tool_calls:
+            break
+        if DEFAULT_TOKEN_BUDGET and usage_totals["completion_tokens"] >= DEFAULT_TOKEN_BUDGET:
+            token_budget_exhausted = True
             break
         try:
             response = chat_completion(
@@ -2669,6 +2819,7 @@ def _attempt_task_fair(
                 "task_ref": task.get("task_ref"),
                 "status": status,
                 "error": error_payload,
+                "usage": usage_totals,
                 "attempts": attempts,
                 "tool_calls_executed": tool_calls_executed,
                 "non_proof_tool_calls": non_proof_tool_calls,
@@ -2677,6 +2828,7 @@ def _attempt_task_fair(
                 "conversation_log": str(conversation_log_path),
                 "failure_class": _failure_taxonomy(status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
             }
+        _accumulate_usage(response)
         response_message = {}
         choices = response.get("choices")
         if isinstance(choices, list) and choices and isinstance(choices[0], dict):
@@ -2800,7 +2952,7 @@ def _attempt_task_fair(
                         }
                     )
                 continue
-            if name not in {"check_proof", "try_tactics", "tactic_sandbox"} and non_proof_tool_calls >= non_proof_tool_limit:
+            if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"} and non_proof_tool_calls >= non_proof_tool_limit:
                 result = {
                     "ok": False,
                     "error": "non_proof_tool_budget_exceeded",
@@ -2856,7 +3008,7 @@ def _attempt_task_fair(
                 allow_grindset_tools=allow_grindset_tools,
             )
             tool_calls_executed += 1
-            if name not in {"check_proof", "try_tactics", "tactic_sandbox"}:
+            if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"}:
                 non_proof_tool_calls += 1
             _append_jsonl(
                 tool_log_path,
@@ -2889,6 +3041,7 @@ def _attempt_task_fair(
                     "task_ref": task.get("task_ref"),
                     "status": "lean_passed",
                     "failure_class": None,
+                    "usage": usage_totals,
                     "attempts": attempts,
                     "tool_calls_executed": tool_calls_executed,
                     "non_proof_tool_calls": non_proof_tool_calls,
@@ -2908,6 +3061,8 @@ def _attempt_task_fair(
         "task_ref": task.get("task_ref"),
         "status": final_status,
         "failure_class": _failure_taxonomy(final_status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
+        "usage": usage_totals,
+        "token_budget_exhausted": token_budget_exhausted,
         "attempts": attempts,
         "tool_calls_executed": tool_calls_executed,
         "non_proof_tool_calls": non_proof_tool_calls,
@@ -3145,8 +3300,25 @@ def run_group(
         }
     else:
         task_results: list[dict[str, object]] = []
+        warm_builds: list[dict[str, object]] = []
         try:
             tasks_payload = json.loads((built.path / "harness" / "TASKS.json").read_text(encoding="utf-8"))
+            # Warm the Lean dependency graph once per target module so agent-visible
+            # check timeouts measure proof elaboration, not cold dependency builds.
+            warm_timeout = int(os.environ.get("DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS", "1800"))
+            for task in tasks_payload.get("tasks", []):
+                module = task.get("target_module") if isinstance(task, dict) else None
+                if isinstance(module, str) and module:
+                    warm_start = time.time()
+                    warm_code, _warm_output = _run_lean_module(built.path, module, timeout_seconds=warm_timeout)
+                    warm_builds.append(
+                        {
+                            "task_ref": task.get("task_ref"),
+                            "module": module,
+                            "exit_code": warm_code,
+                            "duration_seconds": round(time.time() - warm_start, 3),
+                        }
+                    )
             for task in tasks_payload.get("tasks", []):
                 if isinstance(task, dict):
                     if mode in {"fair", "fair+libs"}:
@@ -3176,9 +3348,17 @@ def run_group(
                                 allow_grindset_import=(mode == "legacy"),
                             )
                         )
-            response = {"status": "completed", "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "tasks": task_results}
+            aggregate_usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
+            for task_result in task_results:
+                task_usage = task_result.get("usage")
+                if isinstance(task_usage, dict):
+                    for key in aggregate_usage:
+                        value = task_usage.get(key)
+                        if isinstance(value, (int, float)):
+                            aggregate_usage[key] += int(value)
+            response = {"status": "completed", "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "usage": aggregate_usage, "warm_builds": warm_builds, "tasks": task_results}
         except Exception as exc:
-            response = {"status": "harness_error", "error": str(exc), "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "tasks": task_results}
+            response = {"status": "harness_error", "error": str(exc), "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "warm_builds": warm_builds, "tasks": task_results}
 
     (run_dir / "workspace-manifest.json").write_text((built.path / "workspace-manifest.json").read_text(encoding="utf-8"), encoding="utf-8")
     shutil.copy2(built.path / "harness" / "TASK_SUMMARY.md", run_dir / "TASK_SUMMARY.md")
@@ -3227,6 +3407,7 @@ def run_group(
         "auth_mode": "env" if _api_key() else "none",
         "duration_seconds": round(time.time() - start, 3),
         "harness_status": response["status"],
+        "usage": response.get("usage"),
         "workspace": str(built.path) if keep_workspace else None,
         "verifier": verifier_result,
     }

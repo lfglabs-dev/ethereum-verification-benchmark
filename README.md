@@ -71,6 +71,21 @@ Coverage is strongest today for accounting, local state preservation, storage ef
 
 ---
 
+## Benchmark results
+
+[![Verity bench](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FTh0rgal%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Foverall.json)](https://github.com/Th0rgal/verity-benchmark/blob/benchmark-results/leaderboard.md)
+[![MiniMax](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FTh0rgal%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-smart.json)](https://github.com/Th0rgal/verity-benchmark/blob/benchmark-results/leaderboard.md)
+[![Grok Code](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FTh0rgal%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fgrok.json)](https://github.com/Th0rgal/verity-benchmark/blob/benchmark-results/leaderboard.md)
+[![MiniMax Fast](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FTh0rgal%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-fast.json)](https://github.com/Th0rgal/verity-benchmark/blob/benchmark-results/leaderboard.md)
+
+Results are produced by the manually-dispatched [Benchmark workflow](.github/workflows/benchmark.yml)
+(models, display names, budget, task slice, and API endpoint are all dispatch inputs) and published to
+the [`benchmark-results`](https://github.com/Th0rgal/verity-benchmark/tree/benchmark-results) branch:
+[leaderboard.md](https://github.com/Th0rgal/verity-benchmark/blob/benchmark-results/leaderboard.md)
+(pass rate, median attempts, and median completion tokens to success per model) and `results.json`
+(canonical per-task data). The headline metric is **completion tokens to a verified proof**, not just
+pass/fail.
+
 ## Running the benchmark
 
 ### Verify reference proofs

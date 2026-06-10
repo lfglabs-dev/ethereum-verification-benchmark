@@ -1,0 +1,176 @@
+name: Benchmark
+
+# Manually-triggered benchmark sweep. Runs the default fair harness for each
+# requested model over a task slice, aggregates pass/attempt/token results,
+# and force-pushes README-facing artifacts (leaderboard.md, results.json,
+# shields.io badge endpoints) to the `benchmark-results` branch.
+on:
+  workflow_dispatch:
+    inputs:
+      models:
+        description: "Comma-separated model entries, `id` or `id=Display Name`"
+        default: "builtin/smart=MiniMax,grok=Grok Code,builtin/fast=MiniMax Fast"
+      budget:
+        description: "Budget profile"
+        type: choice
+        options: [quick, normal, deep]
+        default: normal
+      tasks:
+        description: "Space-separated task refs, `slice` (5-task representative set) or `all` (full active suite)"
+        default: "slice"
+      base_url:
+        description: "OpenAI-compatible endpoint (empty = repo var DEFAULT_HARNESS_BASE_URL)"
+        default: ""
+      api_key_secret:
+        description: "Name of the repo secret holding the API key for the endpoint"
+        default: "DEFAULT_HARNESS_API_KEY"
+
+concurrency:
+  group: benchmark
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  SLICE_TASKS: >-
+    ethereum/deposit_contract_minimal/deposit_count
+    kleros/sortition_trees/node_id_bijection
+    damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance
+    nexus_mutual/ramm_price_band/sync_sets_book_value
+    paladin_votes/stream_recovery_claim_usdc/claim_marks_user
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+      tasks: ${{ steps.tasks.outputs.tasks }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build model matrix
+        id: matrix
+        env:
+          MODELS_INPUT: ${{ inputs.models }}
+        run: |
+          python3 - <<'EOF' >> "$GITHUB_OUTPUT"
+          import json, os
+          entries = []
+          for raw in os.environ["MODELS_INPUT"].split(","):
+              raw = raw.strip()
+              if not raw:
+                  continue
+              model, _, name = raw.partition("=")
+              slug = "".join(c if c.isalnum() else "-" for c in model).strip("-").lower()
+              entries.append({"model": model.strip(), "name": (name or model).strip(), "slug": slug})
+          print("matrix=" + json.dumps({"include": entries}))
+          EOF
+      - name: Resolve task list
+        id: tasks
+        env:
+          TASKS_INPUT: ${{ inputs.tasks }}
+        run: |
+          if [ "$TASKS_INPUT" = "slice" ]; then
+            echo "tasks=$SLICE_TASKS" >> "$GITHUB_OUTPUT"
+          elif [ "$TASKS_INPUT" = "all" ]; then
+            echo "tasks=$(python3 -m harness.cli list --suite active --unit task | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+          else
+            echo "tasks=$TASKS_INPUT" >> "$GITHUB_OUTPUT"
+          fi
+
+  bench:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    env:
+      DEFAULT_HARNESS_MODEL: ${{ matrix.model }}
+      DEFAULT_HARNESS_BASE_URL: ${{ inputs.base_url != '' && inputs.base_url || vars.DEFAULT_HARNESS_BASE_URL }}
+      DEFAULT_HARNESS_API_KEY: ${{ secrets[inputs.api_key_secret] }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install elan
+        run: |
+          curl -sSfL https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore Lean cache
+        uses: actions/cache@v4
+        with:
+          path: .lake
+          key: lake-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+          restore-keys: lake-${{ runner.os }}-
+      - name: Hydrate mathlib cache
+        run: lake exe cache get || lake exe cache get
+      - name: Run tasks
+        env:
+          TASKS: ${{ needs.prepare.outputs.tasks }}
+          BUDGET: ${{ inputs.budget }}
+        run: |
+          set +e
+          for task in $TASKS; do
+            echo "::group::$task"
+            python3 -m harness.cli run-task "$task" --harness default --mode fair --budget "$BUDGET"
+            echo "task $task exited with $?"
+            echo "::endgroup::"
+          done
+          exit 0
+      - name: Prune heavy artifacts
+        run: |
+          find results/runs -type d \( -name conversations -o -name tool-calls -o -name attempts -o -name submitted -o -name verifier \) -exec rm -rf {} + 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bench-${{ matrix.slug }}
+          path: results/runs
+          retention-days: 30
+
+  aggregate:
+    needs: [prepare, bench]
+    if: always() && needs.prepare.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bench-*
+          path: results/runs
+          merge-multiple: true
+      - name: Aggregate
+        env:
+          MODELS_INPUT: ${{ inputs.models }}
+          TASKS_INPUT: ${{ inputs.tasks }}
+          BUDGET: ${{ inputs.budget }}
+        run: |
+          NAMES=$(python3 - <<'EOF'
+          import os
+          pairs = []
+          for raw in os.environ["MODELS_INPUT"].split(","):
+              raw = raw.strip()
+              if raw:
+                  model, _, name = raw.partition("=")
+                  pairs.append(f"{model.strip()}={(name or model).strip()}")
+          print(",".join(pairs))
+          EOF
+          )
+          python3 scripts/aggregate_runs.py \
+            --runs-dir results/runs --out out \
+            --names "$NAMES" \
+            --meta "budget=$BUDGET" \
+            --meta "sha=${{ github.sha }}" \
+            --meta "tasks=$TASKS_INPUT"
+          cat out/leaderboard.md
+      - name: Publish to benchmark-results branch
+        run: |
+          cd out
+          git init -q -b benchmark-results
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Benchmark results for ${{ github.sha }} (budget=${{ inputs.budget }})"
+          git push -f "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" benchmark-results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-aggregate
+          path: out
