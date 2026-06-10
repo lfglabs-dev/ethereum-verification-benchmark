@@ -4,6 +4,7 @@
   "adapter": "shell",
   "track": "group/shell",
   "command": ["opencode", "run", "--model", "verity/{model}", "{prompt}"],
+  "continue_command": ["opencode", "run", "--continue", "--model", "verity/{model}", "{continue_prompt}"],
   "env": {
     "OPENCODE_CONFIG": "{workspace}/opencode.json",
     "VERITY_PROXY_KEY": "{proxy_key}"

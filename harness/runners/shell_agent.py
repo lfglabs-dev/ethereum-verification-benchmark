@@ -170,14 +170,11 @@ def run_group(
     for key, template in (profile.get("env") or {}).items():
         env[str(key)] = _expand(str(template), substitutions)
 
-    stdout = stderr = ""
-    return_code = 0
-    harness_status = "dry_run"
-    if not dry_run:
+    def _run_cli(cli_command: list[str], remaining_seconds: float) -> tuple[int, str, str]:
         process: subprocess.Popen[str] | None = None
         try:
             process = subprocess.Popen(
-                command,
+                cli_command,
                 cwd=built.path,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
@@ -185,18 +182,64 @@ def run_group(
                 env=env,
                 start_new_session=True,
             )
-            stdout, stderr = process.communicate(timeout=timeout_seconds)
-            return_code = process.returncode
-            harness_status = "completed" if return_code == 0 else "harness_error"
+            out, err = process.communicate(timeout=max(30, remaining_seconds))
+            return process.returncode, out, err
         except subprocess.TimeoutExpired:
             if process is not None:
                 try:
                     os.killpg(process.pid, signal.SIGKILL)
                 except ProcessLookupError:
                     pass
-                stdout, stderr = process.communicate()
-            return_code = 124
-            harness_status = "timeout"
+                out, err = process.communicate()
+                return 124, out, err
+            return 124, "", ""
+
+    def _quick_check() -> tuple[bool, str]:
+        completed = subprocess.run(
+            ["./harness/check.sh"], cwd=built.path, capture_output=True, text=True, check=False, timeout=600
+        )
+        output = (completed.stdout + completed.stderr).strip()
+        return completed.returncode == 0, output[-1500:]
+
+    stdout = stderr = ""
+    return_code = 0
+    harness_status = "dry_run"
+    invocations: list[dict[str, object]] = []
+    max_invocations = int(os.environ.get("SHELL_AGENT_MAX_INVOCATIONS", "6"))
+    continue_template = profile.get("continue_command")
+    if not dry_run:
+        deadline = time.time() + timeout_seconds
+        for invocation_index in range(1, max_invocations + 1):
+            cli_command = command
+            if invocation_index > 1 and isinstance(continue_template, list):
+                passed, check_tail = _quick_check()
+                if passed:
+                    break
+                continue_subs = substitutions | {
+                    "continue_prompt": (
+                        "The Lean check still fails. Latest output tail:\n"
+                        f"{check_tail}\n"
+                        "Continue fixing the proof in the editable file until ./harness/check.sh passes. "
+                        "Keep the theorem statement byte-identical; no sorry/admit/axiom."
+                    )
+                }
+                cli_command = [_expand(str(part), continue_subs) for part in continue_template]
+            elif invocation_index > 1:
+                break
+            started_invocation = time.time()
+            return_code, out, err = _run_cli(cli_command, deadline - time.time())
+            stdout += out
+            stderr += err
+            invocations.append(
+                {
+                    "index": invocation_index,
+                    "exit_code": return_code,
+                    "duration_seconds": round(time.time() - started_invocation, 3),
+                }
+            )
+            harness_status = "completed" if return_code == 0 else ("timeout" if return_code == 124 else "harness_error")
+            if return_code != 0 or time.time() >= deadline or proxy.budget_exhausted():
+                break
     proxy.stop()
     shutil.rmtree(fake_home, ignore_errors=True)
 
@@ -247,6 +290,7 @@ def run_group(
         "duration_seconds": round(time.time() - start, 3),
         "harness_status": harness_status,
         "harness_exit_code": return_code,
+        "invocations": invocations,
         "timeout_seconds": timeout_seconds,
         "warm_build": warm,
         "usage": dict(proxy.usage),
