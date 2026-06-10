@@ -39,7 +39,7 @@ The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) ar
 
 ## Benchmark suite
 
-19 active cases, 117 active task manifests, and 8 backlog task manifests are drawn from real-world contracts. All active and backlog task manifests are currently runnable proof tasks with hidden reference proofs.
+21 active cases, 124 active task manifests, and 8 backlog task manifests are drawn from real-world contracts. All active and backlog task manifests are currently runnable proof tasks with hidden reference proofs.
 
 | Case | Source | Tasks |
 |------|--------|-------|
@@ -55,8 +55,10 @@ The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) ar
 | `nexus_mutual/ramm_price_band` | Nexus Mutual RAMM | 4 |
 | `onedelta/caller_address_integrity` | OneDelta callback caller integrity | 10 |
 | `paladin_votes/stream_recovery_claim_usdc` | Paladin Votes | 26 |
+| `piku/fund_conservation` | Piku / Inverter oracle funding manager | 4 |
 | `polygon/agglayer_bridge` | Polygon Agglayer bridge | 2 |
 | `reserve/auction_price_band` | Reserve DTF | 4 |
+| `rootstock/flyover_quote_lifecycle` | Rootstock Flyover quote lifecycle | 3 |
 | `safe/owner_manager_reach` | Safe OwnerManager | 15 |
 | `termmax/order_v2_buy_xt_single_segment` | TermMax Order V2 | 1 |
 | `usual/dao_collateral` | Usual DaoCollateral | 5 |
@@ -88,25 +90,55 @@ Coverage is strongest today for accounting, local state preservation, storage ef
 
 The supported benchmark harnesses are:
 
-- `default`: built-in Lean-tools harness using local proof candidates plus an OpenAI-compatible API fallback.
+- `default`: built-in Lean-tools harness. Its default `fair` mode is agent-first: no hardcoded local proof candidates, no theorem/task-name dispatch, and all model actions go through Lean-native tools logged in run artifacts.
 - `grok-build`: Grok Build shell harness.
+
+Default harness modes:
+
+- `fair`: OpenAI-compatible tool loop with `show_task`, `read_file`, `show_goal`, `definition_outline`, `tactic_sandbox`, `check_proof`, `try_tactics`, and `search_declarations`. Fair workspaces exclude group-specific Grindset helpers and fair proof patching does not add broad `Benchmark.Grindset` imports. Native tool calls and JSON-encoded text tool calls are both supported. This is the headline comparison mode.
+- `fair+libs`: same agent-first loop as `fair`, but allows explicit inspection of the generic Grindset helper modules copied into the fair workspace. It still excludes group-specific helpers and theorem-specific local candidates.
+- `tuned`: generic heuristic/API comparison mode without hardcoded local proof candidates or group-specific Grindset helpers.
+- `legacy`: compatibility mode for the previous local-candidate and group-specific Grindset behavior. Use this only as an upper-bound/debug signal, not as the headline comparison.
+
+Fair-mode chat requests retry transient provider failures by default and log retry events in `conversations/*.jsonl`. Provider-specific context-window hints such as `n_ctx` are opt-in through `DEFAULT_HARNESS_CONTEXT_TOKENS`. For small-context providers, set `DEFAULT_HARNESS_NATIVE_TOOLS=0` and lower `DEFAULT_HARNESS_TOOL_RESULT_CHARS` / `DEFAULT_HARNESS_TASK_SUMMARY_CHARS`; the harness will use compact JSON tool calls and keep full tool output in artifacts. Fair tools can search and read public Lean dependency files under `.lake`, while hidden proof files, GeneratedPreview, `.env`, and Grindset remain blocked by default.
+
+Fair task results include `failure_class` so provider failures, no-tool loops, context loops, parse errors, unknown names, unsolved goals, Lean timeouts, and other Lean failures are distinguishable in run artifacts.
+
+Provider switching is configured in `.env`. Set `DEFAULT_HARNESS_PROVIDER=qwen` or `DEFAULT_HARNESS_PROVIDER=glm` to make the default harness read `DEFAULT_HARNESS_QWEN_*` or `DEFAULT_HARNESS_GLM_*` values before the generic `DEFAULT_HARNESS_*` endpoint/model/key.
+
+Fair-mode tools do not expose `Benchmark/Grindset/*` files by default. Set `DEFAULT_HARNESS_ALLOW_GRINDSET_TOOLS=1` only for explicit research runs that measure the value of generic Grindset helpers.
+
+Both `default --mode fair` and `grok-build` receive the same generated `harness/TASK_SUMMARY.md` in each run workspace. It lists the target theorem, editable files, implementation/specification files, check command, and policy. Grok also gets the initial `./harness/check.sh` result in that summary so it does not spend turns rediscovering the first Lean failure.
+
+Budget profiles:
+
+- `--budget quick`: CI-sized smoke budget.
+- `--budget normal`: small comparison budget.
+- `--budget deep`: long agent budget for real attempts.
 
 ```bash
 # Run a single task with the default harness
-python3 -m harness.cli run-task lido/vaulthub_locked/locked_funds_solvency --harness default
+python3 -m harness.cli run-task lido/vaulthub_locked/locked_funds_solvency --harness default --mode fair
+
+# Run a deeper fair agent attempt
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair --budget deep
 
 # Run a full case with the default harness
-./scripts/run_default_harness_group.sh lido/vaulthub_locked --max-attempts 2
+./scripts/run_default_harness_group.sh lido/vaulthub_locked --mode fair --max-attempts 2
 
 # Run the full suite with the default harness
-./scripts/run_default_harness_suite.sh --suite active --max-attempts 1
+./scripts/run_default_harness_suite.sh --suite active --mode fair --max-attempts 1
 
 # Run Grok Build
 VERITY_ALLOW_HOST_GROK_AUTH=1 ./scripts/run_grok_build_group.sh ethereum/deposit_contract_minimal --max-turns 20
+VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget deep
 ./scripts/run_grok_build_suite.sh --suite active
 
-# Compare two run artifacts
-python3 -m harness.cli compare --runs results/runs/<default-run> results/runs/<grok-build-run>
+# Compare fair/tuned/legacy runs. Treat legacy as a debug upper bound.
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode tuned
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode legacy
+python3 -m harness.cli compare --runs results/runs/<default-fair-run> results/runs/<default-tuned-run> results/runs/<default-legacy-run>
 ```
 
 Default harness API configuration:

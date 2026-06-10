@@ -18,9 +18,17 @@
   "system_prompt_files": ["harness/PROMPT.md", "harness/POLICY.md", "harness/TOOLS.md", "harness/PROOF_PATTERNS.md"],
   "temperature": 0.0,
   "max_completion_tokens": 1,
+  "max_attempts": 1,
+  "max_tool_calls": 24,
   "headers": {},
   "header_envs": {},
   "extra_body": {},
   "request_timeout_seconds": 60,
-  "optional_secret_env": ["DEFAULT_HARNESS_API_KEY", "GAZELLA_API_KEY", "OPENAI_API_KEY"]
+  "optional_secret_env": [
+    "DEFAULT_HARNESS_API_KEY",
+    "DEFAULT_HARNESS_QWEN_API_KEY",
+    "DEFAULT_HARNESS_GLM_API_KEY",
+    "GAZELLA_API_KEY",
+    "OPENAI_API_KEY"
+  ]
 }

@@ -38,6 +38,14 @@ def main() -> int:
             "import Benchmark.Cases.Ethereum.DepositContractMinimal.Specs",
             "import Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
         ),
+        "hidden_import_suffix": lambda text: text.replace(
+            "import Benchmark.Cases.Ethereum.DepositContractMinimal.Specs",
+            "import Benchmark.Cases.Safe.OwnerManagerReach.OpenProofs",
+        ),
+        "hidden_import_multi": lambda text: text.replace(
+            "import Benchmark.Cases.Ethereum.DepositContractMinimal.Specs",
+            "import Benchmark.Cases.Ethereum.DepositContractMinimal.Specs Benchmark.Cases.Safe.OwnerManagerReach.OpenProofs",
+        ),
         "statement_mismatch": lambda text: text.replace(
             "(hMin : depositAmount >= 1000000000)",
             "(hMin : depositAmount >= 1000000001)",
@@ -46,6 +54,8 @@ def main() -> int:
     expected = {
         "placeholder": "forbidden_placeholder",
         "hidden_import": "hidden_import",
+        "hidden_import_suffix": "hidden_import",
+        "hidden_import_multi": "hidden_import",
         "statement_mismatch": "theorem_statement_mismatch",
     }
     failures = []
