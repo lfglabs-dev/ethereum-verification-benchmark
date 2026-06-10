@@ -47,8 +47,6 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
             run = json.loads(run_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             continue
-        if run.get("harness_id") != "default":
-            continue
         score = run.get("verifier", {}).get("score", {})
         attempts = None
         tool_calls = None
@@ -66,6 +64,8 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
         rows.append(
             {
                 "run_id": run.get("run_id"),
+                "harness": run.get("harness_id"),
+                "usage_source": run.get("usage_source", "in-loop"),
                 "model": run.get("model"),
                 "task_ref": run.get("task_ref") or run.get("group_id"),
                 "mode": run.get("mode"),
@@ -85,9 +85,9 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
 
 def _dedupe_latest(rows: list[dict[str, object]]) -> list[dict[str, object]]:
     """Keep only the latest run per (model, task_ref)."""
-    latest: dict[tuple[str, str], dict[str, object]] = {}
+    latest: dict[tuple[str, str, str], dict[str, object]] = {}
     for row in sorted(rows, key=lambda item: str(item.get("started_at") or "")):
-        latest[(str(row["model"]), str(row["task_ref"]))] = row
+        latest[(str(row["harness"]), str(row["model"]), str(row["task_ref"]))] = row
     return list(latest.values())
 
 
@@ -127,21 +127,23 @@ def _leaderboard_markdown(summaries: dict[str, dict[str, object]], names: dict[s
     lines = [
         "# Verity Benchmark Leaderboard",
         "",
-        f"Generated {meta.get('date')} · commit `{meta.get('sha', 'unknown')[:9]}` · budget `{meta.get('budget', '?')}` · harness `default/fair`",
+        f"Generated {meta.get('date')} · commit `{meta.get('sha', 'unknown')[:9]}` · budget `{meta.get('budget', '?')}`",
         "",
-        "| Model | Pass | Median attempts to pass | Median completion tokens to pass | Total completion tokens |",
-        "|---|---|---|---|---|",
+        "| Harness | Model | Pass | Median attempts to pass | Median completion tokens to pass | Total completion tokens |",
+        "|---|---|---|---|---|---|",
     ]
     def sort_key(item: tuple[str, dict[str, object]]) -> tuple[float, float]:
         summary = item[1]
         tokens = summary["median_completion_tokens_to_pass"]
         return (-float(summary["pass_rate"]), float(tokens) if tokens else float("inf"))
 
-    for model, summary in sorted(summaries.items(), key=sort_key):
+    for combo, summary in sorted(summaries.items(), key=sort_key):
+        harness, _, model = combo.partition(":")
+        harness_display = "builtin (fair)" if harness == "default" else harness
         display = names.get(model, model)
         tokens = summary["median_completion_tokens_to_pass"]
         lines.append(
-            f"| {display} | {summary['passed']}/{summary['tasks']} | "
+            f"| {harness_display} | {display} | {summary['passed']}/{summary['tasks']} | "
             f"{summary['median_attempts_to_pass'] if summary['median_attempts_to_pass'] is not None else '—'} | "
             f"{f'{tokens:,}' if tokens else '—'} | {summary['total_completion_tokens']:,} |"
         )
@@ -172,8 +174,11 @@ def main() -> int:
             meta[key] = value
 
     rows = _dedupe_latest(collect_runs(args.runs_dir))
-    models = sorted({str(row["model"]) for row in rows})
-    summaries = {model: _model_summary([row for row in rows if row["model"] == model]) for model in models}
+    combos = sorted({(str(row["harness"]), str(row["model"])) for row in rows})
+    summaries = {
+        f"{harness}:{model}": _model_summary([row for row in rows if row["harness"] == harness and row["model"] == model])
+        for harness, model in combos
+    }
 
     out = args.out
     badges = out / "badges"
@@ -183,12 +188,16 @@ def main() -> int:
         encoding="utf-8",
     )
     (out / "leaderboard.md").write_text(_leaderboard_markdown(summaries, names, meta), encoding="utf-8")
-    for model in models:
+    for harness, model in combos:
+        key = f"{harness}:{model}"
         label = names.get(model, model)
-        (badges / f"{_slug(model)}.json").write_text(json.dumps(_badge(label, summaries[model])) + "\n", encoding="utf-8")
+        if harness != "default":
+            label = f"{label} ({harness})"
+        slug = _slug(model) if harness == "default" else f"{_slug(harness)}--{_slug(model)}"
+        (badges / f"{slug}.json").write_text(json.dumps(_badge(label, summaries[key])) + "\n", encoding="utf-8")
     total = _model_summary(rows)
     (badges / "overall.json").write_text(json.dumps(_badge("verity bench", total)) + "\n", encoding="utf-8")
-    print(f"aggregated {len(rows)} runs for {len(models)} model(s) into {out}")
+    print(f"aggregated {len(rows)} runs for {len(combos)} harness-model combo(s) into {out}")
     return 0
 
 
