@@ -74,9 +74,9 @@ Coverage is strongest today for accounting, local state preservation, storage ef
 ## Benchmark results
 
 [![Verity bench](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Foverall.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
-[![MiniMax](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-smart.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
-[![Grok Code](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fgrok.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
-[![MiniMax Fast](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-fast.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
+[![MiniMax M3](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-smart.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
+[![Grok Build 0.1](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fgrok.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
+[![GLM 5 Turbo](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-fast.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
 
 Results are produced by the manually-dispatched [Benchmark workflow](.github/workflows/benchmark.yml)
 (models, display names, budget, task slice, and API endpoint are all dispatch inputs) and published to

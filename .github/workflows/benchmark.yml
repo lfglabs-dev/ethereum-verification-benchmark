@@ -9,7 +9,7 @@ on:
     inputs:
       models:
         description: "Comma-separated model entries, `id` or `id=Display Name`"
-        default: "builtin/smart=MiniMax,grok=Grok Code,builtin/fast=MiniMax Fast"
+        default: "builtin/smart=MiniMax M3,grok=Grok Build 0.1,builtin/fast=GLM 5 Turbo"
       budget:
         description: "Budget profile"
         type: choice
