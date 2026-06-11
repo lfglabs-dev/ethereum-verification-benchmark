@@ -234,6 +234,7 @@ def run_group(
             if invocation_index > 1 and isinstance(continue_template, list):
                 passed, check_tail = _quick_check()
                 if passed:
+                    harness_status = "completed"
                     break
                 continue_subs = substitutions | {
                     "continue_prompt": (
@@ -258,7 +259,11 @@ def run_group(
                 }
             )
             harness_status = "completed" if return_code == 0 else ("timeout" if return_code == 124 else "harness_error")
-            if return_code != 0 or time.time() >= deadline or proxy.budget_exhausted():
+            if return_code == 124 or time.time() >= deadline or proxy.budget_exhausted():
+                break
+            # A non-zero exit only ends the loop when there is no configured
+            # continue path; otherwise the next iteration re-checks and resumes.
+            if return_code != 0 and not isinstance(continue_template, list):
                 break
     proxy.stop()
     shutil.rmtree(fake_home, ignore_errors=True)

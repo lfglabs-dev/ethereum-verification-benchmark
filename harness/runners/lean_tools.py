@@ -2578,7 +2578,15 @@ def _execute_fair_tool(
         for label, proof in proofs:
             candidate = _candidate_from_response(original, proof, task.get("theorem_name"))
             candidate_statement = " ".join(_theorem_statement(candidate, task.get("theorem_name")).split())
-            if original_statement and candidate_statement != original_statement:
+            # Fail closed when the skeleton statement cannot be extracted:
+            # proof-body patches keep the statement byte-identical by
+            # construction, so only whole-file submissions can change it.
+            statement_guard_failed = (
+                candidate_statement != original_statement
+                if original_statement
+                else _looks_like_full_file(_extract_lean_file(proof))
+            )
+            if statement_guard_failed:
                 attempt = {
                     "attempt": f"tool:{name}",
                     "status": "rejected_statement_mismatch",

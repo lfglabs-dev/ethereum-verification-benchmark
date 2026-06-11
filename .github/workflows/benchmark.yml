@@ -100,9 +100,17 @@ jobs:
     env:
       DEFAULT_HARNESS_MODEL: ${{ matrix.model }}
       DEFAULT_HARNESS_BASE_URL: ${{ inputs.base_url != '' && inputs.base_url || vars.DEFAULT_HARNESS_BASE_URL }}
-      DEFAULT_HARNESS_API_KEY: ${{ secrets[inputs.api_key_secret] }}
+      DEFAULT_HARNESS_API_KEY: ${{ secrets[format('{0}', inputs.api_key_secret)] }}
     steps:
       - uses: actions/checkout@v4
+      - name: Ensure API key secret resolved
+        env:
+          SECRET_NAME: ${{ inputs.api_key_secret }}
+        run: |
+          if [ -z "$DEFAULT_HARNESS_API_KEY" ]; then
+            echo "secret '$SECRET_NAME' is missing or empty" >&2
+            exit 1
+          fi
       - name: Install elan
         run: |
           curl -sSfL https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain none
@@ -120,18 +128,29 @@ jobs:
           TASKS: ${{ needs.prepare.outputs.tasks }}
           BUDGET: ${{ inputs.budget }}
         run: |
+          # A non-zero run-task exit means the model failed the proof — that is
+          # benchmark data, not a job failure. Fail the job only on infra
+          # errors (harness_error / missing_credentials / missing run.json).
           set +e
+          infra_failures=0
           for task in $TASKS; do
             echo "::group::$task"
-            python3 -m harness.cli run-task "$task" --harness default --mode fair --budget "$BUDGET"
-            echo "task $task exited with $?"
+            run_dir=$(python3 -m harness.cli run-task "$task" --harness default --mode fair --budget "$BUDGET" | tee /dev/stderr | tail -n1)
+            echo "task $task exited with ${PIPESTATUS[0]}"
+            status=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('harness_status',''))" "$run_dir/run.json" 2>/dev/null)
+            if [ "$status" != "completed" ]; then
+              echo "::error::$task harness_status='${status:-missing run.json}'"
+              infra_failures=$((infra_failures + 1))
+            fi
             echo "::endgroup::"
           done
-          exit 0
+          exit "$((infra_failures > 0))"
       - name: Prune heavy artifacts
+        if: always()
         run: |
           find results/runs -type d \( -name conversations -o -name tool-calls -o -name attempts -o -name submitted -o -name verifier \) -exec rm -rf {} + 2>/dev/null || true
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: bench-${{ strategy.job-index }}-${{ matrix.slug }}
           path: results/runs
