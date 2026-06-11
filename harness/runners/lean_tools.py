@@ -185,6 +185,7 @@ def chat_completion(
     last_error: ChatCompletionError | None = None
     retry_after_seconds: float | None = None
     for attempt in range(1, max_request_attempts + 1):
+        retry_after_seconds = None
         started = time.time()
         request = urllib.request.Request(f"{base_url.rstrip('/')}/chat/completions", data=body, headers={"Content-Type": "application/json", "User-Agent": HTTP_USER_AGENT}, method="POST")
         api_key = _api_key()
@@ -323,9 +324,15 @@ def _indent_proof_body(text: str) -> str:
         body = body[theorem_body.end() :]
     body = re.sub(r"(?m)^end\s+[A-Za-z0-9_'.]+\s*$.*", "", body, flags=re.DOTALL)
     lines: list[str] = []
+    in_preamble = True
     for raw_line in body.splitlines():
         line = raw_line.rstrip()
         stripped = line.strip()
+        if in_preamble and (
+            not stripped or stripped.startswith(("import ", "namespace ", "open ", "/--", "-/", "--"))
+        ):
+            continue
+        in_preamble = False
         if stripped.startswith(("Explanation", "This proof", "The proof", "Note:", "```")):
             break
         lines.append(line)
@@ -510,7 +517,8 @@ def _run_lean_module(
         # Fall back to a module build when the file check fails for build-graph
         # reasons (stale or missing dependency oleans), not proof reasons.
         lowered = output.lower()
-        if code not in (0, 124) and ("unknown module" in lowered or "no such file" in lowered or "object file" in lowered or "olean" in lowered):
+        dependency_error = re.search(r"unknown module prefix|unknown package|object file .* does not exist|no such file or directory|bad import", lowered)
+        if code not in (0, 124) and dependency_error:
             return _run_lean_command(workspace, ["lake", "build", module], timeout_seconds)
         return code, output
     return _run_lean_command(workspace, ["lake", "build", module], timeout_seconds)
@@ -2393,10 +2401,27 @@ def _append_jsonl(path: Path, payload: dict[str, object]) -> None:
         handle.write(json.dumps(payload, sort_keys=True) + "\n")
 
 
+def _shrink_strings(value: object, limit: int) -> object:
+    if isinstance(value, str) and len(value) > limit:
+        return value[:limit] + f"...[truncated {len(value) - limit} chars]"
+    if isinstance(value, dict):
+        return {key: _shrink_strings(item, limit) for key, item in value.items()}
+    if isinstance(value, list):
+        return [_shrink_strings(item, limit) for item in value]
+    return value
+
+
 def _tool_result_content(result: dict[str, object]) -> str:
     serialized = json.dumps(result, sort_keys=True)
     if len(serialized) <= DEFAULT_TOOL_RESULT_CHARS:
         return serialized
+    # First shrink individual long strings (usually raw Lean output) so the
+    # structured fields (first_error, hint, stuck) survive intact.
+    for limit in (2000, 800, 300):
+        shrunk = json.dumps(_shrink_strings(result, limit), sort_keys=True)
+        if len(shrunk) <= DEFAULT_TOOL_RESULT_CHARS:
+            return shrunk
+    serialized = shrunk
     head_budget = max(0, DEFAULT_TOOL_RESULT_CHARS - 160)
     while True:
         payload = {
@@ -3266,7 +3291,8 @@ def run_group(
         raise ValueError("max_tool_calls must be non-negative")
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_subject = task_ref or group_id
-    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{RUN_SLUG}-{mode}-{run_subject.replace('/', '__')}"
+    model_slug = "".join(ch if ch.isalnum() else "-" for ch in DEFAULT_MODEL).strip("-").lower()
+    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{RUN_SLUG}-{mode}-{model_slug}-{run_subject.replace('/', '__')}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     start = time.time()

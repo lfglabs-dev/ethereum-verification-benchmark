@@ -93,7 +93,8 @@ def run_group(
     start = time.time()
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_subject = task_ref or group_id
-    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{harness_id}-{run_subject.replace('/', '__')}"
+    model_slug = "".join(ch if ch.isalnum() else "-" for ch in model).strip("-").lower()
+    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{harness_id}-{model_slug}-{run_subject.replace('/', '__')}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
 

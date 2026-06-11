@@ -354,6 +354,7 @@ def main() -> int:
     parser.add_argument("--names", default="", help="model=Display Name,comma separated")
     parser.add_argument("--prices", default="", help="model=input_per_M/output_per_M USD, comma separated (overrides --openrouter)")
     parser.add_argument("--estimates", default="", help="harness:model=field:value,... ; display estimates where usage is unmeasured")
+    parser.add_argument("--merge", type=Path, default=None, help="previously published results.json to merge (latest run per harness/model/task wins)")
     parser.add_argument("--openrouter", default="", help="local_model=openrouter_id pairs; fetches live pricing from the OpenRouter API")
     parser.add_argument("--meta", action="append", default=[], help="key=value metadata, repeatable")
     args = parser.parse_args()
@@ -367,7 +368,14 @@ def main() -> int:
 
     prices = _openrouter_prices(args.openrouter)
     prices.update(_parse_prices(args.prices))
-    rows = _dedupe_latest(collect_runs(args.runs_dir))
+    collected = collect_runs(args.runs_dir)
+    if args.merge and args.merge.is_file():
+        try:
+            previous = json.loads(args.merge.read_text(encoding="utf-8")).get("runs", [])
+            collected = [row for row in previous if isinstance(row, dict)] + collected
+        except (OSError, json.JSONDecodeError) as exc:
+            print(f"warning: could not merge previous results ({exc})")
+    rows = _dedupe_latest(collected)
     for row in rows:
         cost = _row_cost(row, prices)
         if cost is not None:
@@ -394,7 +402,15 @@ def main() -> int:
         slug = _slug(model) if harness == "default" else f"{_slug(harness)}--{_slug(model)}"
         (badges / f"{slug}.json").write_text(json.dumps(_badge(label, summaries[key])) + "\n", encoding="utf-8")
     total = _model_summary(rows)
-    (badges / "overall.json").write_text(json.dumps(_badge("verity bench", total)) + "\n", encoding="utf-8")
+    overall_passed = sum(1 for row in rows if row["passed"])
+    overall = {
+        "schemaVersion": 1,
+        "label": "verity bench",
+        "message": f"{overall_passed}/{len(rows)} runs verified",
+        "color": "brightgreen" if rows and overall_passed == len(rows) else ("yellow" if overall_passed else "red"),
+    }
+    (badges / "overall.json").write_text(json.dumps(overall) + "\n", encoding="utf-8")
+    del total
     print(f"aggregated {len(rows)} runs for {len(combos)} harness-model combo(s) into {out}")
     return 0
 

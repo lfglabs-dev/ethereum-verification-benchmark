@@ -63,6 +63,8 @@ class MeteringProxy:
             self._flush_locked()
 
     def budget_exhausted(self) -> bool:
+        # Soft cap: checked between requests, so concurrent in-flight
+        # completions can overshoot by at most one response each.
         if not self.completion_token_budget:
             return False
         with self.lock:
@@ -135,6 +137,7 @@ class MeteringProxy:
                     self.send_header("Transfer-Encoding", "chunked")
                     self.end_headers()
                     buffer = b""
+                    self._last_stream_usage = None
                     while True:
                         chunk = response.read(4096)
                         if not chunk:
@@ -146,6 +149,10 @@ class MeteringProxy:
                             line, buffer = buffer.split(b"\n", 1)
                             self._scan_sse_line(line)
                     self._scan_sse_line(buffer)
+                    # Providers send cumulative usage chunks; record only the
+                    # final one so a stream counts exactly once.
+                    if isinstance(self._last_stream_usage, dict):
+                        proxy.record_usage(self._last_stream_usage)
                     self.wfile.write(b"0\r\n\r\n")
                 else:
                     data = response.read()
@@ -176,8 +183,11 @@ class MeteringProxy:
                 except (ValueError, UnicodeDecodeError):
                     return
                 usage = decoded.get("usage") if isinstance(decoded, dict) else None
-                if isinstance(usage, dict) and usage.get("total_tokens"):
-                    proxy.record_usage(usage)
+                if isinstance(usage, dict) and any(
+                    isinstance(usage.get(key), (int, float)) and usage.get(key)
+                    for key in ("total_tokens", "completion_tokens", "prompt_tokens")
+                ):
+                    self._last_stream_usage = usage
 
             do_POST = _forward
             do_GET = _forward

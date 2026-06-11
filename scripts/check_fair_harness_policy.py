@@ -47,8 +47,17 @@ def main() -> int:
         "unfold sample\n    trivial",
         "sample",
     )
-    if "\n      trivial" in multiline_candidate:
-        errors.append("fair/model proof patching should normalize over-indented tactic bodies")
+    # Relative indentation must be preserved verbatim: collapsing nested lines
+    # corrupts calc blocks and multi-line simp argument lists.
+    if "\n      trivial" not in multiline_candidate:
+        errors.append("fair/model proof patching must preserve relative tactic indentation")
+    calc_candidate = lean_tools._candidate_from_response(
+        original,
+        "calc a = b := by rw [h]\n  _ = c := by simp",
+        "sample",
+    )
+    if "\n    _ = c := by simp" not in calc_candidate:
+        errors.append("fair/model proof patching must keep calc steps inside the calc block")
     comparison_candidate = lean_tools._candidate_from_comparison_response(original, "trivial", "sample")
     if "import Benchmark.Grindset" not in comparison_candidate:
         errors.append("comparison-mode API fallback should preserve previous Benchmark.Grindset import behavior")

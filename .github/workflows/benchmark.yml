@@ -68,6 +68,14 @@ jobs:
               entries.append({"model": model.strip(), "name": (name or model).strip(), "slug": slug})
           print("matrix=" + json.dumps({"include": entries}))
           EOF
+      - name: Validate API key secret name
+        env:
+          SECRET_NAME: ${{ inputs.api_key_secret }}
+        run: |
+          if ! printf '%s' "$SECRET_NAME" | grep -Eq '^(DEFAULT_HARNESS_API_KEY|BENCH_[A-Z0-9_]+)$'; then
+            echo "api_key_secret must be DEFAULT_HARNESS_API_KEY or match BENCH_[A-Z0-9_]+" >&2
+            exit 1
+          fi
       - name: Resolve task list
         id: tasks
         env:
@@ -125,7 +133,7 @@ jobs:
           find results/runs -type d \( -name conversations -o -name tool-calls -o -name attempts -o -name submitted -o -name verifier \) -exec rm -rf {} + 2>/dev/null || true
       - uses: actions/upload-artifact@v4
         with:
-          name: bench-${{ matrix.slug }}
+          name: bench-${{ strategy.job-index }}-${{ matrix.slug }}
           path: results/runs
           retention-days: 30
 
@@ -140,6 +148,11 @@ jobs:
           pattern: bench-*
           path: results/runs
           merge-multiple: true
+      - name: Fetch previously published results
+        run: |
+          mkdir -p previous
+          curl -sf "https://raw.githubusercontent.com/${{ github.repository }}/benchmark-results/results.json" \
+            -o previous/results.json || echo "no previous results"
       - name: Aggregate
         env:
           MODELS_INPUT: ${{ inputs.models }}
@@ -160,6 +173,7 @@ jobs:
           )
           python3 scripts/aggregate_runs.py \
             --runs-dir results/runs --out out \
+            --merge previous/results.json \
             --names "$NAMES" \
             --prices "$PRICES_INPUT" \
             --meta "budget=$BUDGET" \
