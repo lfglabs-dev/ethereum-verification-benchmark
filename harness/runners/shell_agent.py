@@ -156,9 +156,28 @@ def run_group(
         "home": str(fake_home),
     }
     for rel, template in (profile.get("config_files") or {}).items():
-        target = built.path / _expand(str(rel), substitutions)
+        rel = _expand(str(rel), substitutions)
+        # "~/..." config files land in the isolated HOME (auth/config the agent
+        # should use but not see in its workspace); everything else in the workspace.
+        target = (fake_home / rel[2:]) if rel.startswith("~/") else (built.path / rel)
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(_expand(str(template), substitutions), encoding="utf-8")
+    host_auth = profile.get("host_auth")
+    auth_mode = "proxy"
+    if isinstance(host_auth, dict):
+        flag = str(host_auth.get("env_flag") or "")
+        source = Path(str(host_auth.get("source") or "")).expanduser()
+        if flag and os.environ.get(flag) == "1" and source.is_file():
+            dest = fake_home / str(host_auth.get("dest") or source.name)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, dest)
+            auth_mode = "host-auth"
+        else:
+            proxy.stop()
+            shutil.rmtree(fake_home, ignore_errors=True)
+            raise RuntimeError(
+                f"harness {harness_id} requires host auth: set {flag}=1 with {source} present"
+            )
     command = [_expand(str(part), substitutions) for part in profile["command"]]
     env = os.environ.copy()
     env["HOME"] = str(fake_home)
@@ -243,6 +262,19 @@ def run_group(
     proxy.stop()
     shutil.rmtree(fake_home, ignore_errors=True)
 
+    usage = dict(proxy.usage)
+    usage_source = "metered"
+    usage_pattern = profile.get("usage_pattern")
+    if isinstance(usage_pattern, str) and usage["total_tokens"] == 0:
+        import re
+
+        total = 0
+        for match in re.finditer(usage_pattern, stdout + "\n" + stderr):
+            total += int(re.sub(r"[^\d]", "", match.group(1)))
+        if total:
+            usage = {"prompt_tokens": None, "completion_tokens": None, "total_tokens": total, "requests": None}
+            usage_source = "self-reported"
+
     (run_dir / "stdout.txt").write_text(stdout or "", encoding="utf-8")
     (run_dir / "stderr.txt").write_text(stderr or "", encoding="utf-8")
     shutil.copy2(built.manifest_path, run_dir / "workspace-manifest.json")
@@ -293,14 +325,15 @@ def run_group(
         "invocations": invocations,
         "timeout_seconds": timeout_seconds,
         "warm_build": warm,
-        "usage": dict(proxy.usage),
-        "usage_source": "metered",
+        "auth_mode": auth_mode,
+        "usage": usage,
+        "usage_source": usage_source,
         "token_budget": token_budget,
         "workspace": str(built.path) if keep_workspace else None,
         "verifier": verifier_result,
     }
     (run_dir / "harness-response.json").write_text(
-        json.dumps({"status": harness_status, "command": command, "tasks": [{"task_ref": task_ref or group_id, "usage": dict(proxy.usage)}]}, indent=2) + "\n",
+        json.dumps({"status": harness_status, "command": command, "tasks": [{"task_ref": task_ref or group_id, "usage": usage}]}, indent=2) + "\n",
         encoding="utf-8",
     )
     (run_dir / "harness-request.json").write_text(

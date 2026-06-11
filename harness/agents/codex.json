@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "agent_id": "codex",
+  "adapter": "shell",
+  "track": "group/shell",
+  "command": [
+    "codex",
+    "exec",
+    "--skip-git-repo-check",
+    "--dangerously-bypass-approvals-and-sandbox",
+    "-m",
+    "{model}",
+    "-C",
+    "{workspace}",
+    "{prompt}"
+  ],
+  "continue_command": [
+    "codex",
+    "exec",
+    "resume",
+    "--last",
+    "--skip-git-repo-check",
+    "--dangerously-bypass-approvals-and-sandbox",
+    "-C",
+    "{workspace}",
+    "{continue_prompt}"
+  ],
+  "env": {
+    "CODEX_HOME": "{home}/.codex"
+  },
+  "host_auth": {
+    "source": "~/.codex/auth.json",
+    "dest": ".codex/auth.json",
+    "env_flag": "VERITY_ALLOW_HOST_CODEX_AUTH"
+  },
+  "usage_pattern": "tokens used\\s*\\n([\\d\\s,\\u202f.]+)",
+  "version_command": [
+    "codex",
+    "--version"
+  ]
+}
