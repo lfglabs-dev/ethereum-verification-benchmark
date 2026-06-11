@@ -26,6 +26,41 @@ def _slug(model: str) -> str:
     return "".join(ch if ch.isalnum() else "-" for ch in model).strip("-").lower()
 
 
+def _parse_prices(raw: str) -> dict[str, tuple[float, float]]:
+    """Parse "model=input_per_M/output_per_M" pairs (USD per million tokens)."""
+    prices: dict[str, tuple[float, float]] = {}
+    for pair in raw.split(","):
+        pair = pair.strip()
+        if not pair or "=" not in pair:
+            continue
+        model, rate = pair.split("=", 1)
+        if "/" not in rate:
+            continue
+        input_rate, output_rate = rate.split("/", 1)
+        try:
+            prices[model.strip()] = (float(input_rate), float(output_rate))
+        except ValueError:
+            continue
+    return prices
+
+
+def _row_cost(row: dict[str, object], prices: dict[str, tuple[float, float]]) -> float | None:
+    rates = prices.get(str(row.get("model")))
+    if not rates:
+        return None
+    prompt = row.get("prompt_tokens")
+    completion = row.get("completion_tokens")
+    if not isinstance(prompt, (int, float)) or not isinstance(completion, (int, float)):
+        return None
+    return prompt * rates[0] / 1_000_000 + completion * rates[1] / 1_000_000
+
+
+def _fmt_cost(value: object) -> str:
+    if not isinstance(value, (int, float)):
+        return "—"
+    return f"${value:.2f}" if value >= 0.10 else f"${value:.3f}"
+
+
 def _parse_names(raw: str) -> dict[str, str]:
     names: dict[str, str] = {}
     for pair in raw.split(","):
@@ -93,6 +128,8 @@ def _dedupe_latest(rows: list[dict[str, object]]) -> list[dict[str, object]]:
 
 def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
     passed = [row for row in rows if row["passed"]]
+    costs = [row["cost_usd"] for row in passed if isinstance(row.get("cost_usd"), (int, float))]
+    all_costs = [row["cost_usd"] for row in rows if isinstance(row.get("cost_usd"), (int, float))]
     completion = [row["completion_tokens"] for row in passed if isinstance(row["completion_tokens"], (int, float))]
     prompt = [row["prompt_tokens"] for row in passed if isinstance(row["prompt_tokens"], (int, float))]
     attempts = [row["attempts"] for row in passed if isinstance(row["attempts"], int) and row["attempts"] > 0]
@@ -105,6 +142,8 @@ def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
         "median_prompt_tokens_to_pass": int(statistics.median(prompt)) if prompt else None,
         "total_completion_tokens": sum(int(row["completion_tokens"]) for row in rows if isinstance(row["completion_tokens"], (int, float))),
         "total_prompt_tokens": sum(int(row["prompt_tokens"]) for row in rows if isinstance(row["prompt_tokens"], (int, float))),
+        "median_cost_to_pass_usd": round(statistics.median(costs), 4) if costs else None,
+        "total_cost_usd": round(sum(all_costs), 4) if all_costs else None,
     }
 
 
@@ -156,8 +195,8 @@ def _leaderboard_markdown(
         "whole agent loop (builtin: in-loop accounting; shell harnesses: metered at the API",
         "boundary by the harness proxy).",
         "",
-        "| Harness | Model | Pass | Median completion tok / pass | Median prompt tok / pass | Total completion tok | Total prompt tok |",
-        "|---|---|---|---|---|---|---|",
+        "| Harness | Model | Pass | Median completion tok / pass | Median prompt tok / pass | Median cost / pass | Total completion tok | Total prompt tok | Total cost |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
 
     def sort_key(item: tuple[str, dict[str, object]]) -> tuple[float, float]:
@@ -172,7 +211,9 @@ def _leaderboard_markdown(
             f"| {_harness_display(harness)} | {display} | {summary['passed']}/{summary['tasks']} | "
             f"{_fmt_tokens(summary['median_completion_tokens_to_pass'])} | "
             f"{_fmt_tokens(summary['median_prompt_tokens_to_pass'])} | "
-            f"{_fmt_tokens(summary['total_completion_tokens'])} | {_fmt_tokens(summary['total_prompt_tokens'])} |"
+            f"{_fmt_cost(summary.get('median_cost_to_pass_usd'))} | "
+            f"{_fmt_tokens(summary['total_completion_tokens'])} | {_fmt_tokens(summary['total_prompt_tokens'])} | "
+            f"{_fmt_cost(summary.get('total_cost_usd'))} |"
         )
 
     # Per-task matrix: one row per task, one column per harness x model combo,
@@ -200,7 +241,9 @@ def _leaderboard_markdown(
                 cells.append("·")
             else:
                 mark = "✅" if row["passed"] else "❌"
-                cells.append(f"{mark} {_fmt_tokens(row['completion_tokens'])}")
+                cost = row.get("cost_usd")
+                suffix = f" ({_fmt_cost(cost)})" if isinstance(cost, (int, float)) else ""
+                cells.append(f"{mark} {_fmt_tokens(row['completion_tokens'])}{suffix}")
         lines.append(f"| `{task}` | " + " | ".join(cells) + " |")
     lines.extend(
         [
@@ -219,6 +262,7 @@ def main() -> int:
     parser.add_argument("--runs-dir", type=Path, default=Path("results/runs"))
     parser.add_argument("--out", type=Path, default=Path("out"))
     parser.add_argument("--names", default="", help="model=Display Name,comma separated")
+    parser.add_argument("--prices", default="", help="model=input_per_M/output_per_M USD, comma separated")
     parser.add_argument("--meta", action="append", default=[], help="key=value metadata, repeatable")
     args = parser.parse_args()
 
@@ -229,7 +273,12 @@ def main() -> int:
             key, value = pair.split("=", 1)
             meta[key] = value
 
+    prices = _parse_prices(args.prices)
     rows = _dedupe_latest(collect_runs(args.runs_dir))
+    for row in rows:
+        cost = _row_cost(row, prices)
+        if cost is not None:
+            row["cost_usd"] = round(cost, 4)
     combos = sorted({(str(row["harness"]), str(row["model"])) for row in rows})
     summaries = {
         f"{harness}:{model}": _model_summary([row for row in rows if row["harness"] == harness and row["model"] == model])
@@ -240,7 +289,7 @@ def main() -> int:
     badges = out / "badges"
     badges.mkdir(parents=True, exist_ok=True)
     (out / "results.json").write_text(
-        json.dumps({"meta": meta, "names": names, "summaries": summaries, "runs": rows}, indent=2) + "\n",
+        json.dumps({"meta": meta, "names": names, "prices_usd_per_M": {k: {"input": v[0], "output": v[1]} for k, v in prices.items()}, "summaries": summaries, "runs": rows}, indent=2) + "\n",
         encoding="utf-8",
     )
     (out / "leaderboard.md").write_text(_leaderboard_markdown(summaries, rows, names, meta), encoding="utf-8")

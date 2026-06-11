@@ -24,6 +24,9 @@ on:
       api_key_secret:
         description: "Name of the repo secret holding the API key for the endpoint"
         default: "DEFAULT_HARNESS_API_KEY"
+      prices:
+        description: "Optional pricing `model=input_per_M/output_per_M` USD, comma separated (adds cost columns)"
+        default: ""
 
 concurrency:
   group: benchmark
@@ -142,6 +145,7 @@ jobs:
           MODELS_INPUT: ${{ inputs.models }}
           TASKS_INPUT: ${{ inputs.tasks }}
           BUDGET: ${{ inputs.budget }}
+          PRICES_INPUT: ${{ inputs.prices }}
         run: |
           NAMES=$(python3 - <<'EOF'
           import os
@@ -157,6 +161,7 @@ jobs:
           python3 scripts/aggregate_runs.py \
             --runs-dir results/runs --out out \
             --names "$NAMES" \
+            --prices "$PRICES_INPUT" \
             --meta "budget=$BUDGET" \
             --meta "sha=${{ github.sha }}" \
             --meta "tasks=$TASKS_INPUT"
