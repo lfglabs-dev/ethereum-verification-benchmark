@@ -44,6 +44,46 @@ def _parse_prices(raw: str) -> dict[str, tuple[float, float]]:
     return prices
 
 
+def _openrouter_prices(mapping_raw: str) -> dict[str, tuple[float, float]]:
+    """Fetch live USD-per-token pricing from the OpenRouter models API.
+
+    mapping_raw maps local model ids to OpenRouter ids, e.g.
+    "builtin/smart=minimax/minimax-m3,gpt55=openai/gpt-5.5".
+    Returns USD per million tokens. Fails soft (empty dict) when offline.
+    """
+    mapping: dict[str, str] = {}
+    for pair in mapping_raw.split(","):
+        pair = pair.strip()
+        if pair and "=" in pair:
+            local, remote = pair.split("=", 1)
+            mapping[local.strip()] = remote.strip()
+    if not mapping:
+        return {}
+    import urllib.request
+
+    try:
+        request = urllib.request.Request(
+            "https://openrouter.ai/api/v1/models", headers={"User-Agent": "verity-benchmark-harness/1.0"}
+        )
+        with urllib.request.urlopen(request, timeout=30) as response:
+            models = json.loads(response.read().decode("utf-8")).get("data", [])
+    except Exception as exc:  # noqa: BLE001 - pricing is best-effort decoration
+        print(f"warning: could not fetch OpenRouter pricing ({exc}); cost columns omitted")
+        return {}
+    by_id = {model.get("id"): model.get("pricing", {}) for model in models if isinstance(model, dict)}
+    prices: dict[str, tuple[float, float]] = {}
+    for local, remote in mapping.items():
+        pricing = by_id.get(remote)
+        if not pricing:
+            print(f"warning: OpenRouter id {remote!r} not found; no pricing for {local}")
+            continue
+        try:
+            prices[local] = (float(pricing["prompt"]) * 1_000_000, float(pricing["completion"]) * 1_000_000)
+        except (KeyError, TypeError, ValueError):
+            continue
+    return prices
+
+
 def _row_cost(row: dict[str, object], prices: dict[str, tuple[float, float]]) -> float | None:
     rates = prices.get(str(row.get("model")))
     if not rates:
@@ -262,7 +302,8 @@ def main() -> int:
     parser.add_argument("--runs-dir", type=Path, default=Path("results/runs"))
     parser.add_argument("--out", type=Path, default=Path("out"))
     parser.add_argument("--names", default="", help="model=Display Name,comma separated")
-    parser.add_argument("--prices", default="", help="model=input_per_M/output_per_M USD, comma separated")
+    parser.add_argument("--prices", default="", help="model=input_per_M/output_per_M USD, comma separated (overrides --openrouter)")
+    parser.add_argument("--openrouter", default="", help="local_model=openrouter_id pairs; fetches live pricing from the OpenRouter API")
     parser.add_argument("--meta", action="append", default=[], help="key=value metadata, repeatable")
     args = parser.parse_args()
 
@@ -273,7 +314,8 @@ def main() -> int:
             key, value = pair.split("=", 1)
             meta[key] = value
 
-    prices = _parse_prices(args.prices)
+    prices = _openrouter_prices(args.openrouter)
+    prices.update(_parse_prices(args.prices))
     rows = _dedupe_latest(collect_runs(args.runs_dir))
     for row in rows:
         cost = _row_cost(row, prices)
