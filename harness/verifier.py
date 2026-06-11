@@ -102,11 +102,19 @@ def _copy_repo_for_verification() -> Path:
     temp_root = Path(tempfile.mkdtemp(prefix="verity-verifier-"))
     dst = temp_root / "repo"
 
-    def ignore(dir_path: str, names: list[str]) -> set[str]:
-        ignored = {".git", ".lake", "results", "__pycache__"}
-        return ignored.intersection(names)
+    needed_roots = {
+        "Benchmark", "Benchmark.lean", "cases", "families", "harness", "scripts",
+        "lakefile.lean", "lake-manifest.json", "lean-toolchain", "benchmark.toml",
+        "trusted-axioms.json", "schemas",
+    }
 
-    shutil.copytree(ROOT, dst, ignore=ignore)
+    def ignore(dir_path: str, names: list[str]) -> set[str]:
+        ignored = {name for name in names if name in {".git", ".lake", "results", "__pycache__"}}
+        if Path(dir_path).resolve() == ROOT.resolve():
+            ignored.update(name for name in names if name not in needed_roots)
+        return ignored
+
+    shutil.copytree(ROOT, dst, ignore=ignore, symlinks=True, ignore_dangling_symlinks=True)
     lake_cache = ROOT / ".lake"
     if lake_cache.exists():
         (dst / ".lake").symlink_to(lake_cache, target_is_directory=True)
@@ -145,8 +153,16 @@ def verify_group(
             targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, "harness_error", "missing target module"))
             continue
         code, output = _run(["lake", "build", module], verifier_repo, timeout_seconds)
+        if code != 0 and "not up-to-date" in output:
+            # Shared dependency cache corrupted (e.g. concurrent lake builds);
+            # repair and retry once so infra noise never reads as a proof failure.
+            _run(["lake", "exe", "cache", "get"], verifier_repo, 600)
+            code, output = _run(["lake", "build", module], verifier_repo, timeout_seconds)
         if code != 0:
-            status = "timeout" if code == 124 else "lean_check_failed"
+            if "not up-to-date" in output:
+                status = "verifier_infra_error"
+            else:
+                status = "timeout" if code == 124 else "lean_check_failed"
             targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, status, _compact_output(output)))
             continue
         if task.theorem_name:

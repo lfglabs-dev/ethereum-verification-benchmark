@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "agent_id": "opencode",
+  "adapter": "shell",
+  "track": "group/shell",
+  "command": ["opencode", "run", "--model", "verity/{model}", "{prompt}"],
+  "continue_command": ["opencode", "run", "--continue", "--model", "verity/{model}", "{continue_prompt}"],
+  "env": {
+    "OPENCODE_CONFIG": "{workspace}/opencode.json",
+    "VERITY_PROXY_KEY": "{proxy_key}"
+  },
+  "config_files": {
+    "opencode.json": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"provider\": {\n    \"verity\": {\n      \"npm\": \"@ai-sdk/openai-compatible\",\n      \"name\": \"Verity metering proxy\",\n      \"options\": {\n        \"baseURL\": \"{proxy_url}\",\n        \"apiKey\": \"{proxy_key}\"\n      },\n      \"models\": {\n        \"{model}\": {}\n      }\n    }\n  },\n  \"permission\": {\n    \"edit\": \"allow\",\n    \"bash\": \"allow\",\n    \"webfetch\": \"deny\"\n  }\n}\n"
+  },
+  "version_command": ["opencode", "--version"]
+}

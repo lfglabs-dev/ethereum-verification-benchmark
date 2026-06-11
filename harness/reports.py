@@ -59,6 +59,7 @@ def compare_runs(paths: list[Path]) -> dict[str, Any]:
             "passed_targets": score.get("passed_targets", 0),
             "total_targets": score.get("total_targets", 0),
             "failure_modes": dict(sorted(failure_modes.items())),
+            "usage": run.get("usage"),
             "duration_seconds": run.get("duration_seconds"),
             "artifact": str(run_path),
         }

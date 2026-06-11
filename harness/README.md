@@ -52,9 +52,9 @@ Task briefing:
 - Fair task results include `failure_class`, distinguishing provider/context failures, no-tool loops, context loops, proof parse errors, unknown names, unsolved goals, Lean timeouts, and other Lean failures.
 
 Budget profiles:
-- `quick`: `max_attempts=1`, `max_tool_calls=24`, `max_turns=20`, `grok_timeout_seconds=900`.
-- `normal`: `max_attempts=4`, `max_tool_calls=80`, `max_turns=50`, `grok_timeout_seconds=2400`.
-- `deep`: `max_attempts=12`, `max_tool_calls=200`, `max_turns=100`, `grok_timeout_seconds=7200`.
+- `quick`: `max_attempts=4`, `max_tool_calls=40`, `max_turns=20`, `grok_timeout_seconds=900`.
+- `normal`: `max_attempts=16`, `max_tool_calls=120`, `max_turns=50`, `grok_timeout_seconds=2400`.
+- `deep`: `max_attempts=48`, `max_tool_calls=400`, `max_turns=100`, `grok_timeout_seconds=7200`.
 - Explicit `--max-attempts`, `--max-tool-calls`, `--max-turns`, or `--grok-timeout-seconds` override the selected profile.
 
 Default harness API env:
@@ -73,6 +73,28 @@ Default harness API env:
 - `DEFAULT_HARNESS_ALLOW_GRINDSET_TOOLS` for explicit research runs with
   generic Grindset helper visibility; default fair comparisons keep this off
 - `DEFAULT_HARNESS_CONTEXT_TOKENS` if the provider supports an `n_ctx` request hint
+- `DEFAULT_HARNESS_TOKEN_BUDGET` to stop a task after N completion tokens (0 = unlimited);
+  per-task and aggregate `usage` is reported in `harness-response.json` and `run.json`
+- `DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS` for the one-time dependency warm build
+  the fair runner performs per target module before the agent loop starts (default 1800)
+- `DEFAULT_HARNESS_HTTP_USER_AGENT` to override the request User-Agent (default
+  `verity-benchmark-harness/1.0`; some proxies reject the Python default UA)
+- `DEFAULT_HARNESS_CHECK_MODE`: `file` (default) checks the editable proof file with
+  `lake env lean` (seconds; falls back to `lake build` on dependency-graph errors),
+  `module` always runs the full `lake build <target>`
+- `DEFAULT_HARNESS_STUCK_NUDGE`: `1` (default) appends a change-strategy nudge when a
+  proof attempt repeats the same error signature; failed attempts also carry a
+  failure-class `hint` (unsolved goals, unknown name, parse, type, timeout)
+
+Fair-mode behavior notes:
+- Before any agent request, the runner builds each target module once so agent-visible
+  Lean check timeouts measure proof elaboration rather than cold dependency builds.
+  Run `lake exe cache get && lake build` on the host before benchmarking.
+- `check_proof`/`try_tactics` accept either a tactic body (placed under `:= by` with
+  relative indentation preserved verbatim) or a complete Lean file with imports,
+  helper lemmas, and the target theorem. Submissions that change the target theorem
+  statement are rejected with `statement_mismatch` feedback.
+- `show_goal` does not consume the non-proof tool budget.
 
 Local runtime configuration:
 - Copy `.env.example` to `.env`.

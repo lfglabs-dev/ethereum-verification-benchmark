@@ -12,9 +12,9 @@ class BudgetProfile:
 
 
 BUDGET_PROFILES: dict[str, BudgetProfile] = {
-    "quick": BudgetProfile(max_attempts=1, max_tool_calls=24, max_turns=20, grok_timeout_seconds=900),
-    "normal": BudgetProfile(max_attempts=4, max_tool_calls=80, max_turns=50, grok_timeout_seconds=2400),
-    "deep": BudgetProfile(max_attempts=12, max_tool_calls=200, max_turns=100, grok_timeout_seconds=7200),
+    "quick": BudgetProfile(max_attempts=4, max_tool_calls=40, max_turns=20, grok_timeout_seconds=900),
+    "normal": BudgetProfile(max_attempts=16, max_tool_calls=120, max_turns=50, grok_timeout_seconds=2400),
+    "deep": BudgetProfile(max_attempts=48, max_tool_calls=400, max_turns=100, grok_timeout_seconds=7200),
 }
 
 
