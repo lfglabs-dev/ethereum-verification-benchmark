@@ -94,6 +94,7 @@ def _dedupe_latest(rows: list[dict[str, object]]) -> list[dict[str, object]]:
 def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
     passed = [row for row in rows if row["passed"]]
     completion = [row["completion_tokens"] for row in passed if isinstance(row["completion_tokens"], (int, float))]
+    prompt = [row["prompt_tokens"] for row in passed if isinstance(row["prompt_tokens"], (int, float))]
     attempts = [row["attempts"] for row in passed if isinstance(row["attempts"], int) and row["attempts"] > 0]
     return {
         "tasks": len(rows),
@@ -101,7 +102,9 @@ def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
         "pass_rate": round(len(passed) / len(rows), 3) if rows else 0.0,
         "median_attempts_to_pass": statistics.median(attempts) if attempts else None,
         "median_completion_tokens_to_pass": int(statistics.median(completion)) if completion else None,
+        "median_prompt_tokens_to_pass": int(statistics.median(prompt)) if prompt else None,
         "total_completion_tokens": sum(int(row["completion_tokens"]) for row in rows if isinstance(row["completion_tokens"], (int, float))),
+        "total_prompt_tokens": sum(int(row["prompt_tokens"]) for row in rows if isinstance(row["prompt_tokens"], (int, float))),
     }
 
 
@@ -123,15 +126,40 @@ def _badge(label: str, summary: dict[str, object]) -> dict[str, object]:
     return {"schemaVersion": 1, "label": label, "message": message, "color": color}
 
 
-def _leaderboard_markdown(summaries: dict[str, dict[str, object]], names: dict[str, str], meta: dict[str, str]) -> str:
+def _fmt_tokens(value: object) -> str:
+    if not isinstance(value, (int, float)) or not value:
+        return "—"
+    if value >= 1_000_000:
+        return f"{value / 1_000_000:.1f}M"
+    if value >= 1_000:
+        return f"{value / 1_000:.1f}k"
+    return str(int(value))
+
+
+def _harness_display(harness: str) -> str:
+    return "builtin (fair)" if harness == "default" else harness
+
+
+def _leaderboard_markdown(
+    summaries: dict[str, dict[str, object]],
+    rows: list[dict[str, object]],
+    names: dict[str, str],
+    meta: dict[str, str],
+) -> str:
     lines = [
         "# Verity Benchmark Leaderboard",
         "",
         f"Generated {meta.get('date')} · commit `{meta.get('sha', 'unknown')[:9]}` · budget `{meta.get('budget', '?')}`",
         "",
-        "| Harness | Model | Pass | Median attempts to pass | Median completion tokens to pass | Total completion tokens |",
-        "|---|---|---|---|---|---|",
+        "**Headline metric: tokens to a verified proof.** All combos run the same task set;",
+        "pass/fail is decided by the independent verifier; tokens are counted across the",
+        "whole agent loop (builtin: in-loop accounting; shell harnesses: metered at the API",
+        "boundary by the harness proxy).",
+        "",
+        "| Harness | Model | Pass | Median completion tok / pass | Median prompt tok / pass | Total completion tok | Total prompt tok |",
+        "|---|---|---|---|---|---|---|",
     ]
+
     def sort_key(item: tuple[str, dict[str, object]]) -> tuple[float, float]:
         summary = item[1]
         tokens = summary["median_completion_tokens_to_pass"]
@@ -139,19 +167,47 @@ def _leaderboard_markdown(summaries: dict[str, dict[str, object]], names: dict[s
 
     for combo, summary in sorted(summaries.items(), key=sort_key):
         harness, _, model = combo.partition(":")
-        harness_display = "builtin (fair)" if harness == "default" else harness
         display = names.get(model, model)
-        tokens = summary["median_completion_tokens_to_pass"]
         lines.append(
-            f"| {harness_display} | {display} | {summary['passed']}/{summary['tasks']} | "
-            f"{summary['median_attempts_to_pass'] if summary['median_attempts_to_pass'] is not None else '—'} | "
-            f"{f'{tokens:,}' if tokens else '—'} | {summary['total_completion_tokens']:,} |"
+            f"| {_harness_display(harness)} | {display} | {summary['passed']}/{summary['tasks']} | "
+            f"{_fmt_tokens(summary['median_completion_tokens_to_pass'])} | "
+            f"{_fmt_tokens(summary['median_prompt_tokens_to_pass'])} | "
+            f"{_fmt_tokens(summary['total_completion_tokens'])} | {_fmt_tokens(summary['total_prompt_tokens'])} |"
         )
+
+    # Per-task matrix: one row per task, one column per harness x model combo,
+    # cell = pass/fail with completion tokens spent on that task.
+    combos = sorted({(str(row["harness"]), str(row["model"])) for row in rows})
+    tasks = sorted({str(row["task_ref"]) for row in rows})
+    by_key = {(str(r["harness"]), str(r["model"]), str(r["task_ref"])): r for r in rows}
+    header = " | ".join(f"{_harness_display(h)}<br>{names.get(m, m)}" for h, m in combos)
     lines.extend(
         [
             "",
-            "Pass/fail is decided by the independent verifier. Tokens are completion tokens",
-            "reported by the provider across the whole agent loop for the task.",
+            "## Per-task completion tokens",
+            "",
+            "Cell = ✅/❌ with completion tokens spent on that task (including failed attempts).",
+            "",
+            f"| Task | {header} |",
+            "|---" * (len(combos) + 1) + "|",
+        ]
+    )
+    for task in tasks:
+        cells = []
+        for harness, model in combos:
+            row = by_key.get((harness, model, task))
+            if row is None:
+                cells.append("·")
+            else:
+                mark = "✅" if row["passed"] else "❌"
+                cells.append(f"{mark} {_fmt_tokens(row['completion_tokens'])}")
+        lines.append(f"| `{task}` | " + " | ".join(cells) + " |")
+    lines.extend(
+        [
+            "",
+            "Notes: completion tokens are what the model generated (the main cost driver per",
+            "provider pricing); prompt tokens show how context-hungry each harness is. Shell",
+            "harness rows have no attempt counts because iteration happens inside the CLI.",
             "",
         ]
     )
@@ -187,7 +243,7 @@ def main() -> int:
         json.dumps({"meta": meta, "names": names, "summaries": summaries, "runs": rows}, indent=2) + "\n",
         encoding="utf-8",
     )
-    (out / "leaderboard.md").write_text(_leaderboard_markdown(summaries, names, meta), encoding="utf-8")
+    (out / "leaderboard.md").write_text(_leaderboard_markdown(summaries, rows, names, meta), encoding="utf-8")
     for harness, model in combos:
         key = f"{harness}:{model}"
         label = names.get(model, model)
