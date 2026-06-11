@@ -256,7 +256,7 @@ def _leaderboard_markdown(
         "",
         f"Generated {meta.get('date')} · commit `{meta.get('sha', 'unknown')[:9]}` · budget `{meta.get('budget', '?')}`",
         "",
-        "**Headline metric: tokens to a verified proof.** All combos run the same task set;",
+        "**Ranked by total cost (cheapest first).** All combos run the same task set;",
         "pass/fail is decided by the independent verifier; tokens are counted across the",
         "whole agent loop (builtin: in-loop accounting; shell harnesses: metered at the API",
         "boundary by the harness proxy).",
@@ -266,9 +266,15 @@ def _leaderboard_markdown(
     ]
 
     def sort_key(item: tuple[str, dict[str, object]]) -> tuple[float, float]:
-        summary = item[1]
-        tokens = summary["median_completion_tokens_to_pass"]
-        return (-float(summary["pass_rate"]), float(tokens) if tokens else float("inf"))
+        combo, summary = item
+        cost = summary.get("total_cost_usd")
+        if not isinstance(cost, (int, float)):
+            est_sort = (estimates.get(combo) or {}).get("sort")
+            try:
+                cost = float(est_sort) if est_sort else float("inf")
+            except ValueError:
+                cost = float("inf")
+        return (float(cost), -float(summary["pass_rate"]))
 
     for combo, summary in sorted(summaries.items(), key=sort_key):
         harness, _, model = combo.partition(":")
