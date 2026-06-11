@@ -153,8 +153,16 @@ def verify_group(
             targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, "harness_error", "missing target module"))
             continue
         code, output = _run(["lake", "build", module], verifier_repo, timeout_seconds)
+        if code != 0 and "not up-to-date" in output:
+            # Shared dependency cache corrupted (e.g. concurrent lake builds);
+            # repair and retry once so infra noise never reads as a proof failure.
+            _run(["lake", "exe", "cache", "get"], verifier_repo, 600)
+            code, output = _run(["lake", "build", module], verifier_repo, timeout_seconds)
         if code != 0:
-            status = "timeout" if code == 124 else "lean_check_failed"
+            if "not up-to-date" in output:
+                status = "verifier_infra_error"
+            else:
+                status = "timeout" if code == 124 else "lean_check_failed"
             targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, status, _compact_output(output)))
             continue
         if task.theorem_name:
