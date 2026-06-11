@@ -101,6 +101,29 @@ def _fmt_cost(value: object) -> str:
     return f"${value:.2f}" if value >= 0.10 else f"${value:.3f}"
 
 
+def _parse_estimates(raw: str) -> dict[str, dict[str, str]]:
+    """Parse display estimates for combos lacking measured usage.
+
+    Format: "harness:model=field:value,field:value;harness:model=..."
+    Fields: completion, prompt, cost, total_cost. Values are shown verbatim
+    (marked as estimates) where measured data is unavailable.
+    """
+    estimates: dict[str, dict[str, str]] = {}
+    for combo_raw in raw.split(";"):
+        combo_raw = combo_raw.strip()
+        if not combo_raw or "=" not in combo_raw:
+            continue
+        combo, fields_raw = combo_raw.split("=", 1)
+        fields: dict[str, str] = {}
+        for field_raw in fields_raw.split(","):
+            if ":" in field_raw:
+                key, value = field_raw.split(":", 1)
+                fields[key.strip()] = value.strip()
+        if fields:
+            estimates[combo.strip()] = fields
+    return estimates
+
+
 def _parse_names(raw: str) -> dict[str, str]:
     names: dict[str, str] = {}
     for pair in raw.split(","):
@@ -225,7 +248,9 @@ def _leaderboard_markdown(
     rows: list[dict[str, object]],
     names: dict[str, str],
     meta: dict[str, str],
+    estimates: dict[str, dict[str, str]] | None = None,
 ) -> str:
+    estimates = estimates or {}
     lines = [
         "# Verity Benchmark Leaderboard",
         "",
@@ -248,13 +273,21 @@ def _leaderboard_markdown(
     for combo, summary in sorted(summaries.items(), key=sort_key):
         harness, _, model = combo.partition(":")
         display = names.get(model, model)
+        est = estimates.get(combo, {})
+
+        def cell(measured: str, est_key: str) -> str:
+            if measured != "—":
+                return measured
+            value = est.get(est_key)
+            return f"~{value} *(est.)*" if value else "—"
+
         lines.append(
             f"| {_harness_display(harness)} | {display} | {summary['passed']}/{summary['tasks']} | "
-            f"{_fmt_tokens(summary['median_completion_tokens_to_pass'])} | "
-            f"{_fmt_tokens(summary['median_prompt_tokens_to_pass'])} | "
-            f"{_fmt_cost(summary.get('median_cost_to_pass_usd'))} | "
+            f"{cell(_fmt_tokens(summary['median_completion_tokens_to_pass']), 'completion')} | "
+            f"{cell(_fmt_tokens(summary['median_prompt_tokens_to_pass']), 'prompt')} | "
+            f"{cell(_fmt_cost(summary.get('median_cost_to_pass_usd')), 'cost')} | "
             f"{_fmt_tokens(summary['total_completion_tokens'])} | {_fmt_tokens(summary['total_prompt_tokens'])} | "
-            f"{_fmt_cost(summary.get('total_cost_usd'))} |"
+            f"{cell(_fmt_cost(summary.get('total_cost_usd')), 'total_cost')} |"
         )
 
     # Per-task matrix: one row per task, one column per harness x model combo,
@@ -297,6 +330,11 @@ def _leaderboard_markdown(
             "Notes: completion tokens are what the model generated (the main cost driver per",
             "provider pricing); prompt tokens show how context-hungry each harness is. Shell",
             "harness rows have no attempt counts because iteration happens inside the CLI.",
+            "Values marked *(est.)* are estimates, not measurements: grok-cli exposes no token",
+            "telemetry at all (range derived from turn counts, run durations, and the same",
+            "model's measured usage under the builtin harness); codex reports only an",
+            "undecomposed total (cost range assumes 90-99% of tokens are prompt-side, the",
+            "typical split for coding agents).",
             "",
         ]
     )
@@ -309,6 +347,7 @@ def main() -> int:
     parser.add_argument("--out", type=Path, default=Path("out"))
     parser.add_argument("--names", default="", help="model=Display Name,comma separated")
     parser.add_argument("--prices", default="", help="model=input_per_M/output_per_M USD, comma separated (overrides --openrouter)")
+    parser.add_argument("--estimates", default="", help="harness:model=field:value,... ; display estimates where usage is unmeasured")
     parser.add_argument("--openrouter", default="", help="local_model=openrouter_id pairs; fetches live pricing from the OpenRouter API")
     parser.add_argument("--meta", action="append", default=[], help="key=value metadata, repeatable")
     args = parser.parse_args()
@@ -340,7 +379,7 @@ def main() -> int:
         json.dumps({"meta": meta, "names": names, "prices_usd_per_M": {k: {"input": v[0], "output": v[1]} for k, v in prices.items()}, "summaries": summaries, "runs": rows}, indent=2) + "\n",
         encoding="utf-8",
     )
-    (out / "leaderboard.md").write_text(_leaderboard_markdown(summaries, rows, names, meta), encoding="utf-8")
+    (out / "leaderboard.md").write_text(_leaderboard_markdown(summaries, rows, names, meta, _parse_estimates(args.estimates)), encoding="utf-8")
     for harness, model in combos:
         key = f"{harness}:{model}"
         label = names.get(model, model)
