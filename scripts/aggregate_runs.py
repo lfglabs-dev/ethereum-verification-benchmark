@@ -151,6 +151,7 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
                 "tool_calls": tool_calls,
                 "prompt_tokens": usage.get("prompt_tokens"),
                 "completion_tokens": usage.get("completion_tokens"),
+                "total_tokens": usage.get("total_tokens"),
                 "duration_seconds": run.get("duration_seconds"),
                 "started_at": run.get("started_at"),
             }
@@ -283,7 +284,12 @@ def _leaderboard_markdown(
                 mark = "✅" if row["passed"] else "❌"
                 cost = row.get("cost_usd")
                 suffix = f" ({_fmt_cost(cost)})" if isinstance(cost, (int, float)) else ""
-                cells.append(f"{mark} {_fmt_tokens(row['completion_tokens'])}{suffix}")
+                tokens = row["completion_tokens"]
+                if not isinstance(tokens, (int, float)):
+                    total = row.get("total_tokens")
+                    cells.append(f"{mark} ≈{_fmt_tokens(total)} total{suffix}" if isinstance(total, (int, float)) else f"{mark} —{suffix}")
+                else:
+                    cells.append(f"{mark} {_fmt_tokens(tokens)}{suffix}")
         lines.append(f"| `{task}` | " + " | ".join(cells) + " |")
     lines.extend(
         [
