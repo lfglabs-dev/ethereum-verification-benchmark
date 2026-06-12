@@ -315,8 +315,11 @@ def run_group(
     version = None
     version_command = profile.get("version_command")
     if isinstance(version_command, list):
-        probe = subprocess.run([str(part) for part in version_command], capture_output=True, text=True, check=False)
-        version = (probe.stdout or probe.stderr).strip().splitlines()[0] if (probe.stdout or probe.stderr).strip() else None
+        try:
+            probe = subprocess.run([str(part) for part in version_command], capture_output=True, text=True, check=False)
+            version = (probe.stdout or probe.stderr).strip().splitlines()[0] if (probe.stdout or probe.stderr).strip() else None
+        except OSError:
+            version = None
     run = {
         "schema_version": 1,
         "run_id": run_id,
@@ -349,7 +352,7 @@ def run_group(
         encoding="utf-8",
     )
     (run_dir / "harness-request.json").write_text(
-        json.dumps({"group": agent_group_to_json(group), "command": command, "model": model, "timeout_seconds": timeout_seconds}, indent=2) + "\n",
+        json.dumps({"group": agent_group_to_json(group), "command": command, "model": model, "timeout_seconds": timeout_seconds, "max_turns": max_turns, "auth_mode": auth_mode}, indent=2) + "\n",
         encoding="utf-8",
     )
     (run_dir / "run.json").write_text(json.dumps(run, indent=2) + "\n", encoding="utf-8")
