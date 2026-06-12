@@ -6,6 +6,8 @@ namespace Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc
 open Verity
 open Verity.EVM.Uint256
 
+set_option linter.unusedSimpArgs false
+
 /--
 Executing `claimBoth` when the computed USDC payout would exceed the round
 total reverts before any state writes, leaving the contract state unchanged.
@@ -21,10 +23,19 @@ theorem claimBoth_reverts_if_usdc_exceeds_total
     (hUsdcExceeds : add (s.storage 1) (computedClaimAmount usdcShareWad s) > s.storage 0) :
     let s' := ((StreamRecoveryClaimUsdc.claimBoth usdcShareWad true wethShareWad wethProofAccepted).run s).snd
     claimBoth_reverts_if_usdc_exceeds_total_spec s s' := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
   unfold claimBoth_reverts_if_usdc_exceeds_total_spec
-  grind [StreamRecoveryClaimUsdc.claimBoth, StreamRecoveryClaimUsdc.roundUsdcTotal, StreamRecoveryClaimUsdc.roundUsdcClaimed, StreamRecoveryClaimUsdc.totalUsdcAllocated, StreamRecoveryClaimUsdc.roundActive, StreamRecoveryClaimUsdc.hasSignedWaiver, StreamRecoveryClaimUsdc.hasClaimedUsdc, StreamRecoveryClaimUsdc.roundWethTotal, StreamRecoveryClaimUsdc.roundWethClaimed, StreamRecoveryClaimUsdc.totalWethAllocated, StreamRecoveryClaimUsdc.hasClaimedWeth]
-
+  have hUsdcFresh' : (s.storageMap 5 s.sender == 0) = true := by
+    simp [hUsdcFresh]
+  have hUsdcBoundFalse :
+      ¬ add (s.storage 1) (div (mul usdcShareWad (s.storage 0)) 1000000000000000000) <= s.storage 0 := by
+    simpa [computedClaimAmount] using (Nat.not_le_of_gt hUsdcExceeds)
+  have hUsdcBoundFalseVal :
+      ¬ (add (s.storage 1) (div (mul usdcShareWad (s.storage 0)) 1000000000000000000)).val <= (s.storage 0).val := by
+    simpa using hUsdcBoundFalse
+  simp [StreamRecoveryClaimUsdc.claimBoth, StreamRecoveryClaimUsdc.claimUsdc,
+    hWaiver, hActive, hUsdcFresh', hUsdcBoundFalseVal, StreamRecoveryClaimUsdc.roundUsdcTotal,
+    StreamRecoveryClaimUsdc.roundUsdcClaimed, StreamRecoveryClaimUsdc.totalUsdcAllocated,
+    StreamRecoveryClaimUsdc.roundActive, StreamRecoveryClaimUsdc.hasSignedWaiver,
+    StreamRecoveryClaimUsdc.hasClaimedUsdc, getMapping, getStorage, msgSender,
+    Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
 end Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc

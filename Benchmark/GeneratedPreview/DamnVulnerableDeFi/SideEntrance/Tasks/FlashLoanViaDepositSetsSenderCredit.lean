@@ -15,10 +15,22 @@ theorem flashLoanViaDeposit_sets_sender_credit
     (hBorrow : amount <= s.storage 0) :
     let s' := ((SideEntrance.flashLoanViaDeposit amount).run s).snd
     flashLoanViaDeposit_sets_sender_credit_spec amount s s' := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold flashLoanViaDeposit_sets_sender_credit_spec
-  grind [SideEntrance.flashLoanViaDeposit, SideEntrance.poolBalance, SideEntrance.totalCredits, SideEntrance.creditOf]
+  try simp only [grind_norm] at *
+  try unfold flashLoanViaDeposit_sets_sender_credit_spec
+  try unfold SideEntrance.poolBalance
+  try unfold SideEntrance.totalCredits
+  try unfold SideEntrance.creditOf
+  try unfold SideEntrance.deposit
+  try unfold SideEntrance.flashLoanViaDeposit
+  try unfold SideEntrance.withdraw
+  try unfold deposit_sets_pool_balance_spec
+  try unfold deposit_sets_sender_credit_spec
+  try unfold flashLoanViaDeposit_preserves_pool_balance_spec
+  try unfold flashLoanViaDeposit_sets_sender_credit_spec
+  try unfold exploit_trace_drains_pool_spec
+  simp [grind_norm, SideEntrance.poolBalance, SideEntrance.totalCredits, SideEntrance.creditOf, SideEntrance.deposit, SideEntrance.flashLoanViaDeposit, SideEntrance.withdraw, deposit_sets_pool_balance_spec, deposit_sets_sender_credit_spec, flashLoanViaDeposit_preserves_pool_balance_spec, flashLoanViaDeposit_sets_sender_credit_spec, exploit_trace_drains_pool_spec, *]
+  all_goals try (split_ifs <;> simp_all [grind_norm])
+  all_goals try (repeat' (split <;> simp_all [grind_norm]))
+  all_goals try omega
 
 end Benchmark.Cases.DamnVulnerableDeFi.SideEntrance

@@ -19,10 +19,8 @@ theorem spotPrice_buy_ge_book_value
     (hBuyReserve : calculateBuyReserve eth oldEth oldNxmBuyReserve capital supply elapsed speed != 0)
     (hSafe : buyArithmeticSafe eth oldEth oldNxmBuyReserve capital supply elapsed speed) :
     spotPrice_buy_ge_book_value_spec eth oldEth oldNxmBuyReserve oldNxmSellReserve capital supply elapsed speed := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold spotPrice_buy_ge_book_value_spec
-  grind
+  exact spotPrice_buy_ge_book_value_main
+    eth oldEth oldNxmBuyReserve oldNxmSellReserve capital supply elapsed speed
+    hEth hOldEth hSupply hCapital hBuyReserve hSafe
 
 end Benchmark.Cases.NexusMutual.RammSpotPrice

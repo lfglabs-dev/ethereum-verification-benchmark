@@ -2021,7 +2021,7 @@ def run_group(
     group = load_group(group_id, suite)
     if task_ref:
         group = filter_group_to_task(group, task_ref)
-    built = build_group_workspace(group, run_id=run_id, include_group_grindset=False)
+    built = build_group_workspace(group, run_id=run_id)
     assert_workspace_isolated(built.path)
     base_url = DEFAULT_BASE_URL
     response: dict[str, object]

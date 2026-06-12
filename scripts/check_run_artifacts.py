@@ -78,8 +78,8 @@ def check_run(run_dir: Path) -> list[str]:
         errors.append(f"{run_dir}: workspace manifest has no file entries")
     if run.get("harness_id") == "default" and run.get("mode") == "fair" and run.get("run_mode") in {"task", "group"}:
         tool_policy = manifest.get("tool_policy")
-        if not isinstance(tool_policy, dict) or tool_policy.get("include_group_grindset") is not False:
-            errors.append(f"{run_dir}: fair default run must record include_group_grindset=false")
+        if not isinstance(tool_policy, dict) or tool_policy.get("generic_grindset_only") is not True:
+            errors.append(f"{run_dir}: fair default run must record generic_grindset_only=true")
         if "max_tool_calls" not in request:
             errors.append(f"{run_dir}: fair default request missing max_tool_calls")
     if run.get("harness_id") == "grok-build" and run.get("run_mode") in {"task", "group"}:

@@ -30,10 +30,6 @@ theorem transfer_no_balance_revert
     (hFromBal64 : s.storageMap 1 sender < UINT64_MOD)
     (hToBal64 : s.storageMap 1 recipient < UINT64_MOD) :
     transfer_no_balance_revert_spec sender recipient amount s := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold transfer_no_balance_revert_spec
-  grind
+  simp_all [grind_norm, transfer_no_balance_revert_spec, UINT64_MOD, add64, sub64, tryIncrease64SuccessWithInit, tryIncrease64UpdatedWithInit, tryIncrease64WithInit, tryIncrease64, tryDecrease64SuccessWithInit, tryDecrease64UpdatedWithInit, tryDecrease64WithInit, tryDecrease64, ERC7984.totalSupply, ERC7984.balances, ERC7984.balanceInitialized, ERC7984.operators, ERC7984.totalSupplyInitialized, ERC7984._update, ERC7984._transfer, ERC7984.transfer, ERC7984.transferFrom, ERC7984._setOperator, ERC7984.setOperator, ERC7984._mint, ERC7984.mint, ERC7984._burn, ERC7984.burn, balanceOf, supply, supplyInitialized, transfer_conservation_spec, transfer_sufficient_spec, transfer_insufficient_spec, transfer_preserves_supply_spec, mint_increases_supply_spec, mint_ctokens_match_deposit_spec, mint_overflow_protection_spec, burn_decreases_supply_spec, burn_insufficient_spec, transfer_no_balance_revert_spec, operatorExpiry, transferFrom_conservation_spec, setOperator_updates_spec]
 
 end Benchmark.Cases.Zama.ERC7984ConfidentialToken

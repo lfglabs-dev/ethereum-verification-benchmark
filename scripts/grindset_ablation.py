@@ -128,7 +128,7 @@ def battery(skeleton: str, symbols: list[str]) -> list[tuple[str, str]]:
 def run_task(task_ref: str, suite: str) -> dict[str, object]:
     group_id = "/".join(task_ref.split("/")[:2])
     group = filter_group_to_task(load_group(group_id, suite), task_ref)
-    built = build_group_workspace(group, run_id=f"ablation-{task_ref.replace('/', '__')}", include_group_grindset=False)
+    built = build_group_workspace(group, run_id=f"ablation-{task_ref.replace('/', '__')}")
     task = group.tasks[0]
     results: list[dict[str, object]] = []
     try:

@@ -1,5 +1,6 @@
 import Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Specs
 import Verity.Stdlib.Math
+import Verity.Proofs.Stdlib.Math
 import Benchmark.Grindset
 
 namespace Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit
@@ -20,10 +21,9 @@ theorem positive_deposit_mints_positive_shares_under_rate_bound
       <= (assets : Nat) * ((add (s.storage 1) virtualShares : Uint256) : Nat))
     (hMul : (assets : Nat) * ((add (s.storage 1) virtualShares : Uint256) : Nat) <= MAX_UINT256) :
     positive_deposit_mints_positive_shares_under_rate_bound_spec assets s := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold positive_deposit_mints_positive_shares_under_rate_bound_spec
-  grind
+  unfold positive_deposit_mints_positive_shares_under_rate_bound_spec previewDeposit previewDepositAmount
+  simpa [mulDivDown] using
+    Verity.Proofs.Stdlib.Math.mulDivDown_pos assets (add (s.storage 1) virtualShares)
+      (add (s.storage 0) virtualAssets) hDenom hRate hMul
 
 end Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit

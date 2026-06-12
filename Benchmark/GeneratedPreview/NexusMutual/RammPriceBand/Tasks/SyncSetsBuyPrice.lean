@@ -14,10 +14,8 @@ theorem syncPriceBand_sets_buy_price
     (hSupply : supply_ != 0) :
     let s' := ((RammPriceBand.syncPriceBand capital_ supply_).run s).snd
     syncPriceBand_sets_buy_price_spec capital_ supply_ s s' := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold syncPriceBand_sets_buy_price_spec
-  grind [RammPriceBand.syncPriceBand, RammPriceBand.capital, RammPriceBand.supply, RammPriceBand.bookValue, RammPriceBand.buySpotPrice, RammPriceBand.sellSpotPrice]
+  try simp only [grind_norm] at *
+  try unfold syncPriceBand_sets_buy_price_spec RammPriceBand.syncPriceBand RammPriceBand.capital RammPriceBand.supply RammPriceBand.bookValue RammPriceBand.buySpotPrice RammPriceBand.sellSpotPrice
+  simp [grind_norm, *]
 
 end Benchmark.Cases.NexusMutual.RammPriceBand

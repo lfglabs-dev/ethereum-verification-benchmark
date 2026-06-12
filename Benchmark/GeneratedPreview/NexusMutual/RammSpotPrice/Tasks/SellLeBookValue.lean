@@ -20,10 +20,8 @@ theorem spotPrice_sell_le_book_value
     (hSafe : sellArithmeticSafe eth oldEth oldNxmSellReserve capital supply elapsed speed)
     (hScale : realisticSellScale eth capital supply) :
     spotPrice_sell_le_book_value_spec eth oldEth oldNxmBuyReserve oldNxmSellReserve capital supply elapsed speed := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold spotPrice_sell_le_book_value_spec
-  grind
+  exact spotPrice_sell_le_book_value_main
+    eth oldEth oldNxmBuyReserve oldNxmSellReserve capital supply elapsed speed
+    hEth hOldEth hSupply hCapital hSellReserve hSafe hScale
 
 end Benchmark.Cases.NexusMutual.RammSpotPrice

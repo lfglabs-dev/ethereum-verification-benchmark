@@ -111,7 +111,7 @@ def run_group(
     ]
     if dirty:
         raise RuntimeError(f"editable files modified in source repo (restore before benchmarking): {', '.join(dirty)}")
-    built = build_group_workspace(group, run_id=run_id, include_group_grindset=False)
+    built = build_group_workspace(group, run_id=run_id)
     assert_workspace_isolated(built.path)
     initial_editable: dict[str, str] = {}
     for task in group.tasks:

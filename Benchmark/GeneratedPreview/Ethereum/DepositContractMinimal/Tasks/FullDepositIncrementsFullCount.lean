@@ -17,10 +17,20 @@ theorem full_deposit_increments_full_count
     (hFull : depositAmount >= 32000000000) :
     let s' := ((DepositContractMinimal.deposit depositAmount).run s).snd
     deposit_increments_full_count_for_full_deposit_spec depositAmount s s' := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold deposit_increments_full_count_for_full_deposit_spec
-  grind [DepositContractMinimal.deposit, DepositContractMinimal.depositCount, DepositContractMinimal.fullDepositCount, DepositContractMinimal.chainStarted]
+  try simp only [grind_norm] at *
+  try unfold deposit_increments_full_count_for_full_deposit_spec
+  try unfold DepositContractMinimal.depositCount
+  try unfold DepositContractMinimal.fullDepositCount
+  try unfold DepositContractMinimal.chainStarted
+  try unfold DepositContractMinimal.deposit
+  try unfold DepositContractMinimal.hasChainStarted
+  try unfold deposit_increments_deposit_count_spec
+  try unfold deposit_preserves_full_count_for_small_deposit_spec
+  try unfold deposit_increments_full_count_for_full_deposit_spec
+  try unfold deposit_starts_chain_at_threshold_spec
+  simp [grind_norm, DepositContractMinimal.depositCount, DepositContractMinimal.fullDepositCount, DepositContractMinimal.chainStarted, DepositContractMinimal.deposit, DepositContractMinimal.hasChainStarted, deposit_increments_deposit_count_spec, deposit_preserves_full_count_for_small_deposit_spec, deposit_increments_full_count_for_full_deposit_spec, deposit_starts_chain_at_threshold_spec, *]
+  all_goals try (split_ifs <;> simp_all [grind_norm])
+  all_goals try (repeat' (split <;> simp_all [grind_norm]))
+  all_goals try omega
 
 end Benchmark.Cases.Ethereum.DepositContractMinimal

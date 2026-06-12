@@ -16,10 +16,30 @@ theorem node_id_bijection
     (hHigh : nodeIndex <= 6) :
     let s' := ((SortitionTrees.setLeaf nodeIndex stakePathID weight).run s).snd
     node_id_bijection_spec nodeIndex stakePathID s' := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold node_id_bijection_spec
-  grind [SortitionTrees.setLeaf, SortitionTrees.rootSum, SortitionTrees.leftSum, SortitionTrees.rightSum, SortitionTrees.leaf0, SortitionTrees.leaf1, SortitionTrees.leaf2, SortitionTrees.leaf3, SortitionTrees.nodeIndexesToIDs, SortitionTrees.IDsToNodeIndexes, SortitionTrees.selectedNode]
+  try simp only [grind_norm] at *
+  try unfold node_id_bijection_spec
+  try unfold SortitionTrees.rootSum
+  try unfold SortitionTrees.leftSum
+  try unfold SortitionTrees.rightSum
+  try unfold SortitionTrees.leaf0
+  try unfold SortitionTrees.leaf1
+  try unfold SortitionTrees.leaf2
+  try unfold SortitionTrees.leaf3
+  try unfold SortitionTrees.nodeIndexesToIDs
+  try unfold SortitionTrees.IDsToNodeIndexes
+  try unfold SortitionTrees.selectedNode
+  try unfold SortitionTrees.setLeaf
+  try unfold SortitionTrees.draw
+  try unfold leaf_sum
+  try unfold parent_equals_sum_of_children_spec
+  try unfold root_equals_sum_of_leaves_spec
+  try unfold draw_interval_matches_weights_spec
+  try unfold draw_selects_valid_leaf_spec
+  try unfold node_id_bijection_spec
+  try unfold root_minus_left_equals_right_subtree_spec
+  simp [grind_norm, SortitionTrees.rootSum, SortitionTrees.leftSum, SortitionTrees.rightSum, SortitionTrees.leaf0, SortitionTrees.leaf1, SortitionTrees.leaf2, SortitionTrees.leaf3, SortitionTrees.nodeIndexesToIDs, SortitionTrees.IDsToNodeIndexes, SortitionTrees.selectedNode, SortitionTrees.setLeaf, SortitionTrees.draw, leaf_sum, parent_equals_sum_of_children_spec, root_equals_sum_of_leaves_spec, draw_interval_matches_weights_spec, draw_selects_valid_leaf_spec, node_id_bijection_spec, root_minus_left_equals_right_subtree_spec, *]
+  all_goals try (split_ifs <;> simp_all [grind_norm])
+  all_goals try (repeat' (split <;> simp_all [grind_norm]))
+  all_goals try omega
 
 end Benchmark.Cases.Kleros.SortitionTrees

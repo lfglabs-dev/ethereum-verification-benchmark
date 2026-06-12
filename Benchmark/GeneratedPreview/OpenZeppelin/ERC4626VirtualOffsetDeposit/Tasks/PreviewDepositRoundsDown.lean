@@ -1,5 +1,6 @@
 import Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Specs
 import Verity.Stdlib.Math
+import Verity.Proofs.Stdlib.Math
 import Benchmark.Grindset
 
 namespace Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit
@@ -16,10 +17,9 @@ theorem previewDeposit_rounds_down
     (assets : Uint256) (s : ContractState)
     (hMul : (assets : Nat) * ((add (s.storage 1) virtualShares : Uint256) : Nat) <= MAX_UINT256) :
     previewDeposit_rounds_down_spec assets s := by
-  -- Grindset-first skeleton. See harness/PROOF_PATTERNS.md.
-  -- Try `grind` with contract symbol hints; fall back to `simp` /
-  -- `by_cases` if grind leaves goals. Use `grind?` for hints.
-  unfold previewDeposit_rounds_down_spec
-  grind
+  unfold previewDeposit_rounds_down_spec previewDeposit previewDepositAmount
+  simpa [mulDivDown] using
+    Verity.Proofs.Stdlib.Math.mulDivDown_mul_le assets (add (s.storage 1) virtualShares)
+      (add (s.storage 0) virtualAssets) hMul
 
 end Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit

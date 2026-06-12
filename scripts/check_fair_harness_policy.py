@@ -17,12 +17,12 @@ from harness.runners import lean_tools
 from harness.workspace_builder import build_group_workspace
 
 
-GROUP_SPECIFIC_GRINDSET = {
-    "Benchmark/Grindset/Arith.lean",
-    "Benchmark/Grindset/Cork.lean",
-    "Benchmark/Grindset/Kleros.lean",
-    "Benchmark/Grindset/Paladin.lean",
-    "Benchmark/Grindset/Reserve.lean",
+GENERIC_GRINDSET_MODULES = {
+    "Attr.lean",
+    "Monad.lean",
+    "Core.lean",
+    "Reach.lean",
+    "ArithCore.lean",
 }
 
 
@@ -67,22 +67,19 @@ def main() -> int:
             errors.append(f"fair solve loop contains branch-shaped text {forbidden_text!r}")
 
     group = load_group("lido/vaulthub_locked", "active")
-    fair = build_group_workspace(group, run_id="fair-policy", include_group_grindset=False)
+    fair = build_group_workspace(group, run_id="fair-policy")
     try:
         fair_files = _manifest_files(fair.path)
-        leaked = sorted(fair_files & GROUP_SPECIFIC_GRINDSET)
+        leaked = sorted(rel for rel in fair_files if rel.startswith("Benchmark/Grindset/") and Path(rel).name not in GENERIC_GRINDSET_MODULES)
         if leaked:
-            errors.append(f"fair workspace includes group-specific Grindset modules: {', '.join(leaked)}")
-        fair_root = (fair.path / "Benchmark" / "Grindset.lean").read_text(encoding="utf-8")
-        group_specific_imports = {
-            f"import Benchmark.Grindset.{Path(rel).stem}" for rel in GROUP_SPECIFIC_GRINDSET
-        }
-        for line in fair_root.splitlines():
-            if line.strip() in group_specific_imports:
-                errors.append(f"fair Grindset umbrella imports a group-specific helper: {line.strip()}")
+            errors.append(f"fair workspace includes non-generic Grindset modules: {', '.join(leaked)}")
+        repo_modules = {p.name for p in (Path(__file__).resolve().parent.parent / "Benchmark" / "Grindset").glob("*.lean")}
+        non_generic = repo_modules - GENERIC_GRINDSET_MODULES - {"ReachTests.lean"}
+        if non_generic:
+            errors.append(f"repo Benchmark/Grindset contains non-generic modules: {', '.join(sorted(non_generic))}")
         manifest = json.loads((fair.path / "workspace-manifest.json").read_text(encoding="utf-8"))
-        if manifest.get("tool_policy", {}).get("include_group_grindset") is not False:
-            errors.append("fair workspace manifest does not record include_group_grindset=false")
+        if manifest.get("tool_policy", {}).get("generic_grindset_only") is not True:
+            errors.append("fair workspace manifest does not record generic_grindset_only=true")
         if "reference_solution" in json.dumps(manifest.get("group", {})):
             errors.append("fair workspace manifest exposes reference_solution metadata")
         tasks_json = json.loads((fair.path / "harness" / "TASKS.json").read_text(encoding="utf-8"))
