@@ -53,8 +53,21 @@ def _harvest_symbols(workspace: Path, task) -> list[str]:
         if not path.is_file():
             continue
         namespace = None
+        in_block_comment = False
         for raw in path.read_text(encoding="utf-8").splitlines():
             line = raw.strip()
+            if in_block_comment:
+                if "-/" in line:
+                    in_block_comment = False
+                    line = line.split("-/", 1)[1].strip()
+                else:
+                    continue
+            if line.startswith(("/-", "/--")):
+                if "-/" not in line:
+                    in_block_comment = True
+                continue
+            if line.startswith("--"):
+                continue
             ns_match = re.match(r"namespace\s+([A-Za-z0-9_.]+)", line)
             if ns_match:
                 namespace = ns_match.group(1).split(".")[-1]
@@ -63,12 +76,15 @@ def _harvest_symbols(workspace: Path, task) -> list[str]:
                 namespace = contract_match.group(1)
             def_match = re.match(r"def\s+([A-Za-z_][A-Za-z0-9_']*)", line)
             if def_match:
-                names.append(f"{namespace}.{def_match.group(1)}" if namespace else def_match.group(1))
+                # Plain defs live at the file namespace, which matches the
+                # skeleton's own namespace — refer to them bare. Only
+                # verity_contract members need the contract-name prefix.
+                names.append(def_match.group(1))
                 continue
             if namespace is None:
                 continue
-            fn_match = re.match(r"function\s+(?:[A-Za-z_][A-Za-z0-9_']*\([^)]*\)\s+)*([A-Za-z_][A-Za-z0-9_']*)", line)
-            if fn_match and fn_match.group(1) not in ("on", "nonreentrant"):
+            fn_match = re.match(r"function\s+(?:internal\s+)?([A-Za-z_][A-Za-z0-9_']*)\s*(?:\(|$)", line)
+            if fn_match and fn_match.group(1) not in ("on", "nonreentrant", "internal"):
                 names.append(f"{namespace}.{fn_match.group(1)}")
                 continue
             slot_match = re.match(r"([A-Za-z_][A-Za-z0-9_']*)\s*:\s*.+:=\s*slot\s+\d+", line)
@@ -95,6 +111,9 @@ def battery(skeleton: str, symbols: list[str]) -> list[tuple[str, str]]:
         )),
         # simp_all variant: unfolds spec defs inside hypotheses too.
         ("simp_all_everything", f"simp_all [{all_args}]\n"),
+        # Reach-style chain goals (Safe family shape) have a dedicated shipped
+        # tactic; harmless elsewhere (fails fast).
+        ("reach_grind", unfolds + "verity_reach_grind\n"),
         ("grind", "grind\n"),
     ]
     seen: set[str] = set()

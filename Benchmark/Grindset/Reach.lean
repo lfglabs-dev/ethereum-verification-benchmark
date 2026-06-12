@@ -170,6 +170,46 @@ private theorem isChain_append_step (step : σ → α → α) (s : σ) (b : α) 
       show IsChain step s (a₁ :: ((a₂ :: t) ++ [step s b]))
       exact ⟨hstep, ih⟩
 
+
+/-- Dropping a prefix of a chain leaves a chain. The workhorse for
+    "split the chain at a member" arguments (acyclicity proofs). -/
+theorem isChain_suffix (step : σ → α → α) (s : σ) :
+    ∀ (xs ys : List α), IsChain step s (xs ++ ys) → IsChain step s ys
+  | [], _, h => h
+  | _ :: as, ys, h => by
+      have htail : IsChain step s (as ++ ys) := by
+        cases hcase : as ++ ys with
+        | nil => exact trivial
+        | cons b bs =>
+            rw [List.cons_append, hcase] at h
+            exact h.2
+      exact isChain_suffix step s as ys htail
+
+/-- The step relation holds across any adjacent pair inside a chain:
+    from `chain = pre ++ a :: b :: post` conclude `step s a = b`. -/
+theorem isChain_step_at_mem (step : σ → α → α) (s : σ)
+    {pre post : List α} {a b : α}
+    (h : IsChain step s (pre ++ a :: b :: post)) :
+    step s a = b :=
+  (isChain_suffix step s pre (a :: b :: post) h).1
+
+/-- Witness-based duplicate freedom, mirroring the per-case `noDuplicates`
+    definitions generically. -/
+def NoDuplicates : List α → Prop
+  | [] => True
+  | a :: t => a ∉ t ∧ NoDuplicates t
+
+@[simp]
+theorem noDuplicates_nil : NoDuplicates ([] : List α) := trivial
+
+@[simp]
+theorem noDuplicates_cons (a : α) (t : List α) :
+    NoDuplicates (a :: t) ↔ a ∉ t ∧ NoDuplicates t := Iff.rfl
+
+/-- Head of a duplicate-free chain does not recur in the tail. -/
+theorem NoDuplicates.head_notMem {a : α} {t : List α}
+    (h : NoDuplicates (a :: t)) : a ∉ t := h.1
+
 /-- Witness-based reachability: there is a chain from `a` to `b`. -/
 def Reachable (step : σ → α → α) (s : σ) (a b : α) : Prop :=
   ∃ chain : List α,
