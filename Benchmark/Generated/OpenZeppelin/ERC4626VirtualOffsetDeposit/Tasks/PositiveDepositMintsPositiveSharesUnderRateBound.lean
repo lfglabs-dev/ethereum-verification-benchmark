@@ -1,5 +1,6 @@
 import Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Specs
 import Verity.Stdlib.Math
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit
 

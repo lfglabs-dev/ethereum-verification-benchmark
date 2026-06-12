@@ -27,67 +27,12 @@
 
 import Benchmark.Cases.Lido.VaulthubLocked.Specs
 import Benchmark.Grindset.Attr
+import Benchmark.Grindset.ArithCore
 
 namespace Benchmark.Grindset.Arith
 
 open Verity
 open Benchmark.Cases.Lido.VaulthubLocked
-
-/-! ## Uint256 → Nat wrapper lemmas -/
-
-/-- Uint256 multiplication reduces to Nat multiplication when no overflow. -/
-@[grind_norm, simp]
-theorem mul_val_of_no_overflow (a b : Uint256)
-    (h : a.val * b.val < Verity.Core.Uint256.modulus) :
-    (Verity.EVM.Uint256.mul a b).val = a.val * b.val := by
-  simp [HMul.hMul, Verity.Core.Uint256.mul, Verity.Core.Uint256.ofNat]
-  exact Nat.mod_eq_of_lt h
-
-/-- Uint256 subtraction reduces to Nat subtraction when b ≤ a. -/
-@[grind_norm, simp]
-theorem sub_val_of_le (a b : Uint256)
-    (h : b.val ≤ a.val) :
-    (Verity.EVM.Uint256.sub a b).val = a.val - b.val := by
-  have hlt : a.val - b.val < Verity.Core.Uint256.modulus :=
-    Nat.lt_of_le_of_lt (Nat.sub_le _ _) a.isLt
-  simp [HSub.hSub, Verity.Core.Uint256.sub, h, Verity.Core.Uint256.ofNat]
-  exact Nat.mod_eq_of_lt hlt
-
-/-- Uint256 division reduces to Nat division when divisor is nonzero. -/
-@[grind_norm, simp]
-theorem div_val (a b : Uint256) (hb : b.val ≠ 0) :
-    (Verity.EVM.Uint256.div a b).val = a.val / b.val := by
-  have hlt : a.val / b.val < Verity.Core.Uint256.modulus :=
-    Nat.lt_of_le_of_lt (Nat.div_le_self _ _) a.isLt
-  simp [HDiv.hDiv, Verity.Core.Uint256.div, hb, Verity.Core.Uint256.ofNat]
-  exact Nat.mod_eq_of_lt hlt
-
-/-- Uint256 addition reduces to Nat addition when no overflow. -/
-@[grind_norm, simp]
-theorem add_val_of_no_overflow (a b : Uint256)
-    (h : a.val + b.val < Verity.Core.Uint256.modulus) :
-    (Verity.EVM.Uint256.add a b).val = a.val + b.val := by
-  simp [HAdd.hAdd, Verity.Core.Uint256.add, Verity.Core.Uint256.ofNat]
-  exact Nat.mod_eq_of_lt h
-
-/-! ## ceilDiv val-level unfolding -/
-
-/-- Natural-number identity: for a > 0, b > 0, (a-1)/b + 1 = (a+b-1)/b. -/
-private theorem ceildiv_identity (a b : Nat) (ha : a > 0) (hb : b > 0) :
-    (a - 1) / b + 1 = (a + b - 1) / b := by
-  have h : a + b - 1 = (a - 1) + b := by omega
-  rw [h, Nat.add_div_right _ hb]
-
-/-- Nat-level: (a+b-1)/b ≤ a when b ≥ 1. -/
-private theorem ceilDiv_nat_le (a b : Nat) (hb : b ≥ 1) :
-    (a + b - 1) / b ≤ a := by
-  by_cases ha : a = 0
-  · subst ha; simp
-    exact Or.inr (by omega : 0 < b)
-  · have haPos : a > 0 := Nat.pos_of_ne_zero ha
-    have hRw : a + b - 1 = (a - 1) + b := by omega
-    rw [hRw, Nat.add_div_right _ (by omega : b > 0)]
-    have := Nat.div_le_self (a - 1) b; omega
 
 /-- ceilDiv(a,b).val = (a.val + b.val - 1) / b.val when b > 0. -/
 @[grind_norm, simp]

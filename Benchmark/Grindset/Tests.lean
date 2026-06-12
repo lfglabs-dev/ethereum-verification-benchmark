@@ -78,6 +78,7 @@ theorem demo_flashLoanViaDeposit_preserves_pool_balance
           amount).run s).snd
     Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_preserves_pool_balance_spec
       amount s s' := by
+  simp only [grind_norm] at hBorrow
   simp only [grind_norm,
     Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_preserves_pool_balance_spec,
     Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.SideEntrance.flashLoanViaDeposit,

@@ -1,4 +1,5 @@
 import Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Generated.Zodiac.RolesDecoderFaithfulness.Tasks
 

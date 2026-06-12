@@ -74,8 +74,12 @@ def main() -> int:
         if leaked:
             errors.append(f"fair workspace includes group-specific Grindset modules: {', '.join(leaked)}")
         fair_root = (fair.path / "Benchmark" / "Grindset.lean").read_text(encoding="utf-8")
-        if "Benchmark.Grindset.Arith" in fair_root:
-            errors.append("fair Grindset umbrella imports a group-specific helper")
+        group_specific_imports = {
+            f"import Benchmark.Grindset.{Path(rel).stem}" for rel in GROUP_SPECIFIC_GRINDSET
+        }
+        for line in fair_root.splitlines():
+            if line.strip() in group_specific_imports:
+                errors.append(f"fair Grindset umbrella imports a group-specific helper: {line.strip()}")
         manifest = json.loads((fair.path / "workspace-manifest.json").read_text(encoding="utf-8"))
         if manifest.get("tool_policy", {}).get("include_group_grindset") is not False:
             errors.append("fair workspace manifest does not record include_group_grindset=false")

@@ -1,4 +1,5 @@
 import Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Slot0Proof
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Wildcat.BorrowLiquiditySafety
 

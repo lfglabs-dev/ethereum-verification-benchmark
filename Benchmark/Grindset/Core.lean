@@ -211,4 +211,124 @@ are `StorageSlot`s whose `.slot` literal is the slot number. -/
 theorem StorageSlot.slot_mk (n : Nat) :
     ({ slot := n } : StorageSlot Uint256).slot = n := rfl
 
+
+/-! ## Uint256-keyed mapping storage (`setMappingUint`, Verity #154)
+
+Same read-after-write family as `storageMap`, for `Uint256 → Uint256`
+mappings. The update shape mirrors `Verity.setMappingUint`. -/
+
+@[grind_norm, simp]
+theorem storageMapUint_setMappingUint_eq
+    (s : ContractState) (slot : Nat) (key v : Uint256) :
+    ({ s with
+        storageMapUint := fun sl k =>
+          if sl == slot && k == key then v
+          else s.storageMapUint sl k } : ContractState).storageMapUint slot key
+      = v := by
+  simp
+
+@[grind_norm, simp]
+theorem storageMapUint_setMappingUint_ne_key
+    (s : ContractState) (slot : Nat) (key key' v : Uint256)
+    (h : key' ≠ key) :
+    ({ s with
+        storageMapUint := fun sl k =>
+          if sl == slot && k == key then v
+          else s.storageMapUint sl k } : ContractState).storageMapUint slot key'
+      = s.storageMapUint slot key' := by
+  have : (key' == key) = false := by
+    simpa [beq_iff_eq] using h
+  simp [this]
+
+@[grind_norm, simp]
+theorem storageMapUint_setMappingUint_ne_slot
+    (s : ContractState) (slot n : Nat) (key key' v : Uint256)
+    (h : n ≠ slot) :
+    ({ s with
+        storageMapUint := fun sl k =>
+          if sl == slot && k == key then v
+          else s.storageMapUint sl k } : ContractState).storageMapUint n key'
+      = s.storageMapUint n key' := by
+  have : (n == slot) = false := by
+    simpa [Nat.beq_eq_true_eq] using h
+  simp [this]
+
+/-! ## Double-mapping storage (`setMapping2`, Verity #154) -/
+
+@[grind_norm, simp]
+theorem storageMap2_setMapping2_eq
+    (s : ContractState) (slot : Nat) (key1 key2 : Address) (v : Uint256) :
+    ({ s with
+        storageMap2 := fun sl a1 a2 =>
+          if sl == slot && a1 == key1 && a2 == key2 then v
+          else s.storageMap2 sl a1 a2 } : ContractState).storageMap2 slot key1 key2
+      = v := by
+  simp
+
+@[grind_norm, simp]
+theorem storageMap2_setMapping2_ne_slot
+    (s : ContractState) (slot n : Nat) (key1 key2 a1 a2 : Address) (v : Uint256)
+    (h : n ≠ slot) :
+    ({ s with
+        storageMap2 := fun sl b1 b2 =>
+          if sl == slot && b1 == key1 && b2 == key2 then v
+          else s.storageMap2 sl b1 b2 } : ContractState).storageMap2 n a1 a2
+      = s.storageMap2 n a1 a2 := by
+  have : (n == slot) = false := by
+    simpa [Nat.beq_eq_true_eq] using h
+  simp [this]
+
+@[grind_norm, simp]
+theorem storageMap2_setMapping2_ne_key1
+    (s : ContractState) (slot : Nat) (key1 key2 a1 a2 : Address) (v : Uint256)
+    (h : a1 ≠ key1) :
+    ({ s with
+        storageMap2 := fun sl b1 b2 =>
+          if sl == slot && b1 == key1 && b2 == key2 then v
+          else s.storageMap2 sl b1 b2 } : ContractState).storageMap2 slot a1 a2
+      = s.storageMap2 slot a1 a2 := by
+  have : (a1 == key1) = false := by
+    simpa [beq_iff_eq] using h
+  simp [this]
+
+@[grind_norm, simp]
+theorem storageMap2_setMapping2_ne_key2
+    (s : ContractState) (slot : Nat) (key1 key2 a1 a2 : Address) (v : Uint256)
+    (h : a2 ≠ key2) :
+    ({ s with
+        storageMap2 := fun sl b1 b2 =>
+          if sl == slot && b1 == key1 && b2 == key2 then v
+          else s.storageMap2 sl b1 b2 } : ContractState).storageMap2 slot a1 a2
+      = s.storageMap2 slot a1 a2 := by
+  have : (a2 == key2) = false := by
+    simpa [beq_iff_eq] using h
+  simp [this]
+
+/-! ## Cross-type preservation for the newer mapping families -/
+
+@[grind_norm, simp]
+theorem storage_after_setMappingUint
+    (s : ContractState) (n slot : Nat) (key v : Uint256) :
+    ({ s with
+        storageMapUint := fun sl k =>
+          if sl == slot && k == key then v
+          else s.storageMapUint sl k } : ContractState).storage n
+      = s.storage n := rfl
+
+@[grind_norm, simp]
+theorem storageMapUint_after_setStorage
+    (s : ContractState) (slot n : Nat) (v key : Uint256) :
+    ({ s with
+        storage := fun k => if k == slot then v else s.storage k } : ContractState).storageMapUint n key
+      = s.storageMapUint n key := rfl
+
+@[grind_norm, simp]
+theorem sender_after_setMappingUint
+    (s : ContractState) (slot : Nat) (key v : Uint256) :
+    ({ s with
+        storageMapUint := fun sl k =>
+          if sl == slot && k == key then v
+          else s.storageMapUint sl k } : ContractState).sender
+      = s.sender := rfl
+
 end Benchmark.Grindset

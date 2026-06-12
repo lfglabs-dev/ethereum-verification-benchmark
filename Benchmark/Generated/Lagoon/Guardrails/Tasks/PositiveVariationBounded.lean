@@ -1,4 +1,5 @@
 import Benchmark.Cases.Lagoon.Guardrails.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Generated.Lagoon.Guardrails.Tasks
 

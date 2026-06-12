@@ -157,6 +157,60 @@ def _case_public_dirs(group: Group) -> list[str]:
     return sorted(set(dirs))
 
 
+
+def _clone_tree(src: Path, dst: Path) -> None:
+    """Cheap copy-on-write/hardlink clone of a directory tree."""
+    import platform
+    import subprocess
+
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    if platform.system() == "Darwin":
+        result = subprocess.run(["cp", "-Rc", str(src), str(dst)], capture_output=True)
+        if result.returncode == 0:
+            return
+    else:
+        result = subprocess.run(["cp", "-Rla", str(src), str(dst)], capture_output=True)
+        if result.returncode == 0:
+            return
+    shutil.copytree(src, dst)
+
+
+def _seed_pruned_project_build(workspace: Path) -> None:
+    """Clone the project's .lake/build into the workspace and prune every
+    artifact whose source .lean is absent from the workspace.
+
+    Sharing the repo build dir verbatim leaks compiled hidden reference
+    proofs and excluded Grindset modules: they stay importable even though
+    their sources never reach the workspace. Pruning to workspace sources
+    keeps warm-build time near zero without that leak."""
+    src_build = ROOT / ".lake" / "build"
+    dst_build = workspace / ".lake" / "build"
+    if not src_build.is_dir() or dst_build.exists():
+        return
+    _clone_tree(src_build, dst_build)
+    for tree in (dst_build / "lib" / "lean", dst_build / "ir"):
+        if not tree.is_dir():
+            continue
+        for artifact in sorted(tree.rglob("*")):
+            if not artifact.is_file():
+                continue
+            rel = artifact.relative_to(tree)
+            stem = rel.as_posix()
+            for suffix in (".olean", ".olean.hash", ".olean.trace", ".ilean", ".ilean.hash",
+                           ".trace", ".c", ".c.hash", ".c.o", ".o", ".bc", ".json"):
+                if stem.endswith(suffix):
+                    stem = stem[: -len(suffix)]
+                    break
+            source = workspace / (stem + ".lean")
+            if not source.is_file():
+                artifact.unlink(missing_ok=True)
+        for directory in sorted((d for d in tree.rglob("*") if d.is_dir()), reverse=True):
+            try:
+                directory.rmdir()
+            except OSError:
+                pass
+
+
 def build_group_workspace(
     group: Group,
     *,
@@ -174,17 +228,27 @@ def build_group_workspace(
     dependency_cache: dict[str, str] | None = None
     lake_cache = ROOT / ".lake"
     if lake_cache.exists() and not (workspace / ".lake").exists():
-        (workspace / ".lake").symlink_to(lake_cache, target_is_directory=True)
-        dependency_cache = {"path": ".lake", "target": str(lake_cache)}
+        # Share only dependency packages (Mathlib, Verity, ...). The project's
+        # own build dir must NOT be shared: it contains oleans for hidden
+        # reference proofs (Benchmark/Cases/*/Proofs.lean) and case-specific
+        # Grindset modules, which would otherwise be importable from the
+        # workspace even though their sources are excluded. The project build
+        # dir is cloned cheaply and pruned to artifacts whose sources are
+        # present in the workspace (see _seed_pruned_project_build).
+        (workspace / ".lake").mkdir()
+        if (lake_cache / "packages").exists():
+            (workspace / ".lake" / "packages").symlink_to(lake_cache / "packages", target_is_directory=True)
+            dependency_cache = {"path": ".lake/packages", "target": str(lake_cache / "packages")}
 
     grindset_root = workspace / "Benchmark" / "Grindset.lean"
     grindset_root.parent.mkdir(parents=True, exist_ok=True)
-    grindset_modules = {"Attr.lean", "Monad.lean", "Core.lean", "Reach.lean"}
+    grindset_modules = {"Attr.lean", "Monad.lean", "Core.lean", "Reach.lean", "ArithCore.lean"}
     grindset_imports = [
         "import Benchmark.Grindset.Attr",
         "import Benchmark.Grindset.Monad",
         "import Benchmark.Grindset.Core",
         "import Benchmark.Grindset.Reach",
+        "import Benchmark.Grindset.ArithCore",
     ]
     group_base_id = "/".join(group.group_id.split("/")[:2])
     if include_group_grindset and group_base_id == "lido/vaulthub_locked":
@@ -272,6 +336,9 @@ def build_group_workspace(
             ".env",
         ],
     }
+    if dependency_cache is not None:
+        _seed_pruned_project_build(workspace)
+
     manifest_path = workspace / "workspace-manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return BuiltWorkspace(path=workspace, manifest_path=manifest_path)

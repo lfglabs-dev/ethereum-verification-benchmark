@@ -4,6 +4,7 @@ import Benchmark.Grindset.Attr
 import Benchmark.Grindset.Monad
 import Benchmark.Grindset.Core
 import Benchmark.Grindset.Tests
+import Benchmark.Grindset.ArithCore
 import Benchmark.Grindset.Arith
 import Benchmark.Grindset.Reserve
 import Benchmark.Grindset.Kleros
