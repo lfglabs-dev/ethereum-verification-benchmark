@@ -15,6 +15,7 @@ import Benchmark.Cases.ERC4337.EntryPointInvariant.IndexedCounting
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Aggregator
 import Benchmark.Cases.ERC4337.EntryPointInvariant.InnerHandleOpIntrinsic
 import Benchmark.Cases.ERC4337.EntryPointInvariant.LoopRefinement
+import Benchmark.Cases.ERC4337.EntryPointInvariant.SelectorsAndTopics
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 
