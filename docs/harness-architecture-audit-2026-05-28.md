@@ -5,7 +5,7 @@ Objective: keep headline benchmark comparisons focused on solver capability, not
 Changes in this audit:
 
 - Added shared `harness/TASK_SUMMARY.md` generation for every task/group workspace.
-- Fed the shared summary to both `default --mode fair` and `grok-build`.
+- Fed the shared summary to both `default` and `grok-build`.
 - Added `quick`, `normal`, and `deep` budget profiles so long agent runs are explicit and reproducible.
 - Added Grok `timeout_seconds` handling, timeout artifacts, stdout/stderr preservation, and editable-file diffs.
 - Added a Grok initial `./harness/check.sh` pass before the shell agent starts and appended the compact result to `TASK_SUMMARY.md`.
@@ -25,7 +25,7 @@ Fairness boundary:
 Recommended comparisons:
 
 ```bash
-python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair --budget normal
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --budget normal
 VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget normal
 python3 -m harness.cli compare --runs results/runs/<default-fair-run> results/runs/<grok-build-run>
 ```
@@ -34,6 +34,6 @@ Use `--budget deep` when inspecting whether either agent is still making useful 
 
 Measurement notes from this pass:
 
-- The current workspace had no `.env` and no default-harness API key. `default --mode fair` and `default --mode tuned` now finish quickly with `missing_credentials` artifacts instead of falling into accidental non-agent or stalled remote behavior.
+- The current workspace had no `.env` and no default-harness API key. `default` and `default --mode tuned` now finish quickly with `missing_credentials` artifacts instead of falling into accidental non-agent or stalled remote behavior.
 - A three-task Grok sample initially spent 10-13 minutes per task in OAuth because copied host auth was stale. The preflight change reduced the same stale-auth failure to a clear `harness_error` in about three seconds.
 - Sample stale-auth preflight artifact: `results/runs/20260528T093026-grok-build-ethereum__deposit_contract_minimal__deposit_count`.

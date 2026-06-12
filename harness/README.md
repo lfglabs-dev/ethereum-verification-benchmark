@@ -13,9 +13,9 @@ Task contract:
 
 Main entrypoints:
 - `python3 -m harness.cli list --suite active --unit group`
-- `python3 -m harness.cli run-task <project/case/task> --harness default --mode fair`
-- `python3 -m harness.cli run-group <project/case> --harness default --mode fair`
-- `python3 -m harness.cli run-suite --suite active --harness default --mode fair`
+- `python3 -m harness.cli run-task <project/case/task> --harness default`
+- `python3 -m harness.cli run-group <project/case> --harness default`
+- `python3 -m harness.cli run-suite --suite active --harness default`
 - `python3 -m harness.cli run-group <project/case> --harness grok-build`
 - `python3 -m harness.cli run-suite --suite active --harness grok-build`
 - `python3 -m harness.cli compare --runs results/runs/*`
@@ -120,10 +120,10 @@ Useful commands:
 
 ```bash
 python3 -m harness.cli list --suite active --unit group
-python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair --max-attempts 2 --keep-workspace
-python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair --budget deep
-python3 -m harness.cli run-group ethereum/deposit_contract_minimal --harness default --mode fair --max-attempts 2 --keep-workspace
-python3 -m harness.cli run-suite --suite active --harness default --mode fair --max-attempts 1
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --keep-workspace
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --budget deep
+python3 -m harness.cli run-group ethereum/deposit_contract_minimal --harness default --max-attempts 2 --keep-workspace
+python3 -m harness.cli run-suite --suite active --harness default --max-attempts 1
 VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --max-turns 20
 VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget deep
 python3 -m harness.cli run-group ethereum/deposit_contract_minimal --harness grok-build --dry-run --max-turns 20 --keep-workspace

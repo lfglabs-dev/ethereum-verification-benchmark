@@ -53,7 +53,6 @@ def run_group(
     max_attempts: int,
     max_turns: int,
     grok_timeout_seconds: int,
-    mode: str,
     max_tool_calls: int,
     task_ref: str | None = None,
 ) -> tuple[int, Path]:
@@ -75,7 +74,6 @@ def run_group(
             dry_run=dry_run,
             max_attempts=max_attempts,
             max_tool_calls=max_tool_calls,
-            mode=mode,
             task_ref=task_ref,
         )
     raise SystemExit(f"unknown harness: {harness} (expected: default, grok-build)")
@@ -107,12 +105,11 @@ def run_suite(
     max_attempts: int,
     max_turns: int,
     grok_timeout_seconds: int,
-    mode: str,
     max_tool_calls: int,
 ) -> tuple[int, Path]:
     start = time.time()
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    mode_slug = f"-{mode}" if harness == "default" else ""
+    mode_slug = "-fair" if harness == "default" else ""
     run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{harness}{mode_slug}-suite-{suite}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -124,7 +121,7 @@ def run_suite(
     total_groups = len(groups)
     for index, group in enumerate(groups, start=1):
         print(f"[{index}/{total_groups}] start {group.group_id}", flush=True)
-        code, child_dir = run_group(group.group_id, harness, suite, keep_workspace, dry_run, max_attempts, max_turns, grok_timeout_seconds, mode, max_tool_calls)
+        code, child_dir = run_group(group.group_id, harness, suite, keep_workspace, dry_run, max_attempts, max_turns, grok_timeout_seconds, max_tool_calls)
         child_run = _load_child_run(child_dir)
         score = child_run.get("verifier", {}).get("score", {})
         passed = score.get("passed_targets", 0)
@@ -177,7 +174,7 @@ def run_suite(
         "harness_id": harness,
         "model": child_models[0] if len(child_models) == 1 else "suite-aggregate",
         "track": child_tracks[0] if len(child_tracks) == 1 else "mixed",
-        "mode": mode if harness == "default" else None,
+        "mode": "fair" if harness == "default" else None,
         "run_mode": "suite",
         "group_id": None,
         "task_ref": None,
@@ -200,7 +197,7 @@ def run_suite(
                 "max_attempts": max_attempts,
                 "max_turns": max_turns,
                 "grok_timeout_seconds": grok_timeout_seconds,
-                "mode": mode if harness == "default" else None,
+                "mode": "fair" if harness == "default" else None,
                 "max_tool_calls": max_tool_calls if harness == "default" else None,
                 "groups": [group_to_json(group) for group in groups],
             },
@@ -262,7 +259,6 @@ def main() -> int:
     group_parser.add_argument("--max-attempts", type=int)
     group_parser.add_argument("--max-turns", type=int)
     group_parser.add_argument("--grok-timeout-seconds", type=int)
-    group_parser.add_argument("--mode", choices=["fair", "fair+libs"], default="fair")
     group_parser.add_argument("--max-tool-calls", type=int)
 
     task_parser = sub.add_parser("run-task")
@@ -275,7 +271,6 @@ def main() -> int:
     task_parser.add_argument("--max-attempts", type=int)
     task_parser.add_argument("--max-turns", type=int)
     task_parser.add_argument("--grok-timeout-seconds", type=int)
-    task_parser.add_argument("--mode", choices=["fair", "fair+libs"], default="fair")
     task_parser.add_argument("--max-tool-calls", type=int)
 
     suite_parser = sub.add_parser("run-suite")
@@ -287,7 +282,6 @@ def main() -> int:
     suite_parser.add_argument("--max-attempts", type=int)
     suite_parser.add_argument("--max-turns", type=int)
     suite_parser.add_argument("--grok-timeout-seconds", type=int)
-    suite_parser.add_argument("--mode", choices=["fair", "fair+libs"], default="fair")
     suite_parser.add_argument("--max-tool-calls", type=int)
 
     compare_parser = sub.add_parser("compare")
@@ -317,7 +311,6 @@ def main() -> int:
             args.max_attempts,
             args.max_turns,
             args.grok_timeout_seconds,
-            args.mode,
             args.max_tool_calls,
         )
         print(run_dir)
@@ -334,7 +327,6 @@ def main() -> int:
             args.max_attempts,
             args.max_turns,
             args.grok_timeout_seconds,
-            args.mode,
             args.max_tool_calls,
             task_ref=args.task_ref,
         )
@@ -350,7 +342,6 @@ def main() -> int:
             max_attempts=args.max_attempts,
             max_turns=args.max_turns,
             grok_timeout_seconds=args.grok_timeout_seconds,
-            mode=args.mode,
             max_tool_calls=args.max_tool_calls,
         )
         print(run_dir)

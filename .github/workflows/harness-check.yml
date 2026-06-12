@@ -4,7 +4,7 @@ name: Harness check
 # behavior, and the results aggregator. No Lean toolchain required.
 on:
   pull_request:
-    paths: ["harness/**", "scripts/aggregate_runs.py", "scripts/check_grindset_generic.py", "Benchmark/Grindset/**", ".github/workflows/benchmark.yml"]
+    paths: ["harness/**", "scripts/aggregate_runs.py", "scripts/check_grindset_generic.py", "scripts/check_reference_solutions.py", "Benchmark/**", "cases/**", ".github/workflows/benchmark.yml"]
   workflow_dispatch:
 
 jobs:
@@ -16,6 +16,8 @@ jobs:
         run: python3 -m compileall -q harness scripts/aggregate_runs.py
       - name: Grindset generic lint
         run: python3 scripts/check_grindset_generic.py
+      - name: Reference solution audit
+        run: python3 scripts/check_reference_solutions.py
       - name: Proof patcher unit checks
         run: |
           python3 - <<'EOF'

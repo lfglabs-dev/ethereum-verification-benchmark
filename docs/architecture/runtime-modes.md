@@ -16,5 +16,5 @@ All modes use the same task contract and evaluator.
 
 Current group harnesses are concrete adapters over this task contract:
 
-- `default --mode fair` is the auditable Lean-tools mode. It exposes only generic public-file, goal, proof-check, tactic-try, and declaration-search tools, logs every tool call, and verifies the final editable file independently.
+- `default` is the auditable Lean-tools mode. It exposes only generic public-file, goal, proof-check, tactic-try, and declaration-search tools, logs every tool call, and verifies the final editable file independently.
 - `grok-build` is a shell-agent custom adapter over an isolated generated workspace and the same final verifier.

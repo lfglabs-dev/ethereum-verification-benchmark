@@ -152,7 +152,7 @@ Provider switching is configured in `.env`. Set `DEFAULT_HARNESS_PROVIDER=qwen` 
 
 Fair-mode tools do not expose `Benchmark/Grindset/*` files by default. Set `DEFAULT_HARNESS_ALLOW_GRINDSET_TOOLS=1` only for explicit research runs that measure the value of generic Grindset helpers.
 
-Both `default --mode fair` and `grok-build` receive the same generated `harness/TASK_SUMMARY.md` in each run workspace. It lists the target theorem, editable files, implementation/specification files, check command, and policy. Grok also gets the initial `./harness/check.sh` result in that summary so it does not spend turns rediscovering the first Lean failure.
+Both `default` and `grok-build` receive the same generated `harness/TASK_SUMMARY.md` in each run workspace. It lists the target theorem, editable files, implementation/specification files, check command, and policy. Grok also gets the initial `./harness/check.sh` result in that summary so it does not spend turns rediscovering the first Lean failure.
 
 Budget profiles:
 
@@ -162,16 +162,16 @@ Budget profiles:
 
 ```bash
 # Run a single task with the default harness
-python3 -m harness.cli run-task lido/vaulthub_locked/locked_funds_solvency --harness default --mode fair
+python3 -m harness.cli run-task lido/vaulthub_locked/locked_funds_solvency --harness default
 
 # Run a deeper fair agent attempt
-python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair --budget deep
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --budget deep
 
 # Run a full case with the default harness
-./scripts/run_default_harness_group.sh lido/vaulthub_locked --mode fair --max-attempts 2
+./scripts/run_default_harness_group.sh lido/vaulthub_locked --max-attempts 2
 
 # Run the full suite with the default harness
-./scripts/run_default_harness_suite.sh --suite active --mode fair --max-attempts 1
+./scripts/run_default_harness_suite.sh --suite active --max-attempts 1
 
 # Run Grok Build
 VERITY_ALLOW_HOST_GROK_AUTH=1 ./scripts/run_grok_build_group.sh ethereum/deposit_contract_minimal --max-turns 20
@@ -179,7 +179,7 @@ VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_c
 ./scripts/run_grok_build_suite.sh --suite active
 
 # Compare runs across harnesses/modes
-python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default
 python3 -m harness.cli compare --runs results/runs/<default-fair-run> results/runs/<grok-build-run>
 ```
 

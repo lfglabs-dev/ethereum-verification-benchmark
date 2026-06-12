@@ -31,7 +31,6 @@ except ImportError:
 
 HARNESS_ID = "default"
 RUN_SLUG = "default"
-VALID_MODES = ("fair", "fair+libs")
 PROVIDER_DEFAULTS = {
     "qwen": {
         "base_url": "https://spark-de79.gazella-vector.ts.net/v1",
@@ -91,7 +90,6 @@ DEFAULT_TASK_SUMMARY_CHARS = int(os.environ.get("DEFAULT_HARNESS_TASK_SUMMARY_CH
 DEFAULT_MAX_NON_PROOF_TOOL_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_NON_PROOF_TOOL_CALLS", "24"))
 DEFAULT_MAX_SANDBOX_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_SANDBOX_CALLS", "16"))
 DEFAULT_TOKEN_BUDGET = int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0"))  # 0 = unlimited; counts completion tokens per task
-DEFAULT_ALLOW_GRINDSET_TOOLS = os.environ.get("DEFAULT_HARNESS_ALLOW_GRINDSET_TOOLS", "0").lower() in {"1", "true", "yes"}
 HTTP_USER_AGENT = os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", "verity-benchmark-harness/1.0")
 LEAN_CHECK_MODE = os.environ.get("DEFAULT_HARNESS_CHECK_MODE", "file").strip().lower()  # "file" = lake env lean <editable>, "module" = lake build
 STUCK_NUDGE = os.environ.get("DEFAULT_HARNESS_STUCK_NUDGE", "1").lower() not in {"0", "false", "no"}
@@ -386,18 +384,6 @@ def _candidate_from_response(original: str, response_text: str, theorem_name: ob
     return _patch_proof_body(original, response_text)
 
 
-def _is_rejected_model_body(task: dict[str, object], response_text: str) -> str | None:
-    body = _indent_proof_body(response_text)
-    compact = " ".join(line.strip() for line in body.splitlines() if line.strip())
-    theorem_name = task.get("theorem_name")
-    large_solvency_targets = {
-        "Benchmark.Cases.Lido.VaulthubLocked.locked_funds_solvency",
-    }
-    if theorem_name in large_solvency_targets and compact in {"grind", "grind []"}:
-        return "broad_grind_rejected_for_large_solvency_target"
-    return None
-
-
 def _public_symbol_summary(text: str, *, limit: int = 1200) -> str:
     namespace = ""
     lines: list[str] = []
@@ -420,42 +406,6 @@ def _public_symbol_summary(text: str, *, limit: int = 1200) -> str:
         if re.match(r"[A-Za-z_][A-Za-z0-9_']*\s*:\s*.+:=\s*slot\s+\d+", line):
             lines.append(f"storage {line}")
     return "\n".join(lines)[:limit]
-
-
-def _context_for_task(
-    task: dict[str, object],
-    workspace: Path,
-    editable: str,
-    editable_files: object,
-    specification_files: object,
-    implementation_files: object,
-) -> tuple[str, str]:
-    context_parts: list[str] = []
-    symbol_parts: list[str] = []
-    total_context_chars = 0
-    proof_patterns = workspace / "harness" / "PROOF_PATTERNS.md"
-    if proof_patterns.is_file():
-        pattern_text = proof_patterns.read_text(encoding="utf-8")[:1500]
-        context_parts.append(f"[public proof guide: harness/PROOF_PATTERNS.md]\n{pattern_text}")
-        total_context_chars += len(context_parts[-1])
-    seen: set[str] = set()
-    for label, paths in (("editable", editable_files), ("specification", specification_files), ("implementation", implementation_files)):
-        if not isinstance(paths, list):
-            continue
-        for rel in paths:
-            if not isinstance(rel, str) or rel in seen or not (workspace / rel).is_file():
-                continue
-            seen.add(rel)
-            file_text = _read_workspace_file(workspace, rel)
-            symbol_summary = _public_symbol_summary(file_text)
-            if symbol_summary:
-                symbol_parts.append(f"[symbols from {rel}]\n{symbol_summary}")
-            snippet = f"[{label}: {rel}]\n{file_text}"
-            if label != "editable" and total_context_chars + len(snippet) > PROMPT_CONTEXT_CHARS:
-                continue
-            context_parts.append(snippet)
-            total_context_chars += len(snippet)
-    return "\n\n".join(context_parts), "\n\n".join(symbol_parts)
 
 
 def _read_workspace_file(workspace: Path, rel: str) -> str:
@@ -785,25 +735,6 @@ def _stuck_signature(first_error: object) -> str:
     return text[:200]
 
 
-def _retry_feedback(output: str) -> str:
-    compact = _compact_lean_output(output, limit=900)
-    lines = [line for line in compact.splitlines() if "error:" in line.lower() or "unsolved goals" in line.lower()]
-    text = "\n".join(lines) if lines else compact
-    if "maximum recursion depth has been reached" in compact:
-        text += (
-            "\nAvoid broad recursive simp. Do not put ContractResult.snd in a simp list. "
-            "Prefer unfolding the target contract/spec, split contract if/branch conditions with by_cases, "
-            "and simplify concrete storage slot names."
-        )
-    if "unknown identifier" in compact:
-        text += "\nUse only names visible in the provided files. Do not invent Verity.Storage.* helpers or ContractState methods."
-    if "unknown constant" in compact:
-        text += "\nUse only visible declarations. Do not invent storage_set or ContractState update lemmas."
-    if "failed to unfold" in compact:
-        text += "\nDo not unfold generated contract .spec declarations unless Lean shows they unfold; unfold the concrete function and public spec instead."
-    return text[-240:]
-
-
 FAIR_TOOLS: list[dict[str, Any]] = [
     {
         "type": "function",
@@ -945,7 +876,7 @@ def _local_no_auth_endpoint(base_url: str) -> bool:
     return host in {"127.0.0.1", "localhost", "::1"}
 
 
-def _fair_tool_can_read(rel: str, *, allow_grindset_tools: bool = False) -> bool:
+def _fair_tool_can_read(rel: str) -> bool:
     parts = Path(rel).parts
     if rel == ".env" or ".env" in parts:
         return False
@@ -953,9 +884,7 @@ def _fair_tool_can_read(rel: str, *, allow_grindset_tools: bool = False) -> bool
         return False
     if rel.endswith("Proofs.lean") or "/Proofs/" in rel:
         return False
-    if allow_grindset_tools or DEFAULT_ALLOW_GRINDSET_TOOLS:
-        return True
-    return not rel.startswith("Benchmark/Grindset/")
+    return True
 
 
 def _fair_dependency_roots(workspace: Path) -> list[Path]:
@@ -977,7 +906,7 @@ def _fair_dependency_roots(workspace: Path) -> list[Path]:
     return roots
 
 
-def _public_lean_files(workspace: Path, *, allow_grindset_tools: bool = False) -> list[tuple[str, Path]]:
+def _public_lean_files(workspace: Path) -> list[tuple[str, Path]]:
     seen: set[Path] = set()
     files: list[tuple[str, Path]] = []
 
@@ -987,7 +916,7 @@ def _public_lean_files(workspace: Path, *, allow_grindset_tools: bool = False) -
             rel = path.relative_to(workspace).as_posix()
         except (OSError, ValueError):
             continue
-        if resolved in seen or not _fair_tool_can_read(rel, allow_grindset_tools=allow_grindset_tools):
+        if resolved in seen or not _fair_tool_can_read(rel):
             continue
         seen.add(resolved)
         files.append((rel, path))
@@ -999,7 +928,7 @@ def _public_lean_files(workspace: Path, *, allow_grindset_tools: bool = False) -
                 rel = ".lake/" + path.relative_to(dependency_root).as_posix()
             except (OSError, ValueError):
                 continue
-            if resolved in seen or not _fair_tool_can_read(rel, allow_grindset_tools=allow_grindset_tools):
+            if resolved in seen or not _fair_tool_can_read(rel):
                 continue
             seen.add(resolved)
             files.append((rel, path))
@@ -1007,10 +936,10 @@ def _public_lean_files(workspace: Path, *, allow_grindset_tools: bool = False) -
     return sorted(files, key=lambda item: item[0])
 
 
-def _search_declarations(workspace: Path, query: str, *, limit: int = 20, allow_grindset_tools: bool = False) -> list[dict[str, object]]:
+def _search_declarations(workspace: Path, query: str, *, limit: int = 20) -> list[dict[str, object]]:
     results: list[dict[str, object]] = []
     pattern = query.lower()
-    for rel, path in _public_lean_files(workspace, allow_grindset_tools=allow_grindset_tools):
+    for rel, path in _public_lean_files(workspace):
         try:
             lines = path.read_text(encoding="utf-8").splitlines()
         except UnicodeDecodeError:
@@ -1081,10 +1010,10 @@ def _related_simp_lemmas(lines: list[str], decl_start: int, query: str) -> list[
     return related
 
 
-def _definition_outline(workspace: Path, query: str, *, limit: int = 12, allow_grindset_tools: bool = False) -> list[dict[str, object]]:
+def _definition_outline(workspace: Path, query: str, *, limit: int = 12) -> list[dict[str, object]]:
     results: list[dict[str, object]] = []
     pattern = query.lower()
-    for rel, path in _public_lean_files(workspace, allow_grindset_tools=allow_grindset_tools):
+    for rel, path in _public_lean_files(workspace):
         try:
             lines = path.read_text(encoding="utf-8").splitlines()
         except UnicodeDecodeError:
@@ -1221,7 +1150,6 @@ def _execute_fair_tool(
     attempts_dir: Path,
     attempts: list[dict[str, object]],
     sandbox_state: dict[str, int] | None = None,
-    allow_grindset_tools: bool = False,
 ) -> dict[str, object]:
     if name == "show_task":
         summary_path = workspace / "harness" / "TASK_SUMMARY.md"
@@ -1243,8 +1171,8 @@ def _execute_fair_tool(
             path = _safe_workspace_path(workspace, rel)
         except ValueError as exc:
             return {"ok": False, "error": str(exc)}
-        if not _fair_tool_can_read(rel, allow_grindset_tools=allow_grindset_tools):
-            return {"ok": False, "error": "fair mode does not expose hidden proof, GeneratedPreview, .env, or disabled Grindset files"}
+        if not _fair_tool_can_read(rel):
+            return {"ok": False, "error": "fair mode does not expose hidden proof, GeneratedPreview, or .env files"}
         if not path.is_file():
             return {"ok": False, "error": "file not found"}
         try:
@@ -1417,13 +1345,13 @@ def _execute_fair_tool(
         if not isinstance(query, str) or not query:
             return {"ok": False, "error": "query must be a non-empty string"}
         limit = args.get("limit")
-        return {"ok": True, "results": _search_declarations(workspace, query, limit=int(limit) if isinstance(limit, int) else 20, allow_grindset_tools=allow_grindset_tools)}
+        return {"ok": True, "results": _search_declarations(workspace, query, limit=int(limit) if isinstance(limit, int) else 20)}
     if name == "definition_outline":
         query = args.get("query")
         if not isinstance(query, str) or not query:
             return {"ok": False, "error": "query must be a non-empty string"}
         limit = args.get("limit")
-        return {"ok": True, "results": _definition_outline(workspace, query, limit=int(limit) if isinstance(limit, int) else 12, allow_grindset_tools=allow_grindset_tools)}
+        return {"ok": True, "results": _definition_outline(workspace, query, limit=int(limit) if isinstance(limit, int) else 12)}
     return {"ok": False, "error": f"unknown tool: {name}"}
 
 
@@ -1490,7 +1418,6 @@ def _attempt_task_fair(
     attempts_dir: Path,
     tool_log_path: Path,
     conversation_log_path: Path,
-    allow_grindset_tools: bool = False,
 ) -> dict[str, object]:
     editable_files = task.get("editable_files")
     target_module = task.get("target_module")
@@ -1784,7 +1711,6 @@ def _attempt_task_fair(
                 attempts_dir=attempts_dir,
                 attempts=attempts,
                 sandbox_state=sandbox_state,
-                allow_grindset_tools=allow_grindset_tools,
             )
             tool_calls_executed += 1
             if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"}:
@@ -1853,147 +1779,6 @@ def _attempt_task_fair(
     }
 
 
-def _attempt_task(
-    task: dict[str, object],
-    workspace: Path,
-    *,
-    base_url: str,
-    max_attempts: int,
-    attempts_dir: Path,
-) -> dict[str, object]:
-    editable_files = task.get("editable_files")
-    implementation_files = task.get("implementation_files")
-    specification_files = task.get("specification_files")
-    target_module = task.get("target_module")
-    if not isinstance(editable_files, list) or len(editable_files) != 1 or not isinstance(target_module, str):
-        return {"task_ref": task.get("task_ref"), "status": "unsupported_task_shape"}
-    editable = str(editable_files[0])
-    proof_path = workspace / editable
-    original = proof_path.read_text(encoding="utf-8")
-    proof_path.write_text(original, encoding="utf-8")
-    feedback = "No Lean feedback yet."
-    attempts: list[dict[str, object]] = []
-
-    if not re.search(r"\b(sorry|admit|axiom)\b|\?_[A-Za-z0-9_']*", original):
-        code, output = _run_lean_module(workspace, target_module)
-        attempts.append(
-            {
-                "attempt": "preexisting",
-                "status": "lean_passed" if code == 0 else "lean_failed",
-                "exit_code": code,
-                "candidate_path": None,
-                "output": _compact_lean_output(output),
-                "response_usage": None,
-            }
-        )
-        if code == 0:
-            return {"task_ref": task.get("task_ref"), "status": "lean_passed", "attempts": attempts}
-        feedback = output
-
-    for attempt_index in range(1, max_attempts + 1):
-        context_text, symbol_text = _context_for_task(
-            task,
-            workspace,
-            editable,
-            editable_files,
-            specification_files,
-            implementation_files,
-        )
-        messages = [
-            {
-                "role": "system",
-                "content": (
-                    "You are editing one Lean 4 file in a Verity benchmark workspace. "
-                    "Return only the tactic proof body that belongs under `:= by`, not a complete file "
-                    "and not prose. Do not repeat imports, namespace declarations, theorem headers, or `:= by`. "
-                    "Do not use sorry, admit, axiom, hidden imports, or placeholders. "
-                    "Use the Lean tactic `grind`; there is no `Grindset.grind` declaration. "
-                    "Use only declarations visible in the provided public files. Do not invent "
-                    "Verity.Storage helpers, storage_set lemmas, or ContractState methods."
-                ),
-            },
-            {
-                "role": "user",
-                "content": (
-                    f"Task: {task.get('task_ref')}\n"
-                    f"Target theorem: {task.get('theorem_name')}\n"
-                    f"Editable file: {editable}\n\n"
-                    f"Public symbol summary:\n{symbol_text}\n\n"
-                    + context_text
-                    + f"\n\nLean feedback:\n{_retry_feedback(feedback)}\n"
-                ),
-            },
-        ]
-        try:
-            response = chat_completion(messages, base_url=base_url)
-            rejection = _is_rejected_model_body(task, _response_text(response))
-            if rejection:
-                attempts.append(
-                    {
-                        "attempt": attempt_index,
-                        "status": "rejected_candidate",
-                        "reason": rejection,
-                        "response_usage": response.get("usage") if isinstance(response, dict) else None,
-                    }
-                )
-                break
-            candidate = _candidate_from_response(original, _response_text(response), task.get("theorem_name"))
-        except Exception as exc:
-            if "exceeds the available context size" not in str(exc):
-                attempts.append({"attempt": attempt_index, "status": "request_failed", "error": str(exc)})
-                break
-            minimal_messages = [
-                messages[0],
-                {
-                    "role": "user",
-                    "content": (
-                        "Return Lean tactic body only, under := by. No prose.\n"
-                        f"Target: {task.get('theorem_name')}\n"
-                        f"Errors: {_retry_feedback(feedback)[:160]}\n"
-                    ),
-                },
-            ]
-            try:
-                response = chat_completion(minimal_messages, base_url=base_url, max_tokens=1024)
-                rejection = _is_rejected_model_body(task, _response_text(response))
-                if rejection:
-                    attempts.append(
-                        {
-                            "attempt": attempt_index,
-                            "status": "rejected_candidate",
-                            "reason": rejection,
-                            "response_usage": response.get("usage") if isinstance(response, dict) else None,
-                        }
-                    )
-                    break
-                candidate = _candidate_from_response(original, _response_text(response), task.get("theorem_name"))
-            except Exception as fallback_exc:
-                attempts.append({"attempt": attempt_index, "status": "request_failed", "error": str(fallback_exc)})
-                break
-        proof_path.write_text(candidate, encoding="utf-8")
-        candidate_path = attempts_dir / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}-attempt-{attempt_index}.lean"
-        candidate_path.parent.mkdir(parents=True, exist_ok=True)
-        candidate_path.write_text(candidate, encoding="utf-8")
-        code, output = _run_lean_module(workspace, target_module)
-        attempts.append(
-            {
-                "attempt": attempt_index,
-                "status": "lean_passed" if code == 0 else "lean_failed",
-                "exit_code": code,
-                "candidate_path": str(candidate_path),
-                "output": _compact_lean_output(output),
-                "response_usage": response.get("usage") if isinstance(response, dict) else None,
-            }
-        )
-        if code == 0:
-            return {"task_ref": task.get("task_ref"), "status": "lean_passed", "attempts": attempts}
-        feedback = output
-
-    if not any(attempt.get("status") in {"lean_failed", "lean_passed"} for attempt in attempts):
-        proof_path.write_text(original, encoding="utf-8")
-    return {"task_ref": task.get("task_ref"), "status": "failed_submitted" if attempts else "failed_no_attempt", "attempts": attempts}
-
-
 def run_group(
     group_id: str,
     *,
@@ -2002,11 +1787,8 @@ def run_group(
     dry_run: bool = False,
     max_attempts: int = 1,
     max_tool_calls: int = DEFAULT_MAX_TOOL_CALLS,
-    mode: str = "fair",
     task_ref: str | None = None,
 ) -> tuple[int, Path]:
-    if mode not in VALID_MODES:
-        raise ValueError(f"unknown default harness mode: {mode} (expected one of {', '.join(VALID_MODES)})")
     if max_attempts < 0:
         raise ValueError("max_attempts must be non-negative")
     if max_tool_calls < 0:
@@ -2014,7 +1796,7 @@ def run_group(
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_subject = task_ref or group_id
     model_slug = "".join(ch if ch.isalnum() else "-" for ch in DEFAULT_MODEL).strip("-").lower()
-    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{RUN_SLUG}-{mode}-{model_slug}-{run_subject.replace('/', '__')}"
+    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{RUN_SLUG}-fair-{model_slug}-{run_subject.replace('/', '__')}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     start = time.time()
@@ -2031,7 +1813,7 @@ def run_group(
             "provider": _active_provider(),
             "base_url": base_url,
             "model": DEFAULT_MODEL,
-            "mode": mode,
+            "mode": "fair",
             "max_attempts": max_attempts,
             "max_tool_calls": max_tool_calls,
         }
@@ -2042,7 +1824,7 @@ def run_group(
             "provider": _active_provider(),
             "base_url": base_url,
             "model": DEFAULT_MODEL,
-            "mode": mode,
+            "mode": "fair",
             "error": f"{mode} mode requires DEFAULT_HARNESS_API_KEY{provider_key_hint}, GAZELLA_API_KEY, OPENAI_API_KEY, or a localhost-compatible no-auth endpoint",
             "tasks": [],
         }
@@ -2069,30 +1851,18 @@ def run_group(
                     )
             for task in tasks_payload.get("tasks", []):
                 if isinstance(task, dict):
-                    if mode in {"fair", "fair+libs"}:
-                        task_results.append(
-                            _attempt_task_fair(
-                                task,
-                                built.path,
-                                base_url=base_url,
-                                max_attempts=max_attempts,
-                                max_tool_calls=max_tool_calls,
-                                attempts_dir=run_dir / "attempts",
-                                tool_log_path=run_dir / "tool-calls" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
-                                conversation_log_path=run_dir / "conversations" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
-                                allow_grindset_tools=(mode == "fair+libs"),
-                            )
+                    task_results.append(
+                        _attempt_task_fair(
+                            task,
+                            built.path,
+                            base_url=base_url,
+                            max_attempts=max_attempts,
+                            max_tool_calls=max_tool_calls,
+                            attempts_dir=run_dir / "attempts",
+                            tool_log_path=run_dir / "tool-calls" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
+                            conversation_log_path=run_dir / "conversations" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                         )
-                    else:
-                        task_results.append(
-                            _attempt_task(
-                                task,
-                                built.path,
-                                base_url=base_url,
-                                max_attempts=max_attempts,
-                                attempts_dir=run_dir / "attempts",
-                            )
-                        )
+                    )
             aggregate_usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
             for task_result in task_results:
                 task_usage = task_result.get("usage")
@@ -2101,9 +1871,9 @@ def run_group(
                         value = task_usage.get(key)
                         if isinstance(value, (int, float)):
                             aggregate_usage[key] += int(value)
-            response = {"status": "completed", "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "usage": aggregate_usage, "warm_builds": warm_builds, "tasks": task_results}
+            response = {"status": "completed", "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": "fair", "usage": aggregate_usage, "warm_builds": warm_builds, "tasks": task_results}
         except Exception as exc:
-            response = {"status": "harness_error", "error": str(exc), "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": mode, "warm_builds": warm_builds, "tasks": task_results}
+            response = {"status": "harness_error", "error": str(exc), "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": "fair", "warm_builds": warm_builds, "tasks": task_results}
 
     (run_dir / "workspace-manifest.json").write_text((built.path / "workspace-manifest.json").read_text(encoding="utf-8"), encoding="utf-8")
     shutil.copy2(built.path / "harness" / "TASK_SUMMARY.md", run_dir / "TASK_SUMMARY.md")
@@ -2114,7 +1884,7 @@ def run_group(
                 "provider": _active_provider(),
                 "base_url": base_url,
                 "model": DEFAULT_MODEL,
-                "mode": mode,
+                "mode": "fair",
                 "max_attempts": max_attempts,
                 "max_tool_calls": max_tool_calls,
             },
@@ -2142,7 +1912,7 @@ def run_group(
         "provider": _active_provider(),
         "model": DEFAULT_MODEL,
         "track": "group/lean_tools",
-        "mode": mode,
+        "mode": "fair",
         "run_mode": "task" if task_ref else "group",
         "group_id": group_id,
         "task_ref": task_ref,
@@ -2174,7 +1944,6 @@ def main() -> int:
     run.add_argument("--dry-run", action="store_true")
     run.add_argument("--max-attempts", type=int, default=1)
     run.add_argument("--max-tool-calls", type=int, default=DEFAULT_MAX_TOOL_CALLS)
-    run.add_argument("--mode", choices=VALID_MODES, default="fair")
     run.add_argument("--task-ref")
     args = parser.parse_args()
     if args.command == "smoke":
