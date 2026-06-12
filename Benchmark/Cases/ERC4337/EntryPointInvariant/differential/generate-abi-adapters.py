@@ -20,10 +20,14 @@ from pathlib import Path
 
 def render() -> str:
     return """function validateUserOp(key, declaredNonce) -> validationData {
+    // Returns packed validationData (authorizer | validUntil | validAfter).
+    // 0 = authorizer success (SIG_VALIDATION_SUCCESS) + no/valid time bounds.
+    // Nonzero can model SIG_VALIDATION_FAILED (authorizer=1) or time failure.
     validationData := 0
 }
 
 function validatePaymasterUserOp(key) -> paymasterValidationData {
+    // Same packed shape as account validationData.
     paymasterValidationData := 0
 }
 
