@@ -52,10 +52,9 @@ for review but not load-bearing for the headline.
   all-or-nothing, length/bounds, batch composition, lifecycle. Originally
   the headline statement before the counting form was introduced.
 - `Frame.lean` (`Benchmark` namespace) — 10 theorems: Verity-contract
-  shape of the frame conditions. The upstream `Verity.EVM.Frame` lemmas
-  now exist in verity main (shipped via lfglabs-dev/verity#1969), but this
-  benchmark still carries local duplicates (`EvmYulFrame.lean`,
-  `Layout.lean`) pending a refactor to consume the upstream versions.
+  shape of the frame conditions. The EVM CALL frame lemmas are consumed
+  from upstream `Verity.EVM.Frame`; `EvmYulFrame.lean` is only a stable
+  benchmark namespace adapter.
 - `Bytecode.lean` — 4 theorems: composes the abstract biconditional with
   the upstream frame conditions and records the EntryPointV09 EOA-only
   guard shape.
@@ -84,12 +83,13 @@ The upstream frame/layout lemmas (L3, L4, L5) now exist in verity main
 (`Verity.EVM.Frame.external_call_preserves_caller_storage` /
 `external_call_preserves_caller_memory`,
 `Verity.EVM.Layout.call_buffer_disjoint_from_heap`), shipped via
-`lfglabs-dev/verity#1969`. However, this benchmark still carries local
-duplicates of these statements (`EvmYulFrame.lean`, `Layout.lean`) and has
-not yet been refactored to consume the upstream lemmas directly.
+`lfglabs-dev/verity#1969`, and this benchmark now consumes them directly.
+`Layout.lean` keeps the EntryPoint-specific `opInfos` field names as a thin
+adapter over upstream `Verity.EVM.Layout`.
 
-`TransientGuard.lean` remains only as a generic EIP-1153 mutex smoke. It is
-not part of the EntryPoint critical path because EntryPoint v0.9's
+`TransientGuard.lean` remains only as a smoke invoking upstream
+`Verity.Core.nonReentrantTransient_locked_reverts`. It is not part of the
+EntryPoint critical path because EntryPoint v0.9's
 `nonReentrant` modifier is an EOA-only gate
 `tx.origin == msg.sender && msg.sender.code.length == 0`, modeled in
 `EntryPointV09.lean` with `msgSender` plus `txOriginOracle` and

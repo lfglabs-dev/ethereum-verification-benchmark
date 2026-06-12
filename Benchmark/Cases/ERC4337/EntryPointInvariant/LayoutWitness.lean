@@ -74,11 +74,9 @@ def LayoutWitness.toCallSites (w : LayoutWitness)
 theorem witness_implies_disjoint (w : LayoutWitness) :
     w.scratchOff + w.scratchSize ≤ w.opInfosBase ∨
     w.opInfosBase + w.opInfosWords ≤ w.scratchOff := by
-  left
-  unfold LayoutWitness.scratchOff
-  have h1 := w.scratchSize_le_scratch_room
-  have h2 := w.opInfosBase_in_heap
-  omega
+  -- Adapter: project the artifact witness to the benchmark layout shape,
+  -- whose disjointness theorem is backed by `Verity.EVM.Layout`.
+  exact callOutputBuffer_disjoint_from_opInfos w.toSolcLayout w.toCallSites
 
 /-- And in `MemFrame.Disjoint` form. -/
 theorem witness_implies_memframe_disjoint (w : LayoutWitness) :

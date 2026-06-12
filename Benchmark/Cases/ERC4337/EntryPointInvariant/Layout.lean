@@ -1,15 +1,17 @@
 import Benchmark.Cases.ERC4337.EntryPointInvariant.EvmYulFrame
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Frame
+import Verity.EVM.Layout
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
 
-open Benchmark.Cases.ERC4337.EntryPointInvariant.EvmYulFrame
 open Benchmark.Cases.ERC4337.EntryPointInvariant.MemFrame
 
 /-!
 # Step 3 — Solc memory-layout disjointness for the EntryPoint
 
-This module formalises the static facts about Solidity's memory allocator
+This module adapts the upstream `Verity.EVM.Layout` solc memory-layout
+lemma to the EntryPoint benchmark's historic `opInfos` field names.
+It formalises the static facts about Solidity's memory allocator
 that hold for the `handleOps` function in EntryPoint v0.9, and proves that
 the chosen call-output buffer is disjoint from the `opInfos[]` region —
 the disjointness premise consumed by Step 2's
@@ -109,13 +111,28 @@ theorem callOutputBuffer_disjoint_from_opInfos
     (L : SolcLayout) (S : EntryPointCallSites L) :
     S.outOff_eq_scratchLo + S.outSize_le_scratch ≤ L.opInfosBase ∨
     L.opInfosBase + L.opInfosWords ≤ S.outOff_eq_scratchLo := by
-  left
-  have h1 := S.outSize_in_range
-  have h2 := L.scratchHi_le_fmp
-  have h3 := L.fmpSlotIdx_lt_zero
-  have h4 := L.zeroSlot_lt_heap
-  have h5 := L.heap_le_opInfos
-  omega
+  -- Adapter: translate the benchmark's `opInfos` field names to upstream
+  -- `heapRegion` names and invoke `Verity.EVM.Layout`.
+  let L' : Verity.EVM.Layout.SolcLayout :=
+    { scratchLo := L.scratchLo
+      scratchHi := L.scratchHi
+      fmpSlotIdx := L.fmpSlotIdx
+      zeroSlotIdx := L.zeroSlotIdx
+      heapStart := L.heapStart
+      heapRegionBase := L.opInfosBase
+      heapRegionWords := L.opInfosWords
+      scratchLo_lt_hi := L.scratchLo_lt_hi
+      scratchHi_le_fmp := L.scratchHi_le_fmp
+      fmpSlotIdx_lt_zero := L.fmpSlotIdx_lt_zero
+      zeroSlot_lt_heap := L.zeroSlot_lt_heap
+      heap_le_heapBase := L.heap_le_opInfos
+      heapRegionWords_pos := L.opInfosWords_pos }
+  let S' : Verity.EVM.Layout.ScratchOutputBuffer L' :=
+    { outOff := S.outOff_eq_scratchLo
+      outSize := S.outSize_le_scratch
+      outOff_eq_scratchLo := S.outOff_eq
+      outSize_in_range := S.outSize_in_range }
+  exact Verity.EVM.Layout.call_buffer_disjoint_from_heap L' S'
 
 /-- In the form the EvmYul-side lemma expects (`outOff + outSize ≤ regionLo
     ∨ regionHi ≤ outOff`). -/
