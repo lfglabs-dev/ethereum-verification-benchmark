@@ -143,8 +143,6 @@ Default harness modes:
 
 - `fair`: OpenAI-compatible tool loop with `show_task`, `read_file`, `show_goal`, `definition_outline`, `tactic_sandbox`, `check_proof`, `try_tactics`, and `search_declarations`. Fair workspaces exclude group-specific Grindset helpers and fair proof patching does not add broad `Benchmark.Grindset` imports. Native tool calls and JSON-encoded text tool calls are both supported. This is the headline comparison mode.
 - `fair+libs`: same agent-first loop as `fair`, but allows explicit inspection of the generic Grindset helper modules copied into the fair workspace. It still excludes group-specific helpers and theorem-specific local candidates.
-- `tuned`: generic heuristic/API comparison mode without hardcoded local proof candidates or group-specific Grindset helpers.
-- `legacy`: compatibility mode for the previous local-candidate and group-specific Grindset behavior. Use this only as an upper-bound/debug signal, not as the headline comparison.
 
 Fair-mode chat requests retry transient provider failures by default and log retry events in `conversations/*.jsonl`. Provider-specific context-window hints such as `n_ctx` are opt-in through `DEFAULT_HARNESS_CONTEXT_TOKENS`. For small-context providers, set `DEFAULT_HARNESS_NATIVE_TOOLS=0` and lower `DEFAULT_HARNESS_TOOL_RESULT_CHARS` / `DEFAULT_HARNESS_TASK_SUMMARY_CHARS`; the harness will use compact JSON tool calls and keep full tool output in artifacts. Fair tools can search and read public Lean dependency files under `.lake`, while hidden proof files, GeneratedPreview, `.env`, and Grindset remain blocked by default.
 
@@ -180,11 +178,9 @@ VERITY_ALLOW_HOST_GROK_AUTH=1 ./scripts/run_grok_build_group.sh ethereum/deposit
 VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget deep
 ./scripts/run_grok_build_suite.sh --suite active
 
-# Compare fair/tuned/legacy runs. Treat legacy as a debug upper bound.
+# Compare runs across harnesses/modes
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode fair
-python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode tuned
-python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode legacy
-python3 -m harness.cli compare --runs results/runs/<default-fair-run> results/runs/<default-tuned-run> results/runs/<default-legacy-run>
+python3 -m harness.cli compare --runs results/runs/<default-fair-run> results/runs/<grok-build-run>
 ```
 
 Default harness API configuration:

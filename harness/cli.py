@@ -262,7 +262,7 @@ def main() -> int:
     group_parser.add_argument("--max-attempts", type=int)
     group_parser.add_argument("--max-turns", type=int)
     group_parser.add_argument("--grok-timeout-seconds", type=int)
-    group_parser.add_argument("--mode", choices=["fair", "fair+libs", "tuned", "legacy"], default="fair")
+    group_parser.add_argument("--mode", choices=["fair", "fair+libs"], default="fair")
     group_parser.add_argument("--max-tool-calls", type=int)
 
     task_parser = sub.add_parser("run-task")
@@ -275,7 +275,7 @@ def main() -> int:
     task_parser.add_argument("--max-attempts", type=int)
     task_parser.add_argument("--max-turns", type=int)
     task_parser.add_argument("--grok-timeout-seconds", type=int)
-    task_parser.add_argument("--mode", choices=["fair", "fair+libs", "tuned", "legacy"], default="fair")
+    task_parser.add_argument("--mode", choices=["fair", "fair+libs"], default="fair")
     task_parser.add_argument("--max-tool-calls", type=int)
 
     suite_parser = sub.add_parser("run-suite")
@@ -287,7 +287,7 @@ def main() -> int:
     suite_parser.add_argument("--max-attempts", type=int)
     suite_parser.add_argument("--max-turns", type=int)
     suite_parser.add_argument("--grok-timeout-seconds", type=int)
-    suite_parser.add_argument("--mode", choices=["fair", "fair+libs", "tuned", "legacy"], default="fair")
+    suite_parser.add_argument("--mode", choices=["fair", "fair+libs"], default="fair")
     suite_parser.add_argument("--max-tool-calls", type=int)
 
     compare_parser = sub.add_parser("compare")
