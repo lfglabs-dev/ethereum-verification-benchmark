@@ -46,6 +46,7 @@ try:
         _extract_lean_file, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
         _strip_thinking, _theorem_statement,
     )
+    from ..symbols import public_symbol_summary as _public_symbol_summary
 except ImportError:
     from transport import (
         ChatCompletionError, DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, HTTP_USER_AGENT,
@@ -63,6 +64,7 @@ except ImportError:
         _extract_lean_file, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
         _strip_thinking, _theorem_statement,
     )
+    from symbols import public_symbol_summary as _public_symbol_summary
 
 
 HARNESS_ID = "default"
@@ -77,30 +79,6 @@ DEFAULT_MAX_NON_PROOF_TOOL_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_NON_P
 DEFAULT_MAX_SANDBOX_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_SANDBOX_CALLS", "16"))
 DEFAULT_TOKEN_BUDGET = int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0"))  # 0 = unlimited; counts completion tokens per task
 STUCK_NUDGE = os.environ.get("DEFAULT_HARNESS_STUCK_NUDGE", "1").lower() not in {"0", "false", "no"}
-
-
-def _public_symbol_summary(text: str, *, limit: int = 1200) -> str:
-    namespace = ""
-    lines: list[str] = []
-    for raw_line in text.splitlines():
-        line = raw_line.strip()
-        ns_match = re.match(r"namespace\s+([A-Za-z0-9_'.]+)", line)
-        if ns_match:
-            namespace = ns_match.group(1)
-            lines.append(line)
-            continue
-        if re.match(r"(def|theorem|lemma|abbrev|structure|inductive)\s+[A-Za-z_]", line):
-            lines.append(line)
-            continue
-        if line.startswith("verity_contract "):
-            lines.append(line)
-            continue
-        if re.match(r"function\s+[A-Za-z_][A-Za-z0-9_']*", line):
-            lines.append(f"{namespace}.{line}" if namespace else line)
-            continue
-        if re.match(r"[A-Za-z_][A-Za-z0-9_']*\s*:\s*.+:=\s*slot\s+\d+", line):
-            lines.append(f"storage {line}")
-    return "\n".join(lines)[:limit]
 
 
 def _read_workspace_file(workspace: Path, rel: str) -> str:

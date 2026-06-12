@@ -29,6 +29,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from harness.manifests import filter_group_to_task, list_groups, load_group
 from harness.workspace_builder import build_group_workspace
 from harness.runners import lean_tools
+from harness.symbols import harvest_task_symbols, spec_names
 
 SLICE_TASKS = [
     "ethereum/deposit_contract_minimal/deposit_count",
@@ -39,62 +40,8 @@ SLICE_TASKS = [
 ]
 
 
-def _spec_names(skeleton: str) -> list[str]:
-    return sorted(set(re.findall(r"\b([A-Za-z_][A-Za-z0-9_'.]*_spec)\b", skeleton)))
-
-
-def _harvest_symbols(workspace: Path, task) -> list[str]:
-    """Contract functions, storage-slot decls, and spec defs from the task's
-    public files — the names a model can mechanically extract via show_task /
-    read_file. Nothing case-specific is hardcoded here."""
-    names: list[str] = []
-    for rel in list(task.implementation_files) + list(task.specification_files):
-        path = workspace / rel
-        if not path.is_file():
-            continue
-        namespace = None
-        in_block_comment = False
-        for raw in path.read_text(encoding="utf-8").splitlines():
-            line = raw.strip()
-            if in_block_comment:
-                if "-/" in line:
-                    in_block_comment = False
-                    line = line.split("-/", 1)[1].strip()
-                else:
-                    continue
-            if line.startswith(("/-", "/--")):
-                if "-/" not in line:
-                    in_block_comment = True
-                continue
-            if line.startswith("--"):
-                continue
-            ns_match = re.match(r"namespace\s+([A-Za-z0-9_.]+)", line)
-            if ns_match:
-                namespace = ns_match.group(1).split(".")[-1]
-            contract_match = re.match(r"verity_contract\s+([A-Za-z_][A-Za-z0-9_']*)", line)
-            if contract_match:
-                namespace = contract_match.group(1)
-            def_match = re.match(r"def\s+([A-Za-z_][A-Za-z0-9_']*)", line)
-            if def_match:
-                # Plain defs live at the file namespace, which matches the
-                # skeleton's own namespace — refer to them bare. Only
-                # verity_contract members need the contract-name prefix.
-                names.append(def_match.group(1))
-                continue
-            if namespace is None:
-                continue
-            fn_match = re.match(r"function\s+(?:internal\s+)?([A-Za-z_][A-Za-z0-9_']*)\s*(?:\(|$)", line)
-            if fn_match and fn_match.group(1) not in ("on", "nonreentrant", "internal"):
-                names.append(f"{namespace}.{fn_match.group(1)}")
-                continue
-            slot_match = re.match(r"([A-Za-z_][A-Za-z0-9_']*)\s*:\s*.+:=\s*slot\s+\d+", line)
-            if slot_match:
-                names.append(f"{namespace}.{slot_match.group(1)}")
-    return list(dict.fromkeys(names))
-
-
 def battery(skeleton: str, symbols: list[str]) -> list[tuple[str, str]]:
-    specs = _spec_names(skeleton)
+    specs = spec_names(skeleton)
     unfolds = "".join(f"try unfold {name}\n" for name in specs + symbols)
     args = ", ".join(["grind_norm"] + symbols + ["*"])
     all_args = ", ".join(["grind_norm"] + specs + symbols)
@@ -140,7 +87,7 @@ def run_task(task_ref: str, suite: str) -> dict[str, object]:
         # elaboration, not dependency compilation (skeleton has sorry, so a
         # non-zero exit here is expected).
         lean_tools._run_lean_module(built.path, target_module, timeout_seconds=1800)
-        symbols = _harvest_symbols(built.path, task)
+        symbols = harvest_task_symbols(built.path, task)
         for name, body in battery(skeleton, symbols):
             candidate = lean_tools._patch_proof_body(skeleton, body)
             started = time.time()

@@ -174,19 +174,33 @@ def _clone_tree(src: Path, dst: Path) -> None:
     shutil.copytree(src, dst)
 
 
-def _seed_pruned_project_build(workspace: Path) -> None:
-    """Clone the project's .lake/build into the workspace and prune every
-    artifact whose source .lean is absent from the workspace.
+def setup_private_lake(root_dir: Path, *, prune_to_sources: bool = False) -> dict[str, str] | None:
+    """Give `root_dir` a private .lake: dependency packages are shared via
+    symlink (read-only caches), while the project's own build dir is cloned
+    cheaply so builds never write into the repo cache.
 
-    Sharing the repo build dir verbatim leaks compiled hidden reference
-    proofs and excluded Grindset modules: they stay importable even though
-    their sources never reach the workspace. Pruning to workspace sources
-    keeps warm-build time near zero without that leak."""
-    src_build = ROOT / ".lake" / "build"
+    With `prune_to_sources`, every cloned artifact whose source .lean is
+    absent from `root_dir` is removed. Sharing the repo build dir verbatim
+    would leak compiled hidden reference proofs: they stay importable even
+    though their sources never reach the workspace. Verifier copies carry
+    all sources, so they clone without pruning."""
+    lake_cache = ROOT / ".lake"
+    if not lake_cache.exists() or (root_dir / ".lake").exists():
+        return None
+    (root_dir / ".lake").mkdir()
+    dependency_cache: dict[str, str] | None = None
+    if (lake_cache / "packages").exists():
+        (root_dir / ".lake" / "packages").symlink_to(lake_cache / "packages", target_is_directory=True)
+        dependency_cache = {"path": ".lake/packages", "target": str(lake_cache / "packages")}
+    if (lake_cache / "build").is_dir():
+        _clone_tree(lake_cache / "build", root_dir / ".lake" / "build")
+        if prune_to_sources:
+            _prune_build_to_sources(root_dir)
+    return dependency_cache
+
+
+def _prune_build_to_sources(workspace: Path) -> None:
     dst_build = workspace / ".lake" / "build"
-    if not src_build.is_dir() or dst_build.exists():
-        return
-    _clone_tree(src_build, dst_build)
     for tree in (dst_build / "lib" / "lean", dst_build / "ir"):
         if not tree.is_dir():
             continue
@@ -224,19 +238,6 @@ def build_group_workspace(
         if (ROOT / rel).is_file():
             _copy_file(rel, workspace, copied)
     dependency_cache: dict[str, str] | None = None
-    lake_cache = ROOT / ".lake"
-    if lake_cache.exists() and not (workspace / ".lake").exists():
-        # Share only dependency packages (Mathlib, Verity, ...). The project's
-        # own build dir must NOT be shared: it contains oleans for hidden
-        # reference proofs (Benchmark/Cases/*/Proofs.lean) and case-specific
-        # Grindset modules, which would otherwise be importable from the
-        # workspace even though their sources are excluded. The project build
-        # dir is cloned cheaply and pruned to artifacts whose sources are
-        # present in the workspace (see _seed_pruned_project_build).
-        (workspace / ".lake").mkdir()
-        if (lake_cache / "packages").exists():
-            (workspace / ".lake" / "packages").symlink_to(lake_cache / "packages", target_is_directory=True)
-            dependency_cache = {"path": ".lake/packages", "target": str(lake_cache / "packages")}
 
     grindset_root = workspace / "Benchmark" / "Grindset.lean"
     grindset_root.parent.mkdir(parents=True, exist_ok=True)
@@ -318,8 +319,7 @@ def build_group_workspace(
             ".env",
         ],
     }
-    if dependency_cache is not None:
-        _seed_pruned_project_build(workspace)
+    dependency_cache = setup_private_lake(workspace, prune_to_sources=True)
 
     manifest_path = workspace / "workspace-manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")

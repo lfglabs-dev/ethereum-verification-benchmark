@@ -14,11 +14,11 @@ from pathlib import Path
 try:
     from .manifests import Group, Task, group_to_json
     from .paths import ROOT
-    from .workspace_builder import _clone_tree, sha256_file
+    from .workspace_builder import setup_private_lake, sha256_file
 except ImportError:
     from manifests import Group, Task, group_to_json
     from paths import ROOT
-    from workspace_builder import _clone_tree, sha256_file
+    from workspace_builder import setup_private_lake, sha256_file
 
 FORBIDDEN_RE = re.compile(r"\b(sorry|admit|axiom)\b|\?_[A-Za-z0-9_']*")
 IMPORT_RE = re.compile(r"^\s*import\s+(.+)$", re.MULTILINE)
@@ -122,16 +122,11 @@ def _copy_repo_for_verification() -> Path:
         return ignored
 
     shutil.copytree(ROOT, dst, ignore=ignore, symlinks=True, ignore_dangling_symlinks=True)
-    lake_cache = ROOT / ".lake"
-    if lake_cache.exists():
-        # Private build dir (cheap clone): verification builds must not write
-        # into the repo cache, and the workspace umbrella overlay below would
-        # otherwise be rebuilt into the shared .lake.
-        (dst / ".lake").mkdir()
-        if (lake_cache / "packages").exists():
-            (dst / ".lake" / "packages").symlink_to(lake_cache / "packages", target_is_directory=True)
-        if (lake_cache / "build").is_dir():
-            _clone_tree(lake_cache / "build", dst / ".lake" / "build")
+    # Private build dir (cheap clone): verification builds must not write
+    # into the repo cache, and the workspace umbrella overlay below would
+    # otherwise be rebuilt into the shared .lake. No pruning: the verifier
+    # copy intentionally carries every source, including hidden proofs.
+    setup_private_lake(dst)
     return dst
 
 
