@@ -86,6 +86,7 @@ def run_group(
     keep_workspace: bool = False,
     timeout_seconds: int = 2400,
     token_budget: int = 0,
+    max_turns: int = 20,
     task_ref: str | None = None,
     dry_run: bool = False,
 ) -> tuple[int, Path]:
@@ -155,6 +156,7 @@ def run_group(
         "proxy_url": proxy.base_url,
         "proxy_key": proxy.local_key,
         "home": str(fake_home),
+        "max_turns": str(max_turns),
     }
     for rel, template in (profile.get("config_files") or {}).items():
         rel = _expand(str(rel), substitutions)
@@ -165,19 +167,23 @@ def run_group(
         target.write_text(_expand(str(template), substitutions), encoding="utf-8")
     host_auth = profile.get("host_auth")
     auth_mode = "proxy"
-    if isinstance(host_auth, dict):
+    if isinstance(host_auth, dict) and not dry_run:
         flag = str(host_auth.get("env_flag") or "")
         source = Path(str(host_auth.get("source") or "")).expanduser()
+        fallback_env = str(host_auth.get("fallback_env") or "")
         if flag and os.environ.get(flag) == "1" and source.is_file():
             dest = fake_home / str(host_auth.get("dest") or source.name)
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, dest)
             auth_mode = "host-auth"
+        elif fallback_env and os.environ.get(fallback_env):
+            auth_mode = "env"
         else:
             proxy.stop()
             shutil.rmtree(fake_home, ignore_errors=True)
             raise RuntimeError(
                 f"harness {harness_id} requires host auth: set {flag}=1 with {source} present"
+                + (f", or set {fallback_env}" if fallback_env else "")
             )
     command = [_expand(str(part), substitutions) for part in profile["command"]]
     env = os.environ.copy()
@@ -364,6 +370,7 @@ def main() -> int:
     parser.add_argument("--keep-workspace", action="store_true")
     parser.add_argument("--timeout-seconds", type=int, default=2400)
     parser.add_argument("--token-budget", type=int, default=0)
+    parser.add_argument("--max-turns", type=int, default=20)
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     group_id = group_id_from_task_ref(args.task_ref) if args.task_ref else args.group_id
@@ -377,6 +384,7 @@ def main() -> int:
         keep_workspace=args.keep_workspace,
         timeout_seconds=args.timeout_seconds,
         token_budget=args.token_budget,
+        max_turns=args.max_turns,
         task_ref=args.task_ref,
         dry_run=args.dry_run,
     )

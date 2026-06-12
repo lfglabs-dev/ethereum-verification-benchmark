@@ -11,21 +11,11 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from harness.runners.grok_build import _json_or_raw_stdout
 from scripts.check_run_artifacts import check_run
 
 
 def main() -> int:
     errors: list[str] = []
-    valid = json.loads(_json_or_raw_stdout('{"ok": true}'))
-    if valid != {"ok": True}:
-        errors.append("valid Grok JSON stdout was not preserved")
-    malformed = json.loads(_json_or_raw_stdout("{not-json"))
-    if malformed != {"raw_stdout": "{not-json"}:
-        errors.append("malformed Grok stdout was not wrapped as raw_stdout")
-    plain = json.loads(_json_or_raw_stdout("plain output"))
-    if plain != {"raw_stdout": "plain output"}:
-        errors.append("plain Grok stdout was not wrapped as raw_stdout")
 
     temp_root = Path(tempfile.mkdtemp(prefix="verity-artifact-helper-"))
     try:

@@ -33,14 +33,14 @@ try:
     from .manifests import group_id_from_task_ref, group_to_json, list_groups
     from .paths import RESULTS_DIR
     from .reports import compare_runs, write_run_report
-    from .runners.grok_build import run_group as run_grok_group
+    from .runners.shell_agent import run_group as run_shell_group
     from .runners.lean_tools import run_group as run_lean_tools_group
 except ImportError:
     from budgets import BUDGET_PROFILES, budget_profile
     from manifests import group_id_from_task_ref, group_to_json, list_groups
     from paths import RESULTS_DIR
     from reports import compare_runs, write_run_report
-    from runners.grok_build import run_group as run_grok_group
+    from runners.shell_agent import run_group as run_shell_group
     from runners.lean_tools import run_group as run_lean_tools_group
 
 
@@ -52,18 +52,20 @@ def run_group(
     dry_run: bool,
     max_attempts: int,
     max_turns: int,
-    grok_timeout_seconds: int,
+    shell_timeout_seconds: int,
     max_tool_calls: int,
     task_ref: str | None = None,
 ) -> tuple[int, Path]:
-    if harness == "grok-build":
-        return run_grok_group(
+    if harness != "default":
+        return run_shell_group(
             group_id,
+            harness_id=harness,
+            model=os.environ.get("DEFAULT_HARNESS_MODEL", harness),
             suite=suite,
             keep_workspace=keep_workspace,
             dry_run=dry_run,
+            timeout_seconds=shell_timeout_seconds,
             max_turns=max_turns,
-            timeout_seconds=grok_timeout_seconds,
             task_ref=task_ref,
         )
     if harness == "default":
@@ -76,8 +78,7 @@ def run_group(
             max_tool_calls=max_tool_calls,
             task_ref=task_ref,
         )
-    raise SystemExit(f"unknown harness: {harness} (expected: default, grok-build)")
-
+    
 
 def _load_child_run(run_dir: Path) -> dict:
     return json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
@@ -104,7 +105,7 @@ def run_suite(
     dry_run: bool,
     max_attempts: int,
     max_turns: int,
-    grok_timeout_seconds: int,
+    shell_timeout_seconds: int,
     max_tool_calls: int,
 ) -> tuple[int, Path]:
     start = time.time()
@@ -121,7 +122,7 @@ def run_suite(
     total_groups = len(groups)
     for index, group in enumerate(groups, start=1):
         print(f"[{index}/{total_groups}] start {group.group_id}", flush=True)
-        code, child_dir = run_group(group.group_id, harness, suite, keep_workspace, dry_run, max_attempts, max_turns, grok_timeout_seconds, max_tool_calls)
+        code, child_dir = run_group(group.group_id, harness, suite, keep_workspace, dry_run, max_attempts, max_turns, shell_timeout_seconds, max_tool_calls)
         child_run = _load_child_run(child_dir)
         score = child_run.get("verifier", {}).get("score", {})
         passed = score.get("passed_targets", 0)
@@ -196,7 +197,7 @@ def run_suite(
                 "dry_run": dry_run,
                 "max_attempts": max_attempts,
                 "max_turns": max_turns,
-                "grok_timeout_seconds": grok_timeout_seconds,
+                "shell_timeout_seconds": shell_timeout_seconds,
                 "mode": "fair" if harness == "default" else None,
                 "max_tool_calls": max_tool_calls if harness == "default" else None,
                 "groups": [group_to_json(group) for group in groups],
@@ -236,8 +237,8 @@ def _apply_budget(args: argparse.Namespace) -> None:
         args.max_tool_calls = profile.max_tool_calls
     if args.max_turns is None:
         args.max_turns = profile.max_turns
-    if args.grok_timeout_seconds is None:
-        args.grok_timeout_seconds = profile.grok_timeout_seconds
+    if args.shell_timeout_seconds is None:
+        args.shell_timeout_seconds = profile.shell_timeout_seconds
 
 
 def main() -> int:
@@ -252,36 +253,36 @@ def main() -> int:
     group_parser = sub.add_parser("run-group")
     group_parser.add_argument("group_id")
     group_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    group_parser.add_argument("--harness", choices=["default", "grok-build"], default="default")
+    group_parser.add_argument("--harness", default="default", help="default (built-in fair harness) or a shell agent profile id from harness/agents/ (e.g. grok-build, opencode, codex)")
     group_parser.add_argument("--keep-workspace", action="store_true")
     group_parser.add_argument("--dry-run", action="store_true")
     group_parser.add_argument("--budget", choices=sorted(BUDGET_PROFILES), default="quick")
     group_parser.add_argument("--max-attempts", type=int)
     group_parser.add_argument("--max-turns", type=int)
-    group_parser.add_argument("--grok-timeout-seconds", type=int)
+    group_parser.add_argument("--shell-timeout-seconds", type=int)
     group_parser.add_argument("--max-tool-calls", type=int)
 
     task_parser = sub.add_parser("run-task")
     task_parser.add_argument("task_ref")
     task_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    task_parser.add_argument("--harness", choices=["default", "grok-build"], default="default")
+    task_parser.add_argument("--harness", default="default", help="default (built-in fair harness) or a shell agent profile id from harness/agents/ (e.g. grok-build, opencode, codex)")
     task_parser.add_argument("--keep-workspace", action="store_true")
     task_parser.add_argument("--dry-run", action="store_true")
     task_parser.add_argument("--budget", choices=sorted(BUDGET_PROFILES), default="quick")
     task_parser.add_argument("--max-attempts", type=int)
     task_parser.add_argument("--max-turns", type=int)
-    task_parser.add_argument("--grok-timeout-seconds", type=int)
+    task_parser.add_argument("--shell-timeout-seconds", type=int)
     task_parser.add_argument("--max-tool-calls", type=int)
 
     suite_parser = sub.add_parser("run-suite")
     suite_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    suite_parser.add_argument("--harness", choices=["default", "grok-build"], default="default")
+    suite_parser.add_argument("--harness", default="default", help="default (built-in fair harness) or a shell agent profile id from harness/agents/ (e.g. grok-build, opencode, codex)")
     suite_parser.add_argument("--keep-workspace", action="store_true")
     suite_parser.add_argument("--dry-run", action="store_true")
     suite_parser.add_argument("--budget", choices=sorted(BUDGET_PROFILES), default="quick")
     suite_parser.add_argument("--max-attempts", type=int)
     suite_parser.add_argument("--max-turns", type=int)
-    suite_parser.add_argument("--grok-timeout-seconds", type=int)
+    suite_parser.add_argument("--shell-timeout-seconds", type=int)
     suite_parser.add_argument("--max-tool-calls", type=int)
 
     compare_parser = sub.add_parser("compare")
@@ -310,7 +311,7 @@ def main() -> int:
             args.dry_run,
             args.max_attempts,
             args.max_turns,
-            args.grok_timeout_seconds,
+            args.shell_timeout_seconds,
             args.max_tool_calls,
         )
         print(run_dir)
@@ -326,7 +327,7 @@ def main() -> int:
             args.dry_run,
             args.max_attempts,
             args.max_turns,
-            args.grok_timeout_seconds,
+            args.shell_timeout_seconds,
             args.max_tool_calls,
             task_ref=args.task_ref,
         )
@@ -341,7 +342,7 @@ def main() -> int:
             dry_run=args.dry_run,
             max_attempts=args.max_attempts,
             max_turns=args.max_turns,
-            grok_timeout_seconds=args.grok_timeout_seconds,
+            shell_timeout_seconds=args.shell_timeout_seconds,
             max_tool_calls=args.max_tool_calls,
         )
         print(run_dir)

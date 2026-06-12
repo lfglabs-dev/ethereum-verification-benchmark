@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from harness.manifests import load_group
-from harness.runners import grok_build
+from harness.runners import shell_agent
 from harness.runners import lean_tools
 from harness.workspace_builder import build_group_workspace
 
@@ -85,9 +85,9 @@ def main() -> int:
         tasks_json = json.loads((fair.path / "harness" / "TASKS.json").read_text(encoding="utf-8"))
         if "reference_solution" in json.dumps(tasks_json):
             errors.append("fair TASKS.json exposes reference_solution metadata")
-        grok_prompt = grok_build._prompt(group)
-        if "reference_solution" in grok_prompt:
-            errors.append("Grok prompt exposes reference_solution metadata")
+        shell_prompt = shell_agent._prompt(group)
+        if "reference_solution" in shell_prompt:
+            errors.append("shell-agent prompt exposes reference_solution metadata")
         rules_text = (fair.path / ".grok" / "rules.md").read_text(encoding="utf-8")
         if "Benchmark/User" in rules_text:
             errors.append(".grok/rules.md still allows Benchmark/User helper files")

@@ -50,9 +50,9 @@ Task briefing:
 - Fair task results include `failure_class`, distinguishing provider/context failures, no-tool loops, context loops, proof parse errors, unknown names, unsolved goals, Lean timeouts, and other Lean failures.
 
 Budget profiles:
-- `quick`: `max_attempts=4`, `max_tool_calls=40`, `max_turns=20`, `grok_timeout_seconds=900`.
-- `normal`: `max_attempts=16`, `max_tool_calls=120`, `max_turns=50`, `grok_timeout_seconds=2400`.
-- `deep`: `max_attempts=48`, `max_tool_calls=400`, `max_turns=100`, `grok_timeout_seconds=7200`.
+- `quick`: `max_attempts=4`, `max_tool_calls=40`, `max_turns=20`, `shell_timeout_seconds=900`.
+- `normal`: `max_attempts=16`, `max_tool_calls=120`, `max_turns=50`, `shell_timeout_seconds=2400`.
+- `deep`: `max_attempts=48`, `max_tool_calls=400`, `max_turns=100`, `shell_timeout_seconds=7200`.
 - Explicit `--max-attempts`, `--max-tool-calls`, `--max-turns`, or `--grok-timeout-seconds` override the selected profile.
 
 Default harness API env:
