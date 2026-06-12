@@ -35,9 +35,11 @@ equivalence of the full contract interface.
 
 `EntryPointDifferential.t.sol` deploys both bytecodes at fresh addresses. The
 original EntryPoint is exercised through its real ABI; the Verity artifact is
-exercised through the flattened projection interface. Validation/paymaster
-callbacks are linked as explicit deterministic ECM stubs, while the sender
-execution path remains a real low-level EVM call.
+exercised through the flattened projection interface. Account validation,
+paymaster validation/postOp, and beneficiary compensation are real typed
+interface calls in the Verity artifact; only the fixed `createSender`
+projection remains a linked deterministic stub. The sender execution path
+remains a real low-level EVM call.
 
 ## Test scope
 

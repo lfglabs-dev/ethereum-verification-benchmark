@@ -56,28 +56,26 @@ def entryPointV09Guarded
 /-- **Step 4 (guard lemma against real EntryPointV09)**: the v0.9
     `nonReentrant` modifier rejects calls whose `tx.origin` differs from
     `msg.sender`. This models the first conjunct of the Solidity EOA-only
-    guard through the benchmark's `txOriginOracle`, not a transient mutex. -/
-theorem entryPointV09_eoa_guard_rejects_origin_oracle_mismatch
+    guard through `txOrigin`, not a transient mutex. -/
+theorem entryPointV09_eoa_guard_rejects_origin_mismatch
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256)
     (s : ContractState)
     (hOriginMismatch :
-      externalCallWords "txOriginOracle" [ExternalArg.toWord EntryPointV09.VALIDATION_SUCCESS] ≠
-        addressToWord s.sender) :
+      addressToWord s.txOrigin ≠ addressToWord s.sender) :
     (entryPointV09Guarded sender paymaster key declaredNonce beneficiary
        hasInitCode hasCallData).run s =
       ContractResult.revert "nonReentrant: tx.origin != msg.sender" s := by
   unfold entryPointV09Guarded
   have hOriginMismatch' :
-      externalCallWords "txOriginOracle" [ExternalArg.toWord EntryPointV09.VALIDATION_SUCCESS] ≠
+      Core.Uint256.ofNat (Core.Address.toNat s.txOrigin) ≠
         Core.Uint256.ofNat (Core.Address.toNat s.sender) := by
     simpa [addressToWord] using hOriginMismatch
   have hNe :
-      (externalCallWords "txOriginOracle" [ExternalArg.toWord EntryPointV09.VALIDATION_SUCCESS] ==
-        addressToWord s.sender) = false := by
+      (addressToWord s.txOrigin == addressToWord s.sender) = false := by
     simp [addressToWord, hOriginMismatch']
   simp [Contract.run, EntryPointV09.handleOp, msgSender, Verity.require,
-    Verity.bind, Bind.bind, addressToWord, hOriginMismatch']
+    Verity.txOrigin, Verity.bind, Bind.bind, addressToWord, hOriginMismatch']
 
 /-- Corollary: the origin-oracle mismatch guard failure preserves the pre-call state. -/
 theorem entryPointV09_eoa_guard_revert_preserves_storage
@@ -85,11 +83,10 @@ theorem entryPointV09_eoa_guard_revert_preserves_storage
     (beneficiary : Address) (hasInitCode hasCallData : Uint256)
     (s : ContractState)
     (hOriginMismatch :
-      externalCallWords "txOriginOracle" [ExternalArg.toWord EntryPointV09.VALIDATION_SUCCESS] ≠
-        addressToWord s.sender) :
+      addressToWord s.txOrigin ≠ addressToWord s.sender) :
     ((entryPointV09Guarded sender paymaster key declaredNonce beneficiary
        hasInitCode hasCallData).run s).snd = s := by
-  rw [entryPointV09_eoa_guard_rejects_origin_oracle_mismatch _ _ _ _ _ _ _ _ hOriginMismatch]
+  rw [entryPointV09_eoa_guard_rejects_origin_mismatch _ _ _ _ _ _ _ _ hOriginMismatch]
   rfl
 
 /-! ## Step 5: top-level theorem universally quantified over external callee bytecode
@@ -111,7 +108,7 @@ This is the structural shape of the Yoav-grade theorem. Its premises are:
 2. The solc memory-layout disjointness from `Layout.lean` — proven from
    the standard solc allocator invariants.
 3. The EntryPointV09 EOA-only entry guard (`tx.origin == msg.sender` plus
-   the `callerCodeLength` oracle for `msg.sender.code.length == 0`).
+   `extcodesize(msg.sender) == 0`).
 
 We state the theorem as a structure containing all the simultaneously-true
 post-conditions for any number of non-self external calls.

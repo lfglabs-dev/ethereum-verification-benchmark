@@ -3,6 +3,7 @@ pragma solidity 0.8.28;
 
 interface Vm {
     function envBytes(string calldata name) external returns (bytes memory value);
+    function prank(address msgSender, address txOrigin) external;
 }
 
 /// @notice Minimal subset of the PackedUserOperation struct as used by
@@ -59,6 +60,10 @@ contract RecordingAccount {
         return 0;
     }
 
+    function validateUserOp(uint256, uint256) external pure returns (uint256) {
+        return 0;
+    }
+
     fallback() external payable {
         lastCallData = msg.data;
         lastCaller = msg.sender;
@@ -76,6 +81,9 @@ contract RejectingAccount {
         uint256
     ) external pure returns (uint256) {
         return 1; // sentinel: SIG_VALIDATION_FAILED
+    }
+    function validateUserOp(uint256, uint256) external pure returns (uint256) {
+        return 1;
     }
     fallback() external payable {}
     receive() external payable {}
@@ -152,6 +160,7 @@ contract EntryPointDifferential {
     IEntryPoint solcEP;
     IEntryPointProjection verityEP;
     address constant BENEFICIARY = address(0xBEEF);
+    address constant VERITY_EOA = address(0xA11CE);
 
     function assertTrue(bool condition, string memory reason) internal pure {
         require(condition, reason);
@@ -203,6 +212,7 @@ contract EntryPointDifferential {
     }
 
     function _runVerity(PackedUserOperation memory op, address beneficiary) internal {
+        vm.prank(VERITY_EOA, VERITY_EOA);
         verityEP.handleOps(
             op.sender,
             address(0),
@@ -255,6 +265,7 @@ contract EntryPointDifferential {
         ops[0].sender = address(acc2);
         _runVerity(ops[0], BENEFICIARY);
         bool verReverted;
+        vm.prank(VERITY_EOA, VERITY_EOA);
         try verityEP.handleOps(address(acc2), address(0), 0, ops[0].nonce, BENEFICIARY, 0, 1) {
             verReverted = false;
         } catch {

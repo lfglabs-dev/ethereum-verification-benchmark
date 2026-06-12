@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Emit Yul helper stubs for EntryPoint v0.9's Verity external calls.
+"""Emit Yul helper stubs for EntryPoint v0.9's remaining linked external.
 
-`EntryPointV09.lean` uses source-level `externalCall` for validation,
-paymaster, sender creation, and postOp boundaries. The current Verity model is
-a flattened one-op projection, so those calls do not carry the dynamic ABI
-payload or target address needed to perform the real Solidity interface call.
-The differential harness therefore links deterministic stubs for that trust
-boundary and reserves real EVM calling for the sender execution path.
+`EntryPointV09.lean` now uses Verity typed interfaces for account validation,
+paymaster validation/postOp, and beneficiary compensation. The one remaining
+source-level `externalCall` is the fixed `SenderCreator.createSender`
+projection; the differential harness links a deterministic stub for that
+trust boundary.
 
 Mirrors `lfglabs-dev/unlink-monorepo`'s
 `script/verity/generate-abi-adapters.py` shape.
@@ -19,24 +18,8 @@ from pathlib import Path
 
 
 def render() -> str:
-    return """function validateUserOp(key, declaredNonce) -> validationData {
-    // Returns packed validationData (authorizer | validUntil | validAfter).
-    // 0 = authorizer success (SIG_VALIDATION_SUCCESS) + no/valid time bounds.
-    // Nonzero can model SIG_VALIDATION_FAILED (authorizer=1) or time failure.
-    validationData := 0
-}
-
-function validatePaymasterUserOp(key) -> paymasterValidationData {
-    // Same packed shape as account validationData.
-    paymasterValidationData := 0
-}
-
-function createSender(key) -> newSender {
+    return """function createSender(key) -> newSender {
     newSender := 1
-}
-
-function postOp(mode) -> postOpResult {
-    postOpResult := mode
 }
 """
 

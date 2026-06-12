@@ -92,5 +92,5 @@ adapter over upstream `Verity.EVM.Layout`.
 EntryPoint critical path because EntryPoint v0.9's
 `nonReentrant` modifier is an EOA-only gate
 `tx.origin == msg.sender && msg.sender.code.length == 0`, modeled in
-`EntryPointV09.lean` with `msgSender` plus `txOriginOracle` and
-`callerCodeLength` oracles for the origin and code-length conjuncts.
+`EntryPointV09.lean` with `msgSender`, direct `txOrigin`, and `extcodesize`
+for the origin and code-length conjuncts.

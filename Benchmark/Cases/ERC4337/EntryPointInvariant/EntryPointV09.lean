@@ -33,9 +33,9 @@ Known, deliberate divergences from the Solidity source:
   and `Nonce2DTable`) lives in `UserOp.lean` / `Trace.lean` and is used by the
   headline theorems. This contract is a projection; claims of faithfulness are
   limited to the control-flow slice relevant to the indexed execution count.
-* **Boolean paymaster oracle.** Paymaster presence is just
-  `paymaster != 0`, and `validatePaymasterUserOp` is an `externalCall`
-  oracle checked against the zero word. Real `paymasterAndData` decoding,
+* **Boolean paymaster interface.** Paymaster presence is just
+  `paymaster != 0`, and `validatePaymasterUserOp` is a typed interface
+  call checked against the zero word. Real `paymasterAndData` decoding,
   context bytes, malformed-return checks, and gas-limit checks are omitted.
 * **No prefund/deposit accounting.** `missingAccountFunds`, the AA21
   account-deposit debit, the paymaster deposit debit before validation,
@@ -44,13 +44,9 @@ Known, deliberate divergences from the Solidity source:
   counter by a constant fee.
 * **EOA-only `nonReentrant` guard.** The actual EntryPoint v0.9
   `nonReentrant` modifier is not a mutex in this source: it checks
-  `tx.origin == msg.sender && msg.sender.code.length == 0`. Verity Core
-  exposes `txOrigin`, but this branch's contract macro does not accept it
-  as a bind source in `verity_contract` bodies, so this projection models
-  `tx.origin` through the `txOriginOracle` external oracle. It also models
-  `msg.sender.code.length` through the `callerCodeLength` oracle. These
-  oracles are trust-surface items: they must agree with EVM `ORIGIN` and
-  `EXTCODESIZE(msg.sender)`.
+  `tx.origin == msg.sender && msg.sender.code.length == 0`. This projection
+  reads `txOrigin` directly and uses the compiler's `extcodesize` expression
+  for `msg.sender.code.length`.
 * **Other omissions.** OOG/low-prefund sentinel handling, the `executeUserOp`
   selector branch, `currentUserOpHash`, real event emission, and the
   aggregated-signature path are out of scope for this projection. (Validation-data
@@ -68,12 +64,12 @@ The Solidity → Verity mapping applied by the projection:
   |------------------------------------------------|------------------------------------|
   | `mapping(address => uint256) deposits`         | `deposits : Address → Uint256`    |
   | 2D `nonceSequenceNumber[sender][key]`          | `nonces : Uint256 → Uint256` (keyed on decoded `key` param in projection) |
-  | `nonReentrant` (tx.origin/EOA check)           | `txOriginOracle`, `msgSender`, `callerCodeLength` oracle |
-  | `account.validateUserOp(...)` external call    | `externalCall "validateUserOp"` oracle |
-  | `paymaster.validatePaymasterUserOp(...)` call  | `externalCall "validatePaymasterUserOp"` oracle |
+  | `nonReentrant` (tx.origin/EOA check)           | `txOrigin`, `msgSender`, `extcodesize` |
+  | `account.validateUserOp(...)` external call    | typed `IAccount.validateUserOp` interface |
+  | `paymaster.validatePaymasterUserOp(...)` call  | typed `IPaymaster.validatePaymasterUserOp` interface |
   | `this.innerHandleOp(...)` self-call (try/catch)| `tryCatch (call ...)`              |
   | `Exec.call(sender, ..., callData)`             | `call ...`                         |
-  | `_compensate(beneficiary, collected)`          | constant-fee deposit bump          |
+  | `_compensate(beneficiary, collected)`          | typed `IBeneficiary.receivePrefund` + deposit bump |
 -/
 
 verity_contract EntryPointV09 where
@@ -141,17 +137,22 @@ verity_contract EntryPointV09 where
     POSTOP_OP_REVERTED    : Uint256 := 1
     POSTOP_POSTOP_REVERTED : Uint256 := 2
 
+  interfaces
+    interface IAccount where
+      function validateUserOp(Uint256, Uint256) returns (Uint256)
+    end
+
+    interface IPaymaster where
+      function validatePaymasterUserOp(Uint256) returns (Uint256)
+      function postOp(Uint256) returns (Uint256)
+    end
+
+    interface IBeneficiary where
+      function receivePrefund(Uint256)
+    end
+
   linked_externals
-    -- Trust-surface oracle for EVM `ORIGIN`. Verity Core exposes `txOrigin`,
-    -- but the contract macro in this branch cannot bind it in a function body.
-    external txOriginOracle(Uint256) -> (Uint256)
-    -- Trust-surface oracle for `msg.sender.code.length`. It must return the
-    -- EVM `EXTCODESIZE` of its address argument.
-    external callerCodeLength(Address) -> (Uint256)
-    external validateUserOp(Uint256, Uint256) -> (Uint256)
-    external validatePaymasterUserOp(Uint256) -> (Uint256)
     external createSender(Uint256) -> (Uint256)
-    external postOp(Uint256) -> (Uint256)
 
   -- Mirrors `_validateAccountPrepayment` + `_validateAndUpdateNonce` (the
   -- latter lives inside `_validatePrepayment` in the real source). The nonce
@@ -167,9 +168,9 @@ verity_contract EntryPointV09 where
   -- + time-range logic at the decision level. Full decomposition and
   -- `vdValid` live in `UserOp.lean`.
   function allow_post_interaction_writes internal _validateAccount
-      (sender : Address, key : Uint256, declaredNonce : Uint256) : Uint256 := do
+      (sender : IAccount, key : Uint256, declaredNonce : Uint256) : Uint256 := do
     -- account.validateUserOp(...) — the call happens first.
-    let validation := externalCall "validateUserOp" [key, declaredNonce]
+    let validation ← sender.validateUserOp key declaredNonce
     -- Nonce check/bump (faithful order: after account validation, before paymaster).
     -- We key on the decoded `key` parameter (projection of (sender, key) 2D slot).
     let expected ← getMappingUint nonces key
@@ -183,10 +184,10 @@ verity_contract EntryPointV09 where
   -- paymaster validation word is checked by the caller; sentinel 0 means
   -- accept.
   function internal _validatePaymaster
-      (paymaster : Address, key : Uint256) : Uint256 := do
+      (paymaster : IPaymaster, key : Uint256) : Uint256 := do
     if paymaster != 0 then
       -- paymaster.validatePaymasterUserOp(userOp, userOpHash, requiredPreFund)
-      let validation := externalCall "validatePaymasterUserOp" [key]
+      let validation ← paymaster.validatePaymasterUserOp key
       return validation
     else
       return VALIDATION_SUCCESS
@@ -207,7 +208,7 @@ verity_contract EntryPointV09 where
   -- Nonce update (inside the account step) occurs after account validation
   -- and before the paymaster step, per the real control flow.
   function allow_post_interaction_writes internal _validatePrepayment
-      (sender : Address, paymaster : Address,
+      (sender : IAccount, paymaster : IPaymaster,
        key : Uint256, declaredNonce : Uint256,
        hasInitCode : Uint256) : Uint256 := do
     let _deployResult ← _createSender key hasInitCode
@@ -223,7 +224,7 @@ verity_contract EntryPointV09 where
   -- execution-path attempt and accrues the fee, regardless of whether the
   -- inner sender call ran or reverted (try/catch absorption).
   function internal _innerHandleOp
-      (sender : Address, _key : Uint256, hasCallData : Uint256) : Uint256 := do
+      (sender : IAccount, _key : Uint256, hasCallData : Uint256) : Uint256 := do
     if hasCallData == HAS_CALLDATA then
       unsafe "EntryPoint innerHandleOp sender call boundary" do
         tryCatch (call 100000 sender 0 0 4 0 0) (do
@@ -236,20 +237,20 @@ verity_contract EntryPointV09 where
   -- catches its revert, then records the execution attempt and increments
   -- collected fees.
   function allow_post_interaction_writes internal _executeUserOp
-      (sender : Address, key : Uint256, hasCallData : Uint256) : Uint256 := do
+      (sender : IAccount, key : Uint256, hasCallData : Uint256) : Uint256 := do
     let _innerResult ← _innerHandleOp sender key hasCallData
     setMappingUint opInfoRecord key OP_INFO_EXECUTED
     return 1
 
   -- Mirrors `paymaster.postOp(mode, context, actualGasCost, ...)`.
   -- The postOp callback is only invoked when a paymaster is attached; we
-  -- model the call as an externalCall returning the new mode word. The
+  -- model the call as a typed interface call returning the new mode word. The
   -- biconditional does not depend on postOp's result, but completeness of
   -- the model does.
   function internal _postOp
-      (paymaster : Address, mode : Uint256) : Uint256 := do
+      (paymaster : IPaymaster, mode : Uint256) : Uint256 := do
     if paymaster != 0 then
-      let result := externalCall "postOp" [mode]
+      let result ← paymaster.postOp mode
       return result
     else
       return mode
@@ -257,8 +258,9 @@ verity_contract EntryPointV09 where
   -- Mirrors `_compensate`: transfer the collected wei to the beneficiary.
   -- We model the deposit ledger update; the actual ETH transfer is an
   -- external call abstracted into the deposit map.
-  function internal _compensate
-      (beneficiary : Address, amount : Uint256) : Unit := do
+  function allow_post_interaction_writes internal _compensate
+      (beneficiary : IBeneficiary, amount : Uint256) : Unit := do
+    beneficiary.receivePrefund amount
     let current ← getMapping deposits beneficiary
     setMapping deposits beneficiary (add current amount)
 
@@ -266,8 +268,8 @@ verity_contract EntryPointV09 where
   -- `PackedUserOperation[] calldata ops`; we expose the per-op body so the
   -- per-op invariants can be stated without modelling calldata layout.
   function allow_post_interaction_writes internal _handleOpUnchecked
-      (sender : Address, paymaster : Address,
-       key : Uint256, declaredNonce : Uint256, beneficiary : Address,
+      (sender : IAccount, paymaster : IPaymaster,
+       key : Uint256, declaredNonce : Uint256, beneficiary : IBeneficiary,
        hasInitCode : Uint256, hasCallData : Uint256)
       : Uint256 := do
     -- Phase 1: validation. Optional createSender + account + paymaster.
@@ -288,18 +290,20 @@ verity_contract EntryPointV09 where
   --
   --   require(tx.origin == msg.sender && msg.sender.code.length == 0)
   --
-  -- `msgSender` is read directly. `tx.origin` and the code-length conjunct
-  -- are represented by the `txOriginOracle` and `callerCodeLength` oracles
-  -- above.
+  -- `msgSender` and `txOrigin` are read directly. The code-length conjunct
+  -- uses the compiler's `extcodesize` expression.
   function allow_post_interaction_writes handleOp
-      (sender : Address, paymaster : Address,
-       key : Uint256, declaredNonce : Uint256, beneficiary : Address,
+      (sender : IAccount, paymaster : IPaymaster,
+       key : Uint256, declaredNonce : Uint256, beneficiary : IBeneficiary,
        hasInitCode : Uint256, hasCallData : Uint256)
       : Uint256 := do
-    let caller ← msgSender
-    let originWord := externalCall "txOriginOracle" [VALIDATION_SUCCESS]
-    require (originWord == addressToWord caller) "nonReentrant: tx.origin != msg.sender"
-    let callerCodeLen := externalCall "callerCodeLength" [caller]
+    let entryCaller ← msgSender
+    let txOriginAddr ← txOrigin
+    let originWord := addressToWord txOriginAddr
+    require (originWord == addressToWord entryCaller) "nonReentrant: tx.origin != msg.sender"
+    let mut callerCodeLen := 0
+    unsafe "EntryPoint nonReentrant caller extcodesize check" do
+      callerCodeLen := extcodesize entryCaller
     require (callerCodeLen == VALIDATION_SUCCESS) "nonReentrant: caller has code"
     let exec ← _handleOpUnchecked sender paymaster key declaredNonce
       beneficiary hasInitCode hasCallData
@@ -310,8 +314,8 @@ verity_contract EntryPointV09 where
   -- Differential tests must call this projection through its own interface, not
   -- through `IEntryPoint.handleOps(PackedUserOperation[],address)`.
   function handleOps
-      (sender : Address, paymaster : Address,
-       key : Uint256, declaredNonce : Uint256, beneficiary : Address,
+      (sender : IAccount, paymaster : IPaymaster,
+       key : Uint256, declaredNonce : Uint256, beneficiary : IBeneficiary,
        hasInitCode : Uint256, hasCallData : Uint256)
       : Uint256 := do
     let exec ← handleOp sender paymaster key declaredNonce beneficiary hasInitCode hasCallData
