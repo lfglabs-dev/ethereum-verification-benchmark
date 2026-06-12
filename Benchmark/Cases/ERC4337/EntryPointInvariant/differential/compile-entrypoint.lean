@@ -1,4 +1,4 @@
-import Compiler.CompileDriverBase
+import Compiler.CompileDriver
 import Benchmark.Cases.ERC4337.EntryPointInvariant.EntryPointV09
 
 /-!
@@ -17,7 +17,7 @@ Args:
 unsafe def main (args : List String) : IO Unit := do
   let outDir := args.headD "differential/build/yul"
   let externals := args.getD 1 ""
-  Compiler.Base.compileSpecsWithOptions
+  Compiler.compileSpecsWithOptions
     [ Benchmark.Cases.ERC4337.EntryPointInvariant.EntryPointV09.spec ]
     outDir
     true

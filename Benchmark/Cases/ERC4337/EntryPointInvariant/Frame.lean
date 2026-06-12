@@ -151,11 +151,13 @@ theorem nonce_write_once
     match r with
     | ContractResult.success _ s' => s'.storageMapUint 1 senderKey = add expectedNonce 1
     | ContractResult.revert _ _   => True := by
+  have hRead : s.readMapUint 1 senderKey = expectedNonce := hMatch
   simp only [EntryPointFrame.validateOne, EntryPointFrame.nonces,
     EntryPointFrame.opInfoSlot, Verity.Contract.run, Verity.bind, Bind.bind,
     getMappingUint, setMappingUint, setStorage, Verity.require,
-    Verity.pure, Pure.pure, hMatch]
-  simp [call]
+    Verity.pure, Pure.pure]
+  rw [hRead]
+  simp
 
 /-- **Stronger lemma (1)** stated for `handleOpsBody`: after the full
     two-phase body completes (validation + execution), the nonce slot equals
@@ -168,12 +170,14 @@ theorem nonce_preserved_through_execution
     match r with
     | ContractResult.success _ s' => s'.storageMapUint 1 senderKey = add expectedNonce 1
     | ContractResult.revert _ _   => True := by
+  have hRead : s.readMapUint 1 senderKey = expectedNonce := hMatch
   simp only [EntryPointFrame.handleOpsBody, EntryPointFrame.validateOne,
     EntryPointFrame.executeOne, EntryPointFrame.nonces,
     EntryPointFrame.opInfoSlot, Verity.Contract.run, Verity.bind, Bind.bind,
     getMappingUint, getStorage, setMappingUint, setStorage, Verity.require,
-    Verity.pure, Pure.pure, hMatch]
-  simp [call]
+    Verity.pure, Pure.pure]
+  rw [hRead]
+  simp
 
 /-! ## Lemma (2): opInfos frame condition
 
@@ -200,12 +204,14 @@ theorem opInfos_frame
     match r with
     | ContractResult.success info _ => info = 1
     | ContractResult.revert _ _     => True := by
+  have hRead : s.readMapUint 1 senderKey = expectedNonce := hMatch
   simp only [EntryPointFrame.handleOpsBody, EntryPointFrame.validateOne,
     EntryPointFrame.executeOne, EntryPointFrame.nonces,
     EntryPointFrame.opInfoSlot, Verity.Contract.run, Verity.bind, Bind.bind,
     getMappingUint, getStorage, setMappingUint, setStorage, Verity.require,
-    Verity.pure, Pure.pure, hMatch]
-  simp [call]
+    Verity.pure, Pure.pure]
+  rw [hRead]
+  simp
 
 /-! ## Memory-frame lemma (2'): the real opInfos-in-memory argument
 
