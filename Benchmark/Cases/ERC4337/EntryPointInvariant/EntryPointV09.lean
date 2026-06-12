@@ -21,12 +21,18 @@ then execution for that one op.
 
 Known, deliberate divergences from the Solidity source:
 
-* **Single-nonce abstraction.** The real `NonceManager` keys nonces by the
-  2D pair `(sender, uint192 key)` and updates them via
-  `_validateAndUpdateNonce` inside `_validatePrepayment`. Here `nonces` is
-  a flat `Address → Uint256` map (the inner key is collapsed away), and the
-  nonce check happens before the account validation call rather than after.
-  A faithful 2D nonce model lives in `UserOp.lean`, not here.
+* **Decoded nonce (2D shape).** The real `NonceManager` keys by the 2D pair
+  `(sender, uint192 key)` with `_validateAndUpdateNonce` (post-increment seq
+  check) inside `_validatePrepayment`, AFTER the account validation call and
+  BEFORE paymaster validation. This projection receives the decoded `key`
+  (uint192) and `declaredNonce` (uint64 seq) as separate parameters (the
+  one-op decoded style); it keys its nonce sequence map on the supplied `key`
+  (proxy for the per-(sender,key) slot) and performs the check/bump after the
+  account external call returns but before the paymaster step. The pure 2D
+  model (with explicit `nonceKey`/`nonceSeq` decode from a packed `Uint256`
+  and `Nonce2DTable`) lives in `UserOp.lean` / `Trace.lean` and is used by the
+  headline theorems. This contract is a projection; claims of faithfulness are
+  limited to the control-flow slice relevant to the indexed execution count.
 * **Boolean paymaster oracle.** Paymaster presence is just
   `paymaster != 0`, and `validatePaymasterUserOp` is an `externalCall`
   oracle checked against the zero word. Real `paymasterAndData` decoding,
@@ -45,10 +51,11 @@ Known, deliberate divergences from the Solidity source:
   `msg.sender.code.length` through the `callerCodeLength` oracle. These
   oracles are trust-surface items: they must agree with EVM `ORIGIN` and
   `EXTCODESIZE(msg.sender)`.
-* **Other omissions.** Validation-data aggregator/time-window parsing,
-  OOG/low-prefund sentinel handling, the `executeUserOp` selector branch,
-  `currentUserOpHash`, real event emission, and the aggregated-signature
-  path are all out of scope for this projection.
+* **Other omissions.** OOG/low-prefund sentinel handling, the `executeUserOp`
+  selector branch, `currentUserOpHash`, real event emission, and the
+  aggregated-signature path are out of scope for this projection. (Validation-data
+  packed structure + authorizer/time gate is now tightened in the oracle
+  returns and success checks; see the `_validateAccount` comment.)
 
 The headline theorem is **not** carried by this file. The abstract models
 in `Contract.lean` and `Trace.lean` carry the proven indexed
@@ -60,7 +67,7 @@ The Solidity → Verity mapping applied by the projection:
   | Solidity                                       | Verity                             |
   |------------------------------------------------|------------------------------------|
   | `mapping(address => uint256) deposits`         | `deposits : Address → Uint256`    |
-  | 2D `nonceSequence[sender][key]`                | flat `nonces : Address → Uint256` |
+  | 2D `nonceSequenceNumber[sender][key]`          | `nonces : Uint256 → Uint256` (keyed on decoded `key` param in projection) |
   | `nonReentrant` (tx.origin/EOA check)           | `txOriginOracle`, `msgSender`, `callerCodeLength` oracle |
   | `account.validateUserOp(...)` external call    | `externalCall "validateUserOp"` oracle |
   | `paymaster.validatePaymasterUserOp(...)` call  | `externalCall "validatePaymasterUserOp"` oracle |
@@ -73,9 +80,13 @@ verity_contract EntryPointV09 where
   storage
     -- StakeManager: deposit balance per account.
     deposits : Address → Uint256 := slot 1
-    -- NonceManager: 2D nonce sequence number per (sender, key). We model the
-    -- common single-key case by collapsing the inner key into the address.
-    nonces : Address → Uint256 := slot 2
+    -- NonceManager: 2D `nonceSequenceNumber[sender][uint192 key]`.
+    -- In the one-op decoded-parameter projection style, the `key` parameter
+    -- (high 192 bits of userOp.nonce) is used directly as the storage key for
+    -- the per-key sequence number. (A full nested map is not required for the
+    -- projection; the abstract `Nonce2DTable` in UserOp.lean carries the
+    -- explicit (sender, key) shape for theorem statements.)
+    nonces : Uint256 → Uint256 := slot 2
     -- Aggregator address slot used in the aggregated-op path. Set to the
     -- per-batch aggregator during _iterateValidationPhase.
     currentAggregator : Address := slot 3
@@ -111,7 +122,10 @@ verity_contract EntryPointV09 where
     error DelegateAndRevert(Uint256, Uint256)
 
   constants
-    -- ValidationData sentinel: 0 = success, nonzero = failure code.
+    -- 0 represents a packed validationData with authorizer = SIG_VALIDATION_SUCCESS
+    -- (and valid time window, or 0 bounds). Nonzero from the oracle stands for
+    -- either authorizer = SIG_VALIDATION_FAILED or a time-window violation.
+    -- The projection checks `== 0` for the success gate (authorizer success).
     VALIDATION_SUCCESS : Uint256 := 0
     OP_INFO_VALIDATED : Uint256 := 1
     OP_INFO_EXECUTED  : Uint256 := 2
@@ -139,18 +153,29 @@ verity_contract EntryPointV09 where
     external createSender(Uint256) -> (Uint256)
     external postOp(Uint256) -> (Uint256)
 
-  -- Mirrors `_validateAccountAndPaymasterValidationData` partially: nonce
-  -- check + account.validateUserOp call. The result is the validation word.
+  -- Mirrors `_validateAccountPrepayment` + `_validateAndUpdateNonce` (the
+  -- latter lives inside `_validatePrepayment` in the real source). The nonce
+  -- check/bump is performed AFTER the account validation call returns and
+  -- BEFORE paymaster validation (see `_validatePrepayment` below). The
+  -- returned word from the oracle is the packed `validationData`
+  -- (authorizer | validUntil(6B) | validAfter(6B)); success is when the
+  -- authorizer field encodes SIG_VALIDATION_SUCCESS (here represented by the
+  -- concrete word 0 in the projection's oracle convention). Nonzero covers
+  -- SIG_VALIDATION_FAILED (authorizer = 1) and time-window failures; this
+  -- projection does not branch on the exact failure reason (both prevent
+  -- reaching execution), but the accept gate matches the authorizer ∈ {0,1}
+  -- + time-range logic at the decision level. Full decomposition and
+  -- `vdValid` live in `UserOp.lean`.
   function allow_post_interaction_writes internal _validateAccount
       (sender : Address, key : Uint256, declaredNonce : Uint256) : Uint256 := do
-    -- nonces[sender] is the next expected nonce. EntryPoint validates the
-    -- account first, then advances the nonce on the accepted path.
-    let expected ← getMapping nonces sender
-    require (declaredNonce == expected) "AA25 invalid account nonce"
-    -- account.validateUserOp(userOp, userOpHash, missingFunds)
+    -- account.validateUserOp(...) — the call happens first.
     let validation := externalCall "validateUserOp" [key, declaredNonce]
+    -- Nonce check/bump (faithful order: after account validation, before paymaster).
+    -- We key on the decoded `key` parameter (projection of (sender, key) 2D slot).
+    let expected ← getMappingUint nonces key
+    require (declaredNonce == expected) "AA25 invalid account nonce"
+    setMappingUint nonces key (add expected 1)
     require (validation == VALIDATION_SUCCESS) "AA23 reverted (or OOG)"
-    setMapping nonces sender (add expected 1)
     return validation
 
   -- Mirrors `_validatePaymasterPrepayment`: the paymaster branch is skipped
@@ -179,6 +204,8 @@ verity_contract EntryPointV09 where
       return 0
 
   -- Mirrors `_validatePrepayment`: optional createSender + account + paymaster.
+  -- Nonce update (inside the account step) occurs after account validation
+  -- and before the paymaster step, per the real control flow.
   function allow_post_interaction_writes internal _validatePrepayment
       (sender : Address, paymaster : Address,
        key : Uint256, declaredNonce : Uint256,

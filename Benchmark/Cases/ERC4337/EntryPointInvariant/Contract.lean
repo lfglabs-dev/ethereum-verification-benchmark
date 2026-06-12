@@ -227,10 +227,12 @@ This extension models the rest of the EntryPoint v0.9 lifecycle:
   validation, the account's nonce strictly increments by 1. In the real
   source this is `_validateAndUpdateNonce` inside `_validatePrepayment`,
   AFTER account validation (`_validateAccountPrepayment`) and BEFORE
-  paymaster validation (`EntryPoint.sol` lines 833-858) — not in
-  `_validateAccountAndPaymasterValidationData`. Note also that the real
-  nonce is keyed by the 2D pair `(sender, uint192 key)` (`NonceManager.sol`);
-  this model uses a single sequential nonce per account.
+  paymaster validation. The real nonce is keyed by the 2D pair
+  `(sender, uint192 key)` (`NonceManager.sol`); the faithful decode + per-key
+  bump model is in `UserOp.lean`/`Trace.lean` (used by the headline Yoav
+  theorems). This "full-scope" illustration uses a simple scalar nonce for
+  the sequential case; the projection in `EntryPointV09.lean` now keys on the
+  decoded `key` and follows the post-account / pre-paymaster order.
 - **Paymaster**: optional address; when present, `_validatePaymasterPrepayment`
   must also approve the op. Validation succeeds iff the account AND (if present)
   the paymaster both approve.

@@ -61,14 +61,14 @@ batch sits at the abstract level). The composition step glues them.
 theorem validateAccount_refines_abstract
     (sender : Address) (key declaredNonce : Uint256)
     (approves : Bool) (s s' : ContractState)
-    (hNonce : s.storageMap 2 sender = declaredNonce)
+    (hNonce : s.storageMapUint 2 key = declaredNonce)
     (hConcrete :
       (EntryPointV09._validateAccount sender key declaredNonce).run s =
         ContractResult.success EntryPointV09.VALIDATION_SUCCESS s')
     (hWord  : abstractMatchesValidationWord approves
                 EntryPointV09.VALIDATION_SUCCESS = true) :
     approves = true ∧
-      s.storageMap EntryPointV09.nonces.slot sender = declaredNonce ∧
+      s.storageMapUint EntryPointV09.nonces.slot key = declaredNonce ∧
       ((EntryPointV09._validateAccount sender key declaredNonce).run s).isSuccess = true := by
   unfold abstractMatchesValidationWord at hWord
   constructor
