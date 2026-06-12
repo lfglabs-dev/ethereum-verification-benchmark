@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT))
 
 from harness.manifests import load_group
 from harness.runners import shell_agent
+from harness import transport
 from harness.runners import lean_tools
 from harness.workspace_builder import build_group_workspace
 
@@ -97,10 +98,10 @@ def main() -> int:
     temp_workspace = Path(tempfile.mkdtemp(prefix="verity-fair-policy-tools-"))
     original_chat_completion = lean_tools.chat_completion
     original_run_lean_module = lean_tools._run_lean_module
-    original_urlopen = lean_tools.urllib.request.urlopen
-    original_request_retries = lean_tools.REQUEST_RETRIES
-    original_request_backoff = lean_tools.REQUEST_RETRY_BACKOFF_SECONDS
-    original_context_tokens = lean_tools.DEFAULT_CONTEXT_TOKENS
+    original_urlopen = transport.urllib.request.urlopen
+    original_request_retries = transport.REQUEST_RETRIES
+    original_request_backoff = transport.REQUEST_RETRY_BACKOFF_SECONDS
+    original_context_tokens = transport.DEFAULT_CONTEXT_TOKENS
     original_native_tools = lean_tools.DEFAULT_NATIVE_TOOLS
     try:
         proof_rel = "Benchmark/Generated/Sample.lean"
@@ -280,10 +281,10 @@ def main() -> int:
                 raise TimeoutError("synthetic timeout")
             return FakeResponse()
 
-        lean_tools.urllib.request.urlopen = flaky_urlopen
-        lean_tools.REQUEST_RETRIES = 1
-        lean_tools.REQUEST_RETRY_BACKOFF_SECONDS = 0
-        lean_tools.DEFAULT_CONTEXT_TOKENS = None
+        transport.urllib.request.urlopen = flaky_urlopen
+        transport.REQUEST_RETRIES = 1
+        transport.REQUEST_RETRY_BACKOFF_SECONDS = 0
+        transport.DEFAULT_CONTEXT_TOKENS = None
         retry_response = lean_tools.chat_completion(
             [{"role": "user", "content": "hello"}],
             base_url="http://example.invalid/v1",
@@ -298,8 +299,8 @@ def main() -> int:
         request_events = [json.loads(line) for line in request_log.read_text(encoding="utf-8").splitlines()]
         if [event.get("status") for event in request_events] != ["request_retry", "request_retry_succeeded"]:
             errors.append("chat_completion retry log should record retry and success events")
-        lean_tools.urllib.request.urlopen = original_urlopen
-        lean_tools.DEFAULT_CONTEXT_TOKENS = original_context_tokens
+        transport.urllib.request.urlopen = original_urlopen
+        transport.DEFAULT_CONTEXT_TOKENS = original_context_tokens
         lean_tools.DEFAULT_NATIVE_TOOLS = True
 
         def fake_chat_completion(*args: object, **kwargs: object) -> dict[str, object]:
@@ -456,10 +457,10 @@ def main() -> int:
     finally:
         lean_tools.chat_completion = original_chat_completion
         lean_tools._run_lean_module = original_run_lean_module
-        lean_tools.urllib.request.urlopen = original_urlopen
-        lean_tools.REQUEST_RETRIES = original_request_retries
-        lean_tools.REQUEST_RETRY_BACKOFF_SECONDS = original_request_backoff
-        lean_tools.DEFAULT_CONTEXT_TOKENS = original_context_tokens
+        transport.urllib.request.urlopen = original_urlopen
+        transport.REQUEST_RETRIES = original_request_retries
+        transport.REQUEST_RETRY_BACKOFF_SECONDS = original_request_backoff
+        transport.DEFAULT_CONTEXT_TOKENS = original_context_tokens
         lean_tools.DEFAULT_NATIVE_TOOLS = original_native_tools
         shutil.rmtree(temp_workspace, ignore_errors=True)
 
