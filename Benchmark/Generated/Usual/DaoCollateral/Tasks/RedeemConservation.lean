@@ -1,4 +1,5 @@
 import Benchmark.Cases.Usual.DaoCollateral.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Usual.DaoCollateral
 

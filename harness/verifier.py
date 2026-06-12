@@ -14,11 +14,11 @@ from pathlib import Path
 try:
     from .manifests import Group, Task, group_to_json
     from .paths import ROOT
-    from .workspace_builder import sha256_file
+    from .workspace_builder import setup_private_lake, sha256_file
 except ImportError:
     from manifests import Group, Task, group_to_json
     from paths import ROOT
-    from workspace_builder import sha256_file
+    from workspace_builder import setup_private_lake, sha256_file
 
 FORBIDDEN_RE = re.compile(r"\b(sorry|admit|axiom)\b|\?_[A-Za-z0-9_']*")
 IMPORT_RE = re.compile(r"^\s*import\s+(.+)$", re.MULTILINE)
@@ -76,7 +76,7 @@ def _theorem_signature(text: str, theorem_name: str | None) -> str | None:
     return " ".join(match.group(0).split())
 
 
-def _policy_failure(task: Task, submitted_file: Path) -> str | None:
+def _policy_failure(task: Task, submitted_file: Path, submitted_workspace: Path) -> str | None:
     if not submitted_file.is_file():
         return "theorem_missing"
     text = submitted_file.read_text(encoding="utf-8")
@@ -86,6 +86,13 @@ def _policy_failure(task: Task, submitted_file: Path) -> str | None:
                 import_module.startswith("Benchmark.Cases.") and import_module.split(".")[-1].endswith("Proofs")
             ):
                 return "hidden_import"
+            # Any project module the agent could not see in its workspace is
+            # hidden by definition: the verifier repo has every source, so
+            # compilation alone would not catch the smuggled import.
+            if import_module.startswith("Benchmark"):
+                rel = import_module.replace(".", "/") + ".lean"
+                if not (submitted_workspace / rel).is_file():
+                    return "hidden_import"
     original_file = ROOT / task.editable_files[0]
     original_sig = _theorem_signature(original_file.read_text(encoding="utf-8"), task.theorem_name)
     submitted_sig = _theorem_signature(text, task.theorem_name)
@@ -115,9 +122,11 @@ def _copy_repo_for_verification() -> Path:
         return ignored
 
     shutil.copytree(ROOT, dst, ignore=ignore, symlinks=True, ignore_dangling_symlinks=True)
-    lake_cache = ROOT / ".lake"
-    if lake_cache.exists():
-        (dst / ".lake").symlink_to(lake_cache, target_is_directory=True)
+    # Private build dir (cheap clone): verification builds must not write
+    # into the repo cache, and the workspace umbrella overlay below would
+    # otherwise be rebuilt into the shared .lake. No pruning: the verifier
+    # copy intentionally carries every source, including hidden proofs.
+    setup_private_lake(dst)
     return dst
 
 
@@ -130,6 +139,13 @@ def verify_group(
 ) -> dict[str, object]:
     started = time.time()
     verifier_repo = _copy_repo_for_verification()
+    # Mirror the workspace's generated Grindset umbrella: the repo umbrella
+    # imports case-specific helper modules the agent never saw, and through
+    # the skeleton's `import Benchmark.Grindset` those names would otherwise
+    # be in scope during verification.
+    workspace_umbrella = submitted_workspace / "Benchmark" / "Grindset.lean"
+    if workspace_umbrella.is_file():
+        shutil.copy2(workspace_umbrella, verifier_repo / "Benchmark" / "Grindset.lean")
     keep_verifier_workspace = os.environ.get("VERITY_KEEP_VERIFIER_WORKSPACE") == "1"
     targets: list[TargetResult] = []
     submitted_files: list[str] = []
@@ -140,7 +156,7 @@ def verify_group(
             continue
         rel = task.editable_files[0]
         submitted = submitted_workspace / rel
-        failure = _policy_failure(task, submitted)
+        failure = _policy_failure(task, submitted, submitted_workspace)
         if failure:
             targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, failure))
             continue

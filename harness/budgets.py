@@ -8,13 +8,13 @@ class BudgetProfile:
     max_attempts: int
     max_tool_calls: int
     max_turns: int
-    grok_timeout_seconds: int
+    shell_timeout_seconds: int
 
 
 BUDGET_PROFILES: dict[str, BudgetProfile] = {
-    "quick": BudgetProfile(max_attempts=4, max_tool_calls=40, max_turns=20, grok_timeout_seconds=900),
-    "normal": BudgetProfile(max_attempts=16, max_tool_calls=120, max_turns=50, grok_timeout_seconds=2400),
-    "deep": BudgetProfile(max_attempts=48, max_tool_calls=400, max_turns=100, grok_timeout_seconds=7200),
+    "quick": BudgetProfile(max_attempts=4, max_tool_calls=40, max_turns=20, shell_timeout_seconds=900),
+    "normal": BudgetProfile(max_attempts=16, max_tool_calls=120, max_turns=50, shell_timeout_seconds=2400),
+    "deep": BudgetProfile(max_attempts=48, max_tool_calls=400, max_turns=100, shell_timeout_seconds=7200),
 }
 
 

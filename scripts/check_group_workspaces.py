@@ -30,18 +30,28 @@ def check_group(group_id: str) -> list[str]:
         if not (built.path / "Benchmark" / "Grindset.lean").is_file():
             errors.append(f"{group_id}: missing Benchmark/Grindset.lean umbrella import")
         dependency_cache = manifest.get("dependency_cache")
+        if dependency_cache is None and (ROOT / ".lake" / "packages").exists():
+            errors.append(f"{group_id}: manifest records no dependency_cache despite available repo .lake")
         if dependency_cache is not None:
-            if dependency_cache.get("path") != ".lake":
+            if dependency_cache.get("path") != ".lake/packages":
                 errors.append(f"{group_id}: unexpected dependency cache path {dependency_cache.get('path')!r}")
-            cache_link = built.path / ".lake"
+            if (built.path / ".lake").is_symlink():
+                errors.append(f"{group_id}: workspace .lake must be private, not a symlink to the repo cache")
+            cache_link = built.path / ".lake" / "packages"
             if not cache_link.is_symlink():
-                errors.append(f"{group_id}: dependency cache .lake is not a symlink")
+                errors.append(f"{group_id}: dependency cache .lake/packages is not a symlink")
             else:
                 resolved_cache = cache_link.resolve()
                 if resolved_cache == ROOT:
                     errors.append(f"{group_id}: dependency cache resolves to repo root")
-                if not str(resolved_cache).endswith("/.lake"):
-                    errors.append(f"{group_id}: dependency cache target is not a .lake directory: {resolved_cache}")
+                if not str(resolved_cache).endswith("/.lake/packages"):
+                    errors.append(f"{group_id}: dependency cache target is not a .lake/packages directory: {resolved_cache}")
+            lean_tree = built.path / ".lake" / "build" / "lib" / "lean"
+            if lean_tree.is_dir():
+                for olean in lean_tree.rglob("*.olean"):
+                    source_rel = olean.relative_to(lean_tree).as_posix()[: -len(".olean")] + ".lean"
+                    if not (built.path / source_rel).is_file():
+                        errors.append(f"{group_id}: leaked build artifact without workspace source: {source_rel}")
         for task in manifest["group"]["tasks"]:
             for key in ("implementation_files", "specification_files", "editable_files"):
                 for rel in task[key]:

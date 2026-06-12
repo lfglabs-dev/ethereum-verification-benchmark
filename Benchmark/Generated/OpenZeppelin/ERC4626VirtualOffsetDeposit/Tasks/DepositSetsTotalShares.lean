@@ -1,4 +1,5 @@
 import Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit
 

@@ -1,4 +1,5 @@
 import Benchmark.Cases.Ethereum.DepositContractMinimal.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Ethereum.DepositContractMinimal
 

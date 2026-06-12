@@ -1,4 +1,5 @@
 import Benchmark.Cases.Kleros.SortitionTrees.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Kleros.SortitionTrees
 

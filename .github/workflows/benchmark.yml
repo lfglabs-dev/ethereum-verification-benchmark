@@ -135,7 +135,7 @@ jobs:
           infra_failures=0
           for task in $TASKS; do
             echo "::group::$task"
-            run_dir=$(python3 -m harness.cli run-task "$task" --harness default --mode fair --budget "$BUDGET" | tee /dev/stderr | tail -n1)
+            run_dir=$(python3 -m harness.cli run-task "$task" --harness default --budget "$BUDGET" | tee /dev/stderr | tail -n1)
             echo "task $task exited with ${PIPESTATUS[0]}"
             status=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1])).get('harness_status',''))" "$run_dir/run.json" 2>/dev/null)
             if [ "$status" != "completed" ]; then

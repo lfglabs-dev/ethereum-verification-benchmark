@@ -78,8 +78,8 @@ def check_run(run_dir: Path) -> list[str]:
         errors.append(f"{run_dir}: workspace manifest has no file entries")
     if run.get("harness_id") == "default" and run.get("mode") == "fair" and run.get("run_mode") in {"task", "group"}:
         tool_policy = manifest.get("tool_policy")
-        if not isinstance(tool_policy, dict) or tool_policy.get("include_group_grindset") is not False:
-            errors.append(f"{run_dir}: fair default run must record include_group_grindset=false")
+        if not isinstance(tool_policy, dict) or tool_policy.get("generic_grindset_only") is not True:
+            errors.append(f"{run_dir}: fair default run must record generic_grindset_only=true")
         if "max_tool_calls" not in request:
             errors.append(f"{run_dir}: fair default request missing max_tool_calls")
     if run.get("harness_id") == "grok-build" and run.get("run_mode") in {"task", "group"}:
@@ -125,10 +125,51 @@ def check_run(run_dir: Path) -> list[str]:
     return errors
 
 
+def self_test() -> list[str]:
+    """Validator sanity check: a malformed run.json must be reported cleanly."""
+    import shutil
+    import tempfile
+
+    errors: list[str] = []
+    temp_root = Path(tempfile.mkdtemp(prefix="verity-artifact-helper-"))
+    try:
+        run_dir = temp_root / "run"
+        (run_dir / "verifier").mkdir(parents=True)
+        for rel in (
+            "workspace-manifest.json",
+            "harness-request.json",
+            "harness-response.json",
+            "stdout.txt",
+            "stderr.txt",
+            "report.md",
+            "verifier/verifier.json",
+        ):
+            path = run_dir / rel
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("{}\n", encoding="utf-8")
+        (run_dir / "run.json").write_text("{bad-json\n", encoding="utf-8")
+        artifact_errors = check_run(run_dir)
+        if not artifact_errors or "run.json is not valid JSON" not in artifact_errors[0]:
+            errors.append("artifact validator did not report malformed run.json cleanly")
+    finally:
+        shutil.rmtree(temp_root, ignore_errors=True)
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Validate normalized benchmark run artifact directories")
-    parser.add_argument("runs", nargs="+", type=Path)
+    parser.add_argument("runs", nargs="*", type=Path)
+    parser.add_argument("--self-test", action="store_true", help="run the validator sanity check instead of validating run dirs")
     args = parser.parse_args()
+    if args.self_test:
+        failures = self_test()
+        if failures:
+            print("\n".join(failures))
+            return 1
+        print("artifact validator self-test passed")
+        return 0
+    if not args.runs:
+        parser.error("provide run directories or --self-test")
     errors: list[str] = []
     for path in args.runs:
         errors.extend(check_run(path))

@@ -1,4 +1,5 @@
 import Benchmark.Cases.TermFinance.TermAuctionClearing.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.TermFinance.TermAuctionClearing
 

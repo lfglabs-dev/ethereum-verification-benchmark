@@ -11,18 +11,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from harness.manifests import filter_group_to_task, load_group
-from harness.runners import grok_build
+from harness.manifests import load_group
+from harness.runners import shell_agent
+from harness import transport
 from harness.runners import lean_tools
 from harness.workspace_builder import build_group_workspace
 
 
-GROUP_SPECIFIC_GRINDSET = {
-    "Benchmark/Grindset/Arith.lean",
-    "Benchmark/Grindset/Cork.lean",
-    "Benchmark/Grindset/Kleros.lean",
-    "Benchmark/Grindset/Paladin.lean",
-    "Benchmark/Grindset/Reserve.lean",
+GENERIC_GRINDSET_MODULES = {
+    "Attr.lean",
+    "Monad.lean",
+    "Core.lean",
+    "Reach.lean",
+    "ArithCore.lean",
 }
 
 
@@ -58,9 +59,6 @@ def main() -> int:
     )
     if "\n    _ = c := by simp" not in calc_candidate:
         errors.append("fair/model proof patching must keep calc steps inside the calc block")
-    comparison_candidate = lean_tools._candidate_from_comparison_response(original, "trivial", "sample")
-    if "import Benchmark.Grindset" not in comparison_candidate:
-        errors.append("comparison-mode API fallback should preserve previous Benchmark.Grindset import behavior")
     fair_source = inspect.getsource(lean_tools._attempt_task_fair)
     for forbidden_call in ("_local_tactic_candidates", "_heuristic_tactic_candidates"):
         if forbidden_call in fair_source:
@@ -70,53 +68,40 @@ def main() -> int:
             errors.append(f"fair solve loop contains branch-shaped text {forbidden_text!r}")
 
     group = load_group("lido/vaulthub_locked", "active")
-    fair = build_group_workspace(group, run_id="fair-policy", include_group_grindset=False)
-    legacy = build_group_workspace(group, run_id="legacy-policy", include_group_grindset=True)
-    legacy_task = build_group_workspace(
-        filter_group_to_task(group, "lido/vaulthub_locked/ceildiv_sandwich"),
-        run_id="legacy-task-policy",
-        include_group_grindset=True,
-    )
+    fair = build_group_workspace(group, run_id="fair-policy")
     try:
         fair_files = _manifest_files(fair.path)
-        legacy_files = _manifest_files(legacy.path)
-        legacy_task_files = _manifest_files(legacy_task.path)
-        leaked = sorted(fair_files & GROUP_SPECIFIC_GRINDSET)
+        leaked = sorted(rel for rel in fair_files if rel.startswith("Benchmark/Grindset/") and Path(rel).name not in GENERIC_GRINDSET_MODULES)
         if leaked:
-            errors.append(f"fair workspace includes group-specific Grindset modules: {', '.join(leaked)}")
-        if "Benchmark/Grindset/Arith.lean" not in legacy_files:
-            errors.append("legacy workspace no longer includes expected Grindset helper")
-        if "Benchmark/Grindset/Arith.lean" not in legacy_task_files:
-            errors.append("legacy task workspace no longer includes expected Grindset helper")
-        fair_root = (fair.path / "Benchmark" / "Grindset.lean").read_text(encoding="utf-8")
-        if "Benchmark.Grindset.Arith" in fair_root:
-            errors.append("fair Grindset umbrella imports a group-specific helper")
+            errors.append(f"fair workspace includes non-generic Grindset modules: {', '.join(leaked)}")
+        repo_modules = {p.name for p in (Path(__file__).resolve().parent.parent / "Benchmark" / "Grindset").glob("*.lean")}
+        non_generic = repo_modules - GENERIC_GRINDSET_MODULES - {"ReachTests.lean"}
+        if non_generic:
+            errors.append(f"repo Benchmark/Grindset contains non-generic modules: {', '.join(sorted(non_generic))}")
         manifest = json.loads((fair.path / "workspace-manifest.json").read_text(encoding="utf-8"))
-        if manifest.get("tool_policy", {}).get("include_group_grindset") is not False:
-            errors.append("fair workspace manifest does not record include_group_grindset=false")
+        if manifest.get("tool_policy", {}).get("generic_grindset_only") is not True:
+            errors.append("fair workspace manifest does not record generic_grindset_only=true")
         if "reference_solution" in json.dumps(manifest.get("group", {})):
             errors.append("fair workspace manifest exposes reference_solution metadata")
         tasks_json = json.loads((fair.path / "harness" / "TASKS.json").read_text(encoding="utf-8"))
         if "reference_solution" in json.dumps(tasks_json):
             errors.append("fair TASKS.json exposes reference_solution metadata")
-        grok_prompt = grok_build._prompt(group)
-        if "reference_solution" in grok_prompt:
-            errors.append("Grok prompt exposes reference_solution metadata")
+        shell_prompt = shell_agent._prompt(group)
+        if "reference_solution" in shell_prompt:
+            errors.append("shell-agent prompt exposes reference_solution metadata")
         rules_text = (fair.path / ".grok" / "rules.md").read_text(encoding="utf-8")
         if "Benchmark/User" in rules_text:
             errors.append(".grok/rules.md still allows Benchmark/User helper files")
     finally:
         shutil.rmtree(fair.path, ignore_errors=True)
-        shutil.rmtree(legacy.path, ignore_errors=True)
-        shutil.rmtree(legacy_task.path, ignore_errors=True)
 
     temp_workspace = Path(tempfile.mkdtemp(prefix="verity-fair-policy-tools-"))
     original_chat_completion = lean_tools.chat_completion
     original_run_lean_module = lean_tools._run_lean_module
-    original_urlopen = lean_tools.urllib.request.urlopen
-    original_request_retries = lean_tools.REQUEST_RETRIES
-    original_request_backoff = lean_tools.REQUEST_RETRY_BACKOFF_SECONDS
-    original_context_tokens = lean_tools.DEFAULT_CONTEXT_TOKENS
+    original_urlopen = transport.urllib.request.urlopen
+    original_request_retries = transport.REQUEST_RETRIES
+    original_request_backoff = transport.REQUEST_RETRY_BACKOFF_SECONDS
+    original_context_tokens = transport.DEFAULT_CONTEXT_TOKENS
     original_native_tools = lean_tools.DEFAULT_NATIVE_TOOLS
     try:
         proof_rel = "Benchmark/Generated/Sample.lean"
@@ -296,10 +281,10 @@ def main() -> int:
                 raise TimeoutError("synthetic timeout")
             return FakeResponse()
 
-        lean_tools.urllib.request.urlopen = flaky_urlopen
-        lean_tools.REQUEST_RETRIES = 1
-        lean_tools.REQUEST_RETRY_BACKOFF_SECONDS = 0
-        lean_tools.DEFAULT_CONTEXT_TOKENS = None
+        transport.urllib.request.urlopen = flaky_urlopen
+        transport.REQUEST_RETRIES = 1
+        transport.REQUEST_RETRY_BACKOFF_SECONDS = 0
+        transport.DEFAULT_CONTEXT_TOKENS = None
         retry_response = lean_tools.chat_completion(
             [{"role": "user", "content": "hello"}],
             base_url="http://example.invalid/v1",
@@ -314,8 +299,8 @@ def main() -> int:
         request_events = [json.loads(line) for line in request_log.read_text(encoding="utf-8").splitlines()]
         if [event.get("status") for event in request_events] != ["request_retry", "request_retry_succeeded"]:
             errors.append("chat_completion retry log should record retry and success events")
-        lean_tools.urllib.request.urlopen = original_urlopen
-        lean_tools.DEFAULT_CONTEXT_TOKENS = original_context_tokens
+        transport.urllib.request.urlopen = original_urlopen
+        transport.DEFAULT_CONTEXT_TOKENS = original_context_tokens
         lean_tools.DEFAULT_NATIVE_TOOLS = True
 
         def fake_chat_completion(*args: object, **kwargs: object) -> dict[str, object]:
@@ -472,10 +457,10 @@ def main() -> int:
     finally:
         lean_tools.chat_completion = original_chat_completion
         lean_tools._run_lean_module = original_run_lean_module
-        lean_tools.urllib.request.urlopen = original_urlopen
-        lean_tools.REQUEST_RETRIES = original_request_retries
-        lean_tools.REQUEST_RETRY_BACKOFF_SECONDS = original_request_backoff
-        lean_tools.DEFAULT_CONTEXT_TOKENS = original_context_tokens
+        transport.urllib.request.urlopen = original_urlopen
+        transport.REQUEST_RETRIES = original_request_retries
+        transport.REQUEST_RETRY_BACKOFF_SECONDS = original_request_backoff
+        transport.DEFAULT_CONTEXT_TOKENS = original_context_tokens
         lean_tools.DEFAULT_NATIVE_TOOLS = original_native_tools
         shutil.rmtree(temp_workspace, ignore_errors=True)
 
