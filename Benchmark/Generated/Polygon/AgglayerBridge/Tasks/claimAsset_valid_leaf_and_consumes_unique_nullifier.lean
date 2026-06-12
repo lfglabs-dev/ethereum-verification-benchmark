@@ -1,5 +1,6 @@
 import Benchmark.Cases.Polygon.AgglayerBridge.Contract
 import Benchmark.Cases.Polygon.AgglayerBridge.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Generated.Polygon.AgglayerBridge.Tasks
 

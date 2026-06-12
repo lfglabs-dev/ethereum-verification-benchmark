@@ -112,6 +112,22 @@ attribute [grind_norm] Verity.msgValue
 attribute [grind_norm] Verity.blockTimestamp Verity.blockNumber Verity.chainid
 attribute [grind_norm] Verity.require
 
+/-! ### Branch distribution and Uint256 order normalization
+
+`ite_apply` pushes a pending state application through an `if` produced by a
+contract branch, so `(if c then f else g) s` exposes `f s` / `g s` to the
+`*_run` lemmas. The order `_def` lemmas put Uint256 comparisons in `.val`
+form, matching the shape `require`-derived conditions take after
+normalization. -/
+
+@[grind_norm, simp]
+theorem ite_apply_arg {c : Prop} [Decidable c] {α β : Sort _} (f g : α → β) (x : α) :
+    (if c then f else g) x = if c then f x else g x := by
+  split <;> rfl
+
+attribute [grind_norm] ge_iff_le gt_iff_lt
+attribute [grind_norm] Verity.Core.Uint256.le_def Verity.Core.Uint256.lt_def
+
 /-! ### `require` branch discharge
 
 The `verity_contract` macro elaborates `require (a <= b) msg` into

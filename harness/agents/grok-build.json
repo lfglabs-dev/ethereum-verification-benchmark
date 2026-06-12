@@ -1,23 +1,27 @@
 {
   "schema_version": 1,
   "agent_id": "grok-build",
-  "mode": "custom",
-  "track": "group/shell",
-  "run_slug": "grok-build",
-  "adapter": "command",
-  "command": ["python3", "-m", "harness.runners.grok_build"],
-  "model": "grok-build",
-  "base_url": null,
-  "api_key": null,
-  "chat_completions_path": null,
-  "models_path": null,
-  "system_prompt_files": ["harness/PROMPT.md", "harness/POLICY.md", "harness/TOOLS.md", "harness/PROOF_PATTERNS.md"],
-  "temperature": 0.0,
-  "max_completion_tokens": 1,
-  "headers": {},
-  "header_envs": {},
-  "extra_body": {},
-  "request_timeout_seconds": 1,
-  "secret_env": ["GROK_CODE_XAI_API_KEY"],
-  "secret_files": []
+  "adapter": "shell",
+  "track": "group/grok-build",
+  "command": [
+    "grok",
+    "--model", "grok-build",
+    "--cwd", "{workspace}",
+    "--sandbox", "strict",
+    "--disable-web-search",
+    "--no-memory",
+    "--no-subagents",
+    "--always-approve",
+    "--output-format", "json",
+    "--max-turns", "{max_turns}",
+    "--prompt-file", "{prompt_file}"
+  ],
+  "host_auth": {
+    "env_flag": "VERITY_ALLOW_HOST_GROK_AUTH",
+    "source": "~/.grok/auth.json",
+    "dest": ".grok/auth.json",
+    "fallback_env": "GROK_CODE_XAI_API_KEY"
+  },
+  "usage_pattern": "\"total_tokens\"\\s*:\\s*(\\d+)",
+  "version_command": ["grok", "--version"]
 }

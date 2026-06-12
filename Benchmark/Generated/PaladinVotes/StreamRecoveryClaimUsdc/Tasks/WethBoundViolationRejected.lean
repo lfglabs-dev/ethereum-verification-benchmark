@@ -1,4 +1,5 @@
 import Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc
 

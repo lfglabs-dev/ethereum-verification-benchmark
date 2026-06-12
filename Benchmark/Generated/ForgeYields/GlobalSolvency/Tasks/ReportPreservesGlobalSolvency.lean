@@ -1,4 +1,5 @@
 import Benchmark.Cases.ForgeYields.GlobalSolvency.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.ForgeYields.GlobalSolvency
 

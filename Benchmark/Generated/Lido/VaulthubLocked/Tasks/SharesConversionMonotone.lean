@@ -1,4 +1,5 @@
 import Benchmark.Cases.Lido.VaulthubLocked.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Lido.VaulthubLocked
 

@@ -1,4 +1,5 @@
 import Benchmark.Cases.NexusMutual.RammPriceBand.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.NexusMutual.RammPriceBand
 

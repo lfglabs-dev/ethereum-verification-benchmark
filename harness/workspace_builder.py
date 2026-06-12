@@ -90,14 +90,13 @@ def _relevant_symbols_for_task(workspace: Path, task: object) -> list[str]:
     return symbols
 
 
-def _task_summary_markdown(group: Group, workspace: Path, *, include_group_grindset: bool) -> str:
+def _task_summary_markdown(group: Group, workspace: Path) -> str:
     lines = [
         "# Verity Task Summary",
         "",
         f"- group: `{group.group_id}`",
         f"- suite: `{group.suite}`",
         f"- tasks: `{len(group.tasks)}`",
-        f"- group-specific Grindset helpers included: `{str(include_group_grindset).lower()}`",
         "- check command: `./harness/check.sh`",
         "",
         "## Policy",
@@ -157,12 +156,79 @@ def _case_public_dirs(group: Group) -> list[str]:
     return sorted(set(dirs))
 
 
+
+def _clone_tree(src: Path, dst: Path) -> None:
+    """Cheap copy-on-write/hardlink clone of a directory tree."""
+    import platform
+    import subprocess
+
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    if platform.system() == "Darwin":
+        result = subprocess.run(["cp", "-Rc", str(src), str(dst)], capture_output=True)
+        if result.returncode == 0:
+            return
+    else:
+        result = subprocess.run(["cp", "-Rla", str(src), str(dst)], capture_output=True)
+        if result.returncode == 0:
+            return
+    shutil.copytree(src, dst)
+
+
+def setup_private_lake(root_dir: Path, *, prune_to_sources: bool = False) -> dict[str, str] | None:
+    """Give `root_dir` a private .lake: dependency packages are shared via
+    symlink (read-only caches), while the project's own build dir is cloned
+    cheaply so builds never write into the repo cache.
+
+    With `prune_to_sources`, every cloned artifact whose source .lean is
+    absent from `root_dir` is removed. Sharing the repo build dir verbatim
+    would leak compiled hidden reference proofs: they stay importable even
+    though their sources never reach the workspace. Verifier copies carry
+    all sources, so they clone without pruning."""
+    lake_cache = ROOT / ".lake"
+    if not lake_cache.exists() or (root_dir / ".lake").exists():
+        return None
+    (root_dir / ".lake").mkdir()
+    dependency_cache: dict[str, str] | None = None
+    if (lake_cache / "packages").exists():
+        (root_dir / ".lake" / "packages").symlink_to(lake_cache / "packages", target_is_directory=True)
+        dependency_cache = {"path": ".lake/packages", "target": str(lake_cache / "packages")}
+    if (lake_cache / "build").is_dir():
+        _clone_tree(lake_cache / "build", root_dir / ".lake" / "build")
+        if prune_to_sources:
+            _prune_build_to_sources(root_dir)
+    return dependency_cache
+
+
+def _prune_build_to_sources(workspace: Path) -> None:
+    dst_build = workspace / ".lake" / "build"
+    for tree in (dst_build / "lib" / "lean", dst_build / "ir"):
+        if not tree.is_dir():
+            continue
+        for artifact in sorted(tree.rglob("*")):
+            if not artifact.is_file():
+                continue
+            rel = artifact.relative_to(tree)
+            stem = rel.as_posix()
+            for suffix in (".olean", ".olean.hash", ".olean.trace", ".ilean", ".ilean.hash",
+                           ".trace", ".c", ".c.hash", ".c.o", ".o", ".bc", ".json"):
+                if stem.endswith(suffix):
+                    stem = stem[: -len(suffix)]
+                    break
+            source = workspace / (stem + ".lean")
+            if not source.is_file():
+                artifact.unlink(missing_ok=True)
+        for directory in sorted((d for d in tree.rglob("*") if d.is_dir()), reverse=True):
+            try:
+                directory.rmdir()
+            except OSError:
+                pass
+
+
 def build_group_workspace(
     group: Group,
     *,
     workspace_dir: Path | None = None,
     run_id: str | None = None,
-    include_group_grindset: bool = True,
 ) -> BuiltWorkspace:
     workspace = workspace_dir or Path(tempfile.mkdtemp(prefix=f"verity-{group.group_id.replace('/', '__')}-"))
     workspace.mkdir(parents=True, exist_ok=True)
@@ -172,36 +238,17 @@ def build_group_workspace(
         if (ROOT / rel).is_file():
             _copy_file(rel, workspace, copied)
     dependency_cache: dict[str, str] | None = None
-    lake_cache = ROOT / ".lake"
-    if lake_cache.exists() and not (workspace / ".lake").exists():
-        (workspace / ".lake").symlink_to(lake_cache, target_is_directory=True)
-        dependency_cache = {"path": ".lake", "target": str(lake_cache)}
 
     grindset_root = workspace / "Benchmark" / "Grindset.lean"
     grindset_root.parent.mkdir(parents=True, exist_ok=True)
-    grindset_modules = {"Attr.lean", "Monad.lean", "Core.lean", "Reach.lean"}
+    grindset_modules = {"Attr.lean", "Monad.lean", "Core.lean", "Reach.lean", "ArithCore.lean"}
     grindset_imports = [
         "import Benchmark.Grindset.Attr",
         "import Benchmark.Grindset.Monad",
         "import Benchmark.Grindset.Core",
         "import Benchmark.Grindset.Reach",
+        "import Benchmark.Grindset.ArithCore",
     ]
-    group_base_id = "/".join(group.group_id.split("/")[:2])
-    if include_group_grindset and group_base_id == "lido/vaulthub_locked":
-        grindset_imports.append("import Benchmark.Grindset.Arith")
-        grindset_modules.add("Arith.lean")
-    if include_group_grindset and group_base_id == "reserve/auction_price_band":
-        grindset_imports.append("import Benchmark.Grindset.Reserve")
-        grindset_modules.add("Reserve.lean")
-    if include_group_grindset and group_base_id == "kleros/sortition_trees":
-        grindset_imports.append("import Benchmark.Grindset.Kleros")
-        grindset_modules.add("Kleros.lean")
-    if include_group_grindset and group_base_id == "cork/pool_solvency":
-        grindset_imports.append("import Benchmark.Grindset.Cork")
-        grindset_modules.add("Cork.lean")
-    if include_group_grindset and group_base_id == "paladin_votes/stream_recovery_claim_usdc":
-        grindset_imports.append("import Benchmark.Grindset.Paladin")
-        grindset_modules.add("Paladin.lean")
     grindset_root.write_text(
         "\n".join(grindset_imports)
         + "\n\n/- Group-safe umbrella generated by harness/workspace_builder.py. -/\n",
@@ -240,7 +287,7 @@ def build_group_workspace(
     (harness_dir / "TASKS.json").write_text(json.dumps(agent_group_to_json(group), indent=2) + "\n", encoding="utf-8")
     copied["harness/TASKS.json"] = sha256_file(harness_dir / "TASKS.json")
     (harness_dir / "TASK_SUMMARY.md").write_text(
-        _task_summary_markdown(group, workspace, include_group_grindset=include_group_grindset),
+        _task_summary_markdown(group, workspace),
         encoding="utf-8",
     )
     copied["harness/TASK_SUMMARY.md"] = sha256_file(harness_dir / "TASK_SUMMARY.md")
@@ -256,6 +303,8 @@ def build_group_workspace(
     copied[".grok/rules.md"] = sha256_file(grok_dir / "rules.md")
     copied[".grok/sandbox.toml"] = sha256_file(grok_dir / "sandbox.toml")
 
+    dependency_cache = setup_private_lake(workspace, prune_to_sources=True)
+
     manifest = {
         "schema_version": 1,
         "run_id": run_id,
@@ -264,7 +313,7 @@ def build_group_workspace(
         "files": [{"path": path, "sha256": digest} for path, digest in sorted(copied.items())],
         "dependency_cache": dependency_cache,
         "tool_policy": {
-            "include_group_grindset": include_group_grindset,
+            "generic_grindset_only": True,
         },
         "forbidden_absent": [
             "Benchmark/Cases/**/*Proofs.lean",
@@ -272,6 +321,7 @@ def build_group_workspace(
             ".env",
         ],
     }
+
     manifest_path = workspace / "workspace-manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     return BuiltWorkspace(path=workspace, manifest_path=manifest_path)

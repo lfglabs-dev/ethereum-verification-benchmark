@@ -1,5 +1,6 @@
 import Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Specs
 import Verity.Proofs.Stdlib.Automation
+import Benchmark.Grindset
 
 namespace Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle
 

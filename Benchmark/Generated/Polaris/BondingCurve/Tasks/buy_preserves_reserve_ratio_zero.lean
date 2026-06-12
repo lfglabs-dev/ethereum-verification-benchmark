@@ -1,4 +1,5 @@
 import Benchmark.Cases.Polaris.BondingCurve.Specs
+import Benchmark.Grindset
 
 namespace Benchmark.Generated.Polaris.BondingCurve.Tasks
 

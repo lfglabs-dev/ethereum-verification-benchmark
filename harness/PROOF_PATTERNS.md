@@ -2,14 +2,52 @@
 
 Use public operational proof patterns, not hidden case solutions.
 
-Lean 4.22's `grind` tactic is useful when the editable file already imports a
-lightweight grindset module. Do not add broad `import Benchmark.Grindset` to an
-evaluated task just to use `grind`; the umbrella can compile too much and make
-verification time out. If no grindset import is already present, prefer the
-explicit `simp`/`by_cases` fallback with the operational lemmas listed in the
-proof body.
+The editable file already imports `Benchmark.Grindset`, which provides the
+`grind_norm` simp set: monad collapse (`bind`/`Contract.run`/`.snd`),
+read-after-write storage and mapping lemmas (including Uint256-keyed and
+double mappings), `require` discharge, branch distribution (`ite_apply_arg`),
+and Uint256 order/val normalization. Build your proof around it.
 
-## Primary: grind-first pattern
+## Primary: the normalize–unfold–simp–split template
+
+This template closes most slot-write and spec-unfolding obligations. The
+name lists are mechanical: every `*_spec` name in the editable file, the
+contract function under test, every storage field of the contract
+(`fieldName : Uint256 := slot N` declarations), and every helper `def` from
+the public spec files (read them with `read_file` if unsure).
+
+```lean
+theorem slot_write_theorem ... := by
+  -- 1. normalize hypotheses into .val form
+  try simp only [grind_norm] at *
+  -- 2. unfold spec + contract function + helpers (try each; unused ones no-op)
+  try unfold spec_name
+  try unfold ContractName.fn
+  -- 3. one simp with everything: grind_norm + storage fields + helpers + hyps
+  simp [grind_norm, ContractName.fn, ContractName.fieldA, ContractName.fieldB,
+        specHelper, *]
+  -- 4. discharge remaining branches
+  all_goals try (split_ifs <;> simp_all [grind_norm])
+  all_goals try (repeat' (split <;> simp_all [grind_norm]))
+  all_goals try omega
+```
+
+Why each step matters:
+
+- Storage field names in the simp list reduce symbolic `.slot` projections
+  (`ContractName.fieldA.slot`) to numeric literals, letting `simp` discharge
+  `require` guards directly from your hypotheses.
+- `simp [..., *]` uses your hypotheses as rewrites; if a hypothesis mentions
+  a spec helper (e.g. `computedClaimAmount`) while the goal has it inlined,
+  use `simp_all [grind_norm, spec_name, ContractName.fn, <fields>, <helpers>]`
+  instead — it unfolds inside hypotheses too.
+- `split_ifs <;> simp_all [grind_norm]` handles undecided contract branches
+  (deposit-size thresholds and similar) without manual `by_cases`.
+- Lean treats a no-progress `simp` as an error. Keep `try` on every
+  normalization step that might be a no-op (as in the template); if you see
+  `simp made no progress`, wrap that line in `try` or delete it.
+
+## Secondary: grind-first pattern
 
 Start with `unfold` on the spec name followed by `grind [...]` passing the
 contract function you are reasoning about and every storage field it touches.
@@ -36,9 +74,8 @@ Rules of thumb for the grind hint list:
   reads or writes (when in doubt, include them all — extra hints are cheap).
 - If the spec references another helper function (e.g. `computedClaimAmount`),
   add that helper name too so `grind` can unfold it.
-- Do not add `import Benchmark.Grindset` unless the proof directly references
-  a declaration from that module. If a narrow helper is needed, import the
-  specific module such as `Benchmark.Grindset.Arith`, not the umbrella.
+- Do not add imports: `Benchmark.Grindset` is already imported by the task
+  skeleton, and modules outside your workspace will not compile.
 
 If `grind` leaves the goal visibly closer but not closed, use `grind?` once
 to print the actual lemma set it chose; copy any useful additions back into
@@ -86,10 +123,9 @@ the public theorem and finish each branch with `exact helper_branch ...`.
 
 ## Fallback: simp + by_cases
 
-If `grind` still leaves goals after you have unfolded the spec and hinted the
-contract function plus every storage field, fall back to the pre-grindset
-simp-heavy recipe. This is strictly a fallback; prefer to extend the `grind`
-hint list first.
+If the primary template and grind both leave goals, an explicit simp set
+spelling out the monadic plumbing gives the most control (the names below are
+what `grind_norm` bundles):
 
 ```lean
 -- Fallback when grind alone does not close:
@@ -107,14 +143,10 @@ The simp set MUST include every storage field definition from the contract.
 Without them, `simp` leaves unresolved `if` expressions comparing
 `s.storage ContractName.field.slot` against constants.
 
-Do not use `split` on the final post-state goal unless the goal itself is
-explicitly a conjunction or a sum-type elimination. Generated Verity
-execution terms often simplify better if you first prove the exact branch
-facts used by the contract and then call `simp`.
-
-If `simp` leaves nested `match`/`if` expressions with free variables, use
-`by_cases` on each unresolved condition BEFORE calling `simp`, not `split`
-after. Pass all case hypotheses to `simp`.
+If `simp` leaves nested `match`/`if` expressions, prefer the primary
+template's `split_ifs <;> simp_all [grind_norm]` / `repeat' (split <;>
+simp_all [grind_norm])` discharge; `by_cases` on the exact condition with the
+hypothesis passed to `simp` is the manual equivalent when split misfires.
 
 If `simp` leaves unsolved goals because a hypothesis uses a spec helper name
 (e.g., `computedClaimAmount`) while the goal has the definition already
