@@ -36,12 +36,15 @@ Known, deliberate divergences from the Solidity source:
   gas-price math, refunds, and the real `_compensate` ETH transfer (which
   can revert) are not modeled. `_compensate` here just bumps a deposit
   counter by a constant fee.
-* **Transient-guard mismatch.** The `tload`/`tstore` lock block below
-  models an OpenZeppelin-style EIP-1153 transient **mutex**. The actual
-  EntryPoint v0.9 `nonReentrant` modifier is **not** a mutex in this
-  source: it checks `tx.origin == msg.sender && msg.sender.code.length == 0`
-  (an EOA-caller restriction). The mutex here is a stand-in, not a
-  translation of that guard.
+* **EOA-only `nonReentrant` guard.** The actual EntryPoint v0.9
+  `nonReentrant` modifier is not a mutex in this source: it checks
+  `tx.origin == msg.sender && msg.sender.code.length == 0`. Verity Core
+  exposes `txOrigin`, but this branch's contract macro does not accept it
+  as a bind source in `verity_contract` bodies, so this projection models
+  `tx.origin` through the `txOriginOracle` external oracle. It also models
+  `msg.sender.code.length` through the `callerCodeLength` oracle. These
+  oracles are trust-surface items: they must agree with EVM `ORIGIN` and
+  `EXTCODESIZE(msg.sender)`.
 * **Other omissions.** Validation-data aggregator/time-window parsing,
   OOG/low-prefund sentinel handling, the `executeUserOp` selector branch,
   `currentUserOpHash`, real event emission, and the aggregated-signature
@@ -58,7 +61,7 @@ The Solidity → Verity mapping applied by the projection:
   |------------------------------------------------|------------------------------------|
   | `mapping(address => uint256) deposits`         | `deposits : Address → Uint256`    |
   | 2D `nonceSequence[sender][key]`                | flat `nonces : Address → Uint256` |
-  | `nonReentrant` (tx.origin/EOA check)           | `tload` / `tstore` mutex stand-in  |
+  | `nonReentrant` (tx.origin/EOA check)           | `txOriginOracle`, `msgSender`, `callerCodeLength` oracle |
   | `account.validateUserOp(...)` external call    | `externalCall "validateUserOp"` oracle |
   | `paymaster.validatePaymasterUserOp(...)` call  | `externalCall "validatePaymasterUserOp"` oracle |
   | `this.innerHandleOp(...)` self-call (try/catch)| `tryCatch (call ...)`              |
@@ -68,10 +71,6 @@ The Solidity → Verity mapping applied by the projection:
 
 verity_contract EntryPointV09 where
   storage
-    -- Reentrancy lock backed by transient storage (EIP-1153 in real source).
-    -- We expose it as a storage slot for the Verity model but it semantically
-    -- corresponds to the transient slot used by ReentrancyGuardTransient.
-    reentrancyLock : Uint256 := slot 0
     -- StakeManager: deposit balance per account.
     deposits : Address → Uint256 := slot 1
     -- NonceManager: 2D nonce sequence number per (sender, key). We model the
@@ -129,6 +128,12 @@ verity_contract EntryPointV09 where
     POSTOP_POSTOP_REVERTED : Uint256 := 2
 
   linked_externals
+    -- Trust-surface oracle for EVM `ORIGIN`. Verity Core exposes `txOrigin`,
+    -- but the contract macro in this branch cannot bind it in a function body.
+    external txOriginOracle(Uint256) -> (Uint256)
+    -- Trust-surface oracle for `msg.sender.code.length`. It must return the
+    -- EVM `EXTCODESIZE` of its address argument.
+    external callerCodeLength(Address) -> (Uint256)
     external validateUserOp(Uint256, Uint256) -> (Uint256)
     external validatePaymasterUserOp(Uint256) -> (Uint256)
     external createSender(Uint256) -> (Uint256)
@@ -251,22 +256,27 @@ verity_contract EntryPointV09 where
     return exec
 
   -- Public single-op projection of `handleOps`, guarded like the Solidity
-  -- `external nonReentrant` entry point. This keeps the compiled Verity artifact
-  -- honest for differential tests while the benchmark remains explicit that it
-  -- does not model dynamic calldata array decoding.
+  -- `external nonReentrant` entry point. EntryPoint v0.9's modifier is an
+  -- EOA-only gate, not a transient mutex:
+  --
+  --   require(tx.origin == msg.sender && msg.sender.code.length == 0)
+  --
+  -- `msgSender` is read directly. `tx.origin` and the code-length conjunct
+  -- are represented by the `txOriginOracle` and `callerCodeLength` oracles
+  -- above.
   function allow_post_interaction_writes handleOp
       (sender : Address, paymaster : Address,
        key : Uint256, declaredNonce : Uint256, beneficiary : Address,
        hasInitCode : Uint256, hasCallData : Uint256)
       : Uint256 := do
-    unsafe "EntryPoint transient reentrancy guard boundary" do
-      let locked ← tload 0
-      require (locked == 0) "ReentrancyGuardTransient: reentrant call"
-      tstore 0 1
-      let exec ← _handleOpUnchecked sender paymaster key declaredNonce
-        beneficiary hasInitCode hasCallData
-      tstore 0 0
-      return exec
+    let caller ← msgSender
+    let originWord := externalCall "txOriginOracle" [VALIDATION_SUCCESS]
+    require (originWord == addressToWord caller) "nonReentrant: tx.origin != msg.sender"
+    let callerCodeLen := externalCall "callerCodeLength" [caller]
+    require (callerCodeLen == VALIDATION_SUCCESS) "nonReentrant: caller has code"
+    let exec ← _handleOpUnchecked sender paymaster key declaredNonce
+      beneficiary hasInitCode hasCallData
+    return exec
 
   -- Flattened one-op `handleOps` projection. The Solidity ABI accepts a dynamic
   -- array of packed structs; this model exposes the decoded fields directly.

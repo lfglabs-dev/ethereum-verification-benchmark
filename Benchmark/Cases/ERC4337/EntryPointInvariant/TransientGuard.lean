@@ -7,17 +7,14 @@ open Verity.EVM.Uint256
 open Contracts
 
 /-!
-# Transient reentrancy guard (EIP-1153)
+# Transient reentrancy guard smoke (EIP-1153)
 
-EntryPoint v0.9 uses `ReentrancyGuardTransient`: the lock lives in
-transient storage, not regular storage, so it is cleared automatically at
-the end of the transaction. This module ports `Verity.nonReentrant` to
-the transient-storage primitive and proves the same `_locked_reverts`
-lemma against it.
-
-This swap closes one of the residual trust assumptions: the storage-slot
-nonReentrant we used in `Frame.lean` and `Bytecode.lean` is no longer the
-proof target — the actual transient-storage shape is.
+This is a standalone generic smoke for contracts that actually use an
+OpenZeppelin-style transient-storage mutex. It is intentionally **not** part
+of the EntryPoint v0.9 model: the Solidity `nonReentrant` modifier in that
+source is an EOA-only guard
+`tx.origin == msg.sender && msg.sender.code.length == 0`, not a transient
+mutex.
 -/
 
 /-- Transient analogue of `Verity.nonReentrant`. The lock lives in

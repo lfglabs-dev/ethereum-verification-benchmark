@@ -1,5 +1,4 @@
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Trace
-import Benchmark.Cases.ERC4337.EntryPointInvariant.TransientGuard
 import Benchmark.Cases.ERC4337.EntryPointInvariant.EvmYulFrame
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
 
@@ -184,8 +183,8 @@ open Layout
 /-- **CRITICAL_PATH T** — the headline theorem. Top-level (bytecode-level
     form): the Yoav counting biconditional holds for any sequence of
     arbitrary EVM callee invocations. Composes L1–L10 with the upstream
-    frame, layout, and reentrancy lemmas (`Verity.EVM.Frame`,
-    `Verity.EVM.Layout`, `Verity.Core.nonReentrantTransient_locked_reverts`)
+    frame, layout, and EntryPointV09 EOA-guard lemmas (`Verity.EVM.Frame`,
+    `Verity.EVM.Layout`, `EntryPointV09.handleOp` guard checks)
     into the literal counting form of Yoav Weis's English claim. -/
 theorem yoav_counting_biconditional_under_arbitrary_callees
     (ops : List PackedUserOperation)

@@ -44,40 +44,52 @@ This module closes the loop on the original session goals. It:
   `Layout.lean`.
 -/
 
-/-! ## Step 4: frame lemmas against `EntryPointV09` -/
+/-! ## Step 4: entry guard lemmas against `EntryPointV09` -/
 
-/-- The guarded public entry point at the EntryPointV09 level. -/
+/-- The public EOA-gated entry point at the EntryPointV09 level. -/
 def entryPointV09Guarded
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256) : Contract Uint256 :=
   EntryPointV09.handleOp sender paymaster key declaredNonce
     beneficiary hasInitCode hasCallData
 
-/-- **Step 4 (lemma 3 against real EntryPointV09)**: re-entry into the guarded
-    `EntryPointV09.handleOp` reverts when the lock slot is set. -/
-theorem entryPointV09_reentrancy_guard_blocks_reentry
+/-- **Step 4 (guard lemma against real EntryPointV09)**: the v0.9
+    `nonReentrant` modifier rejects calls whose `tx.origin` differs from
+    `msg.sender`. This models the first conjunct of the Solidity EOA-only
+    guard through the benchmark's `txOriginOracle`, not a transient mutex. -/
+theorem entryPointV09_eoa_guard_rejects_origin_oracle_mismatch
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256)
     (s : ContractState)
-    (hLocked : s.transientStorage 0 ≠ 0) :
+    (hOriginMismatch :
+      externalCallWords "txOriginOracle" [ExternalArg.toWord EntryPointV09.VALIDATION_SUCCESS] ≠
+        addressToWord s.sender) :
     (entryPointV09Guarded sender paymaster key declaredNonce beneficiary
        hasInitCode hasCallData).run s =
-      ContractResult.revert "ReentrancyGuardTransient: reentrant call" s := by
+      ContractResult.revert "nonReentrant: tx.origin != msg.sender" s := by
   unfold entryPointV09Guarded
-  have hNe : (s.transientStorage 0 == 0) = false := by
-    simp [hLocked]
-  simp [Contract.run, EntryPointV09.handleOp, tload, Verity.require,
-    Verity.bind, Bind.bind, hNe]
+  have hOriginMismatch' :
+      externalCallWords "txOriginOracle" [ExternalArg.toWord EntryPointV09.VALIDATION_SUCCESS] ≠
+        Core.Uint256.ofNat (Core.Address.toNat s.sender) := by
+    simpa [addressToWord] using hOriginMismatch
+  have hNe :
+      (externalCallWords "txOriginOracle" [ExternalArg.toWord EntryPointV09.VALIDATION_SUCCESS] ==
+        addressToWord s.sender) = false := by
+    simp [addressToWord, hOriginMismatch']
+  simp [Contract.run, EntryPointV09.handleOp, msgSender, Verity.require,
+    Verity.bind, Bind.bind, addressToWord, hOriginMismatch']
 
-/-- Corollary: the storage roll-back property for the real contract. -/
-theorem entryPointV09_reentrancy_revert_preserves_storage
+/-- Corollary: the origin-oracle mismatch guard failure preserves the pre-call state. -/
+theorem entryPointV09_eoa_guard_revert_preserves_storage
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256)
     (s : ContractState)
-    (hLocked : s.transientStorage 0 ≠ 0) :
+    (hOriginMismatch :
+      externalCallWords "txOriginOracle" [ExternalArg.toWord EntryPointV09.VALIDATION_SUCCESS] ≠
+        addressToWord s.sender) :
     ((entryPointV09Guarded sender paymaster key declaredNonce beneficiary
        hasInitCode hasCallData).run s).snd = s := by
-  rw [entryPointV09_reentrancy_guard_blocks_reentry _ _ _ _ _ _ _ _ hLocked]
+  rw [entryPointV09_eoa_guard_rejects_origin_oracle_mismatch _ _ _ _ _ _ _ _ hOriginMismatch]
   rfl
 
 /-! ## Step 5: top-level theorem universally quantified over external callee bytecode
@@ -89,8 +101,8 @@ the EntryPointV09 control-flow biconditional and frame invariants hold.
 
 The self-call to `this.innerHandleOp` is deliberately not included in this
 frame-preservation theorem. A self-call can mutate EntryPoint storage and must
-be handled by the source-level `EntryPointV09` model and reentrancy/frame
-lemmas, not by `applyCallToCaller`, whose premise is a non-self CALL boundary.
+be handled by the source-level `EntryPointV09` model and frame lemmas, not by
+`applyCallToCaller`, whose premise is a non-self CALL boundary.
 
 This is the structural shape of the Yoav-grade theorem. Its premises are:
 
@@ -98,7 +110,8 @@ This is the structural shape of the Yoav-grade theorem. Its premises are:
    universally over `CalleeResult` by construction.
 2. The solc memory-layout disjointness from `Layout.lean` — proven from
    the standard solc allocator invariants.
-3. The Verity reentrancy-guard model that EntryPointV09 imports.
+3. The EntryPointV09 EOA-only entry guard (`tx.origin == msg.sender` plus
+   the `callerCodeLength` oracle for `msg.sender.code.length == 0`).
 
 We state the theorem as a structure containing all the simultaneously-true
 post-conditions for any number of non-self external calls.
@@ -121,8 +134,8 @@ abbrev BytecodeCalleeSequence := BytecodeExternalCalleeSequence
     invariants hold simultaneously:
 
     1. The caller's storage at every slot is preserved by every external call.
-    2. The caller's transient storage (the reentrancy lock) at every slot
-       is preserved by every external call.
+    2. The caller's transient storage at every slot is preserved by every
+       external call.
     3. Every word in the `opInfos[]` memory region is preserved by every
        external call.
 

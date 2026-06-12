@@ -38,7 +38,7 @@ one of them broke, the headline would no longer compile.
 | L5 | `Verity.EVM.Layout.call_buffer_disjoint_from_heap` | (upstream) | solc layout disjointness |
 | L6 | `executionLoop_count_le_one` | `Trace.lean` | at-most-once under pairwise distinct |
 | L7 | `executionLoop_count_ge_one` | `Trace.lean` | at-least-once when validated |
-| L8 | `Verity.Core.nonReentrantTransient_locked_reverts` | (upstream) | re-entry blocked (EIP-1153 lock) |
+| L8 | `EntryPointV09.handleOp` EOA guard checks | `EntryPointV09.lean` / `Bytecode.lean` | EntryPoint v0.9 `nonReentrant` rejects non-EOA callers |
 | L9 | `yoav_count_eq_one_when_validated_and_executable` | `Yoav.lean` | bridges loop to counting |
 | L10| `yoav_count_eq_zero_when_validation_fails` | `Yoav.lean` | failure side |
 | **T** | `yoav_counting_biconditional_under_arbitrary_callees` | `Yoav.lean` | the composition |
@@ -55,10 +55,10 @@ for review but not load-bearing for the headline.
   shape of the frame conditions. The upstream `Verity.EVM.Frame` lemmas
   now exist in verity main (shipped via lfglabs-dev/verity#1969), but this
   benchmark still carries local duplicates (`EvmYulFrame.lean`,
-  `Layout.lean`, `TransientGuard.lean`) pending a refactor to consume the
-  upstream versions.
+  `Layout.lean`) pending a refactor to consume the upstream versions.
 - `Bytecode.lean` — 4 theorems: composes the abstract biconditional with
-  the upstream frame conditions. Wires the toy `EntryPointFrame`.
+  the upstream frame conditions and records the EntryPointV09 EOA-only
+  guard shape.
 - `Refinement.lean` — connects `EntryPointV09`'s storage delta to the
   abstract `validationLoop` / `executionLoop`. (item A)
 - `Trace.lean` extra lemmas (`executionLoop_event_origin`,
@@ -80,12 +80,17 @@ critical-path lemmas above. Everything else is supporting material.
 If you have a day, also read `Trace.lean` (the abstract model) and
 `Refinement.lean` (the bridge to `EntryPointV09`).
 
-The upstream lemmas (L3, L4, L5, L8) now exist in verity main
+The upstream frame/layout lemmas (L3, L4, L5) now exist in verity main
 (`Verity.EVM.Frame.external_call_preserves_caller_storage` /
 `external_call_preserves_caller_memory`,
-`Verity.EVM.Layout.call_buffer_disjoint_from_heap`,
-`Verity.Core.nonReentrantTransient_locked_reverts`), shipped via
+`Verity.EVM.Layout.call_buffer_disjoint_from_heap`), shipped via
 `lfglabs-dev/verity#1969`. However, this benchmark still carries local
-duplicates of these statements (`EvmYulFrame.lean`, `Layout.lean`,
-`TransientGuard.lean`) and has not yet been refactored to consume the
-upstream lemmas directly.
+duplicates of these statements (`EvmYulFrame.lean`, `Layout.lean`) and has
+not yet been refactored to consume the upstream lemmas directly.
+
+`TransientGuard.lean` remains only as a generic EIP-1153 mutex smoke. It is
+not part of the EntryPoint critical path because EntryPoint v0.9's
+`nonReentrant` modifier is an EOA-only gate
+`tx.origin == msg.sender && msg.sender.code.length == 0`, modeled in
+`EntryPointV09.lean` with `msgSender` plus `txOriginOracle` and
+`callerCodeLength` oracles for the origin and code-length conjuncts.

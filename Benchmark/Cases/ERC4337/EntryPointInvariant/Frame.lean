@@ -32,12 +32,12 @@ The key Verity semantic facts we exploit:
   it cannot mutate the caller's `ContractState`. This is exactly the EVM
   guarantee that `CALL`-ing an external address gives that address its own
   storage frame, not the caller's.
-* `Contracts.tload` / `tstore` operate on a separate `transientStorage` map
-  used for EIP-1153 reentrancy guards. External calls cannot interfere with
-  `transientStorage` either.
+* `Contracts.tload` / `tstore` operate on a separate `transientStorage` map.
+  External calls cannot interfere with `transientStorage` either.
 * `Verity.nonReentrant` enforces the standard locked / unlocked discipline
   and has the proved theorem `nonReentrant_locked_reverts` showing re-entry
-  reverts when the lock slot is non-zero.
+  reverts when the lock slot is non-zero. This is a generic historical
+  scaffold, not the EntryPoint v0.9 entry guard.
 
 This means the three lemmas reduce to **showing that EntryPoint's bytecode
 uses those primitives correctly**, not "for all callee bytecode". The
@@ -55,7 +55,7 @@ EntryPoint.sol they concern.
 
 verity_contract EntryPointFrame where
   storage
-    -- Reentrancy lock (matches `ReentrancyGuard._status` in the Solidity source).
+    -- Generic mutex lock used by this historical scaffold.
     reentrancyLock : Uint256 := slot 0
     -- Nonce mapping `address sender => uint256 nonceKey => uint256 nonce`
     -- We simplify by keying directly on Uint256 senderKey for the lemma; the
@@ -82,9 +82,9 @@ verity_contract EntryPointFrame where
     let _callResult := call 0 senderKey 0 0 0 0 0
     return info
 
-  -- Combined entry point. Solidity wraps this in `nonReentrant`; we expose
-  -- the raw body and write the guard around it at the lemma level using the
-  -- verified `Verity.nonReentrant` combinator.
+  -- Combined entry point. We expose the raw body and write a generic mutex
+  -- guard around it at the lemma level using the verified
+  -- `Verity.nonReentrant` combinator.
   function handleOpsBody (senderKey : Uint256, expectedNonce : Uint256)
       : Uint256 := do
     validateOne senderKey expectedNonce
@@ -103,8 +103,8 @@ open Contracts
 
 Wrapping `handleOpsBody` with `Verity.nonReentrant` on the `reentrancyLock`
 slot guarantees that any call attempted while the lock is non-zero reverts.
-This is the formal counterpart of `nonReentrant` blocking a re-entry from a
-malicious account/paymaster.
+This remains compiled as a generic mutex smoke. EntryPoint v0.9 itself uses
+an EOA-only `nonReentrant` modifier, modeled in `EntryPointV09.lean`.
 -/
 
 /-- The `nonReentrant`-wrapped entry point. -/
