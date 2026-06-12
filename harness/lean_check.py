@@ -66,12 +66,15 @@ def _first_meaningful_lean_error(output: str) -> str:
 
 def _classify_lean_failure(output: str) -> str:
     lowered = output.lower()
-    if ("unexpected token" in lowered or "expected" in lowered) and "error:" in lowered:
-        return "lean_parse_error"
-    if "unknown identifier" in lowered or "unknown constant" in lowered or "unknown namespace" in lowered:
-        return "lean_unknown_name"
+    # Order matters: goal/identifier outputs routinely contain the substring
+    # "expected" (e.g. "expected to have type"), so the parse-error pattern
+    # must come after the more specific classes.
     if "unsolved goals" in lowered:
         return "lean_unsolved_goals"
+    if "unknown identifier" in lowered or "unknown constant" in lowered or "unknown namespace" in lowered:
+        return "lean_unknown_name"
+    if ("unexpected token" in lowered or "expected '" in lowered) and "error:" in lowered:
+        return "lean_parse_error"
     if "type mismatch" in lowered or "application type mismatch" in lowered:
         return "lean_type_error"
     if "timeout" in lowered:
