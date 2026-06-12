@@ -123,10 +123,9 @@ the public theorem and finish each branch with `exact helper_branch ...`.
 
 ## Fallback: simp + by_cases
 
-If `grind` still leaves goals after you have unfolded the spec and hinted the
-contract function plus every storage field, fall back to the pre-grindset
-simp-heavy recipe. This is strictly a fallback; prefer to extend the `grind`
-hint list first.
+If the primary template and grind both leave goals, an explicit simp set
+spelling out the monadic plumbing gives the most control (the names below are
+what `grind_norm` bundles):
 
 ```lean
 -- Fallback when grind alone does not close:
@@ -144,14 +143,10 @@ The simp set MUST include every storage field definition from the contract.
 Without them, `simp` leaves unresolved `if` expressions comparing
 `s.storage ContractName.field.slot` against constants.
 
-Do not use `split` on the final post-state goal unless the goal itself is
-explicitly a conjunction or a sum-type elimination. Generated Verity
-execution terms often simplify better if you first prove the exact branch
-facts used by the contract and then call `simp`.
-
-If `simp` leaves nested `match`/`if` expressions with free variables, use
-`by_cases` on each unresolved condition BEFORE calling `simp`, not `split`
-after. Pass all case hypotheses to `simp`.
+If `simp` leaves nested `match`/`if` expressions, prefer the primary
+template's `split_ifs <;> simp_all [grind_norm]` / `repeat' (split <;>
+simp_all [grind_norm])` discharge; `by_cases` on the exact condition with the
+hypothesis passed to `simp` is the manual equivalent when split misfires.
 
 If `simp` leaves unsolved goals because a hypothesis uses a spec helper name
 (e.g., `computedClaimAmount`) while the goal has the definition already

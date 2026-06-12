@@ -14,10 +14,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Compile harness modules
         run: python3 -m compileall -q harness scripts/aggregate_runs.py
-      - name: Grindset generic lint
-        run: python3 scripts/check_grindset_generic.py
-      - name: Reference solution audit
-        run: python3 scripts/check_reference_solutions.py
+      - name: Check suite (lake-free)
+        run: python3 scripts/check.py fast
       - name: Proof patcher unit checks
         run: |
           python3 - <<'EOF'
