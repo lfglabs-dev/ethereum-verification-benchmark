@@ -29,7 +29,7 @@ if ! command -v lake >/dev/null; then
   exit 2
 fi
 python3 "$DIFF_ROOT/generate-abi-adapters.py" --out "$ADAPTERS"
-lake build Compiler.CompileDriverBase Benchmark.Cases.ERC4337.EntryPointInvariant.EntryPointV09
+lake build Compiler.CompileDriver Benchmark.Cases.ERC4337.EntryPointInvariant.EntryPointV09
 lake env lean --run "$DIFF_ROOT/compile-entrypoint.lean" "$YUL_DIR" "$ADAPTERS"
 VERITY_YUL=$(find "$YUL_DIR" -type f -name '*.yul' | sort | head -n 1)
 if [ -z "$VERITY_YUL" ]; then
