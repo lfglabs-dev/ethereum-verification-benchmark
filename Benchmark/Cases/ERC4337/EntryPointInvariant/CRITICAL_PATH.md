@@ -52,7 +52,11 @@ for review but not load-bearing for the headline.
   all-or-nothing, length/bounds, batch composition, lifecycle. Originally
   the headline statement before the counting form was introduced.
 - `Frame.lean` (`Benchmark` namespace) — 10 theorems: Verity-contract
-  shape of the frame conditions. Subsumed by `Verity.EVM.Frame`.
+  shape of the frame conditions. The upstream `Verity.EVM.Frame` lemmas
+  now exist in verity main (shipped via lfglabs-dev/verity#1969), but this
+  benchmark still carries local duplicates (`EvmYulFrame.lean`,
+  `Layout.lean`, `TransientGuard.lean`) pending a refactor to consume the
+  upstream versions.
 - `Bytecode.lean` — 4 theorems: composes the abstract biconditional with
   the upstream frame conditions. Wires the toy `EntryPointFrame`.
 - `Refinement.lean` — connects `EntryPointV09`'s storage delta to the
@@ -76,5 +80,12 @@ critical-path lemmas above. Everything else is supporting material.
 If you have a day, also read `Trace.lean` (the abstract model) and
 `Refinement.lean` (the bridge to `EntryPointV09`).
 
-The upstream lemmas (L3, L4, L5, L8) live in `Verity` itself; their proofs
-are shipped in `lfglabs-dev/verity#1969`.
+The upstream lemmas (L3, L4, L5, L8) now exist in verity main
+(`Verity.EVM.Frame.external_call_preserves_caller_storage` /
+`external_call_preserves_caller_memory`,
+`Verity.EVM.Layout.call_buffer_disjoint_from_heap`,
+`Verity.Core.nonReentrantTransient_locked_reverts`), shipped via
+`lfglabs-dev/verity#1969`. However, this benchmark still carries local
+duplicates of these statements (`EvmYulFrame.lean`, `Layout.lean`,
+`TransientGuard.lean`) and has not yet been refactored to consume the
+upstream lemmas directly.

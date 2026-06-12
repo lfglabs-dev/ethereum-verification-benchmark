@@ -8,43 +8,62 @@ open Verity.Stdlib.Math
 open Contracts
 
 /-!
-# EntryPoint v0.9 — faithful Verity translation
+# EntryPoint v0.9 — one-op, decoded-parameter projection
 
-This file is a hand-written but faithful translation of the slice of
-`EntryPoint.sol` at commit
+This file is a hand-written, **one-op, decoded-parameter projection** of the
+load-bearing slice of `EntryPoint.sol` at commit
 `b36a1ed52ae00da6f8a4c8d50181e2877e4fa410`
-(eth-infinitism/account-abstraction, v0.9) that is load-bearing for the
-execution-validation biconditional.
+(eth-infinitism/account-abstraction, v0.9). It is **not** a faithful
+line-by-line Solidity translation: the real `handleOps` is a batch
+entrypoint over `PackedUserOperation[] calldata`, whereas this contract
+takes a single op's already-decoded scalar parameters and runs validation
+then execution for that one op.
 
-We translate manually because Verity does not currently expose a
-`fromSolidity` Lean entry point — the production compiler runs out-of-band
-from the `verity-cli`. A manual translation is the correct option here:
+Known, deliberate divergences from the Solidity source:
 
-* The relevant surface is small (`handleOps`, `_iterateValidationPhase`,
-  `_validatePrepayment`, `_validateAccountAndPaymasterValidationData`,
-  `_executeUserOp`, `_compensate`).
-* The unsupported-by-Verity features in the rest of the file (inline
-  assembly in `innerHandleOp`, signature aggregation, custom-error
-  parameter encoding) sit OUTSIDE the slice that the invariant cares
-  about. They are abstracted away here as `externalCall` stubs, matching
-  the same trust class Verity uses elsewhere for ABI-encoded calls.
-* Every accounting and control-flow branch that matters for the invariant
-  is preserved.
+* **Single-nonce abstraction.** The real `NonceManager` keys nonces by the
+  2D pair `(sender, uint192 key)` and updates them via
+  `_validateAndUpdateNonce` inside `_validatePrepayment`. Here `nonces` is
+  a flat `Address → Uint256` map (the inner key is collapsed away), and the
+  nonce check happens before the account validation call rather than after.
+  A faithful 2D nonce model lives in `UserOp.lean`, not here.
+* **Boolean paymaster oracle.** Paymaster presence is just
+  `paymaster != 0`, and `validatePaymasterUserOp` is an `externalCall`
+  oracle checked against the zero word. Real `paymasterAndData` decoding,
+  context bytes, malformed-return checks, and gas-limit checks are omitted.
+* **No prefund/deposit accounting.** `missingAccountFunds`, the AA21
+  account-deposit debit, the paymaster deposit debit before validation,
+  gas-price math, refunds, and the real `_compensate` ETH transfer (which
+  can revert) are not modeled. `_compensate` here just bumps a deposit
+  counter by a constant fee.
+* **Transient-guard mismatch.** The `tload`/`tstore` lock block below
+  models an OpenZeppelin-style EIP-1153 transient **mutex**. The actual
+  EntryPoint v0.9 `nonReentrant` modifier is **not** a mutex in this
+  source: it checks `tx.origin == msg.sender && msg.sender.code.length == 0`
+  (an EOA-caller restriction). The mutex here is a stand-in, not a
+  translation of that guard.
+* **Other omissions.** Validation-data aggregator/time-window parsing,
+  OOG/low-prefund sentinel handling, the `executeUserOp` selector branch,
+  `currentUserOpHash`, real event emission, and the aggregated-signature
+  path are all out of scope for this projection.
 
-The Solidity → Verity mapping we apply:
+The headline theorem is **not** carried by this file. The abstract models
+in `Contract.lean` and `Trace.lean` carry the proven indexed
+execution-count biconditional; this contract is a Verity-shaped projection
+that downstream refinement lemmas connect to that abstract model.
+
+The Solidity → Verity mapping applied by the projection:
 
   | Solidity                                       | Verity                             |
   |------------------------------------------------|------------------------------------|
   | `mapping(address => uint256) deposits`         | `deposits : Address → Uint256`    |
-  | `mapping(address => uint256) nonceSequence`   | `nonces : Uint256 → Uint256`     |
-  | `ReentrancyGuardTransient` (EIP-1153)          | `tload` / `tstore` lock slot       |
-  | `account.validateUserOp(...)` external call    | `externalCall "validateUserOp"`    |
-  | `paymaster.validatePaymasterUserOp(...)` call  | `externalCall "validatePaymasterUserOp"` |
+  | 2D `nonceSequence[sender][key]`                | flat `nonces : Address → Uint256` |
+  | `nonReentrant` (tx.origin/EOA check)           | `tload` / `tstore` mutex stand-in  |
+  | `account.validateUserOp(...)` external call    | `externalCall "validateUserOp"` oracle |
+  | `paymaster.validatePaymasterUserOp(...)` call  | `externalCall "validatePaymasterUserOp"` oracle |
   | `this.innerHandleOp(...)` self-call (try/catch)| `tryCatch (call ...)`              |
   | `Exec.call(sender, ..., callData)`             | `call ...`                         |
-  | `_compensate(beneficiary, collected)`          | direct subtraction + transfer      |
-
-The contract below is the canonical artifact downstream proofs target.
+  | `_compensate(beneficiary, collected)`          | constant-fee deposit bump          |
 -/
 
 verity_contract EntryPointV09 where

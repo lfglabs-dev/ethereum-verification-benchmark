@@ -223,9 +223,14 @@ def feesCollectedR (ops : List OpInfo) : Option Nat :=
 This extension models the rest of the EntryPoint v0.9 lifecycle:
 
 - **Nonce**: each account has an expected next nonce; an op is valid only if
-  its declared nonce equals the expected one. After successful validation, the
-  account's nonce strictly increments by 1 (matches `account.nonce++` in
-  `_validateAccountAndPaymasterValidationData`).
+  its declared nonce equals the expected one. After successful account
+  validation, the account's nonce strictly increments by 1. In the real
+  source this is `_validateAndUpdateNonce` inside `_validatePrepayment`,
+  AFTER account validation (`_validateAccountPrepayment`) and BEFORE
+  paymaster validation (`EntryPoint.sol` lines 833-858) — not in
+  `_validateAccountAndPaymasterValidationData`. Note also that the real
+  nonce is keyed by the 2D pair `(sender, uint192 key)` (`NonceManager.sol`);
+  this model uses a single sequential nonce per account.
 - **Paymaster**: optional address; when present, `_validatePaymasterPrepayment`
   must also approve the op. Validation succeeds iff the account AND (if present)
   the paymaster both approve.
