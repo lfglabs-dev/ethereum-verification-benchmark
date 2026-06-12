@@ -30,6 +30,8 @@ def check_group(group_id: str) -> list[str]:
         if not (built.path / "Benchmark" / "Grindset.lean").is_file():
             errors.append(f"{group_id}: missing Benchmark/Grindset.lean umbrella import")
         dependency_cache = manifest.get("dependency_cache")
+        if dependency_cache is None and (ROOT / ".lake" / "packages").exists():
+            errors.append(f"{group_id}: manifest records no dependency_cache despite available repo .lake")
         if dependency_cache is not None:
             if dependency_cache.get("path") != ".lake/packages":
                 errors.append(f"{group_id}: unexpected dependency cache path {dependency_cache.get('path')!r}")

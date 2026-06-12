@@ -303,6 +303,8 @@ def build_group_workspace(
     copied[".grok/rules.md"] = sha256_file(grok_dir / "rules.md")
     copied[".grok/sandbox.toml"] = sha256_file(grok_dir / "sandbox.toml")
 
+    dependency_cache = setup_private_lake(workspace, prune_to_sources=True)
+
     manifest = {
         "schema_version": 1,
         "run_id": run_id,
@@ -319,7 +321,6 @@ def build_group_workspace(
             ".env",
         ],
     }
-    dependency_cache = setup_private_lake(workspace, prune_to_sources=True)
 
     manifest_path = workspace / "workspace-manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
