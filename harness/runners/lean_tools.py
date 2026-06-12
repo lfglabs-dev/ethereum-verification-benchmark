@@ -771,6 +771,12 @@ def _hint_for_failure(failure_kind: object, output: str) -> str | None:
     if "maximum recursion depth" in output:
         extra = "Avoid broad recursive simp; use simp only with explicit lemmas and case-split contract branches with by_cases."
         hint = f"{hint} {extra}" if hint else extra
+    if "simp made no progress" in output:
+        extra = (
+            "A simp step made no progress, which Lean treats as an error: wrap optional normalization steps in `try` "
+            "(e.g. `try simp only [grind_norm] at *`) or delete the redundant simp line, then resubmit."
+        )
+        hint = f"{hint} {extra}" if hint else extra
     return hint
 
 

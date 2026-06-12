@@ -43,6 +43,9 @@ Why each step matters:
   instead — it unfolds inside hypotheses too.
 - `split_ifs <;> simp_all [grind_norm]` handles undecided contract branches
   (deposit-size thresholds and similar) without manual `by_cases`.
+- Lean treats a no-progress `simp` as an error. Keep `try` on every
+  normalization step that might be a no-op (as in the template); if you see
+  `simp made no progress`, wrap that line in `try` or delete it.
 
 ## Secondary: grind-first pattern
 
