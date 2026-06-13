@@ -171,6 +171,8 @@ def _clone_tree(src: Path, dst: Path) -> None:
         result = subprocess.run(["cp", "-Rla", str(src), str(dst)], capture_output=True)
         if result.returncode == 0:
             return
+    if dst.exists():
+        shutil.rmtree(dst)
     shutil.copytree(src, dst)
 
 
