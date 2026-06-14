@@ -8,44 +8,17 @@
   "names": {
     "spark/step3p7-flash-148b": "Step37"
   },
-  "prices_usd_per_M": {},
+  "prices_usd_per_M": {
+    "zai/glm-5.2": {
+      "input": 0.6,
+      "output": 2.2
+    },
+    "minimax/minimax-m3": {
+      "input": 0.3,
+      "output": 1.2
+    }
+  },
   "summaries": {
-    "codex:gpt-5.5": {
-      "tasks": 5,
-      "passed": 5,
-      "pass_rate": 1.0,
-      "median_attempts_to_pass": null,
-      "median_completion_tokens_to_pass": null,
-      "median_prompt_tokens_to_pass": null,
-      "total_completion_tokens": 0,
-      "total_prompt_tokens": 0,
-      "median_cost_to_pass_usd": null,
-      "total_cost_usd": null
-    },
-    "default:builtin/fast": {
-      "tasks": 5,
-      "passed": 5,
-      "pass_rate": 1.0,
-      "median_attempts_to_pass": 40,
-      "median_completion_tokens_to_pass": 12387,
-      "median_prompt_tokens_to_pass": 1226186,
-      "total_completion_tokens": 56857,
-      "total_prompt_tokens": 5969523,
-      "median_cost_to_pass_usd": 1.5241,
-      "total_cost_usd": 7.3907
-    },
-    "default:builtin/smart": {
-      "tasks": 5,
-      "passed": 5,
-      "pass_rate": 1.0,
-      "median_attempts_to_pass": 8,
-      "median_completion_tokens_to_pass": 6887,
-      "median_prompt_tokens_to_pass": 768883,
-      "total_completion_tokens": 42931,
-      "total_prompt_tokens": 4784922,
-      "median_cost_to_pass_usd": 0.2389,
-      "total_cost_usd": 1.4869
-    },
     "default:gpt55": {
       "tasks": 5,
       "passed": 5,
@@ -58,18 +31,6 @@
       "median_cost_to_pass_usd": 1.2348,
       "total_cost_usd": 8.421
     },
-    "default:grok": {
-      "tasks": 5,
-      "passed": 4,
-      "pass_rate": 0.8,
-      "median_attempts_to_pass": 6.0,
-      "median_completion_tokens_to_pass": 2121,
-      "median_prompt_tokens_to_pass": 476174,
-      "total_completion_tokens": 32069,
-      "total_prompt_tokens": 5773169,
-      "median_cost_to_pass_usd": 0.4797,
-      "total_cost_usd": 5.8372
-    },
     "default:minimax/minimax-m3": {
       "tasks": 135,
       "passed": 38,
@@ -79,8 +40,8 @@
       "median_prompt_tokens_to_pass": 156726,
       "total_completion_tokens": 1463317,
       "total_prompt_tokens": 102895944,
-      "median_cost_to_pass_usd": null,
-      "total_cost_usd": null
+      "median_cost_to_pass_usd": 0.0493,
+      "total_cost_usd": 32.6246
     },
     "default:spark/step3p7-flash-148b": {
       "tasks": 135,
@@ -103,522 +64,11 @@
       "median_prompt_tokens_to_pass": 105665,
       "total_completion_tokens": 1310417,
       "total_prompt_tokens": 61668637,
-      "median_cost_to_pass_usd": null,
-      "total_cost_usd": null
-    },
-    "grok-build:grok-build": {
-      "tasks": 5,
-      "passed": 4,
-      "pass_rate": 0.8,
-      "median_attempts_to_pass": null,
-      "median_completion_tokens_to_pass": null,
-      "median_prompt_tokens_to_pass": null,
-      "total_completion_tokens": 0,
-      "total_prompt_tokens": 0,
-      "median_cost_to_pass_usd": null,
-      "total_cost_usd": null
-    },
-    "opencode:builtin/fast": {
-      "tasks": 5,
-      "passed": 5,
-      "pass_rate": 1.0,
-      "median_attempts_to_pass": null,
-      "median_completion_tokens_to_pass": 7533,
-      "median_prompt_tokens_to_pass": 301001,
-      "total_completion_tokens": 134046,
-      "total_prompt_tokens": 3959633,
-      "median_cost_to_pass_usd": 0.3913,
-      "total_cost_usd": 5.2878
-    },
-    "opencode:builtin/smart": {
-      "tasks": 5,
-      "passed": 3,
-      "pass_rate": 0.6,
-      "median_attempts_to_pass": null,
-      "median_completion_tokens_to_pass": 10529,
-      "median_prompt_tokens_to_pass": 1917160,
-      "total_completion_tokens": 113662,
-      "total_prompt_tokens": 10800803,
-      "median_cost_to_pass_usd": 0.5878,
-      "total_cost_usd": 3.3767
+      "median_cost_to_pass_usd": 0.0658,
+      "total_cost_usd": 39.8837
     }
   },
   "runs": [
-    {
-      "run_id": "20260610T175203-default-fair-ethereum__deposit_contract_minimal__deposit_count",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "grok",
-      "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 14,
-      "tool_calls": 61,
-      "prompt_tokens": 609516,
-      "completion_tokens": 5203,
-      "total_tokens": 645794,
-      "duration_seconds": 1251.659,
-      "started_at": "2026-06-10T17:52:03Z",
-      "cost_usd": 0.6199
-    },
-    {
-      "run_id": "20260610T175351-default-fair-ethereum__deposit_contract_minimal__deposit_count",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/smart",
-      "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 6,
-      "tool_calls": 42,
-      "prompt_tokens": 602770,
-      "completion_tokens": 4798,
-      "total_tokens": 607568,
-      "duration_seconds": 954.768,
-      "started_at": "2026-06-10T17:53:51Z",
-      "cost_usd": 0.1866
-    },
-    {
-      "run_id": "20260610T183608-default-fair-ethereum__deposit_contract_minimal__deposit_count",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/fast",
-      "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 45,
-      "tool_calls": 72,
-      "prompt_tokens": 1391466,
-      "completion_tokens": 12387,
-      "total_tokens": 1403853,
-      "duration_seconds": 676.082,
-      "started_at": "2026-06-10T18:36:08Z",
-      "cost_usd": 1.7193
-    },
-    {
-      "run_id": "20260610T184419-default-fair-kleros__sortition_trees__node_id_bijection",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/smart",
-      "task_ref": "kleros/sortition_trees/node_id_bijection",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 5,
-      "tool_calls": 47,
-      "prompt_tokens": 536376,
-      "completion_tokens": 5599,
-      "total_tokens": 541975,
-      "duration_seconds": 311.173,
-      "started_at": "2026-06-10T18:44:19Z",
-      "cost_usd": 0.1676
-    },
-    {
-      "run_id": "20260610T185858-default-fair-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/smart",
-      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 8,
-      "tool_calls": 58,
-      "prompt_tokens": 1126232,
-      "completion_tokens": 8870,
-      "total_tokens": 1135102,
-      "duration_seconds": 592.39,
-      "started_at": "2026-06-10T18:58:58Z",
-      "cost_usd": 0.3485
-    },
-    {
-      "run_id": "20260610T190921-default-fair-nexus_mutual__ramm_price_band__sync_sets_book_value",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/smart",
-      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 15,
-      "tool_calls": 55,
-      "prompt_tokens": 768883,
-      "completion_tokens": 6887,
-      "total_tokens": 775770,
-      "duration_seconds": 503.132,
-      "started_at": "2026-06-10T19:09:21Z",
-      "cost_usd": 0.2389
-    },
-    {
-      "run_id": "20260610T191744-default-fair-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/smart",
-      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 25,
-      "tool_calls": 70,
-      "prompt_tokens": 1750661,
-      "completion_tokens": 16777,
-      "total_tokens": 1767438,
-      "duration_seconds": 850.302,
-      "started_at": "2026-06-10T19:17:44Z",
-      "cost_usd": 0.5453
-    },
-    {
-      "run_id": "20260610T210149-default-fair-kleros__sortition_trees__node_id_bijection",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "grok",
-      "task_ref": "kleros/sortition_trees/node_id_bijection",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 4,
-      "tool_calls": 38,
-      "prompt_tokens": 376473,
-      "completion_tokens": 1085,
-      "total_tokens": 390748,
-      "duration_seconds": 225.05,
-      "started_at": "2026-06-10T21:01:49Z",
-      "cost_usd": 0.3786
-    },
-    {
-      "run_id": "20260610T210152-default-fair-kleros__sortition_trees__node_id_bijection",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/fast",
-      "task_ref": "kleros/sortition_trees/node_id_bijection",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 20,
-      "tool_calls": 53,
-      "prompt_tokens": 772252,
-      "completion_tokens": 6834,
-      "total_tokens": 779086,
-      "duration_seconds": 389.895,
-      "started_at": "2026-06-10T21:01:52Z",
-      "cost_usd": 0.954
-    },
-    {
-      "run_id": "20260610T210534-default-fair-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "grok",
-      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 3,
-      "tool_calls": 47,
-      "prompt_tokens": 314114,
-      "completion_tokens": 1767,
-      "total_tokens": 331077,
-      "duration_seconds": 210.042,
-      "started_at": "2026-06-10T21:05:34Z",
-      "cost_usd": 0.3176
-    },
-    {
-      "run_id": "20260610T210822-default-fair-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/fast",
-      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 43,
-      "tool_calls": 63,
-      "prompt_tokens": 1226186,
-      "completion_tokens": 13176,
-      "total_tokens": 1239362,
-      "duration_seconds": 606.99,
-      "started_at": "2026-06-10T21:08:22Z",
-      "cost_usd": 1.5241
-    },
-    {
-      "run_id": "20260610T210905-default-fair-nexus_mutual__ramm_price_band__sync_sets_book_value",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "grok",
-      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 8,
-      "tool_calls": 49,
-      "prompt_tokens": 575876,
-      "completion_tokens": 2476,
-      "total_tokens": 597652,
-      "duration_seconds": 483.85,
-      "started_at": "2026-06-10T21:09:05Z",
-      "cost_usd": 0.5808
-    },
-    {
-      "run_id": "20260610T211709-default-fair-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "grok",
-      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
-      "mode": "fair",
-      "passed": false,
-      "passed_targets": 0,
-      "total_targets": 1,
-      "attempts": 48,
-      "tool_calls": 98,
-      "prompt_tokens": 3897190,
-      "completion_tokens": 21538,
-      "total_tokens": 4001499,
-      "duration_seconds": 1282.12,
-      "started_at": "2026-06-10T21:17:09Z",
-      "cost_usd": 3.9403
-    },
-    {
-      "run_id": "20260610T211829-default-fair-nexus_mutual__ramm_price_band__sync_sets_book_value",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/fast",
-      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 2,
-      "tool_calls": 42,
-      "prompt_tokens": 552232,
-      "completion_tokens": 3791,
-      "total_tokens": 556023,
-      "duration_seconds": 262.343,
-      "started_at": "2026-06-10T21:18:29Z",
-      "cost_usd": 0.6778
-    },
-    {
-      "run_id": "20260610T220838-opencode-ethereum__deposit_contract_minimal__deposit_count",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/smart",
-      "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
-      "mode": "shell",
-      "passed": false,
-      "passed_targets": 0,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 647521,
-      "completion_tokens": 3948,
-      "total_tokens": 651469,
-      "duration_seconds": 262.76,
-      "started_at": "2026-06-10T22:08:38Z",
-      "cost_usd": 0.199
-    },
-    {
-      "run_id": "20260610T220841-opencode-ethereum__deposit_contract_minimal__deposit_count",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/fast",
-      "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 2232874,
-      "completion_tokens": 96004,
-      "total_tokens": 2328878,
-      "duration_seconds": 1327.667,
-      "started_at": "2026-06-10T22:08:41Z",
-      "cost_usd": 3.0635
-    },
-    {
-      "run_id": "20260610T221301-opencode-kleros__sortition_trees__node_id_bijection",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/smart",
-      "task_ref": "kleros/sortition_trees/node_id_bijection",
-      "mode": "shell",
-      "passed": false,
-      "passed_targets": 0,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 614782,
-      "completion_tokens": 2850,
-      "total_tokens": 617632,
-      "duration_seconds": 273.184,
-      "started_at": "2026-06-10T22:13:01Z",
-      "cost_usd": 0.1879
-    },
-    {
-      "run_id": "20260610T221734-opencode-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/smart",
-      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 1917160,
-      "completion_tokens": 10529,
-      "total_tokens": 1927689,
-      "duration_seconds": 593.884,
-      "started_at": "2026-06-10T22:17:34Z",
-      "cost_usd": 0.5878
-    },
-    {
-      "run_id": "20260610T222728-opencode-nexus_mutual__ramm_price_band__sync_sets_book_value",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/smart",
-      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 326832,
-      "completion_tokens": 3648,
-      "total_tokens": 330480,
-      "duration_seconds": 204.932,
-      "started_at": "2026-06-10T22:27:28Z",
-      "cost_usd": 0.1024
-    },
-    {
-      "run_id": "20260610T223049-opencode-kleros__sortition_trees__node_id_bijection",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/fast",
-      "task_ref": "kleros/sortition_trees/node_id_bijection",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 1033580,
-      "completion_tokens": 22507,
-      "total_tokens": 1056087,
-      "duration_seconds": 433.104,
-      "started_at": "2026-06-10T22:30:49Z",
-      "cost_usd": 1.3303
-    },
-    {
-      "run_id": "20260610T223053-opencode-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/smart",
-      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 7294508,
-      "completion_tokens": 92687,
-      "total_tokens": 7387195,
-      "duration_seconds": 2082.959,
-      "started_at": "2026-06-10T22:30:53Z",
-      "cost_usd": 2.2996
-    },
-    {
-      "run_id": "20260610T223802-opencode-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/fast",
-      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 132772,
-      "completion_tokens": 2106,
-      "total_tokens": 134878,
-      "duration_seconds": 70.016,
-      "started_at": "2026-06-10T22:38:02Z",
-      "cost_usd": 0.1678
-    },
-    {
-      "run_id": "20260610T223912-opencode-nexus_mutual__ramm_price_band__sync_sets_book_value",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/fast",
-      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 259406,
-      "completion_tokens": 5896,
-      "total_tokens": 265302,
-      "duration_seconds": 174.446,
-      "started_at": "2026-06-10T22:39:12Z",
-      "cost_usd": 0.3349
-    },
-    {
-      "run_id": "20260610T224206-opencode-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
-      "harness": "opencode",
-      "usage_source": "metered",
-      "model": "builtin/fast",
-      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": 301001,
-      "completion_tokens": 7533,
-      "total_tokens": 308534,
-      "duration_seconds": 153.646,
-      "started_at": "2026-06-10T22:42:06Z",
-      "cost_usd": 0.3913
-    },
-    {
-      "run_id": "20260611T063941-default-fair-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
-      "harness": "default",
-      "usage_source": "in-loop",
-      "model": "builtin/fast",
-      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
-      "mode": "fair",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 40,
-      "tool_calls": 75,
-      "prompt_tokens": 2027387,
-      "completion_tokens": 20669,
-      "total_tokens": 2048056,
-      "duration_seconds": 1206.163,
-      "started_at": "2026-06-11T06:39:41Z",
-      "cost_usd": 2.5155
-    },
     {
       "run_id": "20260611T064117-default-fair-ethereum__deposit_contract_minimal__deposit_count",
       "harness": "default",
@@ -637,24 +87,6 @@
       "duration_seconds": 410.912,
       "started_at": "2026-06-11T06:41:17Z",
       "cost_usd": 2.2641
-    },
-    {
-      "run_id": "20260611T064528-grok-build-ethereum__deposit_contract_minimal__deposit_count",
-      "harness": "grok-build",
-      "usage_source": "in-loop",
-      "model": "grok-build",
-      "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
-      "mode": null,
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": null,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": null,
-      "duration_seconds": 1300.533,
-      "started_at": "2026-06-11T06:45:28Z"
     },
     {
       "run_id": "20260611T064808-default-fair-kleros__sortition_trees__node_id_bijection",
@@ -733,168 +165,6 @@
       "cost_usd": 3.721
     },
     {
-      "run_id": "20260611T070711-grok-build-kleros__sortition_trees__node_id_bijection",
-      "harness": "grok-build",
-      "usage_source": "in-loop",
-      "model": "grok-build",
-      "task_ref": "kleros/sortition_trees/node_id_bijection",
-      "mode": null,
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": null,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": null,
-      "duration_seconds": 1832.324,
-      "started_at": "2026-06-11T07:07:11Z"
-    },
-    {
-      "run_id": "20260611T071643-codex-kleros__sortition_trees__node_id_bijection",
-      "harness": "codex",
-      "usage_source": "self-reported",
-      "model": "gpt-5.5",
-      "task_ref": "kleros/sortition_trees/node_id_bijection",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": 192769,
-      "duration_seconds": 250.817,
-      "started_at": "2026-06-11T07:16:43Z"
-    },
-    {
-      "run_id": "20260611T072054-codex-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
-      "harness": "codex",
-      "usage_source": "self-reported",
-      "model": "gpt-5.5",
-      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": 192422,
-      "duration_seconds": 299.394,
-      "started_at": "2026-06-11T07:20:54Z"
-    },
-    {
-      "run_id": "20260611T072554-codex-nexus_mutual__ramm_price_band__sync_sets_book_value",
-      "harness": "codex",
-      "usage_source": "self-reported",
-      "model": "gpt-5.5",
-      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": 124161,
-      "duration_seconds": 272.201,
-      "started_at": "2026-06-11T07:25:54Z"
-    },
-    {
-      "run_id": "20260611T073027-codex-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
-      "harness": "codex",
-      "usage_source": "self-reported",
-      "model": "gpt-5.5",
-      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": 151299,
-      "duration_seconds": 767.355,
-      "started_at": "2026-06-11T07:30:27Z"
-    },
-    {
-      "run_id": "20260611T073749-grok-build-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
-      "harness": "grok-build",
-      "usage_source": "in-loop",
-      "model": "grok-build",
-      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
-      "mode": null,
-      "passed": false,
-      "passed_targets": 0,
-      "total_targets": 1,
-      "attempts": null,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": null,
-      "duration_seconds": 1654.762,
-      "started_at": "2026-06-11T07:37:49Z"
-    },
-    {
-      "run_id": "20260611T074439-codex-ethereum__deposit_contract_minimal__deposit_count",
-      "harness": "codex",
-      "usage_source": "self-reported",
-      "model": "gpt-5.5",
-      "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
-      "mode": "shell",
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": 0,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": 123591,
-      "duration_seconds": 441.25,
-      "started_at": "2026-06-11T07:44:39Z"
-    },
-    {
-      "run_id": "20260611T080526-grok-build-nexus_mutual__ramm_price_band__sync_sets_book_value",
-      "harness": "grok-build",
-      "usage_source": "in-loop",
-      "model": "grok-build",
-      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
-      "mode": null,
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": null,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": null,
-      "duration_seconds": 790.698,
-      "started_at": "2026-06-11T08:05:26Z"
-    },
-    {
-      "run_id": "20260611T081844-grok-build-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
-      "harness": "grok-build",
-      "usage_source": "in-loop",
-      "model": "grok-build",
-      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
-      "mode": null,
-      "passed": true,
-      "passed_targets": 1,
-      "total_targets": 1,
-      "attempts": null,
-      "tool_calls": null,
-      "prompt_tokens": null,
-      "completion_tokens": null,
-      "total_tokens": null,
-      "duration_seconds": 1058.677,
-      "started_at": "2026-06-11T08:18:44Z"
-    },
-    {
       "run_id": "20260613T145808-default-fair-minimax-minimax-m3-alchemix__earmark_conservation__earmark_preserves_invariant",
       "harness": "default",
       "usage_source": "in-loop",
@@ -910,7 +180,8 @@
       "completion_tokens": 7280,
       "total_tokens": 981345,
       "duration_seconds": 1243.226,
-      "started_at": "2026-06-13T14:58:08Z"
+      "started_at": "2026-06-13T14:58:08Z",
+      "cost_usd": 0.301
     },
     {
       "run_id": "20260613T145808-default-fair-zai-glm-5-2-alchemix__earmark_conservation__earmark_preserves_invariant",
@@ -928,7 +199,8 @@
       "completion_tokens": 14601,
       "total_tokens": 535103,
       "duration_seconds": 1426.659,
-      "started_at": "2026-06-13T14:58:08Z"
+      "started_at": "2026-06-13T14:58:08Z",
+      "cost_usd": 0.3444
     },
     {
       "run_id": "20260613T151852-default-fair-minimax-minimax-m3-alchemix__earmark_conservation__redeem_preserves_invariant",
@@ -946,7 +218,8 @@
       "completion_tokens": 11667,
       "total_tokens": 885962,
       "duration_seconds": 659.827,
-      "started_at": "2026-06-13T15:18:52Z"
+      "started_at": "2026-06-13T15:18:52Z",
+      "cost_usd": 0.2763
     },
     {
       "run_id": "20260613T152155-default-fair-zai-glm-5-2-alchemix__earmark_conservation__redeem_preserves_invariant",
@@ -964,7 +237,8 @@
       "completion_tokens": 12616,
       "total_tokens": 901125,
       "duration_seconds": 1551.912,
-      "started_at": "2026-06-13T15:21:55Z"
+      "started_at": "2026-06-13T15:21:55Z",
+      "cost_usd": 0.5609
     },
     {
       "run_id": "20260613T152509-default-fair-minimax-minimax-m3-alchemix__earmark_conservation__sub_debt_preserves_invariant",
@@ -982,7 +256,8 @@
       "completion_tokens": 15800,
       "total_tokens": 1173988,
       "duration_seconds": 1156.308,
-      "started_at": "2026-06-13T15:25:09Z"
+      "started_at": "2026-06-13T15:25:09Z",
+      "cost_usd": 0.3664
     },
     {
       "run_id": "20260613T152509-default-fair-minimax-minimax-m3-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
@@ -1000,7 +275,8 @@
       "completion_tokens": 6991,
       "total_tokens": 601101,
       "duration_seconds": 621.231,
-      "started_at": "2026-06-13T15:25:09Z"
+      "started_at": "2026-06-13T15:25:09Z",
+      "cost_usd": 0.1866
     },
     {
       "run_id": "20260613T152509-default-fair-minimax-minimax-m3-alchemix__earmark_conservation__sync_account_preserves_invariant",
@@ -1018,7 +294,8 @@
       "completion_tokens": 10277,
       "total_tokens": 1352126,
       "duration_seconds": 984.351,
-      "started_at": "2026-06-13T15:25:09Z"
+      "started_at": "2026-06-13T15:25:09Z",
+      "cost_usd": 0.4149
     },
     {
       "run_id": "20260613T152509-default-fair-minimax-minimax-m3-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
@@ -1036,7 +313,8 @@
       "completion_tokens": 8974,
       "total_tokens": 844180,
       "duration_seconds": 543.389,
-      "started_at": "2026-06-13T15:25:09Z"
+      "started_at": "2026-06-13T15:25:09Z",
+      "cost_usd": 0.2613
     },
     {
       "run_id": "20260613T152509-default-fair-zai-glm-5-2-alchemix__earmark_conservation__sub_debt_preserves_invariant",
@@ -1054,7 +332,8 @@
       "completion_tokens": 12844,
       "total_tokens": 516354,
       "duration_seconds": 1293.566,
-      "started_at": "2026-06-13T15:25:09Z"
+      "started_at": "2026-06-13T15:25:09Z",
+      "cost_usd": 0.3304
     },
     {
       "run_id": "20260613T152509-default-fair-zai-glm-5-2-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
@@ -1072,7 +351,8 @@
       "completion_tokens": 8620,
       "total_tokens": 529863,
       "duration_seconds": 891.578,
-      "started_at": "2026-06-13T15:25:09Z"
+      "started_at": "2026-06-13T15:25:09Z",
+      "cost_usd": 0.3317
     },
     {
       "run_id": "20260613T152509-default-fair-zai-glm-5-2-alchemix__earmark_conservation__sync_account_preserves_invariant",
@@ -1090,7 +370,8 @@
       "completion_tokens": 8830,
       "total_tokens": 729327,
       "duration_seconds": 1213.97,
-      "started_at": "2026-06-13T15:25:09Z"
+      "started_at": "2026-06-13T15:25:09Z",
+      "cost_usd": 0.4517
     },
     {
       "run_id": "20260613T152509-default-fair-zai-glm-5-2-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
@@ -1108,7 +389,8 @@
       "completion_tokens": 12943,
       "total_tokens": 554814,
       "duration_seconds": 1220.37,
-      "started_at": "2026-06-13T15:25:09Z"
+      "started_at": "2026-06-13T15:25:09Z",
+      "cost_usd": 0.3536
     },
     {
       "run_id": "20260613T153412-default-fair-minimax-minimax-m3-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
@@ -1126,7 +408,8 @@
       "completion_tokens": 10070,
       "total_tokens": 1376940,
       "duration_seconds": 1225.485,
-      "started_at": "2026-06-13T15:34:12Z"
+      "started_at": "2026-06-13T15:34:12Z",
+      "cost_usd": 0.4221
     },
     {
       "run_id": "20260613T153530-default-fair-minimax-minimax-m3-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
@@ -1144,7 +427,8 @@
       "completion_tokens": 2526,
       "total_tokens": 303565,
       "duration_seconds": 705.668,
-      "started_at": "2026-06-13T15:35:30Z"
+      "started_at": "2026-06-13T15:35:30Z",
+      "cost_usd": 0.0933
     },
     {
       "run_id": "20260613T154001-default-fair-zai-glm-5-2-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
@@ -1162,7 +446,8 @@
       "completion_tokens": 1598,
       "total_tokens": 63320,
       "duration_seconds": 268.513,
-      "started_at": "2026-06-13T15:40:01Z"
+      "started_at": "2026-06-13T15:40:01Z",
+      "cost_usd": 0.0405
     },
     {
       "run_id": "20260613T154133-default-fair-minimax-minimax-m3-damn_vulnerable_defi__side_entrance__deposit_sets_sender_credit",
@@ -1180,7 +465,8 @@
       "completion_tokens": 589,
       "total_tokens": 21718,
       "duration_seconds": 128.848,
-      "started_at": "2026-06-13T15:41:33Z"
+      "started_at": "2026-06-13T15:41:33Z",
+      "cost_usd": 0.007
     },
     {
       "run_id": "20260613T154343-default-fair-minimax-minimax-m3-ethereum__deposit_contract_minimal__chain_start_threshold",
@@ -1198,7 +484,8 @@
       "completion_tokens": 1050,
       "total_tokens": 38901,
       "duration_seconds": 140.121,
-      "started_at": "2026-06-13T15:43:43Z"
+      "started_at": "2026-06-13T15:43:43Z",
+      "cost_usd": 0.0126
     },
     {
       "run_id": "20260613T154425-default-fair-minimax-minimax-m3-cork__pool_solvency__solvency_preserved",
@@ -1216,7 +503,8 @@
       "completion_tokens": 7490,
       "total_tokens": 710237,
       "duration_seconds": 1227.319,
-      "started_at": "2026-06-13T15:44:25Z"
+      "started_at": "2026-06-13T15:44:25Z",
+      "cost_usd": 0.2198
     },
     {
       "run_id": "20260613T154430-default-fair-zai-glm-5-2-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_sets_sender_credit",
@@ -1234,7 +522,8 @@
       "completion_tokens": 3247,
       "total_tokens": 123126,
       "duration_seconds": 503.613,
-      "started_at": "2026-06-13T15:44:30Z"
+      "started_at": "2026-06-13T15:44:30Z",
+      "cost_usd": 0.0791
     },
     {
       "run_id": "20260613T154523-default-fair-zai-glm-5-2-damn_vulnerable_defi__side_entrance__deposit_sets_sender_credit",
@@ -1252,7 +541,8 @@
       "completion_tokens": 855,
       "total_tokens": 33266,
       "duration_seconds": 165.246,
-      "started_at": "2026-06-13T15:45:23Z"
+      "started_at": "2026-06-13T15:45:23Z",
+      "cost_usd": 0.0213
     },
     {
       "run_id": "20260613T154530-default-fair-zai-glm-5-2-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
@@ -1270,7 +560,8 @@
       "completion_tokens": 12844,
       "total_tokens": 697553,
       "duration_seconds": 1136.831,
-      "started_at": "2026-06-13T15:45:30Z"
+      "started_at": "2026-06-13T15:45:30Z",
+      "cost_usd": 0.4391
     },
     {
       "run_id": "20260613T154603-default-fair-minimax-minimax-m3-ethereum__deposit_contract_minimal__small_deposit_preserves_full_count",
@@ -1288,7 +579,8 @@
       "completion_tokens": 10239,
       "total_tokens": 1126648,
       "duration_seconds": 1065.719,
-      "started_at": "2026-06-13T15:46:03Z"
+      "started_at": "2026-06-13T15:46:03Z",
+      "cost_usd": 0.3472
     },
     {
       "run_id": "20260613T154643-default-fair-zai-glm-5-2-cork__pool_solvency__solvency_preserved",
@@ -1306,7 +598,8 @@
       "completion_tokens": 10662,
       "total_tokens": 499922,
       "duration_seconds": 806.676,
-      "started_at": "2026-06-13T15:46:43Z"
+      "started_at": "2026-06-13T15:46:43Z",
+      "cost_usd": 0.317
     },
     {
       "run_id": "20260613T154716-default-fair-minimax-minimax-m3-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_sets_sender_credit",
@@ -1324,7 +617,8 @@
       "completion_tokens": 932,
       "total_tokens": 40620,
       "duration_seconds": 133.487,
-      "started_at": "2026-06-13T15:47:16Z"
+      "started_at": "2026-06-13T15:47:16Z",
+      "cost_usd": 0.013
     },
     {
       "run_id": "20260613T154809-default-fair-zai-glm-5-2-ethereum__deposit_contract_minimal__chain_start_threshold",
@@ -1342,7 +636,8 @@
       "completion_tokens": 628,
       "total_tokens": 36216,
       "duration_seconds": 190.925,
-      "started_at": "2026-06-13T15:48:09Z"
+      "started_at": "2026-06-13T15:48:09Z",
+      "cost_usd": 0.0227
     },
     {
       "run_id": "20260613T154930-default-fair-minimax-minimax-m3-ethereum__deposit_contract_minimal__full_deposit_preserves_partial_gap",
@@ -1360,7 +655,8 @@
       "completion_tokens": 6259,
       "total_tokens": 1182491,
       "duration_seconds": 1213.004,
-      "started_at": "2026-06-13T15:49:30Z"
+      "started_at": "2026-06-13T15:49:30Z",
+      "cost_usd": 0.3604
     },
     {
       "run_id": "20260613T155120-default-fair-zai-glm-5-2-ethereum__deposit_contract_minimal__small_deposit_preserves_full_count",
@@ -1378,7 +674,8 @@
       "completion_tokens": 5323,
       "total_tokens": 124244,
       "duration_seconds": 566.03,
-      "started_at": "2026-06-13T15:51:20Z"
+      "started_at": "2026-06-13T15:51:20Z",
+      "cost_usd": 0.0831
     },
     {
       "run_id": "20260613T155254-default-fair-zai-glm-5-2-ethereum__deposit_contract_minimal__full_deposit_preserves_partial_gap",
@@ -1396,7 +693,8 @@
       "completion_tokens": 17920,
       "total_tokens": 928770,
       "duration_seconds": 878.099,
-      "started_at": "2026-06-13T15:52:54Z"
+      "started_at": "2026-06-13T15:52:54Z",
+      "cost_usd": 0.5859
     },
     {
       "run_id": "20260613T155438-default-fair-minimax-minimax-m3-ethereum__deposit_contract_minimal__deposit_count",
@@ -1414,7 +712,8 @@
       "completion_tokens": 7394,
       "total_tokens": 440477,
       "duration_seconds": 482.533,
-      "started_at": "2026-06-13T15:54:38Z"
+      "started_at": "2026-06-13T15:54:38Z",
+      "cost_usd": 0.1388
     },
     {
       "run_id": "20260613T160010-default-fair-zai-glm-5-2-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
@@ -1432,7 +731,8 @@
       "completion_tokens": 1981,
       "total_tokens": 117854,
       "duration_seconds": 233.831,
-      "started_at": "2026-06-13T16:00:10Z"
+      "started_at": "2026-06-13T16:00:10Z",
+      "cost_usd": 0.0739
     },
     {
       "run_id": "20260613T160047-default-fair-zai-glm-5-2-forgeyields__global_solvency__redeem_token_gateway_depreciated_preserves_global_solvency",
@@ -1450,7 +750,8 @@
       "completion_tokens": 2599,
       "total_tokens": 89629,
       "duration_seconds": 195.321,
-      "started_at": "2026-06-13T16:00:47Z"
+      "started_at": "2026-06-13T16:00:47Z",
+      "cost_usd": 0.0579
     },
     {
       "run_id": "20260613T160241-default-fair-minimax-minimax-m3-forgeyields__global_solvency__claim_redeem_preserves_global_solvency",
@@ -1468,7 +769,8 @@
       "completion_tokens": 11624,
       "total_tokens": 1414895,
       "duration_seconds": 1038.622,
-      "started_at": "2026-06-13T16:02:41Z"
+      "started_at": "2026-06-13T16:02:41Z",
+      "cost_usd": 0.4349
     },
     {
       "run_id": "20260613T160349-default-fair-minimax-minimax-m3-forgeyields__global_solvency__redeem_token_gateway_depreciated_preserves_global_solvency",
@@ -1486,7 +788,8 @@
       "completion_tokens": 1220,
       "total_tokens": 28316,
       "duration_seconds": 77.519,
-      "started_at": "2026-06-13T16:03:49Z"
+      "started_at": "2026-06-13T16:03:49Z",
+      "cost_usd": 0.0096
     },
     {
       "run_id": "20260613T160402-default-fair-zai-glm-5-2-ipor__plasma_vault_redeem_split__fee_payout_bounded_by_fee_free",
@@ -1504,7 +807,8 @@
       "completion_tokens": 6179,
       "total_tokens": 112571,
       "duration_seconds": 216.975,
-      "started_at": "2026-06-13T16:04:02Z"
+      "started_at": "2026-06-13T16:04:02Z",
+      "cost_usd": 0.0774
     },
     {
       "run_id": "20260613T160404-default-fair-zai-glm-5-2-ethereum__deposit_contract_minimal__full_deposit_increments_full_count",
@@ -1522,7 +826,8 @@
       "completion_tokens": 2771,
       "total_tokens": 66458,
       "duration_seconds": 279.596,
-      "started_at": "2026-06-13T16:04:04Z"
+      "started_at": "2026-06-13T16:04:04Z",
+      "cost_usd": 0.0443
     },
     {
       "run_id": "20260613T160427-default-fair-zai-glm-5-2-ethereum__deposit_contract_minimal__deposit_count",
@@ -1540,7 +845,8 @@
       "completion_tokens": 2364,
       "total_tokens": 93727,
       "duration_seconds": 218.458,
-      "started_at": "2026-06-13T16:04:27Z"
+      "started_at": "2026-06-13T16:04:27Z",
+      "cost_usd": 0.06
     },
     {
       "run_id": "20260613T160453-default-fair-minimax-minimax-m3-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
@@ -1558,7 +864,8 @@
       "completion_tokens": 865,
       "total_tokens": 20592,
       "duration_seconds": 72.239,
-      "started_at": "2026-06-13T16:04:53Z"
+      "started_at": "2026-06-13T16:04:53Z",
+      "cost_usd": 0.007
     },
     {
       "run_id": "20260613T160507-default-fair-minimax-minimax-m3-ipor__plasma_vault_redeem_split__fee_payout_bounded_by_fee_free",
@@ -1576,7 +883,8 @@
       "completion_tokens": 21194,
       "total_tokens": 948278,
       "duration_seconds": 1116.792,
-      "started_at": "2026-06-13T16:05:07Z"
+      "started_at": "2026-06-13T16:05:07Z",
+      "cost_usd": 0.3036
     },
     {
       "run_id": "20260613T160605-default-fair-minimax-minimax-m3-ethereum__deposit_contract_minimal__full_deposit_increments_full_count",
@@ -1594,7 +902,8 @@
       "completion_tokens": 7837,
       "total_tokens": 694216,
       "duration_seconds": 879.357,
-      "started_at": "2026-06-13T16:06:05Z"
+      "started_at": "2026-06-13T16:06:05Z",
+      "cost_usd": 0.2153
     },
     {
       "run_id": "20260613T160732-default-fair-zai-glm-5-2-forgeyields__global_solvency__handle_preserves_global_solvency",
@@ -1612,7 +921,8 @@
       "completion_tokens": 4732,
       "total_tokens": 121672,
       "duration_seconds": 249.211,
-      "started_at": "2026-06-13T16:07:32Z"
+      "started_at": "2026-06-13T16:07:32Z",
+      "cost_usd": 0.0806
     },
     {
       "run_id": "20260613T160739-default-fair-zai-glm-5-2-kleros__sortition_trees__node_id_bijection",
@@ -1630,7 +940,8 @@
       "completion_tokens": 1111,
       "total_tokens": 106776,
       "duration_seconds": 387.757,
-      "started_at": "2026-06-13T16:07:39Z"
+      "started_at": "2026-06-13T16:07:39Z",
+      "cost_usd": 0.0658
     },
     {
       "run_id": "20260613T160805-default-fair-zai-glm-5-2-forgeyields__global_solvency__claim_redeem_preserves_global_solvency",
@@ -1648,7 +959,8 @@
       "completion_tokens": 4279,
       "total_tokens": 64116,
       "duration_seconds": 146.694,
-      "started_at": "2026-06-13T16:08:05Z"
+      "started_at": "2026-06-13T16:08:05Z",
+      "cost_usd": 0.0453
     },
     {
       "run_id": "20260613T160844-default-fair-zai-glm-5-2-forgeyields__global_solvency__deposit_preserves_global_solvency",
@@ -1666,7 +978,8 @@
       "completion_tokens": 3689,
       "total_tokens": 125137,
       "duration_seconds": 190.423,
-      "started_at": "2026-06-13T16:08:44Z"
+      "started_at": "2026-06-13T16:08:44Z",
+      "cost_usd": 0.081
     },
     {
       "run_id": "20260613T160943-default-fair-minimax-minimax-m3-forgeyields__global_solvency__handle_preserves_global_solvency",
@@ -1684,7 +997,8 @@
       "completion_tokens": 8696,
       "total_tokens": 702222,
       "duration_seconds": 653.665,
-      "started_at": "2026-06-13T16:09:43Z"
+      "started_at": "2026-06-13T16:09:43Z",
+      "cost_usd": 0.2185
     },
     {
       "run_id": "20260613T161032-default-fair-zai-glm-5-2-forgeyields__global_solvency__report_preserves_global_solvency",
@@ -1702,7 +1016,8 @@
       "completion_tokens": 1355,
       "total_tokens": 144528,
       "duration_seconds": 191.629,
-      "started_at": "2026-06-13T16:10:32Z"
+      "started_at": "2026-06-13T16:10:32Z",
+      "cost_usd": 0.0889
     },
     {
       "run_id": "20260613T161142-default-fair-zai-glm-5-2-forgeyields__global_solvency__transfer_remote_preserves_global_solvency",
@@ -1720,7 +1035,8 @@
       "completion_tokens": 2357,
       "total_tokens": 76748,
       "duration_seconds": 126.265,
-      "started_at": "2026-06-13T16:11:42Z"
+      "started_at": "2026-06-13T16:11:42Z",
+      "cost_usd": 0.0498
     },
     {
       "run_id": "20260613T161154-default-fair-zai-glm-5-2-forgeyields__global_solvency__request_redeem_preserves_global_solvency",
@@ -1738,7 +1054,8 @@
       "completion_tokens": 1108,
       "total_tokens": 22322,
       "duration_seconds": 65.458,
-      "started_at": "2026-06-13T16:11:54Z"
+      "started_at": "2026-06-13T16:11:54Z",
+      "cost_usd": 0.0152
     },
     {
       "run_id": "20260613T161300-default-fair-zai-glm-5-2-kleros__sortition_trees__draw_interval_matches_weights",
@@ -1756,7 +1073,8 @@
       "completion_tokens": 8469,
       "total_tokens": 362687,
       "duration_seconds": 522.81,
-      "started_at": "2026-06-13T16:13:00Z"
+      "started_at": "2026-06-13T16:13:00Z",
+      "cost_usd": 0.2312
     },
     {
       "run_id": "20260613T161344-default-fair-zai-glm-5-2-ipor__plasma_vault_redeem_split__redeem_preserves_pps",
@@ -1774,7 +1092,8 @@
       "completion_tokens": 17562,
       "total_tokens": 64050,
       "duration_seconds": 333.041,
-      "started_at": "2026-06-13T16:13:44Z"
+      "started_at": "2026-06-13T16:13:44Z",
+      "cost_usd": 0.0665
     },
     {
       "run_id": "20260613T161348-default-fair-zai-glm-5-2-kleros__sortition_trees__draw_selects_valid_leaf",
@@ -1792,7 +1111,8 @@
       "completion_tokens": 10400,
       "total_tokens": 723807,
       "duration_seconds": 813.948,
-      "started_at": "2026-06-13T16:13:48Z"
+      "started_at": "2026-06-13T16:13:48Z",
+      "cost_usd": 0.4509
     },
     {
       "run_id": "20260613T161407-default-fair-zai-glm-5-2-lagoon__guardrails__exact_compliance",
@@ -1810,7 +1130,8 @@
       "completion_tokens": 26154,
       "total_tokens": 694530,
       "duration_seconds": 1349.728,
-      "started_at": "2026-06-13T16:14:07Z"
+      "started_at": "2026-06-13T16:14:07Z",
+      "cost_usd": 0.4586
     },
     {
       "run_id": "20260613T161917-default-fair-zai-glm-5-2-kleros__sortition_trees__parent_equals_sum_of_children",
@@ -1828,7 +1149,8 @@
       "completion_tokens": 1950,
       "total_tokens": 47202,
       "duration_seconds": 152.909,
-      "started_at": "2026-06-13T16:19:17Z"
+      "started_at": "2026-06-13T16:19:17Z",
+      "cost_usd": 0.0314
     },
     {
       "run_id": "20260613T162000-default-fair-minimax-minimax-m3-forgeyields__global_solvency__report_preserves_global_solvency",
@@ -1846,7 +1168,8 @@
       "completion_tokens": 895,
       "total_tokens": 35083,
       "duration_seconds": 263.636,
-      "started_at": "2026-06-13T16:20:00Z"
+      "started_at": "2026-06-13T16:20:00Z",
+      "cost_usd": 0.0113
     },
     {
       "run_id": "20260613T162037-default-fair-minimax-minimax-m3-forgeyields__global_solvency__transfer_remote_preserves_global_solvency",
@@ -1864,7 +1187,8 @@
       "completion_tokens": 2263,
       "total_tokens": 186222,
       "duration_seconds": 231.313,
-      "started_at": "2026-06-13T16:20:37Z"
+      "started_at": "2026-06-13T16:20:37Z",
+      "cost_usd": 0.0579
     },
     {
       "run_id": "20260613T162045-default-fair-minimax-minimax-m3-forgeyields__global_solvency__deposit_preserves_global_solvency",
@@ -1882,7 +1206,8 @@
       "completion_tokens": 4962,
       "total_tokens": 121114,
       "duration_seconds": 368.36,
-      "started_at": "2026-06-13T16:20:45Z"
+      "started_at": "2026-06-13T16:20:45Z",
+      "cost_usd": 0.0408
     },
     {
       "run_id": "20260613T162143-default-fair-zai-glm-5-2-kleros__sortition_trees__root_equals_sum_of_leaves",
@@ -1900,7 +1225,8 @@
       "completion_tokens": 2214,
       "total_tokens": 35217,
       "duration_seconds": 150.301,
-      "started_at": "2026-06-13T16:21:43Z"
+      "started_at": "2026-06-13T16:21:43Z",
+      "cost_usd": 0.0247
     },
     {
       "run_id": "20260613T162151-default-fair-zai-glm-5-2-lagoon__guardrails__negative_variation_bounded",
@@ -1918,7 +1244,8 @@
       "completion_tokens": 8592,
       "total_tokens": 231375,
       "duration_seconds": 330.083,
-      "started_at": "2026-06-13T16:21:51Z"
+      "started_at": "2026-06-13T16:21:51Z",
+      "cost_usd": 0.1526
     },
     {
       "run_id": "20260613T162344-default-fair-minimax-minimax-m3-kleros__sortition_trees__node_id_bijection",
@@ -1936,7 +1263,8 @@
       "completion_tokens": 11356,
       "total_tokens": 1185911,
       "duration_seconds": 1257.398,
-      "started_at": "2026-06-13T16:23:44Z"
+      "started_at": "2026-06-13T16:23:44Z",
+      "cost_usd": 0.366
     },
     {
       "run_id": "20260613T162414-default-fair-zai-glm-5-2-lagoon__guardrails__positive_variation_bounded",
@@ -1954,7 +1282,8 @@
       "completion_tokens": 17714,
       "total_tokens": 494282,
       "duration_seconds": 875.456,
-      "started_at": "2026-06-13T16:24:14Z"
+      "started_at": "2026-06-13T16:24:14Z",
+      "cost_usd": 0.3249
     },
     {
       "run_id": "20260613T162424-default-fair-minimax-minimax-m3-ipor__plasma_vault_redeem_split__redeem_preserves_pps",
@@ -1972,7 +1301,8 @@
       "completion_tokens": 18957,
       "total_tokens": 345888,
       "duration_seconds": 402.934,
-      "started_at": "2026-06-13T16:24:24Z"
+      "started_at": "2026-06-13T16:24:24Z",
+      "cost_usd": 0.1208
     },
     {
       "run_id": "20260613T162429-default-fair-minimax-minimax-m3-kleros__sortition_trees__draw_selects_valid_leaf",
@@ -1990,7 +1320,8 @@
       "completion_tokens": 6822,
       "total_tokens": 644582,
       "duration_seconds": 784.908,
-      "started_at": "2026-06-13T16:24:29Z"
+      "started_at": "2026-06-13T16:24:29Z",
+      "cost_usd": 0.1995
     },
     {
       "run_id": "20260613T162654-default-fair-minimax-minimax-m3-forgeyields__global_solvency__request_redeem_preserves_global_solvency",
@@ -2008,7 +1339,8 @@
       "completion_tokens": 16311,
       "total_tokens": 977654,
       "duration_seconds": 1009.503,
-      "started_at": "2026-06-13T16:26:54Z"
+      "started_at": "2026-06-13T16:26:54Z",
+      "cost_usd": 0.308
     },
     {
       "run_id": "20260613T162721-default-fair-zai-glm-5-2-lido__vaulthub_locked__max_liability_shares_bound",
@@ -2026,7 +1358,8 @@
       "completion_tokens": 476,
       "total_tokens": 8434,
       "duration_seconds": 62.572,
-      "started_at": "2026-06-13T16:27:21Z"
+      "started_at": "2026-06-13T16:27:21Z",
+      "cost_usd": 0.0058
     },
     {
       "run_id": "20260613T162723-default-fair-zai-glm-5-2-kleros__sortition_trees__root_minus_left_equals_right_subtree",
@@ -2044,7 +1377,8 @@
       "completion_tokens": 16694,
       "total_tokens": 661973,
       "duration_seconds": 2439.107,
-      "started_at": "2026-06-13T16:27:23Z"
+      "started_at": "2026-06-13T16:27:23Z",
+      "cost_usd": 0.4239
     },
     {
       "run_id": "20260613T162824-default-fair-zai-glm-5-2-nexus_mutual__ramm_price_band__sync_sets_buy_price",
@@ -2062,7 +1396,8 @@
       "completion_tokens": 3778,
       "total_tokens": 198232,
       "duration_seconds": 281.232,
-      "started_at": "2026-06-13T16:28:24Z"
+      "started_at": "2026-06-13T16:28:24Z",
+      "cost_usd": 0.125
     },
     {
       "run_id": "20260613T163107-default-fair-minimax-minimax-m3-kleros__sortition_trees__parent_equals_sum_of_children",
@@ -2080,7 +1415,8 @@
       "completion_tokens": 13419,
       "total_tokens": 981349,
       "duration_seconds": 1597.732,
-      "started_at": "2026-06-13T16:31:07Z"
+      "started_at": "2026-06-13T16:31:07Z",
+      "cost_usd": 0.3065
     },
     {
       "run_id": "20260613T163305-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__delta_compose_internal_permit2_transfer_from_uses_outer_caller",
@@ -2098,7 +1434,8 @@
       "completion_tokens": 1091,
       "total_tokens": 110372,
       "duration_seconds": 183.225,
-      "started_at": "2026-06-13T16:33:05Z"
+      "started_at": "2026-06-13T16:33:05Z",
+      "cost_usd": 0.068
     },
     {
       "run_id": "20260613T163609-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__nested_flash_and_swap_callbacks_keep_outer_caller",
@@ -2116,7 +1453,8 @@
       "completion_tokens": 1174,
       "total_tokens": 94451,
       "duration_seconds": 327.825,
-      "started_at": "2026-06-13T16:36:09Z"
+      "started_at": "2026-06-13T16:36:09Z",
+      "cost_usd": 0.0585
     },
     {
       "run_id": "20260613T163638-default-fair-zai-glm-5-2-lido__vaulthub_locked__locked_funds_solvency",
@@ -2134,7 +1472,8 @@
       "completion_tokens": 13983,
       "total_tokens": 614653,
       "duration_seconds": 1132.027,
-      "started_at": "2026-06-13T16:36:38Z"
+      "started_at": "2026-06-13T16:36:38Z",
+      "cost_usd": 0.3912
     },
     {
       "run_id": "20260613T163734-default-fair-minimax-minimax-m3-kleros__sortition_trees__root_minus_left_equals_right_subtree",
@@ -2152,7 +1491,8 @@
       "completion_tokens": 8897,
       "total_tokens": 1040210,
       "duration_seconds": 874.34,
-      "started_at": "2026-06-13T16:37:34Z"
+      "started_at": "2026-06-13T16:37:34Z",
+      "cost_usd": 0.3201
     },
     {
       "run_id": "20260613T163850-default-fair-zai-glm-5-2-lido__vaulthub_locked__reserve_ratio_bounds",
@@ -2170,7 +1510,8 @@
       "completion_tokens": 573,
       "total_tokens": 30036,
       "duration_seconds": 148.817,
-      "started_at": "2026-06-13T16:38:50Z"
+      "started_at": "2026-06-13T16:38:50Z",
+      "cost_usd": 0.0189
     },
     {
       "run_id": "20260613T164119-default-fair-zai-glm-5-2-nexus_mutual__ramm_price_band__sync_sets_capital",
@@ -2188,7 +1529,8 @@
       "completion_tokens": 461,
       "total_tokens": 30650,
       "duration_seconds": 145.359,
-      "started_at": "2026-06-13T16:41:19Z"
+      "started_at": "2026-06-13T16:41:19Z",
+      "cost_usd": 0.0191
     },
     {
       "run_id": "20260613T164137-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__v3_callback_direct_transfer_from_uses_outer_caller",
@@ -2206,7 +1548,8 @@
       "completion_tokens": 2859,
       "total_tokens": 204138,
       "duration_seconds": 461.616,
-      "started_at": "2026-06-13T16:41:37Z"
+      "started_at": "2026-06-13T16:41:37Z",
+      "cost_usd": 0.1271
     },
     {
       "run_id": "20260613T164344-default-fair-minimax-minimax-m3-kleros__sortition_trees__draw_interval_matches_weights",
@@ -2224,7 +1567,8 @@
       "completion_tokens": 1191,
       "total_tokens": 132644,
       "duration_seconds": 285.831,
-      "started_at": "2026-06-13T16:43:44Z"
+      "started_at": "2026-06-13T16:43:44Z",
+      "cost_usd": 0.0409
     },
     {
       "run_id": "20260613T164345-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__direct_erc20_transfer_from_uses_outer_caller",
@@ -2242,7 +1586,8 @@
       "completion_tokens": 3509,
       "total_tokens": 198526,
       "duration_seconds": 373.592,
-      "started_at": "2026-06-13T16:43:45Z"
+      "started_at": "2026-06-13T16:43:45Z",
+      "cost_usd": 0.1247
     },
     {
       "run_id": "20260613T164441-default-fair-minimax-minimax-m3-lagoon__guardrails__exact_compliance",
@@ -2260,7 +1605,8 @@
       "completion_tokens": 5698,
       "total_tokens": 178805,
       "duration_seconds": 402.18,
-      "started_at": "2026-06-13T16:44:41Z"
+      "started_at": "2026-06-13T16:44:41Z",
+      "cost_usd": 0.0588
     },
     {
       "run_id": "20260613T164830-default-fair-minimax-minimax-m3-kleros__sortition_trees__root_equals_sum_of_leaves",
@@ -2278,7 +1624,8 @@
       "completion_tokens": 1389,
       "total_tokens": 102529,
       "duration_seconds": 361.741,
-      "started_at": "2026-06-13T16:48:30Z"
+      "started_at": "2026-06-13T16:48:30Z",
+      "cost_usd": 0.032
     },
     {
       "run_id": "20260613T164919-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_claimed_plus_allocated_conserved",
@@ -2296,7 +1643,8 @@
       "completion_tokens": 6798,
       "total_tokens": 748811,
       "duration_seconds": 951.958,
-      "started_at": "2026-06-13T16:49:19Z"
+      "started_at": "2026-06-13T16:49:19Z",
+      "cost_usd": 0.4602
     },
     {
       "run_id": "20260613T164958-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__swap_callback_permit2_transfer_from_uses_outer_caller",
@@ -2314,7 +1662,8 @@
       "completion_tokens": 3626,
       "total_tokens": 186638,
       "duration_seconds": 305.547,
-      "started_at": "2026-06-13T16:49:58Z"
+      "started_at": "2026-06-13T16:49:58Z",
+      "cost_usd": 0.1178
     },
     {
       "run_id": "20260613T165124-default-fair-minimax-minimax-m3-lido__vaulthub_locked__locked_funds_solvency",
@@ -2332,7 +1681,8 @@
       "completion_tokens": 34593,
       "total_tokens": 1576492,
       "duration_seconds": 1562.944,
-      "started_at": "2026-06-13T16:51:24Z"
+      "started_at": "2026-06-13T16:51:24Z",
+      "cost_usd": 0.5041
     },
     {
       "run_id": "20260613T165209-default-fair-minimax-minimax-m3-lido__vaulthub_locked__ceildiv_sandwich",
@@ -2350,7 +1700,8 @@
       "completion_tokens": 15996,
       "total_tokens": 1339657,
       "duration_seconds": 869.278,
-      "started_at": "2026-06-13T16:52:09Z"
+      "started_at": "2026-06-13T16:52:09Z",
+      "cost_usd": 0.4163
     },
     {
       "run_id": "20260613T165432-default-fair-minimax-minimax-m3-lagoon__guardrails__positive_variation_bounded",
@@ -2368,7 +1719,8 @@
       "completion_tokens": 3621,
       "total_tokens": 353693,
       "duration_seconds": 195.44,
-      "started_at": "2026-06-13T16:54:32Z"
+      "started_at": "2026-06-13T16:54:32Z",
+      "cost_usd": 0.1094
     },
     {
       "run_id": "20260613T165504-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_claim_marks_both_claimed",
@@ -2386,7 +1738,8 @@
       "completion_tokens": 7764,
       "total_tokens": 626286,
       "duration_seconds": 873.359,
-      "started_at": "2026-06-13T16:55:04Z"
+      "started_at": "2026-06-13T16:55:04Z",
+      "cost_usd": 0.3882
     },
     {
       "run_id": "20260613T165530-default-fair-zai-glm-5-2-nexus_mutual__ramm_price_band__sync_sets_book_value",
@@ -2404,7 +1757,8 @@
       "completion_tokens": 733,
       "total_tokens": 38854,
       "duration_seconds": 88.584,
-      "started_at": "2026-06-13T16:55:30Z"
+      "started_at": "2026-06-13T16:55:30Z",
+      "cost_usd": 0.0245
     },
     {
       "run_id": "20260613T165659-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__delta_compose_internal_erc20_transfer_from_uses_outer_caller",
@@ -2422,7 +1776,8 @@
       "completion_tokens": 2914,
       "total_tokens": 100373,
       "duration_seconds": 240.374,
-      "started_at": "2026-06-13T16:56:59Z"
+      "started_at": "2026-06-13T16:56:59Z",
+      "cost_usd": 0.0649
     },
     {
       "run_id": "20260613T165745-default-fair-minimax-minimax-m3-lagoon__guardrails__negative_variation_bounded",
@@ -2440,7 +1795,8 @@
       "completion_tokens": 12021,
       "total_tokens": 716684,
       "duration_seconds": 599.436,
-      "started_at": "2026-06-13T16:57:45Z"
+      "started_at": "2026-06-13T16:57:45Z",
+      "cost_usd": 0.2258
     },
     {
       "run_id": "20260613T165747-default-fair-minimax-minimax-m3-lido__vaulthub_locked__reserve_ratio_bounds",
@@ -2458,7 +1814,8 @@
       "completion_tokens": 733,
       "total_tokens": 23225,
       "duration_seconds": 67.838,
-      "started_at": "2026-06-13T16:57:47Z"
+      "started_at": "2026-06-13T16:57:47Z",
+      "cost_usd": 0.0076
     },
     {
       "run_id": "20260613T165855-default-fair-minimax-minimax-m3-nexus_mutual__ramm_price_band__sync_sets_capital",
@@ -2476,7 +1833,8 @@
       "completion_tokens": 1460,
       "total_tokens": 100244,
       "duration_seconds": 153.635,
-      "started_at": "2026-06-13T16:58:55Z"
+      "started_at": "2026-06-13T16:58:55Z",
+      "cost_usd": 0.0314
     },
     {
       "run_id": "20260613T170059-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__flash_callback_erc20_transfer_from_uses_outer_caller",
@@ -2494,7 +1852,8 @@
       "completion_tokens": 4688,
       "total_tokens": 213453,
       "duration_seconds": 612.503,
-      "started_at": "2026-06-13T17:00:59Z"
+      "started_at": "2026-06-13T17:00:59Z",
+      "cost_usd": 0.1356
     },
     {
       "run_id": "20260613T170129-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__direct_erc20_transfer_from_uses_outer_caller",
@@ -2512,7 +1871,8 @@
       "completion_tokens": 3404,
       "total_tokens": 193050,
       "duration_seconds": 239.872,
-      "started_at": "2026-06-13T17:01:29Z"
+      "started_at": "2026-06-13T17:01:29Z",
+      "cost_usd": 0.061
     },
     {
       "run_id": "20260613T170512-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_usdc_double_claim_rejected",
@@ -2530,7 +1890,8 @@
       "completion_tokens": 14158,
       "total_tokens": 562672,
       "duration_seconds": 1358.259,
-      "started_at": "2026-06-13T17:05:12Z"
+      "started_at": "2026-06-13T17:05:12Z",
+      "cost_usd": 0.3603
     },
     {
       "run_id": "20260613T170530-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__swap_callback_permit2_transfer_from_uses_outer_caller",
@@ -2548,7 +1909,8 @@
       "completion_tokens": 13897,
       "total_tokens": 1215512,
       "duration_seconds": 1422.355,
-      "started_at": "2026-06-13T17:05:30Z"
+      "started_at": "2026-06-13T17:05:30Z",
+      "cost_usd": 0.3772
     },
     {
       "run_id": "20260613T170638-default-fair-minimax-minimax-m3-lido__vaulthub_locked__shares_conversion_monotone",
@@ -2566,7 +1928,8 @@
       "completion_tokens": 31342,
       "total_tokens": 1355493,
       "duration_seconds": 1136.026,
-      "started_at": "2026-06-13T17:06:38Z"
+      "started_at": "2026-06-13T17:06:38Z",
+      "cost_usd": 0.4349
     },
     {
       "run_id": "20260613T170744-default-fair-minimax-minimax-m3-lido__vaulthub_locked__max_liability_shares_bound",
@@ -2584,7 +1947,8 @@
       "completion_tokens": 342,
       "total_tokens": 13498,
       "duration_seconds": 44.179,
-      "started_at": "2026-06-13T17:07:44Z"
+      "started_at": "2026-06-13T17:07:44Z",
+      "cost_usd": 0.0044
     },
     {
       "run_id": "20260613T170802-default-fair-zai-glm-5-2-lido__vaulthub_locked__ceildiv_sandwich",
@@ -2602,7 +1966,8 @@
       "completion_tokens": 26948,
       "total_tokens": 874095,
       "duration_seconds": 1697.024,
-      "started_at": "2026-06-13T17:08:02Z"
+      "started_at": "2026-06-13T17:08:02Z",
+      "cost_usd": 0.5676
     },
     {
       "run_id": "20260613T170829-default-fair-minimax-minimax-m3-nexus_mutual__ramm_price_band__sync_sets_buy_price",
@@ -2620,7 +1985,8 @@
       "completion_tokens": 2455,
       "total_tokens": 119918,
       "duration_seconds": 160.349,
-      "started_at": "2026-06-13T17:08:29Z"
+      "started_at": "2026-06-13T17:08:29Z",
+      "cost_usd": 0.0382
     },
     {
       "run_id": "20260613T170938-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_matches_independent_claims",
@@ -2638,7 +2004,8 @@
       "completion_tokens": 11432,
       "total_tokens": 687387,
       "duration_seconds": 1085.588,
-      "started_at": "2026-06-13T17:09:38Z"
+      "started_at": "2026-06-13T17:09:38Z",
+      "cost_usd": 0.4307
     },
     {
       "run_id": "20260613T171109-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__delta_compose_internal_permit2_transfer_from_uses_outer_caller",
@@ -2656,7 +2023,8 @@
       "completion_tokens": 9252,
       "total_tokens": 535336,
       "duration_seconds": 860.468,
-      "started_at": "2026-06-13T17:11:09Z"
+      "started_at": "2026-06-13T17:11:09Z",
+      "cost_usd": 0.1689
     },
     {
       "run_id": "20260613T171112-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__transfers_permit2_transfer_from_uses_outer_caller",
@@ -2674,7 +2042,8 @@
       "completion_tokens": 1026,
       "total_tokens": 78795,
       "duration_seconds": 295.789,
-      "started_at": "2026-06-13T17:11:12Z"
+      "started_at": "2026-06-13T17:11:12Z",
+      "cost_usd": 0.0489
     },
     {
       "run_id": "20260613T171608-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_claim_updates_total_allocated",
@@ -2692,7 +2061,8 @@
       "completion_tokens": 10540,
       "total_tokens": 687142,
       "duration_seconds": 2144.944,
-      "started_at": "2026-06-13T17:16:08Z"
+      "started_at": "2026-06-13T17:16:08Z",
+      "cost_usd": 0.4291
     },
     {
       "run_id": "20260613T171727-default-fair-minimax-minimax-m3-nexus_mutual__ramm_price_band__sync_sets_book_value",
@@ -2710,7 +2080,8 @@
       "completion_tokens": 697,
       "total_tokens": 41508,
       "duration_seconds": 173.011,
-      "started_at": "2026-06-13T17:17:27Z"
+      "started_at": "2026-06-13T17:17:27Z",
+      "cost_usd": 0.0131
     },
     {
       "run_id": "20260613T172021-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__delta_compose_internal_erc20_transfer_from_uses_outer_caller",
@@ -2728,7 +2099,8 @@
       "completion_tokens": 8804,
       "total_tokens": 819509,
       "duration_seconds": 738.44,
-      "started_at": "2026-06-13T17:20:21Z"
+      "started_at": "2026-06-13T17:20:21Z",
+      "cost_usd": 0.2538
     },
     {
       "run_id": "20260613T172530-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__nested_flash_and_swap_callbacks_keep_outer_caller",
@@ -2746,7 +2118,8 @@
       "completion_tokens": 2361,
       "total_tokens": 162274,
       "duration_seconds": 378.365,
-      "started_at": "2026-06-13T17:25:30Z"
+      "started_at": "2026-06-13T17:25:30Z",
+      "cost_usd": 0.0508
     },
     {
       "run_id": "20260613T172535-default-fair-minimax-minimax-m3-nexus_mutual__ramm_price_band__sync_sets_sell_price",
@@ -2764,7 +2137,8 @@
       "completion_tokens": 953,
       "total_tokens": 27641,
       "duration_seconds": 157.961,
-      "started_at": "2026-06-13T17:25:35Z"
+      "started_at": "2026-06-13T17:25:35Z",
+      "cost_usd": 0.0092
     },
     {
       "run_id": "20260613T172744-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_weth_bound_violation_rejected",
@@ -2782,7 +2156,8 @@
       "completion_tokens": 19318,
       "total_tokens": 1054353,
       "duration_seconds": 1441.934,
-      "started_at": "2026-06-13T17:27:44Z"
+      "started_at": "2026-06-13T17:27:44Z",
+      "cost_usd": 0.6635
     },
     {
       "run_id": "20260613T172750-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
@@ -2800,7 +2175,8 @@
       "completion_tokens": 7278,
       "total_tokens": 199918,
       "duration_seconds": 404.553,
-      "started_at": "2026-06-13T17:27:50Z"
+      "started_at": "2026-06-13T17:27:50Z",
+      "cost_usd": 0.1316
     },
     {
       "run_id": "20260613T172813-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__direct_permit2_transfer_from_uses_outer_caller",
@@ -2818,7 +2194,8 @@
       "completion_tokens": 3302,
       "total_tokens": 347645,
       "duration_seconds": 340.173,
-      "started_at": "2026-06-13T17:28:13Z"
+      "started_at": "2026-06-13T17:28:13Z",
+      "cost_usd": 0.1073
     },
     {
       "run_id": "20260613T172912-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_claim_marks_both_claimed",
@@ -2836,7 +2213,8 @@
       "completion_tokens": 9292,
       "total_tokens": 650122,
       "duration_seconds": 1315.141,
-      "started_at": "2026-06-13T17:29:12Z"
+      "started_at": "2026-06-13T17:29:12Z",
+      "cost_usd": 0.2034
     },
     {
       "run_id": "20260613T173149-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__v3_callback_direct_transfer_from_uses_outer_caller",
@@ -2854,7 +2232,8 @@
       "completion_tokens": 3156,
       "total_tokens": 177767,
       "duration_seconds": 357.656,
-      "started_at": "2026-06-13T17:31:49Z"
+      "started_at": "2026-06-13T17:31:49Z",
+      "cost_usd": 0.0562
     },
     {
       "run_id": "20260613T173239-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__flash_callback_erc20_transfer_from_uses_outer_caller",
@@ -2872,7 +2251,8 @@
       "completion_tokens": 5599,
       "total_tokens": 439595,
       "duration_seconds": 476.172,
-      "started_at": "2026-06-13T17:32:39Z"
+      "started_at": "2026-06-13T17:32:39Z",
+      "cost_usd": 0.1369
     },
     {
       "run_id": "20260613T173354-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__transfers_erc20_transfer_from_uses_outer_caller",
@@ -2890,7 +2270,8 @@
       "completion_tokens": 2236,
       "total_tokens": 176703,
       "duration_seconds": 527.336,
-      "started_at": "2026-06-13T17:33:54Z"
+      "started_at": "2026-06-13T17:33:54Z",
+      "cost_usd": 0.055
     },
     {
       "run_id": "20260613T173435-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__double_claim_rejected",
@@ -2908,7 +2289,8 @@
       "completion_tokens": 4258,
       "total_tokens": 192277,
       "duration_seconds": 460.752,
-      "started_at": "2026-06-13T17:34:35Z"
+      "started_at": "2026-06-13T17:34:35Z",
+      "cost_usd": 0.1222
     },
     {
       "run_id": "20260613T173619-default-fair-zai-glm-5-2-lido__vaulthub_locked__shares_conversion_monotone",
@@ -2926,7 +2308,8 @@
       "completion_tokens": 27564,
       "total_tokens": 1001231,
       "duration_seconds": 1383.475,
-      "started_at": "2026-06-13T17:36:19Z"
+      "started_at": "2026-06-13T17:36:19Z",
+      "cost_usd": 0.6448
     },
     {
       "run_id": "20260613T173747-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_claimed_plus_allocated_conserved",
@@ -2944,7 +2327,8 @@
       "completion_tokens": 14458,
       "total_tokens": 1089382,
       "duration_seconds": 1192.853,
-      "started_at": "2026-06-13T17:37:47Z"
+      "started_at": "2026-06-13T17:37:47Z",
+      "cost_usd": 0.3398
     },
     {
       "run_id": "20260613T174036-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity__transfers_permit2_transfer_from_uses_outer_caller",
@@ -2962,7 +2346,8 @@
       "completion_tokens": 3754,
       "total_tokens": 418699,
       "duration_seconds": 579.107,
-      "started_at": "2026-06-13T17:40:36Z"
+      "started_at": "2026-06-13T17:40:36Z",
+      "cost_usd": 0.129
     },
     {
       "run_id": "20260613T174217-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__weth_claim_marks_user",
@@ -2980,7 +2365,8 @@
       "completion_tokens": 6545,
       "total_tokens": 132581,
       "duration_seconds": 444.524,
-      "started_at": "2026-06-13T17:42:17Z"
+      "started_at": "2026-06-13T17:42:17Z",
+      "cost_usd": 0.09
     },
     {
       "run_id": "20260613T174242-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_claim_updates_round_claimed",
@@ -2998,7 +2384,8 @@
       "completion_tokens": 13451,
       "total_tokens": 1313802,
       "duration_seconds": 3962.943,
-      "started_at": "2026-06-13T17:42:42Z"
+      "started_at": "2026-06-13T17:42:42Z",
+      "cost_usd": 0.4062
     },
     {
       "run_id": "20260613T174942-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__weth_double_claim_rejected",
@@ -3016,7 +2403,8 @@
       "completion_tokens": 1336,
       "total_tokens": 34165,
       "duration_seconds": 175.861,
-      "started_at": "2026-06-13T17:49:42Z"
+      "started_at": "2026-06-13T17:49:42Z",
+      "cost_usd": 0.0226
     },
     {
       "run_id": "20260613T175016-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_claim_updates_total_allocated",
@@ -3034,7 +2422,8 @@
       "completion_tokens": 10762,
       "total_tokens": 1024629,
       "duration_seconds": 2532.905,
-      "started_at": "2026-06-13T17:50:16Z"
+      "started_at": "2026-06-13T17:50:16Z",
+      "cost_usd": 0.3171
     },
     {
       "run_id": "20260613T175108-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_matches_independent_claims",
@@ -3052,7 +2441,8 @@
       "completion_tokens": 10201,
       "total_tokens": 802304,
       "duration_seconds": 1384.015,
-      "started_at": "2026-06-13T17:51:08Z"
+      "started_at": "2026-06-13T17:51:08Z",
+      "cost_usd": 0.2499
     },
     {
       "run_id": "20260613T175147-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__claim_updates_round_claimed",
@@ -3070,7 +2460,8 @@
       "completion_tokens": 10584,
       "total_tokens": 1015392,
       "duration_seconds": 1192.043,
-      "started_at": "2026-06-13T17:51:47Z"
+      "started_at": "2026-06-13T17:51:47Z",
+      "cost_usd": 0.6262
     },
     {
       "run_id": "20260613T175154-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_usdc_bound_violation_rejected",
@@ -3088,7 +2479,8 @@
       "completion_tokens": 9803,
       "total_tokens": 923482,
       "duration_seconds": 2036.675,
-      "started_at": "2026-06-13T17:51:54Z"
+      "started_at": "2026-06-13T17:51:54Z",
+      "cost_usd": 0.5698
     },
     {
       "run_id": "20260613T175238-default-fair-zai-glm-5-2-piku__fund_conservation__amount_paid_records_distribution",
@@ -3106,7 +2498,8 @@
       "completion_tokens": 2853,
       "total_tokens": 210285,
       "duration_seconds": 378.731,
-      "started_at": "2026-06-13T17:52:38Z"
+      "started_at": "2026-06-13T17:52:38Z",
+      "cost_usd": 0.1307
     },
     {
       "run_id": "20260613T175740-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_usdc_double_claim_rejected",
@@ -3124,7 +2517,8 @@
       "completion_tokens": 6861,
       "total_tokens": 956407,
       "duration_seconds": 2128.588,
-      "started_at": "2026-06-13T17:57:40Z"
+      "started_at": "2026-06-13T17:57:40Z",
+      "cost_usd": 0.2931
     },
     {
       "run_id": "20260613T175858-default-fair-zai-glm-5-2-polaris__bonding_curve__floor_sell_and_burn_preserves_reserve_ratio_zero",
@@ -3142,7 +2536,8 @@
       "completion_tokens": 6107,
       "total_tokens": 563774,
       "duration_seconds": 725.563,
-      "started_at": "2026-06-13T17:58:58Z"
+      "started_at": "2026-06-13T17:58:58Z",
+      "cost_usd": 0.348
     },
     {
       "run_id": "20260613T175923-default-fair-zai-glm-5-2-nexus_mutual__ramm_price_band__sync_sets_sell_price",
@@ -3160,7 +2555,8 @@
       "completion_tokens": 354,
       "total_tokens": 18763,
       "duration_seconds": 110.819,
-      "started_at": "2026-06-13T17:59:23Z"
+      "started_at": "2026-06-13T17:59:23Z",
+      "cost_usd": 0.0118
     },
     {
       "run_id": "20260613T180114-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__direct_permit2_transfer_from_uses_outer_caller",
@@ -3178,7 +2574,8 @@
       "completion_tokens": 1504,
       "total_tokens": 89806,
       "duration_seconds": 250.447,
-      "started_at": "2026-06-13T18:01:14Z"
+      "started_at": "2026-06-13T18:01:14Z",
+      "cost_usd": 0.0563
     },
     {
       "run_id": "20260613T180525-default-fair-zai-glm-5-2-onedelta__caller_address_integrity__transfers_erc20_transfer_from_uses_outer_caller",
@@ -3196,7 +2593,8 @@
       "completion_tokens": 4894,
       "total_tokens": 221750,
       "duration_seconds": 692.922,
-      "started_at": "2026-06-13T18:05:25Z"
+      "started_at": "2026-06-13T18:05:25Z",
+      "cost_usd": 0.1409
     },
     {
       "run_id": "20260613T181103-default-fair-zai-glm-5-2-polygon__agglayer_bridge__claimMessage_valid_leaf_and_consumes_unique_nullifier",
@@ -3214,7 +2612,8 @@
       "completion_tokens": 8433,
       "total_tokens": 515663,
       "duration_seconds": 1305.514,
-      "started_at": "2026-06-13T18:11:03Z"
+      "started_at": "2026-06-13T18:11:03Z",
+      "cost_usd": 0.3229
     },
     {
       "run_id": "20260613T181139-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__no_overclaim",
@@ -3232,7 +2631,8 @@
       "completion_tokens": 14646,
       "total_tokens": 426640,
       "duration_seconds": 968.437,
-      "started_at": "2026-06-13T18:11:39Z"
+      "started_at": "2026-06-13T18:11:39Z",
+      "cost_usd": 0.2794
     },
     {
       "run_id": "20260613T181412-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_weth_bound_violation_rejected",
@@ -3250,7 +2650,8 @@
       "completion_tokens": 7744,
       "total_tokens": 527505,
       "duration_seconds": 2934.202,
-      "started_at": "2026-06-13T18:14:12Z"
+      "started_at": "2026-06-13T18:14:12Z",
+      "cost_usd": 0.1652
     },
     {
       "run_id": "20260613T181658-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_claim_updates_round_claimed",
@@ -3268,7 +2669,8 @@
       "completion_tokens": 15055,
       "total_tokens": 700318,
       "duration_seconds": 743.002,
-      "started_at": "2026-06-13T18:16:58Z"
+      "started_at": "2026-06-13T18:16:58Z",
+      "cost_usd": 0.4443
     },
     {
       "run_id": "20260613T182551-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__bound_violation_rejected",
@@ -3286,7 +2688,8 @@
       "completion_tokens": 26032,
       "total_tokens": 914874,
       "duration_seconds": 1293.904,
-      "started_at": "2026-06-13T18:25:51Z"
+      "started_at": "2026-06-13T18:25:51Z",
+      "cost_usd": 0.5906
     },
     {
       "run_id": "20260613T182748-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__weth_claim_updates_round_claimed",
@@ -3304,7 +2707,8 @@
       "completion_tokens": 5746,
       "total_tokens": 118131,
       "duration_seconds": 264.688,
-      "started_at": "2026-06-13T18:27:48Z"
+      "started_at": "2026-06-13T18:27:48Z",
+      "cost_usd": 0.0801
     },
     {
       "run_id": "20260613T182921-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_no_overclaim",
@@ -3322,7 +2726,8 @@
       "completion_tokens": 12605,
       "total_tokens": 673396,
       "duration_seconds": 1894.299,
-      "started_at": "2026-06-13T18:29:21Z"
+      "started_at": "2026-06-13T18:29:21Z",
+      "cost_usd": 0.4242
     },
     {
       "run_id": "20260613T183213-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__weth_no_overclaim",
@@ -3340,7 +2745,8 @@
       "completion_tokens": 7769,
       "total_tokens": 730221,
       "duration_seconds": 448.739,
-      "started_at": "2026-06-13T18:32:13Z"
+      "started_at": "2026-06-13T18:32:13Z",
+      "cost_usd": 0.4506
     },
     {
       "run_id": "20260613T183229-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_usdc_bound_violation_rejected",
@@ -3358,7 +2764,8 @@
       "completion_tokens": 6045,
       "total_tokens": 757350,
       "duration_seconds": 1436.265,
-      "started_at": "2026-06-13T18:32:29Z"
+      "started_at": "2026-06-13T18:32:29Z",
+      "cost_usd": 0.2326
     },
     {
       "run_id": "20260613T183249-default-fair-zai-glm-5-2-reserve__auction_price_band__price_upper_bound",
@@ -3376,7 +2783,8 @@
       "completion_tokens": 4488,
       "total_tokens": 704676,
       "duration_seconds": 1002.507,
-      "started_at": "2026-06-13T18:32:49Z"
+      "started_at": "2026-06-13T18:32:49Z",
+      "cost_usd": 0.43
     },
     {
       "run_id": "20260613T183309-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
@@ -3394,7 +2802,8 @@
       "completion_tokens": 4291,
       "total_tokens": 498259,
       "duration_seconds": 656.242,
-      "started_at": "2026-06-13T18:33:09Z"
+      "started_at": "2026-06-13T18:33:09Z",
+      "cost_usd": 0.1533
     },
     {
       "run_id": "20260613T183942-default-fair-zai-glm-5-2-piku__fund_conservation__sell_order_preserves_fund_conservation",
@@ -3412,7 +2821,8 @@
       "completion_tokens": 19268,
       "total_tokens": 668104,
       "duration_seconds": 1690.114,
-      "started_at": "2026-06-13T18:39:42Z"
+      "started_at": "2026-06-13T18:39:42Z",
+      "cost_usd": 0.4317
     },
     {
       "run_id": "20260613T184406-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__double_claim_rejected",
@@ -3430,7 +2840,8 @@
       "completion_tokens": 2280,
       "total_tokens": 211141,
       "duration_seconds": 878.882,
-      "started_at": "2026-06-13T18:44:06Z"
+      "started_at": "2026-06-13T18:44:06Z",
+      "cost_usd": 0.0654
     },
     {
       "run_id": "20260613T184725-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__claimed_plus_allocated_conserved",
@@ -3448,7 +2859,8 @@
       "completion_tokens": 14208,
       "total_tokens": 907040,
       "duration_seconds": 1168.354,
-      "started_at": "2026-06-13T18:47:25Z"
+      "started_at": "2026-06-13T18:47:25Z",
+      "cost_usd": 0.567
     },
     {
       "run_id": "20260613T184845-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_no_overclaim",
@@ -3466,7 +2878,8 @@
       "completion_tokens": 14690,
       "total_tokens": 918102,
       "duration_seconds": 1511.959,
-      "started_at": "2026-06-13T18:48:45Z"
+      "started_at": "2026-06-13T18:48:45Z",
+      "cost_usd": 0.2887
     },
     {
       "run_id": "20260613T184932-default-fair-zai-glm-5-2-safe__owner_manager_reach__add_owner_acyclicity",
@@ -3484,7 +2897,8 @@
       "completion_tokens": 12247,
       "total_tokens": 665956,
       "duration_seconds": 957.625,
-      "started_at": "2026-06-13T18:49:32Z"
+      "started_at": "2026-06-13T18:49:32Z",
+      "cost_usd": 0.4192
     },
     {
       "run_id": "20260613T185626-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__bound_violation_rejected",
@@ -3502,7 +2916,8 @@
       "completion_tokens": 6014,
       "total_tokens": 1301603,
       "duration_seconds": 875.838,
-      "started_at": "2026-06-13T18:56:26Z"
+      "started_at": "2026-06-13T18:56:26Z",
+      "cost_usd": 0.3959
     },
     {
       "run_id": "20260613T185845-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__weth_claim_marks_user",
@@ -3520,7 +2935,8 @@
       "completion_tokens": 11310,
       "total_tokens": 947181,
       "duration_seconds": 990.536,
-      "started_at": "2026-06-13T18:58:45Z"
+      "started_at": "2026-06-13T18:58:45Z",
+      "cost_usd": 0.2943
     },
     {
       "run_id": "20260613T190056-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__both_weth_double_claim_rejected",
@@ -3538,7 +2954,8 @@
       "completion_tokens": 14676,
       "total_tokens": 331718,
       "duration_seconds": 942.002,
-      "started_at": "2026-06-13T19:00:56Z"
+      "started_at": "2026-06-13T19:00:56Z",
+      "cost_usd": 0.2225
     },
     {
       "run_id": "20260613T190307-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__claim_updates_round_claimed",
@@ -3556,7 +2973,8 @@
       "completion_tokens": 14409,
       "total_tokens": 873179,
       "duration_seconds": 1119.132,
-      "started_at": "2026-06-13T19:03:07Z"
+      "started_at": "2026-06-13T19:03:07Z",
+      "cost_usd": 0.2749
     },
     {
       "run_id": "20260613T190530-default-fair-zai-glm-5-2-safe__owner_manager_reach__remove_owner_acyclicity",
@@ -3574,7 +2992,8 @@
       "completion_tokens": 26629,
       "total_tokens": 579627,
       "duration_seconds": 1499.328,
-      "started_at": "2026-06-13T19:05:30Z"
+      "started_at": "2026-06-13T19:05:30Z",
+      "cost_usd": 0.3904
     },
     {
       "run_id": "20260613T190654-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__weth_bound_violation_rejected",
@@ -3592,7 +3011,8 @@
       "completion_tokens": 15852,
       "total_tokens": 1224811,
       "duration_seconds": 1222.825,
-      "started_at": "2026-06-13T19:06:54Z"
+      "started_at": "2026-06-13T19:06:54Z",
+      "cost_usd": 0.7602
     },
     {
       "run_id": "20260613T190752-default-fair-zai-glm-5-2-polaris__bonding_curve__init_reserve_ratio_zero",
@@ -3610,7 +3030,8 @@
       "completion_tokens": 19900,
       "total_tokens": 770315,
       "duration_seconds": 1152.905,
-      "started_at": "2026-06-13T19:07:52Z"
+      "started_at": "2026-06-13T19:07:52Z",
+      "cost_usd": 0.494
     },
     {
       "run_id": "20260613T191102-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__claimed_plus_allocated_conserved",
@@ -3628,7 +3049,8 @@
       "completion_tokens": 16170,
       "total_tokens": 1225414,
       "duration_seconds": 1545.279,
-      "started_at": "2026-06-13T19:11:02Z"
+      "started_at": "2026-06-13T19:11:02Z",
+      "cost_usd": 0.3822
     },
     {
       "run_id": "20260613T191357-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__both_weth_double_claim_rejected",
@@ -3646,7 +3068,8 @@
       "completion_tokens": 8242,
       "total_tokens": 868801,
       "duration_seconds": 2663.717,
-      "started_at": "2026-06-13T19:13:57Z"
+      "started_at": "2026-06-13T19:13:57Z",
+      "cost_usd": 0.2681
     },
     {
       "run_id": "20260613T191516-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__weth_double_claim_rejected",
@@ -3664,7 +3087,8 @@
       "completion_tokens": 2471,
       "total_tokens": 254750,
       "duration_seconds": 599.126,
-      "started_at": "2026-06-13T19:15:16Z"
+      "started_at": "2026-06-13T19:15:16Z",
+      "cost_usd": 0.0786
     },
     {
       "run_id": "20260613T191639-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__claim_updates_total_allocated",
@@ -3682,7 +3106,8 @@
       "completion_tokens": 8579,
       "total_tokens": 633243,
       "duration_seconds": 661.045,
-      "started_at": "2026-06-13T19:16:39Z"
+      "started_at": "2026-06-13T19:16:39Z",
+      "cost_usd": 0.3937
     },
     {
       "run_id": "20260613T192146-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__no_overclaim",
@@ -3700,7 +3125,8 @@
       "completion_tokens": 6062,
       "total_tokens": 300846,
       "duration_seconds": 505.624,
-      "started_at": "2026-06-13T19:21:46Z"
+      "started_at": "2026-06-13T19:21:46Z",
+      "cost_usd": 0.0957
     },
     {
       "run_id": "20260613T192516-default-fair-minimax-minimax-m3-piku__fund_conservation__amount_paid_records_distribution",
@@ -3718,7 +3144,8 @@
       "completion_tokens": 1648,
       "total_tokens": 167235,
       "duration_seconds": 391.329,
-      "started_at": "2026-06-13T19:25:16Z"
+      "started_at": "2026-06-13T19:25:16Z",
+      "cost_usd": 0.0517
     },
     {
       "run_id": "20260613T192706-default-fair-zai-glm-5-2-reserve__auction_price_band__price_at_end_time",
@@ -3736,7 +3163,8 @@
       "completion_tokens": 1223,
       "total_tokens": 86548,
       "duration_seconds": 230.879,
-      "started_at": "2026-06-13T19:27:06Z"
+      "started_at": "2026-06-13T19:27:06Z",
+      "cost_usd": 0.0539
     },
     {
       "run_id": "20260613T192717-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__weth_claimed_plus_allocated_conserved",
@@ -3754,7 +3182,8 @@
       "completion_tokens": 26716,
       "total_tokens": 818465,
       "duration_seconds": 1034.571,
-      "started_at": "2026-06-13T19:27:17Z"
+      "started_at": "2026-06-13T19:27:17Z",
+      "cost_usd": 0.5338
     },
     {
       "run_id": "20260613T192741-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__usdc_preserves_weth_state",
@@ -3772,7 +3201,8 @@
       "completion_tokens": 11952,
       "total_tokens": 1271868,
       "duration_seconds": 1161.108,
-      "started_at": "2026-06-13T19:27:41Z"
+      "started_at": "2026-06-13T19:27:41Z",
+      "cost_usd": 0.7822
     },
     {
       "run_id": "20260613T193012-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__weth_claim_updates_round_claimed",
@@ -3790,7 +3220,8 @@
       "completion_tokens": 9065,
       "total_tokens": 835146,
       "duration_seconds": 691.586,
-      "started_at": "2026-06-13T19:30:12Z"
+      "started_at": "2026-06-13T19:30:12Z",
+      "cost_usd": 0.2587
     },
     {
       "run_id": "20260613T193030-default-fair-zai-glm-5-2-safe__owner_manager_reach__setup_owners_acyclicity",
@@ -3808,7 +3239,8 @@
       "completion_tokens": 11982,
       "total_tokens": 108745,
       "duration_seconds": 515.477,
-      "started_at": "2026-06-13T19:30:30Z"
+      "started_at": "2026-06-13T19:30:30Z",
+      "cost_usd": 0.0844
     },
     {
       "run_id": "20260613T193058-default-fair-zai-glm-5-2-rootstock__flyover_quote_lifecycle__deposit_peg_out_registers_required_amount",
@@ -3826,7 +3258,8 @@
       "completion_tokens": 7674,
       "total_tokens": 462682,
       "duration_seconds": 639.258,
-      "started_at": "2026-06-13T19:30:58Z"
+      "started_at": "2026-06-13T19:30:58Z",
+      "cost_usd": 0.2899
     },
     {
       "run_id": "20260613T193147-default-fair-minimax-minimax-m3-polaris__bonding_curve__floor_sell_and_burn_preserves_reserve_ratio_zero",
@@ -3844,7 +3277,8 @@
       "completion_tokens": 15844,
       "total_tokens": 1101672,
       "duration_seconds": 809.213,
-      "started_at": "2026-06-13T19:31:47Z"
+      "started_at": "2026-06-13T19:31:47Z",
+      "cost_usd": 0.3448
     },
     {
       "run_id": "20260613T193648-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__weth_bound_violation_rejected",
@@ -3862,7 +3296,8 @@
       "completion_tokens": 15785,
       "total_tokens": 1591832,
       "duration_seconds": 1351.548,
-      "started_at": "2026-06-13T19:36:48Z"
+      "started_at": "2026-06-13T19:36:48Z",
+      "cost_usd": 0.4918
     },
     {
       "run_id": "20260613T193906-default-fair-zai-glm-5-2-safe__owner_manager_reach__swap_owner_in_list_reachable",
@@ -3880,7 +3315,8 @@
       "completion_tokens": 29633,
       "total_tokens": 336409,
       "duration_seconds": 1150.652,
-      "started_at": "2026-06-13T19:39:06Z"
+      "started_at": "2026-06-13T19:39:06Z",
+      "cost_usd": 0.2493
     },
     {
       "run_id": "20260613T194137-default-fair-zai-glm-5-2-safe__owner_manager_reach__add_owner_is_owner_correctness",
@@ -3898,7 +3334,8 @@
       "completion_tokens": 16611,
       "total_tokens": 604447,
       "duration_seconds": 776.395,
-      "started_at": "2026-06-13T19:41:37Z"
+      "started_at": "2026-06-13T19:41:37Z",
+      "cost_usd": 0.3892
     },
     {
       "run_id": "20260613T194144-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__weth_no_overclaim",
@@ -3916,7 +3353,8 @@
       "completion_tokens": 9551,
       "total_tokens": 773784,
       "duration_seconds": 657.306,
-      "started_at": "2026-06-13T19:41:44Z"
+      "started_at": "2026-06-13T19:41:44Z",
+      "cost_usd": 0.2407
     },
     {
       "run_id": "20260613T194432-default-fair-zai-glm-5-2-piku__fund_conservation__amount_paid_preserves_fund_conservation",
@@ -3934,7 +3372,8 @@
       "completion_tokens": 12053,
       "total_tokens": 884100,
       "duration_seconds": 1098.355,
-      "started_at": "2026-06-13T19:44:32Z"
+      "started_at": "2026-06-13T19:44:32Z",
+      "cost_usd": 0.5497
     },
     {
       "run_id": "20260613T194517-default-fair-minimax-minimax-m3-polygon__agglayer_bridge__claimMessage_valid_leaf_and_consumes_unique_nullifier",
@@ -3952,7 +3391,8 @@
       "completion_tokens": 15891,
       "total_tokens": 1052240,
       "duration_seconds": 1010.206,
-      "started_at": "2026-06-13T19:45:17Z"
+      "started_at": "2026-06-13T19:45:17Z",
+      "cost_usd": 0.33
     },
     {
       "run_id": "20260613T194702-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__weth_claim_updates_total_allocated",
@@ -3970,7 +3410,8 @@
       "completion_tokens": 21404,
       "total_tokens": 549797,
       "duration_seconds": 838.212,
-      "started_at": "2026-06-13T19:47:02Z"
+      "started_at": "2026-06-13T19:47:02Z",
+      "cost_usd": 0.3641
     },
     {
       "run_id": "20260613T195242-default-fair-minimax-minimax-m3-piku__fund_conservation__sell_order_preserves_fund_conservation",
@@ -3988,7 +3429,8 @@
       "completion_tokens": 15432,
       "total_tokens": 1136141,
       "duration_seconds": 1392.636,
-      "started_at": "2026-06-13T19:52:42Z"
+      "started_at": "2026-06-13T19:52:42Z",
+      "cost_usd": 0.3547
     },
     {
       "run_id": "20260613T195434-default-fair-zai-glm-5-2-safe__owner_manager_reach__remove_owner_in_list_reachable",
@@ -4006,7 +3448,8 @@
       "completion_tokens": 18683,
       "total_tokens": 510437,
       "duration_seconds": 1107.626,
-      "started_at": "2026-06-13T19:54:34Z"
+      "started_at": "2026-06-13T19:54:34Z",
+      "cost_usd": 0.3362
     },
     {
       "run_id": "20260613T195816-default-fair-zai-glm-5-2-termmax__order_v2_buy_xt_single_segment__swap_debt_token_to_xt_updates_virtual_xt_reserve",
@@ -4024,7 +3467,8 @@
       "completion_tokens": 8463,
       "total_tokens": 524908,
       "duration_seconds": 653.479,
-      "started_at": "2026-06-13T19:58:16Z"
+      "started_at": "2026-06-13T19:58:16Z",
+      "cost_usd": 0.3285
     },
     {
       "run_id": "20260613T195821-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__claim_updates_total_allocated",
@@ -4042,7 +3486,8 @@
       "completion_tokens": 17146,
       "total_tokens": 888624,
       "duration_seconds": 1322.146,
-      "started_at": "2026-06-13T19:58:21Z"
+      "started_at": "2026-06-13T19:58:21Z",
+      "cost_usd": 0.282
     },
     {
       "run_id": "20260613T195920-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__weth_claimed_plus_allocated_conserved",
@@ -4060,7 +3505,8 @@
       "completion_tokens": 10418,
       "total_tokens": 984459,
       "duration_seconds": 723.444,
-      "started_at": "2026-06-13T19:59:20Z"
+      "started_at": "2026-06-13T19:59:20Z",
+      "cost_usd": 0.3047
     },
     {
       "run_id": "20260613T200101-default-fair-zai-glm-5-2-paladin_votes__stream_recovery_claim_usdc__weth_preserves_usdc_state",
@@ -4078,7 +3524,8 @@
       "completion_tokens": 13504,
       "total_tokens": 909718,
       "duration_seconds": 775.469,
-      "started_at": "2026-06-13T20:01:01Z"
+      "started_at": "2026-06-13T20:01:01Z",
+      "cost_usd": 0.5674
     },
     {
       "run_id": "20260613T200207-default-fair-minimax-minimax-m3-reserve__auction_price_band__price_upper_bound",
@@ -4096,7 +3543,8 @@
       "completion_tokens": 7188,
       "total_tokens": 1063877,
       "duration_seconds": 539.834,
-      "started_at": "2026-06-13T20:02:07Z"
+      "started_at": "2026-06-13T20:02:07Z",
+      "cost_usd": 0.3256
     },
     {
       "run_id": "20260613T200251-default-fair-zai-glm-5-2-polaris__bonding_curve__buy_preserves_reserve_ratio_zero",
@@ -4114,7 +3562,8 @@
       "completion_tokens": 7863,
       "total_tokens": 546001,
       "duration_seconds": 443.991,
-      "started_at": "2026-06-13T20:02:51Z"
+      "started_at": "2026-06-13T20:02:51Z",
+      "cost_usd": 0.3402
     },
     {
       "run_id": "20260613T200910-default-fair-zai-glm-5-2-usual__dao_collateral__swap_conservation",
@@ -4132,7 +3581,8 @@
       "completion_tokens": 12019,
       "total_tokens": 948471,
       "duration_seconds": 822.479,
-      "started_at": "2026-06-13T20:09:10Z"
+      "started_at": "2026-06-13T20:09:10Z",
+      "cost_usd": 0.5883
     },
     {
       "run_id": "20260613T201015-default-fair-zai-glm-5-2-polygon__agglayer_bridge__claimAsset_valid_leaf_and_consumes_unique_nullifier",
@@ -4150,7 +3600,8 @@
       "completion_tokens": 7882,
       "total_tokens": 762363,
       "duration_seconds": 976.208,
-      "started_at": "2026-06-13T20:10:15Z"
+      "started_at": "2026-06-13T20:10:15Z",
+      "cost_usd": 0.47
     },
     {
       "run_id": "20260613T201107-default-fair-minimax-minimax-m3-safe__owner_manager_reach__add_owner_acyclicity",
@@ -4168,7 +3619,8 @@
       "completion_tokens": 13044,
       "total_tokens": 1024048,
       "duration_seconds": 692.242,
-      "started_at": "2026-06-13T20:11:07Z"
+      "started_at": "2026-06-13T20:11:07Z",
+      "cost_usd": 0.319
     },
     {
       "run_id": "20260613T201123-default-fair-minimax-minimax-m3-piku__fund_conservation__amount_paid_preserves_fund_conservation",
@@ -4186,7 +3638,8 @@
       "completion_tokens": 21038,
       "total_tokens": 1141828,
       "duration_seconds": 978.975,
-      "started_at": "2026-06-13T20:11:23Z"
+      "started_at": "2026-06-13T20:11:23Z",
+      "cost_usd": 0.3615
     },
     {
       "run_id": "20260613T201302-default-fair-zai-glm-5-2-safe__owner_manager_reach__setup_owners_in_list_reachable",
@@ -4204,7 +3657,8 @@
       "completion_tokens": 7350,
       "total_tokens": 500355,
       "duration_seconds": 478.242,
-      "started_at": "2026-06-13T20:13:02Z"
+      "started_at": "2026-06-13T20:13:02Z",
+      "cost_usd": 0.312
     },
     {
       "run_id": "20260613T201357-default-fair-zai-glm-5-2-piku__fund_conservation__sell_order_records_redemption_buckets",
@@ -4222,7 +3676,8 @@
       "completion_tokens": 16071,
       "total_tokens": 886387,
       "duration_seconds": 1527.384,
-      "started_at": "2026-06-13T20:13:57Z"
+      "started_at": "2026-06-13T20:13:57Z",
+      "cost_usd": 0.5575
     },
     {
       "run_id": "20260613T201555-default-fair-minimax-minimax-m3-polaris__bonding_curve__init_reserve_ratio_zero",
@@ -4240,7 +3695,8 @@
       "completion_tokens": 7725,
       "total_tokens": 1266533,
       "duration_seconds": 752.827,
-      "started_at": "2026-06-13T20:15:55Z"
+      "started_at": "2026-06-13T20:15:55Z",
+      "cost_usd": 0.3869
     },
     {
       "run_id": "20260613T202023-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__usdc_preserves_weth_state",
@@ -4258,7 +3714,8 @@
       "completion_tokens": 8338,
       "total_tokens": 314123,
       "duration_seconds": 380.868,
-      "started_at": "2026-06-13T20:20:23Z"
+      "started_at": "2026-06-13T20:20:23Z",
+      "cost_usd": 0.1017
     },
     {
       "run_id": "20260613T202101-default-fair-zai-glm-5-2-safe__owner_manager_reach__swap_owner_is_owner_correctness",
@@ -4276,7 +3733,8 @@
       "completion_tokens": 4947,
       "total_tokens": 607681,
       "duration_seconds": 483.215,
-      "started_at": "2026-06-13T20:21:01Z"
+      "started_at": "2026-06-13T20:21:01Z",
+      "cost_usd": 0.3725
     },
     {
       "run_id": "20260613T202240-default-fair-minimax-minimax-m3-safe__owner_manager_reach__remove_owner_acyclicity",
@@ -4294,7 +3752,8 @@
       "completion_tokens": 9781,
       "total_tokens": 888076,
       "duration_seconds": 873.152,
-      "started_at": "2026-06-13T20:22:40Z"
+      "started_at": "2026-06-13T20:22:40Z",
+      "cost_usd": 0.2752
     },
     {
       "run_id": "20260613T202253-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__burn_insufficient",
@@ -4312,7 +3771,8 @@
       "completion_tokens": 7648,
       "total_tokens": 831625,
       "duration_seconds": 1035.014,
-      "started_at": "2026-06-13T20:22:53Z"
+      "started_at": "2026-06-13T20:22:53Z",
+      "cost_usd": 0.5112
     },
     {
       "run_id": "20260613T202632-default-fair-zai-glm-5-2-reserve__auction_price_band__price_lower_bound",
@@ -4330,7 +3790,8 @@
       "completion_tokens": 1115,
       "total_tokens": 89495,
       "duration_seconds": 174.949,
-      "started_at": "2026-06-13T20:26:32Z"
+      "started_at": "2026-06-13T20:26:32Z",
+      "cost_usd": 0.0555
     },
     {
       "run_id": "20260613T202644-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__weth_claim_updates_total_allocated",
@@ -4348,7 +3809,8 @@
       "completion_tokens": 13031,
       "total_tokens": 1093256,
       "duration_seconds": 913.88,
-      "started_at": "2026-06-13T20:26:44Z"
+      "started_at": "2026-06-13T20:26:44Z",
+      "cost_usd": 0.3397
     },
     {
       "run_id": "20260613T202744-default-fair-minimax-minimax-m3-polaris__bonding_curve__buy_preserves_reserve_ratio_zero",
@@ -4366,7 +3828,8 @@
       "completion_tokens": 18060,
       "total_tokens": 1355222,
       "duration_seconds": 874.89,
-      "started_at": "2026-06-13T20:27:44Z"
+      "started_at": "2026-06-13T20:27:44Z",
+      "cost_usd": 0.4228
     },
     {
       "run_id": "20260613T202828-default-fair-minimax-minimax-m3-reserve__auction_price_band__price_at_end_time",
@@ -4384,7 +3847,8 @@
       "completion_tokens": 2244,
       "total_tokens": 108879,
       "duration_seconds": 189.555,
-      "started_at": "2026-06-13T20:28:28Z"
+      "started_at": "2026-06-13T20:28:28Z",
+      "cost_usd": 0.0347
     },
     {
       "run_id": "20260613T202904-default-fair-zai-glm-5-2-usual__dao_collateral__redeem_conservation",
@@ -4402,7 +3866,8 @@
       "completion_tokens": 9376,
       "total_tokens": 713183,
       "duration_seconds": 617.294,
-      "started_at": "2026-06-13T20:29:04Z"
+      "started_at": "2026-06-13T20:29:04Z",
+      "cost_usd": 0.4429
     },
     {
       "run_id": "20260613T202927-default-fair-zai-glm-5-2-rootstock__flyover_quote_lifecycle__refund_user_peg_out_conserves_quote_amount",
@@ -4420,7 +3885,8 @@
       "completion_tokens": 7031,
       "total_tokens": 891483,
       "duration_seconds": 850.588,
-      "started_at": "2026-06-13T20:29:27Z"
+      "started_at": "2026-06-13T20:29:27Z",
+      "cost_usd": 0.5461
     },
     {
       "run_id": "20260613T203138-default-fair-minimax-minimax-m3-rootstock__flyover_quote_lifecycle__deposit_peg_out_registers_required_amount",
@@ -4438,7 +3904,8 @@
       "completion_tokens": 6534,
       "total_tokens": 942097,
       "duration_seconds": 911.746,
-      "started_at": "2026-06-13T20:31:38Z"
+      "started_at": "2026-06-13T20:31:38Z",
+      "cost_usd": 0.2885
     },
     {
       "run_id": "20260613T203713-default-fair-minimax-minimax-m3-safe__owner_manager_reach__setup_owners_acyclicity",
@@ -4456,7 +3923,8 @@
       "completion_tokens": 13970,
       "total_tokens": 1247114,
       "duration_seconds": 1426.558,
-      "started_at": "2026-06-13T20:37:13Z"
+      "started_at": "2026-06-13T20:37:13Z",
+      "cost_usd": 0.3867
     },
     {
       "run_id": "20260613T203922-default-fair-zai-glm-5-2-usual__dao_collateral__swap_value_conservation",
@@ -4474,7 +3942,8 @@
       "completion_tokens": 8539,
       "total_tokens": 623370,
       "duration_seconds": 808.953,
-      "started_at": "2026-06-13T20:39:22Z"
+      "started_at": "2026-06-13T20:39:22Z",
+      "cost_usd": 0.3877
     },
     {
       "run_id": "20260613T203924-default-fair-zai-glm-5-2-polaris__bonding_curve__sell_preserves_reserve_ratio_zero",
@@ -4492,7 +3961,8 @@
       "completion_tokens": 5844,
       "total_tokens": 524500,
       "duration_seconds": 419.103,
-      "started_at": "2026-06-13T20:39:24Z"
+      "started_at": "2026-06-13T20:39:24Z",
+      "cost_usd": 0.3241
     },
     {
       "run_id": "20260613T204009-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__setOperator_updates",
@@ -4510,7 +3980,8 @@
       "completion_tokens": 5283,
       "total_tokens": 242812,
       "duration_seconds": 327.598,
-      "started_at": "2026-06-13T20:40:09Z"
+      "started_at": "2026-06-13T20:40:09Z",
+      "cost_usd": 0.1541
     },
     {
       "run_id": "20260613T204159-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc__weth_preserves_usdc_state",
@@ -4528,7 +3999,8 @@
       "completion_tokens": 2530,
       "total_tokens": 175223,
       "duration_seconds": 198.758,
-      "started_at": "2026-06-13T20:41:59Z"
+      "started_at": "2026-06-13T20:41:59Z",
+      "cost_usd": 0.0548
     },
     {
       "run_id": "20260613T204219-default-fair-minimax-minimax-m3-polygon__agglayer_bridge__claimAsset_valid_leaf_and_consumes_unique_nullifier",
@@ -4546,7 +4018,8 @@
       "completion_tokens": 11448,
       "total_tokens": 852935,
       "duration_seconds": 1227.351,
-      "started_at": "2026-06-13T20:42:19Z"
+      "started_at": "2026-06-13T20:42:19Z",
+      "cost_usd": 0.2662
     },
     {
       "run_id": "20260613T204338-default-fair-zai-glm-5-2-safe__owner_manager_reach__in_list_reachable",
@@ -4564,7 +4037,8 @@
       "completion_tokens": 18630,
       "total_tokens": 554493,
       "duration_seconds": 661.748,
-      "started_at": "2026-06-13T20:43:38Z"
+      "started_at": "2026-06-13T20:43:38Z",
+      "cost_usd": 0.3625
     },
     {
       "run_id": "20260613T204518-default-fair-minimax-minimax-m3-piku__fund_conservation__sell_order_records_redemption_buckets",
@@ -4582,7 +4056,8 @@
       "completion_tokens": 16840,
       "total_tokens": 1146687,
       "duration_seconds": 828.072,
-      "started_at": "2026-06-13T20:45:18Z"
+      "started_at": "2026-06-13T20:45:18Z",
+      "cost_usd": 0.3592
     },
     {
       "run_id": "20260613T204536-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__transfer_no_balance_revert",
@@ -4600,7 +4075,8 @@
       "completion_tokens": 6496,
       "total_tokens": 564397,
       "duration_seconds": 959.796,
-      "started_at": "2026-06-13T20:45:36Z"
+      "started_at": "2026-06-13T20:45:36Z",
+      "cost_usd": 0.349
     },
     {
       "run_id": "20260613T204624-default-fair-zai-glm-5-2-reserve__auction_price_band__price_at_start_time",
@@ -4618,7 +4094,8 @@
       "completion_tokens": 1209,
       "total_tokens": 104249,
       "duration_seconds": 160.016,
-      "started_at": "2026-06-13T20:46:24Z"
+      "started_at": "2026-06-13T20:46:24Z",
+      "cost_usd": 0.0645
     },
     {
       "run_id": "20260613T204650-default-fair-minimax-minimax-m3-safe__owner_manager_reach__add_owner_is_owner_correctness",
@@ -4636,7 +4113,8 @@
       "completion_tokens": 11042,
       "total_tokens": 821387,
       "duration_seconds": 849.794,
-      "started_at": "2026-06-13T20:46:50Z"
+      "started_at": "2026-06-13T20:46:50Z",
+      "cost_usd": 0.2564
     },
     {
       "run_id": "20260613T204904-default-fair-zai-glm-5-2-rootstock__flyover_quote_lifecycle__refund_peg_out_conserves_quote_amount",
@@ -4654,7 +4132,8 @@
       "completion_tokens": 4583,
       "total_tokens": 406309,
       "duration_seconds": 1041.479,
-      "started_at": "2026-06-13T20:49:04Z"
+      "started_at": "2026-06-13T20:49:04Z",
+      "cost_usd": 0.2511
     },
     {
       "run_id": "20260613T205251-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__mint_ctokens_match_deposit",
@@ -4672,7 +4151,8 @@
       "completion_tokens": 18932,
       "total_tokens": 680400,
       "duration_seconds": 1221.029,
-      "started_at": "2026-06-13T20:52:51Z"
+      "started_at": "2026-06-13T20:52:51Z",
+      "cost_usd": 0.4385
     },
     {
       "run_id": "20260613T205440-default-fair-zai-glm-5-2-safe__owner_manager_reach__remove_owner_owner_list_invariant",
@@ -4690,7 +4170,8 @@
       "completion_tokens": 15105,
       "total_tokens": 695086,
       "duration_seconds": 911.552,
-      "started_at": "2026-06-13T20:54:40Z"
+      "started_at": "2026-06-13T20:54:40Z",
+      "cost_usd": 0.4412
     },
     {
       "run_id": "20260613T205906-default-fair-minimax-minimax-m3-polaris__bonding_curve__sell_preserves_reserve_ratio_zero",
@@ -4708,7 +4189,8 @@
       "completion_tokens": 15395,
       "total_tokens": 1082528,
       "duration_seconds": 1138.859,
-      "started_at": "2026-06-13T20:59:06Z"
+      "started_at": "2026-06-13T20:59:06Z",
+      "cost_usd": 0.3386
     },
     {
       "run_id": "20260613T210101-default-fair-minimax-minimax-m3-safe__owner_manager_reach__remove_owner_in_list_reachable",
@@ -4726,7 +4208,8 @@
       "completion_tokens": 10183,
       "total_tokens": 1210974,
       "duration_seconds": 838.563,
-      "started_at": "2026-06-13T21:01:01Z"
+      "started_at": "2026-06-13T21:01:01Z",
+      "cost_usd": 0.3725
     },
     {
       "run_id": "20260613T210101-default-fair-minimax-minimax-m3-safe__owner_manager_reach__swap_owner_in_list_reachable",
@@ -4744,7 +4227,8 @@
       "completion_tokens": 17648,
       "total_tokens": 595460,
       "duration_seconds": 777.977,
-      "started_at": "2026-06-13T21:01:01Z"
+      "started_at": "2026-06-13T21:01:01Z",
+      "cost_usd": 0.1945
     },
     {
       "run_id": "20260613T210137-default-fair-zai-glm-5-2-zodiac__roles_decoder_faithfulness__roles_decoder_bounds_safe",
@@ -4762,7 +4246,8 @@
       "completion_tokens": 20564,
       "total_tokens": 744972,
       "duration_seconds": 885.102,
-      "started_at": "2026-06-13T21:01:37Z"
+      "started_at": "2026-06-13T21:01:37Z",
+      "cost_usd": 0.4799
     },
     {
       "run_id": "20260613T210246-default-fair-minimax-minimax-m3-reserve__auction_price_band__price_lower_bound",
@@ -4780,7 +4265,8 @@
       "completion_tokens": 11334,
       "total_tokens": 773511,
       "duration_seconds": 895.217,
-      "started_at": "2026-06-13T21:02:46Z"
+      "started_at": "2026-06-13T21:02:46Z",
+      "cost_usd": 0.2423
     },
     {
       "run_id": "20260613T210626-default-fair-zai-glm-5-2-safe__owner_manager_reach__add_owner_owner_list_invariant",
@@ -4798,7 +4284,8 @@
       "completion_tokens": 8884,
       "total_tokens": 813603,
       "duration_seconds": 672.72,
-      "started_at": "2026-06-13T21:06:26Z"
+      "started_at": "2026-06-13T21:06:26Z",
+      "cost_usd": 0.5024
     },
     {
       "run_id": "20260613T210952-default-fair-zai-glm-5-2-safe__owner_manager_reach__swap_owner_acyclicity",
@@ -4816,7 +4303,8 @@
       "completion_tokens": 39414,
       "total_tokens": 774537,
       "duration_seconds": 1549.555,
-      "started_at": "2026-06-13T21:09:52Z"
+      "started_at": "2026-06-13T21:09:52Z",
+      "cost_usd": 0.5278
     },
     {
       "run_id": "20260613T211313-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__transferFrom_conservation",
@@ -4834,7 +4322,8 @@
       "completion_tokens": 15632,
       "total_tokens": 594556,
       "duration_seconds": 581.162,
-      "started_at": "2026-06-13T21:13:13Z"
+      "started_at": "2026-06-13T21:13:13Z",
+      "cost_usd": 0.3817
     },
     {
       "run_id": "20260613T211359-default-fair-minimax-minimax-m3-termmax__order_v2_buy_xt_single_segment__swap_debt_token_to_xt_updates_virtual_xt_reserve",
@@ -4852,7 +4341,8 @@
       "completion_tokens": 34776,
       "total_tokens": 1329777,
       "duration_seconds": 1084.164,
-      "started_at": "2026-06-13T21:13:59Z"
+      "started_at": "2026-06-13T21:13:59Z",
+      "cost_usd": 0.4302
     },
     {
       "run_id": "20260613T211500-default-fair-minimax-minimax-m3-safe__owner_manager_reach__setup_owners_in_list_reachable",
@@ -4870,7 +4360,8 @@
       "completion_tokens": 15854,
       "total_tokens": 654629,
       "duration_seconds": 584.916,
-      "started_at": "2026-06-13T21:15:00Z"
+      "started_at": "2026-06-13T21:15:00Z",
+      "cost_usd": 0.2107
     },
     {
       "run_id": "20260613T211739-default-fair-zai-glm-5-2-safe__owner_manager_reach__remove_owner_is_owner_correctness",
@@ -4888,7 +4379,8 @@
       "completion_tokens": 6401,
       "total_tokens": 457904,
       "duration_seconds": 425.894,
-      "started_at": "2026-06-13T21:17:39Z"
+      "started_at": "2026-06-13T21:17:39Z",
+      "cost_usd": 0.285
     },
     {
       "run_id": "20260613T211742-default-fair-minimax-minimax-m3-rootstock__flyover_quote_lifecycle__refund_user_peg_out_conserves_quote_amount",
@@ -4906,7 +4398,8 @@
       "completion_tokens": 13086,
       "total_tokens": 864403,
       "duration_seconds": 1056.607,
-      "started_at": "2026-06-13T21:17:42Z"
+      "started_at": "2026-06-13T21:17:42Z",
+      "cost_usd": 0.2711
     },
     {
       "run_id": "20260613T211805-default-fair-minimax-minimax-m3-reserve__auction_price_band__price_at_start_time",
@@ -4924,7 +4417,8 @@
       "completion_tokens": 1552,
       "total_tokens": 155091,
       "duration_seconds": 145.742,
-      "started_at": "2026-06-13T21:18:05Z"
+      "started_at": "2026-06-13T21:18:05Z",
+      "cost_usd": 0.0479
     },
     {
       "run_id": "20260613T212031-default-fair-minimax-minimax-m3-rootstock__flyover_quote_lifecycle__refund_peg_out_conserves_quote_amount",
@@ -4942,7 +4436,8 @@
       "completion_tokens": 7412,
       "total_tokens": 724530,
       "duration_seconds": 755.808,
-      "started_at": "2026-06-13T21:20:31Z"
+      "started_at": "2026-06-13T21:20:31Z",
+      "cost_usd": 0.224
     },
     {
       "run_id": "20260613T212254-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__transfer_preserves_supply",
@@ -4960,7 +4455,8 @@
       "completion_tokens": 5970,
       "total_tokens": 520123,
       "duration_seconds": 416.533,
-      "started_at": "2026-06-13T21:22:54Z"
+      "started_at": "2026-06-13T21:22:54Z",
+      "cost_usd": 0.3216
     },
     {
       "run_id": "20260613T212445-default-fair-minimax-minimax-m3-safe__owner_manager_reach__swap_owner_is_owner_correctness",
@@ -4978,7 +4474,8 @@
       "completion_tokens": 13002,
       "total_tokens": 1034740,
       "duration_seconds": 479.281,
-      "started_at": "2026-06-13T21:24:45Z"
+      "started_at": "2026-06-13T21:24:45Z",
+      "cost_usd": 0.3221
     },
     {
       "run_id": "20260613T212445-default-fair-zai-glm-5-2-safe__owner_manager_reach__setup_owners_owner_list_invariant",
@@ -4996,7 +4493,8 @@
       "completion_tokens": 11154,
       "total_tokens": 703947,
       "duration_seconds": 592.193,
-      "started_at": "2026-06-13T21:24:45Z"
+      "started_at": "2026-06-13T21:24:45Z",
+      "cost_usd": 0.4402
     },
     {
       "run_id": "20260613T212951-default-fair-zai-glm-5-2-zodiac__roles_decoder_faithfulness__roles_decoder_faithful",
@@ -5014,7 +4512,8 @@
       "completion_tokens": 15827,
       "total_tokens": 705683,
       "duration_seconds": 523.023,
-      "started_at": "2026-06-13T21:29:51Z"
+      "started_at": "2026-06-13T21:29:51Z",
+      "cost_usd": 0.4487
     },
     {
       "run_id": "20260613T213204-default-fair-minimax-minimax-m3-usual__dao_collateral__swap_conservation",
@@ -5032,7 +4531,8 @@
       "completion_tokens": 7197,
       "total_tokens": 1073886,
       "duration_seconds": 825.163,
-      "started_at": "2026-06-13T21:32:04Z"
+      "started_at": "2026-06-13T21:32:04Z",
+      "cost_usd": 0.3286
     },
     {
       "run_id": "20260613T213244-default-fair-minimax-minimax-m3-usual__dao_collateral__redeem_conservation",
@@ -5050,7 +4550,8 @@
       "completion_tokens": 7695,
       "total_tokens": 673602,
       "duration_seconds": 470.047,
-      "started_at": "2026-06-13T21:32:44Z"
+      "started_at": "2026-06-13T21:32:44Z",
+      "cost_usd": 0.209
     },
     {
       "run_id": "20260613T213307-default-fair-minimax-minimax-m3-safe__owner_manager_reach__add_owner_owner_list_invariant",
@@ -5068,7 +4569,8 @@
       "completion_tokens": 21538,
       "total_tokens": 1121244,
       "duration_seconds": 830.085,
-      "started_at": "2026-06-13T21:33:07Z"
+      "started_at": "2026-06-13T21:33:07Z",
+      "cost_usd": 0.3558
     },
     {
       "run_id": "20260613T213437-default-fair-zai-glm-5-2-safe__owner_manager_reach__swap_owner_owner_list_invariant",
@@ -5086,7 +4588,8 @@
       "completion_tokens": 15178,
       "total_tokens": 500541,
       "duration_seconds": 631.147,
-      "started_at": "2026-06-13T21:34:37Z"
+      "started_at": "2026-06-13T21:34:37Z",
+      "cost_usd": 0.3246
     },
     {
       "run_id": "20260613T213519-default-fair-minimax-minimax-m3-safe__owner_manager_reach__in_list_reachable",
@@ -5104,7 +4607,8 @@
       "completion_tokens": 8678,
       "total_tokens": 1329119,
       "duration_seconds": 503.585,
-      "started_at": "2026-06-13T21:35:19Z"
+      "started_at": "2026-06-13T21:35:19Z",
+      "cost_usd": 0.4065
     },
     {
       "run_id": "20260613T213541-default-fair-zai-glm-5-2-term_finance__term_auction_clearing__clearing_assignment_correct",
@@ -5122,7 +4626,8 @@
       "completion_tokens": 12247,
       "total_tokens": 72092,
       "duration_seconds": 339.873,
-      "started_at": "2026-06-13T21:35:41Z"
+      "started_at": "2026-06-13T21:35:41Z",
+      "cost_usd": 0.0629
     },
     {
       "run_id": "20260613T214034-default-fair-minimax-minimax-m3-usual__dao_collateral__swap_value_conservation",
@@ -5140,7 +4645,8 @@
       "completion_tokens": 8455,
       "total_tokens": 1071677,
       "duration_seconds": 700.272,
-      "started_at": "2026-06-13T21:40:34Z"
+      "started_at": "2026-06-13T21:40:34Z",
+      "cost_usd": 0.3291
     },
     {
       "run_id": "20260613T214122-default-fair-zai-glm-5-2-usual__dao_collateral__redeem_return_formula",
@@ -5158,7 +4664,8 @@
       "completion_tokens": 5002,
       "total_tokens": 685047,
       "duration_seconds": 458.566,
-      "started_at": "2026-06-13T21:41:22Z"
+      "started_at": "2026-06-13T21:41:22Z",
+      "cost_usd": 0.419
     },
     {
       "run_id": "20260613T214342-default-fair-minimax-minimax-m3-safe__owner_manager_reach__remove_owner_owner_list_invariant",
@@ -5176,7 +4683,8 @@
       "completion_tokens": 24030,
       "total_tokens": 1017347,
       "duration_seconds": 751.522,
-      "started_at": "2026-06-13T21:43:42Z"
+      "started_at": "2026-06-13T21:43:42Z",
+      "cost_usd": 0.3268
     },
     {
       "run_id": "20260613T214509-default-fair-zai-glm-5-2-usual__dao_collateral__redeem_fee_formula",
@@ -5194,7 +4702,8 @@
       "completion_tokens": 1678,
       "total_tokens": 43268,
       "duration_seconds": 94.782,
-      "started_at": "2026-06-13T21:45:09Z"
+      "started_at": "2026-06-13T21:45:09Z",
+      "cost_usd": 0.0286
     },
     {
       "run_id": "20260613T214549-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__burn_insufficient",
@@ -5212,7 +4721,8 @@
       "completion_tokens": 14994,
       "total_tokens": 1338076,
       "duration_seconds": 743.247,
-      "started_at": "2026-06-13T21:45:49Z"
+      "started_at": "2026-06-13T21:45:49Z",
+      "cost_usd": 0.4149
     },
     {
       "run_id": "20260613T214644-default-fair-zai-glm-5-2-wildcat__borrow_liquidity_safety__positive_borrow_preserves_required_liquidity",
@@ -5230,7 +4740,8 @@
       "completion_tokens": 2370,
       "total_tokens": 90518,
       "duration_seconds": 115.965,
-      "started_at": "2026-06-13T21:46:44Z"
+      "started_at": "2026-06-13T21:46:44Z",
+      "cost_usd": 0.0581
     },
     {
       "run_id": "20260613T214658-default-fair-minimax-minimax-m3-safe__owner_manager_reach__remove_owner_is_owner_correctness",
@@ -5248,7 +4759,8 @@
       "completion_tokens": 7151,
       "total_tokens": 1082927,
       "duration_seconds": 480.016,
-      "started_at": "2026-06-13T21:46:58Z"
+      "started_at": "2026-06-13T21:46:58Z",
+      "cost_usd": 0.3313
     },
     {
       "run_id": "20260613T214840-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__mint_increases_supply",
@@ -5266,7 +4778,8 @@
       "completion_tokens": 7410,
       "total_tokens": 457929,
       "duration_seconds": 414.551,
-      "started_at": "2026-06-13T21:48:40Z"
+      "started_at": "2026-06-13T21:48:40Z",
+      "cost_usd": 0.2866
     },
     {
       "run_id": "20260613T214900-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__burn_decreases_supply",
@@ -5284,7 +4797,8 @@
       "completion_tokens": 10500,
       "total_tokens": 528169,
       "duration_seconds": 449.341,
-      "started_at": "2026-06-13T21:49:00Z"
+      "started_at": "2026-06-13T21:49:00Z",
+      "cost_usd": 0.3337
     },
     {
       "run_id": "20260613T215215-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__mint_ctokens_match_deposit",
@@ -5302,7 +4816,8 @@
       "completion_tokens": 18533,
       "total_tokens": 989173,
       "duration_seconds": 751.45,
-      "started_at": "2026-06-13T21:52:15Z"
+      "started_at": "2026-06-13T21:52:15Z",
+      "cost_usd": 0.3134
     },
     {
       "run_id": "20260613T215458-default-fair-minimax-minimax-m3-safe__owner_manager_reach__setup_owners_owner_list_invariant",
@@ -5320,7 +4835,8 @@
       "completion_tokens": 11863,
       "total_tokens": 1114957,
       "duration_seconds": 532.874,
-      "started_at": "2026-06-13T21:54:58Z"
+      "started_at": "2026-06-13T21:54:58Z",
+      "cost_usd": 0.3452
     },
     {
       "run_id": "20260613T215535-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__transfer_conservation",
@@ -5338,7 +4854,8 @@
       "completion_tokens": 16605,
       "total_tokens": 957546,
       "duration_seconds": 620.115,
-      "started_at": "2026-06-13T21:55:35Z"
+      "started_at": "2026-06-13T21:55:35Z",
+      "cost_usd": 0.6011
     },
     {
       "run_id": "20260613T215614-default-fair-minimax-minimax-m3-safe__owner_manager_reach__swap_owner_acyclicity",
@@ -5356,7 +4873,8 @@
       "completion_tokens": 108128,
       "total_tokens": 2333910,
       "duration_seconds": 2244.184,
-      "started_at": "2026-06-13T21:56:14Z"
+      "started_at": "2026-06-13T21:56:14Z",
+      "cost_usd": 0.7975
     },
     {
       "run_id": "20260613T215630-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__mint_overflow_protection",
@@ -5374,7 +4892,8 @@
       "completion_tokens": 11239,
       "total_tokens": 596546,
       "duration_seconds": 446.959,
-      "started_at": "2026-06-13T21:56:30Z"
+      "started_at": "2026-06-13T21:56:30Z",
+      "cost_usd": 0.3759
     },
     {
       "run_id": "20260613T215812-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__setOperator_updates",
@@ -5392,7 +4911,8 @@
       "completion_tokens": 2924,
       "total_tokens": 133936,
       "duration_seconds": 219.242,
-      "started_at": "2026-06-13T21:58:12Z"
+      "started_at": "2026-06-13T21:58:12Z",
+      "cost_usd": 0.0428
     },
     {
       "run_id": "20260613T220152-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__transfer_no_balance_revert",
@@ -5410,7 +4930,8 @@
       "completion_tokens": 6426,
       "total_tokens": 540642,
       "duration_seconds": 454.082,
-      "started_at": "2026-06-13T22:01:52Z"
+      "started_at": "2026-06-13T22:01:52Z",
+      "cost_usd": 0.168
     },
     {
       "run_id": "20260613T220351-default-fair-minimax-minimax-m3-safe__owner_manager_reach__swap_owner_owner_list_invariant",
@@ -5428,7 +4949,8 @@
       "completion_tokens": 9116,
       "total_tokens": 766165,
       "duration_seconds": 789.825,
-      "started_at": "2026-06-13T22:03:51Z"
+      "started_at": "2026-06-13T22:03:51Z",
+      "cost_usd": 0.2381
     },
     {
       "run_id": "20260613T220357-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__transfer_insufficient",
@@ -5446,7 +4968,8 @@
       "completion_tokens": 9580,
       "total_tokens": 513261,
       "duration_seconds": 411.019,
-      "started_at": "2026-06-13T22:03:57Z"
+      "started_at": "2026-06-13T22:03:57Z",
+      "cost_usd": 0.3233
     },
     {
       "run_id": "20260613T220447-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__transferFrom_conservation",
@@ -5464,7 +4987,8 @@
       "completion_tokens": 8580,
       "total_tokens": 706637,
       "duration_seconds": 444.843,
-      "started_at": "2026-06-13T22:04:47Z"
+      "started_at": "2026-06-13T22:04:47Z",
+      "cost_usd": 0.2197
     },
     {
       "run_id": "20260613T220555-default-fair-zai-glm-5-2-zama__erc7984_confidential_token__transfer_sufficient",
@@ -5482,7 +5006,8 @@
       "completion_tokens": 7116,
       "total_tokens": 802245,
       "duration_seconds": 1122.654,
-      "started_at": "2026-06-13T22:05:55Z"
+      "started_at": "2026-06-13T22:05:55Z",
+      "cost_usd": 0.4927
     },
     {
       "run_id": "20260613T220926-default-fair-minimax-minimax-m3-zodiac__roles_decoder_faithfulness__roles_decoder_bounds_safe",
@@ -5500,7 +5025,8 @@
       "completion_tokens": 8554,
       "total_tokens": 995609,
       "duration_seconds": 686.536,
-      "started_at": "2026-06-13T22:09:26Z"
+      "started_at": "2026-06-13T22:09:26Z",
+      "cost_usd": 0.3064
     },
     {
       "run_id": "20260613T221048-default-fair-zai-glm-5-2-zodiac__roles_decoder_faithfulness__metadata_bridge",
@@ -5518,7 +5044,8 @@
       "completion_tokens": 26958,
       "total_tokens": 929611,
       "duration_seconds": 1153.573,
-      "started_at": "2026-06-13T22:10:48Z"
+      "started_at": "2026-06-13T22:10:48Z",
+      "cost_usd": 0.6009
     },
     {
       "run_id": "20260613T221212-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__transfer_preserves_supply",
@@ -5536,7 +5063,8 @@
       "completion_tokens": 10399,
       "total_tokens": 780451,
       "duration_seconds": 457.705,
-      "started_at": "2026-06-13T22:12:12Z"
+      "started_at": "2026-06-13T22:12:12Z",
+      "cost_usd": 0.2435
     },
     {
       "run_id": "20260613T221701-default-fair-minimax-minimax-m3-usual__dao_collateral__redeem_fee_formula",
@@ -5554,7 +5082,8 @@
       "completion_tokens": 1193,
       "total_tokens": 58574,
       "duration_seconds": 117.973,
-      "started_at": "2026-06-13T22:17:01Z"
+      "started_at": "2026-06-13T22:17:01Z",
+      "cost_usd": 0.0186
     },
     {
       "run_id": "20260613T221859-default-fair-minimax-minimax-m3-wildcat__borrow_liquidity_safety__positive_borrow_preserves_required_liquidity",
@@ -5572,7 +5101,8 @@
       "completion_tokens": 57621,
       "total_tokens": 1953745,
       "duration_seconds": 1590.969,
-      "started_at": "2026-06-13T22:18:59Z"
+      "started_at": "2026-06-13T22:18:59Z",
+      "cost_usd": 0.638
     },
     {
       "run_id": "20260613T221950-default-fair-minimax-minimax-m3-zodiac__roles_decoder_faithfulness__roles_decoder_faithful",
@@ -5590,7 +5120,8 @@
       "completion_tokens": 13601,
       "total_tokens": 966938,
       "duration_seconds": 703.05,
-      "started_at": "2026-06-13T22:19:50Z"
+      "started_at": "2026-06-13T22:19:50Z",
+      "cost_usd": 0.3023
     },
     {
       "run_id": "20260613T223339-default-fair-minimax-minimax-m3-term_finance__term_auction_clearing__clearing_assignment_correct",
@@ -5608,7 +5139,8 @@
       "completion_tokens": 15593,
       "total_tokens": 658663,
       "duration_seconds": 461.936,
-      "started_at": "2026-06-13T22:33:39Z"
+      "started_at": "2026-06-13T22:33:39Z",
+      "cost_usd": 0.2116
     },
     {
       "run_id": "20260613T224121-default-fair-minimax-minimax-m3-usual__dao_collateral__redeem_return_formula",
@@ -5626,7 +5158,8 @@
       "completion_tokens": 9798,
       "total_tokens": 638379,
       "duration_seconds": 760.426,
-      "started_at": "2026-06-13T22:41:21Z"
+      "started_at": "2026-06-13T22:41:21Z",
+      "cost_usd": 0.2003
     },
     {
       "run_id": "20260613T224531-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__mint_increases_supply",
@@ -5644,7 +5177,8 @@
       "completion_tokens": 14225,
       "total_tokens": 675972,
       "duration_seconds": 485.739,
-      "started_at": "2026-06-13T22:45:31Z"
+      "started_at": "2026-06-13T22:45:31Z",
+      "cost_usd": 0.2156
     },
     {
       "run_id": "20260613T225336-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__transfer_conservation",
@@ -5662,7 +5196,8 @@
       "completion_tokens": 12532,
       "total_tokens": 1327073,
       "duration_seconds": 574.399,
-      "started_at": "2026-06-13T22:53:36Z"
+      "started_at": "2026-06-13T22:53:36Z",
+      "cost_usd": 0.4094
     },
     {
       "run_id": "20260613T225401-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__burn_decreases_supply",
@@ -5680,7 +5215,8 @@
       "completion_tokens": 14387,
       "total_tokens": 836301,
       "duration_seconds": 569.179,
-      "started_at": "2026-06-13T22:54:01Z"
+      "started_at": "2026-06-13T22:54:01Z",
+      "cost_usd": 0.2638
     },
     {
       "run_id": "20260613T230311-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__transfer_sufficient",
@@ -5698,7 +5234,8 @@
       "completion_tokens": 14190,
       "total_tokens": 1563847,
       "duration_seconds": 862.421,
-      "started_at": "2026-06-13T23:03:11Z"
+      "started_at": "2026-06-13T23:03:11Z",
+      "cost_usd": 0.4819
     },
     {
       "run_id": "20260613T230331-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__mint_overflow_protection",
@@ -5716,7 +5253,8 @@
       "completion_tokens": 15434,
       "total_tokens": 1098658,
       "duration_seconds": 578.757,
-      "started_at": "2026-06-13T23:03:31Z"
+      "started_at": "2026-06-13T23:03:31Z",
+      "cost_usd": 0.3435
     },
     {
       "run_id": "20260613T231310-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__transfer_insufficient",
@@ -5734,7 +5272,8 @@
       "completion_tokens": 9890,
       "total_tokens": 1032818,
       "duration_seconds": 503.364,
-      "started_at": "2026-06-13T23:13:10Z"
+      "started_at": "2026-06-13T23:13:10Z",
+      "cost_usd": 0.3187
     },
     {
       "run_id": "20260613T232133-default-fair-minimax-minimax-m3-zodiac__roles_decoder_faithfulness__metadata_bridge",
@@ -5752,7 +5291,8 @@
       "completion_tokens": 10892,
       "total_tokens": 585145,
       "duration_seconds": 427.392,
-      "started_at": "2026-06-13T23:21:33Z"
+      "started_at": "2026-06-13T23:21:33Z",
+      "cost_usd": 0.1853
     },
     {
       "run_id": "20260614T072535-default-fair-spark-step3p7-flash-148b-alchemix__earmark_conservation__earmark_preserves_invariant",
