@@ -39,7 +39,7 @@ The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) ar
 
 ## Benchmark suite
 
-21 active cases, 124 active task manifests, and 8 backlog task manifests are drawn from real-world contracts. All active and backlog task manifests are currently runnable proof tasks with hidden reference proofs.
+25 active cases, 135 active task manifests, and 8 backlog task manifests are drawn from real-world contracts. All active and backlog task manifests are currently runnable proof tasks with hidden reference proofs.
 
 | Case | Source | Tasks |
 |------|--------|-------|
@@ -49,6 +49,7 @@ The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) ar
 | `damn_vulnerable_defi/side_entrance` | Damn Vulnerable DeFi | 5 |
 | `ethereum/deposit_contract_minimal` | Ethereum deposit contract | 5 |
 | `forgeyields/global_solvency` | ForgeYields TokenGateway | 7 |
+| `ipor/plasma_vault_redeem_split` | IPOR Plasma Vault | 2 |
 | `kleros/sortition_trees` | Kleros sortition module | 6 |
 | `lagoon/guardrails` | Lagoon vault guardrails | 3 |
 | `lido/vaulthub_locked` | Lido VaultHub | 5 |
@@ -56,13 +57,16 @@ The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) ar
 | `onedelta/caller_address_integrity` | OneDelta callback caller integrity | 10 |
 | `paladin_votes/stream_recovery_claim_usdc` | Paladin Votes | 26 |
 | `piku/fund_conservation` | Piku / Inverter oracle funding manager | 4 |
+| `polaris/bonding_curve` | Polaris bonding curve | 4 |
 | `polygon/agglayer_bridge` | Polygon Agglayer bridge | 2 |
 | `reserve/auction_price_band` | Reserve DTF | 4 |
 | `rootstock/flyover_quote_lifecycle` | Rootstock Flyover quote lifecycle | 3 |
 | `safe/owner_manager_reach` | Safe OwnerManager | 15 |
+| `term_finance/term_auction_clearing` | Term Finance auction clearing | 1 |
 | `termmax/order_v2_buy_xt_single_segment` | TermMax Order V2 | 1 |
 | `usual/dao_collateral` | Usual DaoCollateral | 5 |
 | `wildcat/borrow_liquidity_safety` | Wildcat V2 | 1 |
+| `zodiac/roles_decoder_faithfulness` | Zodiac Roles decoder | 3 |
 | `zama/erc7984_confidential_token` | Zama / OpenZeppelin ERC-7984 | 12 |
 
 Every runnable task includes a reference proof hidden from the agent during benchmarking. Case-level `proof_status: partial` means the broader case family is not fully complete; it does not imply that runnable per-task reference proofs are missing.
@@ -118,6 +122,63 @@ task slice, and endpoint are dispatch inputs) and publish to the
 branch; single-seed runs, so treat small deltas as noise.
 
 ## Running the benchmark
+
+### Benchmark versions and incremental reruns
+
+Benchmark results are tied to explicit version manifests in `benchmark-versions/`.
+Version `0.1` is the committed baseline and contains the ordered 135-task active
+suite plus these compatibility fingerprints:
+
+- `task_set_id`: ordered task refs for the version.
+- `task_fingerprint`: execution-relevant task files and manifest fields.
+- `task_interface_id`: public/editable files and fields visible to models.
+- `harness_id`: harness code, policies, prompts, runner scripts, and agent configs.
+- `environment_id`: Lean/Lake toolchain and runtime dependency pins.
+
+Create or refresh a version manifest:
+
+```bash
+python3 scripts/compute_fingerprints.py \
+  --version 0.2 \
+  --created-at 2026-06-16 \
+  --out benchmark-versions/v0.2.json
+```
+
+Plan incremental reruns for a model:
+
+```bash
+python3 scripts/plan_rerun.py \
+  --from benchmark-versions/v0.1.json \
+  --to benchmark-versions/v0.2.json \
+  --model minimax/minimax-m3 \
+  --results-manifest results/manifests/v0.1.json \
+  --json-out results/rerun-plans/minimax-v0.1-to-v0.2.json
+```
+
+The planner reruns all tasks when `harness_id` changes, reruns all tasks on an
+`environment_id` change unless `--allow-env-compatible` is passed, reruns added
+or changed task fingerprints, excludes removed tasks, and rejects reuse of
+zero-token, missing-verifier, or error-only artifacts.
+
+Use the JSON plan's `rerun[].task_ref` values as the changed-task run list, then
+publish detailed run directories as release archives rather than committing
+large per-task artifacts. The committed `results/manifests/v<version>.json`
+indexes those archives by release tag, asset name, byte size, SHA-256, caveats,
+and per-task result keys.
+
+Rebuild version-specific outputs from committed manifests:
+
+```bash
+python3 scripts/aggregate_version.py \
+  --version benchmark-versions/v0.1.json \
+  --results-manifest results/manifests/v0.1.json \
+  --out-dir .
+```
+
+This regenerates `results/summaries/v0.1.json`, `leaderboard.md`,
+`results.json`, and `badges/*.json`. Complete model rows are eligible for the
+main ranking. Partial rows are labeled partial and excluded from complete-rank
+comparisons.
 
 ### Verify reference proofs
 

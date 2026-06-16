@@ -1,0 +1,3930 @@
+{
+  "benchmark": "verity-benchmark",
+  "benchmark_version": "0.1",
+  "budget": "normal",
+  "created_at": "2026-06-16",
+  "environment_id": "sha256:a4e6af95c29687bb2a727dbae8d9627208e47f0e48ea7a9d26002fbddf156365",
+  "git_sha": "8c3cc8bc958ce03dbbb494090a703c668d8956ed",
+  "harness_id": "sha256:28a43f1654ee468f873f4b308b67fd4308913aa2aa77cd33e094267a8b9b448d",
+  "manifest_schema_version": 1,
+  "mode": "fair",
+  "task_count": 135,
+  "task_set_id": "sha256:7328d15b6379164a003ba24ab860e03d2557e1dd324f9bd37297666b9aa419da",
+  "tasks": [
+    {
+      "case_id": "alchemix/earmark_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/EarmarkPreservesInvariant.lean"
+      ],
+      "family_id": "alchemix",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/earmark_preserves_invariant.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:774b794f9a7647d760ef989b13f7bcc861fddbad43554d3da9aec0ba888f8bd2",
+      "task_id": "earmark_preserves_invariant",
+      "task_interface_id": "sha256:426a13e92a10bae2350fb254ffc22a9aa3102001ccb24cc375ed7c3bf5676c09",
+      "task_interface_version": 2,
+      "task_ref": "alchemix/earmark_conservation/earmark_preserves_invariant",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation._earmark_preserves_invariant",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "alchemix/earmark_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/RedeemPreservesInvariant.lean"
+      ],
+      "family_id": "alchemix",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/redeem_preserves_invariant.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:d0f7daa8f618c454a2072539c0331d080269d86863a269aed562119a0043716a",
+      "task_id": "redeem_preserves_invariant",
+      "task_interface_id": "sha256:840387ae2d1ff5b9ac6db8ffc1af7814627f104842e8a0757a8a789d427fd65a",
+      "task_interface_version": 2,
+      "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation.redeem_preserves_invariant",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "alchemix/earmark_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SubDebtPreservesInvariant.lean"
+      ],
+      "family_id": "alchemix",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/sub_debt_preserves_invariant.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:cb57b8ef4ae394132f6ca5cbaf82f7cbf0645769dd65581b933e85f3ae0e5f91",
+      "task_id": "sub_debt_preserves_invariant",
+      "task_interface_id": "sha256:ab6fd2127098720795ebc9ce9369e4d4ec1a03a2d54a4503e849c87bc9933c8e",
+      "task_interface_version": 2,
+      "task_ref": "alchemix/earmark_conservation/sub_debt_preserves_invariant",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation._subDebt_preserves_invariant",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "alchemix/earmark_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SubEarmarkedDebtPreservesInvariant.lean"
+      ],
+      "family_id": "alchemix",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/sub_earmarked_debt_preserves_invariant.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:82147bfb7293da9b19b30165942e2824e05dd7bafeb2f053a9b53a20163a6f36",
+      "task_id": "sub_earmarked_debt_preserves_invariant",
+      "task_interface_id": "sha256:e850ae4f7bed851bddce532c500b3f66d6ed8f58bc0c43170c9c3569d4ce631a",
+      "task_interface_version": 2,
+      "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation._subEarmarkedDebt_preserves_invariant",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "alchemix/earmark_conservation",
+      "category": "lazy_accrual_invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SyncAccountPreservesInvariant.lean"
+      ],
+      "family_id": "alchemix",
+      "implementation_files": [
+        "cases/alchemix/earmark_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Contract.lean"
+      ],
+      "manifest_path": "cases/alchemix/earmark_conservation/tasks/sync_account_preserves_invariant.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/alchemix/earmark_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:5328d40b4043da2d8028982cbe91baa3d865ec321e38940317dc7ca52f63e93f",
+      "task_id": "sync_account_preserves_invariant",
+      "task_interface_id": "sha256:21d0e3ba8600783b18b13de8dcaa70b7344256ea69850eed55af0b4e49f88bb2",
+      "task_interface_version": 2,
+      "task_ref": "alchemix/earmark_conservation/sync_account_preserves_invariant",
+      "theorem_name": "Benchmark.Cases.Alchemix.EarmarkConservation._sync_preserves_invariant",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "balancer/reclamm_swap_rounding",
+      "category": "swap_rounding_invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Balancer/ReClammSwapRounding/Tasks/OnSwapFixedVirtualBalancesProductNonDecreasing.lean"
+      ],
+      "family_id": "balancer",
+      "implementation_files": [
+        "cases/balancer/reclamm_swap_rounding/verity/Contract.lean",
+        "Benchmark/Cases/Balancer/ReClammSwapRounding/Contract.lean"
+      ],
+      "manifest_path": "cases/balancer/reclamm_swap_rounding/tasks/on_swap_fixed_virtual_balances_product_non_decreasing.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "arithmetic_rounding",
+      "specification_files": [
+        "cases/balancer/reclamm_swap_rounding/verity/Specs.lean",
+        "Benchmark/Cases/Balancer/ReClammSwapRounding/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:f62258b7734ffd2a3a1c7c5d52b5ffe55c1f4c8f9cb635c5216cf58242976b90",
+      "task_id": "on_swap_fixed_virtual_balances_product_non_decreasing",
+      "task_interface_id": "sha256:41a96e08b0df98d79b988f82afdf74b76417b074bf93c770febad2acb14959e2",
+      "task_interface_version": 2,
+      "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+      "theorem_name": "Benchmark.Cases.Balancer.ReClammSwapRounding.onSwap_fixed_virtual_balances_product_non_decreasing",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "cork/pool_solvency",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Cork/PoolSolvency/Tasks/SolvencyPreserved.lean"
+      ],
+      "family_id": "cork",
+      "implementation_files": [
+        "cases/cork/pool_solvency/verity/Contract.lean",
+        "Benchmark/Cases/Cork/PoolSolvency/Contract.lean"
+      ],
+      "manifest_path": "cases/cork/pool_solvency/tasks/solvency_preserved.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/cork/pool_solvency/verity/Specs.lean",
+        "Benchmark/Cases/Cork/PoolSolvency/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:800a8842472b1a5233cac1b7f7c04aab99cbad4f0087f7acae06d4b6beed37d3",
+      "task_id": "solvency_preserved",
+      "task_interface_id": "sha256:40b45dfe486949f2d6c924509f7f0048b025db38b5b0a1b71225ee101fe7f0bd",
+      "task_interface_version": 2,
+      "task_ref": "cork/pool_solvency/solvency_preserved",
+      "theorem_name": "Benchmark.Cases.Cork.PoolSolvency.solvency_preserved",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "damn_vulnerable_defi/side_entrance",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/DepositSetsPoolBalance.lean"
+      ],
+      "family_id": "damn_vulnerable_defi",
+      "implementation_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean"
+      ],
+      "manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/deposit_sets_pool_balance.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "storage_update",
+      "specification_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:c8accad0d25ff57d30035010ee1b79b4e574124591214692fce686a9ceba7716",
+      "task_id": "deposit_sets_pool_balance",
+      "task_interface_id": "sha256:c6940bfc183462b7c39c9f22c2858c47cc2ad76294c2c191fc2b09f0219707a0",
+      "task_interface_version": 2,
+      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
+      "theorem_name": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.deposit_sets_pool_balance",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "damn_vulnerable_defi/side_entrance",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/DepositSetsSenderCredit.lean"
+      ],
+      "family_id": "damn_vulnerable_defi",
+      "implementation_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean"
+      ],
+      "manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/deposit_sets_sender_credit.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "balance_credit_update",
+      "specification_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:bd16fdd1a8d8416a21127e1dc88bcf82c9cd8ae0b16d51345f130fcde415d39e",
+      "task_id": "deposit_sets_sender_credit",
+      "task_interface_id": "sha256:b260faf626cf0c32f3893eb52455b12012e33249806790d7bc1ecb1474b3a9fa",
+      "task_interface_version": 2,
+      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit",
+      "theorem_name": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.deposit_sets_sender_credit",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "damn_vulnerable_defi/side_entrance",
+      "category": "flash-loan",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/ExploitTraceDrainsPool.lean"
+      ],
+      "family_id": "damn_vulnerable_defi",
+      "implementation_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean"
+      ],
+      "manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/exploit_trace_drains_pool.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "partial",
+      "property_class": "exploit_trace",
+      "specification_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:f48fb4bb3364dded4c3ce2a479edff3aa603e70ba396768fc329adec1702b892",
+      "task_id": "exploit_trace_drains_pool",
+      "task_interface_id": "sha256:0d215f952b4eeb5b47e702c866fe6328d944454ab9653cee8f2b2a6c670bb0d9",
+      "task_interface_version": 2,
+      "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+      "theorem_name": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.exploit_trace_drains_pool",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "damn_vulnerable_defi/side_entrance",
+      "category": "flash-loan",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/FlashLoanViaDepositPreservesPoolBalance.lean"
+      ],
+      "family_id": "damn_vulnerable_defi",
+      "implementation_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean"
+      ],
+      "manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/flash_loan_via_deposit_preserves_pool_balance.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "partial",
+      "property_class": "accounting_invariant_break",
+      "specification_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:d860abebe2fdcf34de96209554bb910f2f64f5e63631a5124c5899330b91de92",
+      "task_id": "flash_loan_via_deposit_preserves_pool_balance",
+      "task_interface_id": "sha256:dc2db4266ae7f0c0209a27741dd68ce9736c37f1eed40237c156979b5fed9eba",
+      "task_interface_version": 2,
+      "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+      "theorem_name": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_preserves_pool_balance",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "damn_vulnerable_defi/side_entrance",
+      "category": "flash-loan",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/FlashLoanViaDepositSetsSenderCredit.lean"
+      ],
+      "family_id": "damn_vulnerable_defi",
+      "implementation_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Contract.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Contract.lean"
+      ],
+      "manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/flash_loan_via_deposit_sets_sender_credit.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "partial",
+      "property_class": "balance_credit_update",
+      "specification_files": [
+        "cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean",
+        "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:fbb589cb0a2418e10c2d3f7ba1c88cb1a702309f5785a96a3484e82bfd638744",
+      "task_id": "flash_loan_via_deposit_sets_sender_credit",
+      "task_interface_id": "sha256:5ac2867d01dcd0386a223c23fa5db0ef6aa59cba040716b9253bb9d57844329a",
+      "task_interface_version": 2,
+      "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit",
+      "theorem_name": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_sets_sender_credit",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "ethereum/deposit_contract_minimal",
+      "category": "bounds",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Ethereum/DepositContractMinimal/Tasks/ChainStartThreshold.lean"
+      ],
+      "family_id": "ethereum",
+      "implementation_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Contract.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean"
+      ],
+      "manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/chain_start_threshold.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "partial",
+      "property_class": "threshold_activation",
+      "specification_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Specs.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:8684bab6dc08020d4a2db7374a85d45acc5d9fd98b220db2e8b24bc0b019bc6f",
+      "task_id": "chain_start_threshold",
+      "task_interface_id": "sha256:34f26d604101386df171af29ea5dced2f32c6f68c16cfb83a4e7b5c5b3360edb",
+      "task_interface_version": 2,
+      "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+      "theorem_name": "Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_starts_chain_at_threshold",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "ethereum/deposit_contract_minimal",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Ethereum/DepositContractMinimal/Tasks/DepositCount.lean"
+      ],
+      "family_id": "ethereum",
+      "implementation_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Contract.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean"
+      ],
+      "manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/deposit_count.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "monotonic_counter",
+      "specification_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Specs.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:a9650ccb8d9c8032feec00a19f90df5ed7a6637fb9ea2a1be6d44fa01abebcf4",
+      "task_id": "deposit_count",
+      "task_interface_id": "sha256:98dc9db9254ff496efa91e9e9efd5e6e2ec03522b44844c4ea6732cd0c5f29a8",
+      "task_interface_version": 2,
+      "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+      "theorem_name": "Benchmark.Cases.Ethereum.DepositContractMinimal.deposit_increments_deposit_count",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "ethereum/deposit_contract_minimal",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Ethereum/DepositContractMinimal/Tasks/FullDepositIncrementsFullCount.lean"
+      ],
+      "family_id": "ethereum",
+      "implementation_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Contract.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean"
+      ],
+      "manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/full_deposit_increments_full_count.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "partial",
+      "property_class": "monotonic_counter",
+      "specification_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Specs.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:4159b8226b8b29993785381a73a1af2a70357b963b90319ded32e29dcf8e4930",
+      "task_id": "full_deposit_increments_full_count",
+      "task_interface_id": "sha256:02187b95281fa1329a3a455e3f9062e1a3c112f5247ad02e7b2ba3ee07c32ec4",
+      "task_interface_version": 2,
+      "task_ref": "ethereum/deposit_contract_minimal/full_deposit_increments_full_count",
+      "theorem_name": "Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_increments_full_count",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "ethereum/deposit_contract_minimal",
+      "category": "accounting",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Ethereum/DepositContractMinimal/Tasks/FullDepositPreservesPartialGap.lean"
+      ],
+      "family_id": "ethereum",
+      "implementation_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Contract.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean"
+      ],
+      "manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/full_deposit_preserves_partial_gap.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "partial",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Specs.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:24ed5f731c2cee2bfe50dcf9c3ffb9706ed3d7aa4f498462d86ebeab5a762d8a",
+      "task_id": "full_deposit_preserves_partial_gap",
+      "task_interface_id": "sha256:b12544995d85e3d95c9cfe0c8743a1b2a4b2bbd356872f5201b0f68ec8eebd23",
+      "task_interface_version": 2,
+      "task_ref": "ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap",
+      "theorem_name": "Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_preserves_partial_gap",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "ethereum/deposit_contract_minimal",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Ethereum/DepositContractMinimal/Tasks/SmallDepositPreservesFullCount.lean"
+      ],
+      "family_id": "ethereum",
+      "implementation_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Contract.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Contract.lean"
+      ],
+      "manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/small_deposit_preserves_full_count.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "threshold_partition",
+      "specification_files": [
+        "cases/ethereum/deposit_contract_minimal/verity/Specs.lean",
+        "Benchmark/Cases/Ethereum/DepositContractMinimal/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:04bdb147c344397dd0f3a173d71e5c08f09904a325279ab909b32e3c8e2c4f9d",
+      "task_id": "small_deposit_preserves_full_count",
+      "task_interface_id": "sha256:543cbed4584b0b43fe9f7234112cfabe7ab4870baccbd6e56e700084162854e5",
+      "task_interface_version": 2,
+      "task_ref": "ethereum/deposit_contract_minimal/small_deposit_preserves_full_count",
+      "theorem_name": "Benchmark.Cases.Ethereum.DepositContractMinimal.small_deposit_preserves_full_count",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "forgeyields/global_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/ClaimRedeemPreservesGlobalSolvency.lean"
+      ],
+      "family_id": "forgeyields",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/claim_redeem_preserves_global_solvency.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "guarded_solvency",
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:d381bbbbbc6e2773d612c8141307f24cf0a2c6623b8639f0a77b79e748da0ce2",
+      "task_id": "claim_redeem_preserves_global_solvency",
+      "task_interface_id": "sha256:053545f9045250cf2ba44e114555822fed1344947003bea7bf7d0feb9bb03ad0",
+      "task_interface_version": 2,
+      "task_ref": "forgeyields/global_solvency/claim_redeem_preserves_global_solvency",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.claimRedeem_preserves_global_solvency",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "forgeyields/global_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/DepositPreservesGlobalSolvency.lean"
+      ],
+      "family_id": "forgeyields",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/deposit_preserves_global_solvency.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "guarded_solvency",
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:5c5a706cd4f8627e02f026bb5193194f26513a46b6debe13d5411ee4d26c3545",
+      "task_id": "deposit_preserves_global_solvency",
+      "task_interface_id": "sha256:9e4fe8bb1ac0bdfb7a359b48e993125e0112ff476bf498d65460a4eaa0e2b1ea",
+      "task_interface_version": 2,
+      "task_ref": "forgeyields/global_solvency/deposit_preserves_global_solvency",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.deposit_preserves_global_solvency",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "forgeyields/global_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/HandlePreservesGlobalSolvency.lean"
+      ],
+      "family_id": "forgeyields",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/handle_preserves_global_solvency.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "guarded_solvency",
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:661aa6e4649da4f6e02c8d09e0e23dee1562c282268949dccd9a6cd3d7bb31ba",
+      "task_id": "handle_preserves_global_solvency",
+      "task_interface_id": "sha256:8bd3d3ef7e64853802c692c490f8b4c6211f3c87955bb703b1e085549dab8f57",
+      "task_interface_version": 2,
+      "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.handle_preserves_global_solvency",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "forgeyields/global_solvency",
+      "category": "invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/RedeemTokenGatewayDepreciatedPreservesGlobalSolvency.lean"
+      ],
+      "family_id": "forgeyields",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/redeem_token_gateway_depreciated_preserves_global_solvency.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "guarded_solvency",
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:6df4c55eb0818a40b2632a00a701b0d7bcae0430f1de34961aeb25184bb5b26a",
+      "task_id": "redeem_token_gateway_depreciated_preserves_global_solvency",
+      "task_interface_id": "sha256:3aefdb1b1bc5619aaa19a2e3378dc96c36466433099d3d392d050d5c3e298cbb",
+      "task_interface_version": 2,
+      "task_ref": "forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.redeemTokenGatewayDepreciated_preserves_global_solvency",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "forgeyields/global_solvency",
+      "category": "invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/ReportPreservesGlobalSolvency.lean"
+      ],
+      "family_id": "forgeyields",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/report_preserves_global_solvency.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "guarded_solvency",
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:7113b29e52806ad1fcbdd084eaf434cae6e339fad0a046bd7b65d295fb37042f",
+      "task_id": "report_preserves_global_solvency",
+      "task_interface_id": "sha256:6b12af357259a2b5672ce225a6d12d7c62beaa59f3fe5c35f3b1827651d1fe10",
+      "task_interface_version": 2,
+      "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.report_preserves_global_solvency",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "forgeyields/global_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/RequestRedeemPreservesGlobalSolvency.lean"
+      ],
+      "family_id": "forgeyields",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/request_redeem_preserves_global_solvency.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "guarded_solvency",
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:31dc95f7c7d93d5539427d588ae7ebb55903a710231599fd1d6d08d9f9b1b452",
+      "task_id": "request_redeem_preserves_global_solvency",
+      "task_interface_id": "sha256:8dd8c21cd5d58f3ecaa7aa7b84e150fe172271b64466cc53a13360a960b95656",
+      "task_interface_version": 2,
+      "task_ref": "forgeyields/global_solvency/request_redeem_preserves_global_solvency",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.requestRedeem_preserves_global_solvency",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "forgeyields/global_solvency",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean"
+      ],
+      "family_id": "forgeyields",
+      "implementation_files": [
+        "cases/forgeyields/global_solvency/verity/Contract.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Contract.lean"
+      ],
+      "manifest_path": "cases/forgeyields/global_solvency/tasks/transfer_remote_preserves_global_solvency.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "guarded_solvency",
+      "specification_files": [
+        "cases/forgeyields/global_solvency/verity/Specs.lean",
+        "Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:cb1468e5f0afac76d25d66e00534224a2196474d250e68e9508453e12726699b",
+      "task_id": "transfer_remote_preserves_global_solvency",
+      "task_interface_id": "sha256:1c7d2be69abe02950ed861a9caf15d5c8d58d11ec343ef682c76347fc7b66d33",
+      "task_interface_version": 2,
+      "task_ref": "forgeyields/global_solvency/transfer_remote_preserves_global_solvency",
+      "theorem_name": "Benchmark.Cases.ForgeYields.GlobalSolvency.transferRemote_preserves_global_solvency",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "ipor/plasma_vault_redeem_split",
+      "category": "invariant",
+      "difficulty": "low",
+      "editable_files": [
+        "Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/FeePayoutBoundedByFeeFree.lean"
+      ],
+      "family_id": "ipor",
+      "implementation_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Contract.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean"
+      ],
+      "manifest_path": "cases/ipor/plasma_vault_redeem_split/tasks/fee_payout_bounded_by_fee_free.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "fee_payout_bound",
+      "specification_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Specs.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:97750f73533d0f774e1b2bad7bc50cc5b69be492daf8498fc8058e4eefad289a",
+      "task_id": "fee_payout_bounded_by_fee_free",
+      "task_interface_id": "sha256:ab2a0acf171a90545926913562cdde367140fddeca269083a2660ab47c73476f",
+      "task_interface_version": 2,
+      "task_ref": "ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free",
+      "theorem_name": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "ipor/plasma_vault_redeem_split",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/IPOR/PlasmaVaultRedeemSplit/Tasks/RedeemPreservesPps.lean"
+      ],
+      "family_id": "ipor",
+      "implementation_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Contract.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Contract.lean"
+      ],
+      "manifest_path": "cases/ipor/plasma_vault_redeem_split/tasks/redeem_preserves_pps.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "pps_nondecrease",
+      "specification_files": [
+        "cases/ipor/plasma_vault_redeem_split/verity/Specs.lean",
+        "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:82e0b98709e4da85c4cb964534bdce7d831b11dd83e9a7b03021e6d03f5657a4",
+      "task_id": "redeem_preserves_pps",
+      "task_interface_id": "sha256:7e65419efaab91ec2518bbf239eb554d8ab327581756d4af6645550b2c4c8d08",
+      "task_interface_version": 2,
+      "task_ref": "ipor/plasma_vault_redeem_split/redeem_preserves_pps",
+      "theorem_name": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "kleros/sortition_trees",
+      "category": "probabilistic-encoding",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Kleros/SortitionTrees/Tasks/DrawIntervalMatchesWeights.lean"
+      ],
+      "family_id": "kleros",
+      "implementation_files": [
+        "cases/kleros/sortition_trees/verity/Contract.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Contract.lean"
+      ],
+      "manifest_path": "cases/kleros/sortition_trees/tasks/draw_interval_matches_weights.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "weighted_selection",
+      "specification_files": [
+        "cases/kleros/sortition_trees/verity/Specs.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:abf96da6ee0fc972708e1eccf58c460eb6057acd86bbd3fb4def97d41b4b648e",
+      "task_id": "draw_interval_matches_weights",
+      "task_interface_id": "sha256:996ac228fedf4281254b7f00ef9652885f860df06248a63fc53ab115fcce4ec1",
+      "task_interface_version": 2,
+      "task_ref": "kleros/sortition_trees/draw_interval_matches_weights",
+      "theorem_name": "Benchmark.Cases.Kleros.SortitionTrees.draw_interval_matches_weights",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "kleros/sortition_trees",
+      "category": "bounds",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Kleros/SortitionTrees/Tasks/DrawSelectsValidLeaf.lean"
+      ],
+      "family_id": "kleros",
+      "implementation_files": [
+        "cases/kleros/sortition_trees/verity/Contract.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Contract.lean"
+      ],
+      "manifest_path": "cases/kleros/sortition_trees/tasks/draw_selects_valid_leaf.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "output_range",
+      "specification_files": [
+        "cases/kleros/sortition_trees/verity/Specs.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:ef4fad63b66ee32971d07f6dac9f28bd09dd4c01591357b03741b05f13164e67",
+      "task_id": "draw_selects_valid_leaf",
+      "task_interface_id": "sha256:25ddcef48bec4cbd43401a18e157815bb209abced3bf8408d226cbc15e890570",
+      "task_interface_version": 2,
+      "task_ref": "kleros/sortition_trees/draw_selects_valid_leaf",
+      "theorem_name": "Benchmark.Cases.Kleros.SortitionTrees.draw_selects_valid_leaf",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "kleros/sortition_trees",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Kleros/SortitionTrees/Tasks/NodeIdBijection.lean"
+      ],
+      "family_id": "kleros",
+      "implementation_files": [
+        "cases/kleros/sortition_trees/verity/Contract.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Contract.lean"
+      ],
+      "manifest_path": "cases/kleros/sortition_trees/tasks/node_id_bijection.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "mapping_consistency",
+      "specification_files": [
+        "cases/kleros/sortition_trees/verity/Specs.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:b0368d4e62f5ad2f06f04c050ec0c92af7db44415dc61ac15e64f6c81792f660",
+      "task_id": "node_id_bijection",
+      "task_interface_id": "sha256:8cce0b072bee102889e2cc8749df86c56e8a6212282a1600f5cf06a355f99623",
+      "task_interface_version": 2,
+      "task_ref": "kleros/sortition_trees/node_id_bijection",
+      "theorem_name": "Benchmark.Cases.Kleros.SortitionTrees.node_id_bijection",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "kleros/sortition_trees",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Kleros/SortitionTrees/Tasks/ParentEqualsSumOfChildren.lean"
+      ],
+      "family_id": "kleros",
+      "implementation_files": [
+        "cases/kleros/sortition_trees/verity/Contract.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Contract.lean"
+      ],
+      "manifest_path": "cases/kleros/sortition_trees/tasks/parent_equals_sum_of_children.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "tree_conservation",
+      "specification_files": [
+        "cases/kleros/sortition_trees/verity/Specs.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:6d37ed525d3afc34eb9bcf30b9f951d1018d4354b30f86a4c5aeb192485539f1",
+      "task_id": "parent_equals_sum_of_children",
+      "task_interface_id": "sha256:9c8040526486c55112b718b7aeee1c7dbbea67f27da2c444db21a9e0b0dcf4c1",
+      "task_interface_version": 2,
+      "task_ref": "kleros/sortition_trees/parent_equals_sum_of_children",
+      "theorem_name": "Benchmark.Cases.Kleros.SortitionTrees.parent_equals_sum_of_children",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "kleros/sortition_trees",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Kleros/SortitionTrees/Tasks/RootEqualsSumOfLeaves.lean"
+      ],
+      "family_id": "kleros",
+      "implementation_files": [
+        "cases/kleros/sortition_trees/verity/Contract.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Contract.lean"
+      ],
+      "manifest_path": "cases/kleros/sortition_trees/tasks/root_equals_sum_of_leaves.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "partial",
+      "property_class": "total_conservation",
+      "specification_files": [
+        "cases/kleros/sortition_trees/verity/Specs.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:2d2139e753f36cff422c876438437150b46fbcfd7ba7b9b9d649ad14d244db15",
+      "task_id": "root_equals_sum_of_leaves",
+      "task_interface_id": "sha256:76d1da685f493e716719b15970d02af6fb6554e278ee6a73f2a6439d42a15c71",
+      "task_interface_version": 2,
+      "task_ref": "kleros/sortition_trees/root_equals_sum_of_leaves",
+      "theorem_name": "Benchmark.Cases.Kleros.SortitionTrees.root_equals_sum_of_leaves",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "kleros/sortition_trees",
+      "category": "data-structure",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Kleros/SortitionTrees/Tasks/RootMinusLeftEqualsRightSubtree.lean"
+      ],
+      "family_id": "kleros",
+      "implementation_files": [
+        "cases/kleros/sortition_trees/verity/Contract.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Contract.lean"
+      ],
+      "manifest_path": "cases/kleros/sortition_trees/tasks/root_minus_left_equals_right_subtree.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "partial",
+      "property_class": "subtree_partition",
+      "specification_files": [
+        "cases/kleros/sortition_trees/verity/Specs.lean",
+        "Benchmark/Cases/Kleros/SortitionTrees/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:2e29bc255b6c70a310ee3e37178fb4617407c8b0b287aab00df80ffdb7d36faf",
+      "task_id": "root_minus_left_equals_right_subtree",
+      "task_interface_id": "sha256:b85a73cd9f098ed6cba91768085cf336655017cd5a6c2b91511f1018fbecbebd",
+      "task_interface_version": 2,
+      "task_ref": "kleros/sortition_trees/root_minus_left_equals_right_subtree",
+      "theorem_name": "Benchmark.Cases.Kleros.SortitionTrees.root_minus_left_equals_right_subtree",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "lagoon/guardrails",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/ExactCompliance.lean"
+      ],
+      "family_id": "lagoon",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "manifest_path": "cases/lagoon/guardrails/tasks/exact_compliance.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "compliance_boundary",
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:3e81d02c0a646f6cd1f1e2403690eb5915ee1520b93def8d0913627868ec618c",
+      "task_id": "exact_compliance",
+      "task_interface_id": "sha256:d374b2409366ce218f4b87f439ad64e1ef5369355fbd0d79be06e4024dc2b427",
+      "task_interface_version": 2,
+      "task_ref": "lagoon/guardrails/exact_compliance",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "lagoon/guardrails",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/NegativeVariationBounded.lean"
+      ],
+      "family_id": "lagoon",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "manifest_path": "cases/lagoon/guardrails/tasks/negative_variation_bounded.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "compliance_boundary",
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:a627c7c94d826f0e88324d6ee2fd07ceaed2dfa77707639e7d066a93d88a0c02",
+      "task_id": "negative_variation_bounded",
+      "task_interface_id": "sha256:becf1e46fd6729c017b901327adfa39ad69bd485ba7dba071f26d1ba7120913c",
+      "task_interface_version": 2,
+      "task_ref": "lagoon/guardrails/negative_variation_bounded",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "lagoon/guardrails",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Lagoon/Guardrails/Tasks/PositiveVariationBounded.lean"
+      ],
+      "family_id": "lagoon",
+      "implementation_files": [
+        "cases/lagoon/guardrails/verity/Contract.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Contract.lean"
+      ],
+      "manifest_path": "cases/lagoon/guardrails/tasks/positive_variation_bounded.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "compliance_boundary",
+      "specification_files": [
+        "cases/lagoon/guardrails/verity/Specs.lean",
+        "Benchmark/Cases/Lagoon/Guardrails/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:069b9738558b5d33634196a29d6cad570cc84733c99c72dc6becfd95f181847a",
+      "task_id": "positive_variation_bounded",
+      "task_interface_id": "sha256:69184aa62371d68552e8688c61141fa84805bb69ec1f9da50791c619d71b3c20",
+      "task_interface_version": 2,
+      "task_ref": "lagoon/guardrails/positive_variation_bounded",
+      "theorem_name": "Benchmark.Cases.Lagoon.Guardrails.guardrails_positive_bounded",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "lido/vaulthub_locked",
+      "category": "arithmetic-lemma",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Lido/VaulthubLocked/Tasks/CeildivSandwich.lean"
+      ],
+      "family_id": "lido",
+      "implementation_files": [
+        "cases/lido/vaulthub_locked/verity/Contract.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Contract.lean"
+      ],
+      "manifest_path": "cases/lido/vaulthub_locked/tasks/ceildiv_sandwich.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/lido/vaulthub_locked/verity/Specs.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:fa2721fe76c367ebd077b820378ce161cbd814e7aa67a246f899f4361ebe1b11",
+      "task_id": "ceildiv_sandwich",
+      "task_interface_id": "sha256:8428f0adcf959c1fdd89bd499957ebcc4b265cca76388321cd0704fb607956d5",
+      "task_interface_version": 2,
+      "task_ref": "lido/vaulthub_locked/ceildiv_sandwich",
+      "theorem_name": "Benchmark.Cases.Lido.VaulthubLocked.ceildiv_sandwich",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "lido/vaulthub_locked",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Lido/VaulthubLocked/Tasks/LockedFundsSolvency.lean"
+      ],
+      "family_id": "lido",
+      "implementation_files": [
+        "cases/lido/vaulthub_locked/verity/Contract.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Contract.lean"
+      ],
+      "manifest_path": "cases/lido/vaulthub_locked/tasks/locked_funds_solvency.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/lido/vaulthub_locked/verity/Specs.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:6f15b3384abbceb8c0f7e40ef09b11879ea6770da39a8a7aec503f255d8a57f4",
+      "task_id": "locked_funds_solvency",
+      "task_interface_id": "sha256:ff3d615db2e5c4834c24ab3ef794a7ee072d0b1903403f03b380745ac395a9c0",
+      "task_interface_version": 2,
+      "task_ref": "lido/vaulthub_locked/locked_funds_solvency",
+      "theorem_name": "Benchmark.Cases.Lido.VaulthubLocked.locked_funds_solvency",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "lido/vaulthub_locked",
+      "category": "invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Lido/VaulthubLocked/Tasks/MaxLiabilitySharesBound.lean"
+      ],
+      "family_id": "lido",
+      "implementation_files": [
+        "cases/lido/vaulthub_locked/verity/Contract.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Contract.lean"
+      ],
+      "manifest_path": "cases/lido/vaulthub_locked/tasks/max_liability_shares_bound.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/lido/vaulthub_locked/verity/Specs.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:96b4c97b9278f5cb9738297465b87e503649af6f662e876e3ee12cfb656ca701",
+      "task_id": "max_liability_shares_bound",
+      "task_interface_id": "sha256:60707649591488705ae2c0656724dd507fc1d40a867daa0ef45e2cebb26f0bf9",
+      "task_interface_version": 2,
+      "task_ref": "lido/vaulthub_locked/max_liability_shares_bound",
+      "theorem_name": "Benchmark.Cases.Lido.VaulthubLocked.max_liability_shares_bound",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "lido/vaulthub_locked",
+      "category": "invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Lido/VaulthubLocked/Tasks/ReserveRatioBounds.lean"
+      ],
+      "family_id": "lido",
+      "implementation_files": [
+        "cases/lido/vaulthub_locked/verity/Contract.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Contract.lean"
+      ],
+      "manifest_path": "cases/lido/vaulthub_locked/tasks/reserve_ratio_bounds.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/lido/vaulthub_locked/verity/Specs.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:1044def5aaca9fc1697d1763851f4c11fba548392ed8cc76209a45f3c7a03eb8",
+      "task_id": "reserve_ratio_bounds",
+      "task_interface_id": "sha256:1c49ce823c18d656a3b19f9979a41eafb452a0f9845fd5aeeabf879247c5849b",
+      "task_interface_version": 2,
+      "task_ref": "lido/vaulthub_locked/reserve_ratio_bounds",
+      "theorem_name": "Benchmark.Cases.Lido.VaulthubLocked.reserve_ratio_bounds",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "lido/vaulthub_locked",
+      "category": "arithmetic-lemma",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Lido/VaulthubLocked/Tasks/SharesConversionMonotone.lean"
+      ],
+      "family_id": "lido",
+      "implementation_files": [
+        "cases/lido/vaulthub_locked/verity/Contract.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Contract.lean"
+      ],
+      "manifest_path": "cases/lido/vaulthub_locked/tasks/shares_conversion_monotone.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/lido/vaulthub_locked/verity/Specs.lean",
+        "Benchmark/Cases/Lido/VaulthubLocked/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:2d313110279f294cf4a5d32f056d23d9ade5ee9e8bc4a62e9b1538c388ae5ece",
+      "task_id": "shares_conversion_monotone",
+      "task_interface_id": "sha256:f3c9b6a9c24e974aeb696e133dea809094fa3a4c3a2c3d76d6e931c9557f8977",
+      "task_interface_version": 2,
+      "task_ref": "lido/vaulthub_locked/shares_conversion_monotone",
+      "theorem_name": "Benchmark.Cases.Lido.VaulthubLocked.shares_conversion_monotone",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "nexus_mutual/ramm_price_band",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/NexusMutual/RammPriceBand/Tasks/SyncSetsBookValue.lean"
+      ],
+      "family_id": "nexus_mutual",
+      "implementation_files": [
+        "cases/nexus_mutual/ramm_price_band/verity/Contract.lean",
+        "Benchmark/Cases/NexusMutual/RammPriceBand/Contract.lean"
+      ],
+      "manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_book_value.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "price_computation",
+      "specification_files": [
+        "cases/nexus_mutual/ramm_price_band/verity/Specs.lean",
+        "Benchmark/Cases/NexusMutual/RammPriceBand/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:eabef5dfcc85172bc31fbed385e4161c3e3c7b29f5ccdbcfce3b74a1311edbf7",
+      "task_id": "sync_sets_book_value",
+      "task_interface_id": "sha256:f681bb5733843f8865c5ef94bde84bf18280fb53d9b557c76761655f9be6d436",
+      "task_interface_version": 2,
+      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
+      "theorem_name": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_book_value",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "nexus_mutual/ramm_price_band",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/NexusMutual/RammPriceBand/Tasks/SyncSetsBuyPrice.lean"
+      ],
+      "family_id": "nexus_mutual",
+      "implementation_files": [
+        "cases/nexus_mutual/ramm_price_band/verity/Contract.lean",
+        "Benchmark/Cases/NexusMutual/RammPriceBand/Contract.lean"
+      ],
+      "manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_buy_price.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "price_computation",
+      "specification_files": [
+        "cases/nexus_mutual/ramm_price_band/verity/Specs.lean",
+        "Benchmark/Cases/NexusMutual/RammPriceBand/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:2b4e7d1bb326635ede148a518a1817fb91046862dbe9b1a530dc06721094db70",
+      "task_id": "sync_sets_buy_price",
+      "task_interface_id": "sha256:b9b8b6a5ba42657c7bfe620a0ceaf18c355b71878e93a8c9c12b03a7c0911247",
+      "task_interface_version": 2,
+      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_buy_price",
+      "theorem_name": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_buy_price",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "nexus_mutual/ramm_price_band",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/NexusMutual/RammPriceBand/Tasks/SyncSetsCapital.lean"
+      ],
+      "family_id": "nexus_mutual",
+      "implementation_files": [
+        "cases/nexus_mutual/ramm_price_band/verity/Contract.lean",
+        "Benchmark/Cases/NexusMutual/RammPriceBand/Contract.lean"
+      ],
+      "manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_capital.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "storage_write",
+      "specification_files": [
+        "cases/nexus_mutual/ramm_price_band/verity/Specs.lean",
+        "Benchmark/Cases/NexusMutual/RammPriceBand/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:2091929e8707cb2a937cda9f48bd09241e99e209beb4f194c22e56f6c2c23a0a",
+      "task_id": "sync_sets_capital",
+      "task_interface_id": "sha256:097ec728b6ca968810df46d79a950674c74a40db7a759ece903c787feb97c97d",
+      "task_interface_version": 2,
+      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_capital",
+      "theorem_name": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_capital",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "nexus_mutual/ramm_price_band",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/NexusMutual/RammPriceBand/Tasks/SyncSetsSellPrice.lean"
+      ],
+      "family_id": "nexus_mutual",
+      "implementation_files": [
+        "cases/nexus_mutual/ramm_price_band/verity/Contract.lean",
+        "Benchmark/Cases/NexusMutual/RammPriceBand/Contract.lean"
+      ],
+      "manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_sell_price.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "price_computation",
+      "specification_files": [
+        "cases/nexus_mutual/ramm_price_band/verity/Specs.lean",
+        "Benchmark/Cases/NexusMutual/RammPriceBand/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:c19055c984324f425e9000c73eff5cd431decfb8ca4fa9c5dd8d149d41c78a96",
+      "task_id": "sync_sets_sell_price",
+      "task_interface_id": "sha256:baeb370b0ad03baadb2b90c2c870340fc0882b380df8f3d2d1f471638d1f8c9c",
+      "task_interface_version": 2,
+      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_sell_price",
+      "theorem_name": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_sell_price",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DeltaComposeInternalErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_erc20_transfer_from_uses_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:dbfe9d68b652d514fbafa3bbd8902a29ab386f628292ceb51e40fb9dc2c34e67",
+      "task_id": "delta_compose_internal_erc20_transfer_from_uses_outer_caller",
+      "task_interface_id": "sha256:a5c847fc76459388bd5ec6392edac4fe9aa8cbc2cdd0490c07723a6aa7280e48",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_erc20_transferFrom_uses_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DeltaComposeInternalPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_permit2_transfer_from_uses_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:c160470b1ee284bff7d8e9a531d6e6cae9a0019fc6c5b952b2f72578e8726e94",
+      "task_id": "delta_compose_internal_permit2_transfer_from_uses_outer_caller",
+      "task_interface_id": "sha256:23558362fe4f96b2da91e696faddf3e90d28a9b6b8737f170ebbd0750ba0c108",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_permit2_transferFrom_uses_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DirectErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_erc20_transfer_from_uses_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:3573305711cf92fcdd862662ab6c07859e4f4f31fdfcee4c423de0e5e0d72773",
+      "task_id": "direct_erc20_transfer_from_uses_outer_caller",
+      "task_interface_id": "sha256:0355fbfd24b5ecc9d206e6fb160499ca6e8e62e4ad49415a240a1e99dad5df96",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_erc20_transferFrom_uses_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/DirectPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_permit2_transfer_from_uses_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:96ffd49efe18458e49dd74f7b18c006bc84eb79f144e171df9d27d65effee15b",
+      "task_id": "direct_permit2_transfer_from_uses_outer_caller",
+      "task_interface_id": "sha256:59bc223d8ac0a04450cc8b8fd22a7878bb27fac3525b0f33d9d847c7c5cd2958",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_permit2_transferFrom_uses_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "callback_caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/FlashCallbackErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/flash_callback_erc20_transfer_from_uses_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:e5ec3d8cf79920a8ca13aa38d9599dde8fca4776b63ecde9e6c27fcae9c766c7",
+      "task_id": "flash_callback_erc20_transfer_from_uses_outer_caller",
+      "task_interface_id": "sha256:47f7592cae5c6d3c82f39b356f21568ccd62f6633d8fe0ece216cc65a62c1f85",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.flash_callback_erc20_transferFrom_uses_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "nested_callback_caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/NestedFlashAndSwapCallbacksKeepOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/nested_flash_and_swap_callbacks_keep_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:478e7aef308dcea95c9bf952188f7a8a25a616623a3535ba49fce4696b6f2d0f",
+      "task_id": "nested_flash_and_swap_callbacks_keep_outer_caller",
+      "task_interface_id": "sha256:a232951b86fd8e4d0563d5958dabdaa39ad5f09f9ac6fe640b75829bb0c7971f",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.nested_flash_and_swap_callbacks_keep_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "callback_caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/SwapCallbackPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/swap_callback_permit2_transfer_from_uses_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:3aef54a1b2af102a083ad42cbae8c192d82bea47884ccb2faf211fa9d7140bf2",
+      "task_id": "swap_callback_permit2_transfer_from_uses_outer_caller",
+      "task_interface_id": "sha256:d2e44ae26f0ba5ff5c26b0780fa6771c62ee1ef4be10eec507ad49297522a2c5",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.swap_callback_permit2_transferFrom_uses_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/TransfersErc20TransferFromUsesOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_erc20_transfer_from_uses_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:981edee5e30bf7de18f90b7d75f8e1f8ae8fc6793563625a8f25060d396dd41f",
+      "task_id": "transfers_erc20_transfer_from_uses_outer_caller",
+      "task_interface_id": "sha256:b03241eba929bc4e7acb085e040606eee7c250987affb04c92f4f06b2f7d7ad2",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_erc20_transferFrom_uses_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/TransfersPermit2TransferFromUsesOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_permit2_transfer_from_uses_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:ad0429f12263b7cfda3054db6d5d3601b871de6ff53975f1f500a7d157aa0c15",
+      "task_id": "transfers_permit2_transfer_from_uses_outer_caller",
+      "task_interface_id": "sha256:7059530c0924ee37440c69af6e19798ba633248930813ace9524d52e0eca0932",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_permit2_transferFrom_uses_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "onedelta/caller_address_integrity",
+      "category": "callback_direct_pull_caller_address_integrity",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/V3CallbackDirectTransferFromUsesOuterCaller.lean"
+      ],
+      "family_id": "onedelta",
+      "implementation_files": [
+        "cases/onedelta/caller_address_integrity/verity/Contract.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Contract.lean"
+      ],
+      "manifest_path": "cases/onedelta/caller_address_integrity/tasks/v3_callback_direct_transfer_from_uses_outer_caller.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "access_control_identity",
+      "specification_files": [
+        "cases/onedelta/caller_address_integrity/verity/Specs.lean",
+        "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:29dfd53c882e6f4575b7a69a62c5d3ed5fe161aaa37d2b28979202bd5dec2ea2",
+      "task_id": "v3_callback_direct_transfer_from_uses_outer_caller",
+      "task_interface_id": "sha256:3d4f8f37d98eb97e6d404f09d538e743eff24c47633c6b1cd45579ed88ad961a",
+      "task_interface_version": 2,
+      "task_ref": "onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller",
+      "theorem_name": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.v3_callback_direct_transferFrom_uses_outer_caller",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimMarksBothClaimed.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_marks_both_claimed.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "authorization_state",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:3e07ef03df886e7db39b72d420b694d313cd2e7f2668c436ddffc4025cecee22",
+      "task_id": "both_claim_marks_both_claimed",
+      "task_interface_id": "sha256:b37e352970718f9eba13c5a145b331a23f149bf6411acc6133752d888c950970",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_marks_both_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimUpdatesRoundClaimed.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_updates_round_claimed.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "accounting_update",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:3119ba9ca542d8b08c5a1bdc416e09c726609563a0da554051add05b50373016",
+      "task_id": "both_claim_updates_round_claimed",
+      "task_interface_id": "sha256:272671858c21abe52b301d526d8c394dbea878f8fd812c78dd82f2c6b7061e7f",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_round_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimUpdatesTotalAllocated.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_updates_total_allocated.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "accounting_update",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:1b1efefe199eb8afcb5e2fab4d005941b8e87f1bb409537b1a9ed3888bce8887",
+      "task_id": "both_claim_updates_total_allocated",
+      "task_interface_id": "sha256:68ed4c7709d752fd91599f1528326ab7c51b3c801130f51075f3896846d21322",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_total_allocated",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothClaimedPlusAllocatedConserved.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claimed_plus_allocated_conserved.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:00bfcd8ce6b87735c3efa6127fe98d852621bd8b7c7584c7bc5f870d03a1c159",
+      "task_id": "both_claimed_plus_allocated_conserved",
+      "task_interface_id": "sha256:543d1365c328d7f808131695b41ea5099dd1e14af1beef5e8fb7e4e85098237a",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_claimed_plus_allocated_conserved",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "equivalence",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothMatchesIndependentClaims.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_matches_independent_claims.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "complete",
+      "property_class": "noninterference",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:799ddbc1d5b025b07897cd98c5e56b707413f322f13257b564902bf21c9043bb",
+      "task_id": "both_matches_independent_claims",
+      "task_interface_id": "sha256:3e6734598ba1397784615ee52bc42bc12f848bb608aff50b0f899e7bd53ae4ee",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_matches_independent_claims",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothNoOverclaim.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_no_overclaim.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:3e36875b9c93485aeb21290b1001dd50032a293ff50a07c053054d5ee9a04279",
+      "task_id": "both_no_overclaim",
+      "task_interface_id": "sha256:84bec6319b080a602e90dd78021306ceaaecd45b9893cb3084ed5bd5d4ac7be8",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_no_overclaim",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_preserves_round_bounds",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "revert",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothUsdcBoundViolationRejected.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_usdc_bound_violation_rejected.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:7f9501471c363f6c95a53c51198b4eb6646d44fe6517e1cd1522f558412f27ec",
+      "task_id": "both_usdc_bound_violation_rejected",
+      "task_interface_id": "sha256:68d8bf71fd338b575cdbcbde256988a162d359d9398c69c4cbb0f396d50fd288",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_exceeds_total",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "revert",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothUsdcDoubleClaimRejected.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_usdc_double_claim_rejected.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "authorization_state",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:92146d9a221b60f5cbb3f3cdcb73816cb7aa2ad02e390e9f7231fd9393721bc6",
+      "task_id": "both_usdc_double_claim_rejected",
+      "task_interface_id": "sha256:e7711fff5e4dd430412abe52e57ce92027635822e15e27ea620440f31ddbfec4",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_already_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "revert",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothWethBoundViolationRejected.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_weth_bound_violation_rejected.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:039b5852f1273f8a19b94edc1c1fd2b401ab0b8665ca7c7c3743c110b0e7e3f6",
+      "task_id": "both_weth_bound_violation_rejected",
+      "task_interface_id": "sha256:51c80da83c351d6ed2d55fc66911f5c7f82e7219edd21160a7043d52c563357f",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_exceeds_total",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "revert",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BothWethDoubleClaimRejected.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_weth_double_claim_rejected.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "authorization_state",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:8c814fadd894fc40e3280ffa4feb485e023b00f4c60177a1c1d1beabaf966d3c",
+      "task_id": "both_weth_double_claim_rejected",
+      "task_interface_id": "sha256:32b61029096f25629e0692c40c499f99e8ea195650e14ee2aa73baca9aef7df8",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_already_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "bounds",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/BoundViolationRejected.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/bound_violation_rejected.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:d8a0a48883c0d566b564532cc09740b0c8460784758abea39abac43daf72c8a4",
+      "task_id": "bound_violation_rejected",
+      "task_interface_id": "sha256:203bccb304c8037ef8a6bbc33b5da8125b0b510ada49fb783e5362d2e77cf252",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_exceeds_total",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/ClaimMarksUser.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claim_marks_user.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "authorization_state",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:879fd4db4b44ee22445254be5186419e401f8a763f40a69829b9ecb22c99f1b9",
+      "task_id": "claim_marks_user",
+      "task_interface_id": "sha256:274826ffd64c58d600cf1a5f37bd573bf12828fd00b64f7e3def9198161564af",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_marks_user_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/ClaimUpdatesRoundClaimed.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claim_updates_round_claimed.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "accounting_update",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:5695862ac10947566375ffe46215eecf5253c2a2c5e4b384702c6f2056bfdf38",
+      "task_id": "claim_updates_round_claimed",
+      "task_interface_id": "sha256:9e536a9cb9b19fbeb6a6151e869afce35d4c9eaa8c7190c029f0e0b69a763e29",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_round_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/ClaimUpdatesTotalAllocated.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claim_updates_total_allocated.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "accounting_update",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:83cd0cfa3cf2d16502c1daa923dec67cc50a9bd7567e666ea68af1964c743d4b",
+      "task_id": "claim_updates_total_allocated",
+      "task_interface_id": "sha256:85672f0d685ae1b7bd2c53ac6029876f17612c50b048e4c6936a786c11797236",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_total_allocated",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/ClaimedPlusAllocatedConserved.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claimed_plus_allocated_conserved.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:b08a233463bce000848699fb04dfd8455347deb13b033500c194a92664b1505a",
+      "task_id": "claimed_plus_allocated_conserved",
+      "task_interface_id": "sha256:b140cbdfe5be191c0ea9f17bdb14b7e3b104d065ff6e787265e63f26c3bc7ba7",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_claimed_plus_allocated_conserved",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/DoubleClaimRejected.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/double_claim_rejected.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "authorization_state",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:63aa8a86701b31c84d5cb56343a996a393b9608f077ba81186e032e5938428bd",
+      "task_id": "double_claim_rejected",
+      "task_interface_id": "sha256:457caf9453c920803b1af5fa64acd7a05d43e52a43a58af04836ff8169dc3d7e",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/double_claim_rejected",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_already_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/NoOverclaim.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/no_overclaim.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:63259408ee4bb06984e4eaa46899c79fe9099fd6f47b27c2c5c8f936a9e5db9f",
+      "task_id": "no_overclaim",
+      "task_interface_id": "sha256:21f5db4b4e957d2f4a31b8de110ffd5f183d9fe08d79bd1f1ee1308248b51568",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/no_overclaim",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_round_bound",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "isolation",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/UsdcPreservesWethState.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/usdc_preserves_weth_state.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "frame_property",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:6149dd735c02e0bb86ee20484a4826450718838761135cc894626de6502b096e",
+      "task_id": "usdc_preserves_weth_state",
+      "task_interface_id": "sha256:3f2c1b70ddaa390d8d88f83bddf41cd6860ae2d2ec39750f9579f03e585cf8d3",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_weth_state",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "bounds",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethBoundViolationRejected.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_bound_violation_rejected.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:31cac868840beee92c4097fbfab955408a08e76483c382e5b72d12f6f2eeaf98",
+      "task_id": "weth_bound_violation_rejected",
+      "task_interface_id": "sha256:cdaddc28cf9a671b9c386533fabd607b78d10d85b1ad394a4fadab1008ff4214",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_exceeds_total",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimMarksUser.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_marks_user.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "authorization_state",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:5d61af8fe65314dcd348644abc63a785b5bafd5841bb6a071b3bfee777910c72",
+      "task_id": "weth_claim_marks_user",
+      "task_interface_id": "sha256:84e613beb30b204a2507bd2b4474915fc78e94a042aed5858e15c76cb26e2c8f",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_marks_user_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimUpdatesRoundClaimed.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_updates_round_claimed.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "accounting_update",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:6b6e594838be292fbec806753ecab876e4982c810c8541106d53042270a93ee5",
+      "task_id": "weth_claim_updates_round_claimed",
+      "task_interface_id": "sha256:2d0dbea2791c06e5de4d6237440ee4253add4fcc312bdf3620ce74080cea4e08",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_round_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimUpdatesTotalAllocated.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_updates_total_allocated.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "accounting_update",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:35ed97c6a0075490de98b92aa7e65abb7a91952dd39d41c5f914c769973c494b",
+      "task_id": "weth_claim_updates_total_allocated",
+      "task_interface_id": "sha256:cddee075d10c782bb729e13f313ce70a56c9a1fec2989f1f601a5d40eb82d03d",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_total_allocated",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethClaimedPlusAllocatedConserved.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claimed_plus_allocated_conserved.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:019ef28ab0f0763ef3c2a90d19d6f3e4f84a5c1bf48dc724ee25e6842c48001d",
+      "task_id": "weth_claimed_plus_allocated_conserved",
+      "task_interface_id": "sha256:bcfe46e59cf62caa66153795517624ef10f7bf6292c6ee4536d8436026b56246",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_claimed_plus_allocated_conserved",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethDoubleClaimRejected.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_double_claim_rejected.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "authorization_state",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:5db035430d37e1a3004cb3a9ed9c44142b3eeb7047f61912062e4d20bdf9d04e",
+      "task_id": "weth_double_claim_rejected",
+      "task_interface_id": "sha256:c414d3024196f5643a12d6ce6616a458d71e6625cf4bdc5b3800546ea4e8c7fa",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_already_claimed",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethNoOverclaim.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_no_overclaim.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:40de42646654f6d6b10e56cf6a8d2793d82e3c4c517086355ed3d4ec6631e6dd",
+      "task_id": "weth_no_overclaim",
+      "task_interface_id": "sha256:8ead53650ff76b437a3848c111dc8a602eb9d9b73f25d820793b89a0eea4b313",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_round_bound",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "paladin_votes/stream_recovery_claim_usdc",
+      "category": "isolation",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean"
+      ],
+      "family_id": "paladin_votes",
+      "implementation_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Contract.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Contract.lean"
+      ],
+      "manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_preserves_usdc_state.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "frame_property",
+      "specification_files": [
+        "cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean",
+        "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:34e82da6bcbf2dbdb72fee6aa47315ec6649a21fdcbf1128f7ecc3429cf0879c",
+      "task_id": "weth_preserves_usdc_state",
+      "task_interface_id": "sha256:371b1e46bdde5072a8b695c1b3bdc3d2fa57afbc01372c74b07c24c1752318da",
+      "task_interface_version": 2,
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state",
+      "theorem_name": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_usdc_state",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "piku/fund_conservation",
+      "category": "fund_conservation",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidPreservesFundConservation.lean"
+      ],
+      "family_id": "piku",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_preserves_fund_conservation.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:7b2e879f2b172853d2677ba63263132474f181559995267aced4c47508535b54",
+      "task_id": "amount_paid_preserves_fund_conservation",
+      "task_interface_id": "sha256:f1441e960b5e9f3bcb9bafe185287667b706be5cb50fa7a93ab6ab29f2560245",
+      "task_interface_version": 2,
+      "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation.amountPaid_preserves_fund_conservation",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "piku/fund_conservation",
+      "category": "fund_conservation",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/AmountPaidRecordsDistribution.lean"
+      ],
+      "family_id": "piku",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_records_distribution.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_effect",
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:bb5ca15eff672e670192e10902e610c52912f00fc4fd5d6f5a66b313f1ed89e8",
+      "task_id": "amount_paid_records_distribution",
+      "task_interface_id": "sha256:c650f3eedebf43920081553f71620f578302f39bd206e9bb9de2c79bf653f0b6",
+      "task_interface_version": 2,
+      "task_ref": "piku/fund_conservation/amount_paid_records_distribution",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation.amountPaid_records_distribution",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "piku/fund_conservation",
+      "category": "fund_conservation",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderPreservesFundConservation.lean"
+      ],
+      "family_id": "piku",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "manifest_path": "cases/piku/fund_conservation/tasks/sell_order_preserves_fund_conservation.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:938bc90bcf19fa20e0b0996a6272cd02f411afcf4ff384b867edb859e8a91b60",
+      "task_id": "sell_order_preserves_fund_conservation",
+      "task_interface_id": "sha256:3168a2ddb0c88d67c0d4247d86f02f60176cb6d35247046b4575d6d0446caf04",
+      "task_interface_version": 2,
+      "task_ref": "piku/fund_conservation/sell_order_preserves_fund_conservation",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation._sellOrder_preserves_fund_conservation",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "piku/fund_conservation",
+      "category": "fund_conservation",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Piku/FundConservation/Tasks/SellOrderRecordsRedemptionBuckets.lean"
+      ],
+      "family_id": "piku",
+      "implementation_files": [
+        "cases/piku/fund_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Piku/FundConservation/Contract.lean"
+      ],
+      "manifest_path": "cases/piku/fund_conservation/tasks/sell_order_records_redemption_buckets.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_effect",
+      "specification_files": [
+        "cases/piku/fund_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Piku/FundConservation/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:64f5ae1f7bf527accf72fc69f04bf1704ec77c2b074c6bef988c1cf7154fd98d",
+      "task_id": "sell_order_records_redemption_buckets",
+      "task_interface_id": "sha256:1cf4a588456778c4da4335616d185da4d9545a5f24d0c253cee5ed57a1c3c469",
+      "task_interface_version": 2,
+      "task_ref": "piku/fund_conservation/sell_order_records_redemption_buckets",
+      "theorem_name": "Benchmark.Cases.Piku.FundConservation._sellOrder_records_redemption_buckets",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "polaris/bonding_curve",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Polaris/BondingCurve/Tasks/buy_preserves_reserve_ratio_zero.lean"
+      ],
+      "family_id": "polaris",
+      "implementation_files": [
+        "cases/polaris/bonding_curve/verity/Contract.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Contract.lean"
+      ],
+      "manifest_path": "cases/polaris/bonding_curve/tasks/buy_preserves_reserve_ratio_zero.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "reserve_state_transition",
+      "specification_files": [
+        "cases/polaris/bonding_curve/verity/Specs.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:d43888bec2a5a43c34a488e82184badb04cdb6912c53a3ade8b0daa522286989",
+      "task_id": "buy_preserves_reserve_ratio_zero",
+      "task_interface_id": "sha256:a224d8872a83a9fe5da8719396b969f0cb4df90a819e91888f0d1bc008ac4d71",
+      "task_interface_version": 2,
+      "task_ref": "polaris/bonding_curve/buy_preserves_reserve_ratio_zero",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "polaris/bonding_curve",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Polaris/BondingCurve/Tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.lean"
+      ],
+      "family_id": "polaris",
+      "implementation_files": [
+        "cases/polaris/bonding_curve/verity/Contract.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Contract.lean"
+      ],
+      "manifest_path": "cases/polaris/bonding_curve/tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "reserve_state_transition",
+      "specification_files": [
+        "cases/polaris/bonding_curve/verity/Specs.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:5c2f705119eb085ddb2e3c49a44e922edee4371330ecfd2df5f7e8c77078b7c0",
+      "task_id": "floor_sell_and_burn_preserves_reserve_ratio_zero",
+      "task_interface_id": "sha256:a8fe79b475bf2575f89a383077f0cab022fc9ef705d46ff57569d5f2a944a3c9",
+      "task_interface_version": 2,
+      "task_ref": "polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.floorSellAndBurn_preserves_reserve_ratio_zero",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "polaris/bonding_curve",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Polaris/BondingCurve/Tasks/init_reserve_ratio_zero.lean"
+      ],
+      "family_id": "polaris",
+      "implementation_files": [
+        "cases/polaris/bonding_curve/verity/Contract.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Contract.lean"
+      ],
+      "manifest_path": "cases/polaris/bonding_curve/tasks/init_reserve_ratio_zero.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "reserve_state_transition",
+      "specification_files": [
+        "cases/polaris/bonding_curve/verity/Specs.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:aa88f335ae3f9c2a08e6adbd1d35b26bcc6d6d7b36c91b72fee5b8bbd8a643fb",
+      "task_id": "init_reserve_ratio_zero",
+      "task_interface_id": "sha256:b61ab1781d07a2322384a44856e221c274b7a49e4d590dc86b7e55914584e9ac",
+      "task_interface_version": 2,
+      "task_ref": "polaris/bonding_curve/init_reserve_ratio_zero",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.init_reserve_ratio_zero",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "polaris/bonding_curve",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Polaris/BondingCurve/Tasks/sell_preserves_reserve_ratio_zero.lean"
+      ],
+      "family_id": "polaris",
+      "implementation_files": [
+        "cases/polaris/bonding_curve/verity/Contract.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Contract.lean"
+      ],
+      "manifest_path": "cases/polaris/bonding_curve/tasks/sell_preserves_reserve_ratio_zero.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "reserve_state_transition",
+      "specification_files": [
+        "cases/polaris/bonding_curve/verity/Specs.lean",
+        "Benchmark/Cases/Polaris/BondingCurve/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:c4f4b74f729120273a9f1e258103b02914ce136426e52a565388bd4e8e177222",
+      "task_id": "sell_preserves_reserve_ratio_zero",
+      "task_interface_id": "sha256:67fe82db7d49bacf4839aa93e47435012db00ee2cf0ff75236793710e90d49b4",
+      "task_interface_version": 2,
+      "task_ref": "polaris/bonding_curve/sell_preserves_reserve_ratio_zero",
+      "theorem_name": "Benchmark.Cases.Polaris.BondingCurve.sell_preserves_reserve_ratio_zero",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "polygon/agglayer_bridge",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.lean"
+      ],
+      "family_id": "polygon",
+      "implementation_files": [
+        "cases/polygon/agglayer_bridge/verity/Contract.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean"
+      ],
+      "manifest_path": "cases/polygon/agglayer_bridge/tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "authorization_state",
+      "specification_files": [
+        "cases/polygon/agglayer_bridge/verity/Specs.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:f6dd02f40f3f17ee66ece6d389c8317267b9c380f4ec5f7de83454704c68afe1",
+      "task_id": "claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "task_interface_id": "sha256:af0de8dadde167ae7699068bbade117d43f3a5db584e1266f8a09b1f173807aa",
+      "task_interface_version": 2,
+      "task_ref": "polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "theorem_name": "Benchmark.Cases.Polygon.AgglayerBridge.claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "polygon/agglayer_bridge",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.lean"
+      ],
+      "family_id": "polygon",
+      "implementation_files": [
+        "cases/polygon/agglayer_bridge/verity/Contract.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Contract.lean"
+      ],
+      "manifest_path": "cases/polygon/agglayer_bridge/tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "authorization_state",
+      "specification_files": [
+        "cases/polygon/agglayer_bridge/verity/Specs.lean",
+        "Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:83c09654a23f7ef01fd92a8b5df42ff470d14270b652299e52a300c173f1f208",
+      "task_id": "claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "task_interface_id": "sha256:34e347ea6d25c8a3bb75ee11bb14b2ad99e449ab587fd0f9ef1bf01b3884a84f",
+      "task_interface_version": 2,
+      "task_ref": "polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "theorem_name": "Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "reserve/auction_price_band",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceAtEndTime.lean"
+      ],
+      "family_id": "reserve",
+      "implementation_files": [
+        "cases/reserve/auction_price_band/verity/Contract.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean"
+      ],
+      "manifest_path": "cases/reserve/auction_price_band/tasks/price_at_end_time.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "price_computation",
+      "specification_files": [
+        "cases/reserve/auction_price_band/verity/Specs.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:c804eebd275aa5e77f98c18998a867f3a241d16c1b6f0ad4d73492c06afcbbf7",
+      "task_id": "price_at_end_time",
+      "task_interface_id": "sha256:d1e6afb12e4d03546e988537a925553898f4cdad453528dc9276cbf9991701b2",
+      "task_interface_version": 2,
+      "task_ref": "reserve/auction_price_band/price_at_end_time",
+      "theorem_name": "Benchmark.Cases.Reserve.AuctionPriceBand.price_at_end_time",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "reserve/auction_price_band",
+      "category": "arithmetic-invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceAtStartTime.lean"
+      ],
+      "family_id": "reserve",
+      "implementation_files": [
+        "cases/reserve/auction_price_band/verity/Contract.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean"
+      ],
+      "manifest_path": "cases/reserve/auction_price_band/tasks/price_at_start_time.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "price_computation",
+      "specification_files": [
+        "cases/reserve/auction_price_band/verity/Specs.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:c1251e23e36e4b15e78f32eb00079238eedaf56dd877fcff30f7c81b23a6a007",
+      "task_id": "price_at_start_time",
+      "task_interface_id": "sha256:70de0efb83462c273a68dac130c2d0262052841642ccabba6d6ee9b2f404e564",
+      "task_interface_version": 2,
+      "task_ref": "reserve/auction_price_band/price_at_start_time",
+      "theorem_name": "Benchmark.Cases.Reserve.AuctionPriceBand.price_at_start_time",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "reserve/auction_price_band",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceLowerBound.lean"
+      ],
+      "family_id": "reserve",
+      "implementation_files": [
+        "cases/reserve/auction_price_band/verity/Contract.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean"
+      ],
+      "manifest_path": "cases/reserve/auction_price_band/tasks/price_lower_bound.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "price_band",
+      "specification_files": [
+        "cases/reserve/auction_price_band/verity/Specs.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:06986ba35df88114043170056d34e61f382becc481eca34f354b423237fd8d34",
+      "task_id": "price_lower_bound",
+      "task_interface_id": "sha256:909629e53432e6b6067768a1996c43bba1ce70e5d07cd47c835a1386c9ad8e4e",
+      "task_interface_version": 2,
+      "task_ref": "reserve/auction_price_band/price_lower_bound",
+      "theorem_name": "Benchmark.Cases.Reserve.AuctionPriceBand.price_lower_bound",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "reserve/auction_price_band",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Reserve/AuctionPriceBand/Tasks/PriceUpperBound.lean"
+      ],
+      "family_id": "reserve",
+      "implementation_files": [
+        "cases/reserve/auction_price_band/verity/Contract.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Contract.lean"
+      ],
+      "manifest_path": "cases/reserve/auction_price_band/tasks/price_upper_bound.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "price_band",
+      "specification_files": [
+        "cases/reserve/auction_price_band/verity/Specs.lean",
+        "Benchmark/Cases/Reserve/AuctionPriceBand/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:2ff1d3300d57e888e21273ef5f59d79e6afa491c5c9874675c79daaca511bde1",
+      "task_id": "price_upper_bound",
+      "task_interface_id": "sha256:06e68e64a71b3f16ab47291a178da5cea812a4460630c69b2308a2175ca2afcb",
+      "task_interface_version": 2,
+      "task_ref": "reserve/auction_price_band/price_upper_bound",
+      "theorem_name": "Benchmark.Cases.Reserve.AuctionPriceBand.price_upper_bound",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "rootstock/flyover_quote_lifecycle",
+      "category": "bridge_quote_lifecycle",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Rootstock/FlyoverQuoteLifecycle/Tasks/DepositPegOutRegistersRequiredAmount.lean"
+      ],
+      "family_id": "rootstock",
+      "implementation_files": [
+        "cases/rootstock/flyover_quote_lifecycle/verity/Contract.lean",
+        "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Contract.lean"
+      ],
+      "manifest_path": "cases/rootstock/flyover_quote_lifecycle/tasks/deposit_peg_out_registers_required_amount.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "lifecycle_accounting",
+      "specification_files": [
+        "cases/rootstock/flyover_quote_lifecycle/verity/Specs.lean",
+        "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:bf89456de7c9197cd270b229e8acab264dadf77f8eb8515bfb0007e4b676b97c",
+      "task_id": "deposit_peg_out_registers_required_amount",
+      "task_interface_id": "sha256:50c5c67a770a0ecdc4b9fded949aa97997bce519004abd7366beed4e1cda7864",
+      "task_interface_version": 2,
+      "task_ref": "rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount",
+      "theorem_name": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.depositPegOut_registers_required_amount",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "rootstock/flyover_quote_lifecycle",
+      "category": "bridge_quote_lifecycle",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Rootstock/FlyoverQuoteLifecycle/Tasks/RefundPegOutConservesQuoteAmount.lean"
+      ],
+      "family_id": "rootstock",
+      "implementation_files": [
+        "cases/rootstock/flyover_quote_lifecycle/verity/Contract.lean",
+        "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Contract.lean"
+      ],
+      "manifest_path": "cases/rootstock/flyover_quote_lifecycle/tasks/refund_peg_out_conserves_quote_amount.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "lifecycle_accounting",
+      "specification_files": [
+        "cases/rootstock/flyover_quote_lifecycle/verity/Specs.lean",
+        "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:b845cdcc9d13cfd00127e54f0d7e3498707af8c9a062b058c0d2e773faa5970e",
+      "task_id": "refund_peg_out_conserves_quote_amount",
+      "task_interface_id": "sha256:458050dec4cb055774e45ed5caa1165b82f0f2c1741733a43bf8c0115c670b68",
+      "task_interface_version": 2,
+      "task_ref": "rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount",
+      "theorem_name": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.refundPegOut_conserves_quote_amount",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "rootstock/flyover_quote_lifecycle",
+      "category": "bridge_quote_lifecycle",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Rootstock/FlyoverQuoteLifecycle/Tasks/RefundUserPegOutConservesQuoteAmount.lean"
+      ],
+      "family_id": "rootstock",
+      "implementation_files": [
+        "cases/rootstock/flyover_quote_lifecycle/verity/Contract.lean",
+        "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Contract.lean"
+      ],
+      "manifest_path": "cases/rootstock/flyover_quote_lifecycle/tasks/refund_user_peg_out_conserves_quote_amount.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "lifecycle_accounting",
+      "specification_files": [
+        "cases/rootstock/flyover_quote_lifecycle/verity/Specs.lean",
+        "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:1d8a7f8527f4187471a3808b8c78b04d9897865c41b194a4d694994aed769c18",
+      "task_id": "refund_user_peg_out_conserves_quote_amount",
+      "task_interface_id": "sha256:5fbe7ed3a892553ba8d8aeddfa5ae882c94802fa5610b20c2111eb8f59a2ce23",
+      "task_interface_version": 2,
+      "task_ref": "rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount",
+      "theorem_name": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.refundUserPegOut_conserves_quote_amount",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/AddOwnerAcyclicity.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/add_owner_acyclicity.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "linked_list_acyclicity",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:8930c46350e7cac442176fbbd1b22922f8f707002201af611fecfff9bc1daf39",
+      "task_id": "add_owner_acyclicity",
+      "task_interface_id": "sha256:6ca9344eff422d2fe6a6b82702e834d500f37d428fe33b92480691c6f3fefd41",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/add_owner_acyclicity",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.addOwner_acyclicity",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "correctness",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/AddOwnerIsOwnerCorrectness.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/add_owner_is_owner_correctness.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "isOwner_effect",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:ef0dd809b3514c13c0bdd338f587be5da544e4059110a902681bec1388f55a0d",
+      "task_id": "add_owner_is_owner_correctness",
+      "task_interface_id": "sha256:9390f8b9b3de81a8838c5673de85601f2fec552b99599ae3549a4306610d617d",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/add_owner_is_owner_correctness",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.addOwner_isOwnerCorrectness",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/AddOwnerOwnerListInvariant.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/add_owner_owner_list_invariant.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "linked_list_invariant",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:06e02a5685a042de700a045c9fd52c1453223534810bcc853dc138eaab389175",
+      "task_id": "add_owner_owner_list_invariant",
+      "task_interface_id": "sha256:c47239e68b296cc1c348fc285d74ac94976bca1403e2f6096a140286013c4dce",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/add_owner_owner_list_invariant",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.addOwner_ownerListInvariant",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/InListReachable.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/in_list_reachable.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "linked_list_invariant",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:2ac56294898a8604639e2204cbdba83480123a5da4fc106906c4d105ac93bc71",
+      "task_id": "in_list_reachable",
+      "task_interface_id": "sha256:70a462c7d7077f884883fc822ed75abc8f54024e6c1c364be1152038b2caf39d",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/in_list_reachable",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.in_list_reachable",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/RemoveOwnerAcyclicity.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_acyclicity.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "linked_list_acyclicity",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:5783296729a7131d2c660ff610c56371e2a7dd0e837b3b8bc2865400b8707469",
+      "task_id": "remove_owner_acyclicity",
+      "task_interface_id": "sha256:70c6106caa25f7d988c4940f6aab4bca3c8dd29947e49e9bea844c79215cbe85",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/remove_owner_acyclicity",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_acyclicity",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/RemoveOwnerInListReachable.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_in_list_reachable.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "linked_list_invariant",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:382d61a2e8d637fc3e93407cf21801610b52d18f43549021feef28ae6be5c325",
+      "task_id": "remove_owner_in_list_reachable",
+      "task_interface_id": "sha256:25646e1375cb8d8c3fc67d9631f5a21fd537092f9fe09509ae9185a18ff48bec",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/remove_owner_in_list_reachable",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_inListReachable",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "correctness",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/RemoveOwnerIsOwnerCorrectness.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_is_owner_correctness.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "isOwner_effect",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:9a03e6598f4f41f7a40c2564dcfa0f9309ef85ceb491a1ccd8a47c6ee9c601ae",
+      "task_id": "remove_owner_is_owner_correctness",
+      "task_interface_id": "sha256:c70e34638f6e53af55ea2d33e4f026ca40da7b9a4b70c17c82e6cb2a42595f38",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/remove_owner_is_owner_correctness",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_isOwnerCorrectness",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/RemoveOwnerOwnerListInvariant.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_owner_list_invariant.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "linked_list_invariant",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:d7cc176f8a67c183c1d78f572a7de7dcd049491af9def21a52bdff53b2342730",
+      "task_id": "remove_owner_owner_list_invariant",
+      "task_interface_id": "sha256:fd34ce56fb5b762ee25fe9e93dc95780c64a2e1b5878f9ccc048db06fd15d9a4",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/remove_owner_owner_list_invariant",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_ownerListInvariant",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SetupOwnersAcyclicity.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/setup_owners_acyclicity.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "linked_list_acyclicity",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:ceec184d0da823caa9f7802b5a0c69217a0e9d51217123ac985be335a70a5b77",
+      "task_id": "setup_owners_acyclicity",
+      "task_interface_id": "sha256:81e9622f45f122d33dea0ddf881c1739f51102d569cc50826ea66e5086c54da4",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/setup_owners_acyclicity",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_acyclicity",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SetupOwnersInListReachable.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/setup_owners_in_list_reachable.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "linked_list_invariant",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:c3a16c691054c222049244af2f868e7f12991ed05b79a4fc29a04676cdec5692",
+      "task_id": "setup_owners_in_list_reachable",
+      "task_interface_id": "sha256:67ce07c1850433bc6c09a84b3614c58d5de3765a52873ee7b739a2f8285ad31e",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/setup_owners_in_list_reachable",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_inListReachable",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SetupOwnersOwnerListInvariant.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/setup_owners_owner_list_invariant.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "linked_list_invariant",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:fa9f568d7566bf464e726d71d0f67c51b101a7b3f71eaae0e6ee056eaf803da9",
+      "task_id": "setup_owners_owner_list_invariant",
+      "task_interface_id": "sha256:2dce11b2abed3840ea99e2cf38fecb7752b99d2bc84cbdb42fc85a52a98b0197",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/setup_owners_owner_list_invariant",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_ownerListInvariant",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerAcyclicity.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_acyclicity.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "linked_list_acyclicity",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:a9fb21291c79d324d5518d96da04ac0f41c0576cad8605c0ac8f39cd383fc4ff",
+      "task_id": "swap_owner_acyclicity",
+      "task_interface_id": "sha256:1a548d4f852e570c53547fc74a214792cb997cc04fed711ca628850368a4434f",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/swap_owner_acyclicity",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_acyclicity",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerInListReachable.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_in_list_reachable.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "linked_list_invariant",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:a1b4d25a746cbe434df9486ba1a6a2d747e20f173f692901d6455a5e9152f28b",
+      "task_id": "swap_owner_in_list_reachable",
+      "task_interface_id": "sha256:dab3e6e3e46ae5f45225b050cd8d48f5b1dce461f9415729c1dada10e116325d",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/swap_owner_in_list_reachable",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_inListReachable",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "correctness",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerIsOwnerCorrectness.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_is_owner_correctness.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "isOwner_effect",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:0dcac4ae1beff6634e627fbde82abac805b96514c6dc763329b42fed8a79d0a3",
+      "task_id": "swap_owner_is_owner_correctness",
+      "task_interface_id": "sha256:235087b049547a6c5604756c0ea0390c3437abbcda331138f7d4e560043f0708",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/swap_owner_is_owner_correctness",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_isOwnerCorrectness",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "safe/owner_manager_reach",
+      "category": "invariant",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerOwnerListInvariant.lean"
+      ],
+      "family_id": "safe",
+      "implementation_files": [
+        "cases/safe/owner_manager_reach/verity/Contract.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Contract.lean"
+      ],
+      "manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_owner_list_invariant.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "linked_list_invariant",
+      "specification_files": [
+        "cases/safe/owner_manager_reach/verity/Specs.lean",
+        "Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:08be3a0f8ab9b7b5bbf7c4390b6fff33e52359ba9891515b3d4d581e526d5ea6",
+      "task_id": "swap_owner_owner_list_invariant",
+      "task_interface_id": "sha256:b769c55f94a235f82b6cf7752b75656931a494bf7bdb1a430491c0fb1991ef9b",
+      "task_interface_version": 2,
+      "task_ref": "safe/owner_manager_reach/swap_owner_owner_list_invariant",
+      "theorem_name": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_ownerListInvariant",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "term_finance/term_auction_clearing",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/TermFinance/TermAuctionClearing/Tasks/ClearingAssignmentCorrect.lean"
+      ],
+      "family_id": "term_finance",
+      "implementation_files": [
+        "cases/term_finance/term_auction_clearing/verity/Contract.lean",
+        "Benchmark/Cases/TermFinance/TermAuctionClearing/Contract.lean"
+      ],
+      "manifest_path": "cases/term_finance/term_auction_clearing/tasks/clearing_assignment_correct.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "accounting_and_rate_guard",
+      "specification_files": [
+        "cases/term_finance/term_auction_clearing/verity/Specs.lean",
+        "Benchmark/Cases/TermFinance/TermAuctionClearing/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:ec10cf29c137d0a74b8fb2b9aa229f364aafa8ddc0cd0398d62b729d6b8d72ed",
+      "task_id": "clearing_assignment_correct",
+      "task_interface_id": "sha256:c58783ac7fd6e0114823057acf3dd932105a2ea0d28473cb8ed1517259affe28",
+      "task_interface_version": 2,
+      "task_ref": "term_finance/term_auction_clearing/clearing_assignment_correct",
+      "theorem_name": "Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "termmax/order_v2_buy_xt_single_segment",
+      "category": "invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/TermMax/OrderV2BuyXtSingleSegment/Tasks/SwapDebtTokenToXtUpdatesVirtualXtReserve.lean"
+      ],
+      "family_id": "termmax",
+      "implementation_files": [
+        "cases/termmax/order_v2_buy_xt_single_segment/verity/Contract.lean",
+        "Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Contract.lean"
+      ],
+      "manifest_path": "cases/termmax/order_v2_buy_xt_single_segment/tasks/swap_debt_token_to_xt_updates_virtual_xt_reserve.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "complete",
+      "property_class": "reserve_state_transition",
+      "specification_files": [
+        "cases/termmax/order_v2_buy_xt_single_segment/verity/Specs.lean",
+        "Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:fd836146d0fcae9a259f3e3e0734f0c48b797d8bcd21292d44a8f8a3c903efd7",
+      "task_id": "swap_debt_token_to_xt_updates_virtual_xt_reserve",
+      "task_interface_id": "sha256:dc61644d731eeff70596777e7361424ff7f5e25ffa740cb391bdaa7a8527b218",
+      "task_interface_version": 2,
+      "task_ref": "termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve",
+      "theorem_name": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.swapDebtTokenToXt_updates_virtual_xt_reserve",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "usual/dao_collateral",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemConservation.lean"
+      ],
+      "family_id": "usual",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "manifest_path": "cases/usual/dao_collateral/tasks/redeem_conservation.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:8905f3a24cc0c9b8d5cc07453e60d50023fe79f0e2965092dfc88998f29c58cd",
+      "task_id": "redeem_conservation",
+      "task_interface_id": "sha256:8cd60965e44a6560e4277b190b77d7c00bee652c939315f74884cc3fe9486f3a",
+      "task_interface_version": 2,
+      "task_ref": "usual/dao_collateral/redeem_conservation",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.redeem_conservation",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "usual/dao_collateral",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemFeeFormula.lean"
+      ],
+      "family_id": "usual",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "manifest_path": "cases/usual/dao_collateral/tasks/redeem_fee_formula.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "arithmetic_rounding",
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:141cf9caff3c2da1a93959243392bf5c713a243a0dc59ad34b1b74223f55a11e",
+      "task_id": "redeem_fee_formula",
+      "task_interface_id": "sha256:43733c3410f25619959ab850031e7ccac1daf3dae17339826bf6f3ce2003741e",
+      "task_interface_version": 2,
+      "task_ref": "usual/dao_collateral/redeem_fee_formula",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.redeem_fee_formula",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "usual/dao_collateral",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/RedeemReturnFormula.lean"
+      ],
+      "family_id": "usual",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "manifest_path": "cases/usual/dao_collateral/tasks/redeem_return_formula.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "arithmetic_rounding",
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:5cc365e05023de1e663649799b38eb7e232132ad1f82118367516bfaaa175c82",
+      "task_id": "redeem_return_formula",
+      "task_interface_id": "sha256:dc133e7dabdbb29a967dd10dfb85fb9b21ca71a61da7e9e49bbd658a54dfb301",
+      "task_interface_version": 2,
+      "task_ref": "usual/dao_collateral/redeem_return_formula",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.redeem_return_formula",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "usual/dao_collateral",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapConservation.lean"
+      ],
+      "family_id": "usual",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "manifest_path": "cases/usual/dao_collateral/tasks/swap_conservation.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:f6122b285b5b0c61d74760cf4c43da7f2b54a7fa71b90b4cb935e71e6b94d3a5",
+      "task_id": "swap_conservation",
+      "task_interface_id": "sha256:5008ba3026ce4de10fc4f2a4396f944aa261bd1026b38b03f79de88c9651d492",
+      "task_interface_version": 2,
+      "task_ref": "usual/dao_collateral/swap_conservation",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.swap_conservation",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "usual/dao_collateral",
+      "category": "stablecoin_collateral_accounting",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapValueConservation.lean"
+      ],
+      "family_id": "usual",
+      "implementation_files": [
+        "cases/usual/dao_collateral/verity/Contract.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Contract.lean"
+      ],
+      "manifest_path": "cases/usual/dao_collateral/tasks/swap_value_conservation.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "complete",
+      "property_class": "accounting_conservation",
+      "specification_files": [
+        "cases/usual/dao_collateral/verity/Specs.lean",
+        "Benchmark/Cases/Usual/DaoCollateral/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:15cb06023b69365903996c8a32e8ac04123b38336633b44b06f24a164c61b8b2",
+      "task_id": "swap_value_conservation",
+      "task_interface_id": "sha256:2ef0a9bfa6fe9f833ecc55544c849c7c7c71817286019c5dbfa7216839abc2a3",
+      "task_interface_version": 2,
+      "task_ref": "usual/dao_collateral/swap_value_conservation",
+      "theorem_name": "Benchmark.Cases.Usual.DaoCollateral.swap_value_conservation",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "wildcat/borrow_liquidity_safety",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Wildcat/BorrowLiquiditySafety/Tasks/PositiveBorrowPreservesRequiredLiquidity.lean"
+      ],
+      "family_id": "wildcat",
+      "implementation_files": [
+        "cases/wildcat/borrow_liquidity_safety/verity/Contract.lean",
+        "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Contract.lean"
+      ],
+      "manifest_path": "cases/wildcat/borrow_liquidity_safety/tasks/positive_borrow_preserves_required_liquidity.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "complete",
+      "property_class": "accounting_bound",
+      "specification_files": [
+        "cases/wildcat/borrow_liquidity_safety/verity/Specs.lean",
+        "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:266803d753fb4fe960f631f6a280b351e52c0c2d4d0a170aab308eb7211443b1",
+      "task_id": "positive_borrow_preserves_required_liquidity",
+      "task_interface_id": "sha256:7175eeda9db801ec8d8aefb8f53296cf6e4dbd74244894aefbd4301566385591",
+      "task_interface_version": 2,
+      "task_ref": "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity",
+      "theorem_name": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.positive_borrow_preserves_required_liquidity",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/BurnDecreasesSupply.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/burn_decreases_supply.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "supply_update",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:df695700b10fce07676a81526bee4c80beb895c8343e67ba4468d2cdee5a1c6e",
+      "task_id": "burn_decreases_supply",
+      "task_interface_id": "sha256:21ef6e5e76b5afa3f0cff5d6219fd6d18eae96e23ab00693f580b72a9538f5a8",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/burn_decreases_supply",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_decreases_supply",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/BurnInsufficient.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/burn_insufficient.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "silent_failure",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:ab348db4b83e0e7995f8d4ea4ec1c4474f472995c4c40a9ec5ae021ceabe570d",
+      "task_id": "burn_insufficient",
+      "task_interface_id": "sha256:18041fdd4c48a37a04fcb7133d014491b06ca6d544424447f80144e5909f04d5",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/burn_insufficient",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_insufficient",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintCTokensMatchDeposit.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_ctokens_match_deposit.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "deposit_mint_exactness",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:57b450acbdd8e3f463c86fddd90e8ac22a8ec217deec6a84831880416cac174b",
+      "task_id": "mint_ctokens_match_deposit",
+      "task_interface_id": "sha256:1c82f76ed5c3ddb7acafc6a0d1f9a382a6839834e0483407177a098506c1a691",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/mint_ctokens_match_deposit",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_ctokens_match_deposit",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintIncreasesSupply.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_increases_supply.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "supply_update",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:ba159145e470d5f8a724322d6d9e8ec7fb898b18086a0055f19645a5627d2a92",
+      "task_id": "mint_increases_supply",
+      "task_interface_id": "sha256:ec46a5d01b159edab56715f4df1e4655498d30d19d0cc819251ade139afe2147",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/mint_increases_supply",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_increases_supply",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/MintOverflowProtection.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_overflow_protection.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "overflow_safety",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:1859b0bc2c57290e5604024fedead767d8f403a153a09aeb0934bb6f58f3c2dd",
+      "task_id": "mint_overflow_protection",
+      "task_interface_id": "sha256:136c86b490234c24327bb4ef678ff9a5b8a4ddd1046279368bc6fff615ef7dba",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/mint_overflow_protection",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_overflow_protection",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/SetOperatorUpdates.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/setOperator_updates.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "storage_write",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:88056dad5f643b1dd2186b93dbbb67c8e37888b74037c0c8d2c92a5244ff036a",
+      "task_id": "setOperator_updates",
+      "task_interface_id": "sha256:f71e48faffd57d3996c8303247401ae014c92f805f612f05cae58d022690f8d8",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/setOperator_updates",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.setOperator_updates",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferFromConservation.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transferFrom_conservation.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "balance_conservation",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:1ddddc28cc86b3f7a1911c8a889296cb2e190e0b83d56a1fa01e413f9e6a5307",
+      "task_id": "transferFrom_conservation",
+      "task_interface_id": "sha256:967b849408f9a9e494063e2f67cc85c75a0cc9ada910009b80a08de5fddfc93e",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/transferFrom_conservation",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transferFrom_conservation",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferConservation.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_conservation.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "balance_conservation",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:73342550b9277f114006330d7dbd5d816c3c035b72cf5d928a146536ca9bf1eb",
+      "task_id": "transfer_conservation",
+      "task_interface_id": "sha256:cbfef676ec45ff1454aa0493b538b6b868df9af7f2598e845bbf78ac12a82d31",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/transfer_conservation",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_conservation",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferInsufficient.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_insufficient.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "silent_failure",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:93fbfc686358186432f6333f1b2a7a3551380adef500c8c78fc146efc2d0463a",
+      "task_id": "transfer_insufficient",
+      "task_interface_id": "sha256:f9ce83747b66ebb7ce0c318a35a70ae54e7def2026afdb73c341d6a8d99756eb",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/transfer_insufficient",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_insufficient",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "invariant",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferNoBalanceRevert.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_no_balance_revert.yaml",
+      "proof_family": "protocol_transition_correctness",
+      "proof_status": "partial",
+      "property_class": "non_leakage",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:8f885c6576e50b121d86fa4432242e8bc2b306e6565b2f7cffab56d42d675281",
+      "task_id": "transfer_no_balance_revert",
+      "task_interface_id": "sha256:1c7b24f871c34bc78e16904b0dbc92621536381360d57b051064679b58139f29",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/transfer_no_balance_revert",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_no_balance_revert",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "invariant",
+      "difficulty": "easy",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferPreservesSupply.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_preserves_supply.yaml",
+      "proof_family": "state_preservation_local_effects",
+      "proof_status": "partial",
+      "property_class": "supply_invariance",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:0b71be4402b039f06e9160141b274e4bf49491fb2ba27a9bd94242a665f3354b",
+      "task_id": "transfer_preserves_supply",
+      "task_interface_id": "sha256:9738f11a2917e755186464bde67db25c33acb5c0a4019a2e62d7fe4859a2ce4d",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/transfer_preserves_supply",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_preserves_supply",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zama/erc7984_confidential_token",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferSufficient.lean"
+      ],
+      "family_id": "zama",
+      "implementation_files": [
+        "cases/zama/erc7984_confidential_token/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Contract.lean"
+      ],
+      "manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_sufficient.yaml",
+      "proof_family": "functional_correctness",
+      "proof_status": "partial",
+      "property_class": "balance_update",
+      "specification_files": [
+        "cases/zama/erc7984_confidential_token/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:f4a38eb3c1fad25029d118ac44793137de06629ef4e665e54b7c9aa2f6378caf",
+      "task_id": "transfer_sufficient",
+      "task_interface_id": "sha256:7470db1c398218111b6ecfbaecc7172f61c628058c1f810407379af7562bd1d9",
+      "task_interface_version": 2,
+      "task_ref": "zama/erc7984_confidential_token/transfer_sufficient",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_sufficient",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zodiac/roles_decoder_faithfulness",
+      "category": "authorization_decoder",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/MetadataBridge.lean"
+      ],
+      "family_id": "zodiac",
+      "implementation_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean"
+      ],
+      "manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/metadata_bridge.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "complete",
+      "property_class": "calldata_decoder_metadata",
+      "specification_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:b87d4b35aeddc38115db77d98b244397d63813d4e7f1a0293abd2b90724c8968",
+      "task_id": "metadata_bridge",
+      "task_interface_id": "sha256:dfa568d4fcd034988afce5cffc8ab1fe31dbd32a0e26912a9fcca9e860f8f5a9",
+      "task_interface_version": 2,
+      "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge",
+      "theorem_name": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.metadata_bridge",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zodiac/roles_decoder_faithfulness",
+      "category": "authorization_decoder",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/RolesDecoderBoundsSafe.lean"
+      ],
+      "family_id": "zodiac",
+      "implementation_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean"
+      ],
+      "manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/roles_decoder_bounds_safe.yaml",
+      "proof_family": "authorization_enablement",
+      "proof_status": "complete",
+      "property_class": "calldata_decoder_bounds",
+      "specification_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:322a787305abf709a9634918f7d65c750aa7bb2b4da0c4c76562e87cee821b5b",
+      "task_id": "roles_decoder_bounds_safe",
+      "task_interface_id": "sha256:b3d6a510ea06674f7433fd2b1f3a70e6cb394ebe4910e177464385c43df56d28",
+      "task_interface_version": 2,
+      "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe",
+      "theorem_name": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_bounds_safe",
+      "track": "proof-only",
+      "translation_status": "translated"
+    },
+    {
+      "case_id": "zodiac/roles_decoder_faithfulness",
+      "category": "authorization_decoder",
+      "difficulty": "hard",
+      "editable_files": [
+        "Benchmark/Generated/Zodiac/RolesDecoderFaithfulness/Tasks/RolesDecoderFaithful.lean"
+      ],
+      "family_id": "zodiac",
+      "implementation_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Contract.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Contract.lean"
+      ],
+      "manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/roles_decoder_faithful.yaml",
+      "proof_family": "refinement_equivalence",
+      "proof_status": "complete",
+      "property_class": "calldata_decoder_faithfulness",
+      "specification_files": [
+        "cases/zodiac/roles_decoder_faithfulness/verity/Specs.lean",
+        "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Specs.lean"
+      ],
+      "task_fingerprint": "sha256:2830ffed201e655b1a3edc09345bc43d2948923b58c298b1271fdaefa16876d1",
+      "task_id": "roles_decoder_faithful",
+      "task_interface_id": "sha256:f9f3ec01c342dd921bf1550b751f53695fd291d62b52e276ca264b5d41efca95",
+      "task_interface_version": 2,
+      "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_faithful",
+      "theorem_name": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_faithful",
+      "track": "proof-only",
+      "translation_status": "translated"
+    }
+  ]
+}
