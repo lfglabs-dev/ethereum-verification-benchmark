@@ -173,7 +173,7 @@ def main() -> int:
             }
         )
 
-    manifest_path = out_dir / "benchmark-v0.1-artifacts-manifest.json"
+    manifest_path = out_dir / f"benchmark-{args.tag}-artifacts-manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     print(manifest_path)
     for item in manifest["archives"]:

@@ -131,7 +131,12 @@ The planner reruns all tasks when `harness_id`, `mode`, or `budget` changes,
 reruns all tasks on an `environment_id` change unless `--allow-env-compatible`
 is passed, reruns added tasks and changed task/interface fingerprints, excludes
 removed tasks, and rejects reuse of zero-token, missing-verifier, or error-only
-artifacts.
+artifacts. Before reusing an indexed result it also re-validates the stored row
+against the target task: the row's own `task_fingerprint`/`task_interface_id`
+must match the target version, and its stored `result_key` must reproduce from
+that recorded context plus the manifest's current `temperature_policy`/`caveats`
+(which feed the key), so stale/duplicate rows or post-hoc temperature/caveat
+edits force a rerun instead of a silent mismatched reuse.
 
 Use the JSON plan's `rerun[].task_ref` values as the changed-task run list, then
 publish detailed run directories as release archives rather than committing

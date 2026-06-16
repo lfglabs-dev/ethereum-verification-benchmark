@@ -151,6 +151,78 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(plan["rerun_count"], self.version["task_count"])
         self.assertTrue(all(item["reason"] == "budget changed" for item in plan["rerun"]))
 
+    def test_stale_stored_fingerprint_is_not_reused(self) -> None:
+        task = self.version["tasks"][0]
+        model = "synthetic-stale-fingerprint"
+        manifest = {
+            "models": [
+                {
+                    "model_id": model,
+                    "task_results": [
+                        {
+                            "task_ref": task["task_ref"],
+                            "result_key": "synthetic-key",
+                            "task_fingerprint": "sha256:" + "9" * 64,
+                            "task_interface_id": task["task_interface_id"],
+                            "usage": {"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120},
+                            "verifier_output_present": True,
+                            "artifact_status": "ok",
+                            "harness_status": "completed",
+                        }
+                    ],
+                }
+            ]
+        }
+        newer = copy.deepcopy(self.version)
+        newer["tasks"] = [task]
+        newer["task_count"] = 1
+        plan = plan_rerun(self.version, newer, model=model, results_manifest=manifest)
+        self.assertEqual(plan["rerun_count"], 1)
+        self.assertEqual(plan["rerun"][0]["reason"], "stored task_fingerprint mismatch")
+
+    def test_caveat_drift_is_not_reused(self) -> None:
+        task = self.version["tasks"][0]
+        model = "synthetic-caveat-drift"
+        indexed_key = result_key(
+            model=model,
+            benchmark_version="0.1",
+            task_ref=task["task_ref"],
+            task_fingerprint=task["task_fingerprint"],
+            task_interface_id=task["task_interface_id"],
+            harness_id=self.version["harness_id"],
+            environment_id=self.version["environment_id"],
+            mode=self.version["mode"],
+            budget=self.version["budget"],
+            temperature_policy=None,
+            provider_caveats=None,
+        )
+        manifest = {
+            "models": [
+                {
+                    "model_id": model,
+                    "caveats": ["provider downgraded mid-run"],
+                    "task_results": [
+                        {
+                            "task_ref": task["task_ref"],
+                            "result_key": indexed_key,
+                            "task_fingerprint": task["task_fingerprint"],
+                            "task_interface_id": task["task_interface_id"],
+                            "usage": {"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120},
+                            "verifier_output_present": True,
+                            "artifact_status": "ok",
+                            "harness_status": "completed",
+                        }
+                    ],
+                }
+            ]
+        }
+        newer = copy.deepcopy(self.version)
+        newer["tasks"] = [task]
+        newer["task_count"] = 1
+        plan = plan_rerun(self.version, newer, model=model, results_manifest=manifest)
+        self.assertEqual(plan["rerun_count"], 1)
+        self.assertEqual(plan["rerun"][0]["reason"], "stored result_key mismatch")
+
     def test_interface_change_invalidates_that_task(self) -> None:
         newer = copy.deepcopy(self.version)
         newer["benchmark_version"] = "0.2"

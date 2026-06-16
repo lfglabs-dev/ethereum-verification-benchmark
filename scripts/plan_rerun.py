@@ -84,6 +84,49 @@ def reusable_result(entry: dict[str, Any] | None) -> tuple[bool, str | None]:
     return True, None
 
 
+def stored_result_mismatch(
+    entry: dict[str, Any],
+    new_task: dict[str, Any],
+    *,
+    from_version: dict[str, Any],
+    model: str,
+    temperature_policy: object,
+    provider_caveats: object,
+) -> str | None:
+    """Reject reuse when the stored result was indexed under a different context than the target task.
+
+    Version-level checks compare the *from*/*to* version manifests, but they assume the indexed
+    result row was actually produced under the *from* version. A stale or duplicate manifest row, or
+    a results manifest whose model-level ``temperature_policy``/``caveats`` drifted since indexing, can
+    otherwise be reused under the wrong execution context. We therefore (1) compare the row's own
+    recorded fingerprints against the target task and (2) confirm the row's stored ``result_key``
+    reproduces from its recorded context plus the current temperature/caveats (which feed the key).
+    """
+    if str(entry.get("task_fingerprint")) != str(new_task.get("task_fingerprint")):
+        return "stored task_fingerprint mismatch"
+    if str(entry.get("task_interface_id")) != str(new_task.get("task_interface_id")):
+        return "stored task_interface_id mismatch"
+    stored_key = entry.get("result_key")
+    if stored_key is None:
+        return "missing stored result_key"
+    expected_key = result_key(
+        model=model,
+        benchmark_version=str(from_version.get("benchmark_version")),
+        task_ref=str(entry.get("task_ref")),
+        task_fingerprint=str(entry.get("task_fingerprint")),
+        task_interface_id=str(entry.get("task_interface_id")),
+        harness_id=str(from_version.get("harness_id")),
+        environment_id=str(from_version.get("environment_id")),
+        mode=str(from_version.get("mode")),
+        budget=str(from_version.get("budget")),
+        temperature_policy=temperature_policy,
+        provider_caveats=provider_caveats,
+    )
+    if str(stored_key) != expected_key:
+        return "stored result_key mismatch"
+    return None
+
+
 def plan_rerun(
     from_version: dict[str, Any],
     to_version: dict[str, Any],
@@ -133,9 +176,20 @@ def plan_rerun(
             reason = "task_fingerprint changed"
 
         if reason is None:
-            ok, invalid_reason = reusable_result(previous.get(task_ref))
+            prev = previous.get(task_ref)
+            ok, invalid_reason = reusable_result(prev)
             if not ok:
                 reason = invalid_reason or "previous result is invalid"
+            else:
+                assert prev is not None  # reusable_result rejects None
+                reason = stored_result_mismatch(
+                    prev,
+                    new_task,
+                    from_version=from_version,
+                    model=model,
+                    temperature_policy=temperature_policy,
+                    provider_caveats=provider_caveats,
+                )
 
         new_key = result_key(
             model=model,
