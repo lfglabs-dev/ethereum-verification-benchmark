@@ -1,6 +1,6 @@
 # Verity Benchmark Leaderboard
 
-Benchmark version `0.1` · generated 2026-06-16 12:13Z
+Benchmark version `0.1` · generated 2026-06-16 13:33Z
 
 Complete rows are eligible for rank comparisons. Partial rows are shown for transparency and excluded from complete-rank comparisons.
 

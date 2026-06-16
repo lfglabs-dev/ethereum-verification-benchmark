@@ -25,6 +25,7 @@ def result_key(
     benchmark_version: str,
     task_ref: str,
     task_fingerprint: str,
+    task_interface_id: str,
     harness_id: str,
     environment_id: str,
     mode: str,
@@ -38,6 +39,7 @@ def result_key(
             "benchmark_version": benchmark_version,
             "task_ref": task_ref,
             "task_fingerprint": task_fingerprint,
+            "task_interface_id": task_interface_id,
             "harness_id": harness_id,
             "environment_id": environment_id,
             "mode": mode,
@@ -69,7 +71,10 @@ def reusable_result(entry: dict[str, Any] | None) -> tuple[bool, str | None]:
     if not entry:
         return False, "missing previous result"
     usage = entry.get("usage") if isinstance(entry.get("usage"), dict) else {}
-    total_tokens = int(usage.get("total_tokens") or usage.get("prompt_tokens") or 0) + int(usage.get("completion_tokens") or 0)
+    if "total_tokens" in usage:
+        total_tokens = int(usage.get("total_tokens") or 0)
+    else:
+        total_tokens = int(usage.get("prompt_tokens") or 0) + int(usage.get("completion_tokens") or 0)
     if total_tokens <= 0:
         return False, "zero usage"
     if not entry.get("verifier_output_present", False):
@@ -102,6 +107,8 @@ def plan_rerun(
     harness_changed = from_version.get("harness_id") != to_version.get("harness_id")
     env_changed = from_version.get("environment_id") != to_version.get("environment_id")
     env_blocks_reuse = env_changed and not allow_env_compatible
+    mode_changed = from_version.get("mode") != to_version.get("mode")
+    budget_changed = from_version.get("budget") != to_version.get("budget")
 
     for task_ref in sorted(set(from_tasks) - set(to_tasks)):
         removed.append(task_ref)
@@ -114,8 +121,14 @@ def plan_rerun(
             reason = "harness_id changed"
         elif env_blocks_reuse:
             reason = "environment_id changed"
+        elif mode_changed:
+            reason = "mode changed"
+        elif budget_changed:
+            reason = "budget changed"
         elif old_task is None:
             reason = "task added"
+        elif old_task.get("task_interface_id") != new_task.get("task_interface_id"):
+            reason = "task_interface_id changed"
         elif old_task.get("task_fingerprint") != new_task.get("task_fingerprint"):
             reason = "task_fingerprint changed"
 
@@ -129,6 +142,7 @@ def plan_rerun(
             benchmark_version=str(to_version.get("benchmark_version")),
             task_ref=task_ref,
             task_fingerprint=str(new_task.get("task_fingerprint")),
+            task_interface_id=str(new_task.get("task_interface_id")),
             harness_id=str(to_version.get("harness_id")),
             environment_id=str(to_version.get("environment_id")),
             mode=str(to_version.get("mode")),
@@ -151,6 +165,8 @@ def plan_rerun(
         "allow_env_compatible": allow_env_compatible,
         "harness_changed": harness_changed,
         "environment_changed": env_changed,
+        "mode_changed": mode_changed,
+        "budget_changed": budget_changed,
         "task_count": len(to_tasks),
         "reuse_count": len(reuse),
         "rerun_count": len(rerun),

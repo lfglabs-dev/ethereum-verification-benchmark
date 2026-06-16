@@ -54,7 +54,7 @@ Use separate fingerprints so compatibility decisions are explainable.
 - `task_interface_id`: public files, editable files, theorem name, allowed modules, and task manifest fields visible to the model.
 - `harness_id`: harness code, prompt/policy files, runner mode, budget, verifier integration, and tool surface.
 - `environment_id`: Lean toolchain, Lake manifests, dependency lockfiles, and verifier/runtime dependencies.
-- `result_key`: model id plus benchmark version, task ref, task fingerprint, harness id, environment id, mode, effort/budget, temperature policy, and endpoint/provider caveats.
+- `result_key`: model id plus benchmark version, task ref, task fingerprint, task interface id, harness id, environment id, mode, effort/budget, temperature policy, and endpoint/provider caveats.
 
 ## Version Manifest
 

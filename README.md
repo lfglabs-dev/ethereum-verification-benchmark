@@ -77,49 +77,21 @@ Coverage is strongest today for accounting, local state preservation, storage ef
 
 ## Results
 
-[![Verity bench](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Foverall.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
-[![MiniMax M3](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-smart.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
-[![Grok Build 0.1](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fgrok.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
-[![GLM 5 Turbo](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-fast.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
+[![Verity bench](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Foverall.json)](./leaderboard.md)
+[![GLM 5.2](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Fzai-glm-5-2.json)](./leaderboard.md)
+[![MiniMax M3](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Fminimax-minimax-m3.json)](./leaderboard.md)
+[![Kimi K2.7](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Fkimi-kimi-for-coding.json)](./leaderboard.md)
 
-We measure **cost to a verified proof**, not pass/fail alone. Each agent runs in an isolated
-workspace with the reference proofs withheld; an independent verifier recompiles the submitted
-file and checks the theorem statement is untouched. Token usage is metered at the API boundary
-and priced at live [OpenRouter](https://openrouter.ai) rates. We evaluate two harness families
-on identical tasks: the **builtin harness** (a minimal Lean-native tool loop: goal inspection,
-declaration search, proof checking) and **generic coding agents** (opencode, codex, grok CLI)
-given shell access to the same workspace.
+Each agent runs in an isolated workspace with the reference proofs withheld; an
+independent verifier recompiles the submitted file and checks the theorem
+statement is untouched. Token usage is metered at the API boundary when the
+provider reports it.
 
-Current results on a 5-task slice spanning four proof families, ranked by total cost
-(full table, per-task data, and methodology notes in the
-[leaderboard](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)):
-
-| Harness | Model | Verified | Median cost / proof | Total cost |
-|---|---|---|---|---|
-| builtin | MiniMax M3 | 5/5 | $0.24 | $1.49 |
-| opencode | MiniMax M3 | 3/5 | $0.59 | $3.38 |
-| codex | GPT-5.5 | 5/5 | ~$0.8–1.2 *(est.)* | ~$4–6 *(est.)* |
-| opencode | GLM 5 Turbo | 5/5 | $0.39 | $5.29 |
-| builtin | Grok Build 0.1 | 4/5 | $0.48 | $5.84 |
-| builtin | GLM 5 Turbo | 5/5 | $1.52 | $7.39 |
-| builtin | GPT-5.5 | 5/5 | $1.23 | $8.42 |
-| grok CLI | Grok Build 0.1 | 4/5 | ~$0.5–5 *(est.)* | ~$3–25 *(est.)* |
-
-Two observations so far, to be confirmed at larger scale:
-
-1. **Given enough budget, every model proves almost everything.** The discriminating variable
-   is cost: across models the spread is ~6× in total cost at equal success.
-2. **Harness×model interaction is real.** More capable models (GPT-5.5, MiniMax M3) perform
-   best inside the constrained builtin loop, while cheaper models (GLM 5 Turbo) do better as
-   unconstrained shell agents — the structured tool protocol appears to help models that can
-   exploit it and hinder those that cannot.
-
-Estimates marked *(est.)* cover harnesses that expose no token telemetry (grok CLI) or only an
-undecomposed total (codex); derivation is documented in the leaderboard. Results come from the
-manually-dispatched [benchmark workflow](.github/workflows/benchmark.yml) (models, budgets,
-task slice, and endpoint are dispatch inputs) and publish to the
-[`benchmark-results`](https://github.com/lfglabs-dev/verity-benchmark/tree/benchmark-results)
-branch; single-seed runs, so treat small deltas as noise.
+Current committed results are for benchmark version `0.1`, the 135-task active
+suite. See [leaderboard.md](./leaderboard.md) for rankable complete rows and
+transparent partial rows. Detailed per-task traces are archived as GitHub
+release assets, with committed indexes in `results/manifests/` and aggregate
+summaries in `results/summaries/`.
 
 ## Running the benchmark
 
@@ -155,10 +127,11 @@ python3 scripts/plan_rerun.py \
   --json-out results/rerun-plans/minimax-v0.1-to-v0.2.json
 ```
 
-The planner reruns all tasks when `harness_id` changes, reruns all tasks on an
-`environment_id` change unless `--allow-env-compatible` is passed, reruns added
-or changed task fingerprints, excludes removed tasks, and rejects reuse of
-zero-token, missing-verifier, or error-only artifacts.
+The planner reruns all tasks when `harness_id`, `mode`, or `budget` changes,
+reruns all tasks on an `environment_id` change unless `--allow-env-compatible`
+is passed, reruns added tasks and changed task/interface fingerprints, excludes
+removed tasks, and rejects reuse of zero-token, missing-verifier, or error-only
+artifacts.
 
 Use the JSON plan's `rerun[].task_ref` values as the changed-task run list, then
 publish detailed run directories as release archives rather than committing
@@ -261,7 +234,7 @@ verity-benchmark/
 ├── harness/             # Agent runner, tools, and evaluation
 ├── scripts/             # CLI entry points
 ├── schemas/             # JSON schemas for results
-└── results/             # Run artifacts
+└── results/             # Published summaries and artifact manifests
 ```
 
 ---

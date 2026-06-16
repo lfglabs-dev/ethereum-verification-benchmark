@@ -88,6 +88,7 @@ class VersioningTests(unittest.TestCase):
                                 benchmark_version="0.1",
                                 task_ref=task["task_ref"],
                                 task_fingerprint=task["task_fingerprint"],
+                                task_interface_id=task["task_interface_id"],
                                 harness_id=self.version["harness_id"],
                                 environment_id=self.version["environment_id"],
                                 mode=self.version["mode"],
@@ -107,6 +108,58 @@ class VersioningTests(unittest.TestCase):
         plan = plan_rerun(self.version, newer, model=model, results_manifest=manifest)
         self.assertEqual(plan["rerun_count"], 1)
         self.assertEqual(plan["rerun"][0]["reason"], "zero usage")
+
+    def test_explicit_zero_total_tokens_is_not_reused_even_with_component_usage(self) -> None:
+        task = self.version["tasks"][0]
+        model = "synthetic-zero-total"
+        manifest = {
+            "models": [
+                {
+                    "model_id": model,
+                    "task_results": [
+                        {
+                            "task_ref": task["task_ref"],
+                            "result_key": "synthetic-key",
+                            "usage": {"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 0},
+                            "verifier_output_present": True,
+                            "artifact_status": "ok",
+                        }
+                    ],
+                }
+            ]
+        }
+        newer = copy.deepcopy(self.version)
+        newer["tasks"] = [task]
+        newer["task_count"] = 1
+        plan = plan_rerun(self.version, newer, model=model, results_manifest=manifest)
+        self.assertEqual(plan["rerun_count"], 1)
+        self.assertEqual(plan["rerun"][0]["reason"], "zero usage")
+
+    def test_mode_change_invalidates_all_tasks(self) -> None:
+        newer = copy.deepcopy(self.version)
+        newer["benchmark_version"] = "0.2"
+        newer["mode"] = "synthetic-mode"
+        plan = plan_rerun(self.version, newer, model=self.complete_model, results_manifest=self.results)
+        self.assertEqual(plan["rerun_count"], self.version["task_count"])
+        self.assertTrue(all(item["reason"] == "mode changed" for item in plan["rerun"]))
+
+    def test_budget_change_invalidates_all_tasks(self) -> None:
+        newer = copy.deepcopy(self.version)
+        newer["benchmark_version"] = "0.2"
+        newer["budget"] = "deep"
+        plan = plan_rerun(self.version, newer, model=self.complete_model, results_manifest=self.results)
+        self.assertEqual(plan["rerun_count"], self.version["task_count"])
+        self.assertTrue(all(item["reason"] == "budget changed" for item in plan["rerun"]))
+
+    def test_interface_change_invalidates_that_task(self) -> None:
+        newer = copy.deepcopy(self.version)
+        newer["benchmark_version"] = "0.2"
+        changed_ref = newer["tasks"][0]["task_ref"]
+        newer["tasks"][0]["task_interface_id"] = "sha256:" + "4" * 64
+        plan = plan_rerun(self.version, newer, model=self.complete_model, results_manifest=self.results)
+        self.assertEqual(plan["rerun_count"], 1)
+        self.assertEqual(plan["rerun"][0]["task_ref"], changed_ref)
+        self.assertEqual(plan["rerun"][0]["reason"], "task_interface_id changed")
 
 
 if __name__ == "__main__":
