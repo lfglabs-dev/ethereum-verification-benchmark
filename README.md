@@ -39,7 +39,7 @@ The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) ar
 
 ## Benchmark suite
 
-21 active cases, 124 active task manifests, and 8 backlog task manifests are drawn from real-world contracts. All active and backlog task manifests are currently runnable proof tasks with hidden reference proofs.
+25 active cases, 135 active task manifests, and 8 backlog task manifests are drawn from real-world contracts. All active and backlog task manifests are currently runnable proof tasks with hidden reference proofs.
 
 | Case | Source | Tasks |
 |------|--------|-------|
@@ -49,6 +49,7 @@ The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) ar
 | `damn_vulnerable_defi/side_entrance` | Damn Vulnerable DeFi | 5 |
 | `ethereum/deposit_contract_minimal` | Ethereum deposit contract | 5 |
 | `forgeyields/global_solvency` | ForgeYields TokenGateway | 7 |
+| `ipor/plasma_vault_redeem_split` | IPOR Plasma Vault | 2 |
 | `kleros/sortition_trees` | Kleros sortition module | 6 |
 | `lagoon/guardrails` | Lagoon vault guardrails | 3 |
 | `lido/vaulthub_locked` | Lido VaultHub | 5 |
@@ -56,13 +57,16 @@ The agent must produce a valid Lean proof. No placeholders (`sorry`, `admit`) ar
 | `onedelta/caller_address_integrity` | OneDelta callback caller integrity | 10 |
 | `paladin_votes/stream_recovery_claim_usdc` | Paladin Votes | 26 |
 | `piku/fund_conservation` | Piku / Inverter oracle funding manager | 4 |
+| `polaris/bonding_curve` | Polaris bonding curve | 4 |
 | `polygon/agglayer_bridge` | Polygon Agglayer bridge | 2 |
 | `reserve/auction_price_band` | Reserve DTF | 4 |
 | `rootstock/flyover_quote_lifecycle` | Rootstock Flyover quote lifecycle | 3 |
 | `safe/owner_manager_reach` | Safe OwnerManager | 15 |
+| `term_finance/term_auction_clearing` | Term Finance auction clearing | 1 |
 | `termmax/order_v2_buy_xt_single_segment` | TermMax Order V2 | 1 |
 | `usual/dao_collateral` | Usual DaoCollateral | 5 |
 | `wildcat/borrow_liquidity_safety` | Wildcat V2 | 1 |
+| `zodiac/roles_decoder_faithfulness` | Zodiac Roles decoder | 3 |
 | `zama/erc7984_confidential_token` | Zama / OpenZeppelin ERC-7984 | 12 |
 
 Every runnable task includes a reference proof hidden from the agent during benchmarking. Case-level `proof_status: partial` means the broader case family is not fully complete; it does not imply that runnable per-task reference proofs are missing.
@@ -73,51 +77,86 @@ Coverage is strongest today for accounting, local state preservation, storage ef
 
 ## Results
 
-[![Verity bench](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Foverall.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
-[![MiniMax M3](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-smart.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
-[![Grok Build 0.1](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fgrok.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
-[![GLM 5 Turbo](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fbenchmark-results%2Fbadges%2Fbuiltin-fast.json)](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)
+[![Verity bench](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Foverall.json)](./leaderboard.md)
+[![GLM 5.2](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Fzai-glm-5-2.json)](./leaderboard.md)
+[![MiniMax M3](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Fminimax-minimax-m3.json)](./leaderboard.md)
+[![Kimi K2.7](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Fkimi-kimi-for-coding.json)](./leaderboard.md)
 
-We measure **cost to a verified proof**, not pass/fail alone. Each agent runs in an isolated
-workspace with the reference proofs withheld; an independent verifier recompiles the submitted
-file and checks the theorem statement is untouched. Token usage is metered at the API boundary
-and priced at live [OpenRouter](https://openrouter.ai) rates. We evaluate two harness families
-on identical tasks: the **builtin harness** (a minimal Lean-native tool loop: goal inspection,
-declaration search, proof checking) and **generic coding agents** (opencode, codex, grok CLI)
-given shell access to the same workspace.
+Each agent runs in an isolated workspace with the reference proofs withheld; an
+independent verifier recompiles the submitted file and checks the theorem
+statement is untouched. Token usage is metered at the API boundary when the
+provider reports it.
 
-Current results on a 5-task slice spanning four proof families, ranked by total cost
-(full table, per-task data, and methodology notes in the
-[leaderboard](https://github.com/lfglabs-dev/verity-benchmark/blob/benchmark-results/leaderboard.md)):
-
-| Harness | Model | Verified | Median cost / proof | Total cost |
-|---|---|---|---|---|
-| builtin | MiniMax M3 | 5/5 | $0.24 | $1.49 |
-| opencode | MiniMax M3 | 3/5 | $0.59 | $3.38 |
-| codex | GPT-5.5 | 5/5 | ~$0.8–1.2 *(est.)* | ~$4–6 *(est.)* |
-| opencode | GLM 5 Turbo | 5/5 | $0.39 | $5.29 |
-| builtin | Grok Build 0.1 | 4/5 | $0.48 | $5.84 |
-| builtin | GLM 5 Turbo | 5/5 | $1.52 | $7.39 |
-| builtin | GPT-5.5 | 5/5 | $1.23 | $8.42 |
-| grok CLI | Grok Build 0.1 | 4/5 | ~$0.5–5 *(est.)* | ~$3–25 *(est.)* |
-
-Two observations so far, to be confirmed at larger scale:
-
-1. **Given enough budget, every model proves almost everything.** The discriminating variable
-   is cost: across models the spread is ~6× in total cost at equal success.
-2. **Harness×model interaction is real.** More capable models (GPT-5.5, MiniMax M3) perform
-   best inside the constrained builtin loop, while cheaper models (GLM 5 Turbo) do better as
-   unconstrained shell agents — the structured tool protocol appears to help models that can
-   exploit it and hinder those that cannot.
-
-Estimates marked *(est.)* cover harnesses that expose no token telemetry (grok CLI) or only an
-undecomposed total (codex); derivation is documented in the leaderboard. Results come from the
-manually-dispatched [benchmark workflow](.github/workflows/benchmark.yml) (models, budgets,
-task slice, and endpoint are dispatch inputs) and publish to the
-[`benchmark-results`](https://github.com/lfglabs-dev/verity-benchmark/tree/benchmark-results)
-branch; single-seed runs, so treat small deltas as noise.
+Current committed results are for benchmark version `0.1`, the 135-task active
+suite. See [leaderboard.md](./leaderboard.md) for rankable complete rows and
+transparent partial rows. Detailed per-task traces are archived as GitHub
+release assets, with committed indexes in `results/manifests/` and aggregate
+summaries in `results/summaries/`.
 
 ## Running the benchmark
+
+### Benchmark versions and incremental reruns
+
+Benchmark results are tied to explicit version manifests in `benchmark-versions/`.
+Version `0.1` is the committed baseline and contains the ordered 135-task active
+suite plus these compatibility fingerprints:
+
+- `task_set_id`: ordered task refs for the version.
+- `task_fingerprint`: execution-relevant task files and manifest fields.
+- `task_interface_id`: public/editable files and fields visible to models.
+- `harness_id`: harness code, policies, prompts, runner scripts, and agent configs.
+- `environment_id`: Lean/Lake toolchain and runtime dependency pins.
+
+Create or refresh a version manifest:
+
+```bash
+python3 scripts/compute_fingerprints.py \
+  --version 0.2 \
+  --created-at 2026-06-16 \
+  --out benchmark-versions/v0.2.json
+```
+
+Plan incremental reruns for a model:
+
+```bash
+python3 scripts/plan_rerun.py \
+  --from benchmark-versions/v0.1.json \
+  --to benchmark-versions/v0.2.json \
+  --model minimax/minimax-m3 \
+  --results-manifest results/manifests/v0.1.json \
+  --json-out results/rerun-plans/minimax-v0.1-to-v0.2.json
+```
+
+The planner reruns all tasks when `harness_id`, `mode`, or `budget` changes,
+reruns all tasks on an `environment_id` change unless `--allow-env-compatible`
+is passed, reruns added tasks and changed task/interface fingerprints, excludes
+removed tasks, and rejects reuse of zero-token, missing-verifier, or error-only
+artifacts. Before reusing an indexed result it also re-validates the stored row
+against the target task: the row's own `task_fingerprint`/`task_interface_id`
+must match the target version, and its stored `result_key` must reproduce from
+that recorded context plus the manifest's current `temperature_policy`/`caveats`
+(which feed the key), so stale/duplicate rows or post-hoc temperature/caveat
+edits force a rerun instead of a silent mismatched reuse.
+
+Use the JSON plan's `rerun[].task_ref` values as the changed-task run list, then
+publish detailed run directories as release archives rather than committing
+large per-task artifacts. The committed `results/manifests/v<version>.json`
+indexes those archives by release tag, asset name, byte size, SHA-256, caveats,
+and per-task result keys.
+
+Rebuild version-specific outputs from committed manifests:
+
+```bash
+python3 scripts/aggregate_version.py \
+  --version benchmark-versions/v0.1.json \
+  --results-manifest results/manifests/v0.1.json \
+  --out-dir .
+```
+
+This regenerates `results/summaries/v0.1.json`, `leaderboard.md`,
+`results.json`, and `badges/*.json`. Complete model rows are eligible for the
+main ranking. Partial rows are labeled partial and excluded from complete-rank
+comparisons.
 
 ### Verify reference proofs
 
@@ -200,7 +239,7 @@ verity-benchmark/
 ├── harness/             # Agent runner, tools, and evaluation
 ├── scripts/             # CLI entry points
 ├── schemas/             # JSON schemas for results
-└── results/             # Run artifacts
+└── results/             # Published summaries and artifact manifests
 ```
 
 ---

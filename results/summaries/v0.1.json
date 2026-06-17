@@ -1,0 +1,385 @@
+{
+  "benchmark": "verity-benchmark",
+  "benchmark_version": "0.1",
+  "environment_id": "sha256:a4e6af95c29687bb2a727dbae8d9627208e47f0e48ea7a9d26002fbddf156365",
+  "harness_id": "sha256:28a43f1654ee468f873f4b308b67fd4308913aa2aa77cd33e094267a8b9b448d",
+  "models": [
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-claude-opus-4-8.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-claude-opus-4-8.tar.zst",
+        "byte_size": 684609,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "216badbc277b1dad6daeb9d921448ffced02a7210e2eb67c26c6df0347f66987"
+      },
+      "caveats": [
+        "partial task coverage: 88/135",
+        "1 duplicate task artifacts; latest archive entry indexed"
+      ],
+      "completion_tokens": 2025318,
+      "display_name": "claude-opus-4-8",
+      "failed": 50,
+      "median_completion_tokens_to_pass": 5821,
+      "median_prompt_tokens_to_pass": 191925,
+      "model_id": "claude-opus-4-8",
+      "pass_rate": 0.432,
+      "passed": 38,
+      "prompt_tokens": 57918538,
+      "status": "partial",
+      "task_count": 88,
+      "total_tokens": 59943856,
+      "valid_count": 88
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-deepseek-v4-flash.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-deepseek-v4-flash.tar.zst",
+        "byte_size": 11442,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "1ffb11ed814620e16248b598f21b0b94575c6ab13729c5a8a3a3ca568dfb810f"
+      },
+      "caveats": [
+        "partial task coverage: 5/135",
+        "5 zero-usage task artifacts are not reusable"
+      ],
+      "completion_tokens": 0,
+      "display_name": "deepseek-v4-flash",
+      "failed": 5,
+      "median_completion_tokens_to_pass": null,
+      "median_prompt_tokens_to_pass": null,
+      "model_id": "deepseek-v4-flash",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "prompt_tokens": 0,
+      "status": "invalid",
+      "task_count": 5,
+      "total_tokens": 0,
+      "valid_count": 0
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-deepseek-v4-pro.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-deepseek-v4-pro.tar.zst",
+        "byte_size": 11419,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "1f6680fb878b339638f696c6c6e81a1438bcc3d4d3ef52611982c620e8ecf9f5"
+      },
+      "caveats": [
+        "partial task coverage: 5/135",
+        "5 zero-usage task artifacts are not reusable"
+      ],
+      "completion_tokens": 0,
+      "display_name": "deepseek-v4-pro",
+      "failed": 5,
+      "median_completion_tokens_to_pass": null,
+      "median_prompt_tokens_to_pass": null,
+      "model_id": "deepseek-v4-pro",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "prompt_tokens": 0,
+      "status": "invalid",
+      "task_count": 5,
+      "total_tokens": 0,
+      "valid_count": 0
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-grok.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-grok.tar.zst",
+        "byte_size": 684165,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "ba6d88f4ed7ea1fe802d6fb44bf46d092fcc865a7c2d8f13d6304bdccb6866e7"
+      },
+      "caveats": [
+        "partial task coverage: 58/135"
+      ],
+      "completion_tokens": 255759,
+      "display_name": "grok",
+      "failed": 30,
+      "median_completion_tokens_to_pass": 1196,
+      "median_prompt_tokens_to_pass": 247657,
+      "model_id": "grok",
+      "pass_rate": 0.483,
+      "passed": 28,
+      "prompt_tokens": 36982124,
+      "status": "partial",
+      "task_count": 58,
+      "total_tokens": 37237883,
+      "valid_count": 58
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-kimi-kimi-for-coding.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-kimi-kimi-for-coding.tar.zst",
+        "byte_size": 1466089,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "747dd38ee3082212c1805023951fd4f5fe63dec8b44da7451f42f99bc118ad62"
+      },
+      "caveats": [],
+      "completion_tokens": 2013775,
+      "display_name": "Kimi K2.7",
+      "failed": 104,
+      "median_completion_tokens_to_pass": 2214,
+      "median_prompt_tokens_to_pass": 32815,
+      "model_id": "kimi/kimi-for-coding",
+      "pass_rate": 0.23,
+      "passed": 31,
+      "prompt_tokens": 34526391,
+      "status": "complete",
+      "task_count": 135,
+      "total_tokens": 36540166,
+      "valid_count": 135
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-minimax-minimax-m3.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-minimax-minimax-m3.tar.zst",
+        "byte_size": 1964022,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "0619a5b4bec747c4ddd8c18af9817ab0c0029cfb2679002a0727142c58684b76"
+      },
+      "caveats": [],
+      "completion_tokens": 1463317,
+      "display_name": "minimax/minimax-m3",
+      "failed": 97,
+      "median_completion_tokens_to_pass": 2271,
+      "median_prompt_tokens_to_pass": 156726,
+      "model_id": "minimax/minimax-m3",
+      "pass_rate": 0.281,
+      "passed": 38,
+      "prompt_tokens": 102895944,
+      "status": "complete",
+      "task_count": 135,
+      "total_tokens": 104359261,
+      "valid_count": 135
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-openai-gpt-55.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-openai-gpt-55.tar.zst",
+        "byte_size": 779138,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "7e5380355fccb2a872d4a4ba0f9e3acfbaa93f537ab9a5ba767e8f869c8826ad"
+      },
+      "caveats": [
+        "partial task coverage: 93/135"
+      ],
+      "completion_tokens": 645476,
+      "display_name": "openai-gpt-55",
+      "failed": 35,
+      "median_completion_tokens_to_pass": 1590,
+      "median_prompt_tokens_to_pass": 141740,
+      "model_id": "openai-gpt-55",
+      "pass_rate": 0.624,
+      "passed": 58,
+      "prompt_tokens": 32777402,
+      "status": "partial",
+      "task_count": 93,
+      "total_tokens": 33422878,
+      "valid_count": 93
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-openai-gpt-55-pro.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-openai-gpt-55-pro.tar.zst",
+        "byte_size": 25094,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "ca45167a59c6c7f8deb470fccb2b8b124378f5743afade6c69283f153c28b9d3"
+      },
+      "caveats": [
+        "partial task coverage: 1/135"
+      ],
+      "completion_tokens": 11365,
+      "display_name": "openai-gpt-55-pro",
+      "failed": 1,
+      "median_completion_tokens_to_pass": null,
+      "median_prompt_tokens_to_pass": null,
+      "model_id": "openai-gpt-55-pro",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "prompt_tokens": 244667,
+      "status": "partial",
+      "task_count": 1,
+      "total_tokens": 256032,
+      "valid_count": 1
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-spark-step3p7-flash-148b.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-spark-step3p7-flash-148b.tar.zst",
+        "byte_size": 541156,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "dbffa6e2273bf40ae1c3cb144fd12869adf303ddcd382592d31735d6a401809d"
+      },
+      "caveats": [
+        "286 duplicate task artifacts; latest archive entry indexed",
+        "123 zero-usage task artifacts are not reusable"
+      ],
+      "completion_tokens": 10445,
+      "display_name": "Step37",
+      "failed": 134,
+      "median_completion_tokens_to_pass": 0,
+      "median_prompt_tokens_to_pass": 0,
+      "model_id": "spark/step3p7-flash-148b",
+      "pass_rate": 0.007,
+      "passed": 1,
+      "prompt_tokens": 502737,
+      "status": "partial",
+      "task_count": 135,
+      "total_tokens": 513182,
+      "valid_count": 12
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-virtuals-deepseek-v4-flash.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-virtuals-deepseek-v4-flash.tar.zst",
+        "byte_size": 51422,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "30a44e6919d8c66ed415781ff8eba5fb731714b034343955726d669e948fb16b"
+      },
+      "caveats": [
+        "partial task coverage: 2/135"
+      ],
+      "completion_tokens": 36731,
+      "display_name": "virtuals/deepseek-v4-flash",
+      "failed": 2,
+      "median_completion_tokens_to_pass": null,
+      "median_prompt_tokens_to_pass": null,
+      "model_id": "virtuals/deepseek-v4-flash",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "prompt_tokens": 2202209,
+      "status": "partial",
+      "task_count": 2,
+      "total_tokens": 2238940,
+      "valid_count": 2
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-virtuals-deepseek-v4-pro.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-virtuals-deepseek-v4-pro.tar.zst",
+        "byte_size": 31571,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "93ecafb6a2501ff22a9c4e4cb5cc121271203b808100273b826e252a2a793cf9"
+      },
+      "caveats": [
+        "partial task coverage: 1/135"
+      ],
+      "completion_tokens": 18411,
+      "display_name": "virtuals/deepseek-v4-pro",
+      "failed": 1,
+      "median_completion_tokens_to_pass": null,
+      "median_prompt_tokens_to_pass": null,
+      "model_id": "virtuals/deepseek-v4-pro",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "prompt_tokens": 986238,
+      "status": "partial",
+      "task_count": 1,
+      "total_tokens": 1004649,
+      "valid_count": 1
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-virtuals-xiaomi-mimo-v2-5.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-virtuals-xiaomi-mimo-v2-5.tar.zst",
+        "byte_size": 27629,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "8f02e2e9517cafbdaef50960b9c7a38ea88bcba23031a75238383efb3cfe5795"
+      },
+      "caveats": [
+        "partial task coverage: 2/135"
+      ],
+      "completion_tokens": 23973,
+      "display_name": "virtuals/xiaomi-mimo-v2-5",
+      "failed": 2,
+      "median_completion_tokens_to_pass": null,
+      "median_prompt_tokens_to_pass": null,
+      "model_id": "virtuals/xiaomi-mimo-v2-5",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "prompt_tokens": 836800,
+      "status": "partial",
+      "task_count": 2,
+      "total_tokens": 860773,
+      "valid_count": 2
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-xai-grok-4-3.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-xai-grok-4-3.tar.zst",
+        "byte_size": 49562,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "93dec7dcaef5e60a024a2759d6c065469965b5b0feca434784a61ba60cba2c21"
+      },
+      "caveats": [
+        "partial task coverage: 5/135"
+      ],
+      "completion_tokens": 15277,
+      "display_name": "xai/grok-4.3",
+      "failed": 5,
+      "median_completion_tokens_to_pass": null,
+      "median_prompt_tokens_to_pass": null,
+      "model_id": "xai/grok-4.3",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "prompt_tokens": 2754894,
+      "status": "partial",
+      "task_count": 5,
+      "total_tokens": 2770171,
+      "valid_count": 5
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-xiaomi-mimo-v2-5.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-xiaomi-mimo-v2-5.tar.zst",
+        "byte_size": 11423,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "cc39152eb9f4d981f07166ca5a8b01a411a6ac91ac6affc0cf80221d8e8d2816"
+      },
+      "caveats": [
+        "partial task coverage: 5/135",
+        "5 zero-usage task artifacts are not reusable"
+      ],
+      "completion_tokens": 0,
+      "display_name": "xiaomi-mimo-v2-5",
+      "failed": 5,
+      "median_completion_tokens_to_pass": null,
+      "median_prompt_tokens_to_pass": null,
+      "model_id": "xiaomi-mimo-v2-5",
+      "pass_rate": 0.0,
+      "passed": 0,
+      "prompt_tokens": 0,
+      "status": "invalid",
+      "task_count": 5,
+      "total_tokens": 0,
+      "valid_count": 0
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-zai-glm-5-2.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/benchmark-v0.1/benchmark-v0.1-zai-glm-5-2.tar.zst",
+        "byte_size": 1656031,
+        "release_tag": "benchmark-v0.1",
+        "sha256": "14a99c66bf18253fe981e96dd827baaf79bcc0287fcd31b0d894273a49a705b7"
+      },
+      "caveats": [],
+      "completion_tokens": 1310417,
+      "display_name": "zai/glm-5.2",
+      "failed": 82,
+      "median_completion_tokens_to_pass": 2599,
+      "median_prompt_tokens_to_pass": 105665,
+      "model_id": "zai/glm-5.2",
+      "pass_rate": 0.393,
+      "passed": 53,
+      "prompt_tokens": 61668637,
+      "status": "complete",
+      "task_count": 135,
+      "total_tokens": 62979054,
+      "valid_count": 135
+    }
+  ],
+  "schema_version": 1,
+  "task_count": 135,
+  "task_set_id": "sha256:7328d15b6379164a003ba24ab860e03d2557e1dd324f9bd37297666b9aa419da"
+}
