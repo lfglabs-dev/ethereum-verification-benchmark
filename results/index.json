@@ -1,0 +1,15 @@
+{
+  "benchmark": "verity-benchmark",
+  "latest_version": "0.1",
+  "schema_version": 1,
+  "versions": [
+    {
+      "benchmark_version": "0.1",
+      "label": "v0.1",
+      "manifest_url": "results/manifests/v0.1.json",
+      "summary_url": "results/summaries/v0.1.json",
+      "tag": "benchmark-v0.1",
+      "task_count": 135
+    }
+  ]
+}

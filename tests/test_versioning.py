@@ -3,12 +3,14 @@ from __future__ import annotations
 import copy
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from aggregate_version import aggregate, build_version_index, split_model_id
 from compute_fingerprints import build_version_manifest
 from plan_rerun import plan_rerun, result_key
 
@@ -232,6 +234,32 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(plan["rerun_count"], 1)
         self.assertEqual(plan["rerun"][0]["task_ref"], changed_ref)
         self.assertEqual(plan["rerun"][0]["reason"], "task_interface_id changed")
+
+    def test_summary_exposes_provider_and_model_for_website_consumers(self) -> None:
+        summary = aggregate(self.version, self.results)
+        by_id = {model["model_id"]: model for model in summary["models"]}
+        self.assertEqual(by_id["kimi/kimi-for-coding"]["provider"], "kimi")
+        self.assertEqual(by_id["kimi/kimi-for-coding"]["model"], "kimi-for-coding")
+        self.assertEqual(by_id["openai-gpt-55"]["provider"], "openai")
+        self.assertEqual(by_id["openai-gpt-55"]["model"], "gpt-55")
+
+    def test_model_id_split_uses_known_prefixes_and_slashes(self) -> None:
+        self.assertEqual(split_model_id("minimax/minimax-m3"), ("minimax", "minimax-m3"))
+        self.assertEqual(split_model_id("claude-opus-4-8"), ("anthropic", "opus-4-8"))
+        self.assertEqual(split_model_id("grok"), ("xai", "grok-build-0.1"))
+        self.assertEqual(split_model_id("xai/grok-4.3"), ("xai", "grok-4.3"))
+        self.assertEqual(split_model_id("custom-model"), ("unknown", "custom-model"))
+
+    def test_version_index_points_to_summary_and_manifest(self) -> None:
+        summary = aggregate(self.version, self.results)
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp)
+            (out / "results" / "summaries").mkdir(parents=True)
+            index = build_version_index(out, latest_version="0.1", current_summary=summary)
+        self.assertEqual(index["latest_version"], "0.1")
+        self.assertEqual(index["versions"][0]["benchmark_version"], "0.1")
+        self.assertEqual(index["versions"][0]["summary_url"], "results/summaries/v0.1.json")
+        self.assertEqual(index["versions"][0]["manifest_url"], "results/manifests/v0.1.json")
 
 
 if __name__ == "__main__":
