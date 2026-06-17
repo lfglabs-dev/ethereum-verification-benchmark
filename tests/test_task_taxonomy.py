@@ -97,6 +97,27 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(result.outcome, "harness_error")
         self.assertFalse(result.is_pass)
 
+    def test_completed_with_failures_is_a_trusted_run(self) -> None:
+        # The harness emits 'completed_with_failures' when the run finishes but some targets
+        # fail. That is a genuine model failure to classify, not an infrastructure error.
+        result = self.classify(
+            "lean_check_failed", "unsolved goals", harness_status="completed_with_failures"
+        )
+        self.assertEqual(result.outcome, "lean_check_failed")
+        self.assertEqual(result.lean_failure_mode, "unsolved_goals")
+        passed = self.classify("passed", "", harness_status="completed_with_failures")
+        self.assertEqual(passed.outcome, "passed")
+        self.assertTrue(passed.is_pass)
+
+    def test_legacy_passed_status_is_case_insensitive(self) -> None:
+        artifact = {
+            "harness_status": "completed",
+            "evaluation": {"status": "Passed", "failure_mode": "lean_check_failed", "details": ""},
+        }
+        row = next(cf.iter_run_targets(artifact))
+        self.assertEqual(row["status"], "passed")
+        self.assertTrue(self.classify(row["status"], row["output"]).is_pass)
+
     def test_theorem_missing_outcome(self) -> None:
         result = self.classify("theorem_missing", "")
         self.assertEqual(result.outcome, "theorem_missing")
@@ -136,8 +157,10 @@ class ExtractorTests(unittest.TestCase):
         blank_harness = {"harness_status": "", "verifier_output_present": True}
         errored = {"harness_status": "errored", "verifier_output_present": True}
         no_output = {"harness_status": "completed", "verifier_output_present": False}
+        completed_with_failures = {"harness_status": "completed_with_failures", "verifier_output_present": True}
         self.assertTrue(ef.is_valid_attempt(ok))
         self.assertTrue(ef.is_valid_attempt(blank_harness))
+        self.assertTrue(ef.is_valid_attempt(completed_with_failures))
         self.assertFalse(ef.is_valid_attempt(errored))
         self.assertFalse(ef.is_valid_attempt(no_output))
 

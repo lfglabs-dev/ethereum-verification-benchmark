@@ -33,6 +33,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from classify_failures import (  # noqa: E402
+    COMPLETED_HARNESS_STATUSES,
     classify,
     iter_run_files,
     iter_run_targets,
@@ -67,7 +68,7 @@ def is_valid_attempt(result: dict[str, Any]) -> bool:
     Errored/incomplete/zero-output rows are excluded from skill conclusions (they reflect
     transport or infrastructure problems, not model reasoning).
     """
-    if str(result.get("harness_status") or "").lower() not in {"", "completed"}:
+    if str(result.get("harness_status") or "").strip().lower() not in COMPLETED_HARNESS_STATUSES:
         return False
     return bool(result.get("verifier_output_present", False))
 

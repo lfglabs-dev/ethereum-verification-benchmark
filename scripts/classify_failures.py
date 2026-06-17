@@ -26,6 +26,11 @@ from typing import Any, Iterator
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TAXONOMY = ROOT / "analysis" / "failure_modes.json"
 
+# Harness statuses that mean the run finished cleanly enough to trust its verdict.
+# ``completed_with_failures`` is emitted (harness/cli.py) when the run completes but some
+# targets fail -- those are genuine model failures we must keep, not infrastructure errors.
+COMPLETED_HARNESS_STATUSES = frozenset({"", "completed", "completed_with_failures"})
+
 
 @dataclass(frozen=True)
 class Classification:
@@ -67,7 +72,7 @@ def map_outcome(
     verifier status, since a partial run can leave a stale or empty verdict.
     """
     index = _build_status_index(taxonomy)
-    if harness_status is not None and str(harness_status).strip().lower() not in {"", "completed"}:
+    if harness_status is not None and str(harness_status).strip().lower() not in COMPLETED_HARNESS_STATUSES:
         return index.get("harness_error", {"id": "harness_error", "is_pass": False})
     key = str(status or "").strip().lower()
     if key in index:
@@ -153,7 +158,8 @@ def iter_run_targets(artifact: dict[str, Any]) -> Iterator[dict[str, Any]]:
         return
     evaluation = artifact.get("evaluation")
     if isinstance(evaluation, dict):
-        status = evaluation.get("failure_mode") if evaluation.get("status") != "passed" else "passed"
+        passed = str(evaluation.get("status") or "").strip().lower() == "passed"
+        status = "passed" if passed else evaluation.get("failure_mode")
         yield {
             "task_ref": artifact.get("task_ref"),
             "status": status or evaluation.get("status"),
