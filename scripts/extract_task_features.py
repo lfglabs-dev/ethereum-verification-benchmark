@@ -34,6 +34,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from classify_failures import (  # noqa: E402
     COMPLETED_HARNESS_STATUSES,
+    artifact_run_id,
     classify,
     iter_run_files,
     iter_run_targets,
@@ -116,9 +117,14 @@ def usage_total_tokens(result: dict[str, Any]) -> int:
     return int(usage.get("prompt_tokens") or 0) + int(usage.get("completion_tokens") or 0)
 
 
-def load_enrichment(runs_dirs: list[Path], taxonomy: dict[str, Any]) -> dict[tuple[str, str], dict[str, Any]]:
-    """(model_id, task_ref) -> classification dict, parsed from detailed run artifacts."""
-    enrichment: dict[tuple[str, str], dict[str, Any]] = {}
+def load_enrichment(runs_dirs: list[Path], taxonomy: dict[str, Any]) -> dict[tuple[str, str, str], dict[str, Any]]:
+    """(model_id, task_ref, run_id) -> classification dict from detailed artifacts.
+
+    Run ids are part of the key because benchmark manifests select a specific reusable
+    artifact. Backfills and retries can leave multiple artifacts for the same model/task,
+    and attaching the wrong detailed artifact would mix pass/fail and failure-mode data.
+    """
+    enrichment: dict[tuple[str, str, str], dict[str, Any]] = {}
     for runs_dir in runs_dirs:
         if not runs_dir.exists():
             print(f"warning: runs dir not found, skipping: {runs_dir}", file=sys.stderr)
@@ -129,9 +135,10 @@ def load_enrichment(runs_dirs: list[Path], taxonomy: dict[str, Any]) -> dict[tup
             except (OSError, json.JSONDecodeError):
                 continue
             model_id = artifact.get("model")
+            run_id = artifact_run_id(artifact, run_file)
             for target in iter_run_targets(artifact):
                 task_ref = target.get("task_ref")
-                if not (model_id and task_ref):
+                if not (model_id and task_ref and run_id):
                     continue
                 result = classify(
                     target.get("status"),
@@ -139,7 +146,7 @@ def load_enrichment(runs_dirs: list[Path], taxonomy: dict[str, Any]) -> dict[tup
                     taxonomy=taxonomy,
                     harness_status=target.get("harness_status"),
                 )
-                enrichment[(str(model_id), str(task_ref))] = result.as_dict()
+                enrichment[(str(model_id), str(task_ref), str(run_id))] = result.as_dict()
     return enrichment
 
 
@@ -152,7 +159,7 @@ def build_features(
     version: dict[str, Any],
     results: dict[str, Any],
     *,
-    enrichment: dict[tuple[str, str], dict[str, Any]],
+    enrichment: dict[tuple[Any, ...], dict[str, Any]],
     min_coverage: float,
 ) -> dict[str, Any]:
     tasks = {str(t["task_ref"]): t for t in version.get("tasks", [])}
@@ -188,7 +195,14 @@ def build_features(
                 "requests": req,
                 "harness_status": row.get("harness_status"),
             }
-            enriched = enrichment.get((model, task_ref))
+            run_id = row.get("run_id")
+            enriched = None
+            if run_id:
+                enriched = enrichment.get((model, task_ref, str(run_id)))
+            if enriched is None:
+                # Backwards-compatible path for tests and hand-authored fixtures that
+                # intentionally do not model concrete artifact selection.
+                enriched = enrichment.get((model, task_ref))
             if enriched is not None:
                 detail["outcome"] = enriched["outcome"]
                 detail["lean_failure_mode"] = enriched["lean_failure_mode"]

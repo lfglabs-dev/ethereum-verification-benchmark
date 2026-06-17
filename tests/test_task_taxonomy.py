@@ -16,6 +16,7 @@ import copy
 import inspect
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -294,6 +295,45 @@ class ExtractorTests(unittest.TestCase):
         features = ef.build_features(version, results, enrichment=enrichment, min_coverage=1.0)
         self.assertEqual(features["tasks"][0]["failure_modes"], {})
 
+    def test_enrichment_uses_manifest_run_id_when_duplicate_artifacts_exist(self) -> None:
+        version = {
+            "benchmark_version": "0.1",
+            "tasks": [{"task_ref": "fam/case/thm", "task_fingerprint": "fp", "task_interface_id": "i"}],
+        }
+        results = {
+            "models": [
+                {
+                    "model_id": "m",
+                    "task_results": [
+                        {
+                            **self._row("fam/case/thm", passed=False, tokens=10),
+                            "run_id": "run-new",
+                        }
+                    ],
+                }
+            ]
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write_run(
+                root / "run-old",
+                run_id="run-old",
+                status="lean_check_failed",
+                output="unsolved goals",
+            )
+            self._write_run(
+                root / "run-new",
+                run_id="run-new",
+                status="theorem_missing",
+                output="",
+            )
+            enrichment = ef.load_enrichment([root], cf.load_taxonomy())
+
+        features = ef.build_features(version, results, enrichment=enrichment, min_coverage=1.0)
+        task = features["tasks"][0]
+        self.assertEqual(task["per_model"]["m"]["outcome"], "theorem_missing")
+        self.assertEqual(task["failure_modes"], {"theorem_missing": 1})
+
     @staticmethod
     def _row(task_ref: str, *, passed: bool, tokens: int) -> dict:
         return {
@@ -303,6 +343,26 @@ class ExtractorTests(unittest.TestCase):
             "verifier_output_present": True,
             "usage": {"total_tokens": tokens, "requests": 1},
         }
+
+    @staticmethod
+    def _write_run(path: Path, *, run_id: str, status: str, output: str) -> None:
+        path.mkdir(parents=True)
+        artifact = {
+            "run_id": run_id,
+            "model": "m",
+            "task_ref": "fam/case/thm",
+            "harness_status": "completed",
+            "verifier": {
+                "targets": [
+                    {
+                        "task_ref": "fam/case/thm",
+                        "status": status,
+                        "output": output,
+                    }
+                ]
+            },
+        }
+        (path / "run.json").write_text(json.dumps(artifact), encoding="utf-8")
 
 
 class DecouplingInvariantTests(unittest.TestCase):

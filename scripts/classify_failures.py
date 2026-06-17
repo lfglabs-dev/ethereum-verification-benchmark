@@ -175,6 +175,22 @@ def _load_run(path: Path) -> dict[str, Any] | None:
         return None
 
 
+def artifact_run_id(artifact: dict[str, Any], run_file: Path) -> str:
+    """Return the run id represented by an artifact path.
+
+    Canonical ``run.json`` artifacts carry ``run_id``. Older extracted archives may only
+    have ``verifier/verifier.json``; in that case the run directory name is the stable id
+    that matches manifests.
+    """
+    if artifact.get("run_id"):
+        return str(artifact["run_id"])
+    if run_file.name == "verifier.json" and run_file.parent.name == "verifier":
+        return run_file.parent.parent.name
+    if run_file.name == "run.json":
+        return run_file.parent.name
+    return run_file.stem
+
+
 def iter_run_files(runs_dir: Path) -> Iterator[Path]:
     """Yield one canonical artifact JSON per run directory (run.json preferred)."""
     if (runs_dir / "run.json").exists():
@@ -198,6 +214,8 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
         artifact = _load_run(run_file)
         if artifact is None:
             continue
+        run_id = artifact_run_id(artifact, run_file)
+        model_id = artifact.get("model")
         for target in iter_run_targets(artifact):
             result = classify(
                 target["status"],
@@ -205,7 +223,14 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
                 taxonomy=taxonomy,
                 harness_status=target.get("harness_status"),
             )
-            rows.append({"task_ref": target["task_ref"], **result.as_dict()})
+            rows.append(
+                {
+                    "run_id": run_id,
+                    "model_id": model_id,
+                    "task_ref": target["task_ref"],
+                    **result.as_dict(),
+                }
+            )
     return rows
 
 
