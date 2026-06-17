@@ -242,11 +242,14 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(by_id["kimi/kimi-for-coding"]["model"], "kimi-for-coding")
         self.assertEqual(by_id["openai-gpt-55"]["provider"], "openai")
         self.assertEqual(by_id["openai-gpt-55"]["model"], "gpt-55")
+        self.assertEqual(by_id["grok"]["provider"], "grok")
+        self.assertEqual(by_id["grok"]["model"], "grok-build-0.1")
+        self.assertEqual(by_id["grok"]["display_name"], "grok/grok-build-0.1")
 
     def test_model_id_split_uses_known_prefixes_and_slashes(self) -> None:
         self.assertEqual(split_model_id("minimax/minimax-m3"), ("minimax", "minimax-m3"))
         self.assertEqual(split_model_id("claude-opus-4-8"), ("anthropic", "opus-4-8"))
-        self.assertEqual(split_model_id("grok"), ("xai", "grok-build-0.1"))
+        self.assertEqual(split_model_id("grok"), ("grok", "grok-build-0.1"))
         self.assertEqual(split_model_id("xai/grok-4.3"), ("xai", "grok-4.3"))
         self.assertEqual(split_model_id("custom-model"), ("unknown", "custom-model"))
 

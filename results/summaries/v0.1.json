@@ -100,7 +100,7 @@
         "partial task coverage: 58/135"
       ],
       "completion_tokens": 255759,
-      "display_name": "grok",
+      "display_name": "grok/grok-build-0.1",
       "failed": 30,
       "median_completion_tokens_to_pass": 1196,
       "median_prompt_tokens_to_pass": 247657,
@@ -109,7 +109,7 @@
       "pass_rate": 0.483,
       "passed": 28,
       "prompt_tokens": 36982124,
-      "provider": "xai",
+      "provider": "grok",
       "status": "partial",
       "task_count": 58,
       "total_tokens": 37237883,

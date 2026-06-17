@@ -23,7 +23,7 @@ def split_model_id(model_id: str) -> tuple[str, str]:
         provider, model = model_id.split("/", 1)
         return provider, model
     known_aliases = {
-        "grok": ("xai", "grok-build-0.1"),
+        "grok": ("grok", "grok-build-0.1"),
     }
     if model_id in known_aliases:
         return known_aliases[model_id]
@@ -56,11 +56,12 @@ def model_summary(model: dict[str, Any]) -> dict[str, Any]:
     completion_passed = [int((task.get("usage") or {}).get("completion_tokens") or 0) for task in passed]
     prompt_passed = [int((task.get("usage") or {}).get("prompt_tokens") or 0) for task in passed]
     provider, model_name = split_model_id(model["model_id"])
+    display_name = f"{provider}/{model_name}" if model["model_id"] == "grok" else model.get("display_name", model["model_id"])
     return {
         "model_id": model["model_id"],
         "provider": model.get("provider", provider),
         "model": model.get("model", model_name),
-        "display_name": model.get("display_name", model["model_id"]),
+        "display_name": display_name,
         "status": model.get("status", "invalid"),
         "task_count": model.get("task_count", len(tasks)),
         "valid_count": model.get("valid_count", len(tasks)),
