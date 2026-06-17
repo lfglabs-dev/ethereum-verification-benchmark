@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "benchmark_version": "0.1",
+  "description": "Annotation layer that explains *what kind of proof problem* each Verity task is and *what proof skills* it exercises. It complements the machine-readable per-task metadata (proof_family, property_class, difficulty) in benchmark-versions/<v>.json with reviewer-curated skill tags and an empirically-derived snapshot of how models fail.",
+  "decoupling": {
+    "statement": "This file is NOT an input to result_key and never triggers a rerun. It is a separate, hand-maintainable layer keyed by task_ref. Each label records the task_fingerprint it was reviewed against so staleness can be detected (label fingerprint != current version fingerprint) without invalidating any stored result.",
+    "see_also": ["scripts/plan_rerun.py", "scripts/compute_fingerprints.py"],
+    "staleness_check": "A label is 'current' for a version when its task_fingerprint matches that version's task_fingerprint for the same task_ref. A drifted fingerprint flags the label for re-review; it does not block result reuse."
+  },
+  "dimensions": {
+    "proof_family": {
+      "source": "version-metadata",
+      "description": "Coarse proof archetype (functional_correctness, state_preservation_local_effects, authorization_enablement, protocol_transition_correctness, refinement_equivalence)."
+    },
+    "property_class": {
+      "source": "version-metadata",
+      "description": "Finer-grained property being proven (e.g. accounting_conservation, access_control_identity, linked_list_acyclicity)."
+    },
+    "difficulty": {
+      "source": "version-metadata",
+      "description": "Author-assigned a-priori difficulty. Expected vocabulary: easy | medium | hard. NOTE: v0.1 contains one outlier label 'low' (ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free); treat as 'easy' until the version metadata is corrected.",
+      "expected_values": ["easy", "medium", "hard"]
+    },
+    "skills": {
+      "source": "reviewed",
+      "description": "Reviewer-curated proof-skill tags from skill_vocabulary below. Captures the reasoning a passing proof requires, independent of any model's outcome."
+    },
+    "observed_failure_modes": {
+      "source": "derived",
+      "description": "Snapshot of parsed Lean failure modes (see analysis/failure_modes.json) over enriched failing attempts, reproducible via scripts/extract_task_features.py. Informational; refreshes as more models are run."
+    },
+    "empirical_hardness": {
+      "source": "derived",
+      "description": "1 - cohort_pass_rate over full-coverage models (see analysis/task_features.json). Distinct from the author-assigned 'difficulty'."
+    }
+  },
+  "skill_vocabulary": [
+    {"id": "arithmetic_reasoning", "description": "Integer/modular arithmetic, bounds, rounding, overflow, fixed-point math."},
+    {"id": "aggregation_conservation", "description": "Sums/balances/totals preserved across an operation (accounting invariants)."},
+    {"id": "case_analysis", "description": "Branching on conditionals/enums; discharging each control-flow path (split_ifs)."},
+    {"id": "definitional_unfolding", "description": "Unfolding contract semantics, the Verity state monad, or spec definitions to a tractable goal."},
+    {"id": "state_threading", "description": "Reasoning about storage reads/writes threaded through sequential state transitions."},
+    {"id": "invariant_preservation", "description": "Showing a property holds after a transition given it held before."},
+    {"id": "access_control_reasoning", "description": "Caller identity, authorization gates, permitted-vs-rejected execution."},
+    {"id": "rewriting", "description": "Equational rewriting and simp-set orchestration to normalize goals."},
+    {"id": "quantifier_reasoning", "description": "Reasoning under universal/existential quantifiers over sets, maps, or indices."},
+    {"id": "datastructure_reasoning", "description": "Finite sets, linked lists, trees, arrays (membership, bijection, acyclicity)."},
+    {"id": "refinement_alignment", "description": "Showing an implementation refines/equals an abstract spec model."},
+    {"id": "revert_reasoning", "description": "Reasoning about revert/exceptional paths and that disallowed actions fail."}
+  ],
+  "label_provenance": {
+    "skills": "reviewer-curated (Th0rgal) from task proof_family/property_class and a reading of the target theorem",
+    "observed_failure_modes": "auto-derived from v0.1 detailed artifacts for the full-coverage strong models (zai/glm-5.2, minimax/minimax-m3, kimi/kimi-for-coding) via scripts/extract_task_features.py",
+    "cohort_signature": "per-model pass/fail across the v0.1 comparison cohort [kimi/kimi-for-coding, minimax/minimax-m3, spark/step3p7-flash-148b, zai/glm-5.2]"
+  },
+  "labels": [
+    {
+      "task_ref": "alchemix/earmark_conservation/earmark_preserves_invariant",
+      "task_fingerprint": "sha256:774b794f9a7647d760ef989b13f7bcc861fddbad43554d3da9aec0ba888f8bd2",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "state_preservation_local_effects",
+      "property_class": "accounting_conservation",
+      "difficulty": "hard",
+      "skills": ["state_threading", "invariant_preservation", "aggregation_conservation", "arithmetic_reasoning"],
+      "observed_failure_modes": {"syntax_error": 1, "tactic_failed": 1, "unsolved_goals": 1},
+      "cohort_signature": "FFFF",
+      "cohort_pass_rate": 0.0,
+      "notes": "Lazy-accrual earmark math (mulQ128). split_ifs failures: models cannot align the conditional fee branch with the conserved-total goal."
+    },
+    {
+      "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+      "task_fingerprint": "sha256:a9650ccb8d9c8032feec00a19f90df5ed7a6637fb9ea2a1be6d44fa01abebcf4",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "state_preservation_local_effects",
+      "property_class": "monotonic_counter",
+      "difficulty": "easy",
+      "skills": ["state_threading", "invariant_preservation", "arithmetic_reasoning"],
+      "observed_failure_modes": {"syntax_error": 1, "unsolved_goals": 1},
+      "cohort_signature": "FFFP",
+      "cohort_pass_rate": 0.25,
+      "notes": "Only glm-5.2 closes it. 'Easy' label but empirically hard: the deposit-count increment requires threading the nested branch through the state update."
+    },
+    {
+      "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+      "task_fingerprint": "sha256:d860abebe2fdcf34de96209554bb910f2f64f5e63631a5124c5899330b91de92",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "protocol_transition_correctness",
+      "property_class": "accounting_invariant_break",
+      "difficulty": "medium",
+      "skills": ["state_threading", "invariant_preservation", "case_analysis", "aggregation_conservation"],
+      "observed_failure_modes": {"unsolved_goals": 1},
+      "cohort_signature": "FPFP",
+      "cohort_pass_rate": 0.5,
+      "notes": "Divisive: minimax and glm pass, kimi and spark fail. Reasoning about pool balance across a flash-loan-via-deposit trace."
+    },
+    {
+      "task_ref": "onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller",
+      "task_fingerprint": "sha256:981edee5e30bf7de18f90b7d75f8e1f8ae8fc6793563625a8f25060d396dd41f",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "authorization_enablement",
+      "property_class": "access_control_identity",
+      "difficulty": "medium",
+      "skills": ["access_control_reasoning", "case_analysis", "state_threading"],
+      "observed_failure_modes": {"syntax_error": 1},
+      "cohort_signature": "FPFP",
+      "cohort_pass_rate": 0.5,
+      "notes": "One of a family of near-identical caller-identity tasks; their FPFP/FFFP signatures are a clean model-differentiation cluster."
+    },
+    {
+      "task_ref": "kleros/sortition_trees/node_id_bijection",
+      "task_fingerprint": "sha256:b0368d4e62f5ad2f06f04c050ec0c92af7db44415dc61ac15e64f6c81792f660",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "state_preservation_local_effects",
+      "property_class": "mapping_consistency",
+      "difficulty": "medium",
+      "skills": ["datastructure_reasoning", "quantifier_reasoning", "state_threading", "invariant_preservation"],
+      "observed_failure_modes": {"timeout": 1},
+      "cohort_signature": "PFFP",
+      "cohort_pass_rate": 0.5,
+      "notes": "Bijection over sortition-tree node ids. Heavy datastructure/quantifier reasoning; at least one cohort model timed out rather than failed logically."
+    },
+    {
+      "task_ref": "lido/vaulthub_locked/locked_funds_solvency",
+      "task_fingerprint": "sha256:6f15b3384abbceb8c0f7e40ef09b11879ea6770da39a8a7aec503f255d8a57f4",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "functional_correctness",
+      "property_class": "accounting_bound",
+      "difficulty": "hard",
+      "skills": ["arithmetic_reasoning", "aggregation_conservation", "definitional_unfolding", "rewriting"],
+      "observed_failure_modes": {"syntax_error": 1, "unsolved_goals": 2},
+      "cohort_signature": "FFFF",
+      "cohort_pass_rate": 0.0,
+      "notes": "Solvency bound on locked funds. No cohort model solved it; failures are mostly trailing unsolved goals (close but incomplete arithmetic bound)."
+    },
+    {
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved",
+      "task_fingerprint": "sha256:00bfcd8ce6b87735c3efa6127fe98d852621bd8b7c7584c7bc5f870d03a1c159",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "refinement_equivalence",
+      "property_class": "accounting_conservation",
+      "difficulty": "hard",
+      "skills": ["refinement_alignment", "aggregation_conservation", "arithmetic_reasoning", "rewriting"],
+      "observed_failure_modes": {"tactic_failed": 1, "unsolved_goals": 2},
+      "cohort_signature": "FFFF",
+      "cohort_pass_rate": 0.0,
+      "notes": "Refinement-equivalence is the hardest family overall (11% pass rate). Dual-asset conservation over a claim+allocate trace."
+    },
+    {
+      "task_ref": "zama/erc7984_confidential_token/setOperator_updates",
+      "task_fingerprint": "sha256:88056dad5f643b1dd2186b93dbbb67c8e37888b74037c0c8d2c92a5244ff036a",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "functional_correctness",
+      "property_class": "storage_write",
+      "difficulty": "easy",
+      "skills": ["definitional_unfolding", "state_threading", "rewriting"],
+      "observed_failure_modes": {"decision_procedure_failed": 1},
+      "cohort_signature": "FPFP",
+      "cohort_pass_rate": 0.5,
+      "notes": "Simple storage-write postcondition that nonetheless splits the cohort; a failing attempt threw `grind` at it instead of unfolding the write."
+    },
+    {
+      "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+      "task_fingerprint": "sha256:f62258b7734ffd2a3a1c7c5d52b5ffe55c1f4c8f9cb635c5216cf58242976b90",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "state_preservation_local_effects",
+      "property_class": "arithmetic_rounding",
+      "difficulty": "hard",
+      "skills": ["arithmetic_reasoning", "invariant_preservation", "state_threading", "definitional_unfolding"],
+      "observed_failure_modes": {"syntax_error": 1, "unsolved_goals": 2},
+      "cohort_signature": "FFFF",
+      "cohort_pass_rate": 0.0,
+      "notes": "Product-of-virtual-balances non-decreasing under swap rounding. Arithmetic-rounding monotonicity that no cohort model could discharge."
+    },
+    {
+      "task_ref": "usual/dao_collateral/swap_conservation",
+      "task_fingerprint": "sha256:f6122b285b5b0c61d74760cf4c43da7f2b54a7fa71b90b4cb935e71e6b94d3a5",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "state_preservation_local_effects",
+      "property_class": "accounting_conservation",
+      "difficulty": "easy",
+      "skills": ["aggregation_conservation", "state_threading", "invariant_preservation", "case_analysis"],
+      "observed_failure_modes": {"tactic_failed": 2, "unsolved_goals": 1},
+      "cohort_signature": "FFFF",
+      "cohort_pass_rate": 0.0,
+      "notes": "Labeled 'easy' but unsolved by the whole cohort and expensive (~650k mean tokens): a strong example of mislabeled a-priori difficulty."
+    },
+    {
+      "task_ref": "polaris/bonding_curve/init_reserve_ratio_zero",
+      "task_fingerprint": "sha256:aa88f335ae3f9c2a08e6adbd1d35b26bcc6d6d7b36c91b72fee5b8bbd8a643fb",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "state_preservation_local_effects",
+      "property_class": "reserve_state_transition",
+      "difficulty": "medium",
+      "skills": ["state_threading", "definitional_unfolding", "case_analysis", "revert_reasoning"],
+      "observed_failure_modes": {"theorem_missing": 3},
+      "cohort_signature": "FFFF",
+      "cohort_pass_rate": 0.0,
+      "notes": "theorem_missing across the board: models never produced the target declaration at all, distinct from producing a wrong proof."
+    },
+    {
+      "task_ref": "safe/owner_manager_reach/swap_owner_acyclicity",
+      "task_fingerprint": "sha256:a9fb21291c79d324d5518d96da04ac0f41c0576cad8605c0ac8f39cd383fc4ff",
+      "reviewer": "Th0rgal",
+      "reviewed_at": "2026-06-17",
+      "proof_family": "state_preservation_local_effects",
+      "property_class": "linked_list_acyclicity",
+      "difficulty": "hard",
+      "skills": ["datastructure_reasoning", "quantifier_reasoning", "invariant_preservation", "state_threading"],
+      "observed_failure_modes": {"simp_no_progress": 1, "tactic_failed": 1, "unknown_identifier": 1},
+      "cohort_signature": "FFFF",
+      "cohort_pass_rate": 0.0,
+      "notes": "Highest mean token spend of any task (~900k) with zero successes. Linked-list acyclicity over owner-manager reachability; the most expensive dead end in v0.1."
+    }
+  ]
+}

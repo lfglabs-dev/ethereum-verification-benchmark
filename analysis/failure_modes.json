@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "description": "Failure-mode taxonomy for Verity benchmark proof attempts. Classification has two levels: (1) the outcome status reported by the harness/verifier, and (2) when a submitted proof fails to type-check, a Lean failure sub-mode parsed from the verifier output. This file is the data-driven source of truth consumed by scripts/classify_failures.py; it can be extended without code changes and is independent of benchmark versioning (it never feeds result_key).",
+  "matching": {
+    "method": "Outcome status is mapped directly from the verifier/harness status. When the outcome is 'lean_check_failed', the verifier output text is scanned against lean_failure_modes in array order; the first mode with any matching (case-insensitive substring) signature wins. Ordering is deliberate: more specific / more proximate causes are listed before 'unsolved_goals', which is the softest terminal state and is therefore matched last among real Lean errors.",
+    "case_sensitive": false
+  },
+  "outcome_statuses": [
+    {
+      "id": "passed",
+      "label": "Passed",
+      "is_pass": true,
+      "verifier_status": ["passed"],
+      "description": "The submitted proof type-checks and discharges every target with no trusted-axiom violation."
+    },
+    {
+      "id": "lean_check_failed",
+      "label": "Lean check failed",
+      "is_pass": false,
+      "verifier_status": ["lean_check_failed", "failed"],
+      "description": "A candidate proof was submitted but Lean rejected it. The specific Lean failure sub-mode is parsed from the verifier output."
+    },
+    {
+      "id": "theorem_missing",
+      "label": "Theorem missing",
+      "is_pass": false,
+      "verifier_status": ["theorem_missing", "reference_declaration_missing"],
+      "description": "The required theorem/declaration is absent from the submission. The model did not produce the target statement (often gave up, renamed it, or never reached it)."
+    },
+    {
+      "id": "timeout",
+      "label": "Timeout",
+      "is_pass": false,
+      "verifier_status": ["timeout", "deterministic_timeout"],
+      "description": "The verifier build or elaboration exceeded its time budget before reaching a verdict."
+    },
+    {
+      "id": "dependency_checkout_failed",
+      "label": "Dependency checkout failed",
+      "is_pass": false,
+      "verifier_status": ["dependency_checkout_failed"],
+      "description": "Infrastructure failure: a build dependency (e.g. a pinned git revision) could not be fetched. Not attributable to the model."
+    },
+    {
+      "id": "harness_error",
+      "label": "Harness error / incomplete",
+      "is_pass": false,
+      "verifier_status": ["harness_error", "error", "errored", "incomplete"],
+      "description": "The run did not complete cleanly (harness_status != completed). Excluded from model-skill conclusions; tracked separately as an infrastructure/transport problem."
+    },
+    {
+      "id": "no_submission",
+      "label": "No submission",
+      "is_pass": false,
+      "verifier_status": ["no_submission", "not_runnable", "missing_candidate"],
+      "description": "No candidate proof file was produced for the task."
+    }
+  ],
+  "lean_failure_modes": [
+    {
+      "id": "sorry_used",
+      "label": "Used sorry / admit",
+      "signatures": ["declaration uses 'sorry'", "declaration uses 'admit'"],
+      "interpretation": "The proof type-checks only because it leaves a hole. The model failed to find a real proof and stubbed it out."
+    },
+    {
+      "id": "syntax_error",
+      "label": "Syntax / parse error",
+      "signatures": ["unexpected token", "expected ':='", "expected term", "expected command", "unterminated", "unexpected identifier", "unexpected end of input"],
+      "interpretation": "The submitted Lean source does not parse. Often malformed tactic syntax, unbalanced brackets, or invalid term structure."
+    },
+    {
+      "id": "unknown_identifier",
+      "label": "Unknown identifier / constant",
+      "signatures": ["unknown identifier", "unknown constant", "unknown namespace", "unknown package", "unknown tactic"],
+      "capture": "unknown (?:identifier|constant|namespace|tactic) '(?P<detail>[^']*)'",
+      "interpretation": "The model referenced a name that does not exist (hallucinated lemma/definition, wrong namespace, or a tactic that is not in scope)."
+    },
+    {
+      "id": "type_mismatch",
+      "label": "Type / elaboration mismatch",
+      "signatures": ["type mismatch", "application type mismatch", "function expected", "invalid field", "type expected", "must not contain free variables", "motive is not type correct"],
+      "interpretation": "A term is well-formed syntactically but ill-typed or ill-elaborated: wrong argument types, mis-applied function, a field/projection that does not fit, or an expected type that still contains free variables/metavariables."
+    },
+    {
+      "id": "recursion_depth",
+      "label": "Maximum recursion depth",
+      "signatures": ["maximum recursion depth", "deep recursion", "stack overflow"],
+      "interpretation": "Elaboration blew the recursion/stack limit, usually from an unguarded unfolding, runaway simp set, or non-terminating rewrite."
+    },
+    {
+      "id": "heartbeat_timeout",
+      "label": "Elaboration heartbeat timeout",
+      "signatures": ["maximum number of heartbeats", "(deterministic) timeout at", "maxheartbeats"],
+      "interpretation": "Elaboration exceeded the per-declaration heartbeat budget (e.g. timeout at `whnf`). The proof term is too expensive to elaborate -- typically heavy definitional unfolding, `decide`, or large `simp` sets. Distinct from the outcome-level 'timeout', which is the verifier's wall-clock budget; the verifier reports these as lean_check_failed."
+    },
+    {
+      "id": "decision_procedure_failed",
+      "label": "Decision procedure could not close goal",
+      "signatures": ["omega could not", "linarith failed", "`decide` ", "decide failed", "ring failed", "ring_nf failed", "norm_num failed", "positivity failed", "`grind` failed", "grind failed"],
+      "capture": "(?P<detail>omega|linarith|decide|ring_nf|ring|norm_num|positivity|grind)",
+      "interpretation": "An automation tactic (omega/linarith/decide/ring/grind/...) was applied but could not discharge the goal — typically the goal is outside its fragment or needs manual setup first."
+    },
+    {
+      "id": "simp_no_progress",
+      "label": "simp made no progress",
+      "signatures": ["simp made no progress"],
+      "interpretation": "A simp call did not rewrite anything. The model expected a simp set to close or advance the goal but it had no effect."
+    },
+    {
+      "id": "tactic_failed",
+      "label": "Tactic failed",
+      "signatures": ["tactic '", "tactic failed", "rewrite failed", "rfl failed", "apply failed", "exact failed"],
+      "capture": [
+        "tactic '(?P<detail>[a-zA-Z_][a-zA-Z0-9_']*)' failed",
+        "'(?P<detail>[a-zA-Z_][a-zA-Z0-9_']*)' tactic failed"
+      ],
+      "interpretation": "A specific tactic raised an error (e.g. split_ifs with no if-then-else, a rewrite whose motive is not type-correct, a `show` whose pattern is not definitionally equal). The captured detail is the offending tactic."
+    },
+    {
+      "id": "unsolved_goals",
+      "label": "Unsolved goals",
+      "signatures": ["unsolved goals", "unsolved goal"],
+      "interpretation": "The proof script parsed and elaborated but left goals open. The model's reasoning was on track but incomplete — the closest 'soft' failure to a passing proof."
+    },
+    {
+      "id": "other_lean_error",
+      "label": "Other Lean error",
+      "signatures": [],
+      "is_fallback": true,
+      "interpretation": "A Lean error that does not match any known signature. Inspect manually and, if it recurs, add a signature above."
+    }
+  ]
+}
