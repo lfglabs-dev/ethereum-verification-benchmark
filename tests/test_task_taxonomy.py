@@ -127,10 +127,23 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(self.classify("", "").outcome, "no_submission")
         self.assertEqual(self.classify(None, "").outcome, "no_submission")
 
-    def test_unknown_status_surfaces_as_harness_error(self) -> None:
+    def test_known_policy_statuses_are_not_harness_errors(self) -> None:
+        for status in (
+            "hidden_import",
+            "theorem_statement_mismatch",
+            "forbidden_placeholder",
+            "rejected_forbidden_placeholder",
+            "verifier_infra_error",
+        ):
+            with self.subTest(status=status):
+                result = self.classify(status, "")
+                self.assertEqual(result.outcome, status.replace("rejected_", ""))
+                self.assertFalse(result.is_pass)
+
+    def test_unknown_status_surfaces_as_unknown_verifier_status(self) -> None:
         # An unmapped non-empty status must not be silently treated as a Lean failure.
         result = self.classify("totally-unknown-status", "")
-        self.assertEqual(result.outcome, "harness_error")
+        self.assertEqual(result.outcome, "unknown_verifier_status")
         self.assertFalse(result.is_pass)
 
     def test_iter_run_targets_handles_canonical_and_legacy_shapes(self) -> None:
@@ -257,6 +270,29 @@ class ExtractorTests(unittest.TestCase):
         }
         features = ef.build_features(version, results, enrichment=enrichment, min_coverage=1.0)
         self.assertEqual(features["tasks"][0]["failure_modes"], {"theorem_missing": 1})
+
+    def test_build_features_does_not_count_passed_enrichment_as_failure_mode(self) -> None:
+        # If manifest pass/fail and detailed enrichment disagree, do not create a
+        # misleading failure bucket named "passed".
+        version = {
+            "benchmark_version": "0.1",
+            "tasks": [{"task_ref": "fam/case/thm", "task_fingerprint": "fp", "task_interface_id": "i"}],
+        }
+        results = {
+            "models": [
+                {"model_id": "m", "task_results": [self._row("fam/case/thm", passed=False, tokens=10)]}
+            ]
+        }
+        enrichment = {
+            ("m", "fam/case/thm"): {
+                "outcome": "passed",
+                "is_pass": True,
+                "lean_failure_mode": None,
+                "detail": None,
+            }
+        }
+        features = ef.build_features(version, results, enrichment=enrichment, min_coverage=1.0)
+        self.assertEqual(features["tasks"][0]["failure_modes"], {})
 
     @staticmethod
     def _row(task_ref: str, *, passed: bool, tokens: int) -> dict:

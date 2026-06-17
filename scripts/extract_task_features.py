@@ -195,7 +195,10 @@ def build_features(
                 detail["detail"] = enriched["detail"]
                 if not passed and enriched["lean_failure_mode"]:
                     failure_modes[enriched["lean_failure_mode"]] += 1
-                elif not passed and enriched["outcome"] != "lean_check_failed":
+                elif (
+                    not passed
+                    and enriched["outcome"] not in {"lean_check_failed", "passed"}
+                ):
                     failure_modes[enriched["outcome"]] += 1
             per_model[model] = detail
 

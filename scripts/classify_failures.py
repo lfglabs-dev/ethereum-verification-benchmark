@@ -79,9 +79,9 @@ def map_outcome(
         return index[key]
     if not key:
         return index.get("no_submission", {"id": "no_submission", "is_pass": False})
-    # Unknown non-empty status: not a pass, surface it as a harness error rather than
-    # silently treating it as a Lean failure we can sub-classify.
-    return {"id": "harness_error", "is_pass": False, "label": f"unmapped:{key}"}
+    # Unknown non-empty status from a completed harness run: not a pass, but keep it
+    # distinct from transport/harness failures so reports do not mislabel verifier verdicts.
+    return {"id": "unknown_verifier_status", "is_pass": False, "label": f"unmapped:{key}"}
 
 
 def _capture_detail(capture: Any, output: str) -> str | None:

@@ -28,6 +28,27 @@
       "description": "The required theorem/declaration is absent from the submission. The model did not produce the target statement (often gave up, renamed it, or never reached it)."
     },
     {
+      "id": "theorem_statement_mismatch",
+      "label": "Theorem statement mismatch",
+      "is_pass": false,
+      "verifier_status": ["theorem_statement_mismatch"],
+      "description": "The submission changed the theorem statement or target interface instead of proving the required declaration."
+    },
+    {
+      "id": "forbidden_placeholder",
+      "label": "Forbidden placeholder",
+      "is_pass": false,
+      "verifier_status": ["forbidden_placeholder", "rejected_forbidden_placeholder"],
+      "description": "The submitted proof used a forbidden placeholder such as sorry/admit or was rejected by the harness policy before normal verification."
+    },
+    {
+      "id": "hidden_import",
+      "label": "Hidden import",
+      "is_pass": false,
+      "verifier_status": ["hidden_import"],
+      "description": "The submission imported files or modules outside the allowed task interface."
+    },
+    {
       "id": "timeout",
       "label": "Timeout",
       "is_pass": false,
@@ -49,11 +70,25 @@
       "description": "The run did not complete cleanly (harness_status != completed). Excluded from model-skill conclusions; tracked separately as an infrastructure/transport problem."
     },
     {
+      "id": "verifier_infra_error",
+      "label": "Verifier infrastructure error",
+      "is_pass": false,
+      "verifier_status": ["verifier_infra_error"],
+      "description": "The harness completed, but the verifier reported an internal infrastructure error rather than a model proof verdict."
+    },
+    {
       "id": "no_submission",
       "label": "No submission",
       "is_pass": false,
       "verifier_status": ["no_submission", "not_runnable", "missing_candidate"],
       "description": "No candidate proof file was produced for the task."
+    },
+    {
+      "id": "unknown_verifier_status",
+      "label": "Unknown verifier status",
+      "is_pass": false,
+      "verifier_status": ["unknown_verifier_status"],
+      "description": "A completed run produced a non-empty verifier status that is not yet in the taxonomy. Extend this file if the status recurs."
     }
   ],
   "lean_failure_modes": [
