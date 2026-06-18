@@ -500,7 +500,7 @@ def write_cascade_summary(output: Path) -> None:
         return
     rows = load_json(results_path)
     selected = load_selected(output)
-    task_count = len({row["task_ref"] for row in rows if row.get("task_ref")}) or len(selected)
+    task_count = len(selected) or len({row["task_ref"] for row in rows if row.get("task_ref")})
     solved: set[str] = set()
     summary: list[dict] = []
     cumulative_prompt_tokens = 0
@@ -533,6 +533,7 @@ def write_cascade_summary(output: Path) -> None:
                 "executed_tasks": sum(1 for row in profile_rows if not row.get("skipped_already_solved")),
                 "newly_solved": len(newly_solved),
                 "cumulative_solved": len(solved),
+                "task_count": task_count,
                 "solve_rate": round(len(solved) / task_count, 4) if task_count else 0,
                 "profile_prompt_tokens": profile_prompt_tokens,
                 "profile_completion_tokens": profile_completion_tokens,
@@ -583,6 +584,7 @@ def render_solve_rate_svg(summary: list[dict]) -> str:
     circles = []
     labels = []
     for (x, y), row in zip(points, summary):
+        task_count = int(row.get("task_count", 50) or 50)
         circles.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="7" fill="#2563eb" />')
         labels.append(
             f'<text x="{x:.1f}" y="{height - 48}" text-anchor="middle" '
@@ -590,7 +592,7 @@ def render_solve_rate_svg(summary: list[dict]) -> str:
         )
         labels.append(
             f'<text x="{x:.1f}" y="{y - 14:.1f}" text-anchor="middle" '
-            f'font-family="Arial" font-size="12">{row["cumulative_solved"]}/50</text>'
+            f'font-family="Arial" font-size="12">{row["cumulative_solved"]}/{task_count}</text>'
         )
     grid = []
     for tick in range(0, 6):
@@ -603,7 +605,7 @@ def render_solve_rate_svg(summary: list[dict]) -> str:
             '<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640">',
             '<rect width="1120" height="640" fill="#ffffff" />',
             '<text x="40" y="36" font-family="Arial" font-size="24" font-weight="700">Cumulative solve rate by budget profile</text>',
-            '<text x="40" y="60" font-family="Arial" font-size="13" fill="#4b5563">Minimax cascade on selected 50-task panel; solved tasks are skipped at later profiles.</text>',
+            f'<text x="40" y="60" font-family="Arial" font-size="13" fill="#4b5563">Minimax cascade on selected {int(summary[0].get("task_count", 50) or 50)}-task panel; solved tasks are skipped at later profiles.</text>',
             *grid,
             f'<line x1="{left}" x2="{left}" y1="{top}" y2="{height - bottom}" stroke="#111827" />',
             f'<line x1="{left}" x2="{width - right}" y1="{height - bottom}" y2="{height - bottom}" stroke="#111827" />',
@@ -654,7 +656,7 @@ def render_effort_solve_rate_svg(summary: list[dict]) -> str:
             '<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640">',
             '<rect width="1120" height="640" fill="#ffffff" />',
             '<text x="40" y="36" font-family="Arial" font-size="24" font-weight="700">Cumulative solve rate by consumed effort</text>',
-            '<text x="40" y="60" font-family="Arial" font-size="13" fill="#4b5563">Minimax cascade on selected 50-task panel; x-axis is cumulative total tokens from executed runs.</text>',
+            f'<text x="40" y="60" font-family="Arial" font-size="13" fill="#4b5563">Minimax cascade on selected {int(summary[0].get("task_count", 50) or 50)}-task panel; x-axis is cumulative total tokens from executed runs.</text>',
             *grid,
             f'<line x1="{left}" x2="{left}" y1="{top}" y2="{height - bottom}" stroke="#111827" />',
             f'<line x1="{left}" x2="{width - right}" y1="{height - bottom}" y2="{height - bottom}" stroke="#111827" />',
@@ -671,13 +673,15 @@ def render_effort_solve_rate_svg(summary: list[dict]) -> str:
 def marginal_effort_rows(summary: list[dict]) -> list[dict]:
     rows: list[dict] = []
     previous_solved = 0
-    task_count = max(
-        1,
-        max(
-            round(int(row.get("cumulative_solved", 0) or 0) / max(float(row.get("solve_rate", 0) or 0), 0.0001))
-            for row in summary
-        ),
-    )
+    task_count = int(summary[0].get("task_count", 0) or 0)
+    if task_count <= 0:
+        task_count = max(
+            1,
+            max(
+                round(int(row.get("cumulative_solved", 0) or 0) / max(float(row.get("solve_rate", 0) or 0), 0.0001))
+                for row in summary
+            ),
+        )
     percent_per_task = 100 / task_count
     reached_percent = 0.0
     for row in summary:
@@ -863,6 +867,7 @@ def render_solve_events_svg(event_rows: list[dict]) -> str:
 
     final_solved = int(solved_rows[-1]["cumulative_solved"]) if solved_rows else 0
     final_percent = float(solved_rows[-1]["solve_rate_percent"]) if solved_rows else 0.0
+    final_task_count = len(event_rows) or 50
     note = (
         f"{len(solved_rows)} solved events; {len(censored_rows)} unsolved tasks are censored at their final observed spend. "
         "Within each parallel profile batch, event order uses total tokens as a stable completion proxy."
@@ -880,7 +885,7 @@ def render_solve_events_svg(event_rows: list[dict]) -> str:
             f'<polyline points="{" ".join(polyline_points)}" fill="none" stroke="#2563eb" stroke-width="2.4" />',
             *points,
             *censored,
-            f'<text x="{width - right}" y="{y_for(final_percent) - 18:.1f}" text-anchor="end" font-family="Arial" font-size="13" fill="#111827">{final_solved}/50 solved</text>',
+            f'<text x="{width - right}" y="{y_for(final_percent) - 18:.1f}" text-anchor="end" font-family="Arial" font-size="13" fill="#111827">{final_solved}/{final_task_count} solved</text>',
             '<text x="28" y="342" text-anchor="middle" font-family="Arial" font-size="13" transform="rotate(-90 28 342)">cumulative solve rate</text>',
             f'<text x="{left + plot_w / 2:.1f}" y="{height - 24}" text-anchor="middle" font-family="Arial" font-size="13">cumulative total tokens at solve event</text>',
             "</svg>",
