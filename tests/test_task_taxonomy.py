@@ -432,5 +432,56 @@ class DecouplingInvariantTests(unittest.TestCase):
         self.assertEqual(reran.get(task_ref), "task_fingerprint changed")
 
 
+class PlacementArtifactTests(unittest.TestCase):
+    """The generated task-map artifacts expose the expected website/report contracts."""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.version = json.loads((ROOT / "benchmark-versions" / "v0.1.json").read_text(encoding="utf-8"))
+        cls.features = json.loads((ROOT / "analysis" / "task_features.json").read_text(encoding="utf-8"))
+        cls.pca = json.loads((ROOT / "analysis" / "task_map" / "task_pca.json").read_text(encoding="utf-8"))
+        cls.cards = json.loads((ROOT / "analysis" / "task_placement_cards.json").read_text(encoding="utf-8"))
+
+    def test_pca_artifact_covers_the_active_version_tasks(self) -> None:
+        version_refs = {task["task_ref"] for task in self.version["tasks"]}
+        pca_refs = {task["task_ref"] for task in self.pca["tasks"]}
+        self.assertEqual(self.pca["schema_version"], 1)
+        self.assertEqual(self.pca["method"], "centered_binary_pca")
+        self.assertEqual(pca_refs, version_refs)
+        self.assertEqual(self.pca["coverage"]["included_tasks"], len(version_refs))
+        self.assertGreaterEqual(len(self.pca["coverage"]["included_models"]), 4)
+        self.assertIn("stable_family", self.pca["family_counts"])
+        self.assertIn("empirical_family", self.pca["family_counts"])
+
+    def test_placement_cards_cover_active_and_backlog_tasks(self) -> None:
+        feature_refs = {task["task_ref"] for task in self.features["tasks"]}
+        card_refs = {task["task_ref"] for task in self.cards["tasks"]}
+        backlog_refs = card_refs - feature_refs
+        self.assertEqual(self.cards["schema_version"], 1)
+        self.assertEqual(self.cards["task_count"], len(self.cards["tasks"]))
+        self.assertEqual(len(feature_refs), 135)
+        self.assertEqual(len(backlog_refs), 8)
+        self.assertEqual(len(card_refs), 143)
+        for card in self.cards["tasks"]:
+            with self.subTest(task_ref=card["task_ref"]):
+                self.assertIn("stable_family", card)
+                self.assertIn("empirical_family", card)
+                self.assertIn("proof_skills", card)
+                self.assertIn("nearest_neighbors", card)
+                self.assertIsInstance(card["needs_review"], bool)
+
+    def test_analysis_artifacts_are_not_rerun_inputs(self) -> None:
+        model = "kimi/kimi-for-coding"
+        results = json.loads((ROOT / "results" / "manifests" / "v0.1.json").read_text(encoding="utf-8"))
+        baseline = plan_rerun(self.version, self.version, model=model, results_manifest=results)
+        mutated_cards = copy.deepcopy(self.cards)
+        for card in mutated_cards["tasks"]:
+            card["stable_family"] = "synthetic_family"
+            card["empirical_family"] = "synthetic_empirical_family"
+        after = plan_rerun(self.version, self.version, model=model, results_manifest=results)
+        self.assertEqual(after, baseline)
+        self.assertEqual(after["rerun_count"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,2 @@
+--- runner attempt 1 ---
+/workspaces/mission-cd6cfe3f/verity-benchmark-pr95/results/runs/20260618T065656-default-fair-minimax-m3-kleros__sortition_trees__parent_equals_sum_of_children

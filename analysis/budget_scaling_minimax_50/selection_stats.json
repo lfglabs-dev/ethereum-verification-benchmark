@@ -1,0 +1,17 @@
+{
+  "minimax_summary_files": [
+    "/workspaces/mission-cd6cfe3f/output/bench-logs/part-0-minimax-minimax-m3/minimax-minimax-m3-local-summary.jsonl",
+    "/workspaces/mission-cd6cfe3f/output/bench-logs/part-1-minimax-minimax-m3/minimax-minimax-m3-local-summary.jsonl",
+    "/workspaces/mission-cd6cfe3f/output/bench-logs/part-2-minimax-minimax-m3/minimax-minimax-m3-local-summary.jsonl",
+    "/workspaces/mission-cd6cfe3f/output/bench-logs/part-3-minimax-minimax-m3/minimax-minimax-m3-local-summary.jsonl"
+  ],
+  "gpt55_summary_files": [
+    "/workspaces/mission-cd6cfe3f/output/bench-logs/virtuals-openai-gpt-55/openai-gpt-55-local-summary.jsonl",
+    "/workspaces/mission-cd6cfe3f/output/bench-logs/virtuals-openai-gpt-55-resume/openai-gpt-55-local-summary.jsonl",
+    "/workspaces/mission-cd6cfe3f/output/bench-logs/recovery-compute-acp-openai/openai-gpt-55-local-summary.jsonl"
+  ],
+  "minimax_passed": 38,
+  "gpt55_passed": 66,
+  "gpt55_only_passed": 29,
+  "selected": 50
+}

@@ -30,6 +30,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--features", default="analysis/task_features.json")
     parser.add_argument("--out-dir", default="analysis/task_map")
     parser.add_argument("--min-task-coverage", type=int, default=4)
+    parser.add_argument("--pca-min-model-coverage", type=int, default=80)
     parser.add_argument("--cluster-count", type=int, default=8)
     return parser.parse_args()
 
@@ -196,6 +197,82 @@ def classical_mds(distances: list[list[float]], dimensions: int = 2) -> tuple[li
     return coords, explained
 
 
+def pca_embedding(
+    task_refs: list[str],
+    model_ids: list[str],
+    by_task: dict[str, dict[str, float | None]],
+    model_meta: dict[str, dict],
+    min_model_coverage: int,
+) -> tuple[list[str], list[str], list[tuple[float, float]], list[float], list[dict]]:
+    selected_models = [model_id for model_id in model_ids if model_meta[model_id]["task_count"] >= min_model_coverage]
+    selected_tasks = [task_ref for task_ref in task_refs if any(by_task[task_ref][model_id] is not None for model_id in selected_models)]
+    if len(selected_models) < 2 or len(selected_tasks) < 2:
+        return selected_tasks, selected_models, [(0.0, 0.0) for _ in selected_tasks], [0.0, 0.0], []
+
+    columns: list[list[float | None]] = [
+        [by_task[task_ref][model_id] for task_ref in selected_tasks]
+        for model_id in selected_models
+    ]
+    means = []
+    for col in columns:
+        seen = [value for value in col if value is not None]
+        means.append(sum(seen) / len(seen) if seen else 0.0)
+
+    matrix: list[list[float]] = []
+    for task_ref in selected_tasks:
+        row = []
+        for model_id, mean in zip(selected_models, means):
+            value = by_task[task_ref][model_id]
+            row.append(mean if value is None else value)
+        matrix.append(row)
+
+    centered = [[value - means[j] for j, value in enumerate(row)] for row in matrix]
+    denom = max(1, len(centered) - 1)
+    covariance = []
+    for i in range(len(selected_models)):
+        covariance.append(
+            [
+                sum(row[i] * row[j] for row in centered) / denom
+                for j in range(len(selected_models))
+            ]
+        )
+
+    working = [row[:] for row in covariance]
+    eigenvalues: list[float] = []
+    eigenvectors: list[list[float]] = []
+    for axis in range(2):
+        value, vector = top_eigenpair(working, axis + 11)
+        if value <= 1e-12:
+            value = 0.0
+            vector = [0.0 for _ in selected_models]
+        eigenvalues.append(value)
+        eigenvectors.append(vector)
+        for i in range(len(selected_models)):
+            for j in range(len(selected_models)):
+                working[i][j] -= value * vector[i] * vector[j]
+
+    total_variance = sum(max(0.0, row[i]) for i, row in enumerate(covariance)) or 1.0
+    explained = [max(0.0, value) / total_variance for value in eigenvalues]
+    coords = []
+    for row in centered:
+        x = sum(row[j] * eigenvectors[0][j] for j in range(len(selected_models)))
+        y = sum(row[j] * eigenvectors[1][j] for j in range(len(selected_models)))
+        coords.append((x, y))
+
+    loadings = []
+    for j, model_id in enumerate(selected_models):
+        loadings.append(
+            {
+                "model_id": model_id,
+                "pc1": eigenvectors[0][j],
+                "pc2": eigenvectors[1][j],
+                "mean_pass_rate": means[j],
+                "coverage": model_meta[model_id]["task_count"],
+            }
+        )
+    return selected_tasks, selected_models, coords, explained, loadings
+
+
 def agglomerative_clusters(task_refs: list[str], distances: list[list[float]], k: int) -> tuple[dict[str, int], list[str]]:
     n = len(task_refs)
     clusters: dict[int, list[int]] = {i: [i] for i in range(n)}
@@ -325,6 +402,51 @@ def write_task_map_svg(path: Path, rows: list[dict], explained: list[float]) -> 
     path.write_text("\n".join(parts) + "\n")
 
 
+def write_pca_svg(path: Path, rows: list[dict], loadings: list[dict], explained: list[float]) -> None:
+    width, height, margin = 1200, 850, 80
+    points = scale_points([(r["pc1"], r["pc2"]) for r in rows], width, height, margin)
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
+        '<rect width="100%" height="100%" fill="#ffffff"/>',
+        '<text x="40" y="38" font-family="Arial" font-size="24" font-weight="700">Task PCA by model pass/fail profile</text>',
+        f'<text x="40" y="66" font-family="Arial" font-size="13" fill="#475569">Centered binary task-model matrix. Missing cells imputed by model mean. PC1={explained[0]:.1%}, PC2={explained[1]:.1%}. Dot size = failure rate.</text>',
+        f'<line x1="{margin}" y1="{height/2}" x2="{width-margin}" y2="{height/2}" stroke="#e2e8f0"/>',
+        f'<line x1="{width/2}" y1="{margin}" x2="{width/2}" y2="{height-margin}" stroke="#e2e8f0"/>',
+        f'<line x1="{margin}" y1="{height-margin}" x2="{width-margin}" y2="{height-margin}" stroke="#cbd5e1"/>',
+        f'<line x1="{margin}" y1="{margin}" x2="{margin}" y2="{height-margin}" stroke="#cbd5e1"/>',
+        f'<text x="{width/2-80:.0f}" y="{height-20}" font-family="Arial" font-size="13" fill="#334155">PC1: dominant difficulty / broad solvability</text>',
+        f'<text transform="translate(22 {height/2+110:.0f}) rotate(-90)" font-family="Arial" font-size="13" fill="#334155">PC2: model-specialization contrast</text>',
+    ]
+    for row, (x, y) in zip(rows, points):
+        radius = 4 + 10 * row["difficulty"]
+        color = color_for_property(row["property_class"])
+        title = (
+            f'{row["task_ref"]}\\n'
+            f'property={row["property_class"]}\\n'
+            f'proof={row["proof_family"]}\\n'
+            f'empirical_family={row["empirical_family"]}\\n'
+            f'pass_rate={row["pass_rate"]:.2f}, attempts={row["attempts"]}'
+        )
+        parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius:.1f}" fill="{color}" fill-opacity="0.70" stroke="#0f172a" stroke-opacity="0.25"><title>{html.escape(title)}</title></circle>')
+    for row, (x, y) in zip(rows, points):
+        if row["difficulty"] < 0.35 and row["pass_rate"] < 0.85:
+            continue
+        label = row["task_ref"].split("/")[-1]
+        parts.append(f'<text x="{x+8:.1f}" y="{y-8:.1f}" font-family="Arial" font-size="10" fill="#111827">{html.escape(label)}</text>')
+
+    center_x, center_y = width / 2, height / 2
+    scale = 130
+    for loading in loadings:
+        x2 = center_x + loading["pc1"] * scale
+        y2 = center_y - loading["pc2"] * scale
+        label = loading["model_id"].replace("openai-", "").replace("zai/", "").replace("kimi/", "")
+        parts.append(f'<line x1="{center_x:.1f}" y1="{center_y:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="#0f172a" stroke-width="1.6" stroke-opacity="0.65"/>')
+        parts.append(f'<circle cx="{x2:.1f}" cy="{y2:.1f}" r="3.5" fill="#0f172a"/>')
+        parts.append(f'<text x="{x2+6:.1f}" y="{y2-6:.1f}" font-family="Arial" font-size="10" fill="#0f172a">{html.escape(label)}</text>')
+    parts.append("</svg>")
+    path.write_text("\n".join(parts) + "\n")
+
+
 def write_heatmap_svg(path: Path, order: list[str], model_ids: list[str], by_task: dict[str, dict[str, float | None]], rows_by_ref: dict[str, dict]) -> None:
     cell = 14
     left = 430
@@ -390,6 +512,99 @@ def cluster_summaries(rows: list[dict]) -> list[dict]:
             }
         )
     return summaries
+
+
+def empirical_family_for(row: dict) -> str:
+    signature = row.get("cohort_signature")
+    if signature == "FFFF":
+        return "hard_state_invariant"
+    if signature == "PPFP":
+        return "mostly_solved_local_transition"
+    if signature in {"FPFP", "PFFP"}:
+        return "divisive_authorization_or_accounting"
+    if signature in {"FFFP", "PFFF", "FPFF"}:
+        return "single_model_solvable_boundary"
+    if signature == "PFPP":
+        return "simple_bound_regression"
+    difficulty = row.get("difficulty", 0.0)
+    if difficulty >= 0.8:
+        return "hard_state_invariant"
+    if difficulty <= 0.35:
+        return "mostly_solved_local_transition"
+    return "mixed_empirical_profile"
+
+
+def stable_family_for(row: dict) -> str:
+    prop = row["property_class"]
+    proof = row["proof_family"]
+    task_ref = row["task_ref"]
+    if prop in {"access_control_identity", "authorization_state"}:
+        return "authorization_and_caller_integrity"
+    if prop in {"accounting_conservation", "accounting_bound", "accounting_update", "fund_conservation"}:
+        return "asset_accounting_and_conservation"
+    if prop in {"guarded_solvency", "solvency"} or "solvency" in task_ref:
+        return "solvency_and_liquidity_guards"
+    if prop in {"price_computation", "price_band", "output_range"}:
+        return "numeric_bounds_and_pricing"
+    if prop in {"linked_list_invariant", "tree_conservation", "mapping_consistency", "threshold_partition"}:
+        return "structural_indexing_invariants"
+    if proof == "refinement_equivalence" or prop in {"decoder_faithfulness", "metadata_bridge"}:
+        return "decoder_and_refinement_equivalence"
+    if prop in {"non_leakage", "revert_boundary", "accounting_invariant_break"}:
+        return "negative_and_attack_boundaries"
+    if proof == "protocol_transition_correctness":
+        return "protocol_transition_correctness"
+    return "state_preservation_and_local_effects"
+
+
+def write_pca_report(path: Path, rows: list[dict], loadings: list[dict], explained: list[float], models: list[str]) -> None:
+    empirical = Counter(row["empirical_family"] for row in rows)
+    stable = Counter(row["stable_family"] for row in rows)
+    signatures = Counter(row.get("cohort_signature") or "unknown" for row in rows)
+    lines = [
+        "# Task PCA Analysis",
+        "",
+        "Generated from `results/manifests/v0.1.json`.",
+        "",
+        "This is a true PCA over the centered binary task-model success matrix. Missing cells are imputed with the model mean pass rate, so the current output remains provisional until the manifest is regenerated from the full backfills.",
+        "",
+        "## Inputs",
+        "",
+        f"- models used: {', '.join(models)}",
+        f"- tasks projected: {len(rows)}",
+        f"- PC1 explained variance: {explained[0]:.1%}",
+        f"- PC2 explained variance: {explained[1]:.1%}",
+        "",
+        "## Axis Interpretation",
+        "",
+        "- PC1 is the broad solvability axis: easy local properties separate from tasks that nearly every model fails.",
+        "- PC2 is the specialization axis: it separates tasks solved by different subsets of the stronger models.",
+        "- The model arrows in `task_pca.svg` show which model success vectors define each direction.",
+        "",
+        "## Empirical Families",
+        "",
+    ]
+    for name, count in empirical.most_common():
+        lines.append(f"- `{name}`: {count} tasks")
+    lines.extend(["", "## Proposed Stable Semantic Families", ""])
+    for name, count in stable.most_common():
+        lines.append(f"- `{name}`: {count} tasks")
+    lines.extend(["", "## Cohort Signatures", ""])
+    for signature, count in signatures.most_common():
+        lines.append(f"- `{signature}`: {count} tasks")
+    lines.extend(["", "## Model Loadings", ""])
+    for loading in sorted(loadings, key=lambda row: abs(row["pc1"]) + abs(row["pc2"]), reverse=True):
+        lines.append(f"- `{loading['model_id']}`: pc1={loading['pc1']:.3f}, pc2={loading['pc2']:.3f}, mean_pass={loading['mean_pass_rate']:.1%}, coverage={loading['coverage']}")
+    lines.extend(
+        [
+            "",
+            "## Recommendation",
+            "",
+            "Use empirical families as the seed for the stable taxonomy, but do not make PCA clusters the permanent taxonomy directly. The clean schema is `stable_family` for the semantic category, `property_class` for the precise proof obligation, and `empirical_family` plus PCA coordinates for measured behavior. In future benchmark versions, merge stable families that remain behaviorally indistinguishable and split families that consistently form separate PCA/heatmap neighborhoods.",
+            "",
+        ]
+    )
+    path.write_text("\n".join(lines))
 
 
 def write_report(path: Path, rows: list[dict], clusters: list[dict], model_meta: dict[str, dict], explained: list[float]) -> None:
@@ -551,6 +766,64 @@ def main() -> None:
     write_task_map_svg(out_dir / "task_map.svg", rows, explained)
     write_heatmap_svg(out_dir / "clustered_heatmap.svg", order, model_ids, by_task, rows_by_ref)
     write_report(out_dir / "task_clustering_report.md", rows, clusters, model_meta, explained)
+
+    pca_tasks, pca_models, pca_coords, pca_explained, pca_loadings = pca_embedding(
+        all_task_refs,
+        model_ids,
+        by_task,
+        model_meta,
+        args.pca_min_model_coverage,
+    )
+    pca_rows = []
+    pca_lookup = {task_ref: coord for task_ref, coord in zip(pca_tasks, pca_coords)}
+    for task_ref in pca_tasks:
+        proof, prop = category_for(task_ref, taxonomy, matrix_meta)
+        meta = {**matrix_meta.get(task_ref, {}), **feature_meta.get(task_ref, {})}
+        stats = task_stats(task_ref, by_task[task_ref])
+        row = {
+            **stats,
+            "pc1": pca_lookup[task_ref][0],
+            "pc2": pca_lookup[task_ref][1],
+            "proof_family": proof,
+            "property_class": prop,
+            "cohort_signature": meta.get("cohort_signature"),
+            "cohort_pass_rate": float(meta["cohort_pass_rate"]) if meta.get("cohort_pass_rate") not in (None, "") else None,
+            "divisiveness": float(meta["divisiveness"]) if meta.get("divisiveness") not in (None, "") else None,
+        }
+        row["empirical_family"] = empirical_family_for(row)
+        row["stable_family"] = stable_family_for(row)
+        pca_rows.append(row)
+    pca_output = {
+        "schema_version": 1,
+        "benchmark_version": manifest.get("benchmark_version"),
+        "source_manifest": args.manifest,
+        "method": "centered_binary_pca",
+        "coverage": {
+            "min_model_coverage": args.pca_min_model_coverage,
+            "included_models": pca_models,
+            "included_tasks": len(pca_rows),
+            "total_tasks": len(all_task_refs),
+        },
+        "axis_interpretation": {
+            "pc1": "dominant difficulty / broad solvability",
+            "pc2": "model-specialization contrast",
+            "explained_variance_ratio": pca_explained,
+        },
+        "loadings": pca_loadings,
+        "tasks": sorted(pca_rows, key=lambda r: r["task_ref"]),
+        "family_counts": {
+            "empirical_family": dict(Counter(row["empirical_family"] for row in pca_rows)),
+            "stable_family": dict(Counter(row["stable_family"] for row in pca_rows)),
+            "cohort_signature": dict(Counter(row.get("cohort_signature") or "unknown" for row in pca_rows)),
+        },
+        "artifacts": {
+            "pca_svg": "analysis/task_map/task_pca.svg",
+            "pca_report": "analysis/task_map/task_pca_report.md",
+        },
+    }
+    (out_dir / "task_pca.json").write_text(json.dumps(pca_output, indent=2, sort_keys=True) + "\n")
+    write_pca_svg(out_dir / "task_pca.svg", pca_rows, pca_loadings, pca_explained)
+    write_pca_report(out_dir / "task_pca_report.md", pca_rows, pca_loadings, pca_explained, pca_models)
 
 
 if __name__ == "__main__":

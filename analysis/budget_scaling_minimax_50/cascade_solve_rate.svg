@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640">
+<rect width="1120" height="640" fill="#ffffff" />
+<text x="40" y="36" font-family="Arial" font-size="24" font-weight="700">Cumulative solve rate by budget profile</text>
+<text x="40" y="60" font-family="Arial" font-size="13" fill="#4b5563">Minimax cascade on selected 50-task panel; solved tasks are skipped at later profiles.</text>
+<line x1="82" x2="1088" y1="544.0" y2="544.0" stroke="#e5e7eb" />
+<text x="70" y="548.0" text-anchor="end" font-family="Arial" font-size="12">0%</text>
+<line x1="82" x2="1088" y1="446.4" y2="446.4" stroke="#e5e7eb" />
+<text x="70" y="450.4" text-anchor="end" font-family="Arial" font-size="12">20%</text>
+<line x1="82" x2="1088" y1="348.8" y2="348.8" stroke="#e5e7eb" />
+<text x="70" y="352.8" text-anchor="end" font-family="Arial" font-size="12">40%</text>
+<line x1="82" x2="1088" y1="251.2" y2="251.2" stroke="#e5e7eb" />
+<text x="70" y="255.2" text-anchor="end" font-family="Arial" font-size="12">60%</text>
+<line x1="82" x2="1088" y1="153.6" y2="153.6" stroke="#e5e7eb" />
+<text x="70" y="157.6" text-anchor="end" font-family="Arial" font-size="12">80%</text>
+<line x1="82" x2="1088" y1="56.0" y2="56.0" stroke="#e5e7eb" />
+<text x="70" y="60.0" text-anchor="end" font-family="Arial" font-size="12">100%</text>
+<line x1="82" x2="82" y1="56" y2="544" stroke="#111827" />
+<line x1="82" x2="1088" y1="544" y2="544" stroke="#111827" />
+<polyline points="82.0,485.4 193.8,417.1 305.6,339.0 417.3,261.0 529.1,182.9 640.9,173.1 752.7,143.8 864.4,104.8 976.2,75.5 1088.0,75.5" fill="none" stroke="#2563eb" stroke-width="3" />
+<circle cx="82.0" cy="485.4" r="7" fill="#2563eb" />
+<circle cx="193.8" cy="417.1" r="7" fill="#2563eb" />
+<circle cx="305.6" cy="339.0" r="7" fill="#2563eb" />
+<circle cx="417.3" cy="261.0" r="7" fill="#2563eb" />
+<circle cx="529.1" cy="182.9" r="7" fill="#2563eb" />
+<circle cx="640.9" cy="173.1" r="7" fill="#2563eb" />
+<circle cx="752.7" cy="143.8" r="7" fill="#2563eb" />
+<circle cx="864.4" cy="104.8" r="7" fill="#2563eb" />
+<circle cx="976.2" cy="75.5" r="7" fill="#2563eb" />
+<circle cx="1088.0" cy="75.5" r="7" fill="#2563eb" />
+<text x="82.0" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 82.0 592)">p01_ultra_tiny</text>
+<text x="82.0" y="471.4" text-anchor="middle" font-family="Arial" font-size="12">6/50</text>
+<text x="193.8" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 193.8 592)">p02_tiny</text>
+<text x="193.8" y="403.1" text-anchor="middle" font-family="Arial" font-size="12">13/50</text>
+<text x="305.6" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 305.6 592)">p03_ultra_cheap</text>
+<text x="305.6" y="325.0" text-anchor="middle" font-family="Arial" font-size="12">21/50</text>
+<text x="417.3" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 417.3 592)">p04_cheap</text>
+<text x="417.3" y="247.0" text-anchor="middle" font-family="Arial" font-size="12">29/50</text>
+<text x="529.1" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 529.1 592)">p05_quick_minus</text>
+<text x="529.1" y="168.9" text-anchor="middle" font-family="Arial" font-size="12">37/50</text>
+<text x="640.9" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 640.9 592)">p06_quick</text>
+<text x="640.9" y="159.1" text-anchor="middle" font-family="Arial" font-size="12">38/50</text>
+<text x="752.7" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 752.7 592)">p07_medium</text>
+<text x="752.7" y="129.8" text-anchor="middle" font-family="Arial" font-size="12">41/50</text>
+<text x="864.4" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 864.4 592)">p08_normal</text>
+<text x="864.4" y="90.8" text-anchor="middle" font-family="Arial" font-size="12">45/50</text>
+<text x="976.2" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 976.2 592)">p09_high</text>
+<text x="976.2" y="61.5" text-anchor="middle" font-family="Arial" font-size="12">48/50</text>
+<text x="1088.0" y="592" text-anchor="middle" font-family="Arial" font-size="12" transform="rotate(-35 1088.0 592)">p10_ultra_high</text>
+<text x="1088.0" y="61.5" text-anchor="middle" font-family="Arial" font-size="12">48/50</text>
+<text x="22" y="320" text-anchor="middle" font-family="Arial" font-size="13" transform="rotate(-90 22 320)">cumulative solve rate</text>
+</svg>

@@ -1,0 +1,2 @@
+--- runner attempt 1 ---
+/workspaces/mission-cd6cfe3f/verity-benchmark-pr95/results/runs/20260618T065236-default-fair-minimax-m3-forgeyields__global_solvency__transfer_remote_preserves_global_solvency

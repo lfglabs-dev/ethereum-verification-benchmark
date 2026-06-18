@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="820" viewBox="0 0 1180 820">
+<style>
+text{font-family:Inter,Arial,sans-serif;fill:#111827}.sub{fill:#4b5563}.axis{stroke:#374151;stroke-width:1.2}.grid{stroke:#e5e7eb;stroke-width:1}.pt{stroke:#111827;stroke-width:.55;opacity:.82}.legend{font-size:12px}.tick{font-size:11px;fill:#6b7280}.cent{font-size:11px;font-weight:700}
+</style>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="105" y="34" font-size="24" font-weight="700">PCA et revue humaine</text>
+<text x="105" y="57" font-size="13" class="sub">Diamant=tâche à revue; utile pour voir les zones taxonomiques incertaines</text>
+<line x1="105.0" y1="74" x2="105.0" y2="728" class="grid"/>
+<line x1="105" y1="74.0" x2="895" y2="74.0" class="grid"/>
+<text x="105.0" y="748" text-anchor="middle" class="tick">-1.52</text>
+<text x="93" y="78.0" text-anchor="end" class="tick">0.94</text>
+<line x1="263.0" y1="74" x2="263.0" y2="728" class="grid"/>
+<line x1="105" y1="204.8" x2="895" y2="204.8" class="grid"/>
+<text x="263.0" y="748" text-anchor="middle" class="tick">-1.01</text>
+<text x="93" y="208.8" text-anchor="end" class="tick">0.58</text>
+<line x1="421.0" y1="74" x2="421.0" y2="728" class="grid"/>
+<line x1="105" y1="335.6" x2="895" y2="335.6" class="grid"/>
+<text x="421.0" y="748" text-anchor="middle" class="tick">-0.51</text>
+<text x="93" y="339.6" text-anchor="end" class="tick">0.23</text>
+<line x1="579.0" y1="74" x2="579.0" y2="728" class="grid"/>
+<line x1="105" y1="466.4" x2="895" y2="466.4" class="grid"/>
+<text x="579.0" y="748" text-anchor="middle" class="tick">0.00</text>
+<text x="93" y="470.4" text-anchor="end" class="tick">-0.13</text>
+<line x1="737.0" y1="74" x2="737.0" y2="728" class="grid"/>
+<line x1="105" y1="597.2" x2="895" y2="597.2" class="grid"/>
+<text x="737.0" y="748" text-anchor="middle" class="tick">0.51</text>
+<text x="93" y="601.2" text-anchor="end" class="tick">-0.49</text>
+<line x1="895.0" y1="74" x2="895.0" y2="728" class="grid"/>
+<line x1="105" y1="728.0" x2="895" y2="728.0" class="grid"/>
+<text x="895.0" y="748" text-anchor="middle" class="tick">1.02</text>
+<text x="93" y="732.0" text-anchor="end" class="tick">-0.85</text>
+<line x1="105" y1="728" x2="895" y2="728" class="axis"/>
+<line x1="105" y1="74" x2="105" y2="728" class="axis"/>
+<text x="500.0" y="786" font-size="14" font-weight="600">pc1</text>
+<text transform="translate(32 401.0) rotate(-90)" text-anchor="middle" font-size="14" font-weight="600">pc2</text>
+<ellipse cx="625.3" cy="397.3" rx="358.5" ry="295.9" fill="#2563eb" opacity=".08" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="361.4" cy="514.2" rx="144.9" ry="255.7" fill="#dc2626" opacity=".08" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
+<circle cx="840.5" cy="311.3" r="12.0" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/earmark_preserves_invariant | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/redeem_preserves_invariant | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_debt_preserves_invariant | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sync_account_preserves_invariant | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="12.0" fill="#2563eb" class="pt"><title>balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="10.1" fill="#2563eb" class="pt"><title>cork/pool_solvency/solvency_preserved | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="159.5" cy="388.1" r="10.4" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<circle cx="159.5" cy="388.1" r="10.4" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<polygon points="284.5,591.6 273.5,602.5 284.5,613.4 295.4,602.5" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<circle cx="159.5" cy="388.1" r="10.4" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<polygon points="284.5,594.6 276.6,602.5 284.5,610.4 292.3,602.5" fill="#dc2626" class="pt"><title>ethereum/deposit_contract_minimal/chain_start_threshold | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<circle cx="438.0" cy="670.2" r="11.8" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/deposit_count | needs_review_flag=auto | x=-0.452 y=-0.689</title></circle>
+<circle cx="159.5" cy="388.1" r="10.4" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_increments_full_count | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<polygon points="435.3,347.6 429.6,353.3 435.3,359.0 441.0,353.3" fill="#dc2626" class="pt"><title>ethereum/deposit_contract_minimal/small_deposit_preserves_full_count | needs_review_flag=needs_review | x=-0.46 y=0.177</title></polygon>
+<polygon points="538.2,393.9 530.9,401.2 538.2,408.4 545.5,401.2" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/claim_redeem_preserves_global_solvency | needs_review_flag=needs_review | x=-0.129 y=0.0463</title></polygon>
+<circle cx="259.6" cy="119.1" r="8.9" fill="#2563eb" class="pt"><title>forgeyields/global_solvency/deposit_preserves_global_solvency | needs_review_flag=auto | x=-1.03 y=0.818</title></circle>
+<polygon points="413.2,183.3 409.7,186.8 413.2,190.3 416.7,186.8" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/handle_preserves_global_solvency | needs_review_flag=needs_review | x=-0.531 y=0.633</title></polygon>
+<polygon points="284.5,599.0 281.0,602.5 284.5,606.0 288.0,602.5" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>forgeyields/global_solvency/report_preserves_global_solvency | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<polygon points="438.0,662.9 430.7,670.2 438.0,677.5 445.3,670.2" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/request_redeem_preserves_global_solvency | needs_review_flag=needs_review | x=-0.452 y=-0.689</title></polygon>
+<circle cx="259.6" cy="119.1" r="8.9" fill="#2563eb" class="pt"><title>forgeyields/global_solvency/transfer_remote_preserves_global_solvency | needs_review_flag=auto | x=-1.03 y=0.818</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/redeem_preserves_pps | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="259.6" cy="119.1" r="10.4" fill="#2563eb" class="pt"><title>kleros/sortition_trees/draw_interval_matches_weights | needs_review_flag=auto | x=-1.03 y=0.818</title></circle>
+<circle cx="538.2" cy="401.2" r="9.3" fill="#2563eb" class="pt"><title>kleros/sortition_trees/draw_selects_valid_leaf | needs_review_flag=auto | x=-0.129 y=0.0463</title></circle>
+<polygon points="313.0,444.9 302.1,455.8 313.0,466.8 323.9,455.8" fill="#dc2626" class="pt"><title>kleros/sortition_trees/node_id_bijection | needs_review_flag=needs_review | x=-0.854 y=-0.103</title></polygon>
+<circle cx="438.0" cy="670.2" r="9.3" fill="#2563eb" class="pt"><title>kleros/sortition_trees/parent_equals_sum_of_children | needs_review_flag=auto | x=-0.452 y=-0.689</title></circle>
+<circle cx="159.5" cy="388.1" r="10.4" fill="#2563eb" class="pt"><title>kleros/sortition_trees/root_equals_sum_of_leaves | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<circle cx="718.2" cy="413.9" r="11.4" fill="#2563eb" class="pt"><title>kleros/sortition_trees/root_minus_left_equals_right_subtree | needs_review_flag=auto | x=0.45 y=0.0116</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>lagoon/guardrails/exact_compliance | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>lagoon/guardrails/negative_variation_bounded | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>lagoon/guardrails/positive_variation_bounded | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="740.4" cy="580.3" r="10.1" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/ceildiv_sandwich | needs_review_flag=auto | x=0.521 y=-0.444</title></circle>
+<circle cx="840.5" cy="311.3" r="12.0" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/locked_funds_solvency | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/max_liability_shares_bound | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/reserve_ratio_bounds | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<circle cx="740.4" cy="580.3" r="10.1" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/shares_conversion_monotone | needs_review_flag=auto | x=0.521 y=-0.444</title></circle>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_book_value | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<polygon points="284.5,599.0 281.0,602.5 284.5,606.0 288.0,602.5" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_buy_price | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_capital | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<polygon points="284.5,599.0 281.0,602.5 284.5,606.0 288.0,602.5" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_sell_price | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<polygon points="313.0,452.3 309.5,455.8 313.0,459.3 316.5,455.8" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller | needs_review_flag=needs_review | x=-0.854 y=-0.103</title></polygon>
+<polygon points="284.5,599.0 281.0,602.5 284.5,606.0 288.0,602.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<polygon points="284.5,599.0 281.0,602.5 284.5,606.0 288.0,602.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<polygon points="438.0,662.9 430.7,670.2 438.0,677.5 445.3,670.2" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller | needs_review_flag=needs_review | x=-0.452 y=-0.689</title></polygon>
+<polygon points="284.5,593.0 275.0,602.5 284.5,612.0 294.0,602.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<polygon points="284.5,599.0 281.0,602.5 284.5,606.0 288.0,602.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<circle cx="840.5" cy="311.3" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="740.4" cy="580.3" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed | needs_review_flag=auto | x=0.521 y=-0.444</title></circle>
+<circle cx="840.5" cy="311.3" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="12.0" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="718.2" cy="413.9" r="11.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims | needs_review_flag=auto | x=0.45 y=0.0116</title></circle>
+<circle cx="840.5" cy="311.3" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_no_overclaim | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="718.2" cy="413.9" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected | needs_review_flag=auto | x=0.45 y=0.0116</title></circle>
+<circle cx="593.3" cy="199.5" r="8.9" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected | needs_review_flag=auto | x=0.0479 y=0.598</title></circle>
+<circle cx="840.5" cy="311.3" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="718.2" cy="413.9" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected | needs_review_flag=auto | x=0.45 y=0.0116</title></circle>
+<circle cx="618.1" cy="682.9" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected | needs_review_flag=auto | x=0.128 y=-0.724</title></circle>
+<polygon points="384.6,330.0 381.1,333.5 384.6,337.0 388.1,333.5" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_marks_user | needs_review_flag=needs_review | x=-0.623 y=0.231</title></polygon>
+<circle cx="718.2" cy="413.9" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed | needs_review_flag=auto | x=0.45 y=0.0116</title></circle>
+<polygon points="438.0,662.9 430.7,670.2 438.0,677.5 445.3,670.2" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated | needs_review_flag=needs_review | x=-0.452 y=-0.689</title></polygon>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="159.5" cy="388.1" r="8.9" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/double_claim_rejected | needs_review_flag=auto | x=-1.35 y=0.0819</title></circle>
+<polygon points="284.5,599.0 281.0,602.5 284.5,606.0 288.0,602.5" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/no_overclaim | needs_review_flag=needs_review | x=-0.946 y=-0.504</title></polygon>
+<circle cx="259.6" cy="119.1" r="10.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state | needs_review_flag=auto | x=-1.03 y=0.818</title></circle>
+<circle cx="840.5" cy="311.3" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<polygon points="413.2,183.3 409.7,186.8 413.2,190.3 416.7,186.8" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user | needs_review_flag=needs_review | x=-0.531 y=0.633</title></polygon>
+<polygon points="438.0,662.9 430.7,670.2 438.0,677.5 445.3,670.2" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed | needs_review_flag=needs_review | x=-0.452 y=-0.689</title></polygon>
+<circle cx="718.2" cy="413.9" r="10.1" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated | needs_review_flag=auto | x=0.45 y=0.0116</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="259.6" cy="119.1" r="8.9" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected | needs_review_flag=auto | x=-1.03 y=0.818</title></circle>
+<circle cx="538.2" cy="401.2" r="8.9" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim | needs_review_flag=auto | x=-0.129 y=0.0463</title></circle>
+<circle cx="259.6" cy="119.1" r="10.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state | needs_review_flag=auto | x=-1.03 y=0.818</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>piku/fund_conservation/amount_paid_preserves_fund_conservation | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<polygon points="384.6,330.0 381.1,333.5 384.6,337.0 388.1,333.5" fill="#dc2626" class="pt"><title>piku/fund_conservation/amount_paid_records_distribution | needs_review_flag=needs_review | x=-0.623 y=0.231</title></polygon>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_preserves_fund_conservation | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="718.2" cy="413.9" r="10.1" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_records_redemption_buckets | needs_review_flag=auto | x=0.45 y=0.0116</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>polaris/bonding_curve/buy_preserves_reserve_ratio_zero | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="12.0" fill="#2563eb" class="pt"><title>polaris/bonding_curve/init_reserve_ratio_zero | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="840.5" cy="311.3" r="11.4" fill="#2563eb" class="pt"><title>polaris/bonding_curve/sell_preserves_reserve_ratio_zero | needs_review_flag=auto | x=0.843 y=0.292</title></circle>
+<circle cx="797.3" cy="427.5" r="10.1" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier | needs_review_flag=auto | x=0.704 y=-0.0256</title></circle>
+<circle cx="797.3" cy="427.5" r="10.1" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier | needs_review_flag=auto | x=0.704 y=-0.0256</title></circle>
+<circle cx="216.4" cy="235.3" r="8.9" fill="#2563eb" class="pt"><title>reserve/auction_price_band/price_at_end_time | needs_review_flag=auto | x=-1.16 y=0.5</title></circle>
+<circle cx="216.4" cy="235.3" r="8.9" fill="#2563eb" class="pt"><title>reserve/auction_price_band/price_at_start_time | needs_review_flag=auto | x=-1.16 y=0.5</title></circle>
+<polygon points="494.9,510.0 487.6,517.3 494.9,524.6 502.2,517.3" fill="#dc2626" class="pt"><title>reserve/auction_price_band/price_lower_bound | needs_review_flag=needs_review | x=-0.269 y=-0.271</title></polygon>
+<circle cx="721.0" cy="491.4" r="10.1" fill="#2563eb" class="pt"><title>reserve/auction_price_band/price_upper_bound | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_acyclicity | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_is_owner_correctness | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_owner_list_invariant | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/in_list_reachable | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_acyclicity | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_in_list_reachable | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_is_owner_correctness | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_owner_list_invariant | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_acyclicity | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_in_list_reachable | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_owner_list_invariant | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="12.0" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_acyclicity | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_in_list_reachable | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_is_owner_correctness | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_owner_list_invariant | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>term_finance/term_auction_clearing/clearing_assignment_correct | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_conservation | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="262.4" cy="196.7" r="8.9" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_fee_formula | needs_review_flag=auto | x=-1.02 y=0.606</title></circle>
+<circle cx="721.0" cy="491.4" r="10.1" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_return_formula | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="12.0" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_conservation | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_value_conservation | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="414.0" cy="254.8" r="8.9" fill="#2563eb" class="pt"><title>wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity | needs_review_flag=auto | x=-0.529 y=0.447</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_decreases_supply | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_insufficient | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_ctokens_match_deposit | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_increases_supply | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_overflow_protection | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<polygon points="387.4,402.9 379.3,411.0 387.4,419.2 395.5,411.0" fill="#dc2626" class="pt"><title>zama/erc7984_confidential_token/setOperator_updates | needs_review_flag=needs_review | x=-0.614 y=0.0193</title></polygon>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transferFrom_conservation | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_conservation | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_insufficient | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="567.5" cy="423.7" r="10.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_no_balance_revert | needs_review_flag=auto | x=-0.0351 y=-0.0154</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_preserves_supply | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_sufficient | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/metadata_bridge | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<circle cx="721.0" cy="491.4" r="11.4" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_faithful | needs_review_flag=auto | x=0.459 y=-0.201</title></circle>
+<text x="625.3" y="397.3" class="cent" text-anchor="middle">auto</text>
+<text x="361.4" y="514.2" class="cent" text-anchor="middle">needs_review</text>
+<text x="921" y="74" font-size="14" font-weight="700">Couleur: needs_review_flag</text>
+<circle cx="928" cy="94" r="6" fill="#2563eb" stroke="#111827" stroke-width=".5"/>
+<text x="943" y="98" class="legend">auto</text>
+<circle cx="928" cy="125" r="6" fill="#dc2626" stroke="#111827" stroke-width=".5"/>
+<text x="943" y="129" class="legend">needs review</text>
+<text x="921" y="716" class="legend" font-weight="700">Taille: confidence</text>
+<text x="921" y="738" class="legend" font-weight="700">Forme: needs_review_flag</text>
+</svg>
