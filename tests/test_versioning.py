@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from aggregate_version import aggregate, build_version_index, leaderboard_json, split_model_id
+from aggregate_version import aggregate, build_version_index, leaderboard_json, public_model_identity, split_model_id
 from compute_fingerprints import build_version_manifest
 from plan_rerun import plan_rerun, result_key
 
@@ -279,19 +279,36 @@ class VersioningTests(unittest.TestCase):
         summary = aggregate(self.version, self.results)
         by_id = {model["model_id"]: model for model in summary["models"]}
         self.assertEqual(by_id["kimi/kimi-for-coding"]["provider"], "kimi")
-        self.assertEqual(by_id["kimi/kimi-for-coding"]["model"], "kimi-for-coding")
+        self.assertEqual(by_id["kimi/kimi-for-coding"]["model"], "kimi-k2.7")
+        self.assertEqual(by_id["kimi/kimi-for-coding"]["display_name"], "kimi-k2.7")
         self.assertEqual(by_id["openai-gpt-55"]["provider"], "openai")
-        self.assertEqual(by_id["openai-gpt-55"]["model"], "gpt-55")
-        self.assertEqual(by_id["grok"]["provider"], "grok")
+        self.assertEqual(by_id["openai-gpt-55"]["model"], "gpt-5.5")
+        self.assertEqual(by_id["openai-gpt-55"]["display_name"], "gpt-5.5")
+        self.assertEqual(by_id["grok"]["provider"], "xai")
         self.assertEqual(by_id["grok"]["model"], "grok-build-0.1")
-        self.assertEqual(by_id["grok"]["display_name"], "grok/grok-build-0.1")
+        self.assertEqual(by_id["grok"]["display_name"], "grok-build-0.1")
 
     def test_model_id_split_uses_known_prefixes_and_slashes(self) -> None:
         self.assertEqual(split_model_id("minimax/minimax-m3"), ("minimax", "minimax-m3"))
-        self.assertEqual(split_model_id("claude-opus-4-8"), ("anthropic", "opus-4-8"))
-        self.assertEqual(split_model_id("grok"), ("grok", "grok-build-0.1"))
+        self.assertEqual(split_model_id("claude-opus-4-8"), ("anthropic", "opus-4.8"))
+        self.assertEqual(split_model_id("grok"), ("xai", "grok-build-0.1"))
         self.assertEqual(split_model_id("xai/grok-4.3"), ("xai", "grok-4.3"))
         self.assertEqual(split_model_id("custom-model"), ("unknown", "custom-model"))
+
+    def test_public_model_identity_matches_website_labels(self) -> None:
+        expected = {
+            "openai-gpt-55": ("openai", "gpt-5.5", "gpt-5.5"),
+            "zai/glm-5.2": ("zai", "glm-5.2", "glm-5.2"),
+            "claude-opus-4-8": ("anthropic", "opus-4.8", "opus-4.8"),
+            "grok": ("xai", "grok-build-0.1", "grok-build-0.1"),
+            "minimax/minimax-m3": ("minimax", "minimax-m3", "minimax-m3"),
+            "kimi/kimi-for-coding": ("kimi", "kimi-k2.7", "kimi-k2.7"),
+            "xai/grok-4.3": ("xai", "grok-4.3", "grok-4.3"),
+            "xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
+        }
+        for model_id, identity in expected.items():
+            with self.subTest(model_id=model_id):
+                self.assertEqual(public_model_identity(model_id), identity)
 
     def test_version_index_points_to_summary_and_manifest(self) -> None:
         summary = aggregate(self.version, self.results)
@@ -312,13 +329,21 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(leaderboard["source_summary_url"], "results/summaries/v0.1.json")
         self.assertEqual(leaderboard["source_manifest_url"], "results/manifests/v0.1.json")
 
-        by_id = {row["model_id"]: row for row in leaderboard["rows"]}
-        minimax = by_id["minimax/minimax-m3"]
+        by_source_id = {row["source_model_id"]: row for row in leaderboard["rows"]}
+        minimax = by_source_id["minimax/minimax-m3"]
+        self.assertEqual(minimax["model_id"], "minimax/minimax-m3")
         self.assertEqual(minimax["provider_id"], "minimax")
         self.assertEqual(minimax["provider_model_id"], "minimax-m3")
+        self.assertEqual(minimax["display_name"], "minimax-m3")
         self.assertIn("total_tokens", minimax)
         self.assertIn("avg_total_tokens_per_task", minimax)
         self.assertEqual(minimax["total"], minimax["passed"] + minimax["failed"])
+
+        openai = by_source_id["openai-gpt-55"]
+        self.assertEqual(openai["model_id"], "openai/gpt-5.5")
+        self.assertEqual(openai["provider_id"], "openai")
+        self.assertEqual(openai["provider_model_id"], "gpt-5.5")
+        self.assertEqual(openai["display_name"], "gpt-5.5")
 
         complete_rows = [row for row in leaderboard["rows"] if row["status"] == "complete"]
         self.assertTrue(all(isinstance(row["rank"], int) for row in complete_rows))

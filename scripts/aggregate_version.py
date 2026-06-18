@@ -18,12 +18,36 @@ def slug(value: str) -> str:
     return "".join(ch if ch.isalnum() else "-" for ch in value).strip("-").lower()
 
 
+PUBLIC_MODEL_ALIASES = {
+    "claude-opus-4-8": ("anthropic", "opus-4.8", "opus-4.8"),
+    "grok": ("xai", "grok-build-0.1", "grok-build-0.1"),
+    "kimi/kimi-for-coding": ("kimi", "kimi-k2.7", "kimi-k2.7"),
+    "openai-gpt-55": ("openai", "gpt-5.5", "gpt-5.5"),
+    "openai-gpt-55-pro": ("openai", "gpt-5.5-pro", "gpt-5.5-pro"),
+    "xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
+}
+
+
+def public_model_identity(model_id: str, display_name: str | None = None) -> tuple[str, str, str]:
+    """Return website-facing provider, model, and display label."""
+    if model_id in PUBLIC_MODEL_ALIASES:
+        return PUBLIC_MODEL_ALIASES[model_id]
+    provider, model = split_model_id(model_id)
+    if model_id.startswith("virtuals/"):
+        return provider, model, f"{provider}/{model}"
+    if "/" in model_id and (not display_name or display_name == model_id or "/" in display_name):
+        return provider, model, model
+    return provider, model, display_name or model
+
+
 def split_model_id(model_id: str) -> tuple[str, str]:
     if "/" in model_id:
         provider, model = model_id.split("/", 1)
         return provider, model
     known_aliases = {
-        "grok": ("grok", "grok-build-0.1"),
+        key: (provider, model)
+        for key, (provider, model, _display) in PUBLIC_MODEL_ALIASES.items()
+        if "/" not in key or key == "kimi/kimi-for-coding"
     }
     if model_id in known_aliases:
         return known_aliases[model_id]
@@ -55,12 +79,11 @@ def model_summary(model: dict[str, Any]) -> dict[str, Any]:
     usage = [task.get("usage") for task in tasks if isinstance(task.get("usage"), dict)]
     completion_passed = [int((task.get("usage") or {}).get("completion_tokens") or 0) for task in passed]
     prompt_passed = [int((task.get("usage") or {}).get("prompt_tokens") or 0) for task in passed]
-    provider, model_name = split_model_id(model["model_id"])
-    display_name = f"{provider}/{model_name}" if model["model_id"] == "grok" else model.get("display_name", model["model_id"])
+    provider, model_name, display_name = public_model_identity(model["model_id"], model.get("display_name"))
     return {
         "model_id": model["model_id"],
-        "provider": model.get("provider", provider),
-        "model": model.get("model", model_name),
+        "provider": provider,
+        "model": model_name,
         "display_name": display_name,
         "status": model.get("status", "invalid"),
         "task_count": model.get("task_count", len(tasks)),
@@ -109,7 +132,8 @@ def leaderboard_json(summary: dict[str, Any]) -> dict[str, Any]:
         rows.append(
             {
                 "rank": complete_rank.get(item["model_id"]),
-                "model_id": item["model_id"],
+                "model_id": f"{item['provider']}/{item['model']}",
+                "source_model_id": item["model_id"],
                 "provider_id": item["provider"],
                 "provider_model_id": item["model"],
                 "display_name": item["display_name"],
