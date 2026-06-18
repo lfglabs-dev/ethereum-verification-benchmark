@@ -15,3 +15,7 @@ results/comparisons/
 results/runs/
 __pycache__/
 Benchmark/GeneratedPreview/
+
+# Regenerable analysis figures.
+analysis/budget_scaling_minimax_50/cascade_solve_events.svg
+analysis/budget_scaling_minimax_50/cascade_marginal_effort_per_percent.svg

@@ -247,6 +247,16 @@ def write_outputs(output: Path) -> None:
         "- `cascade_summary.csv/json`: cumulative solves plus prompt/completion/total token effort.",
         "- `cascade_solve_rate.svg`: x = budget profile, y = cumulative solve rate.",
         "- `cascade_effort_solve_rate.svg`: x = cumulative total tokens, y = cumulative solve rate.",
+        "- `cascade_solve_events.csv`: one row per selected task, ordered by cumulative observed token effort; unsolved tasks are right-censored at their final observed spend.",
+        "- `cascade_solve_events.svg`: regenerable figure from `cascade_solve_events.csv`.",
+        "- `cascade_marginal_effort_per_percent.svg`: x = marginal total tokens needed for one additional success-rate percentage point, y = reached solve-rate increment.",
+        "- `cascade_marginal_effort_per_percent.csv`: source data for the marginal-effort graph.",
+        "",
+        "Publication note:",
+        "- Keep this experiment as a sidecar analysis asset under `analysis/budget_scaling_minimax_50/`.",
+        "- Publish JSON provenance here (`profiles.json`, `selected_tasks.json`, `selection_stats.json`, `cascade_results.json`, `cascade_summary.json`) rather than adding it to `benchmark-versions/v0.1.json`.",
+        "- `v0.1.json` should remain the canonical leaderboard manifest; this cascade uses a different budget-scaling methodology.",
+        "- SVG figures are generated artifacts. They can be regenerated from the CSV/JSON outputs with `scripts/plan_budget_scaling_experiment.py`.",
         "",
         "Harness note:",
         "- For `--harness default`, the effective proof-search knobs are `max_attempts` and `max_tool_calls`.",
@@ -542,6 +552,20 @@ def write_cascade_summary(output: Path) -> None:
     (output / "cascade_summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     (output / "cascade_solve_rate.svg").write_text(render_solve_rate_svg(summary), encoding="utf-8")
     (output / "cascade_effort_solve_rate.svg").write_text(render_effort_solve_rate_svg(summary), encoding="utf-8")
+    event_rows = solve_event_rows(rows, selected)
+    if event_rows:
+        with (output / "cascade_solve_events.csv").open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=list(event_rows[0].keys()))
+            writer.writeheader()
+            writer.writerows(event_rows)
+        (output / "cascade_solve_events.svg").write_text(render_solve_events_svg(event_rows), encoding="utf-8")
+    marginal_rows = marginal_effort_rows(summary)
+    if marginal_rows:
+        with (output / "cascade_marginal_effort_per_percent.csv").open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=list(marginal_rows[0].keys()))
+            writer.writeheader()
+            writer.writerows(marginal_rows)
+        (output / "cascade_marginal_effort_per_percent.svg").write_text(render_marginal_effort_svg(marginal_rows, summary), encoding="utf-8")
 
 
 def render_solve_rate_svg(summary: list[dict]) -> str:
@@ -639,6 +663,298 @@ def render_effort_solve_rate_svg(summary: list[dict]) -> str:
             *labels,
             '<text x="28" y="320" text-anchor="middle" font-family="Arial" font-size="13" transform="rotate(-90 28 320)">cumulative solve rate</text>',
             f'<text x="{left + plot_w / 2:.1f}" y="{height - 18}" text-anchor="middle" font-family="Arial" font-size="13">cumulative total tokens</text>',
+            "</svg>",
+        ]
+    )
+
+
+def marginal_effort_rows(summary: list[dict]) -> list[dict]:
+    rows: list[dict] = []
+    previous_solved = 0
+    task_count = max(
+        1,
+        max(
+            round(int(row.get("cumulative_solved", 0) or 0) / max(float(row.get("solve_rate", 0) or 0), 0.0001))
+            for row in summary
+        ),
+    )
+    percent_per_task = 100 / task_count
+    reached_percent = 0.0
+    for row in summary:
+        cumulative_solved = int(row.get("cumulative_solved", 0) or 0)
+        newly_solved = max(0, cumulative_solved - previous_solved)
+        gained_percent = newly_solved * percent_per_task
+        total_tokens = int(row.get("profile_total_tokens", 0) or 0)
+        completion_tokens = int(row.get("profile_completion_tokens", 0) or 0)
+        requests = int(row.get("profile_requests", 0) or 0)
+        if newly_solved > 0 and gained_percent > 0:
+            rows.append(
+                {
+                    "profile": row["profile"],
+                    "from_solve_rate_percent": round(reached_percent, 2),
+                    "to_solve_rate_percent": round(cumulative_solved * percent_per_task, 2),
+                    "newly_solved": newly_solved,
+                    "gained_percentage_points": round(gained_percent, 2),
+                    "tokens_per_percentage_point": round(total_tokens / gained_percent, 2),
+                    "completion_tokens_per_percentage_point": round(completion_tokens / gained_percent, 2),
+                    "requests_per_percentage_point": round(requests / gained_percent, 2),
+                    "profile_total_tokens": total_tokens,
+                    "profile_completion_tokens": completion_tokens,
+                    "profile_requests": requests,
+                }
+            )
+        reached_percent = cumulative_solved * percent_per_task
+        previous_solved = cumulative_solved
+    return rows
+
+
+def solve_event_rows(rows: list[dict], selected: list[dict]) -> list[dict]:
+    task_order = {item["task_ref"]: int(item.get("rank", index + 1)) for index, item in enumerate(selected)}
+    task_count = len(task_order) or len({row.get("task_ref") for row in rows if row.get("task_ref")})
+    profile_order = {profile.name: index for index, profile in enumerate(PROFILES)}
+    solved: set[str] = set()
+    cumulative_total_tokens = 0
+    cumulative_completion_tokens = 0
+    cumulative_requests = 0
+    event_rows: list[dict] = []
+    last_unsolved_event_by_task: dict[str, dict] = {}
+
+    for profile in PROFILES:
+        profile_rows = [
+            row
+            for row in rows
+            if row.get("profile") == profile.name
+            and row.get("task_ref") not in solved
+            and not row.get("skipped_already_solved")
+        ]
+        # The jobs ran in parallel, so exact completion order is not in the artifact.
+        # Use consumed tokens as a stable completion proxy inside each profile batch.
+        profile_rows.sort(
+            key=lambda row: (
+                int(row.get("total_tokens", 0) or 0),
+                int(row.get("requests", 0) or 0),
+                task_order.get(row.get("task_ref"), 10**9),
+            )
+        )
+        for row in profile_rows:
+            task_ref = row["task_ref"]
+            total_tokens = int(row.get("total_tokens", 0) or 0)
+            completion_tokens = int(row.get("completion_tokens", 0) or 0)
+            requests = int(row.get("requests", 0) or 0)
+            cumulative_total_tokens += total_tokens
+            cumulative_completion_tokens += completion_tokens
+            cumulative_requests += requests
+            if row.get("passed") and task_ref not in solved:
+                solved.add(task_ref)
+                last_unsolved_event_by_task.pop(task_ref, None)
+                event_rows.append(
+                    {
+                        "event_index": len(event_rows) + 1,
+                        "task_ref": task_ref,
+                        "status": "solved",
+                        "profile": profile.name,
+                        "profile_index": profile_order.get(profile.name, -1) + 1,
+                        "task_total_tokens_at_event": total_tokens,
+                        "task_completion_tokens_at_event": completion_tokens,
+                        "task_requests_at_event": requests,
+                        "cumulative_total_tokens_at_event": cumulative_total_tokens,
+                        "cumulative_completion_tokens_at_event": cumulative_completion_tokens,
+                        "cumulative_requests_at_event": cumulative_requests,
+                        "cumulative_solved": len(solved),
+                        "solve_rate": round(len(solved) / task_count, 4) if task_count else 0,
+                        "solve_rate_percent": round(100 * len(solved) / task_count, 2) if task_count else 0,
+                    }
+                )
+            elif task_ref not in solved:
+                last_unsolved_event_by_task[task_ref] = {
+                    "profile": profile.name,
+                    "profile_index": profile_order.get(profile.name, -1) + 1,
+                    "task_total_tokens_at_event": total_tokens,
+                    "task_completion_tokens_at_event": completion_tokens,
+                    "task_requests_at_event": requests,
+                    "cumulative_total_tokens_at_event": cumulative_total_tokens,
+                    "cumulative_completion_tokens_at_event": cumulative_completion_tokens,
+                    "cumulative_requests_at_event": cumulative_requests,
+                }
+
+    unsolved = sorted(
+        set(task_order) - solved,
+        key=lambda task_ref: (
+            int(last_unsolved_event_by_task.get(task_ref, {}).get("cumulative_total_tokens_at_event", cumulative_total_tokens) or 0),
+            task_order.get(task_ref, 10**9),
+        ),
+    )
+    for task_ref in unsolved:
+        last_event = last_unsolved_event_by_task.get(task_ref, {})
+        event_rows.append(
+            {
+                "event_index": len(event_rows) + 1,
+                "task_ref": task_ref,
+                "status": "unsolved_censored",
+                "profile": last_event.get("profile", ""),
+                "profile_index": last_event.get("profile_index", ""),
+                "task_total_tokens_at_event": last_event.get("task_total_tokens_at_event", ""),
+                "task_completion_tokens_at_event": last_event.get("task_completion_tokens_at_event", ""),
+                "task_requests_at_event": last_event.get("task_requests_at_event", ""),
+                "cumulative_total_tokens_at_event": last_event.get("cumulative_total_tokens_at_event", cumulative_total_tokens),
+                "cumulative_completion_tokens_at_event": last_event.get("cumulative_completion_tokens_at_event", cumulative_completion_tokens),
+                "cumulative_requests_at_event": last_event.get("cumulative_requests_at_event", cumulative_requests),
+                "cumulative_solved": len(solved),
+                "solve_rate": round(len(solved) / task_count, 4) if task_count else 0,
+                "solve_rate_percent": round(100 * len(solved) / task_count, 2) if task_count else 0,
+            }
+        )
+    return event_rows
+
+
+def render_solve_events_svg(event_rows: list[dict]) -> str:
+    width, height = 1180, 700
+    left, right, top, bottom = 104, 48, 76, 94
+    plot_w = width - left - right
+    plot_h = height - top - bottom
+    solved_rows = [row for row in event_rows if row["status"] == "solved"]
+    censored_rows = [row for row in event_rows if row["status"] != "solved"]
+    max_x = max(1, max(int(row.get("cumulative_total_tokens_at_event", 0) or 0) for row in event_rows))
+
+    def x_for(tokens: int) -> float:
+        return left + plot_w * tokens / max_x
+
+    def y_for(percent: float) -> float:
+        return top + plot_h * (1 - percent / 100)
+
+    grid: list[str] = []
+    for tick in range(0, 6):
+        rate = tick * 20
+        y = y_for(rate)
+        grid.append(f'<line x1="{left}" x2="{width - right}" y1="{y:.1f}" y2="{y:.1f}" stroke="#e5e7eb" />')
+        grid.append(f'<text x="{left - 12}" y="{y + 4:.1f}" text-anchor="end" font-family="Arial" font-size="12">{rate}%</text>')
+    for tick in range(0, 6):
+        tokens = max_x * tick / 5
+        x = left + plot_w * tick / 5
+        label = f"{tokens / 1_000_000:.1f}M" if max_x >= 1_000_000 else f"{tokens / 1_000:.0f}k"
+        grid.append(f'<line x1="{x:.1f}" x2="{x:.1f}" y1="{top}" y2="{height - bottom}" stroke="#f3f4f6" />')
+        grid.append(f'<text x="{x:.1f}" y="{height - 58}" text-anchor="middle" font-family="Arial" font-size="12">{label}</text>')
+
+    points = []
+    polyline_points = []
+    for row in event_rows:
+        x = x_for(int(row["cumulative_total_tokens_at_event"]))
+        y = y_for(float(row["solve_rate_percent"]))
+        polyline_points.append(f"{x:.1f},{y:.1f}")
+
+    for row in solved_rows:
+        x = x_for(int(row["cumulative_total_tokens_at_event"]))
+        y = y_for(float(row["solve_rate_percent"]))
+        points.append(
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4.3" fill="#2563eb">'
+            f'<title>{row["event_index"]}. {row["task_ref"]} | {row["profile"]} | {int(row["cumulative_total_tokens_at_event"]):,} total tokens</title>'
+            f'</circle>'
+        )
+
+    censored = []
+    for row in censored_rows:
+        x = x_for(int(row["cumulative_total_tokens_at_event"]))
+        y = y_for(float(row["solve_rate_percent"]))
+        censored.append(
+            f'<path d="M {x - 6:.1f} {y - 6:.1f} L {x + 6:.1f} {y + 6:.1f} M {x + 6:.1f} {y - 6:.1f} L {x - 6:.1f} {y + 6:.1f}" '
+            f'stroke="#dc2626" stroke-width="2.3"><title>{row["event_index"]}. {row["task_ref"]} was not solved; '
+            f'{int(row["cumulative_total_tokens_at_event"]):,} cumulative total tokens, solve rate remains {float(row["solve_rate_percent"]):.0f}%</title></path>'
+        )
+
+    final_solved = int(solved_rows[-1]["cumulative_solved"]) if solved_rows else 0
+    final_percent = float(solved_rows[-1]["solve_rate_percent"]) if solved_rows else 0.0
+    note = (
+        f"{len(solved_rows)} solved events; {len(censored_rows)} unsolved tasks are censored at their final observed spend. "
+        "Within each parallel profile batch, event order uses total tokens as a stable completion proxy."
+    )
+
+    return "\n".join(
+        [
+            '<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="700" viewBox="0 0 1180 700">',
+            '<rect width="1180" height="700" fill="#ffffff" />',
+            '<text x="40" y="36" font-family="Arial" font-size="24" font-weight="700">Solve-event curve by continuous effort</text>',
+            f'<text x="40" y="60" font-family="Arial" font-size="13" fill="#4b5563">{note}</text>',
+            *grid,
+            f'<line x1="{left}" x2="{left}" y1="{top}" y2="{height - bottom}" stroke="#111827" />',
+            f'<line x1="{left}" x2="{width - right}" y1="{height - bottom}" y2="{height - bottom}" stroke="#111827" />',
+            f'<polyline points="{" ".join(polyline_points)}" fill="none" stroke="#2563eb" stroke-width="2.4" />',
+            *points,
+            *censored,
+            f'<text x="{width - right}" y="{y_for(final_percent) - 18:.1f}" text-anchor="end" font-family="Arial" font-size="13" fill="#111827">{final_solved}/50 solved</text>',
+            '<text x="28" y="342" text-anchor="middle" font-family="Arial" font-size="13" transform="rotate(-90 28 342)">cumulative solve rate</text>',
+            f'<text x="{left + plot_w / 2:.1f}" y="{height - 24}" text-anchor="middle" font-family="Arial" font-size="13">cumulative total tokens at solve event</text>',
+            "</svg>",
+        ]
+    )
+
+
+def render_marginal_effort_svg(marginal_rows: list[dict], summary: list[dict]) -> str:
+    width, height = 1120, 680
+    left, right, top, bottom = 118, 52, 72, 104
+    plot_w = width - left - right
+    plot_h = height - top - bottom
+    values = [float(row["tokens_per_percentage_point"]) for row in marginal_rows]
+    max_x = max(values) * 1.08 if values else 1
+    max_y = max(float(row["to_solve_rate_percent"]) for row in marginal_rows) if marginal_rows else 100
+
+    def x_for(value: float) -> float:
+        return left + plot_w * (value / max_x if max_x else 0)
+
+    def y_for(value: float) -> float:
+        return top + plot_h * (1 - value / max(100, max_y))
+
+    grid: list[str] = []
+    for tick in range(0, 6):
+        rate = tick * 20
+        y = y_for(rate)
+        grid.append(f'<line x1="{left}" x2="{width - right}" y1="{y:.1f}" y2="{y:.1f}" stroke="#e5e7eb" />')
+        grid.append(f'<text x="{left - 12}" y="{y + 4:.1f}" text-anchor="end" font-family="Arial" font-size="12">{rate}%</text>')
+    for tick in range(0, 6):
+        value = max_x * tick / 5
+        x = left + plot_w * tick / 5
+        label = f"{value / 1_000_000:.1f}M" if max_x >= 1_000_000 else f"{value / 1_000:.0f}k"
+        grid.append(f'<line x1="{x:.1f}" x2="{x:.1f}" y1="{top}" y2="{height - bottom}" stroke="#f3f4f6" />')
+        grid.append(f'<text x="{x:.1f}" y="{height - 62}" text-anchor="middle" font-family="Arial" font-size="12">{label}</text>')
+
+    points: list[str] = []
+    labels: list[str] = []
+    for row in marginal_rows:
+        x = x_for(float(row["tokens_per_percentage_point"]))
+        y = y_for(float(row["to_solve_rate_percent"]))
+        gained = float(row["gained_percentage_points"])
+        radius = 5 + min(14, gained * 0.75)
+        points.append(
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{radius:.1f}" fill="#7c3aed" fill-opacity="0.84" stroke="#4c1d95" stroke-width="1.2" />'
+        )
+        labels.append(
+            f'<text x="{x + 9:.1f}" y="{y - 10:.1f}" font-family="Arial" font-size="12">'
+            f'{row["profile"].split("_", 1)[0]} +{gained:.0f}pp</text>'
+        )
+
+    zero_gain_rows = [row for row in summary if int(row.get("newly_solved", 0) or 0) == 0 and int(row.get("profile_total_tokens", 0) or 0) > 0]
+    zero_gain_note = ""
+    if zero_gain_rows:
+        spent = sum(int(row.get("profile_total_tokens", 0) or 0) for row in zero_gain_rows)
+        profiles = ", ".join(row["profile"].split("_", 1)[0] for row in zero_gain_rows)
+        zero_gain_note = (
+            f'<text x="{left}" y="{height - 24}" font-family="Arial" font-size="12" fill="#6b7280">'
+            f'Zero-gain profiles excluded from x-scale: {profiles}, {spent / 1_000_000:.2f}M total tokens spent for +0pp.</text>'
+        )
+
+    return "\n".join(
+        [
+            '<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="680" viewBox="0 0 1120 680">',
+            '<rect width="1120" height="680" fill="#ffffff" />',
+            '<text x="40" y="36" font-family="Arial" font-size="24" font-weight="700">Marginal effort per added success-rate point</text>',
+            '<text x="40" y="60" font-family="Arial" font-size="13" fill="#4b5563">Each point is a budget-profile gain segment. x = profile total tokens divided by added percentage points; y = cumulative solve rate reached.</text>',
+            *grid,
+            f'<line x1="{left}" x2="{left}" y1="{top}" y2="{height - bottom}" stroke="#111827" />',
+            f'<line x1="{left}" x2="{width - right}" y1="{height - bottom}" y2="{height - bottom}" stroke="#111827" />',
+            *points,
+            *labels,
+            '<text x="28" y="334" text-anchor="middle" font-family="Arial" font-size="13" transform="rotate(-90 28 334)">cumulative solve rate reached</text>',
+            f'<text x="{left + plot_w / 2:.1f}" y="{height - 32}" text-anchor="middle" font-family="Arial" font-size="13">marginal total tokens per +1 percentage point</text>',
+            zero_gain_note,
             "</svg>",
         ]
     )
