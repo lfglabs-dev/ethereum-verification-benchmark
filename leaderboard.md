@@ -1,6 +1,6 @@
 # Verity Benchmark Leaderboard
 
-Benchmark version `0.1` · generated 2026-06-18 15:20Z
+Benchmark version `0.1` · generated 2026-06-18 21:00Z
 
 Complete rows are eligible for rank comparisons. Partial rows are shown for transparency and excluded from complete-rank comparisons.
 
@@ -16,7 +16,7 @@ Complete rows are eligible for rank comparisons. Partial rows are shown for tran
 | partial | virtuals/deepseek-v4-flash | `partial` | 30/135 | 117819157 | 2897337 | 2 duplicate task artifacts; best reusable archive entry indexed, 2 zero-usage task artifacts are not reusable |
 | partial | virtuals/deepseek-v4-pro | `partial` | 28/126 | 92589294 | 3134542 | partial task coverage: 126/135, 13 duplicate task artifacts; best reusable archive entry indexed, 22 zero-usage task artifacts are not reusable |
 | partial | grok-4.3 | `partial` | 25/135 | 47504648 | 304670 | 5 duplicate task artifacts; best reusable archive entry indexed, 5 zero-usage task artifacts are not reusable |
-| partial | virtuals/xiaomi-mimo-v2-5 | `partial` | 13/135 | 33446667 | 1478112 | 1 duplicate task artifacts; best reusable archive entry indexed, 1 zero-usage task artifacts are not reusable |
+| partial | mimo-v2.5 | `partial` | 13/135 | 33446667 | 1478112 | 1 duplicate task artifacts; best reusable archive entry indexed, 1 zero-usage task artifacts are not reusable |
 | partial | Step37 | `partial` | 1/135 | 502737 | 10445 | 286 duplicate task artifacts; latest archive entry indexed, 123 zero-usage task artifacts are not reusable |
 | partial | deepseek-v4-flash | `invalid` | 0/5 | 0 | 0 | partial task coverage: 5/135, 5 zero-usage task artifacts are not reusable |
 | partial | deepseek-v4-pro | `invalid` | 0/5 | 0 | 0 | partial task coverage: 5/135, 5 zero-usage task artifacts are not reusable |

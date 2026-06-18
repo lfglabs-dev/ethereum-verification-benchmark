@@ -304,6 +304,7 @@ class VersioningTests(unittest.TestCase):
             "minimax/minimax-m3": ("minimax", "minimax-m3", "minimax-m3"),
             "kimi/kimi-for-coding": ("kimi", "kimi-k2.7", "kimi-k2.7"),
             "xai/grok-4.3": ("xai", "grok-4.3", "grok-4.3"),
+            "virtuals/xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
             "xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
         }
         for model_id, identity in expected.items():
@@ -344,6 +345,12 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(openai["provider_id"], "openai")
         self.assertEqual(openai["provider_model_id"], "gpt-5.5")
         self.assertEqual(openai["display_name"], "gpt-5.5")
+
+        xiaomi = by_source_id["virtuals/xiaomi-mimo-v2-5"]
+        self.assertEqual(xiaomi["model_id"], "xiaomi/mimo-v2.5")
+        self.assertEqual(xiaomi["provider_id"], "xiaomi")
+        self.assertEqual(xiaomi["provider_model_id"], "mimo-v2.5")
+        self.assertEqual(xiaomi["display_name"], "mimo-v2.5")
 
         complete_rows = [row for row in leaderboard["rows"] if row["status"] == "complete"]
         self.assertTrue(all(isinstance(row["rank"], int) for row in complete_rows))

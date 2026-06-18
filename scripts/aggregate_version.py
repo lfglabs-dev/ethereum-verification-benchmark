@@ -24,6 +24,7 @@ PUBLIC_MODEL_ALIASES = {
     "kimi/kimi-for-coding": ("kimi", "kimi-k2.7", "kimi-k2.7"),
     "openai-gpt-55": ("openai", "gpt-5.5", "gpt-5.5"),
     "openai-gpt-55-pro": ("openai", "gpt-5.5-pro", "gpt-5.5-pro"),
+    "virtuals/xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
     "xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
 }
 
