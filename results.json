@@ -8,29 +8,26 @@
       "archive": {
         "asset_name": "benchmark-v0.1-claude-opus-4-8.tar.zst",
         "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-claude-opus-4-8.tar.zst",
-        "byte_size": 684609,
+        "byte_size": 1119975,
         "release_tag": "v0.1",
-        "sha256": "216badbc277b1dad6daeb9d921448ffced02a7210e2eb67c26c6df0347f66987"
+        "sha256": "82be0bd6ce529ea01d8a643562cd0950747661ad5052de4e418681c5f52f6aa8"
       },
-      "caveats": [
-        "partial task coverage: 88/135",
-        "1 duplicate task artifacts; latest archive entry indexed"
-      ],
-      "completion_tokens": 2025318,
+      "caveats": [],
+      "completion_tokens": 3393628,
       "display_name": "opus-4.8",
-      "failed": 50,
-      "median_completion_tokens_to_pass": 5821,
-      "median_prompt_tokens_to_pass": 191925,
+      "failed": 90,
+      "median_completion_tokens_to_pass": 5954,
+      "median_prompt_tokens_to_pass": 191466,
       "model": "opus-4.8",
       "model_id": "claude-opus-4-8",
-      "pass_rate": 0.432,
-      "passed": 38,
-      "prompt_tokens": 57918538,
+      "pass_rate": 0.333,
+      "passed": 45,
+      "prompt_tokens": 96532539,
       "provider": "anthropic",
-      "status": "partial",
-      "task_count": 88,
-      "total_tokens": 59943856,
-      "valid_count": 88
+      "status": "complete",
+      "task_count": 135,
+      "total_tokens": 99926167,
+      "valid_count": 135
     },
     {
       "archive": {
@@ -92,28 +89,26 @@
       "archive": {
         "asset_name": "benchmark-v0.1-grok.tar.zst",
         "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-grok.tar.zst",
-        "byte_size": 684165,
+        "byte_size": 1794322,
         "release_tag": "v0.1",
-        "sha256": "ba6d88f4ed7ea1fe802d6fb44bf46d092fcc865a7c2d8f13d6304bdccb6866e7"
+        "sha256": "a1af93ed0007643ea81671de21e9d8a4b13eec2f97da88ffc1e4b97cf605baf7"
       },
-      "caveats": [
-        "partial task coverage: 58/135"
-      ],
-      "completion_tokens": 255759,
+      "caveats": [],
+      "completion_tokens": 728301,
       "display_name": "grok-build-0.1",
-      "failed": 30,
-      "median_completion_tokens_to_pass": 1196,
-      "median_prompt_tokens_to_pass": 247657,
+      "failed": 94,
+      "median_completion_tokens_to_pass": 1416,
+      "median_prompt_tokens_to_pass": 274867,
       "model": "grok-build-0.1",
       "model_id": "grok",
-      "pass_rate": 0.483,
-      "passed": 28,
-      "prompt_tokens": 36982124,
+      "pass_rate": 0.304,
+      "passed": 41,
+      "prompt_tokens": 109119204,
       "provider": "xai",
-      "status": "partial",
-      "task_count": 58,
-      "total_tokens": 37237883,
-      "valid_count": 58
+      "status": "complete",
+      "task_count": 135,
+      "total_tokens": 113880465,
+      "valid_count": 135
     },
     {
       "archive": {
@@ -169,28 +164,26 @@
       "archive": {
         "asset_name": "benchmark-v0.1-openai-gpt-55.tar.zst",
         "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-openai-gpt-55.tar.zst",
-        "byte_size": 779138,
+        "byte_size": 1280796,
         "release_tag": "v0.1",
-        "sha256": "7e5380355fccb2a872d4a4ba0f9e3acfbaa93f537ab9a5ba767e8f869c8826ad"
+        "sha256": "763875a271abc598666d86a8fbc7e62d483974357358f7c3d64634c571c595e5"
       },
-      "caveats": [
-        "partial task coverage: 93/135"
-      ],
-      "completion_tokens": 645476,
+      "caveats": [],
+      "completion_tokens": 1223025,
       "display_name": "gpt-5.5",
-      "failed": 35,
-      "median_completion_tokens_to_pass": 1590,
-      "median_prompt_tokens_to_pass": 141740,
+      "failed": 69,
+      "median_completion_tokens_to_pass": 1751,
+      "median_prompt_tokens_to_pass": 159463,
       "model": "gpt-5.5",
       "model_id": "openai-gpt-55",
-      "pass_rate": 0.624,
-      "passed": 58,
-      "prompt_tokens": 32777402,
+      "pass_rate": 0.489,
+      "passed": 66,
+      "prompt_tokens": 54764531,
       "provider": "openai",
-      "status": "partial",
-      "task_count": 93,
-      "total_tokens": 33422878,
-      "valid_count": 93
+      "status": "complete",
+      "task_count": 135,
+      "total_tokens": 55987556,
+      "valid_count": 135
     },
     {
       "archive": {
