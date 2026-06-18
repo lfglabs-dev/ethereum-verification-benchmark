@@ -61,6 +61,27 @@
       "valid_count": 135
     },
     {
+      "avg_total_tokens_per_task": 145271.8,
+      "caveats": [
+        "partial task coverage: 54/135"
+      ],
+      "completion_tokens": 272215,
+      "display_name": "gpt-5.5-pro",
+      "failed": 19,
+      "model_id": "openai/gpt-5.5-pro",
+      "pass_rate": 0.648,
+      "passed": 35,
+      "prompt_tokens": 7572463,
+      "provider_id": "openai",
+      "provider_model_id": "gpt-5.5-pro",
+      "rank": null,
+      "source_model_id": "openai-gpt-55-pro",
+      "status": "partial",
+      "total": 54,
+      "total_tokens": 7844678,
+      "valid_count": 54
+    },
+    {
       "avg_total_tokens_per_task": 359385.8,
       "caveats": [
         "partial task coverage: 93/135"
@@ -123,6 +144,95 @@
       "total": 88,
       "total_tokens": 59943856,
       "valid_count": 88
+    },
+    {
+      "avg_total_tokens_per_task": 894196.3,
+      "caveats": [
+        "2 duplicate task artifacts; best reusable archive entry indexed",
+        "2 zero-usage task artifacts are not reusable"
+      ],
+      "completion_tokens": 2897337,
+      "display_name": "virtuals/deepseek-v4-flash",
+      "failed": 105,
+      "model_id": "virtuals/deepseek-v4-flash",
+      "pass_rate": 0.222,
+      "passed": 30,
+      "prompt_tokens": 117819157,
+      "provider_id": "virtuals",
+      "provider_model_id": "deepseek-v4-flash",
+      "rank": null,
+      "source_model_id": "virtuals/deepseek-v4-flash",
+      "status": "partial",
+      "total": 135,
+      "total_tokens": 120716494,
+      "valid_count": 135
+    },
+    {
+      "avg_total_tokens_per_task": 759713.0,
+      "caveats": [
+        "partial task coverage: 126/135",
+        "13 duplicate task artifacts; best reusable archive entry indexed",
+        "22 zero-usage task artifacts are not reusable"
+      ],
+      "completion_tokens": 3134542,
+      "display_name": "virtuals/deepseek-v4-pro",
+      "failed": 98,
+      "model_id": "virtuals/deepseek-v4-pro",
+      "pass_rate": 0.222,
+      "passed": 28,
+      "prompt_tokens": 92589294,
+      "provider_id": "virtuals",
+      "provider_model_id": "deepseek-v4-pro",
+      "rank": null,
+      "source_model_id": "virtuals/deepseek-v4-pro",
+      "status": "partial",
+      "total": 126,
+      "total_tokens": 95723836,
+      "valid_count": 126
+    },
+    {
+      "avg_total_tokens_per_task": 355646.1,
+      "caveats": [
+        "5 duplicate task artifacts; best reusable archive entry indexed",
+        "5 zero-usage task artifacts are not reusable"
+      ],
+      "completion_tokens": 304670,
+      "display_name": "grok-4.3",
+      "failed": 110,
+      "model_id": "xai/grok-4.3",
+      "pass_rate": 0.185,
+      "passed": 25,
+      "prompt_tokens": 47504648,
+      "provider_id": "xai",
+      "provider_model_id": "grok-4.3",
+      "rank": null,
+      "source_model_id": "xai/grok-4.3",
+      "status": "partial",
+      "total": 135,
+      "total_tokens": 48012223,
+      "valid_count": 135
+    },
+    {
+      "avg_total_tokens_per_task": 258702.1,
+      "caveats": [
+        "1 duplicate task artifacts; best reusable archive entry indexed",
+        "1 zero-usage task artifacts are not reusable"
+      ],
+      "completion_tokens": 1478112,
+      "display_name": "virtuals/xiaomi-mimo-v2-5",
+      "failed": 122,
+      "model_id": "virtuals/xiaomi-mimo-v2-5",
+      "pass_rate": 0.096,
+      "passed": 13,
+      "prompt_tokens": 33446667,
+      "provider_id": "virtuals",
+      "provider_model_id": "xiaomi-mimo-v2-5",
+      "rank": null,
+      "source_model_id": "virtuals/xiaomi-mimo-v2-5",
+      "status": "partial",
+      "total": 135,
+      "total_tokens": 34924779,
+      "valid_count": 135
     },
     {
       "avg_total_tokens_per_task": 3801.3,
@@ -211,111 +321,6 @@
       "total": 5,
       "total_tokens": 0,
       "valid_count": 0
-    },
-    {
-      "avg_total_tokens_per_task": 256032.0,
-      "caveats": [
-        "partial task coverage: 1/135"
-      ],
-      "completion_tokens": 11365,
-      "display_name": "gpt-5.5-pro",
-      "failed": 1,
-      "model_id": "openai/gpt-5.5-pro",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 244667,
-      "provider_id": "openai",
-      "provider_model_id": "gpt-5.5-pro",
-      "rank": null,
-      "source_model_id": "openai-gpt-55-pro",
-      "status": "partial",
-      "total": 1,
-      "total_tokens": 256032,
-      "valid_count": 1
-    },
-    {
-      "avg_total_tokens_per_task": 554034.2,
-      "caveats": [
-        "partial task coverage: 5/135"
-      ],
-      "completion_tokens": 15277,
-      "display_name": "grok-4.3",
-      "failed": 5,
-      "model_id": "xai/grok-4.3",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 2754894,
-      "provider_id": "xai",
-      "provider_model_id": "grok-4.3",
-      "rank": null,
-      "source_model_id": "xai/grok-4.3",
-      "status": "partial",
-      "total": 5,
-      "total_tokens": 2770171,
-      "valid_count": 5
-    },
-    {
-      "avg_total_tokens_per_task": 1004649.0,
-      "caveats": [
-        "partial task coverage: 1/135"
-      ],
-      "completion_tokens": 18411,
-      "display_name": "virtuals/deepseek-v4-pro",
-      "failed": 1,
-      "model_id": "virtuals/deepseek-v4-pro",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 986238,
-      "provider_id": "virtuals",
-      "provider_model_id": "deepseek-v4-pro",
-      "rank": null,
-      "source_model_id": "virtuals/deepseek-v4-pro",
-      "status": "partial",
-      "total": 1,
-      "total_tokens": 1004649,
-      "valid_count": 1
-    },
-    {
-      "avg_total_tokens_per_task": 430386.5,
-      "caveats": [
-        "partial task coverage: 2/135"
-      ],
-      "completion_tokens": 23973,
-      "display_name": "virtuals/xiaomi-mimo-v2-5",
-      "failed": 2,
-      "model_id": "virtuals/xiaomi-mimo-v2-5",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 836800,
-      "provider_id": "virtuals",
-      "provider_model_id": "xiaomi-mimo-v2-5",
-      "rank": null,
-      "source_model_id": "virtuals/xiaomi-mimo-v2-5",
-      "status": "partial",
-      "total": 2,
-      "total_tokens": 860773,
-      "valid_count": 2
-    },
-    {
-      "avg_total_tokens_per_task": 1119470.0,
-      "caveats": [
-        "partial task coverage: 2/135"
-      ],
-      "completion_tokens": 36731,
-      "display_name": "virtuals/deepseek-v4-flash",
-      "failed": 2,
-      "model_id": "virtuals/deepseek-v4-flash",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 2202209,
-      "provider_id": "virtuals",
-      "provider_model_id": "deepseek-v4-flash",
-      "rank": null,
-      "source_model_id": "virtuals/deepseek-v4-flash",
-      "status": "partial",
-      "total": 2,
-      "total_tokens": 2238940,
-      "valid_count": 2
     }
   ],
   "schema_version": 1,
