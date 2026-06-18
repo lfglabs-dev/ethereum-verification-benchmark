@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from aggregate_version import aggregate, build_version_index, split_model_id
+from aggregate_version import aggregate, build_version_index, leaderboard_json, split_model_id
 from compute_fingerprints import build_version_manifest
 from plan_rerun import plan_rerun, result_key
 
@@ -301,8 +301,28 @@ class VersioningTests(unittest.TestCase):
             index = build_version_index(out, latest_version="0.1", current_summary=summary)
         self.assertEqual(index["latest_version"], "0.1")
         self.assertEqual(index["versions"][0]["benchmark_version"], "0.1")
+        self.assertEqual(index["versions"][0]["leaderboard_url"], "results/leaderboards/v0.1.json")
         self.assertEqual(index["versions"][0]["summary_url"], "results/summaries/v0.1.json")
         self.assertEqual(index["versions"][0]["manifest_url"], "results/manifests/v0.1.json")
+
+    def test_leaderboard_json_is_minimal_website_table_with_tokens(self) -> None:
+        summary = aggregate(self.version, self.results)
+        leaderboard = leaderboard_json(summary)
+        self.assertEqual(leaderboard["benchmark_version"], "0.1")
+        self.assertEqual(leaderboard["source_summary_url"], "results/summaries/v0.1.json")
+        self.assertEqual(leaderboard["source_manifest_url"], "results/manifests/v0.1.json")
+
+        by_id = {row["model_id"]: row for row in leaderboard["rows"]}
+        minimax = by_id["minimax/minimax-m3"]
+        self.assertEqual(minimax["provider_id"], "minimax")
+        self.assertEqual(minimax["provider_model_id"], "minimax-m3")
+        self.assertIn("total_tokens", minimax)
+        self.assertIn("avg_total_tokens_per_task", minimax)
+        self.assertEqual(minimax["total"], minimax["passed"] + minimax["failed"])
+
+        complete_rows = [row for row in leaderboard["rows"] if row["status"] == "complete"]
+        self.assertTrue(all(isinstance(row["rank"], int) for row in complete_rows))
+        self.assertTrue(all(row["rank"] is None for row in leaderboard["rows"] if row["status"] != "complete"))
 
 
 if __name__ == "__main__":

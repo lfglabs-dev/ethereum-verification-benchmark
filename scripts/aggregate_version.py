@@ -88,6 +88,57 @@ def badge(label: str, summary: dict[str, Any]) -> dict[str, Any]:
     return {"schemaVersion": 1, "label": label, "message": message, "color": color}
 
 
+def leaderboard_json(summary: dict[str, Any]) -> dict[str, Any]:
+    """Build a website-oriented leaderboard table from a version summary."""
+    rows: list[dict[str, Any]] = []
+    complete_rows = [item for item in summary["models"] if item.get("status") == "complete"]
+    complete_rank = {
+        item["model_id"]: rank
+        for rank, item in enumerate(
+            sorted(complete_rows, key=lambda item: (-item["pass_rate"], item["completion_tokens"], item["model_id"])),
+            1,
+        )
+    }
+    sorted_rows = sorted(
+        summary["models"],
+        key=lambda item: (item.get("status") != "complete", -item["pass_rate"], item["completion_tokens"], item["model_id"]),
+    )
+    for item in sorted_rows:
+        task_count = int(item.get("task_count") or 0)
+        total_tokens = int(item.get("total_tokens") or 0)
+        rows.append(
+            {
+                "rank": complete_rank.get(item["model_id"]),
+                "model_id": item["model_id"],
+                "provider_id": item["provider"],
+                "provider_model_id": item["model"],
+                "display_name": item["display_name"],
+                "status": item["status"],
+                "pass_rate": item["pass_rate"],
+                "passed": int(item["passed"]),
+                "failed": int(item["failed"]),
+                "total": task_count,
+                "valid_count": int(item.get("valid_count", task_count)),
+                "prompt_tokens": int(item.get("prompt_tokens") or 0),
+                "completion_tokens": int(item.get("completion_tokens") or 0),
+                "total_tokens": total_tokens,
+                "avg_total_tokens_per_task": round(total_tokens / task_count, 1) if task_count else None,
+                "caveats": item.get("caveats") or [],
+            }
+        )
+    version_name = str(summary["benchmark_version"])
+    return {
+        "schema_version": 1,
+        "benchmark": summary["benchmark"],
+        "benchmark_version": version_name,
+        "task_count": int(summary["task_count"]),
+        "source_summary_url": f"results/summaries/v{version_name}.json",
+        "source_manifest_url": f"results/manifests/v{version_name}.json",
+        "ranking_policy": "complete rows ranked by pass_rate desc, completion_tokens asc, model_id asc; partial/invalid rows have null rank",
+        "rows": rows,
+    }
+
+
 def leaderboard(version: dict[str, Any], summaries: list[dict[str, Any]]) -> str:
     lines = [
         "# Verity Benchmark Leaderboard",
@@ -139,6 +190,7 @@ def build_version_index(out: Path, latest_version: str, current_summary: dict[st
             "tag": f"benchmark-v{version_name}",
             "label": f"v{version_name}",
             "task_count": int(summary.get("task_count") or 0),
+            "leaderboard_url": f"results/leaderboards/v{version_name}.json",
             "summary_url": f"results/summaries/v{version_name}.json",
             "manifest_url": f"results/manifests/v{version_name}.json",
         }
@@ -148,6 +200,7 @@ def build_version_index(out: Path, latest_version: str, current_summary: dict[st
         "tag": f"benchmark-v{version_name}",
         "label": f"v{version_name}",
         "task_count": int(current_summary["task_count"]),
+        "leaderboard_url": f"results/leaderboards/v{version_name}.json",
         "summary_url": f"results/summaries/v{version_name}.json",
         "manifest_url": f"results/manifests/v{version_name}.json",
     }
@@ -172,10 +225,13 @@ def main() -> int:
     out = args.out_dir
     version_name = str(version["benchmark_version"])
     summaries_dir = out / "results" / "summaries"
+    leaderboards_dir = out / "results" / "leaderboards"
     badges_dir = out / "badges"
     summaries_dir.mkdir(parents=True, exist_ok=True)
+    leaderboards_dir.mkdir(parents=True, exist_ok=True)
     badges_dir.mkdir(parents=True, exist_ok=True)
     (summaries_dir / f"v{version_name}.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    (leaderboards_dir / f"v{version_name}.json").write_text(json.dumps(leaderboard_json(summary), indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (out / "results.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (out / "leaderboard.md").write_text(leaderboard(version, summary["models"]), encoding="utf-8")
     (out / "results" / "index.json").write_text(

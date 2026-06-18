@@ -6,6 +6,7 @@
     {
       "benchmark_version": "0.1",
       "label": "v0.1",
+      "leaderboard_url": "results/leaderboards/v0.1.json",
       "manifest_url": "results/manifests/v0.1.json",
       "summary_url": "results/summaries/v0.1.json",
       "tag": "benchmark-v0.1",

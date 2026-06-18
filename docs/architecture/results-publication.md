@@ -1,11 +1,12 @@
 # Results Publication Data Model
 
 Benchmark consumers should not have to scan release assets or full per-task
-archives to render a leaderboard. Keep three committed JSON layers:
+archives to render a leaderboard. Keep four committed JSON layers:
 
 1. `results/index.json`: small version index for website bootstrapping.
-2. `results/summaries/v<version>.json`: compact public leaderboard data.
-3. `results/manifests/v<version>.json`: full reusable per-model and per-task
+2. `results/leaderboards/v<version>.json`: minimal table data for websites.
+3. `results/summaries/v<version>.json`: compact public model summary data.
+4. `results/manifests/v<version>.json`: full reusable per-model and per-task
    result index, including archive metadata and result keys.
 
 The detailed run directories stay out of git and are published as immutable
@@ -26,6 +27,7 @@ release assets referenced by the manifest.
       "tag": "benchmark-v0.1",
       "label": "v0.1",
       "task_count": 135,
+      "leaderboard_url": "results/leaderboards/v0.1.json",
       "summary_url": "results/summaries/v0.1.json",
       "manifest_url": "results/manifests/v0.1.json"
     }
@@ -37,9 +39,54 @@ Add a new benchmark tag by appending one object and updating
 `latest_version`. Existing version entries should not be mutated except for
 metadata corrections.
 
+## Leaderboard File
+
+`results/leaderboards/v<version>.json` is the smallest committed JSON intended
+for direct website table rendering. It is derived from the summary file, not a
+separate source of truth.
+
+```json
+{
+  "schema_version": 1,
+  "benchmark": "verity-benchmark",
+  "benchmark_version": "0.1",
+  "task_count": 135,
+  "source_summary_url": "results/summaries/v0.1.json",
+  "source_manifest_url": "results/manifests/v0.1.json",
+  "rows": [
+    {
+      "rank": 1,
+      "model_id": "openai-gpt-55",
+      "provider_id": "openai",
+      "provider_model_id": "gpt-55",
+      "display_name": "GPT 5.5",
+      "status": "complete",
+      "pass_rate": 0.489,
+      "passed": 66,
+      "failed": 69,
+      "total": 135,
+      "valid_count": 135,
+      "prompt_tokens": 123,
+      "completion_tokens": 456,
+      "total_tokens": 579,
+      "avg_total_tokens_per_task": 4.3,
+      "caveats": []
+    }
+  ]
+}
+```
+
+For a simple website table, consume only `rows[].display_name`,
+`rows[].pass_rate`, `rows[].passed`, `rows[].failed`, `rows[].total`, and
+optionally `rows[].total_tokens`. The ID fields are intentionally split:
+
+- `model_id`: canonical benchmark row ID, stable for joins.
+- `provider_id`: provider namespace used by the benchmark.
+- `provider_model_id`: model name inside that provider namespace.
+
 ## Summary File
 
-`results/summaries/v<version>.json` is optimized for website rendering. It
+`results/summaries/v<version>.json` is the richer compact public data layer. It
 should include one row per model run with provider and model split explicitly:
 
 ```json
