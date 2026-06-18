@@ -137,6 +137,46 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(plan["rerun_count"], 1)
         self.assertEqual(plan["rerun"][0]["reason"], "zero usage")
 
+    def test_completed_with_failures_result_is_reusable(self) -> None:
+        task = self.version["tasks"][0]
+        model = "synthetic-completed-with-failures"
+        indexed_key = result_key(
+            model=model,
+            benchmark_version="0.1",
+            task_ref=task["task_ref"],
+            task_fingerprint=task["task_fingerprint"],
+            task_interface_id=task["task_interface_id"],
+            harness_id=self.version["harness_id"],
+            environment_id=self.version["environment_id"],
+            mode=self.version["mode"],
+            budget=self.version["budget"],
+        )
+        manifest = {
+            "models": [
+                {
+                    "model_id": model,
+                    "task_results": [
+                        {
+                            "task_ref": task["task_ref"],
+                            "result_key": indexed_key,
+                            "task_fingerprint": task["task_fingerprint"],
+                            "task_interface_id": task["task_interface_id"],
+                            "usage": {"prompt_tokens": 100, "completion_tokens": 20, "total_tokens": 120},
+                            "verifier_output_present": True,
+                            "artifact_status": "ok",
+                            "harness_status": "completed_with_failures",
+                        }
+                    ],
+                }
+            ]
+        }
+        newer = copy.deepcopy(self.version)
+        newer["tasks"] = [task]
+        newer["task_count"] = 1
+        plan = plan_rerun(self.version, newer, model=model, results_manifest=manifest)
+        self.assertEqual(plan["rerun_count"], 0)
+        self.assertEqual(plan["reuse_count"], 1)
+
     def test_mode_change_invalidates_all_tasks(self) -> None:
         newer = copy.deepcopy(self.version)
         newer["benchmark_version"] = "0.2"

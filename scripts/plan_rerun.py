@@ -12,6 +12,7 @@ import sys
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from classify_failures import COMPLETED_HARNESS_STATUSES  # noqa: E402
 from compute_fingerprints import digest_json  # noqa: E402
 
 
@@ -79,7 +80,8 @@ def reusable_result(entry: dict[str, Any] | None) -> tuple[bool, str | None]:
         return False, "zero usage"
     if not entry.get("verifier_output_present", False):
         return False, "missing verifier output"
-    if entry.get("artifact_status") == "error-only" or entry.get("harness_status") not in {None, "completed"}:
+    harness_status = str(entry.get("harness_status") or "").strip().lower()
+    if entry.get("artifact_status") == "error-only" or harness_status not in COMPLETED_HARNESS_STATUSES:
         return False, "error-only artifact"
     return True, None
 
