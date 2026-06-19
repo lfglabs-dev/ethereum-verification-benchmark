@@ -18,15 +18,74 @@ def slug(value: str) -> str:
     return "".join(ch if ch.isalnum() else "-" for ch in value).strip("-").lower()
 
 
+PUBLIC_MODEL_ALIASES = {
+    "claude-opus-4-8": ("anthropic", "opus-4.8", "opus-4.8"),
+    "grok": ("xai", "grok-build-0.1", "grok-build-0.1"),
+    "kimi/kimi-for-coding": ("kimi", "kimi-k2.7", "kimi-k2.7"),
+    "openai-gpt-55": ("openai", "gpt-5.5", "gpt-5.5"),
+    "openai-gpt-55-pro": ("openai", "gpt-5.5-pro", "gpt-5.5-pro"),
+    "virtuals/xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
+    "xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
+}
+
+
+def public_model_identity(model_id: str, display_name: str | None = None) -> tuple[str, str, str]:
+    """Return website-facing provider, model, and display label."""
+    if model_id in PUBLIC_MODEL_ALIASES:
+        return PUBLIC_MODEL_ALIASES[model_id]
+    provider, model = split_model_id(model_id)
+    if model_id.startswith("virtuals/"):
+        return provider, model, f"{provider}/{model}"
+    if "/" in model_id and (not display_name or display_name == model_id or "/" in display_name):
+        return provider, model, model
+    return provider, model, display_name or model
+
+
+def split_model_id(model_id: str) -> tuple[str, str]:
+    if "/" in model_id:
+        provider, model = model_id.split("/", 1)
+        return provider, model
+    known_aliases = {
+        key: (provider, model)
+        for key, (provider, model, _display) in PUBLIC_MODEL_ALIASES.items()
+        if "/" not in key or key == "kimi/kimi-for-coding"
+    }
+    if model_id in known_aliases:
+        return known_aliases[model_id]
+    known_prefixes = {
+        "anthropic-": "anthropic",
+        "claude-": "anthropic",
+        "deepseek-": "deepseek",
+        "gemini-": "google",
+        "grok-": "xai",
+        "kimi-": "moonshot",
+        "minimax-": "minimax",
+        "openai-": "openai",
+        "spark-": "spark",
+        "venice-": "venice",
+        "xiaomi-": "xiaomi",
+        "xai-": "xai",
+        "zai-": "zai",
+        "zai-org-": "zai",
+    }
+    for prefix, provider in sorted(known_prefixes.items(), key=lambda item: len(item[0]), reverse=True):
+        if model_id.startswith(prefix):
+            return provider, model_id[len(prefix) :]
+    return "unknown", model_id
+
+
 def model_summary(model: dict[str, Any]) -> dict[str, Any]:
     tasks = model.get("task_results", [])
     passed = [task for task in tasks if task.get("passed")]
     usage = [task.get("usage") for task in tasks if isinstance(task.get("usage"), dict)]
     completion_passed = [int((task.get("usage") or {}).get("completion_tokens") or 0) for task in passed]
     prompt_passed = [int((task.get("usage") or {}).get("prompt_tokens") or 0) for task in passed]
+    provider, model_name, display_name = public_model_identity(model["model_id"], model.get("display_name"))
     return {
         "model_id": model["model_id"],
-        "display_name": model.get("display_name", model["model_id"]),
+        "provider": provider,
+        "model": model_name,
+        "display_name": display_name,
         "status": model.get("status", "invalid"),
         "task_count": model.get("task_count", len(tasks)),
         "valid_count": model.get("valid_count", len(tasks)),
@@ -51,6 +110,58 @@ def badge(label: str, summary: dict[str, Any]) -> dict[str, Any]:
     if summary.get("status") != "complete":
         color = "lightgrey" if summary["passed"] == 0 else "yellow"
     return {"schemaVersion": 1, "label": label, "message": message, "color": color}
+
+
+def leaderboard_json(summary: dict[str, Any]) -> dict[str, Any]:
+    """Build a website-oriented leaderboard table from a version summary."""
+    rows: list[dict[str, Any]] = []
+    complete_rows = [item for item in summary["models"] if item.get("status") == "complete"]
+    complete_rank = {
+        item["model_id"]: rank
+        for rank, item in enumerate(
+            sorted(complete_rows, key=lambda item: (-item["pass_rate"], item["completion_tokens"], item["model_id"])),
+            1,
+        )
+    }
+    sorted_rows = sorted(
+        summary["models"],
+        key=lambda item: (item.get("status") != "complete", -item["pass_rate"], item["completion_tokens"], item["model_id"]),
+    )
+    for item in sorted_rows:
+        task_count = int(item.get("task_count") or 0)
+        total_tokens = int(item.get("total_tokens") or 0)
+        rows.append(
+            {
+                "rank": complete_rank.get(item["model_id"]),
+                "model_id": f"{item['provider']}/{item['model']}",
+                "source_model_id": item["model_id"],
+                "provider_id": item["provider"],
+                "provider_model_id": item["model"],
+                "display_name": item["display_name"],
+                "status": item["status"],
+                "pass_rate": item["pass_rate"],
+                "passed": int(item["passed"]),
+                "failed": int(item["failed"]),
+                "total": task_count,
+                "valid_count": int(item.get("valid_count", task_count)),
+                "prompt_tokens": int(item.get("prompt_tokens") or 0),
+                "completion_tokens": int(item.get("completion_tokens") or 0),
+                "total_tokens": total_tokens,
+                "avg_total_tokens_per_task": round(total_tokens / task_count, 1) if task_count else None,
+                "caveats": item.get("caveats") or [],
+            }
+        )
+    version_name = str(summary["benchmark_version"])
+    return {
+        "schema_version": 1,
+        "benchmark": summary["benchmark"],
+        "benchmark_version": version_name,
+        "task_count": int(summary["task_count"]),
+        "source_summary_url": f"results/summaries/v{version_name}.json",
+        "source_manifest_url": f"results/manifests/v{version_name}.json",
+        "ranking_policy": "complete rows ranked by pass_rate desc, completion_tokens asc, model_id asc; partial/invalid rows have null rank",
+        "rows": rows,
+    }
 
 
 def leaderboard(version: dict[str, Any], summaries: list[dict[str, Any]]) -> str:
@@ -90,6 +201,42 @@ def aggregate(version: dict[str, Any], manifest: dict[str, Any]) -> dict[str, An
     }
 
 
+def build_version_index(out: Path, latest_version: str, current_summary: dict[str, Any]) -> dict[str, Any]:
+    summaries_dir = out / "results" / "summaries"
+    versions: dict[str, dict[str, Any]] = {}
+    for path in sorted(summaries_dir.glob("v*.json")):
+        try:
+            summary = load_json(path)
+        except json.JSONDecodeError:
+            continue
+        version_name = str(summary.get("benchmark_version") or path.stem.removeprefix("v"))
+        versions[version_name] = {
+            "benchmark_version": version_name,
+            "tag": f"benchmark-v{version_name}",
+            "label": f"v{version_name}",
+            "task_count": int(summary.get("task_count") or 0),
+            "leaderboard_url": f"results/leaderboards/v{version_name}.json",
+            "summary_url": f"results/summaries/v{version_name}.json",
+            "manifest_url": f"results/manifests/v{version_name}.json",
+        }
+    version_name = str(current_summary["benchmark_version"])
+    versions[version_name] = {
+        "benchmark_version": version_name,
+        "tag": f"benchmark-v{version_name}",
+        "label": f"v{version_name}",
+        "task_count": int(current_summary["task_count"]),
+        "leaderboard_url": f"results/leaderboards/v{version_name}.json",
+        "summary_url": f"results/summaries/v{version_name}.json",
+        "manifest_url": f"results/manifests/v{version_name}.json",
+    }
+    return {
+        "schema_version": 1,
+        "benchmark": current_summary["benchmark"],
+        "latest_version": latest_version,
+        "versions": [versions[key] for key in sorted(versions)],
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--version", type=Path, required=True)
@@ -103,12 +250,19 @@ def main() -> int:
     out = args.out_dir
     version_name = str(version["benchmark_version"])
     summaries_dir = out / "results" / "summaries"
+    leaderboards_dir = out / "results" / "leaderboards"
     badges_dir = out / "badges"
     summaries_dir.mkdir(parents=True, exist_ok=True)
+    leaderboards_dir.mkdir(parents=True, exist_ok=True)
     badges_dir.mkdir(parents=True, exist_ok=True)
     (summaries_dir / f"v{version_name}.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    (leaderboards_dir / f"v{version_name}.json").write_text(json.dumps(leaderboard_json(summary), indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (out / "results.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (out / "leaderboard.md").write_text(leaderboard(version, summary["models"]), encoding="utf-8")
+    (out / "results" / "index.json").write_text(
+        json.dumps(build_version_index(out, latest_version=version_name, current_summary=summary), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
     for item in summary["models"]:
         (badges_dir / f"{slug(item['model_id'])}.json").write_text(json.dumps(badge(item["display_name"], item)) + "\n", encoding="utf-8")
     complete_runs = sum(item["task_count"] for item in summary["models"] if item["status"] == "complete")

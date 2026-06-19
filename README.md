@@ -228,25 +228,10 @@ copies only `~/.grok/auth.json` into an isolated temporary home for that run.
 
 ---
 
-## Project structure
-
-```
-verity-benchmark/
-├── Benchmark/
-│   ├── Cases/           # Reference proofs (hidden from agents)
-│   └── Generated/       # Public proof templates
-├── cases/               # Task manifests and contract sources
-├── harness/             # Agent runner, tools, and evaluation
-├── scripts/             # CLI entry points
-├── schemas/             # JSON schemas for results
-└── results/             # Published summaries and artifact manifests
-```
-
----
-
 ## Documentation
 
 | Document | Description |
 |----------|-------------|
 | [harness/README.md](./harness/README.md) | Harness internals and agent integration |
 | [docs/architecture/task-api.md](./docs/architecture/task-api.md) | Task contract and manifest format |
+| [docs/architecture/results-publication.md](./docs/architecture/results-publication.md) | Versioned results data model for websites and downstream consumers |

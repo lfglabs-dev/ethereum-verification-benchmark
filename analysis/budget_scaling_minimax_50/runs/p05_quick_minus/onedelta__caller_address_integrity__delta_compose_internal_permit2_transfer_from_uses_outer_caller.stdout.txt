@@ -1,0 +1,2 @@
+--- runner attempt 1 ---
+/workspaces/mission-cd6cfe3f/verity-benchmark-pr95/results/runs/20260618T083709-default-fair-minimax-m3-onedelta__caller_address_integrity__delta_compose_internal_permit2_transfer_from_uses_outer_caller

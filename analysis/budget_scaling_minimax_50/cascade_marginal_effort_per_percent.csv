@@ -1,0 +1,10 @@
+profile,from_solve_rate_percent,to_solve_rate_percent,newly_solved,gained_percentage_points,tokens_per_percentage_point,completion_tokens_per_percentage_point,requests_per_percentage_point,profile_total_tokens,profile_completion_tokens,profile_requests
+p01_ultra_tiny,0.0,12.0,6,12.0,49871.25,1708.08,16.92,598455,20497,203
+p02_tiny,12.0,26.0,7,14.0,72697.36,2263.93,18.64,1017763,31695,261
+p03_ultra_cheap,26.0,42.0,8,16.0,154437.81,4419.62,24.88,2471005,70714,398
+p04_cheap,42.0,58.0,8,16.0,174164.88,4092.06,23.12,2786638,65473,370
+p05_quick_minus,58.0,74.0,8,16.0,168021.12,2990.94,19.75,2688338,47855,316
+p06_quick,74.0,76.0,1,2.0,2006981.0,28681.5,158.5,4013962,57363,317
+p07_medium,76.0,82.0,3,6.0,883913.67,12443.5,59.67,5303482,74661,358
+p08_normal,82.0,90.0,4,8.0,768523.38,9200.0,42.12,6148187,73600,337
+p09_high,90.0,96.0,3,6.0,1021522.67,8723.33,39.83,6129136,52340,239

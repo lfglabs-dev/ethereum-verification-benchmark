@@ -1,0 +1,104 @@
+{
+  "plots": [
+    {
+      "file": "01_pca_by_stable_family.svg",
+      "title": "PCA des t\u00e2ches par famille stable",
+      "subtitle": "Point=t\u00e2che, taille=log tokens moyens; PC1\u2248difficult\u00e9, PC2\u2248sp\u00e9cialisation"
+    },
+    {
+      "file": "02_pca_by_empirical_family.svg",
+      "title": "PCA par famille empirique",
+      "subtitle": "Point=t\u00e2che, taille=pass-rate; montre les clusters issus des runs"
+    },
+    {
+      "file": "03_pca_by_property_class.svg",
+      "title": "PCA par property_class",
+      "subtitle": "Point=t\u00e2che; cat\u00e9gories de preuve pr\u00e9cises projet\u00e9es sur le comportement mod\u00e8le"
+    },
+    {
+      "file": "04_pca_by_review_status.svg",
+      "title": "PCA et revue humaine",
+      "subtitle": "Diamant=t\u00e2che \u00e0 revue; utile pour voir les zones taxonomiques incertaines"
+    },
+    {
+      "file": "05_mds_by_mds_cluster.svg",
+      "title": "Carte MDS par cluster comportemental",
+      "subtitle": "Reprise de la carte pass/fail coverage-aware avec couleurs de clusters"
+    },
+    {
+      "file": "06_mds_by_stable_family.svg",
+      "title": "Carte MDS par famille stable",
+      "subtitle": "Compare les familles s\u00e9mantiques aux voisinages comportementaux"
+    },
+    {
+      "file": "07_pass_rate_vs_tokens_stable.svg",
+      "title": "Pass-rate vs tokens par famille stable",
+      "subtitle": "Les t\u00e2ches ch\u00e8res mais non r\u00e9solues ressortent en haut \u00e0 gauche"
+    },
+    {
+      "file": "08_cohort_pass_rate_vs_tokens_empirical.svg",
+      "title": "Cohort pass-rate vs tokens par famille empirique",
+      "subtitle": "Vue centr\u00e9e sur la cohorte de mod\u00e8les comparables"
+    },
+    {
+      "file": "09_pc1_vs_tokens_stable.svg",
+      "title": "PC1 vs tokens",
+      "subtitle": "PC1 mesure surtout la solvabilit\u00e9; les tokens indiquent l'effort historique"
+    },
+    {
+      "file": "10_pc2_vs_divisiveness_empirical.svg",
+      "title": "PC2 vs divisiveness",
+      "subtitle": "Met en \u00e9vidence les t\u00e2ches qui s\u00e9parent les mod\u00e8les"
+    },
+    {
+      "file": "11_confidence_vs_pass_rate_stable.svg",
+      "title": "Confiance taxonomique vs pass-rate",
+      "subtitle": "Cherche les familles stables peu r\u00e9solues mais bien identifi\u00e9es"
+    },
+    {
+      "file": "12_confidence_vs_tokens_review.svg",
+      "title": "Confiance vs tokens et revue",
+      "subtitle": "Priorise la revue humaine: basse confiance + haut co\u00fbt"
+    },
+    {
+      "file": "13_skill_count_vs_pass_rate_stable.svg",
+      "title": "Nombre de skills de preuve vs pass-rate",
+      "subtitle": "Complexit\u00e9 de preuve estim\u00e9e contre succ\u00e8s historique"
+    },
+    {
+      "file": "14_spec_signal_count_vs_pass_rate_stable.svg",
+      "title": "Signaux de spec vs pass-rate",
+      "subtitle": "Les specs riches ne sont pas forc\u00e9ment faciles"
+    },
+    {
+      "file": "15_neighbors_vs_confidence_stable.svg",
+      "title": "Voisins taxonomiques vs confiance",
+      "subtitle": "Contr\u00f4le que les placements par similarit\u00e9 ont assez de voisins"
+    },
+    {
+      "file": "16_resolved_vs_pca_stable.svg",
+      "title": "T\u00e2ches r\u00e9solues et non r\u00e9solues sur PCA",
+      "subtitle": "Forme=r\u00e9solution historique; couleur=famille stable"
+    },
+    {
+      "file": "17_task_model_tokens_vs_pc1_model.svg",
+      "title": "T\u00e2che-mod\u00e8le: tokens vs PC1",
+      "subtitle": "Point=paire t\u00e2che-mod\u00e8le; triangle=pass, cercle=fail"
+    },
+    {
+      "file": "18_task_model_pca_by_model.svg",
+      "title": "T\u00e2che-mod\u00e8le sur PCA par mod\u00e8le",
+      "subtitle": "Point=paire t\u00e2che-mod\u00e8le; triangle=pass; montre les zones couvertes par chaque mod\u00e8le"
+    },
+    {
+      "file": "19_task_model_pass_vs_tokens.svg",
+      "title": "T\u00e2che-mod\u00e8le: pass/fail vs tokens",
+      "subtitle": "Chaque point est une tentative mod\u00e8le; utile pour voir l'effort d\u00e9pens\u00e9 avant succ\u00e8s"
+    },
+    {
+      "file": "20_family_centroids_pca.svg",
+      "title": "Centres de familles stables sur PCA",
+      "subtitle": "Point=t\u00e2che, ellipse=extension approximative, label=centro\u00efde de famille"
+    }
+  ]
+}

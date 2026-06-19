@@ -4,12 +4,13 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 source scripts/load_env.sh
 
-python3 -m py_compile harness/*.py harness/runners/*.py scripts/check_group_workspaces.py scripts/check_verifier_policy.py scripts/check_run_artifacts.py scripts/check_fair_harness_policy.py
+python3 -m py_compile harness/*.py harness/runners/*.py scripts/check_group_workspaces.py scripts/check_verifier_policy.py scripts/check_run_artifacts.py scripts/check_fair_harness_policy.py scripts/classify_failures.py scripts/extract_task_features.py scripts/cluster_task_failures.py
 python3 -m json.tool harness/agents/default.json >/dev/null
 python3 -m json.tool harness/agents/grok-build.json >/dev/null
 python3 -m harness.cli list --suite active --unit group >/dev/null
 python3 scripts/check_fair_harness_policy.py
 python3 scripts/check_run_artifacts.py --self-test
+python3 -m unittest discover -s tests
 
 if python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --dry-run >/tmp/verity-default-run-task-smoke.out; then
   echo "expected default run-task dry-run to fail verification on placeholder proof" >&2
