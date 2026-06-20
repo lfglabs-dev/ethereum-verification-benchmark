@@ -2,6 +2,8 @@ import Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant.LayoutWitness
 
+set_option linter.dupNamespace false
+
 open Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
 open Benchmark.Cases.ERC4337.EntryPointInvariant.MemFrame
 

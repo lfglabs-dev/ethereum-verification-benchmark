@@ -168,9 +168,9 @@ verity_contract EntryPointV09 where
   -- + time-range logic at the decision level. Full decomposition and
   -- `vdValid` live in `UserOp.lean`.
   function allow_post_interaction_writes internal _validateAccount
-      (sender : IAccount, key : Uint256, declaredNonce : Uint256) : Uint256 := do
+      (_sender : IAccount, key : Uint256, declaredNonce : Uint256) : Uint256 := do
     -- account.validateUserOp(...) — the call happens first.
-    let validation ← sender.validateUserOp key declaredNonce
+    let validation ← _sender.validateUserOp key declaredNonce
     -- Nonce check/bump (faithful order: after account validation, before paymaster).
     -- We key on the decoded `key` parameter (projection of (sender, key) 2D slot).
     let expected ← getMappingUint nonces key
@@ -184,10 +184,10 @@ verity_contract EntryPointV09 where
   -- paymaster validation word is checked by the caller; sentinel 0 means
   -- accept.
   function internal _validatePaymaster
-      (paymaster : IPaymaster, key : Uint256) : Uint256 := do
+      (paymaster : IPaymaster, _key : Uint256) : Uint256 := do
     if paymaster != 0 then
       -- paymaster.validatePaymasterUserOp(userOp, userOpHash, requiredPreFund)
-      let validation ← paymaster.validatePaymasterUserOp key
+      let validation ← paymaster.validatePaymasterUserOp _key
       return validation
     else
       return VALIDATION_SUCCESS

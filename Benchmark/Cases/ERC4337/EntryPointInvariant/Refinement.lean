@@ -106,7 +106,7 @@ behind support work tracked separately). The refinement is stated at the
     `OP_INFO_VALIDATED`; executed ⇒ `OP_INFO_EXECUTED`. -/
 def abstractOpInfoFor
     (ops : List PackedUserOperation) (table : Nonce2DTable)
-    (approvals : List Bool) (i : Nat) : Uint256 :=
+    (approvals : List Bool) (_i : Nat) : Uint256 :=
   match handleOpsMulti ops table approvals with
   | some _ => EntryPointV09.OP_INFO_EXECUTED
   | none   => 0  -- batch reverted; storage rolled back
@@ -118,7 +118,7 @@ def abstractOpInfoFor
     delta. -/
 theorem refinement_storage_delta_matches_abstract
     (ops : List PackedUserOperation) (table : Nonce2DTable)
-    (approvals : List Bool) (i : Nat) (hi : i < ops.length)
+    (approvals : List Bool) (i : Nat) (_hi : i < ops.length)
     (hVal : batchValidated ops table approvals = true) :
     abstractOpInfoFor ops table approvals i = EntryPointV09.OP_INFO_EXECUTED := by
   unfold abstractOpInfoFor

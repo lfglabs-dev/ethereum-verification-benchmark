@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 27,
-    "implementation_count": 28,
-    "active_case_count": 25,
+    "family_count": 28,
+    "implementation_count": 29,
+    "active_case_count": 26,
     "backlog_case_count": 3,
-    "active_task_count": 135,
+    "active_task_count": 168,
     "backlog_task_count": 8,
-    "buildable_case_count": 27,
-    "runnable_task_count": 143,
+    "buildable_case_count": 28,
+    "runnable_task_count": 176,
     "case_stage_counts": {
-      "build_green": 23,
+      "build_green": 24,
       "candidate": 1,
       "proof_complete": 4
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 27
+      "translated": 28
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 20,
+      "complete": 21,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 143
+      "proof-only": 176
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -43,36 +43,56 @@
       "accounting_effect": 2,
       "accounting_invariant_break": 1,
       "accounting_update": 6,
+      "additivity": 1,
+      "all_or_nothing": 1,
       "arithmetic_rounding": 3,
+      "authority_required": 2,
       "authorization_state": 9,
       "balance_conservation": 2,
       "balance_credit_update": 2,
       "balance_update": 1,
+      "base_case_invariant": 1,
+      "batch_completeness": 2,
+      "biconditional_invariant": 3,
+      "bounds_invariant": 1,
       "calldata_decoder_bounds": 1,
       "calldata_decoder_faithfulness": 1,
       "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
+      "composition_invariant": 1,
+      "counting_invariant": 1,
       "deposit_mint_exactness": 1,
       "exploit_trace": 1,
+      "failure_propagation": 2,
+      "fee_conservation": 5,
       "fee_payout_bound": 1,
       "frame_property": 2,
+      "functional_property": 1,
       "guarded_solvency": 7,
+      "independence_invariant": 1,
       "isOwner_effect": 3,
+      "length_invariant": 1,
       "lifecycle_accounting": 3,
       "linked_list_acyclicity": 4,
       "linked_list_invariant": 8,
+      "liveness_invariant": 1,
       "mapping_consistency": 1,
       "monotonic_counter": 2,
       "non_leakage": 1,
+      "nonce_monotonicity": 1,
       "noninterference": 1,
       "output_range": 2,
       "overflow_safety": 1,
       "pps_nondecrease": 1,
       "price_band": 2,
       "price_computation": 5,
+      "replay_protection": 2,
       "reserve_state_transition": 5,
+      "revert_safety": 1,
+      "safety_invariant": 2,
+      "scope_invariant": 1,
       "silent_failure": 2,
-      "storage_update": 1,
+      "storage_update": 3,
       "storage_write": 6,
       "subtree_partition": 1,
       "supply_invariance": 1,
@@ -85,13 +105,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 35,
+      "functional_correctness": 37,
       "protocol_transition_correctness": 22,
-      "refinement_equivalence": 11,
+      "refinement_equivalence": 42,
       "state_preservation_local_effects": 50
     },
     "family_split_counts": {
-      "active": 24,
+      "active": 25,
       "backlog": 2,
       "mixed": 1
     }
@@ -164,6 +184,23 @@
         "solidity"
       ],
       "manifest_path": "families/damn_vulnerable_defi/family.yaml"
+    },
+    {
+      "family_id": "erc4337",
+      "display_name": "ERC-4337",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for ERC-4337 Account Abstraction EntryPoint contract. Covers the validation-before-execution control-flow slice of handleOps: the operation execution path is reached only after validation, and a non-reverting batch reaches that path once per operation.",
+      "implementation_ids": [
+        "erc4337_v09"
+      ],
+      "case_ids": [
+        "erc4337/entry_point_invariant"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/erc4337/family.yaml"
     },
     {
       "family_id": "ethereum",
@@ -623,6 +660,22 @@
       ],
       "notes": "Active implementation entry for the Damn Vulnerable DeFi challenge set, starting with the Side Entrance flash-loan repayment bug modeled as a compact pool-balance versus credited-liability slice.",
       "manifest_path": "families/damn_vulnerable_defi/implementations/v2/implementation.yaml"
+    },
+    {
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "display_name": "ERC-4337 EntryPoint v0.9",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/eth-infinitism/account-abstraction",
+      "upstream_commit": "b36a1ed52ae00da6f8a4c8d50181e2877e4fa410",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/core/EntryPoint.sol",
+      "case_ids": [
+        "erc4337/entry_point_invariant"
+      ],
+      "notes": "Implementation entry for the ERC-4337 EntryPoint v0.9 contract, benchmarking the two-loop handleOps control-flow slice: the execution path for index i is attempted only after validation passed at index i. The model abstracts UserOperations to indices with boolean validation outcomes and elides calldata payloads, account/paymaster internals, and gas accounting.",
+      "manifest_path": "families/erc4337/implementations/erc4337_v09/implementation.yaml"
     },
     {
       "family_id": "ethereum",
@@ -1198,6 +1251,58 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Specs",
       "proof_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs"
+    },
+    {
+      "case_id": "erc4337/entry_point_invariant",
+      "project": "erc4337",
+      "case_name": "entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/case.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/eth-infinitism/account-abstraction",
+      "upstream_commit": "b36a1ed52ae00da6f8a4c8d50181e2877e4fa410",
+      "original_contract_path": "contracts/core/EntryPoint.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "selected_functions": [
+        "handleOps",
+        "_iterateValidationPhase",
+        "_executeUserOp"
+      ],
+      "lean_target": "Benchmark.Cases.ERC4337.EntryPointInvariant.Compile",
+      "failure_reason": null,
+      "notes": "ERC-4337 EntryPoint control-flow invariant slice: the operation execution path is reached if and only if validation passed. This is not a full proof of arbitrary account/paymaster EVM behavior or `innerHandleOp` calldata effects; it proves the selected two-loop model for all possible validation outcomes.",
+      "buildable": true,
+      "verity_commit": "de9377951c00bbd5fbf72e85d56fe50b8ff40d0c",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "abstract_control_flow_model",
+        "two_loop_structure",
+        "universally_quantified_validation",
+        "execution_attempt_not_call_success",
+        "calldata_payload_elided",
+        "gas_accounting_elided",
+        "paymaster_logic_elided"
+      ],
+      "abstraction_notes": "The benchmark models the two-loop structure of ERC-4337 handleOps as pure Lean functions. UserOperations are abstracted to indices with validation outcomes modeled as List Bool. The validation phase succeeds iff ALL results are true (reflecting the all-or-nothing revert semantics). The execution phase produces List.replicate n true (reflecting that `_executeUserOp` is reached once per operation after validation). The model records execution-path attempts, not account-call success, and elides callData payloads, gas accounting, paymaster internals, and account implementation details. A Verity contract model (EntryPointModel) demonstrates the native-loop/oracle-call shape and the single-op case.",
+      "unsupported_feature_codes": [
+        "indexed_for_loop",
+        "ecm_runtime_target",
+        "try_catch_high_level",
+        "tuple_return",
+        "struct_parameters"
+      ],
+      "spec_target": "Benchmark.Cases.ERC4337.EntryPointInvariant.Specs",
+      "proof_target": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs"
     },
     {
       "case_id": "ethereum/deposit_contract_minimal",
@@ -2877,6 +2982,1491 @@
       "abstraction_notes": "This task captures the hidden liability-side effect of the summarized flash loan path: apparent repayment leaves pool ETH unchanged while still minting withdrawable caller credit.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/account_rejection_reverts",
+      "task_id": "account_rejection_reverts",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/account_rejection_reverts.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authority_required",
+      "category": "validation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.account_rejection_reverts",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/AccountRejectionReverts.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Account approval is required for the batch to succeed.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/all_executed_on_success",
+      "task_id": "all_executed_on_success",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/all_executed_on_success.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "batch_completeness",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.all_executed_on_success",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/AllExecutedOnSuccess.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "If handleOps succeeds, every UserOp's execution was attempted.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/all_validated_on_success",
+      "task_id": "all_validated_on_success",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/all_validated_on_success.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "batch_completeness",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.all_validated_on_success",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/AllValidatedOnSuccess.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "If handleOps succeeds, every UserOp in the batch was validated. Captures the all-or-nothing property of the validation loop.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+      "task_id": "beneficiary_eq_total_prefund",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/beneficiary_eq_total_prefund.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_conservation",
+      "category": "accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.beneficiary_eq_total_prefund",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/BeneficiaryEqTotalPrefund.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Beneficiary receives exactly the sum of per-op prefunds on success.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/count_executed_eq_validated",
+      "task_id": "count_executed_eq_validated",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/count_executed_eq_validated.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "counting_invariant",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.count_executed_eq_validated",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/CountExecutedEqValidated.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Count of executed ops equals count of validated ops on success.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/executed_index_in_bounds",
+      "task_id": "executed_index_in_bounds",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/executed_index_in_bounds.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "bounds_invariant",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.executed_index_in_bounds",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutedIndexInBounds.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Any recorded execution index is strictly less than batch size.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/execution_iff_validation",
+      "task_id": "execution_iff_validation",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_iff_validation.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "biconditional_invariant",
+      "category": "control-flow",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_iff_validation",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionIffValidation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The selected ERC-4337 biconditional control-flow invariant: in a non-reverting handleOps model, the operation execution path is attempted at index i if and only if validation passed at index i. This task does not model full arbitrary account/paymaster EVM behavior or `innerHandleOp` calldata effects.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/execution_implies_validation",
+      "task_id": "execution_implies_validation",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_implies_validation.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "safety_invariant",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_implies_validation",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionImpliesValidation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Claim 1 (Safety): If execution was attempted at index i, then validation must have passed at index i. This is the \"only if\" direction of the ERC-4337 spec.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/execution_independent_of_inner_revert",
+      "task_id": "execution_independent_of_inner_revert",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_independent_of_inner_revert.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "independence_invariant",
+      "category": "control-flow",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_independent_of_inner_revert",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionIndependentOfInnerRevert.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Execution attempt is independent of whether inner sender-call reverted.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+      "task_id": "execution_length_eq_validation_length",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_length_eq_validation_length.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "length_invariant",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_length_eq_validation_length",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionLengthEqValidationLength.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "On success, the execution-attempt list has one entry per UserOp.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/execution_r_iff_in_bounds",
+      "task_id": "execution_r_iff_in_bounds",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_r_iff_in_bounds.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "biconditional_invariant",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.executionR_iff_in_bounds",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionRIffInBounds.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Refined biconditional: on success, execution attempted iff i in bounds.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/fees_collected_eq_ops_length",
+      "task_id": "fees_collected_eq_ops_length",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/fees_collected_eq_ops_length.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_conservation",
+      "category": "accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.fees_collected_eq_ops_length",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/FeesCollectedEqOpsLength.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Fees collected equal the batch size on a successful run.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/fees_concat_additive",
+      "task_id": "fees_concat_additive",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/fees_concat_additive.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_conservation",
+      "category": "accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.fees_concat_additive",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/FeesConcatAdditive.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Fee additivity: fees(ops1 ++ ops2) = fees(ops1) + fees(ops2) on success.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/full_success_implies_all_account_approved",
+      "task_id": "full_success_implies_all_account_approved",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/full_success_implies_all_account_approved.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "safety_invariant",
+      "category": "validation",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.full_success_implies_all_account_approved",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/FullSuccessImpliesAllAccountApproved.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Full-scope safety: success implies every op's account approved.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/handle_ops_deterministic",
+      "task_id": "handle_ops_deterministic",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/handle_ops_deterministic.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "functional_property",
+      "category": "purity",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.handleOps_deterministic",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/HandleOpsDeterministic.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Determinism: handleOps is a pure function of validation results.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/handle_ops_empty",
+      "task_id": "handle_ops_empty",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/handle_ops_empty.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "base_case_invariant",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.handleOps_empty",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/HandleOpsEmpty.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Empty batch: handleOps [] succeeds with no executions.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/no_beneficiary_payout_on_revert",
+      "task_id": "no_beneficiary_payout_on_revert",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/no_beneficiary_payout_on_revert.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_conservation",
+      "category": "accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.no_beneficiary_payout_on_revert",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NoBeneficiaryPayoutOnRevert.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A reverted batch transfers nothing to the beneficiary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/no_execution_on_revert",
+      "task_id": "no_execution_on_revert",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/no_execution_on_revert.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "revert_safety",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.no_execution_on_revert",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NoExecutionOnRevert.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "If handleOps reverts (validation failure), no execution was attempted.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/no_fees_on_revert",
+      "task_id": "no_fees_on_revert",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/no_fees_on_revert.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_conservation",
+      "category": "accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.no_fees_on_revert",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NoFeesOnRevert.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "No fee is collected on a failed batch.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/nonce_advances_by_batch_size",
+      "task_id": "nonce_advances_by_batch_size",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/nonce_advances_by_batch_size.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "nonce_monotonicity",
+      "category": "accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_advances_by_batch_size",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NonceAdvancesByBatchSize.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Nonce monotonicity: successful batch advances nonce by exactly batch size.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/nonce_mismatch_reverts",
+      "task_id": "nonce_mismatch_reverts",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/nonce_mismatch_reverts.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "replay_protection",
+      "category": "validation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_mismatch_reverts",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NonceMismatchReverts.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A mismatched declared nonce reverts the entire batch.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/nonce_strictly_increases",
+      "task_id": "nonce_strictly_increases",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/nonce_strictly_increases.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "replay_protection",
+      "category": "accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_strictly_increases",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NonceStrictlyIncreases.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Strict nonce monotonicity: non-empty success strictly raises the nonce (no replay).",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/paymaster_irrelevant_when_absent",
+      "task_id": "paymaster_irrelevant_when_absent",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/paymaster_irrelevant_when_absent.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "scope_invariant",
+      "category": "validation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.paymaster_irrelevant_when_absent",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/PaymasterIrrelevantWhenAbsent.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Paymaster approval flag has no effect when no paymaster is attached.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/paymaster_rejection_reverts_when_present",
+      "task_id": "paymaster_rejection_reverts_when_present",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/paymaster_rejection_reverts_when_present.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "authority_required",
+      "category": "validation",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.paymaster_rejection_reverts_when_present",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/PaymasterRejectionRevertsWhenPresent.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Paymaster approval is required when a paymaster is attached.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/sender_call_iff_validated_and_calldata",
+      "task_id": "sender_call_iff_validated_and_calldata",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/sender_call_iff_validated_and_calldata.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "biconditional_invariant",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.sender_call_iff_validated_and_calldata",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/SenderCallIffValidatedAndCalldata.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Inner sender call is entered iff validation passed and callData non-empty.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/single_failure_reverts",
+      "task_id": "single_failure_reverts",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/single_failure_reverts.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "all_or_nothing",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.single_failure_reverts",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/SingleFailureReverts.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "If any validation fails, the entire batch reverts.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/single_op_execution_on_validation",
+      "task_id": "single_op_execution_on_validation",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/single_op_execution_on_validation.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_update",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_execution_on_validation",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/SingleOpExecutionOnValidation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Verity contract proof: when processSingleOp succeeds (validation passes), batchExecuted is set to 1.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/single_op_fee_collected",
+      "task_id": "single_op_fee_collected",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/single_op_fee_collected.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_update",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_fee_collected",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/SingleOpFeeCollected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Verity contract proof: processing a single op increments collected fees by 1.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/total_prefund_concat",
+      "task_id": "total_prefund_concat",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/total_prefund_concat.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "additivity",
+      "category": "accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.total_prefund_concat",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/TotalPrefundConcat.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Total-prefund additivity over batch concatenation.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/validation_concat",
+      "task_id": "validation_concat",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_concat.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "composition_invariant",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ValidationConcat.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Composition: validation succeeds on concat iff it succeeds on both halves.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/validation_concat_fail_left",
+      "task_id": "validation_concat_fail_left",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_concat_fail_left.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "failure_propagation",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat_fail_left",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ValidationConcatFailLeft.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Left-failure propagation under concatenation.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/validation_concat_fail_right",
+      "task_id": "validation_concat_fail_right",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_concat_fail_right.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "failure_propagation",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat_fail_right",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ValidationConcatFailRight.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Right-failure propagation under concatenation.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "erc4337/entry_point_invariant/validation_implies_execution",
+      "task_id": "validation_implies_execution",
+      "case_id": "erc4337/entry_point_invariant",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_implies_execution.yaml",
+      "split": "active",
+      "family_id": "erc4337",
+      "implementation_id": "erc4337_v09",
+      "source_ref": "https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "liveness_invariant",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_implies_execution",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/erc4337/entry_point_invariant/verity/Contract.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/erc4337/entry_point_invariant/verity/Specs.lean",
+        "Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ValidationImpliesExecution.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Claim 2 (Liveness): If handleOps succeeds and validation passed at index i, then execution was attempted at index i. This is the \"if\" direction.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -8894,5 +10484,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-05T09:26:32.672156+00:00"
+  "generated_at": "2026-06-20T19:26:28.524616+00:00"
 }
