@@ -104,6 +104,14 @@ contract ReentrantAccount {
         }
     }
 
+    function _nonceKey(uint256 nonce) internal pure returns (uint256) {
+        return uint256(uint192(nonce >> 64));
+    }
+
+    function _nonceSeq(uint256 nonce) internal pure returns (uint256) {
+        return uint256(uint64(nonce));
+    }
+
     function validateUserOp(
         PackedUserOperation calldata op,
         bytes32,
@@ -111,7 +119,15 @@ contract ReentrantAccount {
     ) external returns (uint256) {
         attempted = true;
         if (address(projection) != address(0)) {
-            try projection.handleOps(address(this), address(0), 0, op.nonce, address(this), 0, 1) {
+            try projection.handleOps(
+                address(this),
+                address(0),
+                _nonceKey(op.nonce),
+                _nonceSeq(op.nonce),
+                address(this),
+                0,
+                1
+            ) {
                 reentryReverted = false;
             } catch {
                 reentryReverted = true;
@@ -211,13 +227,21 @@ contract EntryPointDifferential {
         });
     }
 
+    function _nonceKey(PackedUserOperation memory op) internal pure returns (uint256) {
+        return uint256(uint192(op.nonce >> 64));
+    }
+
+    function _nonceSeq(PackedUserOperation memory op) internal pure returns (uint256) {
+        return uint256(uint64(op.nonce));
+    }
+
     function _runVerity(PackedUserOperation memory op, address beneficiary) internal {
         vm.prank(VERITY_EOA, VERITY_EOA);
         verityEP.handleOps(
             op.sender,
             address(0),
-            0,
-            op.nonce,
+            _nonceKey(op),
+            _nonceSeq(op),
             beneficiary,
             op.initCode.length == 0 ? 0 : 1,
             op.callData.length == 0 ? 0 : 1
@@ -266,7 +290,15 @@ contract EntryPointDifferential {
         _runVerity(ops[0], BENEFICIARY);
         bool verReverted;
         vm.prank(VERITY_EOA, VERITY_EOA);
-        try verityEP.handleOps(address(acc2), address(0), 0, ops[0].nonce, BENEFICIARY, 0, 1) {
+        try verityEP.handleOps(
+            address(acc2),
+            address(0),
+            _nonceKey(ops[0]),
+            _nonceSeq(ops[0]),
+            BENEFICIARY,
+            0,
+            1
+        ) {
             verReverted = false;
         } catch {
             verReverted = true;

@@ -193,16 +193,18 @@ verity_contract EntryPointV09 where
       return VALIDATION_SUCCESS
 
   -- Mirrors `SenderCreator.createSender`: when `initCode.length > 0`, the
-  -- EntryPoint deploys the account via an external call. The result is the
-  -- newly-deployed account address (we model the success-or-revert outcome
-  -- with the same sentinel shape as validation calls).
-  function internal _createSender (key : Uint256, hasInitCode : Uint256) : Uint256 := do
+  -- EntryPoint deploys the account via an external call. v0.9 requires the
+  -- factory return to be nonzero and equal to the requested sender before the
+  -- following account validation can run against that sender.
+  function internal _createSender
+      (sender : IAccount, key : Uint256, hasInitCode : Uint256) : Uint256 := do
     if hasInitCode == HAS_INITCODE then
       let deployResult := externalCall "createSender" [key]
       require (deployResult != VALIDATION_SUCCESS) "AA13 initCode failed or OOG"
+      require (deployResult == addressToWord sender) "AA14 initCode must return sender"
       return deployResult
     else
-      return 0
+      return (addressToWord sender)
 
   -- Mirrors `_validatePrepayment`: optional createSender + account + paymaster.
   -- Nonce update (inside the account step) occurs after account validation
@@ -211,8 +213,9 @@ verity_contract EntryPointV09 where
       (sender : IAccount, paymaster : IPaymaster,
        key : Uint256, declaredNonce : Uint256,
        hasInitCode : Uint256) : Uint256 := do
-    let _deployResult ← _createSender key hasInitCode
-    let accountValid ← _validateAccount sender key declaredNonce
+    let effectiveSenderWord ← _createSender sender key hasInitCode
+    let effectiveSender := wordToAddress effectiveSenderWord
+    let accountValid ← _validateAccount effectiveSender key declaredNonce
     require (accountValid == VALIDATION_SUCCESS) "AA23 reverted (or OOG)"
     let pmValid ← _validatePaymaster paymaster key
     require (pmValid == VALIDATION_SUCCESS) "AA33 reverted (or OOG)"

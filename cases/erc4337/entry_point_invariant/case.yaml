@@ -19,7 +19,7 @@ selected_functions:
   - _iterateValidationPhase
   - _executeUserOp
 source_language: solidity
-verity_version: de9377951c00bbd5fbf72e85d56fe50b8ff40d0c
+verity_version: 49181954c71303cbb92c1cb97e4648f8cca861c6
 lean_toolchain: leanprover/lean4:v4.22.0
 abstraction_level: protocol_slice
 abstraction_tags:
