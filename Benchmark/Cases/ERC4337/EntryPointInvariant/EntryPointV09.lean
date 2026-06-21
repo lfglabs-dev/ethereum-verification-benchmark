@@ -167,7 +167,7 @@ verity_contract EntryPointV09 where
   -- reaching execution), but the accept gate matches the authorizer ∈ {0,1}
   -- + time-range logic at the decision level. Full decomposition and
   -- `vdValid` live in `UserOp.lean`.
-  function allow_post_interaction_writes internal _validateAccount
+  function allow_post_interaction_writes reentrancy_trusted internal _validateAccount
       (_sender : IAccount, key : Uint256, declaredNonce : Uint256) : Uint256 := do
     -- account.validateUserOp(...) — the call happens first.
     let validation ← _sender.validateUserOp key declaredNonce
@@ -183,7 +183,7 @@ verity_contract EntryPointV09 where
   -- when no paymaster is attached (`address(0)`). Otherwise the external
   -- paymaster validation word is checked by the caller; sentinel 0 means
   -- accept.
-  function internal _validatePaymaster
+  function reentrancy_trusted internal _validatePaymaster
       (paymaster : IPaymaster, _key : Uint256) : Uint256 := do
     if paymaster != 0 then
       -- paymaster.validatePaymasterUserOp(userOp, userOpHash, requiredPreFund)
@@ -196,7 +196,7 @@ verity_contract EntryPointV09 where
   -- EntryPoint deploys the account via an external call. v0.9 requires the
   -- factory return to be nonzero and equal to the requested sender before the
   -- following account validation can run against that sender.
-  function internal _createSender
+  function reentrancy_trusted internal _createSender
       (sender : IAccount, key : Uint256, hasInitCode : Uint256) : Uint256 := do
     if hasInitCode == HAS_INITCODE then
       let deployResult := externalCall "createSender" [key]
@@ -226,7 +226,7 @@ verity_contract EntryPointV09 where
   -- `callData.length > 0`. The outer `_executeUserOp` always records an
   -- execution-path attempt and accrues the fee, regardless of whether the
   -- inner sender call ran or reverted (try/catch absorption).
-  function internal _innerHandleOp
+  function reentrancy_trusted internal _innerHandleOp
       (sender : IAccount, _key : Uint256, hasCallData : Uint256) : Uint256 := do
     if hasCallData == HAS_CALLDATA then
       unsafe "EntryPoint innerHandleOp sender call boundary" do
@@ -250,7 +250,7 @@ verity_contract EntryPointV09 where
   -- model the call as a typed interface call returning the new mode word. The
   -- biconditional does not depend on postOp's result, but completeness of
   -- the model does.
-  function internal _postOp
+  function reentrancy_trusted internal _postOp
       (paymaster : IPaymaster, mode : Uint256) : Uint256 := do
     if paymaster != 0 then
       let result ← paymaster.postOp mode
@@ -261,7 +261,7 @@ verity_contract EntryPointV09 where
   -- Mirrors `_compensate`: transfer the collected wei to the beneficiary.
   -- We model the deposit ledger update; the actual ETH transfer is an
   -- external call abstracted into the deposit map.
-  function allow_post_interaction_writes internal _compensate
+  function allow_post_interaction_writes reentrancy_trusted internal _compensate
       (beneficiary : IBeneficiary, amount : Uint256) : Unit := do
     beneficiary.receivePrefund amount
     let current ← getMapping deposits beneficiary
