@@ -1285,15 +1285,16 @@
       "lean_toolchain": "leanprover/lean4:v4.22.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
-        "abstract_control_flow_model",
+        "abi_backed_batch_model",
+        "decoded_entrypoint_batch_model",
         "two_loop_structure",
         "universally_quantified_validation",
         "execution_attempt_not_call_success",
-        "calldata_payload_elided",
+        "projected_calldata_payload",
         "gas_accounting_elided",
-        "paymaster_logic_elided"
+        "paymaster_presence_modeled"
       ],
-      "abstraction_notes": "The benchmark models the two-loop structure of ERC-4337 handleOps as pure Lean functions. UserOperations are abstracted to indices with validation outcomes modeled as List Bool. The validation phase succeeds iff ALL results are true (reflecting the all-or-nothing revert semantics). The execution phase produces List.replicate n true (reflecting that `_executeUserOp` is reached once per operation after validation). The model records execution-path attempts, not account-call success, and elides callData payloads, gas accounting, paymaster internals, and account implementation details. A Verity contract model (EntryPointModel) demonstrates the native-loop/oracle-call shape and the single-op case.",
+      "abstraction_notes": "The benchmark now exposes the upstream handleOps(PackedUserOperation[] calldata ops, address beneficiary) ABI in the differential Verity bytecode. That ABI path decodes the real calldata batch into the PackedUserOperation model in UserOp.lean/Trace.lean, then projects to the current proof model for validation/execution counting. The projection preserves nonce key/sequence updates, per-op account validation status, paymaster presence and postOp control-flow, sender execution attempts, beneficiary compensation amount, and all-or-nothing failure isolation for the modeled slice. The model records execution-path attempts, not account-call success, and still abstracts gas accounting, full dynamic-byte payload forwarding, event emission, and exact custom revert payloads behind named refinement/ECM obligations. The differential build injects upstream ABI cases for handleOps, senderCreator, getSenderAddress, depositTo, balanceOf, getDepositInfo, getNonce, getUserOpHash, getCurrentUserOpHash, handleAggregatedOps, and the receive deposit path. The upstream handleOps ABI path creates undeployed accounts through initCode factory calls, calls the real account validateUserOp(PackedUserOperation,bytes32,uint256) ABI, forwards the decoded account execution calldata, calls the real paymaster validatePaymasterUserOp(PackedUserOperation,bytes32,uint256) ABI for the modeled validation slice, calls the real postOp(uint8,bytes,uint256,uint256) ABI for context-bearing paymaster cases, emits UserOperationEvent and PostOpRevertReason for the modeled slices, and moves modeled paymaster deposit/beneficiary ETH for the focused unused-gas penalty path. The handleAggregatedOps path calls the real validateSignatures(PackedUserOperation[],bytes) aggregator ABI, compares the account-returned aggregator against the group aggregator, emits SignatureAggregatorChanged for every group, and projects each group through the same ABI-backed handleOps decoder/executor. Packed account/paymaster validation data is decoded for the focused upstream time-range and block-range checks. Account validation reverts on the ABI path are wrapped as FailedOpWithRevert(0,\"AA23 reverted\",...) with the original revert bytes preserved for the focused upstream tests; account execution reverts remain non-fatal UserOperationEvent(success=false) outcomes with modeled beneficiary payment. The shim also covers focused gas/control-flow aborts for undeployed accounts, insufficient transaction gas, and insufficient verification gas after account creation. The non-paymaster unused-gas penalty smoke is modeled at the event-field level; exact gas accounting remains out of scope. Focused original Hardhat smokes for deposit, bad-signature rejection, account execution, zero/nonexistent/no-deposit paymaster rejection, paymaster postOp reverts, paymaster stake/delay simulation, focused low-gas prefund handling, unused-gas paymaster payment, focused non-paymaster prefund-too-low handling, getCurrentUserOpHash during account execution, core initCode account creation/ignore events, direct SenderCreator custom-error parity, upstream validation time-range handling, focused AA23 validation-revert wrapping, reverted execution payment, focused AA20/AA95/low-verification-gas aborts, non-paymaster unused-gas penalty event-field handling, and the upstream aggregation block now deploy Verity bytecode via VERITY_ENTRYPOINT_BYTECODE and call it through the upstream EntryPoint TypeScript ABI. Raw Verity deployments also install the real compiled SenderCreator runtime, with its EntryPoint immutable patched to the Verity deployment, at Solidity EntryPoint's first-created address so factories and EntryPointSimulations observe the expected boundary address. Full gas accounting, complete simulation coverage, broader gas accounting and penalty precision, exact custom error artifact recognition for Verity EntryPoint bytecode, and the full upstream suite remain pending compatibility targets.",
       "unsupported_feature_codes": [
         "indexed_for_loop",
         "ecm_runtime_target",
@@ -10484,5 +10485,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-21T06:19:14.490264+00:00"
+  "generated_at": "2026-06-21T11:52:40.253419+00:00"
 }

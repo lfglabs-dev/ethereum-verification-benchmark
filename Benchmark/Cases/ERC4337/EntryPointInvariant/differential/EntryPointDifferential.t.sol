@@ -27,21 +27,6 @@ interface IEntryPoint {
     function balanceOf(address account) external view returns (uint256);
 }
 
-/// @notice Flattened one-op projection exposed by the Verity model. The model
-/// deliberately avoids dynamic calldata-array decoding; tests derive these
-/// words from the same PackedUserOperation passed to upstream handleOps.
-interface IEntryPointProjection {
-    function handleOps(
-        address sender,
-        address paymaster,
-        uint256 key,
-        uint256 declaredNonce,
-        address beneficiary,
-        uint256 hasInitCode,
-        uint256 hasCallData
-    ) external;
-}
-
 /// @notice A minimal account that records the calldata it was invoked with.
 contract RecordingAccount {
     bytes public lastCallData;
@@ -92,24 +77,11 @@ contract RejectingAccount {
 /// @notice A malicious account that re-enters handleOps during validation.
 contract ReentrantAccount {
     IEntryPoint public ep;
-    IEntryPointProjection public projection;
     bool public attempted;
     bool public reentryReverted;
 
-    constructor(address target, bool useProjection) {
-        if (useProjection) {
-            projection = IEntryPointProjection(target);
-        } else {
-            ep = IEntryPoint(target);
-        }
-    }
-
-    function _nonceKey(uint256 nonce) internal pure returns (uint256) {
-        return uint256(uint192(nonce >> 64));
-    }
-
-    function _nonceSeq(uint256 nonce) internal pure returns (uint256) {
-        return uint256(uint64(nonce));
+    constructor(address target) {
+        ep = IEntryPoint(target);
     }
 
     function validateUserOp(
@@ -118,35 +90,31 @@ contract ReentrantAccount {
         uint256
     ) external returns (uint256) {
         attempted = true;
-        if (address(projection) != address(0)) {
-            try projection.handleOps(
-                address(this),
-                address(0),
-                _nonceKey(op.nonce),
-                _nonceSeq(op.nonce),
-                address(this),
-                0,
-                1
-            ) {
-                reentryReverted = false;
-            } catch {
-                reentryReverted = true;
-            }
-        } else {
-            PackedUserOperation[] memory ops = new PackedUserOperation[](1);
-            ops[0] = op;
-            try ep.handleOps(ops, payable(address(this))) {
-                reentryReverted = false;
-            } catch {
-                reentryReverted = true;
-            }
+        PackedUserOperation[] memory ops = new PackedUserOperation[](1);
+        ops[0] = op;
+        try ep.handleOps(ops, payable(address(this))) {
+            reentryReverted = false;
+        } catch {
+            reentryReverted = true;
         }
         return 0;
     }
 
     function validateUserOp(uint256, uint256) external returns (uint256) {
         attempted = true;
-        try projection.handleOps(address(this), address(0), 0, 0, address(this), 0, 1) {
+        PackedUserOperation[] memory ops = new PackedUserOperation[](1);
+        ops[0] = PackedUserOperation({
+            sender: address(this),
+            nonce: 0,
+            initCode: hex"",
+            callData: hex"00",
+            accountGasLimits: bytes32(uint256(uint128(200000)) << 128 | uint128(100000)),
+            preVerificationGas: 21000,
+            gasFees: bytes32(uint256(uint128(1 gwei)) << 128 | uint128(1 gwei)),
+            paymasterAndData: hex"",
+            signature: hex""
+        });
+        try ep.handleOps(ops, payable(address(this))) {
             reentryReverted = false;
         } catch {
             reentryReverted = true;
@@ -154,9 +122,21 @@ contract ReentrantAccount {
         return 0;
     }
     fallback() external payable {
-        if (address(projection) != address(0) && !attempted) {
+        if (!attempted) {
             attempted = true;
-            try projection.handleOps(address(this), address(0), 0, 0, address(this), 0, 1) {
+            PackedUserOperation[] memory ops = new PackedUserOperation[](1);
+            ops[0] = PackedUserOperation({
+                sender: address(this),
+                nonce: 0,
+                initCode: hex"",
+                callData: hex"00",
+                accountGasLimits: bytes32(uint256(uint128(200000)) << 128 | uint128(100000)),
+                preVerificationGas: 21000,
+                gasFees: bytes32(uint256(uint128(1 gwei)) << 128 | uint128(1 gwei)),
+                paymasterAndData: hex"",
+                signature: hex""
+            });
+            try ep.handleOps(ops, payable(address(this))) {
                 reentryReverted = false;
             } catch {
                 reentryReverted = true;
@@ -174,7 +154,7 @@ contract EntryPointDifferential {
     Vm internal constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     IEntryPoint solcEP;
-    IEntryPointProjection verityEP;
+    IEntryPoint verityEP;
     address constant BENEFICIARY = address(0xBEEF);
     address constant VERITY_EOA = address(0xA11CE);
 
@@ -206,7 +186,7 @@ contract EntryPointDifferential {
         require(solcAddr != address(0), "deploy solc EP");
         require(verityAddr != address(0), "deploy verity EP");
         solcEP = IEntryPoint(solcAddr);
-        verityEP = IEntryPointProjection(verityAddr);
+        verityEP = IEntryPoint(verityAddr);
     }
 
     function _baseOp(address sender, uint256 nonce, bytes memory callData)
@@ -227,25 +207,11 @@ contract EntryPointDifferential {
         });
     }
 
-    function _nonceKey(PackedUserOperation memory op) internal pure returns (uint256) {
-        return uint256(uint192(op.nonce >> 64));
-    }
-
-    function _nonceSeq(PackedUserOperation memory op) internal pure returns (uint256) {
-        return uint256(uint64(op.nonce));
-    }
-
     function _runVerity(PackedUserOperation memory op, address beneficiary) internal {
+        PackedUserOperation[] memory ops = new PackedUserOperation[](1);
+        ops[0] = op;
         vm.prank(VERITY_EOA, VERITY_EOA);
-        verityEP.handleOps(
-            op.sender,
-            address(0),
-            _nonceKey(op),
-            _nonceSeq(op),
-            beneficiary,
-            op.initCode.length == 0 ? 0 : 1,
-            op.callData.length == 0 ? 0 : 1
-        );
+        verityEP.handleOps(ops, payable(beneficiary));
     }
 
     function testValidateAndExecuteSingleOp() public {
@@ -290,15 +256,7 @@ contract EntryPointDifferential {
         _runVerity(ops[0], BENEFICIARY);
         bool verReverted;
         vm.prank(VERITY_EOA, VERITY_EOA);
-        try verityEP.handleOps(
-            address(acc2),
-            address(0),
-            _nonceKey(ops[0]),
-            _nonceSeq(ops[0]),
-            BENEFICIARY,
-            0,
-            1
-        ) {
+        try verityEP.handleOps(ops, payable(BENEFICIARY)) {
             verReverted = false;
         } catch {
             verReverted = true;
@@ -323,8 +281,8 @@ contract EntryPointDifferential {
     }
 
     function testReentrancyBlocked() public {
-        ReentrantAccount solcAcc = new ReentrantAccount(address(solcEP), false);
-        ReentrantAccount verAcc = new ReentrantAccount(address(verityEP), true);
+        ReentrantAccount solcAcc = new ReentrantAccount(address(solcEP));
+        ReentrantAccount verAcc = new ReentrantAccount(address(verityEP));
         solcEP.depositTo{value: 1 ether}(address(solcAcc));
 
         PackedUserOperation[] memory ops = new PackedUserOperation[](1);

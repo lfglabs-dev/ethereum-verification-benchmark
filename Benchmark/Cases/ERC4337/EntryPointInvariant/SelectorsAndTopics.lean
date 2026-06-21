@@ -19,7 +19,7 @@ def selectorFromSignature (sig : String) : Nat :=
   (Verity.keccak256_lit sig).val / selectorShift
 
 def entryPointHandleOpsSignature : String :=
-  "handleOps(PackedUserOperation[],address)"
+  "handleOps((address,uint256,bytes,bytes,bytes32,uint256,bytes32,bytes,bytes)[],address)"
 
 def projectedHandleOpsSignature : String :=
   "handleOps(address,address,uint256,uint256,address,uint256,uint256)"
@@ -33,7 +33,8 @@ def accountDeployedEventSignature : String :=
 def userOperationRevertReasonEventSignature : String :=
   "UserOperationRevertReason(bytes32,address,uint256,bytes)"
 
-/-- Upstream EntryPoint v0.9 `handleOps(PackedUserOperation[],address)`. -/
+/-- Upstream EntryPoint v0.9 `handleOps(PackedUserOperation[],address)`,
+    rendered with the canonical tuple-array ABI signature. -/
 def entryPointHandleOpsSelector : Uint256 :=
   Verity.Core.Uint256.ofNat (selectorFromSignature entryPointHandleOpsSignature)
 

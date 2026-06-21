@@ -314,8 +314,9 @@ verity_contract EntryPointV09 where
 
   -- Flattened one-op `handleOps` projection. The Solidity ABI accepts a dynamic
   -- array of packed structs; this model exposes the decoded fields directly.
-  -- Differential tests must call this projection through its own interface, not
-  -- through `IEntryPoint.handleOps(PackedUserOperation[],address)`.
+  -- The differential build injects a Yul ABI shim for the real upstream
+  -- `handleOps(PackedUserOperation[],address)` selector and maps decoded ops
+  -- into this projection.
   function handleOps
       (sender : IAccount, paymaster : IPaymaster,
        key : Uint256, declaredNonce : Uint256, beneficiary : IBeneficiary,
