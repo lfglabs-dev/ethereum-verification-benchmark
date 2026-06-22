@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import json
+import tempfile
 import unittest
+from pathlib import Path
 
 from harness.budgets import BudgetProfile, budget_artifact
 from harness.result_validity import failure_taxonomy, row_validity
@@ -53,6 +56,8 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertFalse(invalid["valid"])
         setup = row_validity({"status": "preflight_failed", "provider_setup_error": True})
         self.assertFalse(setup["valid"])
+        verifier_shell_pass = row_validity({"status": "lean_passed", "usage": {"requests": None}, "verifier_confirmed": True})
+        self.assertTrue(verifier_shell_pass["valid"])
 
     def test_budget_artifact_separates_benchmark_and_operational_limits(self) -> None:
         artifact = budget_artifact(BudgetProfile(max_attempts=4, max_tool_calls=40, max_turns=20, shell_timeout_seconds=900))
@@ -71,6 +76,29 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(summary["invalid_tasks"], 1)
         self.assertEqual(summary["passed"], 1)
         self.assertEqual(summary["failure_counts"], {"provider_setup_error": 1})
+
+    def test_aggregate_accepts_verifier_clean_shell_pass_without_requests(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp) / "run"
+            run_dir.mkdir()
+            (run_dir / "run.json").write_text(
+                json.dumps(
+                    {
+                        "run_id": "shell-pass",
+                        "harness_id": "shell",
+                        "model": "local",
+                        "task_ref": "case/task",
+                        "harness_status": "completed",
+                        "usage": {"requests": None, "total_tokens": 123},
+                        "verifier": {"score": {"passed_targets": 1, "total_targets": 1}},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            rows = aggregate_runs.collect_runs(Path(tmp))
+        self.assertEqual(len(rows), 1)
+        self.assertTrue(rows[0]["valid"])
+        self.assertTrue(rows[0]["passed"])
 
 
 if __name__ == "__main__":

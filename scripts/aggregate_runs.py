@@ -169,18 +169,20 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
         if not isinstance(failure_counts, dict):
             failure_counts = failure_counts_from_tasks(tasks if isinstance(tasks, list) else [])
         status = str(run.get("harness_status") or "")
+        verifier_passed = score.get("passed_targets", 0) == score.get("total_targets", 0) and score.get("total_targets", 0) > 0
         task_status = None
         if isinstance(tasks, list) and tasks and isinstance(tasks[0], dict):
             task_status = tasks[0].get("status")
         validity = row_validity(
             {
-                "status": task_status or ("lean_passed" if score.get("passed_targets", 0) == score.get("total_targets", 0) and score.get("total_targets", 0) > 0 else status),
+                "status": task_status or ("lean_passed" if verifier_passed else status),
                 "harness_status": status,
-                "provider_setup_error": run.get("provider_setup_error") or status in {"missing_credentials", "preflight_failed", "harness_error"},
+                "provider_setup_error": run.get("provider_setup_error") or status in {"missing_credentials", "preflight_failed"},
                 "usage": usage,
                 "tool_calls": tool_calls,
                 "attempts": (tasks[0].get("attempts") if isinstance(tasks, list) and tasks and isinstance(tasks[0], dict) else None),
                 "benchmark_budget": run.get("benchmark_budget"),
+                "verifier_confirmed": verifier_passed and not tasks,
             },
             expected_budget=run.get("benchmark_budget") if isinstance(run.get("benchmark_budget"), dict) else None,
         )

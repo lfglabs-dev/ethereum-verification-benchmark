@@ -1392,10 +1392,12 @@ def run_group(
     else:
         task_results: list[dict[str, object]] = []
         warm_builds: list[dict[str, object]] = []
+        preflight_passed = False
         try:
             preflight = generic_preflight(base_url, DEFAULT_MODEL)
             if preflight.get("status") != "passed":
                 raise RuntimeError(f"provider preflight failed: {preflight.get('error') or preflight}")
+            preflight_passed = True
             tasks_payload = json.loads((built.path / "harness" / "TASKS.json").read_text(encoding="utf-8"))
             # Warm the Lean dependency graph once per target module so agent-visible
             # check timeouts measure proof elaboration, not cold dependency builds.
@@ -1451,7 +1453,7 @@ def run_group(
                 **budgets,
             }
         except Exception as exc:
-            status = "preflight_failed" if not task_results and not warm_builds else "harness_error"
+            status = "harness_error" if preflight_passed else "preflight_failed"
             response = {
                 "status": status,
                 "error": str(exc),

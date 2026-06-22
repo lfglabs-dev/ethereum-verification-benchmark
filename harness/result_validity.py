@@ -19,7 +19,7 @@ ALLOWED_TERMINAL_STATUSES = {
     "repetition_loop",
 }
 
-PROVIDER_SETUP_STATUSES = {"missing_credentials", "provider_setup_error", "preflight_failed", "harness_error"}
+PROVIDER_SETUP_STATUSES = {"missing_credentials", "provider_setup_error", "preflight_failed"}
 
 
 def failure_taxonomy(status: str, attempts: list[dict[str, object]], *, tool_calls: int = 0, no_tool_responses: int = 0) -> str:
@@ -71,7 +71,7 @@ def row_validity(row: dict[str, Any], *, expected_budget: dict[str, Any] | None 
         or (isinstance(tool_calls, (int, float)) and tool_calls > 0)
         or (isinstance(attempts, list) and attempts)
     )
-    if status == "lean_passed" and not has_request_activity:
+    if status == "lean_passed" and not has_request_activity and not row.get("verifier_confirmed"):
         errors.append("completed model row has no request activity")
     if status == "lean_passed" and isinstance(usage, dict) and requests not in {None, 0}:
         if not isinstance(total_tokens, (int, float)) or total_tokens <= 0:
