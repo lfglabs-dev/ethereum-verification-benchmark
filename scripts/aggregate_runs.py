@@ -170,9 +170,10 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
             failure_counts = failure_counts_from_tasks(tasks if isinstance(tasks, list) else [])
         status = str(run.get("harness_status") or "")
         verifier_passed = score.get("passed_targets", 0) == score.get("total_targets", 0) and score.get("total_targets", 0) > 0
+        task_dicts = [task for task in tasks if isinstance(task, dict)] if isinstance(tasks, list) else []
         task_status = None
-        if isinstance(tasks, list) and tasks and isinstance(tasks[0], dict):
-            task_status = tasks[0].get("status")
+        if len(task_dicts) == 1:
+            task_status = task_dicts[0].get("status")
         validity = row_validity(
             {
                 "status": task_status or ("lean_passed" if verifier_passed else status),
@@ -186,7 +187,17 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
             },
             expected_budget=run.get("benchmark_budget") if isinstance(run.get("benchmark_budget"), dict) else None,
         )
-        valid = bool(validity.get("valid"))
+        validity_errors = list(validity.get("errors", []))
+        expected_budget = run.get("benchmark_budget") if isinstance(run.get("benchmark_budget"), dict) else None
+        for index, task in enumerate(task_dicts):
+            task_validity = task.get("validity")
+            if not isinstance(task_validity, dict):
+                task_validity = row_validity(task, expected_budget=expected_budget)
+            if not task_validity.get("valid"):
+                task_ref = task.get("task_ref") or task.get("task_id") or index
+                for error in task_validity.get("errors", ["invalid task row"]):
+                    validity_errors.append(f"{task_ref}: {error}")
+        valid = not validity_errors
         passed = (
             valid
             and score.get("passed_targets", 0) == score.get("total_targets", 0)
@@ -201,7 +212,7 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
                 "task_ref": run.get("task_ref") or run.get("group_id"),
                 "mode": run.get("mode"),
                 "valid": valid,
-                "validity_errors": validity.get("errors", []),
+                "validity_errors": validity_errors,
                 "passed": passed,
                 "passed_targets": score.get("passed_targets", 0),
                 "total_targets": score.get("total_targets", 0),
@@ -253,7 +264,7 @@ def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
 
 def _badge(label: str, summary: dict[str, object]) -> dict[str, object]:
     passed = summary["passed"]
-    tasks = summary["tasks"]
+    tasks = summary.get("valid_tasks", summary["tasks"])
     tokens = summary["median_completion_tokens_to_pass"]
     message = f"{passed}/{tasks}"
     if tokens:

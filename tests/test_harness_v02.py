@@ -123,6 +123,58 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertTrue(rows[0]["valid"])
         self.assertFalse(rows[0]["passed"])
 
+    def test_aggregate_uses_all_child_task_validity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp) / "run"
+            run_dir.mkdir()
+            (run_dir / "run.json").write_text(
+                json.dumps(
+                    {
+                        "run_id": "group-pass",
+                        "harness_id": "default",
+                        "model": "local",
+                        "group_id": "case/group",
+                        "harness_status": "completed",
+                        "usage": {"requests": 2, "total_tokens": 123},
+                        "verifier": {"score": {"passed_targets": 2, "total_targets": 2}},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (run_dir / "harness-response.json").write_text(
+                json.dumps(
+                    {
+                        "tasks": [
+                            {"task_ref": "case/a", "status": "lean_passed", "validity": {"valid": True, "errors": []}},
+                            {
+                                "task_ref": "case/b",
+                                "status": "lean_passed",
+                                "validity": {"valid": False, "errors": ["completed model row has no request activity"]},
+                            },
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            rows = aggregate_runs.collect_runs(Path(tmp))
+        self.assertEqual(len(rows), 1)
+        self.assertFalse(rows[0]["valid"])
+        self.assertFalse(rows[0]["passed"])
+        self.assertIn("case/b: completed model row has no request activity", rows[0]["validity_errors"])
+
+    def test_badge_uses_valid_task_denominator(self) -> None:
+        badge = aggregate_runs._badge(
+            "benchmark",
+            {
+                "tasks": 3,
+                "valid_tasks": 2,
+                "passed": 2,
+                "median_completion_tokens_to_pass": None,
+            },
+        )
+        self.assertEqual(badge["message"], "2/2")
+        self.assertEqual(badge["color"], "brightgreen")
+
 
 if __name__ == "__main__":
     unittest.main()
