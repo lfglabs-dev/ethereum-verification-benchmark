@@ -49,7 +49,7 @@ Emit a single unified patch instead of writing files::
 Assumptions
 -----------
 
-* The live generator for Verity benchmark tasks is the human author following
+* The live generator for Ethereum verification benchmark tasks is the human author following
   ``CONTRIBUTING.md``; there is no pre-existing Python scaffolding tool. This
   script stands in as the canonical rewriter so future task skeletons inherit
   the grind-first shape automatically.

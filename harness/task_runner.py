@@ -163,7 +163,7 @@ def load_task_record(task_manifest: Path) -> dict[str, Any]:
     editable_files = normalize_list(task_data.get("editable_files"))
 
     task = {
-        "benchmark": "verity-benchmark",
+        "benchmark": "ethereum-verification-benchmark",
         "schema_version": 1,
         "task_ref": task_ref,
         "task_id": task_id,
@@ -231,7 +231,7 @@ def classify_lean_failure(output: str) -> str:
 
 
 def declaration_exists(module_name: str, declaration_name: str, *, cwd: Path = ROOT) -> tuple[bool, str]:
-    with tempfile.TemporaryDirectory(prefix="verity-benchmark-check-") as tmp_dir:
+    with tempfile.TemporaryDirectory(prefix="ethereum-verification-benchmark-check-") as tmp_dir:
         check_path = Path(tmp_dir) / "Check.lean"
         check_path.write_text(
             f"import {module_name}\n#check {declaration_name}\n",
@@ -418,7 +418,7 @@ def aggregate_results(task_refs: list[str], suite: str) -> dict[str, Any]:
         )
 
     task_summary = {
-        "benchmark": "verity-benchmark",
+        "benchmark": "ethereum-verification-benchmark",
         "schema_version": 1,
         "unit": "task",
         "total_tasks": len(task_refs),
@@ -438,7 +438,7 @@ def aggregate_results(task_refs: list[str], suite: str) -> dict[str, Any]:
         "missing_task_refs": missing_task_refs,
     }
     case_summary = {
-        "benchmark": "verity-benchmark",
+        "benchmark": "ethereum-verification-benchmark",
         "schema_version": 1,
         "unit": "case-secondary",
         "total_cases": len(case_rows),

@@ -19,7 +19,7 @@ release assets referenced by the manifest.
 ```json
 {
   "schema_version": 1,
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "latest_version": "0.1",
   "versions": [
     {
@@ -48,7 +48,7 @@ separate source of truth.
 ```json
 {
   "schema_version": 1,
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "benchmark_version": "0.1",
   "task_count": 135,
   "source_summary_url": "results/summaries/v0.1.json",
@@ -56,9 +56,14 @@ separate source of truth.
   "rows": [
     {
       "rank": 1,
-      "model_id": "openai-gpt-55",
+      "model_id": "openai/gpt-5.5",
+      "source_model_id": "openai-gpt-55",
+      "model_provider_id": "openai",
+      "model_name": "gpt-5.5",
+      "inference_provider_id": "openai",
+      "inference_model_id": "openai-gpt-55",
       "provider_id": "openai",
-      "provider_model_id": "gpt-55",
+      "provider_model_id": "gpt-5.5",
       "display_name": "GPT 5.5",
       "status": "complete",
       "pass_rate": 0.489,
@@ -80,9 +85,16 @@ For a simple website table, consume only `rows[].display_name`,
 `rows[].pass_rate`, `rows[].passed`, `rows[].failed`, `rows[].total`, and
 optionally `rows[].total_tokens`. The ID fields are intentionally split:
 
-- `model_id`: canonical benchmark row ID, stable for joins.
-- `provider_id`: provider namespace used by the benchmark.
-- `provider_model_id`: model name inside that provider namespace.
+- `model_id`: public model identity used for display and ranking, formatted as
+  `model_provider_id/model_name`.
+- `source_model_id`: original benchmark artifact ID, stable for joins against
+  `results/manifests/`.
+- `model_provider_id`: organization that made the model.
+- `model_name`: model name inside the model provider namespace.
+- `inference_provider_id`: service or route used to run inference, when known.
+- `inference_model_id`: model identifier sent to that inference provider.
+- `provider_id` and `provider_model_id`: deprecated aliases for
+  `model_provider_id` and `model_name`, kept for one release cycle.
 
 ## Summary File
 
@@ -92,7 +104,7 @@ should include one row per model run with provider and model split explicitly:
 ```json
 {
   "schema_version": 1,
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "benchmark_version": "0.1",
   "task_count": 135,
   "task_set_id": "sha256:...",
@@ -100,9 +112,14 @@ should include one row per model run with provider and model split explicitly:
   "environment_id": "sha256:...",
   "models": [
     {
+      "model_id": "openai/gpt-5.5",
+      "source_model_id": "openai-gpt-55",
+      "model_provider_id": "openai",
+      "model_name": "gpt-5.5",
+      "inference_provider_id": "openai",
+      "inference_model_id": "openai-gpt-55",
       "provider": "openai",
       "model": "gpt-5.5",
-      "model_id": "openai-gpt-55",
       "display_name": "GPT 5.5",
       "status": "complete",
       "task_count": 135,
@@ -119,14 +136,15 @@ should include one row per model run with provider and model split explicitly:
 The minimum fields needed by the public website are:
 
 - `benchmark_version`
-- `models[].provider`
-- `models[].model`
+- `models[].model_provider_id`
+- `models[].model_name`
 - `models[].passed`
 - `models[].failed`
 
-`status`, `valid_count`, and `caveats` should also be exposed so the website
-can distinguish complete rows from partial or invalid rows without re-parsing
-the manifest.
+`models[].provider` and `models[].model` are deprecated aliases for older
+consumers. `status`, `valid_count`, and `caveats` should also be exposed so the
+website can distinguish complete rows from partial or invalid rows without
+re-parsing the manifest.
 
 ## Full Manifest
 

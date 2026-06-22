@@ -1,4 +1,4 @@
-You are doing a deep-search research pass for the Verity benchmark.
+You are doing a deep-search research pass for the Ethereum verification benchmark.
 
 Goal:
 Find 5-10 public smart contract or programming challenge candidates that would meaningfully expand benchmark coverage, with emphasis on challenge classes that are not already represented by the current suite.

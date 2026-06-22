@@ -18,27 +18,85 @@ def slug(value: str) -> str:
     return "".join(ch if ch.isalnum() else "-" for ch in value).strip("-").lower()
 
 
-PUBLIC_MODEL_ALIASES = {
-    "claude-opus-4-8": ("anthropic", "opus-4.8", "opus-4.8"),
-    "grok": ("xai", "grok-build-0.1", "grok-build-0.1"),
-    "kimi/kimi-for-coding": ("kimi", "kimi-k2.7", "kimi-k2.7"),
-    "openai-gpt-55": ("openai", "gpt-5.5", "gpt-5.5"),
-    "openai-gpt-55-pro": ("openai", "gpt-5.5-pro", "gpt-5.5-pro"),
-    "virtuals/xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
-    "xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
+PUBLIC_MODEL_ALIASES: dict[str, dict[str, str]] = {
+    "claude-opus-4-8": {
+        "model_provider_id": "anthropic",
+        "model_name": "opus-4.8",
+        "display_name": "opus-4.8",
+    },
+    "grok": {
+        "model_provider_id": "xai",
+        "model_name": "grok-build-0.1",
+        "display_name": "grok-build-0.1",
+    },
+    "kimi/kimi-for-coding": {
+        "model_provider_id": "kimi",
+        "model_name": "kimi-k2.7",
+        "display_name": "kimi-k2.7",
+    },
+    "openai-gpt-55": {
+        "model_provider_id": "openai",
+        "model_name": "gpt-5.5",
+        "display_name": "gpt-5.5",
+    },
+    "openai-gpt-55-pro": {
+        "model_provider_id": "openai",
+        "model_name": "gpt-5.5-pro",
+        "display_name": "gpt-5.5-pro",
+    },
+    "virtuals/deepseek-v4-flash": {
+        "model_provider_id": "deepseek",
+        "model_name": "deepseek-v4-flash",
+        "display_name": "deepseek-v4-flash",
+        "inference_provider_id": "virtuals",
+        "inference_model_id": "virtuals/deepseek-v4-flash",
+    },
+    "virtuals/deepseek-v4-pro": {
+        "model_provider_id": "deepseek",
+        "model_name": "deepseek-v4-pro",
+        "display_name": "deepseek-v4-pro",
+        "inference_provider_id": "virtuals",
+        "inference_model_id": "virtuals/deepseek-v4-pro",
+    },
+    "virtuals/xiaomi-mimo-v2-5": {
+        "model_provider_id": "xiaomi",
+        "model_name": "mimo-v2.5",
+        "display_name": "mimo-v2.5",
+        "inference_provider_id": "virtuals",
+        "inference_model_id": "virtuals/xiaomi-mimo-v2-5",
+    },
+    "xiaomi-mimo-v2-5": {
+        "model_provider_id": "xiaomi",
+        "model_name": "mimo-v2.5",
+        "display_name": "mimo-v2.5",
+    },
 }
+
+
+def model_identity(source_model_id: str, display_name: str | None = None) -> dict[str, str]:
+    """Return public model identity and serving-route identity separately."""
+    source_provider, source_model_name = split_model_id(source_model_id)
+    if source_model_id in PUBLIC_MODEL_ALIASES:
+        alias = dict(PUBLIC_MODEL_ALIASES[source_model_id])
+    else:
+        alias = {
+            "model_provider_id": source_provider,
+            "model_name": source_model_name,
+            "display_name": display_name or source_model_name,
+        }
+        if "/" in source_model_id and (not display_name or display_name == source_model_id or "/" in display_name):
+            alias["display_name"] = source_model_name
+    alias.setdefault("inference_provider_id", source_provider)
+    alias.setdefault("inference_model_id", source_model_id)
+    alias["model_id"] = f"{alias['model_provider_id']}/{alias['model_name']}"
+    alias["source_model_id"] = source_model_id
+    return alias
 
 
 def public_model_identity(model_id: str, display_name: str | None = None) -> tuple[str, str, str]:
     """Return website-facing provider, model, and display label."""
-    if model_id in PUBLIC_MODEL_ALIASES:
-        return PUBLIC_MODEL_ALIASES[model_id]
-    provider, model = split_model_id(model_id)
-    if model_id.startswith("virtuals/"):
-        return provider, model, f"{provider}/{model}"
-    if "/" in model_id and (not display_name or display_name == model_id or "/" in display_name):
-        return provider, model, model
-    return provider, model, display_name or model
+    identity = model_identity(model_id, display_name)
+    return identity["model_provider_id"], identity["model_name"], identity["display_name"]
 
 
 def split_model_id(model_id: str) -> tuple[str, str]:
@@ -46,8 +104,8 @@ def split_model_id(model_id: str) -> tuple[str, str]:
         provider, model = model_id.split("/", 1)
         return provider, model
     known_aliases = {
-        key: (provider, model)
-        for key, (provider, model, _display) in PUBLIC_MODEL_ALIASES.items()
+        key: (identity["model_provider_id"], identity["model_name"])
+        for key, identity in PUBLIC_MODEL_ALIASES.items()
         if "/" not in key or key == "kimi/kimi-for-coding"
     }
     if model_id in known_aliases:
@@ -80,12 +138,17 @@ def model_summary(model: dict[str, Any]) -> dict[str, Any]:
     usage = [task.get("usage") for task in tasks if isinstance(task.get("usage"), dict)]
     completion_passed = [int((task.get("usage") or {}).get("completion_tokens") or 0) for task in passed]
     prompt_passed = [int((task.get("usage") or {}).get("prompt_tokens") or 0) for task in passed]
-    provider, model_name, display_name = public_model_identity(model["model_id"], model.get("display_name"))
+    identity = model_identity(model["model_id"], model.get("display_name"))
     return {
-        "model_id": model["model_id"],
-        "provider": provider,
-        "model": model_name,
-        "display_name": display_name,
+        "model_id": identity["model_id"],
+        "source_model_id": identity["source_model_id"],
+        "model_provider_id": identity["model_provider_id"],
+        "model_name": identity["model_name"],
+        "inference_provider_id": identity["inference_provider_id"],
+        "inference_model_id": identity["inference_model_id"],
+        "provider": identity["model_provider_id"],
+        "model": identity["model_name"],
+        "display_name": identity["display_name"],
         "status": model.get("status", "invalid"),
         "task_count": model.get("task_count", len(tasks)),
         "valid_count": model.get("valid_count", len(tasks)),
@@ -133,10 +196,14 @@ def leaderboard_json(summary: dict[str, Any]) -> dict[str, Any]:
         rows.append(
             {
                 "rank": complete_rank.get(item["model_id"]),
-                "model_id": f"{item['provider']}/{item['model']}",
-                "source_model_id": item["model_id"],
-                "provider_id": item["provider"],
-                "provider_model_id": item["model"],
+                "model_id": item["model_id"],
+                "source_model_id": item["source_model_id"],
+                "model_provider_id": item["model_provider_id"],
+                "model_name": item["model_name"],
+                "inference_provider_id": item["inference_provider_id"],
+                "inference_model_id": item["inference_model_id"],
+                "provider_id": item["model_provider_id"],
+                "provider_model_id": item["model_name"],
                 "display_name": item["display_name"],
                 "status": item["status"],
                 "pass_rate": item["pass_rate"],
@@ -166,7 +233,7 @@ def leaderboard_json(summary: dict[str, Any]) -> dict[str, Any]:
 
 def leaderboard(version: dict[str, Any], summaries: list[dict[str, Any]]) -> str:
     lines = [
-        "# Verity Benchmark Leaderboard",
+        "# Ethereum Verification Benchmark Leaderboard",
         "",
         f"Benchmark version `{version['benchmark_version']}` · generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%MZ')}",
         "",
@@ -264,11 +331,11 @@ def main() -> int:
         encoding="utf-8",
     )
     for item in summary["models"]:
-        (badges_dir / f"{slug(item['model_id'])}.json").write_text(json.dumps(badge(item["display_name"], item)) + "\n", encoding="utf-8")
+        (badges_dir / f"{slug(item['source_model_id'])}.json").write_text(json.dumps(badge(item["display_name"], item)) + "\n", encoding="utf-8")
     complete_runs = sum(item["task_count"] for item in summary["models"] if item["status"] == "complete")
     all_runs = sum(item["task_count"] for item in summary["models"])
     (badges_dir / "overall.json").write_text(
-        json.dumps({"schemaVersion": 1, "label": "verity bench", "message": f"{complete_runs}/{all_runs} complete-version runs", "color": "brightgreen" if complete_runs == all_runs and all_runs else "yellow"}) + "\n",
+        json.dumps({"schemaVersion": 1, "label": "ethereum verification", "message": f"{complete_runs}/{all_runs} complete-version runs", "color": "brightgreen" if complete_runs == all_runs and all_runs else "yellow"}) + "\n",
         encoding="utf-8",
     )
     print(f"aggregated benchmark v{version_name}: {len(summary['models'])} model row(s)")

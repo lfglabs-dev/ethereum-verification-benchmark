@@ -74,7 +74,7 @@ Default harness API env:
 - `DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS` for the one-time dependency warm build
   the fair runner performs per target module before the agent loop starts (default 1800)
 - `DEFAULT_HARNESS_HTTP_USER_AGENT` to override the request User-Agent (default
-  `verity-benchmark-harness/1.0`; some proxies reject the Python default UA)
+  `ethereum-verification-benchmark-harness/1.0`; some proxies reject the Python default UA)
 - `DEFAULT_HARNESS_CHECK_MODE`: `file` (default) checks the editable proof file with
   `lake env lean` (seconds; falls back to `lake build` on dependency-graph errors),
   `module` always runs the full `lake build <target>`

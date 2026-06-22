@@ -1,9 +1,9 @@
 # Task taxonomy & model failure clustering
 
-This directory holds the **annotation and analysis layer** for the Verity benchmark:
+This directory holds the **annotation and analysis layer** for the Ethereum verification benchmark:
 what kind of proof problem each task is, what proof skills it exercises, and how models
 fail on it. It answers the questions in
-[issue #93](https://github.com/lfglabs-dev/verity-benchmark/issues/93) — *which tasks are
+[issue #93](https://github.com/lfglabs-dev/ethereum-verification-benchmark/issues/93) — *which tasks are
 hard, which are divisive, and why* — without changing how the benchmark scores anything.
 
 ## Why this is a separate layer
@@ -80,7 +80,7 @@ assets, so the whole pipeline is reproducible by anyone:
 #    These are release assets on tag v0.1. NOTE: the manifest's asset_url uses the
 #    tag `benchmark-v0.1`, which 404s; download from tag `v0.1` explicitly.
 mkdir -p /tmp/v93_artifacts && cd /tmp/v93_artifacts
-gh release download v0.1 --repo lfglabs-dev/verity-benchmark   # then extract the tarballs
+gh release download v0.1 --repo lfglabs-dev/ethereum-verification-benchmark   # then extract the tarballs
 
 # 2. extract per-task / per-model features (+ enrichment if --runs-dir is given).
 python3 scripts/extract_task_features.py \

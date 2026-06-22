@@ -324,7 +324,7 @@ def write_inventory(
     all_cases = active_cases + backlog_cases
     all_tasks = active_tasks + backlog_tasks
     payload = {
-        "benchmark": "verity-benchmark",
+        "benchmark": "ethereum-verification-benchmark",
         "manifest_schema_version": 1,
         "inventory_source": {
             "families": "families/*/family.yaml",

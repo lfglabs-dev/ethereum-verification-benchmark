@@ -63,7 +63,7 @@ def _openrouter_prices(mapping_raw: str) -> dict[str, tuple[float, float]]:
 
     try:
         request = urllib.request.Request(
-            "https://openrouter.ai/api/v1/models", headers={"User-Agent": "verity-benchmark-harness/1.0"}
+            "https://openrouter.ai/api/v1/models", headers={"User-Agent": "ethereum-verification-benchmark-harness/1.0"}
         )
         with urllib.request.urlopen(request, timeout=30) as response:
             models = json.loads(response.read().decode("utf-8")).get("data", [])
@@ -252,7 +252,7 @@ def _leaderboard_markdown(
 ) -> str:
     estimates = estimates or {}
     lines = [
-        "# Verity Benchmark Leaderboard",
+        "# Ethereum Verification Benchmark Leaderboard",
         "",
         f"Generated {meta.get('date')} · commit `{meta.get('sha', 'unknown')[:9]}` · budget `{meta.get('budget', '?')}`",
         "",
@@ -405,7 +405,7 @@ def main() -> int:
     overall_passed = sum(1 for row in rows if row["passed"])
     overall = {
         "schemaVersion": 1,
-        "label": "verity bench",
+        "label": "ethereum verification",
         "message": f"{overall_passed}/{len(rows)} runs verified",
         "color": "brightgreen" if rows and overall_passed == len(rows) else ("yellow" if overall_passed else "red"),
     }

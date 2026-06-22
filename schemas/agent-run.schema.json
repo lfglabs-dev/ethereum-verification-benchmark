@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://verity-benchmark.local/schemas/agent-run.schema.json",
+  "$id": "https://ethereum-verification-benchmark.local/schemas/agent-run.schema.json",
   "title": "Default Benchmark Agent Run Result",
   "type": "object",
   "additionalProperties": false,

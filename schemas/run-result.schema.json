@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://verity-benchmark.local/schemas/run-result.schema.json",
+  "$id": "https://ethereum-verification-benchmark.local/schemas/run-result.schema.json",
   "title": "Benchmark Run Result",
   "type": "object",
   "additionalProperties": false,
@@ -41,7 +41,7 @@
   ],
   "properties": {
     "benchmark": {
-      "const": "verity-benchmark"
+      "const": "ethereum-verification-benchmark"
     },
     "schema_version": {
       "type": "integer"

@@ -220,7 +220,7 @@ def build_version_manifest(
 ) -> dict[str, object]:
     tasks = ordered_tasks(suite)
     return {
-        "benchmark": "verity-benchmark",
+        "benchmark": "ethereum-verification-benchmark",
         "benchmark_version": version,
         "created_at": created_at or date.today().isoformat(),
         "git_sha": git_sha(),
