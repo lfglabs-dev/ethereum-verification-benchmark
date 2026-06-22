@@ -153,6 +153,7 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
         score = run.get("verifier", {}).get("score", {})
         attempts = None
         tool_calls = None
+        tasks: list[object] = []
         response_path = run_path.parent / "harness-response.json"
         if response_path.is_file():
             try:
