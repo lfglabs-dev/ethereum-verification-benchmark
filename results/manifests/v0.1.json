@@ -10622,6 +10622,2592 @@
       "valid_count": 135
     },
     {
+      "archive": null,
+      "benchmark_version": "0.1",
+      "caveats": [],
+      "display_name": "Leanstral-2603",
+      "failed": 126,
+      "model_id": "mistralai/Leanstral-2603",
+      "passed": 9,
+      "status": "complete",
+      "task_count": 135,
+      "task_results": [
+        {
+          "artifact_id": "20260621T055131-default-fair-leanstral-2603-alchemix__earmark_conservation__earmark_preserves_invariant",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:a0a78f4c7924eb73870aaa21ae988402c5ea2d80f5d58d74a320d4c528fe7297",
+          "reusable": true,
+          "run_id": "20260621T055131-default-fair-leanstral-2603-alchemix__earmark_conservation__earmark_preserves_invariant",
+          "task_fingerprint": "sha256:774b794f9a7647d760ef989b13f7bcc861fddbad43554d3da9aec0ba888f8bd2",
+          "task_interface_id": "sha256:426a13e92a10bae2350fb254ffc22a9aa3102001ccb24cc375ed7c3bf5676c09",
+          "task_ref": "alchemix/earmark_conservation/earmark_preserves_invariant",
+          "usage": {
+            "completion_tokens": 8337,
+            "prompt_tokens": 9134,
+            "requests": 3,
+            "total_tokens": 17471
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T055131-default-fair-leanstral-2603-alchemix__earmark_conservation__redeem_preserves_invariant",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:ff8760abff5328c0f1543fa737ba0241259327bab9090581149198bd97927e07",
+          "reusable": true,
+          "run_id": "20260621T055131-default-fair-leanstral-2603-alchemix__earmark_conservation__redeem_preserves_invariant",
+          "task_fingerprint": "sha256:d0f7daa8f618c454a2072539c0331d080269d86863a269aed562119a0043716a",
+          "task_interface_id": "sha256:840387ae2d1ff5b9ac6db8ffc1af7814627f104842e8a0757a8a789d427fd65a",
+          "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+          "usage": {
+            "completion_tokens": 6755,
+            "prompt_tokens": 2666559,
+            "requests": 118,
+            "total_tokens": 2673314
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T055131-default-fair-leanstral-2603-alchemix__earmark_conservation__sub_debt_preserves_invariant",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:548a11d7bf595d50d301a2953d0922b6f17b9c437169a14844aec8d0dc58cf82",
+          "reusable": true,
+          "run_id": "20260621T055131-default-fair-leanstral-2603-alchemix__earmark_conservation__sub_debt_preserves_invariant",
+          "task_fingerprint": "sha256:cb57b8ef4ae394132f6ca5cbaf82f7cbf0645769dd65581b933e85f3ae0e5f91",
+          "task_interface_id": "sha256:ab6fd2127098720795ebc9ce9369e4d4ec1a03a2d54a4503e849c87bc9933c8e",
+          "task_ref": "alchemix/earmark_conservation/sub_debt_preserves_invariant",
+          "usage": {
+            "completion_tokens": 1034,
+            "prompt_tokens": 430369,
+            "requests": 32,
+            "total_tokens": 431403
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T055131-default-fair-leanstral-2603-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:3375cb956edb25d0e6500cb9e1556c05ea0b246c8124f808cdb9e10c69d6554c",
+          "reusable": true,
+          "run_id": "20260621T055131-default-fair-leanstral-2603-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+          "task_fingerprint": "sha256:82147bfb7293da9b19b30165942e2824e05dd7bafeb2f053a9b53a20163a6f36",
+          "task_interface_id": "sha256:e850ae4f7bed851bddce532c500b3f66d6ed8f58bc0c43170c9c3569d4ce631a",
+          "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+          "usage": {
+            "completion_tokens": 8341,
+            "prompt_tokens": 8282,
+            "requests": 3,
+            "total_tokens": 16623
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T060730-default-fair-leanstral-2603-alchemix__earmark_conservation__sync_account_preserves_invariant",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:a3599356ad9f8da07df797fd5dd930bf8b9f9a542525d559c239fe55ff355f2a",
+          "reusable": true,
+          "run_id": "20260621T060730-default-fair-leanstral-2603-alchemix__earmark_conservation__sync_account_preserves_invariant",
+          "task_fingerprint": "sha256:5328d40b4043da2d8028982cbe91baa3d865ec321e38940317dc7ca52f63e93f",
+          "task_interface_id": "sha256:21d0e3ba8600783b18b13de8dcaa70b7344256ea69850eed55af0b4e49f88bb2",
+          "task_ref": "alchemix/earmark_conservation/sync_account_preserves_invariant",
+          "usage": {
+            "completion_tokens": 7238,
+            "prompt_tokens": 833687,
+            "requests": 45,
+            "total_tokens": 840925
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T060900-default-fair-leanstral-2603-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:945bd3c9ee03bb325e334142a3c536f7d65237c144adba1e1a6b487c2177f44a",
+          "reusable": true,
+          "run_id": "20260621T060900-default-fair-leanstral-2603-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+          "task_fingerprint": "sha256:f62258b7734ffd2a3a1c7c5d52b5ffe55c1f4c8f9cb635c5216cf58242976b90",
+          "task_interface_id": "sha256:41a96e08b0df98d79b988f82afdf74b76417b074bf93c770febad2acb14959e2",
+          "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+          "usage": {
+            "completion_tokens": 6641,
+            "prompt_tokens": 1663684,
+            "requests": 118,
+            "total_tokens": 1670325
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T061133-default-fair-leanstral-2603-cork__pool_solvency__solvency_preserved",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:1db722f7aaa651843a4ca0bd1a822165e5153af45aed1aa9e5dc23fdb1b25a7d",
+          "reusable": true,
+          "run_id": "20260621T061133-default-fair-leanstral-2603-cork__pool_solvency__solvency_preserved",
+          "task_fingerprint": "sha256:800a8842472b1a5233cac1b7f7c04aab99cbad4f0087f7acae06d4b6beed37d3",
+          "task_interface_id": "sha256:40b45dfe486949f2d6c924509f7f0048b025db38b5b0a1b71225ee101fe7f0bd",
+          "task_ref": "cork/pool_solvency/solvency_preserved",
+          "usage": {
+            "completion_tokens": 7817,
+            "prompt_tokens": 341874,
+            "requests": 25,
+            "total_tokens": 349691
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T061134-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": true,
+          "result_key": "sha256:e34b9cc43a9e742ec37802b99efd4d5985ebf64ddf94070c3cc9aaa2f2858b32",
+          "reusable": true,
+          "run_id": "20260621T061134-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__deposit_sets_pool_balance",
+          "task_fingerprint": "sha256:c8accad0d25ff57d30035010ee1b79b4e574124591214692fce686a9ceba7716",
+          "task_interface_id": "sha256:c6940bfc183462b7c39c9f22c2858c47cc2ad76294c2c191fc2b09f0219707a0",
+          "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance",
+          "usage": {
+            "completion_tokens": 495,
+            "prompt_tokens": 10702,
+            "requests": 4,
+            "total_tokens": 11197
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T061432-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__deposit_sets_sender_credit",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": true,
+          "result_key": "sha256:75ac0ea8fef58e5199fa4e4c05f07a1a0e85bdd8d889aac906bfbb5d186668b2",
+          "reusable": true,
+          "run_id": "20260621T061432-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__deposit_sets_sender_credit",
+          "task_fingerprint": "sha256:bd16fdd1a8d8416a21127e1dc88bcf82c9cd8ae0b16d51345f130fcde415d39e",
+          "task_interface_id": "sha256:b260faf626cf0c32f3893eb52455b12012e33249806790d7bc1ecb1474b3a9fa",
+          "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit",
+          "usage": {
+            "completion_tokens": 521,
+            "prompt_tokens": 14776,
+            "requests": 5,
+            "total_tokens": 15297
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T061654-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:2dd61a7033ce1f499840872cee60c1d20a6f638cd190189ee09f0d9be9cae37c",
+          "reusable": true,
+          "run_id": "20260621T061654-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+          "task_fingerprint": "sha256:f48fb4bb3364dded4c3ce2a479edff3aa603e70ba396768fc329adec1702b892",
+          "task_interface_id": "sha256:0d215f952b4eeb5b47e702c866fe6328d944454ab9653cee8f2b2a6c670bb0d9",
+          "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+          "usage": {
+            "completion_tokens": 11919,
+            "prompt_tokens": 2695932,
+            "requests": 116,
+            "total_tokens": 2707851
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T062627-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:bbf66a4867c64e91006021087b96781a0295eb13bbda827d68a5ac481577cc63",
+          "reusable": true,
+          "run_id": "20260621T062627-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+          "task_fingerprint": "sha256:d860abebe2fdcf34de96209554bb910f2f64f5e63631a5124c5899330b91de92",
+          "task_interface_id": "sha256:dc2db4266ae7f0c0209a27741dd68ce9736c37f1eed40237c156979b5fed9eba",
+          "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+          "usage": {
+            "completion_tokens": 4786,
+            "prompt_tokens": 544357,
+            "requests": 39,
+            "total_tokens": 549143
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T064203-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_sets_sender_credit",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:6c63250c71611d17363a9f7f387f25e6c9836afffac023d5cd33780e82edddd5",
+          "reusable": true,
+          "run_id": "20260621T064203-default-fair-leanstral-2603-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_sets_sender_credit",
+          "task_fingerprint": "sha256:fbb589cb0a2418e10c2d3f7ba1c88cb1a702309f5785a96a3484e82bfd638744",
+          "task_interface_id": "sha256:5ac2867d01dcd0386a223c23fa5db0ef6aa59cba040716b9253bb9d57844329a",
+          "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit",
+          "usage": {
+            "completion_tokens": 8837,
+            "prompt_tokens": 341176,
+            "requests": 24,
+            "total_tokens": 350013
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T064808-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__chain_start_threshold",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:f58114346b7d06d5dede1b24dd154d77adb4220899b7d7f32a4d15d2cfbb54e4",
+          "reusable": true,
+          "run_id": "20260621T064808-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__chain_start_threshold",
+          "task_fingerprint": "sha256:8684bab6dc08020d4a2db7374a85d45acc5d9fd98b220db2e8b24bc0b019bc6f",
+          "task_interface_id": "sha256:34f26d604101386df171af29ea5dced2f32c6f68c16cfb83a4e7b5c5b3360edb",
+          "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+          "usage": {
+            "completion_tokens": 5475,
+            "prompt_tokens": 1080539,
+            "requests": 41,
+            "total_tokens": 1086014
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T065049-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__deposit_count",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:cd48c806aec683f76380a19e67f7ee64dcdddc1f07099958f2b6e0aac9935057",
+          "reusable": true,
+          "run_id": "20260621T065049-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__deposit_count",
+          "task_fingerprint": "sha256:a9650ccb8d9c8032feec00a19f90df5ed7a6637fb9ea2a1be6d44fa01abebcf4",
+          "task_interface_id": "sha256:98dc9db9254ff496efa91e9e9efd5e6e2ec03522b44844c4ea6732cd0c5f29a8",
+          "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+          "usage": {
+            "completion_tokens": 889,
+            "prompt_tokens": 68544,
+            "requests": 10,
+            "total_tokens": 69433
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T065843-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__full_deposit_increments_full_count",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:9a21360f5eb8d4b950d1325d1b45755f3c9e1cbefc83f78e64f329a762ee0c2e",
+          "reusable": true,
+          "run_id": "20260621T065843-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__full_deposit_increments_full_count",
+          "task_fingerprint": "sha256:4159b8226b8b29993785381a73a1af2a70357b963b90319ded32e29dcf8e4930",
+          "task_interface_id": "sha256:02187b95281fa1329a3a455e3f9062e1a3c112f5247ad02e7b2ba3ee07c32ec4",
+          "task_ref": "ethereum/deposit_contract_minimal/full_deposit_increments_full_count",
+          "usage": {
+            "completion_tokens": 9153,
+            "prompt_tokens": 63122,
+            "requests": 10,
+            "total_tokens": 72275
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T070015-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__full_deposit_preserves_partial_gap",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:ef779c01dbe2450d2174e31ef3102da8ab9a5dc3d4d4963cc5987fe5cc158015",
+          "reusable": true,
+          "run_id": "20260621T070015-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__full_deposit_preserves_partial_gap",
+          "task_fingerprint": "sha256:24ed5f731c2cee2bfe50dcf9c3ffb9706ed3d7aa4f498462d86ebeab5a762d8a",
+          "task_interface_id": "sha256:b12544995d85e3d95c9cfe0c8743a1b2a4b2bbd356872f5201b0f68ec8eebd23",
+          "task_ref": "ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap",
+          "usage": {
+            "completion_tokens": 9038,
+            "prompt_tokens": 1578979,
+            "requests": 67,
+            "total_tokens": 1588017
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T070740-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__small_deposit_preserves_full_count",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:708c95fd581f08c9e21d880227bd0fbd8257d5b0f9263311aad3dddaa8ca70d9",
+          "reusable": true,
+          "run_id": "20260621T070740-default-fair-leanstral-2603-ethereum__deposit_contract_minimal__small_deposit_preserves_full_count",
+          "task_fingerprint": "sha256:04bdb147c344397dd0f3a173d71e5c08f09904a325279ab909b32e3c8e2c4f9d",
+          "task_interface_id": "sha256:543cbed4584b0b43fe9f7234112cfabe7ab4870baccbd6e56e700084162854e5",
+          "task_ref": "ethereum/deposit_contract_minimal/small_deposit_preserves_full_count",
+          "usage": {
+            "completion_tokens": 5371,
+            "prompt_tokens": 699188,
+            "requests": 42,
+            "total_tokens": 704559
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T071810-default-fair-leanstral-2603-forgeyields__global_solvency__claim_redeem_preserves_global_solvency",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:2d6112652268bfa41896cf6abc2654c2ee0d43f23e0aacdddac9658f6065b7e9",
+          "reusable": true,
+          "run_id": "20260621T071810-default-fair-leanstral-2603-forgeyields__global_solvency__claim_redeem_preserves_global_solvency",
+          "task_fingerprint": "sha256:d381bbbbbc6e2773d612c8141307f24cf0a2c6623b8639f0a77b79e748da0ce2",
+          "task_interface_id": "sha256:053545f9045250cf2ba44e114555822fed1344947003bea7bf7d0feb9bb03ad0",
+          "task_ref": "forgeyields/global_solvency/claim_redeem_preserves_global_solvency",
+          "usage": {
+            "completion_tokens": 1319,
+            "prompt_tokens": 99704,
+            "requests": 12,
+            "total_tokens": 101023
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T072503-default-fair-leanstral-2603-forgeyields__global_solvency__deposit_preserves_global_solvency",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:aff6b257a4f0292109c0348df4966e9c14ef2966b561f9a55b579598acc8f4c4",
+          "reusable": true,
+          "run_id": "20260621T072503-default-fair-leanstral-2603-forgeyields__global_solvency__deposit_preserves_global_solvency",
+          "task_fingerprint": "sha256:5c5a706cd4f8627e02f026bb5193194f26513a46b6debe13d5411ee4d26c3545",
+          "task_interface_id": "sha256:9e4fe8bb1ac0bdfb7a359b48e993125e0112ff476bf498d65460a4eaa0e2b1ea",
+          "task_ref": "forgeyields/global_solvency/deposit_preserves_global_solvency",
+          "usage": {
+            "completion_tokens": 9748,
+            "prompt_tokens": 337652,
+            "requests": 23,
+            "total_tokens": 347400
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T072530-default-fair-leanstral-2603-forgeyields__global_solvency__handle_preserves_global_solvency",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:f4fa21021ba1ba3fcae1c75dc472fce902025ab1167694d0048b11461d38153e",
+          "reusable": true,
+          "run_id": "20260621T072530-default-fair-leanstral-2603-forgeyields__global_solvency__handle_preserves_global_solvency",
+          "task_fingerprint": "sha256:661aa6e4649da4f6e02c8d09e0e23dee1562c282268949dccd9a6cd3d7bb31ba",
+          "task_interface_id": "sha256:8bd3d3ef7e64853802c692c490f8b4c6211f3c87955bb703b1e085549dab8f57",
+          "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+          "usage": {
+            "completion_tokens": 5715,
+            "prompt_tokens": 894140,
+            "requests": 45,
+            "total_tokens": 899855
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T073218-default-fair-leanstral-2603-forgeyields__global_solvency__redeem_token_gateway_depreciated_preserves_global_solvency",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:a4c137dec5c2a58b0bded35fe334619332c815985d49f4db593ae3a4634d2c83",
+          "reusable": true,
+          "run_id": "20260621T073218-default-fair-leanstral-2603-forgeyields__global_solvency__redeem_token_gateway_depreciated_preserves_global_solvency",
+          "task_fingerprint": "sha256:6df4c55eb0818a40b2632a00a701b0d7bcae0430f1de34961aeb25184bb5b26a",
+          "task_interface_id": "sha256:3aefdb1b1bc5619aaa19a2e3378dc96c36466433099d3d392d050d5c3e298cbb",
+          "task_ref": "forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency",
+          "usage": {
+            "completion_tokens": 15334,
+            "prompt_tokens": 2807351,
+            "requests": 118,
+            "total_tokens": 2822685
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T074300-default-fair-leanstral-2603-forgeyields__global_solvency__report_preserves_global_solvency",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": true,
+          "result_key": "sha256:3ba27de943ed9820f79dc053cf08a641fb6c69f75fa8b3ac6e56ebb9e2b817bb",
+          "reusable": true,
+          "run_id": "20260621T074300-default-fair-leanstral-2603-forgeyields__global_solvency__report_preserves_global_solvency",
+          "task_fingerprint": "sha256:7113b29e52806ad1fcbdd084eaf434cae6e339fad0a046bd7b65d295fb37042f",
+          "task_interface_id": "sha256:6b12af357259a2b5672ce225a6d12d7c62beaa59f3fe5c35f3b1827651d1fe10",
+          "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency",
+          "usage": {
+            "completion_tokens": 1055,
+            "prompt_tokens": 151656,
+            "requests": 21,
+            "total_tokens": 152711
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T074458-default-fair-leanstral-2603-forgeyields__global_solvency__request_redeem_preserves_global_solvency",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:207a8fe5ab6df916eeb120e851de50b503ad02ef303638b3c52211d450339feb",
+          "reusable": true,
+          "run_id": "20260621T074458-default-fair-leanstral-2603-forgeyields__global_solvency__request_redeem_preserves_global_solvency",
+          "task_fingerprint": "sha256:31dc95f7c7d93d5539427d588ae7ebb55903a710231599fd1d6d08d9f9b1b452",
+          "task_interface_id": "sha256:8dd8c21cd5d58f3ecaa7aa7b84e150fe172271b64466cc53a13360a960b95656",
+          "task_ref": "forgeyields/global_solvency/request_redeem_preserves_global_solvency",
+          "usage": {
+            "completion_tokens": 19604,
+            "prompt_tokens": 2969410,
+            "requests": 116,
+            "total_tokens": 2989014
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T075204-default-fair-leanstral-2603-forgeyields__global_solvency__transfer_remote_preserves_global_solvency",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:6847a72e8e799cb78682b25afc516d75ad0eeb63acb80e1860bb46b000080616",
+          "reusable": true,
+          "run_id": "20260621T075204-default-fair-leanstral-2603-forgeyields__global_solvency__transfer_remote_preserves_global_solvency",
+          "task_fingerprint": "sha256:cb1468e5f0afac76d25d66e00534224a2196474d250e68e9508453e12726699b",
+          "task_interface_id": "sha256:1c7d2be69abe02950ed861a9caf15d5c8d58d11ec343ef682c76347fc7b66d33",
+          "task_ref": "forgeyields/global_solvency/transfer_remote_preserves_global_solvency",
+          "usage": {
+            "completion_tokens": 2062,
+            "prompt_tokens": 93724,
+            "requests": 12,
+            "total_tokens": 95786
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T075300-default-fair-leanstral-2603-ipor__plasma_vault_redeem_split__fee_payout_bounded_by_fee_free",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:4159abc10202879a72191b420663f3108206459c7fa8e3166c670471222c5a0e",
+          "reusable": true,
+          "run_id": "20260621T075300-default-fair-leanstral-2603-ipor__plasma_vault_redeem_split__fee_payout_bounded_by_fee_free",
+          "task_fingerprint": "sha256:97750f73533d0f774e1b2bad7bc50cc5b69be492daf8498fc8058e4eefad289a",
+          "task_interface_id": "sha256:ab2a0acf171a90545926913562cdde367140fddeca269083a2660ab47c73476f",
+          "task_ref": "ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free",
+          "usage": {
+            "completion_tokens": 9376,
+            "prompt_tokens": 2592253,
+            "requests": 116,
+            "total_tokens": 2601629
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T075935-default-fair-leanstral-2603-ipor__plasma_vault_redeem_split__redeem_preserves_pps",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:a168c61bb64572633978e5597ae9313e4aa58a6767b019747f2414123e4ec8bb",
+          "reusable": true,
+          "run_id": "20260621T075935-default-fair-leanstral-2603-ipor__plasma_vault_redeem_split__redeem_preserves_pps",
+          "task_fingerprint": "sha256:82e0b98709e4da85c4cb964534bdce7d831b11dd83e9a7b03021e6d03f5657a4",
+          "task_interface_id": "sha256:7e65419efaab91ec2518bbf239eb554d8ab327581756d4af6645550b2c4c8d08",
+          "task_ref": "ipor/plasma_vault_redeem_split/redeem_preserves_pps",
+          "usage": {
+            "completion_tokens": 5439,
+            "prompt_tokens": 1905044,
+            "requests": 117,
+            "total_tokens": 1910483
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T083244-default-fair-leanstral-2603-kleros__sortition_trees__draw_interval_matches_weights",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:5c2a791703690415c29b00d57838e7d89818d7477d4afff0c254a6f60f664ad2",
+          "reusable": true,
+          "run_id": "20260621T083244-default-fair-leanstral-2603-kleros__sortition_trees__draw_interval_matches_weights",
+          "task_fingerprint": "sha256:abf96da6ee0fc972708e1eccf58c460eb6057acd86bbd3fb4def97d41b4b648e",
+          "task_interface_id": "sha256:996ac228fedf4281254b7f00ef9652885f860df06248a63fc53ab115fcce4ec1",
+          "task_ref": "kleros/sortition_trees/draw_interval_matches_weights",
+          "usage": {
+            "completion_tokens": 5792,
+            "prompt_tokens": 905798,
+            "requests": 53,
+            "total_tokens": 911590
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T084120-default-fair-leanstral-2603-kleros__sortition_trees__draw_selects_valid_leaf",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:ec3f9c0137dbe8d693cd2bba9df3a2e567abfbc167398721a50ff37b7705380f",
+          "reusable": true,
+          "run_id": "20260621T084120-default-fair-leanstral-2603-kleros__sortition_trees__draw_selects_valid_leaf",
+          "task_fingerprint": "sha256:ef4fad63b66ee32971d07f6dac9f28bd09dd4c01591357b03741b05f13164e67",
+          "task_interface_id": "sha256:25ddcef48bec4cbd43401a18e157815bb209abced3bf8408d226cbc15e890570",
+          "task_ref": "kleros/sortition_trees/draw_selects_valid_leaf",
+          "usage": {
+            "completion_tokens": 3793,
+            "prompt_tokens": 337852,
+            "requests": 30,
+            "total_tokens": 341645
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T084822-default-fair-leanstral-2603-kleros__sortition_trees__node_id_bijection",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:a8786e7a82dde244bea6931744656365ee07579714579a5b2dbe281cfe2305cd",
+          "reusable": true,
+          "run_id": "20260621T084822-default-fair-leanstral-2603-kleros__sortition_trees__node_id_bijection",
+          "task_fingerprint": "sha256:b0368d4e62f5ad2f06f04c050ec0c92af7db44415dc61ac15e64f6c81792f660",
+          "task_interface_id": "sha256:8cce0b072bee102889e2cc8749df86c56e8a6212282a1600f5cf06a355f99623",
+          "task_ref": "kleros/sortition_trees/node_id_bijection",
+          "usage": {
+            "completion_tokens": 1712,
+            "prompt_tokens": 631036,
+            "requests": 39,
+            "total_tokens": 632748
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T085129-default-fair-leanstral-2603-kleros__sortition_trees__parent_equals_sum_of_children",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:43e900575c4c0f0636f3058d740547f6390e5fa195716ed0b2b19d0e8b86ad70",
+          "reusable": true,
+          "run_id": "20260621T085129-default-fair-leanstral-2603-kleros__sortition_trees__parent_equals_sum_of_children",
+          "task_fingerprint": "sha256:6d37ed525d3afc34eb9bcf30b9f951d1018d4354b30f86a4c5aeb192485539f1",
+          "task_interface_id": "sha256:9c8040526486c55112b718b7aeee1c7dbbea67f27da2c444db21a9e0b0dcf4c1",
+          "task_ref": "kleros/sortition_trees/parent_equals_sum_of_children",
+          "usage": {
+            "completion_tokens": 2957,
+            "prompt_tokens": 434446,
+            "requests": 32,
+            "total_tokens": 437403
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T085428-default-fair-leanstral-2603-kleros__sortition_trees__root_equals_sum_of_leaves",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:1979da604d6b66d9b7877a0da17ba2ef2f2145b96c4a34a50ed50c7faee8e0fb",
+          "reusable": true,
+          "run_id": "20260621T085428-default-fair-leanstral-2603-kleros__sortition_trees__root_equals_sum_of_leaves",
+          "task_fingerprint": "sha256:2d2139e753f36cff422c876438437150b46fbcfd7ba7b9b9d649ad14d244db15",
+          "task_interface_id": "sha256:76d1da685f493e716719b15970d02af6fb6554e278ee6a73f2a6439d42a15c71",
+          "task_ref": "kleros/sortition_trees/root_equals_sum_of_leaves",
+          "usage": {
+            "completion_tokens": 15084,
+            "prompt_tokens": 2712180,
+            "requests": 118,
+            "total_tokens": 2727264
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T085610-default-fair-leanstral-2603-kleros__sortition_trees__root_minus_left_equals_right_subtree",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:f32e13a1f1e77a0dfcf4bf7cc60f511a271849d44d875b0b4d0edcc054ede12d",
+          "reusable": true,
+          "run_id": "20260621T085610-default-fair-leanstral-2603-kleros__sortition_trees__root_minus_left_equals_right_subtree",
+          "task_fingerprint": "sha256:2e29bc255b6c70a310ee3e37178fb4617407c8b0b287aab00df80ffdb7d36faf",
+          "task_interface_id": "sha256:b85a73cd9f098ed6cba91768085cf336655017cd5a6c2b91511f1018fbecbebd",
+          "task_ref": "kleros/sortition_trees/root_minus_left_equals_right_subtree",
+          "usage": {
+            "completion_tokens": 1547,
+            "prompt_tokens": 209184,
+            "requests": 21,
+            "total_tokens": 210731
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T090514-default-fair-leanstral-2603-lagoon__guardrails__exact_compliance",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:4ea3a9f0cc78ceee573ab5985e788baf1ad2539a25133aa482c7df4c7c832a57",
+          "reusable": true,
+          "run_id": "20260621T090514-default-fair-leanstral-2603-lagoon__guardrails__exact_compliance",
+          "task_fingerprint": "sha256:3e81d02c0a646f6cd1f1e2403690eb5915ee1520b93def8d0913627868ec618c",
+          "task_interface_id": "sha256:d374b2409366ce218f4b87f439ad64e1ef5369355fbd0d79be06e4024dc2b427",
+          "task_ref": "lagoon/guardrails/exact_compliance",
+          "usage": {
+            "completion_tokens": 10693,
+            "prompt_tokens": 29508,
+            "requests": 5,
+            "total_tokens": 40201
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T090645-default-fair-leanstral-2603-lagoon__guardrails__negative_variation_bounded",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:be41a0b85e396a0a6fb394dd40f25e9d9f478f32ecd6abd1066491af067ad9d1",
+          "reusable": true,
+          "run_id": "20260621T090645-default-fair-leanstral-2603-lagoon__guardrails__negative_variation_bounded",
+          "task_fingerprint": "sha256:a627c7c94d826f0e88324d6ee2fd07ceaed2dfa77707639e7d066a93d88a0c02",
+          "task_interface_id": "sha256:becf1e46fd6729c017b901327adfa39ad69bd485ba7dba071f26d1ba7120913c",
+          "task_ref": "lagoon/guardrails/negative_variation_bounded",
+          "usage": {
+            "completion_tokens": 8525,
+            "prompt_tokens": 49856,
+            "requests": 7,
+            "total_tokens": 58381
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T091329-default-fair-leanstral-2603-lagoon__guardrails__positive_variation_bounded",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:0191734d39083172e43ef386ebf42633b38104bd2d68c56b13cde9576fae43f3",
+          "reusable": true,
+          "run_id": "20260621T091329-default-fair-leanstral-2603-lagoon__guardrails__positive_variation_bounded",
+          "task_fingerprint": "sha256:069b9738558b5d33634196a29d6cad570cc84733c99c72dc6becfd95f181847a",
+          "task_interface_id": "sha256:69184aa62371d68552e8688c61141fa84805bb69ec1f9da50791c619d71b3c20",
+          "task_ref": "lagoon/guardrails/positive_variation_bounded",
+          "usage": {
+            "completion_tokens": 14448,
+            "prompt_tokens": 3600954,
+            "requests": 117,
+            "total_tokens": 3615402
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T092715-default-fair-leanstral-2603-lido__vaulthub_locked__ceildiv_sandwich",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:7d3b9c570c345948fd0f4df2fd8007c542775fbd0400819f26e33b1d2c959e39",
+          "reusable": true,
+          "run_id": "20260621T092715-default-fair-leanstral-2603-lido__vaulthub_locked__ceildiv_sandwich",
+          "task_fingerprint": "sha256:fa2721fe76c367ebd077b820378ce161cbd814e7aa67a246f899f4361ebe1b11",
+          "task_interface_id": "sha256:8428f0adcf959c1fdd89bd499957ebcc4b265cca76388321cd0704fb607956d5",
+          "task_ref": "lido/vaulthub_locked/ceildiv_sandwich",
+          "usage": {
+            "completion_tokens": 3374,
+            "prompt_tokens": 209622,
+            "requests": 21,
+            "total_tokens": 212996
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T092819-default-fair-leanstral-2603-lido__vaulthub_locked__locked_funds_solvency",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:d54ad0c7aa9d4b1e24f817e6dc78a880d7fb527d0b437ec2f5dcd0b2c0b53de6",
+          "reusable": true,
+          "run_id": "20260621T092819-default-fair-leanstral-2603-lido__vaulthub_locked__locked_funds_solvency",
+          "task_fingerprint": "sha256:6f15b3384abbceb8c0f7e40ef09b11879ea6770da39a8a7aec503f255d8a57f4",
+          "task_interface_id": "sha256:ff3d615db2e5c4834c24ab3ef794a7ee072d0b1903403f03b380745ac395a9c0",
+          "task_ref": "lido/vaulthub_locked/locked_funds_solvency",
+          "usage": {
+            "completion_tokens": 6582,
+            "prompt_tokens": 272742,
+            "requests": 21,
+            "total_tokens": 279324
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T094051-default-fair-leanstral-2603-lido__vaulthub_locked__max_liability_shares_bound",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": true,
+          "result_key": "sha256:1a1cc6c1176e689550d5adccc8ab285776ddec8ab01025f9e47dc0854fc5f142",
+          "reusable": true,
+          "run_id": "20260621T094051-default-fair-leanstral-2603-lido__vaulthub_locked__max_liability_shares_bound",
+          "task_fingerprint": "sha256:96b4c97b9278f5cb9738297465b87e503649af6f662e876e3ee12cfb656ca701",
+          "task_interface_id": "sha256:60707649591488705ae2c0656724dd507fc1d40a867daa0ef45e2cebb26f0bf9",
+          "task_ref": "lido/vaulthub_locked/max_liability_shares_bound",
+          "usage": {
+            "completion_tokens": 1729,
+            "prompt_tokens": 508202,
+            "requests": 40,
+            "total_tokens": 509931
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T094219-default-fair-leanstral-2603-lido__vaulthub_locked__reserve_ratio_bounds",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": true,
+          "result_key": "sha256:5e198ac183fbe81adfca3b1709138448b906e7030673094c028587c8f2b3f764",
+          "reusable": true,
+          "run_id": "20260621T094219-default-fair-leanstral-2603-lido__vaulthub_locked__reserve_ratio_bounds",
+          "task_fingerprint": "sha256:1044def5aaca9fc1697d1763851f4c11fba548392ed8cc76209a45f3c7a03eb8",
+          "task_interface_id": "sha256:1c49ce823c18d656a3b19f9979a41eafb452a0f9845fd5aeeabf879247c5849b",
+          "task_ref": "lido/vaulthub_locked/reserve_ratio_bounds",
+          "usage": {
+            "completion_tokens": 1086,
+            "prompt_tokens": 84621,
+            "requests": 14,
+            "total_tokens": 85707
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T094654-default-fair-leanstral-2603-lido__vaulthub_locked__shares_conversion_monotone",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:1e07adb374e60cb946fabc5703a694d79728807c0ca035c729f0c3b8b650899b",
+          "reusable": true,
+          "run_id": "20260621T094654-default-fair-leanstral-2603-lido__vaulthub_locked__shares_conversion_monotone",
+          "task_fingerprint": "sha256:2d313110279f294cf4a5d32f056d23d9ade5ee9e8bc4a62e9b1538c388ae5ece",
+          "task_interface_id": "sha256:f3c9b6a9c24e974aeb696e133dea809094fa3a4c3a2c3d76d6e931c9557f8977",
+          "task_ref": "lido/vaulthub_locked/shares_conversion_monotone",
+          "usage": {
+            "completion_tokens": 630,
+            "prompt_tokens": 58119,
+            "requests": 9,
+            "total_tokens": 58749
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T095039-default-fair-leanstral-2603-nexus_mutual__ramm_price_band__sync_sets_book_value",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": true,
+          "result_key": "sha256:0540eb6fd29225421afd7b71954fe948be0ca55a456e43b256a25a7a0347e092",
+          "reusable": true,
+          "run_id": "20260621T095039-default-fair-leanstral-2603-nexus_mutual__ramm_price_band__sync_sets_book_value",
+          "task_fingerprint": "sha256:eabef5dfcc85172bc31fbed385e4161c3e3c7b29f5ccdbcfce3b74a1311edbf7",
+          "task_interface_id": "sha256:f681bb5733843f8865c5ef94bde84bf18280fb53d9b557c76761655f9be6d436",
+          "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
+          "usage": {
+            "completion_tokens": 3872,
+            "prompt_tokens": 206223,
+            "requests": 22,
+            "total_tokens": 210095
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T095407-default-fair-leanstral-2603-nexus_mutual__ramm_price_band__sync_sets_buy_price",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:884157ccada893492176cc11f89e9427712c244c6555830904afb4048795c12c",
+          "reusable": true,
+          "run_id": "20260621T095407-default-fair-leanstral-2603-nexus_mutual__ramm_price_band__sync_sets_buy_price",
+          "task_fingerprint": "sha256:2b4e7d1bb326635ede148a518a1817fb91046862dbe9b1a530dc06721094db70",
+          "task_interface_id": "sha256:b9b8b6a5ba42657c7bfe620a0ceaf18c355b71878e93a8c9c12b03a7c0911247",
+          "task_ref": "nexus_mutual/ramm_price_band/sync_sets_buy_price",
+          "usage": {
+            "completion_tokens": 10692,
+            "prompt_tokens": 2319277,
+            "requests": 117,
+            "total_tokens": 2329969
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T101346-default-fair-leanstral-2603-nexus_mutual__ramm_price_band__sync_sets_capital",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:3a1f15a61100d2ec6e21a381b1d563b0aa0fe7b880a88c1fc0e64754c24aeccc",
+          "reusable": true,
+          "run_id": "20260621T101346-default-fair-leanstral-2603-nexus_mutual__ramm_price_band__sync_sets_capital",
+          "task_fingerprint": "sha256:2091929e8707cb2a937cda9f48bd09241e99e209beb4f194c22e56f6c2c23a0a",
+          "task_interface_id": "sha256:097ec728b6ca968810df46d79a950674c74a40db7a759ece903c787feb97c97d",
+          "task_ref": "nexus_mutual/ramm_price_band/sync_sets_capital",
+          "usage": {
+            "completion_tokens": 3895,
+            "prompt_tokens": 818135,
+            "requests": 50,
+            "total_tokens": 822030
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T102307-default-fair-leanstral-2603-nexus_mutual__ramm_price_band__sync_sets_sell_price",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:7c71534d046b65900fbe4feea42ba6fdb454cc3c704b932c6d7ae1406e38c778",
+          "reusable": true,
+          "run_id": "20260621T102307-default-fair-leanstral-2603-nexus_mutual__ramm_price_band__sync_sets_sell_price",
+          "task_fingerprint": "sha256:c19055c984324f425e9000c73eff5cd431decfb8ca4fa9c5dd8d149d41c78a96",
+          "task_interface_id": "sha256:baeb370b0ad03baadb2b90c2c870340fc0882b380df8f3d2d1f471638d1f8c9c",
+          "task_ref": "nexus_mutual/ramm_price_band/sync_sets_sell_price",
+          "usage": {
+            "completion_tokens": 1363,
+            "prompt_tokens": 86329,
+            "requests": 12,
+            "total_tokens": 87692
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T102504-default-fair-leanstral-2603-onedelta__caller_address_integrity__delta_compose_internal_erc20_transfer_from_uses_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:990b53a2ff7d8b1ad1848b51c3939172868672865be943b7cab70275f587a5e1",
+          "reusable": true,
+          "run_id": "20260621T102504-default-fair-leanstral-2603-onedelta__caller_address_integrity__delta_compose_internal_erc20_transfer_from_uses_outer_caller",
+          "task_fingerprint": "sha256:dbfe9d68b652d514fbafa3bbd8902a29ab386f628292ceb51e40fb9dc2c34e67",
+          "task_interface_id": "sha256:a5c847fc76459388bd5ec6392edac4fe9aa8cbc2cdd0490c07723a6aa7280e48",
+          "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller",
+          "usage": {
+            "completion_tokens": 2274,
+            "prompt_tokens": 190362,
+            "requests": 18,
+            "total_tokens": 192636
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T103146-default-fair-leanstral-2603-onedelta__caller_address_integrity__delta_compose_internal_permit2_transfer_from_uses_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:57e40865297442c81264095bb1bb328e47dea92a8cb08c3748ef718f20b09497",
+          "reusable": true,
+          "run_id": "20260621T103146-default-fair-leanstral-2603-onedelta__caller_address_integrity__delta_compose_internal_permit2_transfer_from_uses_outer_caller",
+          "task_fingerprint": "sha256:c160470b1ee284bff7d8e9a531d6e6cae9a0019fc6c5b952b2f72578e8726e94",
+          "task_interface_id": "sha256:23558362fe4f96b2da91e696faddf3e90d28a9b6b8737f170ebbd0750ba0c108",
+          "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller",
+          "usage": {
+            "completion_tokens": 3897,
+            "prompt_tokens": 1391632,
+            "requests": 118,
+            "total_tokens": 1395529
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T121734-default-fair-leanstral-2603-onedelta__caller_address_integrity__direct_erc20_transfer_from_uses_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:291200693c3fb833ad2fb3c526f70e0b108caab61c68320f998a2ae3a8eb2fd0",
+          "reusable": true,
+          "run_id": "20260621T121734-default-fair-leanstral-2603-onedelta__caller_address_integrity__direct_erc20_transfer_from_uses_outer_caller",
+          "task_fingerprint": "sha256:3573305711cf92fcdd862662ab6c07859e4f4f31fdfcee4c423de0e5e0d72773",
+          "task_interface_id": "sha256:0355fbfd24b5ecc9d206e6fb160499ca6e8e62e4ad49415a240a1e99dad5df96",
+          "task_ref": "onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller",
+          "usage": {
+            "completion_tokens": 3511,
+            "prompt_tokens": 1140112,
+            "requests": 50,
+            "total_tokens": 1143623
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T103800-default-fair-leanstral-2603-onedelta__caller_address_integrity__direct_permit2_transfer_from_uses_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": true,
+          "result_key": "sha256:1947b260fd57de56f7c82c4551595cf2b5406b83f798d1d786719a40bd9b1051",
+          "reusable": true,
+          "run_id": "20260621T103800-default-fair-leanstral-2603-onedelta__caller_address_integrity__direct_permit2_transfer_from_uses_outer_caller",
+          "task_fingerprint": "sha256:96ffd49efe18458e49dd74f7b18c006bc84eb79f144e171df9d27d65effee15b",
+          "task_interface_id": "sha256:59bc223d8ac0a04450cc8b8fd22a7878bb27fac3525b0f33d9d847c7c5cd2958",
+          "task_ref": "onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller",
+          "usage": {
+            "completion_tokens": 1565,
+            "prompt_tokens": 157517,
+            "requests": 19,
+            "total_tokens": 159082
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T122710-default-fair-leanstral-2603-onedelta__caller_address_integrity__flash_callback_erc20_transfer_from_uses_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:b681eb6851b8819e1d9aa42f2f8aeb984c6707c0097a5d92507808ed8725a361",
+          "reusable": true,
+          "run_id": "20260621T122710-default-fair-leanstral-2603-onedelta__caller_address_integrity__flash_callback_erc20_transfer_from_uses_outer_caller",
+          "task_fingerprint": "sha256:e5ec3d8cf79920a8ca13aa38d9599dde8fca4776b63ecde9e6c27fcae9c766c7",
+          "task_interface_id": "sha256:47f7592cae5c6d3c82f39b356f21568ccd62f6633d8fe0ece216cc65a62c1f85",
+          "task_ref": "onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller",
+          "usage": {
+            "completion_tokens": 5722,
+            "prompt_tokens": 199682,
+            "requests": 19,
+            "total_tokens": 205404
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T105600-default-fair-leanstral-2603-onedelta__caller_address_integrity__nested_flash_and_swap_callbacks_keep_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:660355f4a85fcd20a179f4bf5be6e3d5173660cb8341b6c63629cca786438e89",
+          "reusable": true,
+          "run_id": "20260621T105600-default-fair-leanstral-2603-onedelta__caller_address_integrity__nested_flash_and_swap_callbacks_keep_outer_caller",
+          "task_fingerprint": "sha256:478e7aef308dcea95c9bf952188f7a8a25a616623a3535ba49fce4696b6f2d0f",
+          "task_interface_id": "sha256:a232951b86fd8e4d0563d5958dabdaa39ad5f09f9ac6fe640b75829bb0c7971f",
+          "task_ref": "onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller",
+          "usage": {
+            "completion_tokens": 4853,
+            "prompt_tokens": 502389,
+            "requests": 37,
+            "total_tokens": 507242
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T110921-default-fair-leanstral-2603-onedelta__caller_address_integrity__swap_callback_permit2_transfer_from_uses_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:13e3fa779b2df7a307dd37e8025792c5b50217c19813c7022cb0b375b33d6d43",
+          "reusable": true,
+          "run_id": "20260621T110921-default-fair-leanstral-2603-onedelta__caller_address_integrity__swap_callback_permit2_transfer_from_uses_outer_caller",
+          "task_fingerprint": "sha256:3aef54a1b2af102a083ad42cbae8c192d82bea47884ccb2faf211fa9d7140bf2",
+          "task_interface_id": "sha256:d2e44ae26f0ba5ff5c26b0780fa6771c62ee1ef4be10eec507ad49297522a2c5",
+          "task_ref": "onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller",
+          "usage": {
+            "completion_tokens": 5481,
+            "prompt_tokens": 412875,
+            "requests": 27,
+            "total_tokens": 418356
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T112206-default-fair-leanstral-2603-onedelta__caller_address_integrity__transfers_erc20_transfer_from_uses_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:10742bcc2f3d63b993f8794f6e1fff72d0c49309a4f90ce3e9115c1f52e1a452",
+          "reusable": true,
+          "run_id": "20260621T112206-default-fair-leanstral-2603-onedelta__caller_address_integrity__transfers_erc20_transfer_from_uses_outer_caller",
+          "task_fingerprint": "sha256:981edee5e30bf7de18f90b7d75f8e1f8ae8fc6793563625a8f25060d396dd41f",
+          "task_interface_id": "sha256:b03241eba929bc4e7acb085e040606eee7c250987affb04c92f4f06b2f7d7ad2",
+          "task_ref": "onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller",
+          "usage": {
+            "completion_tokens": 15475,
+            "prompt_tokens": 567195,
+            "requests": 44,
+            "total_tokens": 582670
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T120111-default-fair-leanstral-2603-onedelta__caller_address_integrity__transfers_permit2_transfer_from_uses_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:a5e3417aa053d40fa651c16d2e633d4ce344f7de66d6a3892da1104eaa8a10cd",
+          "reusable": true,
+          "run_id": "20260621T120111-default-fair-leanstral-2603-onedelta__caller_address_integrity__transfers_permit2_transfer_from_uses_outer_caller",
+          "task_fingerprint": "sha256:ad0429f12263b7cfda3054db6d5d3601b871de6ff53975f1f500a7d157aa0c15",
+          "task_interface_id": "sha256:7059530c0924ee37440c69af6e19798ba633248930813ace9524d52e0eca0932",
+          "task_ref": "onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller",
+          "usage": {
+            "completion_tokens": 1677,
+            "prompt_tokens": 257450,
+            "requests": 25,
+            "total_tokens": 259127
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T123138-default-fair-leanstral-2603-onedelta__caller_address_integrity__v3_callback_direct_transfer_from_uses_outer_caller",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:cfbd7a0dc93f9047a5fc7014882a0755aa2ab5e482670af4760ceff632a66852",
+          "reusable": true,
+          "run_id": "20260621T123138-default-fair-leanstral-2603-onedelta__caller_address_integrity__v3_callback_direct_transfer_from_uses_outer_caller",
+          "task_fingerprint": "sha256:29dfd53c882e6f4575b7a69a62c5d3ed5fe161aaa37d2b28979202bd5dec2ea2",
+          "task_interface_id": "sha256:3d4f8f37d98eb97e6d404f09d538e743eff24c47633c6b1cd45579ed88ad961a",
+          "task_ref": "onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller",
+          "usage": {
+            "completion_tokens": 14009,
+            "prompt_tokens": 2428271,
+            "requests": 116,
+            "total_tokens": 2442280
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T141744-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_claim_marks_both_claimed",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:9c19662c90a6dea7a19b6b849899a32e45236303945b12021201aeb740ba62a9",
+          "reusable": true,
+          "run_id": "20260621T141744-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_claim_marks_both_claimed",
+          "task_fingerprint": "sha256:3e07ef03df886e7db39b72d420b694d313cd2e7f2668c436ddffc4025cecee22",
+          "task_interface_id": "sha256:b37e352970718f9eba13c5a145b331a23f149bf6411acc6133752d888c950970",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed",
+          "usage": {
+            "completion_tokens": 1788,
+            "prompt_tokens": 59392,
+            "requests": 8,
+            "total_tokens": 61180
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T124032-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_claim_updates_round_claimed",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:46bcc6ece13680af77cbeee4ae6f17807aa2f0ea70beb813d9de6b25a6148393",
+          "reusable": true,
+          "run_id": "20260621T124032-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_claim_updates_round_claimed",
+          "task_fingerprint": "sha256:3119ba9ca542d8b08c5a1bdc416e09c726609563a0da554051add05b50373016",
+          "task_interface_id": "sha256:272671858c21abe52b301d526d8c394dbea878f8fd812c78dd82f2c6b7061e7f",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed",
+          "usage": {
+            "completion_tokens": 10122,
+            "prompt_tokens": 100193,
+            "requests": 12,
+            "total_tokens": 110315
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T124554-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_claim_updates_total_allocated",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:1ff0e8ab234c0becc4e1620d95ca1965e2fd4f449af188bf183a6bfaf529bd69",
+          "reusable": true,
+          "run_id": "20260621T124554-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_claim_updates_total_allocated",
+          "task_fingerprint": "sha256:1b1efefe199eb8afcb5e2fab4d005941b8e87f1bb409537b1a9ed3888bce8887",
+          "task_interface_id": "sha256:68ed4c7709d752fd91599f1528326ab7c51b3c801130f51075f3896846d21322",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated",
+          "usage": {
+            "completion_tokens": 9389,
+            "prompt_tokens": 43815,
+            "requests": 8,
+            "total_tokens": 53204
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T131016-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_claimed_plus_allocated_conserved",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:e58c9fcd011da5bd74a681ec2997a61d5ce0a7a33a388bd4648b87694262efc5",
+          "reusable": true,
+          "run_id": "20260621T131016-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_claimed_plus_allocated_conserved",
+          "task_fingerprint": "sha256:00bfcd8ce6b87735c3efa6127fe98d852621bd8b7c7584c7bc5f870d03a1c159",
+          "task_interface_id": "sha256:543d1365c328d7f808131695b41ea5099dd1e14af1beef5e8fb7e4e85098237a",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved",
+          "usage": {
+            "completion_tokens": 4764,
+            "prompt_tokens": 826279,
+            "requests": 43,
+            "total_tokens": 831043
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T131456-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_matches_independent_claims",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:501132beb8f16fc08004aba6aab32b426ba741229c5f669d961cfe4e5d8635bd",
+          "reusable": true,
+          "run_id": "20260621T131456-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_matches_independent_claims",
+          "task_fingerprint": "sha256:799ddbc1d5b025b07897cd98c5e56b707413f322f13257b564902bf21c9043bb",
+          "task_interface_id": "sha256:3e6734598ba1397784615ee52bc42bc12f848bb608aff50b0f899e7bd53ae4ee",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims",
+          "usage": {
+            "completion_tokens": 1534,
+            "prompt_tokens": 106017,
+            "requests": 11,
+            "total_tokens": 107551
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T133223-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_no_overclaim",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:395fd16f17aadd7e2b629730eb65fed4329e244159ef3d7417b1949ada746ed5",
+          "reusable": true,
+          "run_id": "20260621T133223-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_no_overclaim",
+          "task_fingerprint": "sha256:3e36875b9c93485aeb21290b1001dd50032a293ff50a07c053054d5ee9a04279",
+          "task_interface_id": "sha256:84bec6319b080a602e90dd78021306ceaaecd45b9893cb3084ed5bd5d4ac7be8",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_no_overclaim",
+          "usage": {
+            "completion_tokens": 1860,
+            "prompt_tokens": 122544,
+            "requests": 12,
+            "total_tokens": 124404
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T135501-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_usdc_bound_violation_rejected",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:20db3ac02554184576ed1c677cc402fda03e60144ec1d36cdc0f516cdb4f4570",
+          "reusable": true,
+          "run_id": "20260621T135501-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_usdc_bound_violation_rejected",
+          "task_fingerprint": "sha256:7f9501471c363f6c95a53c51198b4eb6646d44fe6517e1cd1522f558412f27ec",
+          "task_interface_id": "sha256:68d8bf71fd338b575cdbcbde256988a162d359d9398c69c4cbb0f396d50fd288",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected",
+          "usage": {
+            "completion_tokens": 9138,
+            "prompt_tokens": 1836624,
+            "requests": 116,
+            "total_tokens": 1845762
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T135808-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_usdc_double_claim_rejected",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:8e7cac87a0f8fb13b1b4a9edd31063277b219aced94df904377acab5fd3a6acd",
+          "reusable": true,
+          "run_id": "20260621T135808-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_usdc_double_claim_rejected",
+          "task_fingerprint": "sha256:92146d9a221b60f5cbb3f3cdcb73816cb7aa2ad02e390e9f7231fd9393721bc6",
+          "task_interface_id": "sha256:e7711fff5e4dd430412abe52e57ce92027635822e15e27ea620440f31ddbfec4",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected",
+          "usage": {
+            "completion_tokens": 3505,
+            "prompt_tokens": 228432,
+            "requests": 20,
+            "total_tokens": 231937
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T142428-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_weth_bound_violation_rejected",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:5596eb270034e5046d6d8243d653bbddadf2d7454e71dcbc48ff71680a188c3d",
+          "reusable": true,
+          "run_id": "20260621T142428-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_weth_bound_violation_rejected",
+          "task_fingerprint": "sha256:039b5852f1273f8a19b94edc1c1fd2b401ab0b8665ca7c7c3743c110b0e7e3f6",
+          "task_interface_id": "sha256:51c80da83c351d6ed2d55fc66911f5c7f82e7219edd21160a7043d52c563357f",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected",
+          "usage": {
+            "completion_tokens": 7282,
+            "prompt_tokens": 2424121,
+            "requests": 70,
+            "total_tokens": 2431403
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T142635-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_weth_double_claim_rejected",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:72adf206ce3175e0cfe9ede610c6184a03fc12c99569d905de23a6d37cf912f8",
+          "reusable": true,
+          "run_id": "20260621T142635-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__both_weth_double_claim_rejected",
+          "task_fingerprint": "sha256:8c814fadd894fc40e3280ffa4feb485e023b00f4c60177a1c1d1beabaf966d3c",
+          "task_interface_id": "sha256:32b61029096f25629e0692c40c499f99e8ea195650e14ee2aa73baca9aef7df8",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected",
+          "usage": {
+            "completion_tokens": 1633,
+            "prompt_tokens": 108420,
+            "requests": 12,
+            "total_tokens": 110053
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T143344-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__bound_violation_rejected",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:c1cc13b7010c2a1341a6bdd82c2dee1572dd82203a5805c20b6e16869e93849f",
+          "reusable": true,
+          "run_id": "20260621T143344-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__bound_violation_rejected",
+          "task_fingerprint": "sha256:d8a0a48883c0d566b564532cc09740b0c8460784758abea39abac43daf72c8a4",
+          "task_interface_id": "sha256:203bccb304c8037ef8a6bbc33b5da8125b0b510ada49fb783e5362d2e77cf252",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected",
+          "usage": {
+            "completion_tokens": 1096,
+            "prompt_tokens": 76499,
+            "requests": 9,
+            "total_tokens": 77595
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T161625-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:16204a45f570a148d6237799d40e841a1933c2ecbd439418924de52a1f1c07d8",
+          "reusable": true,
+          "run_id": "20260621T161625-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__claim_marks_user",
+          "task_fingerprint": "sha256:879fd4db4b44ee22445254be5186419e401f8a763f40a69829b9ecb22c99f1b9",
+          "task_interface_id": "sha256:274826ffd64c58d600cf1a5f37bd573bf12828fd00b64f7e3def9198161564af",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user",
+          "usage": {
+            "completion_tokens": 2165,
+            "prompt_tokens": 241792,
+            "requests": 19,
+            "total_tokens": 243957
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T162105-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__claim_updates_round_claimed",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:5b54db424bbb767b9abd25ce27acbe84b202a869854893a5a1aa4856a5b6d972",
+          "reusable": true,
+          "run_id": "20260621T162105-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__claim_updates_round_claimed",
+          "task_fingerprint": "sha256:5695862ac10947566375ffe46215eecf5253c2a2c5e4b384702c6f2056bfdf38",
+          "task_interface_id": "sha256:9e536a9cb9b19fbeb6a6151e869afce35d4c9eaa8c7190c029f0e0b69a763e29",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed",
+          "usage": {
+            "completion_tokens": 4467,
+            "prompt_tokens": 477337,
+            "requests": 37,
+            "total_tokens": 481804
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T144345-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__claim_updates_total_allocated",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:8f964a11634ba89e7bbfeac300979de648a149a3f7173c15fa2bc9994be0140f",
+          "reusable": true,
+          "run_id": "20260621T144345-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__claim_updates_total_allocated",
+          "task_fingerprint": "sha256:83cd0cfa3cf2d16502c1daa923dec67cc50a9bd7567e666ea68af1964c743d4b",
+          "task_interface_id": "sha256:85672f0d685ae1b7bd2c53ac6029876f17612c50b048e4c6936a786c11797236",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated",
+          "usage": {
+            "completion_tokens": 5573,
+            "prompt_tokens": 637147,
+            "requests": 34,
+            "total_tokens": 642720
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T154442-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__claimed_plus_allocated_conserved",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:fdd1c8b26ee89eb695af3bc0ce7dcb9415e26bc870c0c75790c87ffa25c79fb7",
+          "reusable": true,
+          "run_id": "20260621T154442-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__claimed_plus_allocated_conserved",
+          "task_fingerprint": "sha256:b08a233463bce000848699fb04dfd8455347deb13b033500c194a92664b1505a",
+          "task_interface_id": "sha256:b140cbdfe5be191c0ea9f17bdb14b7e3b104d065ff6e787265e63f26c3bc7ba7",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved",
+          "usage": {
+            "completion_tokens": 2573,
+            "prompt_tokens": 373504,
+            "requests": 24,
+            "total_tokens": 376077
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T154834-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__double_claim_rejected",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:b83ffa8fcf71c5059691e91e21fa4a316a88c23877c5192540241f93e61eda02",
+          "reusable": true,
+          "run_id": "20260621T154834-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__double_claim_rejected",
+          "task_fingerprint": "sha256:63aa8a86701b31c84d5cb56343a996a393b9608f077ba81186e032e5938428bd",
+          "task_interface_id": "sha256:457caf9453c920803b1af5fa64acd7a05d43e52a43a58af04836ff8169dc3d7e",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/double_claim_rejected",
+          "usage": {
+            "completion_tokens": 11357,
+            "prompt_tokens": 2466126,
+            "requests": 118,
+            "total_tokens": 2477483
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T160058-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__no_overclaim",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:266b8729a2d80d41c3de541fe3faee815e455b7f0d2d76feca7b51f3dc894466",
+          "reusable": true,
+          "run_id": "20260621T160058-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__no_overclaim",
+          "task_fingerprint": "sha256:63259408ee4bb06984e4eaa46899c79fe9099fd6f47b27c2c5c8f936a9e5db9f",
+          "task_interface_id": "sha256:21f5db4b4e957d2f4a31b8de110ffd5f183d9fe08d79bd1f1ee1308248b51568",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/no_overclaim",
+          "usage": {
+            "completion_tokens": 9039,
+            "prompt_tokens": 364467,
+            "requests": 25,
+            "total_tokens": 373506
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T162751-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__usdc_preserves_weth_state",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:fc78aea8f8788609b2f5eb04eef199f60a22efa57ca72c24670922d1ef980cbb",
+          "reusable": true,
+          "run_id": "20260621T162751-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__usdc_preserves_weth_state",
+          "task_fingerprint": "sha256:6149dd735c02e0bb86ee20484a4826450718838761135cc894626de6502b096e",
+          "task_interface_id": "sha256:3f2c1b70ddaa390d8d88f83bddf41cd6860ae2d2ec39750f9579f03e585cf8d3",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state",
+          "usage": {
+            "completion_tokens": 7226,
+            "prompt_tokens": 2543575,
+            "requests": 118,
+            "total_tokens": 2550801
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T163027-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_bound_violation_rejected",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:16dbed68b8a413f66e995f9004453226fc345fd55b2c02131d1fb60de35e5d5c",
+          "reusable": true,
+          "run_id": "20260621T163027-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_bound_violation_rejected",
+          "task_fingerprint": "sha256:31cac868840beee92c4097fbfab955408a08e76483c382e5b72d12f6f2eeaf98",
+          "task_interface_id": "sha256:cdaddc28cf9a671b9c386533fabd607b78d10d85b1ad394a4fadab1008ff4214",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected",
+          "usage": {
+            "completion_tokens": 1847,
+            "prompt_tokens": 241670,
+            "requests": 20,
+            "total_tokens": 243517
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T163321-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_claim_marks_user",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:5b258e99b1fd106639d4cd47a1a8cf5be00a7735fd8d77f43b9af54cc7c1ca4f",
+          "reusable": true,
+          "run_id": "20260621T163321-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_claim_marks_user",
+          "task_fingerprint": "sha256:5d61af8fe65314dcd348644abc63a785b5bafd5841bb6a071b3bfee777910c72",
+          "task_interface_id": "sha256:84e613beb30b204a2507bd2b4474915fc78e94a042aed5858e15c76cb26e2c8f",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user",
+          "usage": {
+            "completion_tokens": 9089,
+            "prompt_tokens": 940865,
+            "requests": 43,
+            "total_tokens": 949954
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T164352-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_claim_updates_round_claimed",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:bfbd9c38cdaffbd83fdf201a9fccc6fc72849fff120a0f79c6e2dda4d5309922",
+          "reusable": true,
+          "run_id": "20260621T164352-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_claim_updates_round_claimed",
+          "task_fingerprint": "sha256:6b6e594838be292fbec806753ecab876e4982c810c8541106d53042270a93ee5",
+          "task_interface_id": "sha256:2d0dbea2791c06e5de4d6237440ee4253add4fcc312bdf3620ce74080cea4e08",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed",
+          "usage": {
+            "completion_tokens": 3933,
+            "prompt_tokens": 586043,
+            "requests": 34,
+            "total_tokens": 589976
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T165314-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_claim_updates_total_allocated",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:4e1411f62d9c04a5d3446c61f45bfe0619b1cfb08885d58dd7462bc648e53334",
+          "reusable": true,
+          "run_id": "20260621T165314-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_claim_updates_total_allocated",
+          "task_fingerprint": "sha256:35ed97c6a0075490de98b92aa7e65abb7a91952dd39d41c5f914c769973c494b",
+          "task_interface_id": "sha256:cddee075d10c782bb729e13f313ce70a56c9a1fec2989f1f601a5d40eb82d03d",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated",
+          "usage": {
+            "completion_tokens": 1561,
+            "prompt_tokens": 298678,
+            "requests": 22,
+            "total_tokens": 300239
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T165714-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_claimed_plus_allocated_conserved",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:815acbd69c0069487b2a70a587074f5ebf40dfb13c4d79f3883d101720cbef4f",
+          "reusable": true,
+          "run_id": "20260621T165714-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_claimed_plus_allocated_conserved",
+          "task_fingerprint": "sha256:019ef28ab0f0763ef3c2a90d19d6f3e4f84a5c1bf48dc724ee25e6842c48001d",
+          "task_interface_id": "sha256:bcfe46e59cf62caa66153795517624ef10f7bf6292c6ee4536d8436026b56246",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved",
+          "usage": {
+            "completion_tokens": 843,
+            "prompt_tokens": 77551,
+            "requests": 10,
+            "total_tokens": 78394
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T170218-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_double_claim_rejected",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:6ac4387c04511bdea34fe4e8f25785087959d932284ff8060e058bb0a4959d66",
+          "reusable": true,
+          "run_id": "20260621T170218-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_double_claim_rejected",
+          "task_fingerprint": "sha256:5db035430d37e1a3004cb3a9ed9c44142b3eeb7047f61912062e4d20bdf9d04e",
+          "task_interface_id": "sha256:c414d3024196f5643a12d6ce6616a458d71e6625cf4bdc5b3800546ea4e8c7fa",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected",
+          "usage": {
+            "completion_tokens": 7990,
+            "prompt_tokens": 1357654,
+            "requests": 58,
+            "total_tokens": 1365644
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T170244-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_no_overclaim",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:b5cf36211d4147c9d9f4c36e5543e6d347e227cec9bb3a95632ba65be5935d89",
+          "reusable": true,
+          "run_id": "20260621T170244-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_no_overclaim",
+          "task_fingerprint": "sha256:40de42646654f6d6b10e56cf6a8d2793d82e3c4c517086355ed3d4ec6631e6dd",
+          "task_interface_id": "sha256:8ead53650ff76b437a3848c111dc8a602eb9d9b73f25d820793b89a0eea4b313",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim",
+          "usage": {
+            "completion_tokens": 16942,
+            "prompt_tokens": 3277245,
+            "requests": 118,
+            "total_tokens": 3294187
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T170421-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_preserves_usdc_state",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:29ff404a76bb9bf9c17aa5cdbf8eac8dc7808aeaed34ec66c741c4e65b62e08c",
+          "reusable": true,
+          "run_id": "20260621T170421-default-fair-leanstral-2603-paladin_votes__stream_recovery_claim_usdc__weth_preserves_usdc_state",
+          "task_fingerprint": "sha256:34e82da6bcbf2dbdb72fee6aa47315ec6649a21fdcbf1128f7ecc3429cf0879c",
+          "task_interface_id": "sha256:371b1e46bdde5072a8b695c1b3bdc3d2fa57afbc01372c74b07c24c1752318da",
+          "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state",
+          "usage": {
+            "completion_tokens": 8983,
+            "prompt_tokens": 721981,
+            "requests": 38,
+            "total_tokens": 730964
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T171220-default-fair-leanstral-2603-piku__fund_conservation__amount_paid_preserves_fund_conservation",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:595814188d5a4f67c9ba9fe144e0d922a889411bb56940c5ee424f0741b7abf3",
+          "reusable": true,
+          "run_id": "20260621T171220-default-fair-leanstral-2603-piku__fund_conservation__amount_paid_preserves_fund_conservation",
+          "task_fingerprint": "sha256:7b2e879f2b172853d2677ba63263132474f181559995267aced4c47508535b54",
+          "task_interface_id": "sha256:f1441e960b5e9f3bcb9bafe185287667b706be5cb50fa7a93ab6ab29f2560245",
+          "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation",
+          "usage": {
+            "completion_tokens": 20115,
+            "prompt_tokens": 2343090,
+            "requests": 118,
+            "total_tokens": 2363205
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T191321-default-fair-leanstral-2603-piku__fund_conservation__amount_paid_records_distribution",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:aa915ac62f6802f2497122983dcbcf0e73b3de39ca6c3c5ba58e5510d5829802",
+          "reusable": true,
+          "run_id": "20260621T191321-default-fair-leanstral-2603-piku__fund_conservation__amount_paid_records_distribution",
+          "task_fingerprint": "sha256:bb5ca15eff672e670192e10902e610c52912f00fc4fd5d6f5a66b313f1ed89e8",
+          "task_interface_id": "sha256:c650f3eedebf43920081553f71620f578302f39bd206e9bb9de2c79bf653f0b6",
+          "task_ref": "piku/fund_conservation/amount_paid_records_distribution",
+          "usage": {
+            "completion_tokens": 3743,
+            "prompt_tokens": 355262,
+            "requests": 27,
+            "total_tokens": 359005
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T175305-default-fair-leanstral-2603-piku__fund_conservation__sell_order_preserves_fund_conservation",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:8458f5067af570793cdba9159bab8952cf3f8a176db52cff593e0f1c6293b3c7",
+          "reusable": true,
+          "run_id": "20260621T175305-default-fair-leanstral-2603-piku__fund_conservation__sell_order_preserves_fund_conservation",
+          "task_fingerprint": "sha256:938bc90bcf19fa20e0b0996a6272cd02f411afcf4ff384b867edb859e8a91b60",
+          "task_interface_id": "sha256:3168a2ddb0c88d67c0d4247d86f02f60176cb6d35247046b4575d6d0446caf04",
+          "task_ref": "piku/fund_conservation/sell_order_preserves_fund_conservation",
+          "usage": {
+            "completion_tokens": 7677,
+            "prompt_tokens": 2633028,
+            "requests": 118,
+            "total_tokens": 2640705
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T200156-default-fair-leanstral-2603-piku__fund_conservation__sell_order_records_redemption_buckets",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:b25a6284b4360054d15c2a13d7820740d8b632cac12f92ab381883217e21d480",
+          "reusable": true,
+          "run_id": "20260621T200156-default-fair-leanstral-2603-piku__fund_conservation__sell_order_records_redemption_buckets",
+          "task_fingerprint": "sha256:64f5ae1f7bf527accf72fc69f04bf1704ec77c2b074c6bef988c1cf7154fd98d",
+          "task_interface_id": "sha256:1cf4a588456778c4da4335616d185da4d9545a5f24d0c253cee5ed57a1c3c469",
+          "task_ref": "piku/fund_conservation/sell_order_records_redemption_buckets",
+          "usage": {
+            "completion_tokens": 8699,
+            "prompt_tokens": 271265,
+            "requests": 22,
+            "total_tokens": 279964
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T201507-default-fair-leanstral-2603-polaris__bonding_curve__buy_preserves_reserve_ratio_zero",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:c0eb6cd5a86532582fb6c91c95e1bca0c9728a4b96a121f7902b5a887dc609cd",
+          "reusable": true,
+          "run_id": "20260621T201507-default-fair-leanstral-2603-polaris__bonding_curve__buy_preserves_reserve_ratio_zero",
+          "task_fingerprint": "sha256:d43888bec2a5a43c34a488e82184badb04cdb6912c53a3ade8b0daa522286989",
+          "task_interface_id": "sha256:a224d8872a83a9fe5da8719396b969f0cb4df90a819e91888f0d1bc008ac4d71",
+          "task_ref": "polaris/bonding_curve/buy_preserves_reserve_ratio_zero",
+          "usage": {
+            "completion_tokens": 5329,
+            "prompt_tokens": 1986865,
+            "requests": 118,
+            "total_tokens": 1992194
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T192338-default-fair-leanstral-2603-polaris__bonding_curve__floor_sell_and_burn_preserves_reserve_ratio_zero",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:6bad344ee718a9fab9021b2d53ea297b0dfdebeb6e95515941e7855b3417d0ca",
+          "reusable": true,
+          "run_id": "20260621T192338-default-fair-leanstral-2603-polaris__bonding_curve__floor_sell_and_burn_preserves_reserve_ratio_zero",
+          "task_fingerprint": "sha256:5c2f705119eb085ddb2e3c49a44e922edee4371330ecfd2df5f7e8c77078b7c0",
+          "task_interface_id": "sha256:a8fe79b475bf2575f89a383077f0cab022fc9ef705d46ff57569d5f2a944a3c9",
+          "task_ref": "polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero",
+          "usage": {
+            "completion_tokens": 1548,
+            "prompt_tokens": 394849,
+            "requests": 31,
+            "total_tokens": 396397
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T194449-default-fair-leanstral-2603-polaris__bonding_curve__init_reserve_ratio_zero",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:3100366aee1d0a8eace4f0ab2538fb1270827583c2dbc68ec0f7a707b8c94c81",
+          "reusable": true,
+          "run_id": "20260621T194449-default-fair-leanstral-2603-polaris__bonding_curve__init_reserve_ratio_zero",
+          "task_fingerprint": "sha256:aa88f335ae3f9c2a08e6adbd1d35b26bcc6d6d7b36c91b72fee5b8bbd8a643fb",
+          "task_interface_id": "sha256:b61ab1781d07a2322384a44856e221c274b7a49e4d590dc86b7e55914584e9ac",
+          "task_ref": "polaris/bonding_curve/init_reserve_ratio_zero",
+          "usage": {
+            "completion_tokens": 7647,
+            "prompt_tokens": 2084253,
+            "requests": 120,
+            "total_tokens": 2091900
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T201837-default-fair-leanstral-2603-polaris__bonding_curve__sell_preserves_reserve_ratio_zero",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:02eeb4f1a7aaeef3de5406d0eb96156ce605bca191f0e5feefb9b5800552b19a",
+          "reusable": true,
+          "run_id": "20260621T201837-default-fair-leanstral-2603-polaris__bonding_curve__sell_preserves_reserve_ratio_zero",
+          "task_fingerprint": "sha256:c4f4b74f729120273a9f1e258103b02914ce136426e52a565388bd4e8e177222",
+          "task_interface_id": "sha256:67fe82db7d49bacf4839aa93e47435012db00ee2cf0ff75236793710e90d49b4",
+          "task_ref": "polaris/bonding_curve/sell_preserves_reserve_ratio_zero",
+          "usage": {
+            "completion_tokens": 7007,
+            "prompt_tokens": 2003785,
+            "requests": 118,
+            "total_tokens": 2010792
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T202829-default-fair-leanstral-2603-polygon__agglayer_bridge__claimAsset_valid_leaf_and_consumes_unique_nullifier",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:781e82b7cfcbe6b7cb4ee764f42ccff811eb8d37c5badfd3dce8bca71b223a08",
+          "reusable": true,
+          "run_id": "20260621T202829-default-fair-leanstral-2603-polygon__agglayer_bridge__claimAsset_valid_leaf_and_consumes_unique_nullifier",
+          "task_fingerprint": "sha256:f6dd02f40f3f17ee66ece6d389c8317267b9c380f4ec5f7de83454704c68afe1",
+          "task_interface_id": "sha256:af0de8dadde167ae7699068bbade117d43f3a5db584e1266f8a09b1f173807aa",
+          "task_ref": "polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier",
+          "usage": {
+            "completion_tokens": 1034,
+            "prompt_tokens": 348958,
+            "requests": 31,
+            "total_tokens": 349992
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T204109-default-fair-leanstral-2603-polygon__agglayer_bridge__claimMessage_valid_leaf_and_consumes_unique_nullifier",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:7a799b757bbf7af75e320da6471d64ab669aae021be174a998e41a662efa2feb",
+          "reusable": true,
+          "run_id": "20260621T204109-default-fair-leanstral-2603-polygon__agglayer_bridge__claimMessage_valid_leaf_and_consumes_unique_nullifier",
+          "task_fingerprint": "sha256:83c09654a23f7ef01fd92a8b5df42ff470d14270b652299e52a300c173f1f208",
+          "task_interface_id": "sha256:34e347ea6d25c8a3bb75ee11bb14b2ad99e449ab587fd0f9ef1bf01b3884a84f",
+          "task_ref": "polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier",
+          "usage": {
+            "completion_tokens": 3009,
+            "prompt_tokens": 652667,
+            "requests": 45,
+            "total_tokens": 655676
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T204125-default-fair-leanstral-2603-reserve__auction_price_band__price_at_end_time",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:d18022f9a8ef23ae35426b6f151584b92e179884edfc025fe792675deaa823ac",
+          "reusable": true,
+          "run_id": "20260621T204125-default-fair-leanstral-2603-reserve__auction_price_band__price_at_end_time",
+          "task_fingerprint": "sha256:c804eebd275aa5e77f98c18998a867f3a241d16c1b6f0ad4d73492c06afcbbf7",
+          "task_interface_id": "sha256:d1e6afb12e4d03546e988537a925553898f4cdad453528dc9276cbf9991701b2",
+          "task_ref": "reserve/auction_price_band/price_at_end_time",
+          "usage": {
+            "completion_tokens": 11339,
+            "prompt_tokens": 32512,
+            "requests": 7,
+            "total_tokens": 43851
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T205528-default-fair-leanstral-2603-reserve__auction_price_band__price_at_start_time",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:fd3a96434d2b39910686b9f37d44dc560d267bdefcda05e50fed5dd6e118d13e",
+          "reusable": true,
+          "run_id": "20260621T205528-default-fair-leanstral-2603-reserve__auction_price_band__price_at_start_time",
+          "task_fingerprint": "sha256:c1251e23e36e4b15e78f32eb00079238eedaf56dd877fcff30f7c81b23a6a007",
+          "task_interface_id": "sha256:70de0efb83462c273a68dac130c2d0262052841642ccabba6d6ee9b2f404e564",
+          "task_ref": "reserve/auction_price_band/price_at_start_time",
+          "usage": {
+            "completion_tokens": 2049,
+            "prompt_tokens": 74163,
+            "requests": 11,
+            "total_tokens": 76212
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T205543-default-fair-leanstral-2603-reserve__auction_price_band__price_lower_bound",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": true,
+          "result_key": "sha256:7ae7be04bf35d8ebec338077a4f21f8b31e0c5e3f76b71c7ae80660985fc1c73",
+          "reusable": true,
+          "run_id": "20260621T205543-default-fair-leanstral-2603-reserve__auction_price_band__price_lower_bound",
+          "task_fingerprint": "sha256:06986ba35df88114043170056d34e61f382becc481eca34f354b423237fd8d34",
+          "task_interface_id": "sha256:909629e53432e6b6067768a1996c43bba1ce70e5d07cd47c835a1386c9ad8e4e",
+          "task_ref": "reserve/auction_price_band/price_lower_bound",
+          "usage": {
+            "completion_tokens": 2441,
+            "prompt_tokens": 283832,
+            "requests": 27,
+            "total_tokens": 286273
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T210035-default-fair-leanstral-2603-reserve__auction_price_band__price_upper_bound",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:f5286ae7271576607b03782bc0f44397bd4f614e1e601a7532f96302845fdd36",
+          "reusable": true,
+          "run_id": "20260621T210035-default-fair-leanstral-2603-reserve__auction_price_band__price_upper_bound",
+          "task_fingerprint": "sha256:2ff1d3300d57e888e21273ef5f59d79e6afa491c5c9874675c79daaca511bde1",
+          "task_interface_id": "sha256:06e68e64a71b3f16ab47291a178da5cea812a4460630c69b2308a2175ca2afcb",
+          "task_ref": "reserve/auction_price_band/price_upper_bound",
+          "usage": {
+            "completion_tokens": 816,
+            "prompt_tokens": 295986,
+            "requests": 27,
+            "total_tokens": 296802
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T210402-default-fair-leanstral-2603-rootstock__flyover_quote_lifecycle__deposit_peg_out_registers_required_amount",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:ff4b6844d2543a737ed8d30f3664c58d70522cf41b1af4dee97adb00e0660387",
+          "reusable": true,
+          "run_id": "20260621T210402-default-fair-leanstral-2603-rootstock__flyover_quote_lifecycle__deposit_peg_out_registers_required_amount",
+          "task_fingerprint": "sha256:bf89456de7c9197cd270b229e8acab264dadf77f8eb8515bfb0007e4b676b97c",
+          "task_interface_id": "sha256:50c5c67a770a0ecdc4b9fded949aa97997bce519004abd7366beed4e1cda7864",
+          "task_ref": "rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount",
+          "usage": {
+            "completion_tokens": 1272,
+            "prompt_tokens": 104755,
+            "requests": 12,
+            "total_tokens": 106027
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T211154-default-fair-leanstral-2603-rootstock__flyover_quote_lifecycle__refund_peg_out_conserves_quote_amount",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:41d77a733383f96204aff893a2e063cf367c6f38dcf166f8d929e6327173c933",
+          "reusable": true,
+          "run_id": "20260621T211154-default-fair-leanstral-2603-rootstock__flyover_quote_lifecycle__refund_peg_out_conserves_quote_amount",
+          "task_fingerprint": "sha256:b845cdcc9d13cfd00127e54f0d7e3498707af8c9a062b058c0d2e773faa5970e",
+          "task_interface_id": "sha256:458050dec4cb055774e45ed5caa1165b82f0f2c1741733a43bf8c0115c670b68",
+          "task_ref": "rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount",
+          "usage": {
+            "completion_tokens": 1724,
+            "prompt_tokens": 204836,
+            "requests": 18,
+            "total_tokens": 206560
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T211431-default-fair-leanstral-2603-rootstock__flyover_quote_lifecycle__refund_user_peg_out_conserves_quote_amount",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:d2213be7113473daba299e3791ad5cb7f168208f54c87534a317bc20c24bf72f",
+          "reusable": true,
+          "run_id": "20260621T211431-default-fair-leanstral-2603-rootstock__flyover_quote_lifecycle__refund_user_peg_out_conserves_quote_amount",
+          "task_fingerprint": "sha256:1d8a7f8527f4187471a3808b8c78b04d9897865c41b194a4d694994aed769c18",
+          "task_interface_id": "sha256:5fbe7ed3a892553ba8d8aeddfa5ae882c94802fa5610b20c2111eb8f59a2ce23",
+          "task_ref": "rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount",
+          "usage": {
+            "completion_tokens": 5481,
+            "prompt_tokens": 1001204,
+            "requests": 48,
+            "total_tokens": 1006685
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T211635-default-fair-leanstral-2603-safe__owner_manager_reach__add_owner_acyclicity",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:7a76e781131ffe514c02508d5e159c07e11f6a07672a1c32824dbd28f077c3dd",
+          "reusable": true,
+          "run_id": "20260621T211635-default-fair-leanstral-2603-safe__owner_manager_reach__add_owner_acyclicity",
+          "task_fingerprint": "sha256:8930c46350e7cac442176fbbd1b22922f8f707002201af611fecfff9bc1daf39",
+          "task_interface_id": "sha256:6ca9344eff422d2fe6a6b82702e834d500f37d428fe33b92480691c6f3fefd41",
+          "task_ref": "safe/owner_manager_reach/add_owner_acyclicity",
+          "usage": {
+            "completion_tokens": 8739,
+            "prompt_tokens": 185842,
+            "requests": 16,
+            "total_tokens": 194581
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T212621-default-fair-leanstral-2603-safe__owner_manager_reach__add_owner_is_owner_correctness",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:d75c724b69395f9ebeb93c43654606d6bdab0adb552d2c4fbc25c707500b0e8b",
+          "reusable": true,
+          "run_id": "20260621T212621-default-fair-leanstral-2603-safe__owner_manager_reach__add_owner_is_owner_correctness",
+          "task_fingerprint": "sha256:ef0dd809b3514c13c0bdd338f587be5da544e4059110a902681bec1388f55a0d",
+          "task_interface_id": "sha256:9390f8b9b3de81a8838c5673de85601f2fec552b99599ae3549a4306610d617d",
+          "task_ref": "safe/owner_manager_reach/add_owner_is_owner_correctness",
+          "usage": {
+            "completion_tokens": 12299,
+            "prompt_tokens": 164757,
+            "requests": 18,
+            "total_tokens": 177056
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T213040-default-fair-leanstral-2603-safe__owner_manager_reach__add_owner_owner_list_invariant",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:c4954c18f9b31ad9878733693924bfe402885051012bf33bf8b921f8cfdf92e3",
+          "reusable": true,
+          "run_id": "20260621T213040-default-fair-leanstral-2603-safe__owner_manager_reach__add_owner_owner_list_invariant",
+          "task_fingerprint": "sha256:06e02a5685a042de700a045c9fd52c1453223534810bcc853dc138eaab389175",
+          "task_interface_id": "sha256:c47239e68b296cc1c348fc285d74ac94976bca1403e2f6096a140286013c4dce",
+          "task_ref": "safe/owner_manager_reach/add_owner_owner_list_invariant",
+          "usage": {
+            "completion_tokens": 10243,
+            "prompt_tokens": 784094,
+            "requests": 41,
+            "total_tokens": 794337
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T214853-default-fair-leanstral-2603-safe__owner_manager_reach__in_list_reachable",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:5d72854cb9c2abbe151c1a6487b79acd848a2be14504c8baaf8ed035c5f30712",
+          "reusable": true,
+          "run_id": "20260621T214853-default-fair-leanstral-2603-safe__owner_manager_reach__in_list_reachable",
+          "task_fingerprint": "sha256:2ac56294898a8604639e2204cbdba83480123a5da4fc106906c4d105ac93bc71",
+          "task_interface_id": "sha256:70a462c7d7077f884883fc822ed75abc8f54024e6c1c364be1152038b2caf39d",
+          "task_ref": "safe/owner_manager_reach/in_list_reachable",
+          "usage": {
+            "completion_tokens": 1426,
+            "prompt_tokens": 117119,
+            "requests": 14,
+            "total_tokens": 118545
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T215432-default-fair-leanstral-2603-safe__owner_manager_reach__remove_owner_acyclicity",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:9de28ef2900b3f65c0060aab150e5a9333d7db1b5df924124c76587c6ad17532",
+          "reusable": true,
+          "run_id": "20260621T215432-default-fair-leanstral-2603-safe__owner_manager_reach__remove_owner_acyclicity",
+          "task_fingerprint": "sha256:5783296729a7131d2c660ff610c56371e2a7dd0e837b3b8bc2865400b8707469",
+          "task_interface_id": "sha256:70c6106caa25f7d988c4940f6aab4bca3c8dd29947e49e9bea844c79215cbe85",
+          "task_ref": "safe/owner_manager_reach/remove_owner_acyclicity",
+          "usage": {
+            "completion_tokens": 5803,
+            "prompt_tokens": 536908,
+            "requests": 37,
+            "total_tokens": 542711
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T220350-default-fair-leanstral-2603-safe__owner_manager_reach__remove_owner_in_list_reachable",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:692ad86c674f787ffc5ab4a719ed77ec30607af0c335a7182a4e2e00472cf3cd",
+          "reusable": true,
+          "run_id": "20260621T220350-default-fair-leanstral-2603-safe__owner_manager_reach__remove_owner_in_list_reachable",
+          "task_fingerprint": "sha256:382d61a2e8d637fc3e93407cf21801610b52d18f43549021feef28ae6be5c325",
+          "task_interface_id": "sha256:25646e1375cb8d8c3fc67d9631f5a21fd537092f9fe09509ae9185a18ff48bec",
+          "task_ref": "safe/owner_manager_reach/remove_owner_in_list_reachable",
+          "usage": {
+            "completion_tokens": 4176,
+            "prompt_tokens": 617460,
+            "requests": 48,
+            "total_tokens": 621636
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T220537-default-fair-leanstral-2603-safe__owner_manager_reach__remove_owner_is_owner_correctness",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:0c2fda3c6b8fe4ce00c4e898e2edff53b116dbf50782b398dd37951997ae81bd",
+          "reusable": true,
+          "run_id": "20260621T220537-default-fair-leanstral-2603-safe__owner_manager_reach__remove_owner_is_owner_correctness",
+          "task_fingerprint": "sha256:9a03e6598f4f41f7a40c2564dcfa0f9309ef85ceb491a1ccd8a47c6ee9c601ae",
+          "task_interface_id": "sha256:c70e34638f6e53af55ea2d33e4f026ca40da7b9a4b70c17c82e6cb2a42595f38",
+          "task_ref": "safe/owner_manager_reach/remove_owner_is_owner_correctness",
+          "usage": {
+            "completion_tokens": 1214,
+            "prompt_tokens": 336874,
+            "requests": 30,
+            "total_tokens": 338088
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T220621-default-fair-leanstral-2603-safe__owner_manager_reach__remove_owner_owner_list_invariant",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:203b5029e95edb9cd421322849769eda3517c7a1bf3d96ade57911952f272938",
+          "reusable": true,
+          "run_id": "20260621T220621-default-fair-leanstral-2603-safe__owner_manager_reach__remove_owner_owner_list_invariant",
+          "task_fingerprint": "sha256:d7cc176f8a67c183c1d78f572a7de7dcd049491af9def21a52bdff53b2342730",
+          "task_interface_id": "sha256:fd34ce56fb5b762ee25fe9e93dc95780c64a2e1b5878f9ccc048db06fd15d9a4",
+          "task_ref": "safe/owner_manager_reach/remove_owner_owner_list_invariant",
+          "usage": {
+            "completion_tokens": 3831,
+            "prompt_tokens": 498370,
+            "requests": 32,
+            "total_tokens": 502201
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T222237-default-fair-leanstral-2603-safe__owner_manager_reach__setup_owners_acyclicity",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:9b840b50d42838ee071ae16643e4da0bc7498ec09c28a91418ae56986239cb63",
+          "reusable": true,
+          "run_id": "20260621T222237-default-fair-leanstral-2603-safe__owner_manager_reach__setup_owners_acyclicity",
+          "task_fingerprint": "sha256:ceec184d0da823caa9f7802b5a0c69217a0e9d51217123ac985be335a70a5b77",
+          "task_interface_id": "sha256:81e9622f45f122d33dea0ddf881c1739f51102d569cc50826ea66e5086c54da4",
+          "task_ref": "safe/owner_manager_reach/setup_owners_acyclicity",
+          "usage": {
+            "completion_tokens": 2749,
+            "prompt_tokens": 2699624,
+            "requests": 118,
+            "total_tokens": 2702373
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T222606-default-fair-leanstral-2603-safe__owner_manager_reach__setup_owners_in_list_reachable",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:84e6421499e6cc4f4f85122579d943c2fbcd934eae42e13aec2f334c04cf4137",
+          "reusable": true,
+          "run_id": "20260621T222606-default-fair-leanstral-2603-safe__owner_manager_reach__setup_owners_in_list_reachable",
+          "task_fingerprint": "sha256:c3a16c691054c222049244af2f868e7f12991ed05b79a4fc29a04676cdec5692",
+          "task_interface_id": "sha256:67ce07c1850433bc6c09a84b3614c58d5de3765a52873ee7b739a2f8285ad31e",
+          "task_ref": "safe/owner_manager_reach/setup_owners_in_list_reachable",
+          "usage": {
+            "completion_tokens": 9593,
+            "prompt_tokens": 458171,
+            "requests": 34,
+            "total_tokens": 467764
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T000726-default-fair-leanstral-2603-safe__owner_manager_reach__setup_owners_owner_list_invariant",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:dae234f5cc4be2cf265d92daf28f0d85d48a7245722f143c9d5d6c13b37fc0e9",
+          "reusable": true,
+          "run_id": "20260622T000726-default-fair-leanstral-2603-safe__owner_manager_reach__setup_owners_owner_list_invariant",
+          "task_fingerprint": "sha256:fa9f568d7566bf464e726d71d0f67c51b101a7b3f71eaae0e6ee056eaf803da9",
+          "task_interface_id": "sha256:2dce11b2abed3840ea99e2cf38fecb7752b99d2bc84cbdb42fc85a52a98b0197",
+          "task_ref": "safe/owner_manager_reach/setup_owners_owner_list_invariant",
+          "usage": {
+            "completion_tokens": 1254,
+            "prompt_tokens": 184197,
+            "requests": 17,
+            "total_tokens": 185451
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T223042-default-fair-leanstral-2603-safe__owner_manager_reach__swap_owner_acyclicity",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:37d52245108c9c20a5d7f07ad23c13527531904aecd3f20f26f090d85954f751",
+          "reusable": true,
+          "run_id": "20260621T223042-default-fair-leanstral-2603-safe__owner_manager_reach__swap_owner_acyclicity",
+          "task_fingerprint": "sha256:a9fb21291c79d324d5518d96da04ac0f41c0576cad8605c0ac8f39cd383fc4ff",
+          "task_interface_id": "sha256:1a548d4f852e570c53547fc74a214792cb997cc04fed711ca628850368a4434f",
+          "task_ref": "safe/owner_manager_reach/swap_owner_acyclicity",
+          "usage": {
+            "completion_tokens": 2394,
+            "prompt_tokens": 2585752,
+            "requests": 118,
+            "total_tokens": 2588146
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T224909-default-fair-leanstral-2603-safe__owner_manager_reach__swap_owner_in_list_reachable",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:40e97a7fa805adbd36685298196c89611c88507c885376f29ab375965cec3460",
+          "reusable": true,
+          "run_id": "20260621T224909-default-fair-leanstral-2603-safe__owner_manager_reach__swap_owner_in_list_reachable",
+          "task_fingerprint": "sha256:a1b4d25a746cbe434df9486ba1a6a2d747e20f173f692901d6455a5e9152f28b",
+          "task_interface_id": "sha256:dab3e6e3e46ae5f45225b050cd8d48f5b1dce461f9415729c1dada10e116325d",
+          "task_ref": "safe/owner_manager_reach/swap_owner_in_list_reachable",
+          "usage": {
+            "completion_tokens": 8325,
+            "prompt_tokens": 8998,
+            "requests": 3,
+            "total_tokens": 17323
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T225146-default-fair-leanstral-2603-safe__owner_manager_reach__swap_owner_is_owner_correctness",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:34973c454c0fc3f698d55e54fb2d28b92bcf4f8a4aefbca1a9aead5ab0fc6571",
+          "reusable": true,
+          "run_id": "20260621T225146-default-fair-leanstral-2603-safe__owner_manager_reach__swap_owner_is_owner_correctness",
+          "task_fingerprint": "sha256:0dcac4ae1beff6634e627fbde82abac805b96514c6dc763329b42fed8a79d0a3",
+          "task_interface_id": "sha256:235087b049547a6c5604756c0ea0390c3437abbcda331138f7d4e560043f0708",
+          "task_ref": "safe/owner_manager_reach/swap_owner_is_owner_correctness",
+          "usage": {
+            "completion_tokens": 847,
+            "prompt_tokens": 406666,
+            "requests": 32,
+            "total_tokens": 407513
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T005046-default-fair-leanstral-2603-safe__owner_manager_reach__swap_owner_owner_list_invariant",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:56f4f4b7190ce3fbcc4abb5137b8bafc554f60d6e8e4fb837ce5378b5c97c66e",
+          "reusable": true,
+          "run_id": "20260622T005046-default-fair-leanstral-2603-safe__owner_manager_reach__swap_owner_owner_list_invariant",
+          "task_fingerprint": "sha256:08be3a0f8ab9b7b5bbf7c4390b6fff33e52359ba9891515b3d4d581e526d5ea6",
+          "task_interface_id": "sha256:b769c55f94a235f82b6cf7752b75656931a494bf7bdb1a430491c0fb1991ef9b",
+          "task_ref": "safe/owner_manager_reach/swap_owner_owner_list_invariant",
+          "usage": {
+            "completion_tokens": 5971,
+            "prompt_tokens": 289059,
+            "requests": 23,
+            "total_tokens": 295030
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T231514-default-fair-leanstral-2603-term_finance__term_auction_clearing__clearing_assignment_correct",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:7840a115e96dfbab6da651ab9b49cc57f98803a97e5f6dd85f3d430585483b2f",
+          "reusable": true,
+          "run_id": "20260621T231514-default-fair-leanstral-2603-term_finance__term_auction_clearing__clearing_assignment_correct",
+          "task_fingerprint": "sha256:ec10cf29c137d0a74b8fb2b9aa229f364aafa8ddc0cd0398d62b729d6b8d72ed",
+          "task_interface_id": "sha256:c58783ac7fd6e0114823057acf3dd932105a2ea0d28473cb8ed1517259affe28",
+          "task_ref": "term_finance/term_auction_clearing/clearing_assignment_correct",
+          "usage": {
+            "completion_tokens": 2658,
+            "prompt_tokens": 286492,
+            "requests": 26,
+            "total_tokens": 289150
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260621T235519-default-fair-leanstral-2603-termmax__order_v2_buy_xt_single_segment__swap_debt_token_to_xt_updates_virtual_xt_reserve",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:80333aa192cf50b4ef56da96cae07f17364f8bdb424a905d0854b9e9dc8152d1",
+          "reusable": true,
+          "run_id": "20260621T235519-default-fair-leanstral-2603-termmax__order_v2_buy_xt_single_segment__swap_debt_token_to_xt_updates_virtual_xt_reserve",
+          "task_fingerprint": "sha256:fd836146d0fcae9a259f3e3e0734f0c48b797d8bcd21292d44a8f8a3c903efd7",
+          "task_interface_id": "sha256:dc61644d731eeff70596777e7361424ff7f5e25ffa740cb391bdaa7a8527b218",
+          "task_ref": "termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve",
+          "usage": {
+            "completion_tokens": 2316,
+            "prompt_tokens": 449301,
+            "requests": 35,
+            "total_tokens": 451617
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T001009-default-fair-leanstral-2603-usual__dao_collateral__redeem_conservation",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:d5a68f78fe3f0209a568860b2de9ded7d40927c879c6f1260eaaeecd5f94eebb",
+          "reusable": true,
+          "run_id": "20260622T001009-default-fair-leanstral-2603-usual__dao_collateral__redeem_conservation",
+          "task_fingerprint": "sha256:8905f3a24cc0c9b8d5cc07453e60d50023fe79f0e2965092dfc88998f29c58cd",
+          "task_interface_id": "sha256:8cd60965e44a6560e4277b190b77d7c00bee652c939315f74884cc3fe9486f3a",
+          "task_ref": "usual/dao_collateral/redeem_conservation",
+          "usage": {
+            "completion_tokens": 633,
+            "prompt_tokens": 52806,
+            "requests": 7,
+            "total_tokens": 53439
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T001803-default-fair-leanstral-2603-usual__dao_collateral__redeem_fee_formula",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:24d0e28d7565da439c9ee740849f59cc6d8a13e063aaf37eba0765c481b73eea",
+          "reusable": true,
+          "run_id": "20260622T001803-default-fair-leanstral-2603-usual__dao_collateral__redeem_fee_formula",
+          "task_fingerprint": "sha256:141cf9caff3c2da1a93959243392bf5c713a243a0dc59ad34b1b74223f55a11e",
+          "task_interface_id": "sha256:43733c3410f25619959ab850031e7ccac1daf3dae17339826bf6f3ce2003741e",
+          "task_ref": "usual/dao_collateral/redeem_fee_formula",
+          "usage": {
+            "completion_tokens": 3470,
+            "prompt_tokens": 306901,
+            "requests": 22,
+            "total_tokens": 310371
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T001918-default-fair-leanstral-2603-usual__dao_collateral__redeem_return_formula",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:7eb59fb635dd4b889aa91888ef5af07bc16596b3d5adc865b91eccfb3c525048",
+          "reusable": true,
+          "run_id": "20260622T001918-default-fair-leanstral-2603-usual__dao_collateral__redeem_return_formula",
+          "task_fingerprint": "sha256:5cc365e05023de1e663649799b38eb7e232132ad1f82118367516bfaaa175c82",
+          "task_interface_id": "sha256:dc133e7dabdbb29a967dd10dfb85fb9b21ca71a61da7e9e49bbd658a54dfb301",
+          "task_ref": "usual/dao_collateral/redeem_return_formula",
+          "usage": {
+            "completion_tokens": 12980,
+            "prompt_tokens": 1552765,
+            "requests": 60,
+            "total_tokens": 1565745
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T002307-default-fair-leanstral-2603-usual__dao_collateral__swap_conservation",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:6e0b29b64afce81c0acf1201952d08b0a8eb748c0a7968b21b679e95049a2e2c",
+          "reusable": true,
+          "run_id": "20260622T002307-default-fair-leanstral-2603-usual__dao_collateral__swap_conservation",
+          "task_fingerprint": "sha256:f6122b285b5b0c61d74760cf4c43da7f2b54a7fa71b90b4cb935e71e6b94d3a5",
+          "task_interface_id": "sha256:5008ba3026ce4de10fc4f2a4396f944aa261bd1026b38b03f79de88c9651d492",
+          "task_ref": "usual/dao_collateral/swap_conservation",
+          "usage": {
+            "completion_tokens": 8239,
+            "prompt_tokens": 593647,
+            "requests": 33,
+            "total_tokens": 601886
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T003439-default-fair-leanstral-2603-usual__dao_collateral__swap_value_conservation",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:eb0428276bb2b9976422fac24a7f8fbe63550773a562fff583f1d3e7cd038951",
+          "reusable": true,
+          "run_id": "20260622T003439-default-fair-leanstral-2603-usual__dao_collateral__swap_value_conservation",
+          "task_fingerprint": "sha256:15cb06023b69365903996c8a32e8ac04123b38336633b44b06f24a164c61b8b2",
+          "task_interface_id": "sha256:2ef0a9bfa6fe9f833ecc55544c849c7c7c71817286019c5dbfa7216839abc2a3",
+          "task_ref": "usual/dao_collateral/swap_value_conservation",
+          "usage": {
+            "completion_tokens": 3027,
+            "prompt_tokens": 2601560,
+            "requests": 117,
+            "total_tokens": 2604587
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T010138-default-fair-leanstral-2603-wildcat__borrow_liquidity_safety__positive_borrow_preserves_required_liquidity",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": true,
+          "result_key": "sha256:6e3790b4d9a9bd4d6661c2d647c505421d4719e898be39740df2aaff9ff6aae6",
+          "reusable": true,
+          "run_id": "20260622T010138-default-fair-leanstral-2603-wildcat__borrow_liquidity_safety__positive_borrow_preserves_required_liquidity",
+          "task_fingerprint": "sha256:266803d753fb4fe960f631f6a280b351e52c0c2d4d0a170aab308eb7211443b1",
+          "task_interface_id": "sha256:7175eeda9db801ec8d8aefb8f53296cf6e4dbd74244894aefbd4301566385591",
+          "task_ref": "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity",
+          "usage": {
+            "completion_tokens": 4808,
+            "prompt_tokens": 248918,
+            "requests": 24,
+            "total_tokens": 253726
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T025429-default-fair-leanstral-2603-zama__erc7984_confidential_token__burn_decreases_supply",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:30a1c28f283cb042f255c2f2641ff2c56a172152c2c215d069cc3e40a3d67b61",
+          "reusable": true,
+          "run_id": "20260622T025429-default-fair-leanstral-2603-zama__erc7984_confidential_token__burn_decreases_supply",
+          "task_fingerprint": "sha256:df695700b10fce07676a81526bee4c80beb895c8343e67ba4468d2cdee5a1c6e",
+          "task_interface_id": "sha256:21ef6e5e76b5afa3f0cff5d6219fd6d18eae96e23ab00693f580b72a9538f5a8",
+          "task_ref": "zama/erc7984_confidential_token/burn_decreases_supply",
+          "usage": {
+            "completion_tokens": 2019,
+            "prompt_tokens": 127236,
+            "requests": 14,
+            "total_tokens": 129255
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T030335-default-fair-leanstral-2603-zama__erc7984_confidential_token__burn_insufficient",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:73e34f7c23d03e8c9c394a0a1d056e44267052a58592e04e98fb5257ccc85409",
+          "reusable": true,
+          "run_id": "20260622T030335-default-fair-leanstral-2603-zama__erc7984_confidential_token__burn_insufficient",
+          "task_fingerprint": "sha256:ab348db4b83e0e7995f8d4ea4ec1c4474f472995c4c40a9ec5ae021ceabe570d",
+          "task_interface_id": "sha256:18041fdd4c48a37a04fcb7133d014491b06ca6d544424447f80144e5909f04d5",
+          "task_ref": "zama/erc7984_confidential_token/burn_insufficient",
+          "usage": {
+            "completion_tokens": 1461,
+            "prompt_tokens": 107574,
+            "requests": 14,
+            "total_tokens": 109035
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T012611-default-fair-leanstral-2603-zama__erc7984_confidential_token__mint_ctokens_match_deposit",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:0cdef10bc35e13828d82f2469c6fad0565fc7377683974dcce8fd8e2adca9ee6",
+          "reusable": true,
+          "run_id": "20260622T012611-default-fair-leanstral-2603-zama__erc7984_confidential_token__mint_ctokens_match_deposit",
+          "task_fingerprint": "sha256:57b450acbdd8e3f463c86fddd90e8ac22a8ec217deec6a84831880416cac174b",
+          "task_interface_id": "sha256:1c82f76ed5c3ddb7acafc6a0d1f9a382a6839834e0483407177a098506c1a691",
+          "task_ref": "zama/erc7984_confidential_token/mint_ctokens_match_deposit",
+          "usage": {
+            "completion_tokens": 9347,
+            "prompt_tokens": 473308,
+            "requests": 34,
+            "total_tokens": 482655
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T015048-default-fair-leanstral-2603-zama__erc7984_confidential_token__mint_increases_supply",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:877b0df75e41e983d2836397d5b140dea71f1205460f887d0e1f5cb11dc8c409",
+          "reusable": true,
+          "run_id": "20260622T015048-default-fair-leanstral-2603-zama__erc7984_confidential_token__mint_increases_supply",
+          "task_fingerprint": "sha256:ba159145e470d5f8a724322d6d9e8ec7fb898b18086a0055f19645a5627d2a92",
+          "task_interface_id": "sha256:ec46a5d01b159edab56715f4df1e4655498d30d19d0cc819251ade139afe2147",
+          "task_ref": "zama/erc7984_confidential_token/mint_increases_supply",
+          "usage": {
+            "completion_tokens": 9213,
+            "prompt_tokens": 1967716,
+            "requests": 116,
+            "total_tokens": 1976929
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T015112-default-fair-leanstral-2603-zama__erc7984_confidential_token__mint_overflow_protection",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:0afd3d60773da38ed05f0afb9a36997640dffd5c426a018024aa9b547fc585ae",
+          "reusable": true,
+          "run_id": "20260622T015112-default-fair-leanstral-2603-zama__erc7984_confidential_token__mint_overflow_protection",
+          "task_fingerprint": "sha256:1859b0bc2c57290e5604024fedead767d8f403a153a09aeb0934bb6f58f3c2dd",
+          "task_interface_id": "sha256:136c86b490234c24327bb4ef678ff9a5b8a4ddd1046279368bc6fff615ef7dba",
+          "task_ref": "zama/erc7984_confidential_token/mint_overflow_protection",
+          "usage": {
+            "completion_tokens": 1883,
+            "prompt_tokens": 184969,
+            "requests": 19,
+            "total_tokens": 186852
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T020949-default-fair-leanstral-2603-zama__erc7984_confidential_token__setOperator_updates",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:9019665c678ee34888e557ae1df4431cf309d9eff334631aa6646028ed31e475",
+          "reusable": true,
+          "run_id": "20260622T020949-default-fair-leanstral-2603-zama__erc7984_confidential_token__setOperator_updates",
+          "task_fingerprint": "sha256:88056dad5f643b1dd2186b93dbbb67c8e37888b74037c0c8d2c92a5244ff036a",
+          "task_interface_id": "sha256:f71e48faffd57d3996c8303247401ae014c92f805f612f05cae58d022690f8d8",
+          "task_ref": "zama/erc7984_confidential_token/setOperator_updates",
+          "usage": {
+            "completion_tokens": 2471,
+            "prompt_tokens": 559159,
+            "requests": 39,
+            "total_tokens": 561630
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T030355-default-fair-leanstral-2603-zama__erc7984_confidential_token__transferFrom_conservation",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:9888ded5774329bb84af8849d8ba7cc059daee2587cbefca093e56d5128b40b7",
+          "reusable": true,
+          "run_id": "20260622T030355-default-fair-leanstral-2603-zama__erc7984_confidential_token__transferFrom_conservation",
+          "task_fingerprint": "sha256:1ddddc28cc86b3f7a1911c8a889296cb2e190e0b83d56a1fa01e413f9e6a5307",
+          "task_interface_id": "sha256:967b849408f9a9e494063e2f67cc85c75a0cc9ada910009b80a08de5fddfc93e",
+          "task_ref": "zama/erc7984_confidential_token/transferFrom_conservation",
+          "usage": {
+            "completion_tokens": 7457,
+            "prompt_tokens": 286952,
+            "requests": 23,
+            "total_tokens": 294409
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T030526-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_conservation",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:59dc022fdc1626a6945471dd74d2fa2bf6701929eb6a783ab076d805f9a4c860",
+          "reusable": true,
+          "run_id": "20260622T030526-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_conservation",
+          "task_fingerprint": "sha256:73342550b9277f114006330d7dbd5d816c3c035b72cf5d928a146536ca9bf1eb",
+          "task_interface_id": "sha256:cbfef676ec45ff1454aa0493b538b6b868df9af7f2598e845bbf78ac12a82d31",
+          "task_ref": "zama/erc7984_confidential_token/transfer_conservation",
+          "usage": {
+            "completion_tokens": 916,
+            "prompt_tokens": 53397,
+            "requests": 9,
+            "total_tokens": 54313
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T030957-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_insufficient",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:799f8bad88a6fe50783906dfa829b7f3fe961a426e40fc601d9e531c400f2904",
+          "reusable": true,
+          "run_id": "20260622T030957-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_insufficient",
+          "task_fingerprint": "sha256:93fbfc686358186432f6333f1b2a7a3551380adef500c8c78fc146efc2d0463a",
+          "task_interface_id": "sha256:f9ce83747b66ebb7ce0c318a35a70ae54e7def2026afdb73c341d6a8d99756eb",
+          "task_ref": "zama/erc7984_confidential_token/transfer_insufficient",
+          "usage": {
+            "completion_tokens": 16749,
+            "prompt_tokens": 2553710,
+            "requests": 118,
+            "total_tokens": 2570459
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T031038-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_no_balance_revert",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:64b6fd4937dab4edc217021f8c582bff9c61f252706d58a8828b8ac602a1fbf8",
+          "reusable": true,
+          "run_id": "20260622T031038-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_no_balance_revert",
+          "task_fingerprint": "sha256:8f885c6576e50b121d86fa4432242e8bc2b306e6565b2f7cffab56d42d675281",
+          "task_interface_id": "sha256:1c7b24f871c34bc78e16904b0dbc92621536381360d57b051064679b58139f29",
+          "task_ref": "zama/erc7984_confidential_token/transfer_no_balance_revert",
+          "usage": {
+            "completion_tokens": 1816,
+            "prompt_tokens": 175004,
+            "requests": 19,
+            "total_tokens": 176820
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T031313-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_preserves_supply",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:3f486ef42f46d862ce3c04b877fe482d5edf414b964e43882eb2493362df41f3",
+          "reusable": true,
+          "run_id": "20260622T031313-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_preserves_supply",
+          "task_fingerprint": "sha256:0b71be4402b039f06e9160141b274e4bf49491fb2ba27a9bd94242a665f3354b",
+          "task_interface_id": "sha256:9738f11a2917e755186464bde67db25c33acb5c0a4019a2e62d7fe4859a2ce4d",
+          "task_ref": "zama/erc7984_confidential_token/transfer_preserves_supply",
+          "usage": {
+            "completion_tokens": 2474,
+            "prompt_tokens": 295663,
+            "requests": 26,
+            "total_tokens": 298137
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T031541-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_sufficient",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:275beb0ee9eb174c5adee42dfe7774e2f0b88f133bea0473cab14b67263e6e63",
+          "reusable": true,
+          "run_id": "20260622T031541-default-fair-leanstral-2603-zama__erc7984_confidential_token__transfer_sufficient",
+          "task_fingerprint": "sha256:f4a38eb3c1fad25029d118ac44793137de06629ef4e665e54b7c9aa2f6378caf",
+          "task_interface_id": "sha256:7470db1c398218111b6ecfbaecc7172f61c628058c1f810407379af7562bd1d9",
+          "task_ref": "zama/erc7984_confidential_token/transfer_sufficient",
+          "usage": {
+            "completion_tokens": 11152,
+            "prompt_tokens": 2129941,
+            "requests": 118,
+            "total_tokens": 2141093
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T031907-default-fair-leanstral-2603-zodiac__roles_decoder_faithfulness__metadata_bridge",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:e0f01da5f51360589592b6c82d885acd5c2ed21f6b7210169058ea5421fb448a",
+          "reusable": true,
+          "run_id": "20260622T031907-default-fair-leanstral-2603-zodiac__roles_decoder_faithfulness__metadata_bridge",
+          "task_fingerprint": "sha256:b87d4b35aeddc38115db77d98b244397d63813d4e7f1a0293abd2b90724c8968",
+          "task_interface_id": "sha256:dfa568d4fcd034988afce5cffc8ab1fe31dbd32a0e26912a9fcca9e860f8f5a9",
+          "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge",
+          "usage": {
+            "completion_tokens": 3564,
+            "prompt_tokens": 510698,
+            "requests": 42,
+            "total_tokens": 514262
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T032316-default-fair-leanstral-2603-zodiac__roles_decoder_faithfulness__roles_decoder_bounds_safe",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:ecc4291bc05b35c3645edc36ed3f8f139b6fdbfe4b4ba20430edea9aa0e0fe70",
+          "reusable": true,
+          "run_id": "20260622T032316-default-fair-leanstral-2603-zodiac__roles_decoder_faithfulness__roles_decoder_bounds_safe",
+          "task_fingerprint": "sha256:322a787305abf709a9634918f7d65c750aa7bb2b4da0c4c76562e87cee821b5b",
+          "task_interface_id": "sha256:b3d6a510ea06674f7433fd2b1f3a70e6cb394ebe4910e177464385c43df56d28",
+          "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe",
+          "usage": {
+            "completion_tokens": 1341,
+            "prompt_tokens": 201628,
+            "requests": 23,
+            "total_tokens": 202969
+          },
+          "verifier_output_present": true
+        },
+        {
+          "artifact_id": "20260622T033401-default-fair-leanstral-2603-zodiac__roles_decoder_faithfulness__roles_decoder_faithful",
+          "artifact_status": "ok",
+          "harness_status": "completed",
+          "passed": false,
+          "result_key": "sha256:ec49557a358d7c66bf97f08aa456850af627593af146b5a84f3600eb2a4899d7",
+          "reusable": true,
+          "run_id": "20260622T033401-default-fair-leanstral-2603-zodiac__roles_decoder_faithfulness__roles_decoder_faithful",
+          "task_fingerprint": "sha256:2830ffed201e655b1a3edc09345bc43d2948923b58c298b1271fdaefa16876d1",
+          "task_interface_id": "sha256:f9f3ec01c342dd921bf1550b751f53695fd291d62b52e276ca264b5d41efca95",
+          "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_faithful",
+          "usage": {
+            "completion_tokens": 989,
+            "prompt_tokens": 275793,
+            "requests": 27,
+            "total_tokens": 276782
+          },
+          "verifier_output_present": true
+        }
+      ],
+      "temperature_policy": null,
+      "token_totals": {
+        "completion_tokens": 755013,
+        "prompt_tokens": 107101717,
+        "requests": 5966,
+        "total_tokens": 107856730
+      },
+      "valid_count": 135
+    },
+    {
       "archive": {
         "asset_name": "benchmark-v0.1-openai-gpt-55.tar.zst",
         "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-openai-gpt-55.tar.zst",
