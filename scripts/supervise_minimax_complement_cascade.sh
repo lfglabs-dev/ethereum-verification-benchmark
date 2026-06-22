@@ -77,7 +77,7 @@ runner_alive() {
 
 start_runner() {
   cd "$ROOT" || return 97
-  python3 scripts/run_minimax_complement_cascade.py >/dev/null
+  python3 scripts/run_minimax_complement_cascade.py --output "$OUTPUT" >/dev/null
   log "starting cascade runner"
   setsid bash -lc '
     cd "$MINIMAX_CASCADE_ROOT" || exit 97
@@ -94,7 +94,7 @@ start_runner() {
         export DEFAULT_HARNESS_API_KEY="$MINIMAX_API_KEY"
       fi
       unset DEFAULT_HARNESS_PROVIDER GAZELLA_API_KEY OPENAI_API_KEY
-      exec python3 scripts/run_minimax_complement_cascade.py --execute --jobs '"$JOBS"' --retries 3 --retry-forever --model MiniMax-M3 --base-url https://api.minimax.io/v1
+      exec python3 scripts/run_minimax_complement_cascade.py --output "$MINIMAX_CASCADE_OUTPUT" --execute --jobs '"$JOBS"' --retries 3 --retry-forever --model MiniMax-M3 --base-url https://api.minimax.io/v1
     } >> "$MINIMAX_CASCADE_RUN_LOG" 2>&1
   ' >/dev/null 2>&1 < /dev/null &
   echo $! > "$PID_FILE"
