@@ -15,7 +15,7 @@ from typing import Iterable
 
 REPO = Path(__file__).resolve().parents[1]
 WORKSPACE = REPO.parent
-DEFAULT_OUTPUT = REPO / "analysis" / "budget_scaling_minimax_50"
+DEFAULT_OUTPUT = REPO / "output" / "budget_scaling_minimax_50"
 DEFAULT_MODEL = "minimax/minimax-m3"
 
 
@@ -253,8 +253,9 @@ def write_outputs(output: Path) -> None:
         "- `cascade_marginal_effort_per_percent.csv`: source data for the marginal-effort graph.",
         "",
         "Publication note:",
-        "- Keep this experiment as a sidecar analysis asset under `analysis/budget_scaling_minimax_50/`.",
-        "- Publish JSON provenance here (`profiles.json`, `selected_tasks.json`, `selection_stats.json`, `cascade_results.json`, `cascade_summary.json`) rather than adding it to `benchmark-versions/v0.1.json`.",
+        "- Keep curated summaries and figures under `analysis/budget_scaling_minimax_50/`.",
+        "- Keep fresh run logs and in-progress cascade outputs under ignored `output/budget_scaling_minimax_50/` until promoted to a release asset or curated analysis artifact.",
+        "- Publish JSON provenance (`profiles.json`, `selected_tasks.json`, `selection_stats.json`, `cascade_results.json`, `cascade_summary.json`) rather than adding it to `benchmark-versions/v0.1.json`.",
         "- `v0.1.json` should remain the canonical leaderboard manifest; this cascade uses a different budget-scaling methodology.",
         "- SVG figures are generated artifacts. They can be regenerated from the CSV/JSON outputs with `scripts/plan_budget_scaling_experiment.py`.",
         "",

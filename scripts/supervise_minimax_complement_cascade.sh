@@ -2,7 +2,7 @@
 set -u
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUTPUT="${MINIMAX_CASCADE_OUTPUT:-$ROOT/analysis/budget_scaling_minimax_remaining_85}"
+OUTPUT="${MINIMAX_CASCADE_OUTPUT:-$ROOT/output/budget_scaling_minimax_remaining_85}"
 PID_FILE="$OUTPUT/cascade.pid"
 RUN_LOG="$OUTPUT/logs/cascade_runner.log"
 SUPERVISOR_LOG="$OUTPUT/logs/cascade_supervisor.log"

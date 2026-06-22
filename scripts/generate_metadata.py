@@ -10,6 +10,11 @@ import sys
 from manifest_utils import load_manifest_data
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from release_config import BENCHMARK_ID  # noqa: E402
+
 ACTIVE_ROOT = ROOT / "cases"
 BACKLOG_ROOT = ROOT / "backlog"
 FAMILIES_ROOT = ROOT / "families"
@@ -324,7 +329,7 @@ def write_inventory(
     all_cases = active_cases + backlog_cases
     all_tasks = active_tasks + backlog_tasks
     payload = {
-        "benchmark": "ethereum-verification-benchmark",
+        "benchmark": BENCHMARK_ID,
         "manifest_schema_version": 1,
         "inventory_source": {
             "families": "families/*/family.yaml",

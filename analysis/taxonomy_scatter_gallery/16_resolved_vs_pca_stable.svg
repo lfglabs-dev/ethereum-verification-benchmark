@@ -7,184 +7,184 @@ text{font-family:Inter,Arial,sans-serif;fill:#111827}.sub{fill:#4b5563}.axis{str
 <text x="105" y="57" font-size="13" class="sub">Forme=résolution historique; couleur=famille stable</text>
 <line x1="105.0" y1="74" x2="105.0" y2="728" class="grid"/>
 <line x1="105" y1="74.0" x2="895" y2="74.0" class="grid"/>
-<text x="105.0" y="748" text-anchor="middle" class="tick">-1.52</text>
-<text x="93" y="78.0" text-anchor="end" class="tick">0.94</text>
+<text x="105.0" y="748" text-anchor="middle" class="tick">-2.50</text>
+<text x="93" y="78.0" text-anchor="end" class="tick">1.34</text>
 <line x1="263.0" y1="74" x2="263.0" y2="728" class="grid"/>
 <line x1="105" y1="204.8" x2="895" y2="204.8" class="grid"/>
-<text x="263.0" y="748" text-anchor="middle" class="tick">-1.01</text>
-<text x="93" y="208.8" text-anchor="end" class="tick">0.58</text>
+<text x="263.0" y="748" text-anchor="middle" class="tick">-1.77</text>
+<text x="93" y="208.8" text-anchor="end" class="tick">0.88</text>
 <line x1="421.0" y1="74" x2="421.0" y2="728" class="grid"/>
 <line x1="105" y1="335.6" x2="895" y2="335.6" class="grid"/>
-<text x="421.0" y="748" text-anchor="middle" class="tick">-0.51</text>
-<text x="93" y="339.6" text-anchor="end" class="tick">0.23</text>
+<text x="421.0" y="748" text-anchor="middle" class="tick">-1.03</text>
+<text x="93" y="339.6" text-anchor="end" class="tick">0.42</text>
 <line x1="579.0" y1="74" x2="579.0" y2="728" class="grid"/>
 <line x1="105" y1="466.4" x2="895" y2="466.4" class="grid"/>
-<text x="579.0" y="748" text-anchor="middle" class="tick">0.00</text>
-<text x="93" y="470.4" text-anchor="end" class="tick">-0.13</text>
+<text x="579.0" y="748" text-anchor="middle" class="tick">-0.30</text>
+<text x="93" y="470.4" text-anchor="end" class="tick">-0.04</text>
 <line x1="737.0" y1="74" x2="737.0" y2="728" class="grid"/>
 <line x1="105" y1="597.2" x2="895" y2="597.2" class="grid"/>
-<text x="737.0" y="748" text-anchor="middle" class="tick">0.51</text>
-<text x="93" y="601.2" text-anchor="end" class="tick">-0.49</text>
+<text x="737.0" y="748" text-anchor="middle" class="tick">0.44</text>
+<text x="93" y="601.2" text-anchor="end" class="tick">-0.50</text>
 <line x1="895.0" y1="74" x2="895.0" y2="728" class="grid"/>
 <line x1="105" y1="728.0" x2="895" y2="728.0" class="grid"/>
-<text x="895.0" y="748" text-anchor="middle" class="tick">1.02</text>
-<text x="93" y="732.0" text-anchor="end" class="tick">-0.85</text>
+<text x="895.0" y="748" text-anchor="middle" class="tick">1.17</text>
+<text x="93" y="732.0" text-anchor="end" class="tick">-0.96</text>
 <line x1="105" y1="728" x2="895" y2="728" class="axis"/>
 <line x1="105" y1="74" x2="105" y2="728" class="axis"/>
 <text x="500.0" y="786" font-size="14" font-weight="600">pc1</text>
 <text transform="translate(32 401.0) rotate(-90)" text-anchor="middle" font-size="14" font-weight="600">pc2</text>
-<ellipse cx="702.3" cy="406.1" rx="358.5" ry="228.0" fill="#dc2626" opacity=".08" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="644.5" cy="406.3" rx="358.5" ry="289.5" fill="#2563eb" opacity=".08" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="646.4" cy="418.3" rx="358.5" ry="104.1" fill="#be123c" opacity=".08" stroke="#be123c" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="409.1" cy="472.3" rx="298.8" ry="121.2" fill="#4f46e5" opacity=".08" stroke="#4f46e5" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="632.2" cy="491.9" rx="222.0" ry="172.5" fill="#9333ea" opacity=".08" stroke="#9333ea" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="336.1" cy="355.3" rx="207.3" ry="289.5" fill="#0891b2" opacity=".08" stroke="#0891b2" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="364.4" cy="434.2" rx="298.8" ry="197.6" fill="#ea580c" opacity=".08" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="394.2" cy="415.6" rx="358.5" ry="289.5" fill="#16a34a" opacity=".08" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5 4"/>
-<circle cx="840.5" cy="311.3" r="11.5" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/earmark_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="11.7" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/redeem_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="11.4" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sub_debt_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="11.3" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="11.4" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sync_account_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="11.9" fill="#2563eb" class="pt"><title>balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="11.3" fill="#dc2626" class="pt"><title>cork/pool_solvency/solvency_preserved | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="159.5,383.9 155.2,392.4 163.7,392.4" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance | stable_family=state_preservation_and_local_effects | x=-1.35 y=0.0819</title></polygon>
-<polygon points="159.5,384.6 156.0,391.6 163.0,391.6" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit | stable_family=state_preservation_and_local_effects | x=-1.35 y=0.0819</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.8" fill="#be123c" class="pt"><title>damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool | stable_family=decoder_and_refinement_equivalence | x=0.843 y=0.292</title></circle>
-<polygon points="284.5,593.3 275.3,611.7 293.7,611.7" fill="#65a30d" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | stable_family=negative_and_attack_boundaries | x=-0.946 y=-0.504</title></polygon>
-<polygon points="159.5,379.2 150.5,397.1 168.5,397.1" fill="#4f46e5" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit | stable_family=protocol_transition_correctness | x=-1.35 y=0.0819</title></polygon>
-<polygon points="284.5,596.2 278.1,608.8 290.8,608.8" fill="#4f46e5" class="pt"><title>ethereum/deposit_contract_minimal/chain_start_threshold | stable_family=protocol_transition_correctness | x=-0.946 y=-0.504</title></polygon>
-<polygon points="438.0,659.9 427.7,680.5 448.3,680.5" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/deposit_count | stable_family=state_preservation_and_local_effects | x=-0.452 y=-0.689</title></polygon>
-<polygon points="159.5,379.4 150.8,396.9 168.2,396.9" fill="#4f46e5" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_increments_full_count | stable_family=protocol_transition_correctness | x=-1.35 y=0.0819</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.7" fill="#dc2626" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="435.3,343.3 425.3,363.3 445.3,363.3" fill="#9333ea" class="pt"><title>ethereum/deposit_contract_minimal/small_deposit_preserves_full_count | stable_family=structural_indexing_invariants | x=-0.46 y=0.177</title></polygon>
-<polygon points="538.2,389.5 526.5,412.8 549.8,412.8" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/claim_redeem_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.129 y=0.0463</title></polygon>
-<polygon points="259.6,109.9 250.5,128.3 268.8,128.3" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/deposit_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-1.03 y=0.818</title></polygon>
-<polygon points="413.2,175.8 402.2,197.8 424.2,197.8" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/handle_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.531 y=0.633</title></polygon>
-<polygon points="284.5,595.8 277.7,609.2 291.2,609.2" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.946 y=-0.504</title></polygon>
-<polygon points="159.5,384.6 156.0,391.6 163.0,391.6" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/report_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-1.35 y=0.0819</title></polygon>
-<polygon points="438.0,658.4 426.2,682.0 449.8,682.0" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/request_redeem_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.452 y=-0.689</title></polygon>
-<polygon points="259.6,110.2 250.7,128.1 268.6,128.1" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/transfer_remote_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-1.03 y=0.818</title></polygon>
-<circle cx="840.5" cy="311.3" r="9.3" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="10.2" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/redeem_preserves_pps | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<polygon points="259.6,110.7 251.3,127.5 268.0,127.5" fill="#2563eb" class="pt"><title>kleros/sortition_trees/draw_interval_matches_weights | stable_family=state_preservation_and_local_effects | x=-1.03 y=0.818</title></polygon>
-<polygon points="538.2,390.4 527.4,411.9 548.9,411.9" fill="#ea580c" class="pt"><title>kleros/sortition_trees/draw_selects_valid_leaf | stable_family=numeric_bounds_and_pricing | x=-0.129 y=0.0463</title></polygon>
-<polygon points="313.0,445.8 303.0,465.9 323.1,465.9" fill="#9333ea" class="pt"><title>kleros/sortition_trees/node_id_bijection | stable_family=structural_indexing_invariants | x=-0.854 y=-0.103</title></polygon>
-<polygon points="438.0,659.9 427.7,680.5 448.3,680.5" fill="#9333ea" class="pt"><title>kleros/sortition_trees/parent_equals_sum_of_children | stable_family=structural_indexing_invariants | x=-0.452 y=-0.689</title></polygon>
-<polygon points="159.5,379.0 150.3,397.3 168.7,397.3" fill="#be123c" class="pt"><title>kleros/sortition_trees/root_equals_sum_of_leaves | stable_family=decoder_and_refinement_equivalence | x=-1.35 y=0.0819</title></polygon>
-<polygon points="718.2,402.1 706.5,425.6 730.0,425.6" fill="#be123c" class="pt"><title>kleros/sortition_trees/root_minus_left_equals_right_subtree | stable_family=decoder_and_refinement_equivalence | x=0.45 y=0.0116</title></polygon>
-<circle cx="840.5" cy="311.3" r="9.6" fill="#2563eb" class="pt"><title>lagoon/guardrails/exact_compliance | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="10.3" fill="#2563eb" class="pt"><title>lagoon/guardrails/negative_variation_bounded | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="9.0" fill="#2563eb" class="pt"><title>lagoon/guardrails/positive_variation_bounded | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<polygon points="740.4,568.3 728.4,592.3 752.4,592.3" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/ceildiv_sandwich | stable_family=asset_accounting_and_conservation | x=0.521 y=-0.444</title></polygon>
-<circle cx="840.5" cy="311.3" r="12.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/locked_funds_solvency | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="159.5,384.6 156.0,391.6 163.0,391.6" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/max_liability_shares_bound | stable_family=asset_accounting_and_conservation | x=-1.35 y=0.0819</title></polygon>
-<polygon points="159.5,384.6 156.0,391.6 163.0,391.6" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/reserve_ratio_bounds | stable_family=asset_accounting_and_conservation | x=-1.35 y=0.0819</title></polygon>
-<polygon points="740.4,568.4 728.4,592.3 752.3,592.3" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/shares_conversion_monotone | stable_family=asset_accounting_and_conservation | x=0.521 y=-0.444</title></polygon>
-<polygon points="159.5,379.8 151.1,396.5 167.8,396.5" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_book_value | stable_family=numeric_bounds_and_pricing | x=-1.35 y=0.0819</title></polygon>
-<polygon points="284.5,593.4 275.3,611.6 293.6,611.6" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_buy_price | stable_family=numeric_bounds_and_pricing | x=-0.946 y=-0.504</title></polygon>
-<polygon points="159.5,384.6 156.0,391.6 163.0,391.6" fill="#2563eb" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_capital | stable_family=state_preservation_and_local_effects | x=-1.35 y=0.0819</title></polygon>
-<polygon points="284.5,594.8 276.8,610.2 292.1,610.2" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_sell_price | stable_family=numeric_bounds_and_pricing | x=-0.946 y=-0.504</title></polygon>
-<polygon points="313.0,446.3 303.5,465.4 322.6,465.4" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.854 y=-0.103</title></polygon>
-<polygon points="284.5,592.2 274.1,612.8 294.8,612.8" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.946 y=-0.504</title></polygon>
-<polygon points="159.5,378.3 149.7,398.0 169.3,398.0" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.35 y=0.0819</title></polygon>
-<polygon points="284.5,593.8 275.8,611.2 293.1,611.2" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.946 y=-0.504</title></polygon>
-<polygon points="159.5,379.1 150.4,397.2 168.5,397.2" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.35 y=0.0819</title></polygon>
-<polygon points="159.5,378.8 150.1,397.5 168.9,397.5" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.35 y=0.0819</title></polygon>
-<polygon points="438.0,660.0 427.8,680.4 448.2,680.4" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.452 y=-0.689</title></polygon>
-<polygon points="284.5,593.1 275.0,611.9 293.9,611.9" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.946 y=-0.504</title></polygon>
-<polygon points="284.5,594.2 276.2,610.8 292.7,610.8" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.946 y=-0.504</title></polygon>
-<polygon points="159.5,379.7 151.0,396.6 167.9,396.6" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.35 y=0.0819</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.7" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed | stable_family=authorization_and_caller_integrity | x=0.843 y=0.292</title></circle>
-<polygon points="740.4,568.3 728.4,592.3 752.4,592.3" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=0.521 y=-0.444</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.6" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="12.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="718.2,403.0 707.3,424.7 729.1,424.7" fill="#be123c" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims | stable_family=decoder_and_refinement_equivalence | x=0.45 y=0.0116</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_no_overclaim | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="718.2,402.0 706.3,425.8 730.1,425.8" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.45 y=0.0116</title></polygon>
-<polygon points="593.3,188.3 582.0,210.7 604.5,210.7" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=0.0479 y=0.598</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.6" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="718.2,402.8 707.2,424.9 729.3,424.9" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=0.45 y=0.0116</title></polygon>
-<polygon points="618.1,671.1 606.2,694.7 629.9,694.7" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.128 y=-0.724</title></polygon>
-<polygon points="384.6,322.7 373.9,344.2 395.4,344.2" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_marks_user | stable_family=authorization_and_caller_integrity | x=-0.623 y=0.231</title></polygon>
-<polygon points="718.2,402.3 706.6,425.5 729.8,425.5" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=0.45 y=0.0116</title></polygon>
-<polygon points="438.0,659.5 427.3,680.9 448.7,680.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=-0.452 y=-0.689</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="159.5,382.0 153.4,394.3 165.6,394.3" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/double_claim_rejected | stable_family=authorization_and_caller_integrity | x=-1.35 y=0.0819</title></polygon>
-<polygon points="284.5,592.8 274.7,612.2 294.2,612.2" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/no_overclaim | stable_family=asset_accounting_and_conservation | x=-0.946 y=-0.504</title></polygon>
-<polygon points="259.6,108.7 249.2,129.5 270.1,129.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state | stable_family=state_preservation_and_local_effects | x=-1.03 y=0.818</title></polygon>
-<circle cx="840.5" cy="311.3" r="12.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="413.2,176.1 402.5,197.5 423.9,197.5" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user | stable_family=authorization_and_caller_integrity | x=-0.531 y=0.633</title></polygon>
-<polygon points="438.0,660.5 428.3,679.9 447.7,679.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=-0.452 y=-0.689</title></polygon>
-<polygon points="718.2,402.5 706.8,425.3 729.6,425.3" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=0.45 y=0.0116</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="259.6,108.6 249.2,129.6 270.1,129.6" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=-1.03 y=0.818</title></polygon>
-<polygon points="538.2,389.8 526.8,412.5 549.6,412.5" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim | stable_family=asset_accounting_and_conservation | x=-0.129 y=0.0463</title></polygon>
-<polygon points="259.6,108.4 249.0,129.8 270.3,129.8" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state | stable_family=state_preservation_and_local_effects | x=-1.03 y=0.818</title></polygon>
-<circle cx="840.5" cy="311.3" r="12.0" fill="#dc2626" class="pt"><title>piku/fund_conservation/amount_paid_preserves_fund_conservation | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="384.6,322.6 373.8,344.3 395.5,344.3" fill="#2563eb" class="pt"><title>piku/fund_conservation/amount_paid_records_distribution | stable_family=state_preservation_and_local_effects | x=-0.623 y=0.231</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.2" fill="#dc2626" class="pt"><title>piku/fund_conservation/sell_order_preserves_fund_conservation | stable_family=asset_accounting_and_conservation | x=0.843 y=0.292</title></circle>
-<polygon points="718.2,402.2 706.6,425.5 729.9,425.5" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_records_redemption_buckets | stable_family=state_preservation_and_local_effects | x=0.45 y=0.0116</title></polygon>
-<circle cx="840.5" cy="311.3" r="11.8" fill="#2563eb" class="pt"><title>polaris/bonding_curve/buy_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="11.7" fill="#2563eb" class="pt"><title>polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="11.9" fill="#2563eb" class="pt"><title>polaris/bonding_curve/init_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="11.6" fill="#2563eb" class="pt"><title>polaris/bonding_curve/sell_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.843 y=0.292</title></circle>
-<circle cx="797.3" cy="427.5" r="11.6" fill="#16a34a" class="pt"><title>polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier | stable_family=authorization_and_caller_integrity | x=0.704 y=-0.0256</title></circle>
-<circle cx="797.3" cy="427.5" r="11.1" fill="#16a34a" class="pt"><title>polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier | stable_family=authorization_and_caller_integrity | x=0.704 y=-0.0256</title></circle>
-<polygon points="216.4,229.8 210.9,240.8 221.9,240.8" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_at_end_time | stable_family=numeric_bounds_and_pricing | x=-1.16 y=0.5</title></polygon>
-<polygon points="216.4,231.8 212.9,238.8 219.9,238.8" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_at_start_time | stable_family=numeric_bounds_and_pricing | x=-1.16 y=0.5</title></polygon>
-<polygon points="494.9,507.8 485.4,526.9 504.5,526.9" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_lower_bound | stable_family=numeric_bounds_and_pricing | x=-0.269 y=-0.271</title></polygon>
-<circle cx="721.0" cy="491.4" r="11.3" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_upper_bound | stable_family=numeric_bounds_and_pricing | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.8" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.6" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.2" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.7" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.5" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/add_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.3" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/in_list_reachable | stable_family=structural_indexing_invariants | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.9" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.4" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/remove_owner_in_list_reachable | stable_family=structural_indexing_invariants | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.2" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.4" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/remove_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.9" fill="#4f46e5" class="pt"><title>safe/owner_manager_reach/setup_owners_acyclicity | stable_family=protocol_transition_correctness | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.7" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/setup_owners_in_list_reachable | stable_family=structural_indexing_invariants | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.4" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/setup_owners_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="12.0" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.1" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/swap_owner_in_list_reachable | stable_family=structural_indexing_invariants | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.3" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.5" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/swap_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="9.4" fill="#2563eb" class="pt"><title>term_finance/term_auction_clearing/clearing_assignment_correct | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.4" fill="#4f46e5" class="pt"><title>termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve | stable_family=protocol_transition_correctness | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.3" fill="#dc2626" class="pt"><title>usual/dao_collateral/redeem_conservation | stable_family=asset_accounting_and_conservation | x=0.459 y=-0.201</title></circle>
-<polygon points="262.4,193.2 258.9,200.2 265.9,200.2" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_fee_formula | stable_family=state_preservation_and_local_effects | x=-1.02 y=0.606</title></polygon>
-<circle cx="721.0" cy="491.4" r="10.8" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_return_formula | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.8" fill="#dc2626" class="pt"><title>usual/dao_collateral/swap_conservation | stable_family=asset_accounting_and_conservation | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.4" fill="#dc2626" class="pt"><title>usual/dao_collateral/swap_value_conservation | stable_family=asset_accounting_and_conservation | x=0.459 y=-0.201</title></circle>
-<polygon points="414.0,243.5 402.7,266.1 425.3,266.1" fill="#dc2626" class="pt"><title>wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity | stable_family=asset_accounting_and_conservation | x=-0.529 y=0.447</title></polygon>
-<circle cx="721.0" cy="491.4" r="10.9" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_decreases_supply | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="12.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_insufficient | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.3" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_ctokens_match_deposit | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_increases_supply | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.3" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_overflow_protection | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<polygon points="387.4,403.3 379.6,418.8 395.2,418.8" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/setOperator_updates | stable_family=state_preservation_and_local_effects | x=-0.614 y=0.0193</title></polygon>
-<circle cx="721.0" cy="491.4" r="10.8" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transferFrom_conservation | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="12.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_conservation | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.1" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_insufficient | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<polygon points="567.5,413.2 556.9,434.2 578.0,434.2" fill="#65a30d" class="pt"><title>zama/erc7984_confidential_token/transfer_no_balance_revert | stable_family=negative_and_attack_boundaries | x=-0.0351 y=-0.0154</title></polygon>
-<circle cx="721.0" cy="491.4" r="10.9" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_preserves_supply | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.9" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_sufficient | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="10.7" fill="#be123c" class="pt"><title>zodiac/roles_decoder_faithfulness/metadata_bridge | stable_family=decoder_and_refinement_equivalence | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.2" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe | stable_family=state_preservation_and_local_effects | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="11.3" fill="#be123c" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_faithful | stable_family=decoder_and_refinement_equivalence | x=0.459 y=-0.201</title></circle>
-<text x="702.3" y="406.1" class="cent" text-anchor="middle">asset_accounting_and_con</text>
-<text x="644.5" y="406.3" class="cent" text-anchor="middle">state_preservation_and_l</text>
-<text x="646.4" y="418.3" class="cent" text-anchor="middle">decoder_and_refinement_e</text>
-<text x="426.0" y="513.1" class="cent" text-anchor="middle">negative_and_attack_boun</text>
-<text x="409.1" y="472.3" class="cent" text-anchor="middle">protocol_transition_corr</text>
-<text x="632.2" y="491.9" class="cent" text-anchor="middle">structural_indexing_inva</text>
-<text x="336.1" y="355.3" class="cent" text-anchor="middle">solvency_and_liquidity_g</text>
-<text x="364.4" y="434.2" class="cent" text-anchor="middle">numeric_bounds_and_prici</text>
-<text x="394.2" y="415.6" class="cent" text-anchor="middle">authorization_and_caller</text>
+<ellipse cx="736.4" cy="483.5" rx="358.5" ry="208.6" fill="#dc2626" opacity=".08" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="714.9" cy="439.1" rx="347.2" ry="238.8" fill="#2563eb" opacity=".08" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="717.5" cy="462.9" rx="295.4" ry="122.4" fill="#be123c" opacity=".08" stroke="#be123c" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="522.1" cy="484.3" rx="309.8" ry="180.3" fill="#4f46e5" opacity=".08" stroke="#4f46e5" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="740.0" cy="481.8" rx="269.1" ry="54.1" fill="#9333ea" opacity=".08" stroke="#9333ea" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="438.9" cy="348.4" rx="216.9" ry="238.8" fill="#0891b2" opacity=".08" stroke="#0891b2" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="385.0" cy="498.4" rx="332.7" ry="212.6" fill="#ea580c" opacity=".08" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="471.4" cy="426.3" rx="305.7" ry="222.5" fill="#16a34a" opacity=".08" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5 4"/>
+<circle cx="840.5" cy="491.8" r="11.2" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/earmark_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="12.0" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/redeem_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.3" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sub_debt_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.1" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.6" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sync_account_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.3" fill="#2563eb" class="pt"><title>balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="10.4" fill="#dc2626" class="pt"><title>cork/pool_solvency/solvency_preserved | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="242.4,496.9 238.9,503.9 245.9,503.9" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance | stable_family=state_preservation_and_local_effects | x=-1.86 y=-0.156</title></polygon>
+<polygon points="188.4,565.2 184.9,572.2 191.9,572.2" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit | stable_family=state_preservation_and_local_effects | x=-2.12 y=-0.396</title></polygon>
+<polygon points="840.5,479.9 828.7,503.6 852.3,503.6" fill="#be123c" class="pt"><title>damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool | stable_family=decoder_and_refinement_equivalence | x=0.916 y=-0.126</title></polygon>
+<polygon points="241.6,619.4 233.9,634.9 249.4,634.9" fill="#65a30d" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | stable_family=negative_and_attack_boundaries | x=-1.87 y=-0.602</title></polygon>
+<polygon points="256.8,612.5 248.9,628.3 264.7,628.3" fill="#4f46e5" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit | stable_family=protocol_transition_correctness | x=-1.8 y=-0.578</title></polygon>
+<polygon points="308.8,521.8 300.8,538.0 316.9,538.0" fill="#4f46e5" class="pt"><title>ethereum/deposit_contract_minimal/chain_start_threshold | stable_family=protocol_transition_correctness | x=-1.56 y=-0.26</title></polygon>
+<polygon points="600.1,374.3 590.6,393.2 609.5,393.2" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/deposit_count | stable_family=state_preservation_and_local_effects | x=-0.201 y=0.254</title></polygon>
+<polygon points="363.9,279.2 355.2,296.5 372.5,296.5" fill="#4f46e5" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_increments_full_count | stable_family=protocol_transition_correctness | x=-1.3 y=0.591</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.3" fill="#dc2626" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="544.3,401.8 534.5,421.3 554.0,421.3" fill="#9333ea" class="pt"><title>ethereum/deposit_contract_minimal/small_deposit_preserves_full_count | stable_family=structural_indexing_invariants | x=-0.461 y=0.156</title></polygon>
+<polygon points="539.4,317.9 528.9,338.9 549.9,338.9" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/claim_redeem_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.483 y=0.449</title></polygon>
+<polygon points="467.3,109.6 457.8,128.6 476.8,128.6" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/deposit_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.819 y=1.18</title></polygon>
+<polygon points="586.2,258.6 575.9,279.2 596.5,279.2" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/handle_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.266 y=0.658</title></polygon>
+<polygon points="391.7,393.6 382.0,413.1 401.5,413.1" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-1.17 y=0.185</title></polygon>
+<polygon points="188.4,565.2 184.9,572.2 191.9,572.2" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/report_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-2.12 y=-0.396</title></polygon>
+<polygon points="546.1,440.7 534.8,463.4 557.5,463.4" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/request_redeem_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.452 y=0.014</title></polygon>
+<polygon points="352.9,290.0 344.4,306.9 361.3,306.9" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/transfer_remote_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-1.35 y=0.554</title></polygon>
+<circle cx="840.5" cy="491.8" r="9.4" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="10.3" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/redeem_preserves_pps | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<polygon points="467.3,109.6 457.9,128.6 476.8,128.6" fill="#2563eb" class="pt"><title>kleros/sortition_trees/draw_interval_matches_weights | stable_family=state_preservation_and_local_effects | x=-0.819 y=1.18</title></polygon>
+<polygon points="546.0,275.8 536.1,295.5 555.9,295.5" fill="#ea580c" class="pt"><title>kleros/sortition_trees/draw_selects_valid_leaf | stable_family=numeric_bounds_and_pricing | x=-0.453 y=0.599</title></polygon>
+<polygon points="338.3,463.9 328.7,483.1 347.9,483.1" fill="#9333ea" class="pt"><title>kleros/sortition_trees/node_id_bijection | stable_family=structural_indexing_invariants | x=-1.42 y=-0.0612</title></polygon>
+<polygon points="532.8,471.5 523.3,490.5 542.4,490.5" fill="#9333ea" class="pt"><title>kleros/sortition_trees/parent_equals_sum_of_children | stable_family=structural_indexing_invariants | x=-0.514 y=-0.0878</title></polygon>
+<polygon points="285.8,552.2 275.9,572.0 295.7,572.0" fill="#be123c" class="pt"><title>kleros/sortition_trees/root_equals_sum_of_leaves | stable_family=decoder_and_refinement_equivalence | x=-1.66 y=-0.373</title></polygon>
+<polygon points="762.3,334.7 751.6,356.0 773.0,356.0" fill="#be123c" class="pt"><title>kleros/sortition_trees/root_minus_left_equals_right_subtree | stable_family=decoder_and_refinement_equivalence | x=0.553 y=0.389</title></polygon>
+<circle cx="840.5" cy="491.8" r="8.7" fill="#2563eb" class="pt"><title>lagoon/guardrails/exact_compliance | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="8.1" fill="#2563eb" class="pt"><title>lagoon/guardrails/negative_variation_bounded | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="10.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/positive_variation_bounded | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<polygon points="766.0,591.3 755.1,613.1 776.9,613.1" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/ceildiv_sandwich | stable_family=asset_accounting_and_conservation | x=0.57 y=-0.514</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.4" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/locked_funds_solvency | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="159.5,623.5 156.0,630.5 163.0,630.5" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/max_liability_shares_bound | stable_family=asset_accounting_and_conservation | x=-2.25 y=-0.601</title></polygon>
+<polygon points="159.5,623.5 156.0,630.5 163.0,630.5" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/reserve_ratio_bounds | stable_family=asset_accounting_and_conservation | x=-2.25 y=-0.601</title></polygon>
+<polygon points="766.0,591.2 755.0,613.2 777.1,613.2" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/shares_conversion_monotone | stable_family=asset_accounting_and_conservation | x=0.57 y=-0.514</title></polygon>
+<polygon points="234.1,677.5 228.7,688.3 239.5,688.3" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_book_value | stable_family=numeric_bounds_and_pricing | x=-1.9 y=-0.798</title></polygon>
+<polygon points="324.5,491.1 315.0,510.0 334.0,510.0" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_buy_price | stable_family=numeric_bounds_and_pricing | x=-1.48 y=-0.157</title></polygon>
+<polygon points="242.7,445.9 235.2,461.0 250.3,461.0" fill="#2563eb" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_capital | stable_family=state_preservation_and_local_effects | x=-1.86 y=0.0092</title></polygon>
+<polygon points="270.6,564.0 265.7,573.7 275.5,573.7" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_sell_price | stable_family=numeric_bounds_and_pricing | x=-1.73 y=-0.397</title></polygon>
+<polygon points="284.3,532.8 275.4,550.6 293.2,550.6" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.67 y=-0.301</title></polygon>
+<polygon points="383.5,575.6 373.3,596.0 393.7,596.0" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.21 y=-0.456</title></polygon>
+<polygon points="338.9,288.4 329.5,307.3 348.3,307.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.42 y=0.556</title></polygon>
+<polygon points="301.8,554.3 293.1,571.8 310.5,571.8" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.59 y=-0.376</title></polygon>
+<polygon points="265.1,429.8 257.0,446.0 273.2,446.0" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.76 y=0.0638</title></polygon>
+<polygon points="265.1,428.7 255.9,447.1 274.3,447.1" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.76 y=0.0638</title></polygon>
+<polygon points="343.8,594.6 334.0,614.2 353.5,614.2" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.39 y=-0.522</title></polygon>
+<polygon points="295.6,549.7 286.4,568.1 304.7,568.1" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.62 y=-0.361</title></polygon>
+<polygon points="324.5,493.6 317.5,507.6 331.5,507.6" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.48 y=-0.157</title></polygon>
+<polygon points="265.1,428.0 255.2,447.8 275.0,447.8" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-1.76 y=0.0638</title></polygon>
+<circle cx="840.5" cy="491.8" r="10.8" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed | stable_family=authorization_and_caller_integrity | x=0.916 y=-0.126</title></circle>
+<polygon points="766.0,591.5 755.3,612.9 776.7,612.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=0.57 y=-0.514</title></polygon>
+<circle cx="840.5" cy="491.8" r="10.8" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.4" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="762.3,334.8 751.7,355.9 772.9,355.9" fill="#be123c" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims | stable_family=decoder_and_refinement_equivalence | x=0.553 y=0.389</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.2" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_no_overclaim | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="762.3,333.6 750.5,357.1 774.0,357.1" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.553 y=0.389</title></polygon>
+<polygon points="702.9,272.1 692.3,293.2 713.4,293.2" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=0.276 y=0.609</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="762.3,334.8 751.7,355.9 772.8,355.9" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=0.553 y=0.389</title></polygon>
+<polygon points="687.8,444.5 676.5,467.2 699.1,467.2" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.206 y=0.00071</title></polygon>
+<polygon points="601.4,227.1 590.7,248.3 612.0,248.3" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_marks_user | stable_family=authorization_and_caller_integrity | x=-0.195 y=0.768</title></polygon>
+<polygon points="762.3,334.2 751.1,356.6 773.5,356.6" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=0.553 y=0.389</title></polygon>
+<polygon points="600.1,373.1 589.4,394.4 610.8,394.4" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=-0.201 y=0.254</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.3" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="271.7,385.1 261.6,405.1 281.7,405.1" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/double_claim_rejected | stable_family=authorization_and_caller_integrity | x=-1.73 y=0.214</title></polygon>
+<polygon points="526.9,338.0 516.7,358.3 537.0,358.3" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/no_overclaim | stable_family=asset_accounting_and_conservation | x=-0.542 y=0.379</title></polygon>
+<polygon points="467.3,107.9 456.1,130.3 478.5,130.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state | stable_family=state_preservation_and_local_effects | x=-0.819 y=1.18</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.5" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="615.1,199.7 604.3,221.5 626.0,221.5" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user | stable_family=authorization_and_caller_integrity | x=-0.131 y=0.863</title></polygon>
+<polygon points="600.1,373.7 590.0,393.8 610.2,393.8" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=-0.201 y=0.254</title></polygon>
+<polygon points="762.3,334.3 751.2,356.4 773.3,356.4" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=0.553 y=0.389</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.4" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="413.4,177.1 403.0,197.7 423.7,197.7" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=-1.07 y=0.944</title></polygon>
+<polygon points="674.6,261.4 662.7,285.1 686.4,285.1" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim | stable_family=asset_accounting_and_conservation | x=0.145 y=0.642</title></polygon>
+<polygon points="400.1,206.3 390.1,226.4 410.1,226.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state | stable_family=state_preservation_and_local_effects | x=-1.13 y=0.843</title></polygon>
+<circle cx="840.5" cy="491.8" r="12.0" fill="#dc2626" class="pt"><title>piku/fund_conservation/amount_paid_preserves_fund_conservation | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="526.7,171.6 516.6,191.9 536.9,191.9" fill="#2563eb" class="pt"><title>piku/fund_conservation/amount_paid_records_distribution | stable_family=state_preservation_and_local_effects | x=-0.542 y=0.964</title></polygon>
+<circle cx="840.5" cy="491.8" r="12.0" fill="#dc2626" class="pt"><title>piku/fund_conservation/sell_order_preserves_fund_conservation | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="762.3,334.3 751.2,356.4 773.4,356.4" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_records_redemption_buckets | stable_family=state_preservation_and_local_effects | x=0.553 y=0.389</title></polygon>
+<circle cx="827.1" cy="516.4" r="11.9" fill="#2563eb" class="pt"><title>polaris/bonding_curve/buy_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.854 y=-0.212</title></circle>
+<circle cx="840.5" cy="491.8" r="11.4" fill="#2563eb" class="pt"><title>polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="12.0" fill="#2563eb" class="pt"><title>polaris/bonding_curve/init_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.7" fill="#2563eb" class="pt"><title>polaris/bonding_curve/sell_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.2" fill="#16a34a" class="pt"><title>polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier | stable_family=authorization_and_caller_integrity | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.2" fill="#16a34a" class="pt"><title>polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier | stable_family=authorization_and_caller_integrity | x=0.916 y=-0.126</title></circle>
+<polygon points="211.2,498.5 203.5,513.9 218.8,513.9" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_at_end_time | stable_family=numeric_bounds_and_pricing | x=-2.01 y=-0.176</title></polygon>
+<polygon points="271.7,391.6 268.2,398.6 275.2,398.6" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_at_start_time | stable_family=numeric_bounds_and_pricing | x=-1.73 y=0.214</title></polygon>
+<polygon points="381.6,546.2 371.9,565.5 391.2,565.5" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_lower_bound | stable_family=numeric_bounds_and_pricing | x=-1.22 y=-0.351</title></polygon>
+<circle cx="840.5" cy="491.8" r="10.9" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_upper_bound | stable_family=numeric_bounds_and_pricing | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="10.7" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.1" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.7" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<polygon points="762.3,334.7 751.6,356.0 772.9,356.0" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.553 y=0.389</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.0" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.6" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/add_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.3" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/in_list_reachable | stable_family=structural_indexing_invariants | x=0.916 y=-0.126</title></circle>
+<polygon points="687.6,278.5 676.7,300.3 698.5,300.3" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.206 y=0.586</title></polygon>
+<circle cx="840.5" cy="491.8" r="10.8" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/remove_owner_in_list_reachable | stable_family=structural_indexing_invariants | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.6" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.5" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/remove_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="12.0" fill="#4f46e5" class="pt"><title>safe/owner_manager_reach/setup_owners_acyclicity | stable_family=protocol_transition_correctness | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.1" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/setup_owners_in_list_reachable | stable_family=structural_indexing_invariants | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.3" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/setup_owners_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.916 y=-0.126</title></circle>
+<polygon points="762.3,333.4 750.3,357.4 774.3,357.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.553 y=0.389</title></polygon>
+<circle cx="840.5" cy="491.8" r="10.7" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/swap_owner_in_list_reachable | stable_family=structural_indexing_invariants | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.2" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.4" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/swap_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="10.3" fill="#2563eb" class="pt"><title>term_finance/term_auction_clearing/clearing_assignment_correct | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.2" fill="#4f46e5" class="pt"><title>termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve | stable_family=protocol_transition_correctness | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.6" fill="#dc2626" class="pt"><title>usual/dao_collateral/redeem_conservation | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="182.2,561.0 178.7,568.0 185.7,568.0" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_fee_formula | stable_family=state_preservation_and_local_effects | x=-2.14 y=-0.381</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.7" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_return_formula | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.8" fill="#dc2626" class="pt"><title>usual/dao_collateral/swap_conservation | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="12.0" fill="#dc2626" class="pt"><title>usual/dao_collateral/swap_value_conservation | stable_family=asset_accounting_and_conservation | x=0.916 y=-0.126</title></circle>
+<polygon points="232.7,654.1 224.2,671.0 241.2,671.0" fill="#dc2626" class="pt"><title>wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity | stable_family=asset_accounting_and_conservation | x=-1.91 y=-0.726</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.1" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_decreases_supply | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="11.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_insufficient | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<polygon points="762.3,334.3 751.2,356.4 773.3,356.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_ctokens_match_deposit | stable_family=state_preservation_and_local_effects | x=0.553 y=0.389</title></polygon>
+<polygon points="765.9,424.5 754.6,447.1 777.2,447.1" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_increases_supply | stable_family=state_preservation_and_local_effects | x=0.569 y=0.0711</title></polygon>
+<circle cx="840.5" cy="491.8" r="11.1" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_overflow_protection | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<polygon points="385.0,380.1 375.6,399.0 394.5,399.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/setOperator_updates | stable_family=state_preservation_and_local_effects | x=-1.2 y=0.234</title></polygon>
+<circle cx="840.5" cy="491.8" r="10.8" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transferFrom_conservation | stable_family=state_preservation_and_local_effects | x=0.916 y=-0.126</title></circle>
+<circle cx="827.1" cy="516.4" r="11.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_conservation | stable_family=state_preservation_and_local_effects | x=0.854 y=-0.212</title></circle>
+<circle cx="827.1" cy="516.4" r="12.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_insufficient | stable_family=state_preservation_and_local_effects | x=0.854 y=-0.212</title></circle>
+<polygon points="679.4,580.4 668.5,602.3 690.3,602.3" fill="#65a30d" class="pt"><title>zama/erc7984_confidential_token/transfer_no_balance_revert | stable_family=negative_and_attack_boundaries | x=0.167 y=-0.476</title></polygon>
+<polygon points="748.8,359.1 737.9,381.0 759.7,381.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_preserves_supply | stable_family=state_preservation_and_local_effects | x=0.49 y=0.302</title></polygon>
+<circle cx="827.1" cy="516.4" r="12.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_sufficient | stable_family=state_preservation_and_local_effects | x=0.854 y=-0.212</title></circle>
+<circle cx="827.1" cy="516.4" r="10.8" fill="#be123c" class="pt"><title>zodiac/roles_decoder_faithfulness/metadata_bridge | stable_family=decoder_and_refinement_equivalence | x=0.854 y=-0.212</title></circle>
+<circle cx="827.1" cy="516.4" r="11.2" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe | stable_family=state_preservation_and_local_effects | x=0.854 y=-0.212</title></circle>
+<circle cx="827.1" cy="516.4" r="10.9" fill="#be123c" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_faithful | stable_family=decoder_and_refinement_equivalence | x=0.854 y=-0.212</title></circle>
+<text x="736.4" y="483.5" class="cent" text-anchor="middle">asset_accounting_and_con</text>
+<text x="714.9" y="439.1" class="cent" text-anchor="middle">state_preservation_and_l</text>
+<text x="717.5" y="462.9" class="cent" text-anchor="middle">decoder_and_refinement_e</text>
+<text x="460.5" y="609.2" class="cent" text-anchor="middle">negative_and_attack_boun</text>
+<text x="522.1" y="484.3" class="cent" text-anchor="middle">protocol_transition_corr</text>
+<text x="740.0" y="481.8" class="cent" text-anchor="middle">structural_indexing_inva</text>
+<text x="438.9" y="348.4" class="cent" text-anchor="middle">solvency_and_liquidity_g</text>
+<text x="385.0" y="498.4" class="cent" text-anchor="middle">numeric_bounds_and_prici</text>
+<text x="471.4" y="426.3" class="cent" text-anchor="middle">authorization_and_caller</text>
 <text x="921" y="74" font-size="14" font-weight="700">Couleur: stable_family</text>
 <circle cx="928" cy="94" r="6" fill="#2563eb" stroke="#111827" stroke-width=".5"/>
 <text x="943" y="98" class="legend">state preservation and</text>

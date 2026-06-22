@@ -8,14 +8,17 @@ import json
 import subprocess
 from datetime import date
 from pathlib import Path
+
 from typing import Any
 
 import sys
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from release_config import BENCHMARK_ID  # noqa: E402
 from manifests import list_groups  # noqa: E402
 from manifest_utils import load_manifest_data  # noqa: E402
 
@@ -220,7 +223,7 @@ def build_version_manifest(
 ) -> dict[str, object]:
     tasks = ordered_tasks(suite)
     return {
-        "benchmark": "ethereum-verification-benchmark",
+        "benchmark": BENCHMARK_ID,
         "benchmark_version": version,
         "created_at": created_at or date.today().isoformat(),
         "git_sha": git_sha(),

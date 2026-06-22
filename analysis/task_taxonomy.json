@@ -51,7 +51,7 @@
   "label_provenance": {
     "skills": "reviewer-curated (Th0rgal) from task proof_family/property_class and a reading of the target theorem",
     "observed_failure_modes": "auto-derived from v0.1 detailed artifacts for the full-coverage strong models (zai/glm-5.2, minimax/minimax-m3, kimi/kimi-for-coding) via scripts/extract_task_features.py",
-    "cohort_signature": "per-model pass/fail across the v0.1 comparison cohort [kimi/kimi-for-coding, minimax/minimax-m3, spark/step3p7-flash-148b, zai/glm-5.2]"
+    "cohort_signature": "per-model pass/fail across the complete rows in the v0.1 leaderboard"
   },
   "labels": [
     {

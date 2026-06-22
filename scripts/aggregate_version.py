@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from release_config import BADGE_LABEL, BENCHMARK_TITLE
+
 
 def load_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -202,8 +204,6 @@ def leaderboard_json(summary: dict[str, Any]) -> dict[str, Any]:
                 "model_name": item["model_name"],
                 "inference_provider_id": item["inference_provider_id"],
                 "inference_model_id": item["inference_model_id"],
-                "provider_id": item["model_provider_id"],
-                "provider_model_id": item["model_name"],
                 "display_name": item["display_name"],
                 "status": item["status"],
                 "pass_rate": item["pass_rate"],
@@ -233,7 +233,7 @@ def leaderboard_json(summary: dict[str, Any]) -> dict[str, Any]:
 
 def leaderboard(version: dict[str, Any], summaries: list[dict[str, Any]]) -> str:
     lines = [
-        "# Ethereum Verification Benchmark Leaderboard",
+        f"# {BENCHMARK_TITLE} Leaderboard",
         "",
         f"Benchmark version `{version['benchmark_version']}` · generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%MZ')}",
         "",
@@ -335,7 +335,7 @@ def main() -> int:
     complete_runs = sum(item["task_count"] for item in summary["models"] if item["status"] == "complete")
     all_runs = sum(item["task_count"] for item in summary["models"])
     (badges_dir / "overall.json").write_text(
-        json.dumps({"schemaVersion": 1, "label": "ethereum verification", "message": f"{complete_runs}/{all_runs} complete-version runs", "color": "brightgreen" if complete_runs == all_runs and all_runs else "yellow"}) + "\n",
+        json.dumps({"schemaVersion": 1, "label": BADGE_LABEL, "message": f"{complete_runs}/{all_runs} complete-version runs", "color": "brightgreen" if complete_runs == all_runs and all_runs else "yellow"}) + "\n",
         encoding="utf-8",
     )
     print(f"aggregated benchmark v{version_name}: {len(summary['models'])} model row(s)")

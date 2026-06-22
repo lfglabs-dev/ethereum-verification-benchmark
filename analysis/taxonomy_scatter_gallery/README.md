@@ -5,7 +5,7 @@
 ### state_preservation_and_local_effects
 
 - tasks: 47
-- avg_pass_rate: 0.148
+- avg_pass_rate: 0.147
 - needs_review: 6
 - property_classes: storage_write (6), reserve_state_transition (4), arithmetic_rounding (3), compliance_boundary (3), lifecycle_accounting (3), linked_list_acyclicity (3)
 - empirical_families: hard_state_invariant (33), mostly_solved_local_transition (11), divisive_authorization_or_accounting (2), single_model_solvable_boundary (1)
@@ -14,7 +14,7 @@
 ### asset_accounting_and_conservation
 
 - tasks: 37
-- avg_pass_rate: 0.155
+- avg_pass_rate: 0.127
 - needs_review: 6
 - property_classes: accounting_bound (16), accounting_conservation (15), accounting_update (6)
 - empirical_families: hard_state_invariant (30), single_model_solvable_boundary (3), mostly_solved_local_transition (2), divisive_authorization_or_accounting (1)
@@ -23,7 +23,7 @@
 ### authorization_and_caller_integrity
 
 - tasks: 19
-- avg_pass_rate: 0.549
+- avg_pass_rate: 0.483
 - needs_review: 8
 - property_classes: access_control_identity (10), authorization_state (9)
 - empirical_families: divisive_authorization_or_accounting (7), mostly_solved_local_transition (6), hard_state_invariant (4), single_model_solvable_boundary (2)
@@ -32,7 +32,7 @@
 ### structural_indexing_invariants
 
 - tasks: 11
-- avg_pass_rate: 0.156
+- avg_pass_rate: 0.136
 - needs_review: 2
 - property_classes: linked_list_invariant (8), threshold_partition (1), mapping_consistency (1), tree_conservation (1)
 - empirical_families: hard_state_invariant (8), divisive_authorization_or_accounting (2), single_model_solvable_boundary (1)
@@ -41,7 +41,7 @@
 ### numeric_bounds_and_pricing
 
 - tasks: 9
-- avg_pass_rate: 0.508
+- avg_pass_rate: 0.539
 - needs_review: 4
 - property_classes: price_computation (5), output_range (2), price_band (2)
 - empirical_families: single_model_solvable_boundary (3), mostly_solved_local_transition (3), divisive_authorization_or_accounting (2), hard_state_invariant (1)
@@ -50,7 +50,7 @@
 ### solvency_and_liquidity_guards
 
 - tasks: 7
-- avg_pass_rate: 0.612
+- avg_pass_rate: 0.560
 - needs_review: 4
 - property_classes: guarded_solvency (7)
 - empirical_families: mostly_solved_local_transition (3), single_model_solvable_boundary (2), divisive_authorization_or_accounting (2)
@@ -59,7 +59,7 @@
 ### decoder_and_refinement_equivalence
 
 - tasks: 6
-- avg_pass_rate: 0.171
+- avg_pass_rate: 0.182
 - needs_review: 0
 - property_classes: exploit_trace (1), total_conservation (1), subtree_partition (1), noninterference (1), calldata_decoder_metadata (1), calldata_decoder_faithfulness (1)
 - empirical_families: hard_state_invariant (5), mostly_solved_local_transition (1)
@@ -68,7 +68,7 @@
 ### protocol_transition_correctness
 
 - tasks: 5
-- avg_pass_rate: 0.457
+- avg_pass_rate: 0.450
 - needs_review: 1
 - property_classes: balance_credit_update (1), threshold_activation (1), monotonic_counter (1), linked_list_acyclicity (1), reserve_state_transition (1)
 - empirical_families: mostly_solved_local_transition (2), hard_state_invariant (2), divisive_authorization_or_accounting (1)
@@ -77,7 +77,7 @@
 ### negative_and_attack_boundaries
 
 - tasks: 2
-- avg_pass_rate: 0.482
+- avg_pass_rate: 0.517
 - needs_review: 1
 - property_classes: accounting_invariant_break (1), non_leakage (1)
 - empirical_families: divisive_authorization_or_accounting (1), single_model_solvable_boundary (1)

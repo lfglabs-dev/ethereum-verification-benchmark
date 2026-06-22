@@ -354,8 +354,8 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(minimax["model_name"], "minimax-m3")
         self.assertEqual(minimax["inference_provider_id"], "minimax")
         self.assertEqual(minimax["inference_model_id"], "minimax/minimax-m3")
-        self.assertEqual(minimax["provider_id"], "minimax")
-        self.assertEqual(minimax["provider_model_id"], "minimax-m3")
+        self.assertNotIn("provider_id", minimax)
+        self.assertNotIn("provider_model_id", minimax)
         self.assertEqual(minimax["display_name"], "minimax-m3")
         self.assertIn("total_tokens", minimax)
         self.assertIn("avg_total_tokens_per_task", minimax)
@@ -365,8 +365,6 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(openai["model_id"], "openai/gpt-5.5")
         self.assertEqual(openai["model_provider_id"], "openai")
         self.assertEqual(openai["model_name"], "gpt-5.5")
-        self.assertEqual(openai["provider_id"], "openai")
-        self.assertEqual(openai["provider_model_id"], "gpt-5.5")
         self.assertEqual(openai["display_name"], "gpt-5.5")
 
         deepseek = by_source_id["virtuals/deepseek-v4-flash"]
@@ -375,8 +373,6 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(deepseek["model_name"], "deepseek-v4-flash")
         self.assertEqual(deepseek["inference_provider_id"], "virtuals")
         self.assertEqual(deepseek["inference_model_id"], "virtuals/deepseek-v4-flash")
-        self.assertEqual(deepseek["provider_id"], "deepseek")
-        self.assertEqual(deepseek["provider_model_id"], "deepseek-v4-flash")
 
         xiaomi = by_source_id["virtuals/xiaomi-mimo-v2-5"]
         self.assertEqual(xiaomi["model_id"], "xiaomi/mimo-v2.5")
@@ -384,8 +380,6 @@ class VersioningTests(unittest.TestCase):
         self.assertEqual(xiaomi["model_name"], "mimo-v2.5")
         self.assertEqual(xiaomi["inference_provider_id"], "virtuals")
         self.assertEqual(xiaomi["inference_model_id"], "virtuals/xiaomi-mimo-v2-5")
-        self.assertEqual(xiaomi["provider_id"], "xiaomi")
-        self.assertEqual(xiaomi["provider_model_id"], "mimo-v2.5")
         self.assertEqual(xiaomi["display_name"], "mimo-v2.5")
 
         complete_rows = [row for row in leaderboard["rows"] if row["status"] == "complete"]

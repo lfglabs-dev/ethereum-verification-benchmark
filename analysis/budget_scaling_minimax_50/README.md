@@ -21,7 +21,8 @@ Generated after cascade execution:
 - `cascade_marginal_effort_per_percent.csv`: source data for the marginal-effort graph.
 
 Publication note:
-- Keep this experiment as a sidecar analysis asset under `analysis/budget_scaling_minimax_50/`.
+- Keep curated summaries and figures as a sidecar analysis asset under `analysis/budget_scaling_minimax_50/`.
+- Keep fresh stdout/stderr logs and in-progress reruns under ignored `output/budget_scaling_minimax_50/`.
 - Publish JSON provenance here (`profiles.json`, `selected_tasks.json`, `selection_stats.json`, `cascade_results.json`, `cascade_summary.json`) rather than adding it to `benchmark-versions/v0.1.json`.
 - `v0.1.json` should remain the canonical leaderboard manifest; this cascade uses a different budget-scaling methodology.
 - SVG figures are generated artifacts. They can be regenerated from the CSV/JSON outputs with `scripts/plan_budget_scaling_experiment.py`.

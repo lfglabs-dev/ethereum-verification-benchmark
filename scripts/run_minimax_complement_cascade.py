@@ -15,7 +15,7 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parents[1]
-DEFAULT_OUTPUT = REPO / "analysis" / "budget_scaling_minimax_remaining_85"
+DEFAULT_OUTPUT = REPO / "output" / "budget_scaling_minimax_remaining_85"
 PUBLISHED_OUTPUT = REPO / "analysis" / "budget_scaling_minimax_50"
 DEFAULT_MODEL = "MiniMax-M3"
 DEFAULT_BASE_URL = "https://api.minimax.io/v1"

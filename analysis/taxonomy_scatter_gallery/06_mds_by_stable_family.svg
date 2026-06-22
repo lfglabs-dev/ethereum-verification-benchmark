@@ -7,184 +7,184 @@ text{font-family:Inter,Arial,sans-serif;fill:#111827}.sub{fill:#4b5563}.axis{str
 <text x="105" y="57" font-size="13" class="sub">Compare les familles sémantiques aux voisinages comportementaux</text>
 <line x1="105.0" y1="74" x2="105.0" y2="728" class="grid"/>
 <line x1="105" y1="74.0" x2="895" y2="74.0" class="grid"/>
-<text x="105.0" y="748" text-anchor="middle" class="tick">-0.74</text>
-<text x="93" y="78.0" text-anchor="end" class="tick">0.41</text>
+<text x="105.0" y="748" text-anchor="middle" class="tick">-0.85</text>
+<text x="93" y="78.0" text-anchor="end" class="tick">0.29</text>
 <line x1="263.0" y1="74" x2="263.0" y2="728" class="grid"/>
 <line x1="105" y1="204.8" x2="895" y2="204.8" class="grid"/>
-<text x="263.0" y="748" text-anchor="middle" class="tick">-0.51</text>
-<text x="93" y="208.8" text-anchor="end" class="tick">0.26</text>
+<text x="263.0" y="748" text-anchor="middle" class="tick">-0.60</text>
+<text x="93" y="208.8" text-anchor="end" class="tick">0.16</text>
 <line x1="421.0" y1="74" x2="421.0" y2="728" class="grid"/>
 <line x1="105" y1="335.6" x2="895" y2="335.6" class="grid"/>
-<text x="421.0" y="748" text-anchor="middle" class="tick">-0.28</text>
-<text x="93" y="339.6" text-anchor="end" class="tick">0.11</text>
+<text x="421.0" y="748" text-anchor="middle" class="tick">-0.36</text>
+<text x="93" y="339.6" text-anchor="end" class="tick">0.03</text>
 <line x1="579.0" y1="74" x2="579.0" y2="728" class="grid"/>
 <line x1="105" y1="466.4" x2="895" y2="466.4" class="grid"/>
-<text x="579.0" y="748" text-anchor="middle" class="tick">-0.05</text>
-<text x="93" y="470.4" text-anchor="end" class="tick">-0.04</text>
+<text x="579.0" y="748" text-anchor="middle" class="tick">-0.12</text>
+<text x="93" y="470.4" text-anchor="end" class="tick">-0.09</text>
 <line x1="737.0" y1="74" x2="737.0" y2="728" class="grid"/>
 <line x1="105" y1="597.2" x2="895" y2="597.2" class="grid"/>
-<text x="737.0" y="748" text-anchor="middle" class="tick">0.18</text>
-<text x="93" y="601.2" text-anchor="end" class="tick">-0.20</text>
+<text x="737.0" y="748" text-anchor="middle" class="tick">0.12</text>
+<text x="93" y="601.2" text-anchor="end" class="tick">-0.22</text>
 <line x1="895.0" y1="74" x2="895.0" y2="728" class="grid"/>
 <line x1="105" y1="728.0" x2="895" y2="728.0" class="grid"/>
-<text x="895.0" y="748" text-anchor="middle" class="tick">0.41</text>
-<text x="93" y="732.0" text-anchor="end" class="tick">-0.35</text>
+<text x="895.0" y="748" text-anchor="middle" class="tick">0.37</text>
+<text x="93" y="732.0" text-anchor="end" class="tick">-0.34</text>
 <line x1="105" y1="728" x2="895" y2="728" class="axis"/>
 <line x1="105" y1="74" x2="105" y2="728" class="axis"/>
 <text x="500.0" y="786" font-size="14" font-weight="600">map_x</text>
 <text transform="translate(32 401.0) rotate(-90)" text-anchor="middle" font-size="14" font-weight="600">map_y</text>
-<ellipse cx="714.6" cy="399.1" rx="354.5" ry="249.6" fill="#dc2626" opacity=".08" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="692.8" cy="419.2" rx="354.5" ry="251.3" fill="#2563eb" opacity=".08" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="689.7" cy="401.1" rx="333.3" ry="119.3" fill="#be123c" opacity=".08" stroke="#be123c" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="464.5" cy="495.9" rx="350.8" ry="162.0" fill="#4f46e5" opacity=".08" stroke="#4f46e5" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="714.3" cy="508.3" rx="269.5" ry="110.5" fill="#9333ea" opacity=".08" stroke="#9333ea" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="340.2" cy="367.3" rx="200.5" ry="284.5" fill="#0891b2" opacity=".08" stroke="#0891b2" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="376.6" cy="477.0" rx="350.1" ry="175.4" fill="#ea580c" opacity=".08" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="408.2" cy="437.3" rx="358.5" ry="292.1" fill="#16a34a" opacity=".08" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5 4"/>
-<circle cx="831.5" cy="294.3" r="11.5" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/earmark_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.322 y=0.157</title></circle>
-<circle cx="831.5" cy="294.3" r="11.7" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/redeem_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.322 y=0.157</title></circle>
-<circle cx="831.5" cy="294.5" r="11.4" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sub_debt_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.322 y=0.157</title></circle>
-<circle cx="831.5" cy="294.5" r="11.3" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.322 y=0.157</title></circle>
-<circle cx="831.5" cy="294.5" r="11.4" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sync_account_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.322 y=0.157</title></circle>
-<circle cx="830.9" cy="296.5" r="11.9" fill="#2563eb" class="pt"><title>balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing | stable_family=state_preservation_and_local_effects | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="11.3" fill="#dc2626" class="pt"><title>cork/pool_solvency/solvency_preserved | stable_family=asset_accounting_and_conservation | x=0.321 y=0.155</title></circle>
-<circle cx="159.5" cy="440.9" r="4.2" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance | stable_family=state_preservation_and_local_effects | x=-0.66 y=-0.0141</title></circle>
-<circle cx="159.5" cy="440.9" r="3.5" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit | stable_family=state_preservation_and_local_effects | x=-0.66 y=-0.0141</title></circle>
-<circle cx="830.9" cy="296.5" r="11.8" fill="#be123c" class="pt"><title>damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool | stable_family=decoder_and_refinement_equivalence | x=0.321 y=0.155</title></circle>
-<circle cx="312.6" cy="660.1" r="9.2" fill="#65a30d" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | stable_family=negative_and_attack_boundaries | x=-0.436 y=-0.27</title></circle>
-<circle cx="200.3" cy="364.2" r="9.0" fill="#4f46e5" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit | stable_family=protocol_transition_correctness | x=-0.6 y=0.0756</title></circle>
-<circle cx="312.6" cy="660.1" r="6.3" fill="#4f46e5" class="pt"><title>ethereum/deposit_contract_minimal/chain_start_threshold | stable_family=protocol_transition_correctness | x=-0.436 y=-0.27</title></circle>
-<circle cx="515.6" cy="601.4" r="10.3" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/deposit_count | stable_family=state_preservation_and_local_effects | x=-0.139 y=-0.201</title></circle>
-<circle cx="159.5" cy="440.9" r="8.7" fill="#4f46e5" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_increments_full_count | stable_family=protocol_transition_correctness | x=-0.66 y=-0.0141</title></circle>
-<circle cx="830.9" cy="296.5" r="11.7" fill="#dc2626" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap | stable_family=asset_accounting_and_conservation | x=0.321 y=0.155</title></circle>
-<circle cx="419.3" cy="408.4" r="10.0" fill="#9333ea" class="pt"><title>ethereum/deposit_contract_minimal/small_deposit_preserves_full_count | stable_family=structural_indexing_invariants | x=-0.28 y=0.024</title></circle>
-<circle cx="524.5" cy="415.0" r="11.7" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/claim_redeem_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.127 y=0.0162</title></circle>
-<circle cx="214.2" cy="167.2" r="9.2" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/deposit_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.58 y=0.306</title></circle>
-<circle cx="441.0" cy="119.1" r="11.0" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/handle_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.248 y=0.362</title></circle>
-<circle cx="312.6" cy="660.1" r="6.7" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.436 y=-0.27</title></circle>
-<circle cx="159.5" cy="440.9" r="3.5" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/report_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.66 y=-0.0141</title></circle>
-<circle cx="515.6" cy="601.4" r="11.8" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/request_redeem_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.139 y=-0.201</title></circle>
-<circle cx="214.2" cy="167.2" r="9.0" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/transfer_remote_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.58 y=0.306</title></circle>
-<circle cx="830.9" cy="296.5" r="9.3" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free | stable_family=state_preservation_and_local_effects | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="10.2" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/redeem_preserves_pps | stable_family=state_preservation_and_local_effects | x=0.321 y=0.155</title></circle>
-<circle cx="214.2" cy="167.2" r="8.4" fill="#2563eb" class="pt"><title>kleros/sortition_trees/draw_interval_matches_weights | stable_family=state_preservation_and_local_effects | x=-0.58 y=0.306</title></circle>
-<circle cx="524.5" cy="415.0" r="10.8" fill="#ea580c" class="pt"><title>kleros/sortition_trees/draw_selects_valid_leaf | stable_family=numeric_bounds_and_pricing | x=-0.127 y=0.0162</title></circle>
-<circle cx="321.9" cy="524.7" r="10.0" fill="#9333ea" class="pt"><title>kleros/sortition_trees/node_id_bijection | stable_family=structural_indexing_invariants | x=-0.423 y=-0.112</title></circle>
-<circle cx="515.6" cy="601.4" r="10.3" fill="#9333ea" class="pt"><title>kleros/sortition_trees/parent_equals_sum_of_children | stable_family=structural_indexing_invariants | x=-0.139 y=-0.201</title></circle>
-<circle cx="200.3" cy="364.2" r="9.2" fill="#be123c" class="pt"><title>kleros/sortition_trees/root_equals_sum_of_leaves | stable_family=decoder_and_refinement_equivalence | x=-0.6 y=0.0756</title></circle>
-<circle cx="733.5" cy="353.5" r="11.7" fill="#be123c" class="pt"><title>kleros/sortition_trees/root_minus_left_equals_right_subtree | stable_family=decoder_and_refinement_equivalence | x=0.179 y=0.088</title></circle>
-<circle cx="830.9" cy="296.5" r="9.6" fill="#2563eb" class="pt"><title>lagoon/guardrails/exact_compliance | stable_family=state_preservation_and_local_effects | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="10.3" fill="#2563eb" class="pt"><title>lagoon/guardrails/negative_variation_bounded | stable_family=state_preservation_and_local_effects | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="9.0" fill="#2563eb" class="pt"><title>lagoon/guardrails/positive_variation_bounded | stable_family=state_preservation_and_local_effects | x=0.321 y=0.155</title></circle>
-<circle cx="776.1" cy="564.9" r="12.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/ceildiv_sandwich | stable_family=asset_accounting_and_conservation | x=0.241 y=-0.159</title></circle>
-<circle cx="830.9" cy="296.5" r="12.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/locked_funds_solvency | stable_family=asset_accounting_and_conservation | x=0.321 y=0.155</title></circle>
-<circle cx="159.5" cy="440.9" r="3.5" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/max_liability_shares_bound | stable_family=asset_accounting_and_conservation | x=-0.66 y=-0.0141</title></circle>
-<circle cx="159.5" cy="440.9" r="3.5" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/reserve_ratio_bounds | stable_family=asset_accounting_and_conservation | x=-0.66 y=-0.0141</title></circle>
-<circle cx="776.1" cy="564.9" r="11.9" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/shares_conversion_monotone | stable_family=asset_accounting_and_conservation | x=0.241 y=-0.159</title></circle>
-<circle cx="200.3" cy="364.2" r="8.3" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_book_value | stable_family=numeric_bounds_and_pricing | x=-0.6 y=0.0756</title></circle>
-<circle cx="312.6" cy="660.1" r="9.1" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_buy_price | stable_family=numeric_bounds_and_pricing | x=-0.436 y=-0.27</title></circle>
-<circle cx="159.5" cy="440.9" r="3.5" fill="#2563eb" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_capital | stable_family=state_preservation_and_local_effects | x=-0.66 y=-0.0141</title></circle>
-<circle cx="312.6" cy="660.1" r="7.7" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_sell_price | stable_family=numeric_bounds_and_pricing | x=-0.436 y=-0.27</title></circle>
-<circle cx="321.9" cy="524.7" r="9.6" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.423 y=-0.112</title></circle>
-<circle cx="361.1" cy="572.6" r="10.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.365 y=-0.168</title></circle>
-<circle cx="159.5" cy="440.9" r="9.8" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.66 y=-0.0141</title></circle>
-<circle cx="312.6" cy="660.1" r="8.7" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.436 y=-0.27</title></circle>
-<circle cx="159.5" cy="440.9" r="9.0" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.66 y=-0.0141</title></circle>
-<circle cx="159.5" cy="440.9" r="9.4" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.66 y=-0.0141</title></circle>
-<circle cx="465.3" cy="682.9" r="10.2" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.213 y=-0.297</title></circle>
-<circle cx="312.6" cy="660.1" r="9.4" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.436 y=-0.27</title></circle>
-<circle cx="312.6" cy="660.1" r="8.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.436 y=-0.27</title></circle>
-<circle cx="159.5" cy="440.9" r="8.5" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.66 y=-0.0141</title></circle>
-<circle cx="830.9" cy="296.5" r="11.7" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed | stable_family=authorization_and_caller_integrity | x=0.321 y=0.155</title></circle>
-<circle cx="776.1" cy="564.9" r="12.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=0.241 y=-0.159</title></circle>
-<circle cx="830.9" cy="296.5" r="11.6" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="12.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.321 y=0.155</title></circle>
-<circle cx="723.3" cy="378.1" r="10.9" fill="#be123c" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims | stable_family=decoder_and_refinement_equivalence | x=0.164 y=0.0593</title></circle>
-<circle cx="832.5" cy="305.5" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_no_overclaim | stable_family=asset_accounting_and_conservation | x=0.324 y=0.144</title></circle>
-<circle cx="723.3" cy="378.1" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.164 y=0.0593</title></circle>
-<circle cx="605.6" cy="142.0" r="11.2" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=-0.00805 y=0.335</title></circle>
-<circle cx="832.5" cy="305.5" r="11.6" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.324 y=0.144</title></circle>
-<circle cx="723.3" cy="378.1" r="11.1" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=0.164 y=0.0593</title></circle>
-<circle cx="653.1" cy="678.1" r="11.8" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.0615 y=-0.291</title></circle>
-<circle cx="392.8" cy="336.4" r="10.7" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_marks_user | stable_family=authorization_and_caller_integrity | x=-0.319 y=0.108</title></circle>
-<circle cx="723.3" cy="378.1" r="11.6" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=0.164 y=0.0593</title></circle>
-<circle cx="485.3" cy="666.0" r="10.7" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=-0.184 y=-0.277</title></circle>
-<circle cx="832.5" cy="305.5" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.324 y=0.144</title></circle>
-<circle cx="162.4" cy="437.2" r="6.1" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/double_claim_rejected | stable_family=authorization_and_caller_integrity | x=-0.656 y=-0.00968</title></circle>
-<circle cx="323.0" cy="653.3" r="9.7" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/no_overclaim | stable_family=asset_accounting_and_conservation | x=-0.421 y=-0.262</title></circle>
-<circle cx="225.9" cy="126.7" r="10.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state | stable_family=state_preservation_and_local_effects | x=-0.563 y=0.353</title></circle>
-<circle cx="832.5" cy="305.5" r="12.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.324 y=0.144</title></circle>
-<circle cx="410.2" cy="162.7" r="10.7" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user | stable_family=authorization_and_caller_integrity | x=-0.294 y=0.311</title></circle>
-<circle cx="485.3" cy="666.0" r="9.7" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=-0.184 y=-0.277</title></circle>
-<circle cx="723.3" cy="378.1" r="11.4" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=0.164 y=0.0593</title></circle>
-<circle cx="832.5" cy="305.5" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.324 y=0.144</title></circle>
-<circle cx="225.9" cy="126.7" r="10.5" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=-0.563 y=0.353</title></circle>
-<circle cx="554.1" cy="374.6" r="11.4" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim | stable_family=asset_accounting_and_conservation | x=-0.0832 y=0.0634</title></circle>
-<circle cx="225.9" cy="126.7" r="10.7" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state | stable_family=state_preservation_and_local_effects | x=-0.563 y=0.353</title></circle>
-<circle cx="832.5" cy="305.5" r="12.0" fill="#dc2626" class="pt"><title>piku/fund_conservation/amount_paid_preserves_fund_conservation | stable_family=asset_accounting_and_conservation | x=0.324 y=0.144</title></circle>
-<circle cx="392.8" cy="336.4" r="10.8" fill="#2563eb" class="pt"><title>piku/fund_conservation/amount_paid_records_distribution | stable_family=state_preservation_and_local_effects | x=-0.319 y=0.108</title></circle>
-<circle cx="832.5" cy="305.5" r="11.2" fill="#dc2626" class="pt"><title>piku/fund_conservation/sell_order_preserves_fund_conservation | stable_family=asset_accounting_and_conservation | x=0.324 y=0.144</title></circle>
-<circle cx="723.3" cy="378.1" r="11.7" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_records_redemption_buckets | stable_family=state_preservation_and_local_effects | x=0.164 y=0.0593</title></circle>
-<circle cx="832.5" cy="305.5" r="11.8" fill="#2563eb" class="pt"><title>polaris/bonding_curve/buy_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.324 y=0.144</title></circle>
-<circle cx="832.5" cy="305.5" r="11.7" fill="#2563eb" class="pt"><title>polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.324 y=0.144</title></circle>
-<circle cx="832.5" cy="305.5" r="11.9" fill="#2563eb" class="pt"><title>polaris/bonding_curve/init_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.324 y=0.144</title></circle>
-<circle cx="832.5" cy="305.5" r="11.6" fill="#2563eb" class="pt"><title>polaris/bonding_curve/sell_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.324 y=0.144</title></circle>
-<circle cx="840.5" cy="452.6" r="11.6" fill="#16a34a" class="pt"><title>polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier | stable_family=authorization_and_caller_integrity | x=0.335 y=-0.0277</title></circle>
-<circle cx="840.5" cy="452.6" r="11.1" fill="#16a34a" class="pt"><title>polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier | stable_family=authorization_and_caller_integrity | x=0.335 y=-0.0277</title></circle>
-<circle cx="160.8" cy="337.3" r="5.5" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_at_end_time | stable_family=numeric_bounds_and_pricing | x=-0.658 y=0.107</title></circle>
-<circle cx="160.8" cy="337.3" r="3.5" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_at_start_time | stable_family=numeric_bounds_and_pricing | x=-0.658 y=0.107</title></circle>
-<circle cx="516.2" cy="535.1" r="9.5" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_lower_bound | stable_family=numeric_bounds_and_pricing | x=-0.139 y=-0.124</title></circle>
-<circle cx="825.0" cy="507.1" r="11.3" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_upper_bound | stable_family=numeric_bounds_and_pricing | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.8" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.6" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.2" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.7" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.5" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/add_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.3" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/in_list_reachable | stable_family=structural_indexing_invariants | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.9" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.4" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/remove_owner_in_list_reachable | stable_family=structural_indexing_invariants | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.2" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.4" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/remove_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.9" fill="#4f46e5" class="pt"><title>safe/owner_manager_reach/setup_owners_acyclicity | stable_family=protocol_transition_correctness | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.7" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/setup_owners_in_list_reachable | stable_family=structural_indexing_invariants | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.4" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/setup_owners_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="12.0" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.1" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/swap_owner_in_list_reachable | stable_family=structural_indexing_invariants | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.3" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.5" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/swap_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="9.4" fill="#2563eb" class="pt"><title>term_finance/term_auction_clearing/clearing_assignment_correct | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.4" fill="#4f46e5" class="pt"><title>termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve | stable_family=protocol_transition_correctness | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.3" fill="#dc2626" class="pt"><title>usual/dao_collateral/redeem_conservation | stable_family=asset_accounting_and_conservation | x=0.313 y=-0.0913</title></circle>
-<circle cx="168.2" cy="304.1" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_fee_formula | stable_family=state_preservation_and_local_effects | x=-0.647 y=0.146</title></circle>
-<circle cx="825.0" cy="507.1" r="10.8" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_return_formula | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.8" fill="#dc2626" class="pt"><title>usual/dao_collateral/swap_conservation | stable_family=asset_accounting_and_conservation | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.4" fill="#dc2626" class="pt"><title>usual/dao_collateral/swap_value_conservation | stable_family=asset_accounting_and_conservation | x=0.313 y=-0.0913</title></circle>
-<circle cx="363.3" cy="207.0" r="11.3" fill="#dc2626" class="pt"><title>wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity | stable_family=asset_accounting_and_conservation | x=-0.362 y=0.259</title></circle>
-<circle cx="825.0" cy="507.1" r="10.9" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_decreases_supply | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="12.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_insufficient | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.3" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_ctokens_match_deposit | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_increases_supply | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.3" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_overflow_protection | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="379.3" cy="505.0" r="7.8" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/setOperator_updates | stable_family=state_preservation_and_local_effects | x=-0.339 y=-0.0889</title></circle>
-<circle cx="825.0" cy="507.1" r="10.8" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transferFrom_conservation | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="12.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_conservation | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.1" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_insufficient | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="627.9" cy="469.5" r="10.5" fill="#65a30d" class="pt"><title>zama/erc7984_confidential_token/transfer_no_balance_revert | stable_family=negative_and_attack_boundaries | x=0.0247 y=-0.0474</title></circle>
-<circle cx="825.0" cy="507.1" r="10.9" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_preserves_supply | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.9" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_sufficient | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="10.7" fill="#be123c" class="pt"><title>zodiac/roles_decoder_faithfulness/metadata_bridge | stable_family=decoder_and_refinement_equivalence | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.2" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe | stable_family=state_preservation_and_local_effects | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="11.3" fill="#be123c" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_faithful | stable_family=decoder_and_refinement_equivalence | x=0.313 y=-0.0913</title></circle>
-<text x="714.6" y="399.1" class="cent" text-anchor="middle">asset_accounting_and_con</text>
-<text x="692.8" y="419.2" class="cent" text-anchor="middle">state_preservation_and_l</text>
-<text x="689.7" y="401.1" class="cent" text-anchor="middle">decoder_and_refinement_e</text>
-<text x="470.3" y="564.8" class="cent" text-anchor="middle">negative_and_attack_boun</text>
-<text x="464.5" y="495.9" class="cent" text-anchor="middle">protocol_transition_corr</text>
-<text x="714.3" y="508.3" class="cent" text-anchor="middle">structural_indexing_inva</text>
-<text x="340.2" y="367.3" class="cent" text-anchor="middle">solvency_and_liquidity_g</text>
-<text x="376.6" y="477.0" class="cent" text-anchor="middle">numeric_bounds_and_prici</text>
-<text x="408.2" y="437.3" class="cent" text-anchor="middle">authorization_and_caller</text>
+<ellipse cx="731.5" cy="352.4" rx="350.5" ry="120.9" fill="#dc2626" opacity=".08" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="721.1" cy="395.8" rx="334.3" ry="219.4" fill="#2563eb" opacity=".08" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="715.7" cy="311.4" rx="266.5" ry="74.1" fill="#be123c" opacity=".08" stroke="#be123c" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="541.3" cy="347.3" rx="285.9" ry="136.3" fill="#4f46e5" opacity=".08" stroke="#4f46e5" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="740.3" cy="362.3" rx="227.7" ry="123.0" fill="#9333ea" opacity=".08" stroke="#9333ea" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="480.4" cy="413.9" rx="218.0" ry="194.8" fill="#0891b2" opacity=".08" stroke="#0891b2" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="431.4" cy="356.1" rx="314.4" ry="164.7" fill="#ea580c" opacity=".08" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="516.2" cy="385.9" rx="261.5" ry="295.9" fill="#16a34a" opacity=".08" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5 4"/>
+<circle cx="819.5" cy="383.4" r="11.2" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/earmark_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="12.0" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/redeem_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="11.3" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sub_debt_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="11.1" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="11.6" fill="#dc2626" class="pt"><title>alchemix/earmark_conservation/sync_account_preserves_invariant | stable_family=asset_accounting_and_conservation | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="11.3" fill="#2563eb" class="pt"><title>balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing | stable_family=state_preservation_and_local_effects | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="10.4" fill="#dc2626" class="pt"><title>cork/pool_solvency/solvency_preserved | stable_family=asset_accounting_and_conservation | x=0.25 y=-0.0124</title></circle>
+<circle cx="283.7" cy="382.8" r="3.5" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance | stable_family=state_preservation_and_local_effects | x=-0.571 y=-0.0118</title></circle>
+<circle cx="208.9" cy="389.3" r="3.5" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit | stable_family=state_preservation_and_local_effects | x=-0.686 y=-0.0181</title></circle>
+<circle cx="781.0" cy="306.2" r="11.8" fill="#be123c" class="pt"><title>damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool | stable_family=decoder_and_refinement_equivalence | x=0.191 y=0.0618</title></circle>
+<circle cx="281.9" cy="216.2" r="7.8" fill="#65a30d" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | stable_family=negative_and_attack_boundaries | x=-0.574 y=0.148</title></circle>
+<circle cx="288.7" cy="250.2" r="7.9" fill="#4f46e5" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit | stable_family=protocol_transition_correctness | x=-0.564 y=0.116</title></circle>
+<circle cx="356.2" cy="245.1" r="8.1" fill="#4f46e5" class="pt"><title>ethereum/deposit_contract_minimal/chain_start_threshold | stable_family=protocol_transition_correctness | x=-0.46 y=0.121</title></circle>
+<circle cx="616.2" cy="255.4" r="9.4" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/deposit_count | stable_family=state_preservation_and_local_effects | x=-0.062 y=0.111</title></circle>
+<circle cx="412.7" cy="489.6" r="8.6" fill="#4f46e5" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_increments_full_count | stable_family=protocol_transition_correctness | x=-0.374 y=-0.114</title></circle>
+<circle cx="819.5" cy="383.4" r="11.3" fill="#dc2626" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap | stable_family=asset_accounting_and_conservation | x=0.25 y=-0.0124</title></circle>
+<circle cx="575.2" cy="427.4" r="9.7" fill="#9333ea" class="pt"><title>ethereum/deposit_contract_minimal/small_deposit_preserves_full_count | stable_family=structural_indexing_invariants | x=-0.125 y=-0.0547</title></circle>
+<circle cx="577.2" cy="353.4" r="10.5" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/claim_redeem_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.122 y=0.0164</title></circle>
+<circle cx="520.1" cy="602.1" r="9.5" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/deposit_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.209 y=-0.223</title></circle>
+<circle cx="608.9" cy="488.0" r="10.3" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/handle_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.0731 y=-0.113</title></circle>
+<circle cx="462.1" cy="277.5" r="9.8" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.298 y=0.0894</title></circle>
+<circle cx="208.9" cy="389.3" r="3.5" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/report_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.686 y=-0.0181</title></circle>
+<circle cx="575.5" cy="240.5" r="11.3" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/request_redeem_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.124 y=0.125</title></circle>
+<circle cx="410.4" cy="546.3" r="8.4" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/transfer_remote_preserves_global_solvency | stable_family=solvency_and_liquidity_guards | x=-0.377 y=-0.169</title></circle>
+<circle cx="819.5" cy="383.4" r="9.4" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free | stable_family=state_preservation_and_local_effects | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="10.3" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/redeem_preserves_pps | stable_family=state_preservation_and_local_effects | x=0.25 y=-0.0124</title></circle>
+<circle cx="548.8" cy="666.2" r="9.5" fill="#2563eb" class="pt"><title>kleros/sortition_trees/draw_interval_matches_weights | stable_family=state_preservation_and_local_effects | x=-0.165 y=-0.284</title></circle>
+<circle cx="607.9" cy="514.0" r="9.9" fill="#ea580c" class="pt"><title>kleros/sortition_trees/draw_selects_valid_leaf | stable_family=numeric_bounds_and_pricing | x=-0.0747 y=-0.138</title></circle>
+<circle cx="405.2" cy="342.0" r="9.6" fill="#9333ea" class="pt"><title>kleros/sortition_trees/node_id_bijection | stable_family=structural_indexing_invariants | x=-0.385 y=0.0274</title></circle>
+<circle cx="566.6" cy="209.4" r="9.5" fill="#9333ea" class="pt"><title>kleros/sortition_trees/parent_equals_sum_of_children | stable_family=structural_indexing_invariants | x=-0.138 y=0.155</title></circle>
+<circle cx="343.5" cy="273.8" r="9.9" fill="#be123c" class="pt"><title>kleros/sortition_trees/root_equals_sum_of_leaves | stable_family=decoder_and_refinement_equivalence | x=-0.48 y=0.093</title></circle>
+<circle cx="725.4" cy="336.9" r="10.7" fill="#be123c" class="pt"><title>kleros/sortition_trees/root_minus_left_equals_right_subtree | stable_family=decoder_and_refinement_equivalence | x=0.105 y=0.0323</title></circle>
+<circle cx="819.5" cy="383.4" r="8.7" fill="#2563eb" class="pt"><title>lagoon/guardrails/exact_compliance | stable_family=state_preservation_and_local_effects | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="8.1" fill="#2563eb" class="pt"><title>lagoon/guardrails/negative_variation_bounded | stable_family=state_preservation_and_local_effects | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="10.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/positive_variation_bounded | stable_family=state_preservation_and_local_effects | x=0.25 y=-0.0124</title></circle>
+<circle cx="766.6" cy="218.6" r="10.9" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/ceildiv_sandwich | stable_family=asset_accounting_and_conservation | x=0.169 y=0.146</title></circle>
+<circle cx="819.5" cy="383.4" r="11.4" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/locked_funds_solvency | stable_family=asset_accounting_and_conservation | x=0.25 y=-0.0124</title></circle>
+<circle cx="159.5" cy="353.0" r="3.5" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/max_liability_shares_bound | stable_family=asset_accounting_and_conservation | x=-0.762 y=0.0168</title></circle>
+<circle cx="159.5" cy="353.0" r="3.5" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/reserve_ratio_bounds | stable_family=asset_accounting_and_conservation | x=-0.762 y=0.0168</title></circle>
+<circle cx="766.6" cy="218.6" r="11.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/shares_conversion_monotone | stable_family=asset_accounting_and_conservation | x=0.169 y=0.146</title></circle>
+<circle cx="231.8" cy="219.8" r="5.4" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_book_value | stable_family=numeric_bounds_and_pricing | x=-0.651 y=0.145</title></circle>
+<circle cx="401.3" cy="251.9" r="9.5" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_buy_price | stable_family=numeric_bounds_and_pricing | x=-0.391 y=0.114</title></circle>
+<circle cx="272.6" cy="495.1" r="7.5" fill="#2563eb" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_capital | stable_family=state_preservation_and_local_effects | x=-0.588 y=-0.12</title></circle>
+<circle cx="338.4" cy="244.2" r="4.9" fill="#ea580c" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_sell_price | stable_family=numeric_bounds_and_pricing | x=-0.488 y=0.121</title></circle>
+<circle cx="343.2" cy="343.6" r="8.9" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.48 y=0.0259</title></circle>
+<circle cx="430.5" cy="119.1" r="10.2" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.346 y=0.242</title></circle>
+<circle cx="399.1" cy="496.2" r="9.4" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.395 y=-0.121</title></circle>
+<circle cx="354.6" cy="215.6" r="8.7" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.463 y=0.149</title></circle>
+<circle cx="360.1" cy="425.7" r="8.1" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.454 y=-0.053</title></circle>
+<circle cx="337.6" cy="386.1" r="9.2" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.489 y=-0.015</title></circle>
+<circle cx="407.2" cy="185.9" r="9.8" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.382 y=0.177</title></circle>
+<circle cx="350.6" cy="215.5" r="9.2" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.469 y=0.149</title></circle>
+<circle cx="401.3" cy="251.9" r="7.0" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.391 y=0.114</title></circle>
+<circle cx="337.6" cy="386.1" r="9.9" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller | stable_family=authorization_and_caller_integrity | x=-0.489 y=-0.015</title></circle>
+<circle cx="824.5" cy="375.8" r="10.8" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed | stable_family=authorization_and_caller_integrity | x=0.257 y=-0.0051</title></circle>
+<circle cx="769.6" cy="199.1" r="10.7" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=0.173 y=0.165</title></circle>
+<circle cx="824.5" cy="375.8" r="10.8" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.4" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="10.6" fill="#be123c" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims | stable_family=decoder_and_refinement_equivalence | x=0.163 y=-0.0225</title></circle>
+<circle cx="824.5" cy="375.8" r="11.2" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_no_overclaim | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="11.7" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.163 y=-0.0225</title></circle>
+<circle cx="726.0" cy="570.0" r="10.5" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=0.106 y=-0.192</title></circle>
+<circle cx="824.5" cy="375.8" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="10.5" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=0.163 y=-0.0225</title></circle>
+<circle cx="706.5" cy="245.7" r="11.3" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.0764 y=0.12</title></circle>
+<circle cx="646.1" cy="442.1" r="10.6" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_marks_user | stable_family=authorization_and_caller_integrity | x=-0.016 y=-0.0689</title></circle>
+<circle cx="763.2" cy="393.9" r="11.2" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=0.163 y=-0.0225</title></circle>
+<circle cx="640.6" cy="285.6" r="10.7" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=-0.0245 y=0.0817</title></circle>
+<circle cx="824.5" cy="375.8" r="11.3" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="338.1" cy="521.3" r="10.0" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/double_claim_rejected | stable_family=authorization_and_caller_integrity | x=-0.488 y=-0.145</title></circle>
+<circle cx="585.3" cy="321.1" r="10.1" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/no_overclaim | stable_family=asset_accounting_and_conservation | x=-0.109 y=0.0475</title></circle>
+<circle cx="538.9" cy="661.8" r="11.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state | stable_family=state_preservation_and_local_effects | x=-0.18 y=-0.28</title></circle>
+<circle cx="824.5" cy="375.8" r="11.5" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="656.7" cy="568.7" r="10.9" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user | stable_family=authorization_and_caller_integrity | x=0.000213 y=-0.191</title></circle>
+<circle cx="640.6" cy="285.6" r="10.1" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed | stable_family=asset_accounting_and_conservation | x=-0.0245 y=0.0817</title></circle>
+<circle cx="763.2" cy="393.9" r="11.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated | stable_family=asset_accounting_and_conservation | x=0.163 y=-0.0225</title></circle>
+<circle cx="824.5" cy="375.8" r="11.4" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="483.0" cy="682.9" r="10.3" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected | stable_family=authorization_and_caller_integrity | x=-0.266 y=-0.3</title></circle>
+<circle cx="698.3" cy="412.9" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim | stable_family=asset_accounting_and_conservation | x=0.064 y=-0.0407</title></circle>
+<circle cx="474.1" cy="661.5" r="10.0" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state | stable_family=state_preservation_and_local_effects | x=-0.28 y=-0.28</title></circle>
+<circle cx="824.5" cy="375.8" r="12.0" fill="#dc2626" class="pt"><title>piku/fund_conservation/amount_paid_preserves_fund_conservation | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="590.2" cy="524.7" r="10.1" fill="#2563eb" class="pt"><title>piku/fund_conservation/amount_paid_records_distribution | stable_family=state_preservation_and_local_effects | x=-0.102 y=-0.148</title></circle>
+<circle cx="824.5" cy="375.8" r="12.0" fill="#dc2626" class="pt"><title>piku/fund_conservation/sell_order_preserves_fund_conservation | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="11.1" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_records_redemption_buckets | stable_family=state_preservation_and_local_effects | x=0.163 y=-0.0225</title></circle>
+<circle cx="840.5" cy="278.8" r="11.9" fill="#2563eb" class="pt"><title>polaris/bonding_curve/buy_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.282 y=0.0882</title></circle>
+<circle cx="824.5" cy="375.8" r="11.4" fill="#2563eb" class="pt"><title>polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="12.0" fill="#2563eb" class="pt"><title>polaris/bonding_curve/init_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.7" fill="#2563eb" class="pt"><title>polaris/bonding_curve/sell_preserves_reserve_ratio_zero | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.2" fill="#16a34a" class="pt"><title>polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier | stable_family=authorization_and_caller_integrity | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.2" fill="#16a34a" class="pt"><title>polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier | stable_family=authorization_and_caller_integrity | x=0.257 y=-0.0051</title></circle>
+<circle cx="272.9" cy="415.3" r="7.7" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_at_end_time | stable_family=numeric_bounds_and_pricing | x=-0.588 y=-0.043</title></circle>
+<circle cx="338.1" cy="521.3" r="3.5" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_at_start_time | stable_family=numeric_bounds_and_pricing | x=-0.488 y=-0.145</title></circle>
+<circle cx="436.3" cy="306.7" r="9.7" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_lower_bound | stable_family=numeric_bounds_and_pricing | x=-0.338 y=0.0614</title></circle>
+<circle cx="824.5" cy="375.8" r="10.9" fill="#ea580c" class="pt"><title>reserve/auction_price_band/price_upper_bound | stable_family=numeric_bounds_and_pricing | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="10.7" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.1" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.7" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="10.7" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.163 y=-0.0225</title></circle>
+<circle cx="824.5" cy="375.8" r="11.0" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.6" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/add_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.3" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/in_list_reachable | stable_family=structural_indexing_invariants | x=0.257 y=-0.0051</title></circle>
+<circle cx="712.7" cy="493.1" r="10.9" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.086 y=-0.118</title></circle>
+<circle cx="824.5" cy="375.8" r="10.8" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/remove_owner_in_list_reachable | stable_family=structural_indexing_invariants | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.6" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.5" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/remove_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="12.0" fill="#4f46e5" class="pt"><title>safe/owner_manager_reach/setup_owners_acyclicity | stable_family=protocol_transition_correctness | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.1" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/setup_owners_in_list_reachable | stable_family=structural_indexing_invariants | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.3" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/setup_owners_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="12.0" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_acyclicity | stable_family=state_preservation_and_local_effects | x=0.163 y=-0.0225</title></circle>
+<circle cx="824.5" cy="375.8" r="10.7" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/swap_owner_in_list_reachable | stable_family=structural_indexing_invariants | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.2" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_is_owner_correctness | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.4" fill="#9333ea" class="pt"><title>safe/owner_manager_reach/swap_owner_owner_list_invariant | stable_family=structural_indexing_invariants | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="10.3" fill="#2563eb" class="pt"><title>term_finance/term_auction_clearing/clearing_assignment_correct | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.2" fill="#4f46e5" class="pt"><title>termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve | stable_family=protocol_transition_correctness | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.6" fill="#dc2626" class="pt"><title>usual/dao_collateral/redeem_conservation | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="208.0" cy="415.0" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_fee_formula | stable_family=state_preservation_and_local_effects | x=-0.687 y=-0.0427</title></circle>
+<circle cx="824.5" cy="375.8" r="11.7" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_return_formula | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.8" fill="#dc2626" class="pt"><title>usual/dao_collateral/swap_conservation | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="12.0" fill="#dc2626" class="pt"><title>usual/dao_collateral/swap_value_conservation | stable_family=asset_accounting_and_conservation | x=0.257 y=-0.0051</title></circle>
+<circle cx="237.6" cy="328.3" r="8.5" fill="#dc2626" class="pt"><title>wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity | stable_family=asset_accounting_and_conservation | x=-0.642 y=0.0406</title></circle>
+<circle cx="824.5" cy="375.8" r="11.1" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_decreases_supply | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="11.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_insufficient | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="11.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_ctokens_match_deposit | stable_family=state_preservation_and_local_effects | x=0.163 y=-0.0225</title></circle>
+<circle cx="775.8" cy="477.2" r="11.3" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_increases_supply | stable_family=state_preservation_and_local_effects | x=0.183 y=-0.103</title></circle>
+<circle cx="824.5" cy="375.8" r="11.1" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_overflow_protection | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="464.9" cy="375.3" r="9.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/setOperator_updates | stable_family=state_preservation_and_local_effects | x=-0.294 y=-0.0046</title></circle>
+<circle cx="824.5" cy="375.8" r="10.8" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transferFrom_conservation | stable_family=state_preservation_and_local_effects | x=0.257 y=-0.0051</title></circle>
+<circle cx="840.5" cy="278.8" r="11.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_conservation | stable_family=state_preservation_and_local_effects | x=0.282 y=0.0882</title></circle>
+<circle cx="840.5" cy="278.8" r="12.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_insufficient | stable_family=state_preservation_and_local_effects | x=0.282 y=0.0882</title></circle>
+<circle cx="716.6" cy="134.8" r="10.9" fill="#65a30d" class="pt"><title>zama/erc7984_confidential_token/transfer_no_balance_revert | stable_family=negative_and_attack_boundaries | x=0.0919 y=0.227</title></circle>
+<circle cx="771.0" cy="314.3" r="10.9" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_preserves_supply | stable_family=state_preservation_and_local_effects | x=0.175 y=0.0541</title></circle>
+<circle cx="840.5" cy="278.8" r="12.0" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_sufficient | stable_family=state_preservation_and_local_effects | x=0.282 y=0.0882</title></circle>
+<circle cx="840.5" cy="278.8" r="10.8" fill="#be123c" class="pt"><title>zodiac/roles_decoder_faithfulness/metadata_bridge | stable_family=decoder_and_refinement_equivalence | x=0.282 y=0.0882</title></circle>
+<circle cx="840.5" cy="278.8" r="11.2" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe | stable_family=state_preservation_and_local_effects | x=0.282 y=0.0882</title></circle>
+<circle cx="840.5" cy="278.8" r="10.9" fill="#be123c" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_faithful | stable_family=decoder_and_refinement_equivalence | x=0.282 y=0.0882</title></circle>
+<text x="731.5" y="352.4" class="cent" text-anchor="middle">asset_accounting_and_con</text>
+<text x="721.1" y="395.8" class="cent" text-anchor="middle">state_preservation_and_l</text>
+<text x="715.7" y="311.4" class="cent" text-anchor="middle">decoder_and_refinement_e</text>
+<text x="499.2" y="175.5" class="cent" text-anchor="middle">negative_and_attack_boun</text>
+<text x="541.3" y="347.3" class="cent" text-anchor="middle">protocol_transition_corr</text>
+<text x="740.3" y="362.3" class="cent" text-anchor="middle">structural_indexing_inva</text>
+<text x="480.4" y="413.9" class="cent" text-anchor="middle">solvency_and_liquidity_g</text>
+<text x="431.4" y="356.1" class="cent" text-anchor="middle">numeric_bounds_and_prici</text>
+<text x="516.2" y="385.9" class="cent" text-anchor="middle">authorization_and_caller</text>
 <text x="921" y="74" font-size="14" font-weight="700">Couleur: stable_family</text>
 <circle cx="928" cy="94" r="6" fill="#2563eb" stroke="#111827" stroke-width=".5"/>
 <text x="943" y="98" class="legend">state preservation and</text>
