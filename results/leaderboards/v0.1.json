@@ -282,31 +282,6 @@
       "total": 135,
       "total_tokens": 34924779,
       "valid_count": 135
-    },
-    {
-      "avg_total_tokens_per_task": 42765.2,
-      "caveats": [
-        "partial task coverage: 12/135"
-      ],
-      "completion_tokens": 10445,
-      "display_name": "Step37",
-      "failed": 12,
-      "inference_model_id": "spark/step3p7-flash-148b",
-      "inference_provider_id": "spark",
-      "model_id": "spark/step3p7-flash-148b",
-      "model_name": "step3p7-flash-148b",
-      "model_provider_id": "spark",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 502737,
-      "provider_id": "spark",
-      "provider_model_id": "step3p7-flash-148b",
-      "rank": null,
-      "source_model_id": "spark/step3p7-flash-148b",
-      "status": "partial",
-      "total": 12,
-      "total_tokens": 513182,
-      "valid_count": 12
     }
   ],
   "schema_version": 1,

@@ -212,38 +212,6 @@
     },
     {
       "archive": {
-        "asset_name": "benchmark-v0.1-spark-step3p7-flash-148b.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-spark-step3p7-flash-148b.tar.zst",
-        "byte_size": 541156,
-        "release_tag": "v0.1",
-        "sha256": "dbffa6e2273bf40ae1c3cb144fd12869adf303ddcd382592d31735d6a401809d"
-      },
-      "caveats": [
-        "partial task coverage: 12/135"
-      ],
-      "completion_tokens": 10445,
-      "display_name": "Step37",
-      "failed": 12,
-      "inference_model_id": "spark/step3p7-flash-148b",
-      "inference_provider_id": "spark",
-      "median_completion_tokens_to_pass": null,
-      "median_prompt_tokens_to_pass": null,
-      "model": "step3p7-flash-148b",
-      "model_id": "spark/step3p7-flash-148b",
-      "model_name": "step3p7-flash-148b",
-      "model_provider_id": "spark",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 502737,
-      "provider": "spark",
-      "source_model_id": "spark/step3p7-flash-148b",
-      "status": "partial",
-      "task_count": 12,
-      "total_tokens": 513182,
-      "valid_count": 12
-    },
-    {
-      "archive": {
         "asset_name": "benchmark-v0.1-virtuals-deepseek-v4-flash.tar.zst",
         "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-virtuals-deepseek-v4-flash.tar.zst",
         "byte_size": 4300519,

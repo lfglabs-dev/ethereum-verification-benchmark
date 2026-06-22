@@ -1,6 +1,6 @@
 # Verity Benchmark Leaderboard
 
-Benchmark version `0.1` · generated 2026-06-22 08:05Z
+Benchmark version `0.1` · generated 2026-06-22 08:15Z
 
 Complete rows are eligible for rank comparisons. Partial rows are shown for transparency and excluded from complete-rank comparisons.
 
@@ -18,4 +18,3 @@ Complete rows are eligible for rank comparisons. Partial rows are shown for tran
 | partial | deepseek-v4-pro | `partial` | 28/126 | 92589294 | 3134542 | partial task coverage: 126/135 |
 | partial | grok-4.3 | `partial` | 25/135 | 47504648 | 304670 | - |
 | partial | mimo-v2.5 | `partial` | 13/135 | 33446667 | 1478112 | - |
-| partial | Step37 | `partial` | 0/12 | 502737 | 10445 | partial task coverage: 12/135 |
