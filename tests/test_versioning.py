@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from aggregate_version import aggregate, build_version_index, leaderboard_json, public_model_identity, split_model_id
+from aggregate_version import aggregate, build_version_index, leaderboard_json, model_identity, public_model_identity, split_model_id
 from compute_fingerprints import build_version_manifest
 from plan_rerun import plan_rerun, result_key
 
@@ -277,10 +277,16 @@ class VersioningTests(unittest.TestCase):
 
     def test_summary_exposes_provider_and_model_for_website_consumers(self) -> None:
         summary = aggregate(self.version, self.results)
-        by_id = {model["model_id"]: model for model in summary["models"]}
+        by_id = {model["source_model_id"]: model for model in summary["models"]}
+        self.assertEqual(by_id["kimi/kimi-for-coding"]["model_id"], "kimi/kimi-k2.7")
+        self.assertEqual(by_id["kimi/kimi-for-coding"]["model_provider_id"], "kimi")
+        self.assertEqual(by_id["kimi/kimi-for-coding"]["model_name"], "kimi-k2.7")
         self.assertEqual(by_id["kimi/kimi-for-coding"]["provider"], "kimi")
         self.assertEqual(by_id["kimi/kimi-for-coding"]["model"], "kimi-k2.7")
         self.assertEqual(by_id["kimi/kimi-for-coding"]["display_name"], "kimi-k2.7")
+        self.assertEqual(by_id["openai-gpt-55"]["model_id"], "openai/gpt-5.5")
+        self.assertEqual(by_id["openai-gpt-55"]["model_provider_id"], "openai")
+        self.assertEqual(by_id["openai-gpt-55"]["model_name"], "gpt-5.5")
         self.assertEqual(by_id["openai-gpt-55"]["provider"], "openai")
         self.assertEqual(by_id["openai-gpt-55"]["model"], "gpt-5.5")
         self.assertEqual(by_id["openai-gpt-55"]["display_name"], "gpt-5.5")
@@ -304,12 +310,23 @@ class VersioningTests(unittest.TestCase):
             "minimax/minimax-m3": ("minimax", "minimax-m3", "minimax-m3"),
             "kimi/kimi-for-coding": ("kimi", "kimi-k2.7", "kimi-k2.7"),
             "xai/grok-4.3": ("xai", "grok-4.3", "grok-4.3"),
+            "virtuals/deepseek-v4-flash": ("deepseek", "deepseek-v4-flash", "deepseek-v4-flash"),
+            "virtuals/deepseek-v4-pro": ("deepseek", "deepseek-v4-pro", "deepseek-v4-pro"),
             "virtuals/xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
             "xiaomi-mimo-v2-5": ("xiaomi", "mimo-v2.5", "mimo-v2.5"),
         }
         for model_id, identity in expected.items():
             with self.subTest(model_id=model_id):
                 self.assertEqual(public_model_identity(model_id), identity)
+
+    def test_model_identity_keeps_inference_provider_separate(self) -> None:
+        identity = model_identity("virtuals/deepseek-v4-flash")
+        self.assertEqual(identity["model_id"], "deepseek/deepseek-v4-flash")
+        self.assertEqual(identity["model_provider_id"], "deepseek")
+        self.assertEqual(identity["model_name"], "deepseek-v4-flash")
+        self.assertEqual(identity["inference_provider_id"], "virtuals")
+        self.assertEqual(identity["inference_model_id"], "virtuals/deepseek-v4-flash")
+        self.assertEqual(identity["source_model_id"], "virtuals/deepseek-v4-flash")
 
     def test_version_index_points_to_summary_and_manifest(self) -> None:
         summary = aggregate(self.version, self.results)
@@ -333,6 +350,10 @@ class VersioningTests(unittest.TestCase):
         by_source_id = {row["source_model_id"]: row for row in leaderboard["rows"]}
         minimax = by_source_id["minimax/minimax-m3"]
         self.assertEqual(minimax["model_id"], "minimax/minimax-m3")
+        self.assertEqual(minimax["model_provider_id"], "minimax")
+        self.assertEqual(minimax["model_name"], "minimax-m3")
+        self.assertEqual(minimax["inference_provider_id"], "minimax")
+        self.assertEqual(minimax["inference_model_id"], "minimax/minimax-m3")
         self.assertEqual(minimax["provider_id"], "minimax")
         self.assertEqual(minimax["provider_model_id"], "minimax-m3")
         self.assertEqual(minimax["display_name"], "minimax-m3")
@@ -342,12 +363,27 @@ class VersioningTests(unittest.TestCase):
 
         openai = by_source_id["openai-gpt-55"]
         self.assertEqual(openai["model_id"], "openai/gpt-5.5")
+        self.assertEqual(openai["model_provider_id"], "openai")
+        self.assertEqual(openai["model_name"], "gpt-5.5")
         self.assertEqual(openai["provider_id"], "openai")
         self.assertEqual(openai["provider_model_id"], "gpt-5.5")
         self.assertEqual(openai["display_name"], "gpt-5.5")
 
+        deepseek = by_source_id["virtuals/deepseek-v4-flash"]
+        self.assertEqual(deepseek["model_id"], "deepseek/deepseek-v4-flash")
+        self.assertEqual(deepseek["model_provider_id"], "deepseek")
+        self.assertEqual(deepseek["model_name"], "deepseek-v4-flash")
+        self.assertEqual(deepseek["inference_provider_id"], "virtuals")
+        self.assertEqual(deepseek["inference_model_id"], "virtuals/deepseek-v4-flash")
+        self.assertEqual(deepseek["provider_id"], "deepseek")
+        self.assertEqual(deepseek["provider_model_id"], "deepseek-v4-flash")
+
         xiaomi = by_source_id["virtuals/xiaomi-mimo-v2-5"]
         self.assertEqual(xiaomi["model_id"], "xiaomi/mimo-v2.5")
+        self.assertEqual(xiaomi["model_provider_id"], "xiaomi")
+        self.assertEqual(xiaomi["model_name"], "mimo-v2.5")
+        self.assertEqual(xiaomi["inference_provider_id"], "virtuals")
+        self.assertEqual(xiaomi["inference_model_id"], "virtuals/xiaomi-mimo-v2-5")
         self.assertEqual(xiaomi["provider_id"], "xiaomi")
         self.assertEqual(xiaomi["provider_model_id"], "mimo-v2.5")
         self.assertEqual(xiaomi["display_name"], "mimo-v2.5")
