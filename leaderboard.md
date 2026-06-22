@@ -1,6 +1,6 @@
 # Verity Benchmark Leaderboard
 
-Benchmark version `0.1` · generated 2026-06-18 21:00Z
+Benchmark version `0.1` · generated 2026-06-22 06:15Z
 
 Complete rows are eligible for rank comparisons. Partial rows are shown for transparency and excluded from complete-rank comparisons.
 
@@ -12,6 +12,7 @@ Complete rows are eligible for rank comparisons. Partial rows are shown for tran
 | 4 | grok-build-0.1 | `complete` | 41/135 | 109119204 | 728301 | - |
 | 5 | minimax-m3 | `complete` | 38/135 | 102895944 | 1463317 | - |
 | 6 | kimi-k2.7 | `complete` | 31/135 | 34526391 | 2013775 | - |
+| 7 | Leanstral-2603 | `complete` | 9/135 | 107101717 | 755013 | - |
 | partial | gpt-5.5-pro | `partial` | 35/54 | 7572463 | 272215 | partial task coverage: 54/135 |
 | partial | virtuals/deepseek-v4-flash | `partial` | 30/135 | 117819157 | 2897337 | 2 duplicate task artifacts; best reusable archive entry indexed, 2 zero-usage task artifacts are not reusable |
 | partial | virtuals/deepseek-v4-pro | `partial` | 28/126 | 92589294 | 3134542 | partial task coverage: 126/135, 13 duplicate task artifacts; best reusable archive entry indexed, 22 zero-usage task artifacts are not reusable |

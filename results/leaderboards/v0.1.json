@@ -118,6 +118,25 @@
       "valid_count": 135
     },
     {
+      "avg_total_tokens_per_task": 798938.7,
+      "caveats": [],
+      "completion_tokens": 755013,
+      "display_name": "Leanstral-2603",
+      "failed": 126,
+      "model_id": "mistralai/Leanstral-2603",
+      "pass_rate": 0.067,
+      "passed": 9,
+      "prompt_tokens": 107101717,
+      "provider_id": "mistralai",
+      "provider_model_id": "Leanstral-2603",
+      "rank": 7,
+      "source_model_id": "mistralai/Leanstral-2603",
+      "status": "complete",
+      "total": 135,
+      "total_tokens": 107856730,
+      "valid_count": 135
+    },
+    {
       "avg_total_tokens_per_task": 145271.8,
       "caveats": [
         "partial task coverage: 54/135"

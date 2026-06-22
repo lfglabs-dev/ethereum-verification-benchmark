@@ -161,6 +161,25 @@
       "valid_count": 135
     },
     {
+      "archive": null,
+      "caveats": [],
+      "completion_tokens": 755013,
+      "display_name": "Leanstral-2603",
+      "failed": 126,
+      "median_completion_tokens_to_pass": 1565,
+      "median_prompt_tokens_to_pass": 157517,
+      "model": "Leanstral-2603",
+      "model_id": "mistralai/Leanstral-2603",
+      "pass_rate": 0.067,
+      "passed": 9,
+      "prompt_tokens": 107101717,
+      "provider": "mistralai",
+      "status": "complete",
+      "task_count": 135,
+      "total_tokens": 107856730,
+      "valid_count": 135
+    },
+    {
       "archive": {
         "asset_name": "benchmark-v0.1-openai-gpt-55.tar.zst",
         "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-openai-gpt-55.tar.zst",
