@@ -6,6 +6,7 @@ from typing import Any
 
 ALLOWED_TERMINAL_STATUSES = {
     "lean_passed",
+    "completed_with_failures",
     "failed_submitted",
     "failed_no_attempt",
     "failed_no_tool_calls",

@@ -100,6 +100,29 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertTrue(rows[0]["valid"])
         self.assertTrue(rows[0]["passed"])
 
+    def test_aggregate_counts_suite_failures_as_valid_failures(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp) / "run"
+            run_dir.mkdir()
+            (run_dir / "run.json").write_text(
+                json.dumps(
+                    {
+                        "run_id": "suite-failure",
+                        "harness_id": "suite",
+                        "model": "local",
+                        "task_ref": "case/task",
+                        "harness_status": "completed_with_failures",
+                        "usage": {"requests": 1, "total_tokens": 123},
+                        "verifier": {"score": {"passed_targets": 0, "total_targets": 1}},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            rows = aggregate_runs.collect_runs(Path(tmp))
+        self.assertEqual(len(rows), 1)
+        self.assertTrue(rows[0]["valid"])
+        self.assertFalse(rows[0]["passed"])
+
 
 if __name__ == "__main__":
     unittest.main()
