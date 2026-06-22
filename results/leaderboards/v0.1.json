@@ -159,10 +159,7 @@
     },
     {
       "avg_total_tokens_per_task": 894196.3,
-      "caveats": [
-        "2 duplicate task artifacts; best reusable archive entry indexed",
-        "2 zero-usage task artifacts are not reusable"
-      ],
+      "caveats": [],
       "completion_tokens": 2897337,
       "display_name": "virtuals/deepseek-v4-flash",
       "failed": 105,
@@ -182,9 +179,7 @@
     {
       "avg_total_tokens_per_task": 759713.0,
       "caveats": [
-        "partial task coverage: 126/135",
-        "13 duplicate task artifacts; best reusable archive entry indexed",
-        "22 zero-usage task artifacts are not reusable"
+        "partial task coverage: 126/135"
       ],
       "completion_tokens": 3134542,
       "display_name": "virtuals/deepseek-v4-pro",
@@ -204,10 +199,7 @@
     },
     {
       "avg_total_tokens_per_task": 355646.1,
-      "caveats": [
-        "5 duplicate task artifacts; best reusable archive entry indexed",
-        "5 zero-usage task artifacts are not reusable"
-      ],
+      "caveats": [],
       "completion_tokens": 304670,
       "display_name": "grok-4.3",
       "failed": 110,
@@ -226,10 +218,7 @@
     },
     {
       "avg_total_tokens_per_task": 258702.1,
-      "caveats": [
-        "1 duplicate task artifacts; best reusable archive entry indexed",
-        "1 zero-usage task artifacts are not reusable"
-      ],
+      "caveats": [],
       "completion_tokens": 1478112,
       "display_name": "mimo-v2.5",
       "failed": 122,
@@ -247,92 +236,25 @@
       "valid_count": 135
     },
     {
-      "avg_total_tokens_per_task": 3801.3,
+      "avg_total_tokens_per_task": 42765.2,
       "caveats": [
-        "286 duplicate task artifacts; latest archive entry indexed",
-        "123 zero-usage task artifacts are not reusable"
+        "partial task coverage: 12/135"
       ],
       "completion_tokens": 10445,
       "display_name": "Step37",
-      "failed": 134,
+      "failed": 12,
       "model_id": "spark/step3p7-flash-148b",
-      "pass_rate": 0.007,
-      "passed": 1,
+      "pass_rate": 0.0,
+      "passed": 0,
       "prompt_tokens": 502737,
       "provider_id": "spark",
       "provider_model_id": "step3p7-flash-148b",
       "rank": null,
       "source_model_id": "spark/step3p7-flash-148b",
       "status": "partial",
-      "total": 135,
+      "total": 12,
       "total_tokens": 513182,
       "valid_count": 12
-    },
-    {
-      "avg_total_tokens_per_task": 0.0,
-      "caveats": [
-        "partial task coverage: 5/135",
-        "5 zero-usage task artifacts are not reusable"
-      ],
-      "completion_tokens": 0,
-      "display_name": "deepseek-v4-flash",
-      "failed": 5,
-      "model_id": "deepseek/v4-flash",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 0,
-      "provider_id": "deepseek",
-      "provider_model_id": "v4-flash",
-      "rank": null,
-      "source_model_id": "deepseek-v4-flash",
-      "status": "invalid",
-      "total": 5,
-      "total_tokens": 0,
-      "valid_count": 0
-    },
-    {
-      "avg_total_tokens_per_task": 0.0,
-      "caveats": [
-        "partial task coverage: 5/135",
-        "5 zero-usage task artifacts are not reusable"
-      ],
-      "completion_tokens": 0,
-      "display_name": "deepseek-v4-pro",
-      "failed": 5,
-      "model_id": "deepseek/v4-pro",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 0,
-      "provider_id": "deepseek",
-      "provider_model_id": "v4-pro",
-      "rank": null,
-      "source_model_id": "deepseek-v4-pro",
-      "status": "invalid",
-      "total": 5,
-      "total_tokens": 0,
-      "valid_count": 0
-    },
-    {
-      "avg_total_tokens_per_task": 0.0,
-      "caveats": [
-        "partial task coverage: 5/135",
-        "5 zero-usage task artifacts are not reusable"
-      ],
-      "completion_tokens": 0,
-      "display_name": "mimo-v2.5",
-      "failed": 5,
-      "model_id": "xiaomi/mimo-v2.5",
-      "pass_rate": 0.0,
-      "passed": 0,
-      "prompt_tokens": 0,
-      "provider_id": "xiaomi",
-      "provider_model_id": "mimo-v2.5",
-      "rank": null,
-      "source_model_id": "xiaomi-mimo-v2-5",
-      "status": "invalid",
-      "total": 5,
-      "total_tokens": 0,
-      "valid_count": 0
     }
   ],
   "schema_version": 1,
