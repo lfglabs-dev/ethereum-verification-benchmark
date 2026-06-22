@@ -78,9 +78,9 @@ jobs:
           done
           solc --version
 
-      - name: Build EntryPointV09 case
+      - name: Build EntryPointInvariant compile gate
         run: |
-          lake build Benchmark.Cases.ERC4337.EntryPointInvariant.EntryPointV09
+          lake build Benchmark.Cases.ERC4337.EntryPointInvariant.Compile
 
       - name: Run differential harness
         run: |

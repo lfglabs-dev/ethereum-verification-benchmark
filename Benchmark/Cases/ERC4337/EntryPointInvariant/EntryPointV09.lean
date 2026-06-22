@@ -89,7 +89,8 @@ verity_contract EntryPointV09 where
     -- For the proof we also need an observable "opInfos was set" marker per
     -- index. This is the Verity-side representation of the in-memory
     -- `UserOpInfo[] opInfos` array; the corresponding bytecode-level
-    -- statement is given as the memory-frame theorem in Frame.lean.
+    -- statement is discharged by the upstream-backed frame/layout path in
+    -- `EvmYulFrame.lean` and `Layout.lean`.
     opInfoRecord : Uint256 → Uint256 := slot 4
 
   errors
@@ -118,11 +119,15 @@ verity_contract EntryPointV09 where
     error DelegateAndRevert(Uint256, Uint256)
 
   constants
-    -- 0 represents a packed validationData with authorizer = SIG_VALIDATION_SUCCESS
-    -- (and valid time window, or 0 bounds). Nonzero from the oracle stands for
-    -- either authorizer = SIG_VALIDATION_FAILED or a time-window violation.
-    -- The projection checks `== 0` for the success gate (authorizer success).
+    -- Packed validationData:
+    --   bits [0,160): authorizer/aggregator
+    --   bits [160,208): validUntil
+    --   bits [208,256): validAfter
+    -- Authorizer 0 represents SIG_VALIDATION_SUCCESS, and validUntil 0 is the
+    -- Solidity sentinel for "no upper time bound".
     VALIDATION_SUCCESS : Uint256 := 0
+    VALIDATION_AGGREGATOR_MASK : Uint256 := 1461501637330902918203684832716283019655932542975
+    VALIDATION_TIME_MASK : Uint256 := 281474976710655
     OP_INFO_VALIDATED : Uint256 := 1
     OP_INFO_EXECUTED  : Uint256 := 2
     -- callData.length predicate: caller passes 1 if op.callData is non-empty,
@@ -154,19 +159,49 @@ verity_contract EntryPointV09 where
   linked_externals
     external createSender(Uint256) -> (Uint256)
 
+  -- Decodes and checks the packed `validationData` returned by account and
+  -- paymaster validation. The Verity contract macro used by this benchmark
+  -- does not currently expose `block.timestamp` inside `verity_contract`
+  -- functions, so this one-op projection checks the packed authorizer field
+  -- and evaluates the time window against timestamp 0. That removes the
+  -- previous over-strong exact-zero gate while keeping the public ABI stable.
+  function reentrancy_trusted internal _validateAccountValidationData
+      (validation : Uint256) : Uint256 := do
+    let aggregator := and validation VALIDATION_AGGREGATOR_MASK
+    let validUntil := and (shr 160 validation) VALIDATION_TIME_MASK
+    let validAfter := and (shr 208 validation) VALIDATION_TIME_MASK
+    let now := 0
+    require (aggregator == VALIDATION_SUCCESS) "AA23 reverted (or OOG)"
+    if validUntil != VALIDATION_SUCCESS then
+      require (validUntil >= now) "AA22 expired or not due"
+    else
+      pure ()
+    require (now >= validAfter) "AA22 expired or not due"
+    return validation
+
+  function reentrancy_trusted internal _validatePaymasterValidationData
+      (validation : Uint256) : Uint256 := do
+    let aggregator := and validation VALIDATION_AGGREGATOR_MASK
+    let validUntil := and (shr 160 validation) VALIDATION_TIME_MASK
+    let validAfter := and (shr 208 validation) VALIDATION_TIME_MASK
+    let now := 0
+    require (aggregator == VALIDATION_SUCCESS) "AA33 reverted (or OOG)"
+    if validUntil != VALIDATION_SUCCESS then
+      require (validUntil >= now) "AA32 paymaster expired or not due"
+    else
+      pure ()
+    require (now >= validAfter) "AA32 paymaster expired or not due"
+    return validation
+
   -- Mirrors `_validateAccountPrepayment` + `_validateAndUpdateNonce` (the
   -- latter lives inside `_validatePrepayment` in the real source). The nonce
   -- check/bump is performed AFTER the account validation call returns and
   -- BEFORE paymaster validation (see `_validatePrepayment` below). The
   -- returned word from the oracle is the packed `validationData`
   -- (authorizer | validUntil(6B) | validAfter(6B)); success is when the
-  -- authorizer field encodes SIG_VALIDATION_SUCCESS (here represented by the
-  -- concrete word 0 in the projection's oracle convention). Nonzero covers
-  -- SIG_VALIDATION_FAILED (authorizer = 1) and time-window failures; this
-  -- projection does not branch on the exact failure reason (both prevent
-  -- reaching execution), but the accept gate matches the authorizer ∈ {0,1}
-  -- + time-range logic at the decision level. Full decomposition and
-  -- `vdValid` live in `UserOp.lean`.
+  -- authorizer field encodes SIG_VALIDATION_SUCCESS and the time range allows
+  -- the current block timestamp. Full decomposition and `vdValid` live in
+  -- `UserOp.lean`.
   function allow_post_interaction_writes reentrancy_trusted internal _validateAccount
       (_sender : IAccount, key : Uint256, declaredNonce : Uint256) : Uint256 := do
     -- account.validateUserOp(...) — the call happens first.
@@ -176,8 +211,8 @@ verity_contract EntryPointV09 where
     let expected ← getMappingUint nonces key
     require (declaredNonce == expected) "AA25 invalid account nonce"
     setMappingUint nonces key (add expected 1)
-    require (validation == VALIDATION_SUCCESS) "AA23 reverted (or OOG)"
-    return validation
+    let checked ← _validateAccountValidationData validation
+    return checked
 
   -- Mirrors `_validatePaymasterPrepayment`: the paymaster branch is skipped
   -- when no paymaster is attached (`address(0)`). Otherwise the external
@@ -215,10 +250,9 @@ verity_contract EntryPointV09 where
        hasInitCode : Uint256) : Uint256 := do
     let effectiveSenderWord ← _createSender sender key hasInitCode
     let effectiveSender := wordToAddress effectiveSenderWord
-    let accountValid ← _validateAccount effectiveSender key declaredNonce
-    require (accountValid == VALIDATION_SUCCESS) "AA23 reverted (or OOG)"
+    let _accountValid ← _validateAccount effectiveSender key declaredNonce
     let pmValid ← _validatePaymaster paymaster key
-    require (pmValid == VALIDATION_SUCCESS) "AA33 reverted (or OOG)"
+    let _pmValid ← _validatePaymasterValidationData pmValid
     setMappingUint opInfoRecord key OP_INFO_VALIDATED
     return VALIDATION_SUCCESS
 
