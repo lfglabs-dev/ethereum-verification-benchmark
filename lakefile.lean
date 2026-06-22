@@ -6,7 +6,7 @@ package «verity-benchmark» where
 
 require verity from git
   "https://github.com/lfglabs-dev/verity.git" @
-  "807d7f5f1b9e710301d03107d0acf7435fd0966b"
+  "dc4408cf0d663cc022c9c3f08f177c34ab7e14b6"
 
 @[default_target]
 lean_lib «Benchmark» where
