@@ -29,14 +29,14 @@ def _load_dotenv() -> None:
 _load_dotenv()
 
 try:
-    from .budgets import BUDGET_PROFILES, budget_profile
+    from .budgets import BUDGET_PROFILES, budget_artifact, budget_profile
     from .manifests import group_id_from_task_ref, group_to_json, list_groups
     from .paths import RESULTS_DIR
     from .reports import compare_runs, write_run_report
     from .runners.shell_agent import run_group as run_shell_group
     from .runners.lean_tools import run_group as run_lean_tools_group
 except ImportError:
-    from budgets import BUDGET_PROFILES, budget_profile
+    from budgets import BUDGET_PROFILES, budget_artifact, budget_profile
     from manifests import group_id_from_task_ref, group_to_json, list_groups
     from paths import RESULTS_DIR
     from reports import compare_runs, write_run_report
@@ -185,6 +185,16 @@ def run_suite(
         "harness_status": harness_status,
         "harness_exit_code": exit_code,
         "child_runs": child_runs,
+        "benchmark_budget": {
+            "max_attempts": max_attempts,
+            "max_tool_calls": max_tool_calls,
+            "max_turns": max_turns,
+            "completion_token_budget": int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0")),
+        },
+        "operational_budget": budget_artifact(
+            budget_profile("quick"),
+            token_budget=int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0")),
+        )["operational_budget"],
         "verifier": verifier,
     }
     (run_dir / "run.json").write_text(json.dumps(run, indent=2) + "\n", encoding="utf-8")
@@ -200,6 +210,16 @@ def run_suite(
                 "shell_timeout_seconds": shell_timeout_seconds,
                 "mode": "fair" if harness == "default" else None,
                 "max_tool_calls": max_tool_calls if harness == "default" else None,
+                "benchmark_budget": {
+                    "max_attempts": max_attempts,
+                    "max_tool_calls": max_tool_calls,
+                    "max_turns": max_turns,
+                    "completion_token_budget": int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0")),
+                },
+                "operational_budget": budget_artifact(
+                    budget_profile("quick"),
+                    token_budget=int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0")),
+                )["operational_budget"],
                 "groups": [group_to_json(group) for group in groups],
             },
             indent=2,

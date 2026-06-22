@@ -13,7 +13,7 @@ import urllib.error
 import urllib.request
 
 from harness.transport_errors import ChatCompletionError
-from harness.transport_preflight import endpoint_smoke, local_no_auth_endpoint as _local_no_auth_endpoint
+from harness.transport_preflight import endpoint_smoke, generic_preflight, local_no_auth_endpoint as _local_no_auth_endpoint
 from harness.transport_request import (
     DEFAULT_BASE_URL,
     DEFAULT_CONTEXT_TOKENS,
@@ -61,5 +61,6 @@ __all__ = [
     "_response_text",
     "chat_completion",
     "endpoint_smoke",
+    "generic_preflight",
     "urllib",
 ]

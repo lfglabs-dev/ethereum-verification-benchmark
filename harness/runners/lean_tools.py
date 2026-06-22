@@ -33,8 +33,9 @@ try:
     from ..transport import (
         ChatCompletionError, DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, HTTP_USER_AGENT,
         _active_provider, _api_key, _harness_env, _local_no_auth_endpoint, _logged_response_message,
-        _response_text, _append_jsonl, chat_completion, endpoint_smoke,
+        _response_text, _append_jsonl, chat_completion, endpoint_smoke, generic_preflight,
     )
+    from ..budgets import operational_budget
     from ..lean_check import (
         FAILURE_HINTS, LEAN_CHECK_MODE, LEAN_CHECK_TIMEOUT_SECONDS, _classify_lean_failure,
         _compact_lean_output, _constants_from_text, _extract_goal_blocks, _first_meaningful_lean_error,
@@ -46,13 +47,15 @@ try:
         _extract_lean_file, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
         _strip_thinking, _theorem_statement,
     )
+    from ..result_validity import failure_counts_from_tasks, failure_taxonomy, row_validity
     from ..symbols import public_symbol_summary as _public_symbol_summary
 except ImportError:
     from transport import (
         ChatCompletionError, DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, HTTP_USER_AGENT,
         _active_provider, _api_key, _harness_env, _local_no_auth_endpoint, _logged_response_message,
-        _response_text, _append_jsonl, chat_completion, endpoint_smoke,
+        _response_text, _append_jsonl, chat_completion, endpoint_smoke, generic_preflight,
     )
+    from budgets import operational_budget
     from lean_check import (
         FAILURE_HINTS, LEAN_CHECK_MODE, LEAN_CHECK_TIMEOUT_SECONDS, _classify_lean_failure,
         _compact_lean_output, _constants_from_text, _extract_goal_blocks, _first_meaningful_lean_error,
@@ -64,6 +67,7 @@ except ImportError:
         _extract_lean_file, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
         _strip_thinking, _theorem_statement,
     )
+    from result_validity import failure_counts_from_tasks, failure_taxonomy, row_validity
     from symbols import public_symbol_summary as _public_symbol_summary
 
 
@@ -158,27 +162,7 @@ def _run_lean_module_with_proof_content(
 
 
 def _failure_taxonomy(status: str, attempts: list[dict[str, object]], *, tool_calls: int = 0, no_tool_responses: int = 0) -> str:
-    if status in {"missing_credentials", "request_timeout", "request_failed"}:
-        return "provider_or_context_failure"
-    if status == "failed_no_tool_calls" or (tool_calls == 0 and not attempts):
-        return "no_tool_calls"
-    if status == "failed_no_attempt" and tool_calls > 0:
-        return "context_loop"
-    outputs = "\n".join(str(attempt.get("output", "")) for attempt in attempts)
-    if attempts:
-        lean_kind = _classify_lean_failure(outputs)
-        if lean_kind == "lean_parse_error":
-            return "proof_parse_failures"
-        if lean_kind == "lean_unknown_name":
-            return "proof_unknown_names"
-        if lean_kind == "lean_unsolved_goals":
-            return "proof_unsolved_goals"
-        if lean_kind == "lean_timeout":
-            return "timeout_after_progress"
-        return "proof_lean_failures"
-    if no_tool_responses:
-        return "context_loop"
-    return "unknown_failure"
+    return failure_taxonomy(status, attempts, tool_calls=tool_calls, no_tool_responses=no_tool_responses)
 
 
 def _stuck_signature(first_error: object) -> str:
@@ -927,6 +911,74 @@ def _attempt_task_fair(
     no_tool_responses = 0
     sandbox_state = {"count": 0, "limit": min(DEFAULT_MAX_SANDBOX_CALLS, max(1, max_tool_calls // 4))}
     usage_totals = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
+    corrective_protocol_sent = False
+    repeated_signatures: dict[str, int] = {}
+
+    def protocol_failure(status: str, request_index: int, detail: dict[str, object]) -> dict[str, object] | None:
+        nonlocal corrective_protocol_sent
+        _append_jsonl(
+            conversation_log_path,
+            {
+                "task_ref": task.get("task_ref"),
+                "request_index": request_index,
+                "status": status,
+                **detail,
+            },
+        )
+        if not corrective_protocol_sent:
+            corrective_protocol_sent = True
+            corrective = (
+                "Your previous tool call was malformed. Reply with exactly one allowed tool call. "
+                "For JSON fallback use {\"tool\":\"show_task\",\"arguments\":{}} or the same shape with valid arguments."
+            )
+            tool_call_id = detail.get("tool_call_id")
+            tool_name = detail.get("tool")
+            if isinstance(tool_call_id, str) and isinstance(tool_name, str):
+                messages.append({"role": "tool", "tool_call_id": tool_call_id, "name": tool_name, "content": corrective})
+            else:
+                messages.append({"role": "user", "content": corrective})
+            return None
+        return {
+            "task_ref": task.get("task_ref"),
+            "status": status,
+            "failure_class": _failure_taxonomy(status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
+            "error": detail,
+            "usage": usage_totals,
+            "attempts": attempts,
+            "tool_calls_executed": tool_calls_executed,
+            "non_proof_tool_calls": non_proof_tool_calls,
+            "non_proof_tool_limit": non_proof_tool_limit,
+            "tool_log": str(tool_log_path),
+            "conversation_log": str(conversation_log_path),
+        }
+
+    def repetition_failure(signature: str) -> dict[str, object] | None:
+        count = repeated_signatures.get(signature, 0) + 1
+        repeated_signatures[signature] = count
+        if count == 2:
+            messages.append(
+                {
+                    "role": "user",
+                    "content": "You repeated the same unproductive action. Change strategy: inspect a different goal/file or submit a materially different proof attempt.",
+                }
+            )
+            return None
+        if count >= 3:
+            return {
+                "task_ref": task.get("task_ref"),
+                "status": "repetition_loop",
+                "failure_class": _failure_taxonomy("repetition_loop", attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
+                "usage": usage_totals,
+                "attempts": attempts,
+                "tool_calls_executed": tool_calls_executed,
+                "non_proof_tool_calls": non_proof_tool_calls,
+                "non_proof_tool_limit": non_proof_tool_limit,
+                "no_tool_responses": no_tool_responses,
+                "tool_log": str(tool_log_path),
+                "conversation_log": str(conversation_log_path),
+                "loop_signature": signature,
+            }
+        return None
 
     def _accumulate_usage(response: dict[str, object]) -> None:
         usage = response.get("usage") if isinstance(response, dict) else None
@@ -1011,6 +1063,9 @@ def _attempt_task_fair(
             text = _response_text(response)
             if text.strip():
                 no_tool_responses += 1
+                repeated = repetition_failure("no-tool:" + re.sub(r"\s+", " ", text.strip())[:300])
+                if repeated is not None:
+                    return repeated
                 if no_tool_responses >= no_tool_response_limit:
                     _append_jsonl(
                         conversation_log_path,
@@ -1032,20 +1087,57 @@ def _attempt_task_fair(
             break
         for tool_call in tool_calls:
             if not isinstance(tool_call, dict):
+                failure = protocol_failure("invalid_tool_call", request_index, {"error": "tool call is not an object", "raw_type": type(tool_call).__name__})
+                if failure is not None:
+                    return failure
                 continue
             function = tool_call.get("function")
             if not isinstance(function, dict):
+                failure = protocol_failure("invalid_tool_call", request_index, {"error": "tool call missing function object", "tool_call": _shrink_strings(tool_call, 300)})
+                if failure is not None:
+                    return failure
                 continue
             name = function.get("name")
             raw_args = function.get("arguments") or "{}"
             try:
                 args = json.loads(raw_args) if isinstance(raw_args, str) else raw_args
-            except json.JSONDecodeError:
-                args = {}
-            if not isinstance(args, dict):
-                args = {}
-            if not isinstance(name, str):
+            except json.JSONDecodeError as exc:
+                failure = protocol_failure(
+                    "malformed_tool_call",
+                    request_index,
+                    {
+                        "error": "malformed_tool_arguments",
+                        "tool": name if isinstance(name, str) else None,
+                        "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "message": str(exc),
+                        "arguments_preview": str(raw_args)[:500],
+                    },
+                )
+                if failure is not None:
+                    return failure
                 continue
+            if not isinstance(args, dict):
+                failure = protocol_failure(
+                    "malformed_tool_call",
+                    request_index,
+                    {
+                        "error": "malformed_tool_arguments",
+                        "tool": name if isinstance(name, str) else None,
+                        "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "message": "tool arguments must decode to an object",
+                    },
+                )
+                if failure is not None:
+                    return failure
+                continue
+            if not isinstance(name, str):
+                failure = protocol_failure("invalid_tool_call", request_index, {"error": "tool call missing function name", "tool_call": _shrink_strings(tool_call, 300)})
+                if failure is not None:
+                    return failure
+                continue
+            repeated = repetition_failure("tool:" + name + ":" + json.dumps(args, sort_keys=True, default=str)[:500])
+            if repeated is not None:
+                return repeated
             if tool_calls_executed >= max_tool_calls:
                 result = {"ok": False, "error": "max_tool_calls_exceeded"}
                 _append_jsonl(
@@ -1203,11 +1295,14 @@ def _attempt_task_fair(
                 }
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
-    final_status = (
-        "failed_no_tool_calls"
-        if no_tool_responses >= no_tool_response_limit
-        else ("failed_submitted" if attempts else "failed_no_attempt")
-    )
+    if tool_calls_executed >= max_tool_calls:
+        final_status = "max_tool_calls_exceeded"
+    elif _proof_attempt_count(attempts) >= max_attempts:
+        final_status = "max_attempts_exceeded"
+    elif no_tool_responses >= no_tool_response_limit:
+        final_status = "failed_no_tool_calls"
+    else:
+        final_status = "failed_submitted" if attempts else "failed_no_attempt"
     return {
         "task_ref": task.get("task_ref"),
         "status": final_status,
@@ -1253,6 +1348,22 @@ def run_group(
     assert_workspace_isolated(built.path)
     base_url = DEFAULT_BASE_URL
     response: dict[str, object]
+    benchmark_budget = {
+        "max_attempts": max_attempts,
+        "max_tool_calls": max_tool_calls,
+        "max_turns": None,
+        "completion_token_budget": DEFAULT_TOKEN_BUDGET,
+    }
+    op_budget = operational_budget()
+    budgets = {
+        "benchmark_budget": benchmark_budget,
+        "operational_budget": {
+            "provider_retries": op_budget.provider_retries,
+            "infra_restarts": op_budget.infra_restarts,
+            "request_timeout_seconds": op_budget.request_timeout_seconds,
+            "warm_build_timeout_seconds": op_budget.warm_build_timeout_seconds,
+        },
+    }
     if dry_run:
         response = {
             "status": "dry_run",
@@ -1262,6 +1373,7 @@ def run_group(
             "mode": "fair",
             "max_attempts": max_attempts,
             "max_tool_calls": max_tool_calls,
+            **budgets,
         }
     elif not _api_key() and not _local_no_auth_endpoint(base_url):
         provider_key_hint = f", DEFAULT_HARNESS_{DEFAULT_PROVIDER.upper()}_API_KEY" if DEFAULT_PROVIDER else ""
@@ -1273,11 +1385,17 @@ def run_group(
             "mode": "fair",
             "error": f"fair mode requires DEFAULT_HARNESS_API_KEY{provider_key_hint}, GAZELLA_API_KEY, OPENAI_API_KEY, or a localhost-compatible no-auth endpoint",
             "tasks": [],
+            "provider_setup_error": True,
+            "failure_class": "provider_setup_error",
+            **budgets,
         }
     else:
         task_results: list[dict[str, object]] = []
         warm_builds: list[dict[str, object]] = []
         try:
+            preflight = generic_preflight(base_url, DEFAULT_MODEL)
+            if preflight.get("status") != "passed":
+                raise RuntimeError(f"provider preflight failed: {preflight.get('error') or preflight}")
             tasks_payload = json.loads((built.path / "harness" / "TASKS.json").read_text(encoding="utf-8"))
             # Warm the Lean dependency graph once per target module so agent-visible
             # check timeouts measure proof elaboration, not cold dependency builds.
@@ -1309,6 +1427,8 @@ def run_group(
                             conversation_log_path=run_dir / "conversations" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                         )
                     )
+                    task_results[-1]["benchmark_budget"] = benchmark_budget
+                    task_results[-1]["validity"] = row_validity(task_results[-1], expected_budget=benchmark_budget)
             aggregate_usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
             for task_result in task_results:
                 task_usage = task_result.get("usage")
@@ -1317,9 +1437,35 @@ def run_group(
                         value = task_usage.get(key)
                         if isinstance(value, (int, float)):
                             aggregate_usage[key] += int(value)
-            response = {"status": "completed", "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": "fair", "usage": aggregate_usage, "warm_builds": warm_builds, "tasks": task_results}
+            response = {
+                "status": "completed",
+                "provider": _active_provider(),
+                "base_url": base_url,
+                "model": DEFAULT_MODEL,
+                "mode": "fair",
+                "usage": aggregate_usage,
+                "preflight": preflight,
+                "warm_builds": warm_builds,
+                "tasks": task_results,
+                "failure_counts": failure_counts_from_tasks(task_results),
+                **budgets,
+            }
         except Exception as exc:
-            response = {"status": "harness_error", "error": str(exc), "provider": _active_provider(), "base_url": base_url, "model": DEFAULT_MODEL, "mode": "fair", "warm_builds": warm_builds, "tasks": task_results}
+            status = "preflight_failed" if not task_results and not warm_builds else "harness_error"
+            response = {
+                "status": status,
+                "error": str(exc),
+                "provider": _active_provider(),
+                "base_url": base_url,
+                "model": DEFAULT_MODEL,
+                "mode": "fair",
+                "provider_setup_error": status == "preflight_failed",
+                "failure_class": "provider_setup_error" if status == "preflight_failed" else None,
+                "warm_builds": warm_builds,
+                "tasks": task_results,
+                "failure_counts": failure_counts_from_tasks(task_results),
+                **budgets,
+            }
 
     (run_dir / "workspace-manifest.json").write_text((built.path / "workspace-manifest.json").read_text(encoding="utf-8"), encoding="utf-8")
     shutil.copy2(built.path / "harness" / "TASK_SUMMARY.md", run_dir / "TASK_SUMMARY.md")
@@ -1333,6 +1479,7 @@ def run_group(
                 "mode": "fair",
                 "max_attempts": max_attempts,
                 "max_tool_calls": max_tool_calls,
+                **budgets,
             },
             indent=2,
         )
@@ -1369,6 +1516,9 @@ def run_group(
         "duration_seconds": round(time.time() - start, 3),
         "harness_status": response["status"],
         "usage": response.get("usage"),
+        "benchmark_budget": benchmark_budget,
+        "operational_budget": budgets["operational_budget"],
+        "failure_counts": response.get("failure_counts") or ({str(response.get("failure_class")): 1} if response.get("failure_class") else {}),
         "workspace": str(built.path) if keep_workspace else None,
         "verifier": verifier_result,
     }
