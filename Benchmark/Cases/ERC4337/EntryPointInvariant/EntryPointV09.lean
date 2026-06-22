@@ -1,4 +1,5 @@
 import Contracts.Common
+import Benchmark.Cases.ERC4337.EntryPointInvariant.InnerHandleOpIntrinsic
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 
@@ -264,7 +265,10 @@ verity_contract EntryPointV09 where
       (sender : IAccount, _key : Uint256, hasCallData : Uint256) : Uint256 := do
     if hasCallData == HAS_CALLDATA then
       unsafe "EntryPoint innerHandleOp sender call boundary" do
-        tryCatch (call 100000 sender 0 0 4 0 0) (do
+        let callDataPtr := intrinsic_prague "entryPointPackInnerCalldata"
+          entryPointPackInnerCalldataLowering
+          [addressToWord sender, 100000, 0, 4]
+        tryCatch (call 100000 sender 0 callDataPtr 4 0 0) (do
           pure ())
       return 1
     else

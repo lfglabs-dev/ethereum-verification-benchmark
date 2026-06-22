@@ -22,5 +22,5 @@ unsafe def main (args : List String) : IO Unit := do
     outDir
     true
     [externals]
-    {}
+    { targetFork := Verity.Core.Intrinsics.HardFork.prague }
     none none none none
