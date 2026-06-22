@@ -1,4 +1,3 @@
-import Benchmark.Cases.ERC4337.EntryPointInvariant.Frame
 import Verity.EVM.Frame
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant.EvmYulFrame

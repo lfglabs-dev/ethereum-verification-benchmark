@@ -1,11 +1,10 @@
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
+import Verity.EVM.MemoryModel
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant.LayoutWitness
 
-set_option linter.dupNamespace false
-
 open Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
-open Benchmark.Cases.ERC4337.EntryPointInvariant.MemFrame
+open Verity.EVM.MemoryModel
 
 /-!
 # Layout witness — per-artifact disjointness for a specific bytecode hash
@@ -80,12 +79,12 @@ theorem witness_implies_disjoint (w : LayoutWitness) :
   -- whose disjointness theorem is backed by `Verity.EVM.Layout`.
   exact callOutputBuffer_disjoint_from_opInfos w.toSolcLayout w.toCallSites
 
-/-- And in `MemFrame.Disjoint` form. -/
+/-- And in upstream `MemoryModel.Disjoint` form. -/
 theorem witness_implies_memframe_disjoint (w : LayoutWitness) :
-    MemFrame.Disjoint
+    Disjoint
       w.scratchOff (w.scratchOff + w.scratchSize)
       w.opInfosBase (w.opInfosBase + w.opInfosWords) := by
-  unfold MemFrame.Disjoint
+  unfold Disjoint
   exact witness_implies_disjoint w
 
 /-! ## Canonical witness for the v0.9 EntryPoint runtime bytecode

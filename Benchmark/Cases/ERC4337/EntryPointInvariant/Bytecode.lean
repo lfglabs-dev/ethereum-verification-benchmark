@@ -1,5 +1,4 @@
 import Benchmark.Cases.ERC4337.EntryPointInvariant.EntryPointV09
-import Benchmark.Cases.ERC4337.EntryPointInvariant.Frame
 import Benchmark.Cases.ERC4337.EntryPointInvariant.EvmYulFrame
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs
@@ -31,9 +30,8 @@ This module closes the loop on the original session goals. It:
 
 * (Step 4) Re-proves each frame condition against the faithful
   `EntryPointV09` Verity contract (the v0.9 translation in
-  `EntryPointV09.lean`), instead of the toy `EntryPointFrame` used by
-  `Frame.lean`. Where the proof shape is identical, we cite the source
-  contract's storage layout.
+  `EntryPointV09.lean`) and the upstream EVM frame lemmas. Where the proof
+  shape is identical, we cite the source contract's storage layout.
 
 * (Step 5) States the top-level claim universally quantified over the
   non-self EvmYul callees used for account/paymaster calls. The universal

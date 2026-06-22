@@ -1,10 +1,10 @@
 import Benchmark.Cases.ERC4337.EntryPointInvariant.EvmYulFrame
-import Benchmark.Cases.ERC4337.EntryPointInvariant.Frame
 import Verity.EVM.Layout
+import Verity.EVM.MemoryModel
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
 
-open Benchmark.Cases.ERC4337.EntryPointInvariant.MemFrame
+open Verity.EVM.MemoryModel
 
 /-!
 # Step 3 — Solc memory-layout disjointness for the EntryPoint
@@ -13,10 +13,9 @@ This module adapts the upstream `Verity.EVM.Layout` solc memory-layout
 lemma to the EntryPoint benchmark's historic `opInfos` field names.
 It formalises the static facts about Solidity's memory allocator
 that hold for the `handleOps` function in EntryPoint v0.9, and proves that
-the chosen call-output buffer is disjoint from the `opInfos[]` region —
-the disjointness premise consumed by Step 2's
-`external_call_preserves_caller_memory` and by `Frame.lean`'s
-`opInfos_memory_frame_under_arbitrary_callee`.
+the chosen call-output buffer is disjoint from the `opInfos[]` region, the
+disjointness premise consumed by `Verity.EVM.Frame` and
+`Verity.EVM.MemoryModel`.
 
 A full symbolic-execution discharge would consume the actual EntryPoint
 bytecode and run a memory-tainting analysis (Halmos / hevm style). What we
@@ -106,7 +105,7 @@ structure EntryPointCallSites (L : SolcLayout) where
     EntryPoint call site `S`, the call's output buffer is disjoint from
     `opInfos[]`. This discharges the
     `Disjoint scratchOff (scratchOff + scratchSize) opInfosBase (opInfosBase + N)`
-    premise of `Frame.MemFrame.opInfos_memory_frame_under_arbitrary_callee`. -/
+    premise of `Verity.EVM.MemoryModel.memory_frame_under_arbitrary_callee`. -/
 theorem callOutputBuffer_disjoint_from_opInfos
     (L : SolcLayout) (S : EntryPointCallSites L) :
     S.outOff_eq_scratchLo + S.outSize_le_scratch ≤ L.opInfosBase ∨
@@ -142,13 +141,13 @@ theorem entrypoint_call_disjoint_evmyul
     L.opInfosBase + L.opInfosWords ≤ S.outOff_eq_scratchLo :=
   callOutputBuffer_disjoint_from_opInfos L S
 
-/-- In the form the `Disjoint` predicate expects. -/
+/-- In the form the upstream `MemoryModel.Disjoint` predicate expects. -/
 theorem entrypoint_call_disjoint_memframe
     (L : SolcLayout) (S : EntryPointCallSites L) :
-    MemFrame.Disjoint
+    Disjoint
       S.outOff_eq_scratchLo (S.outOff_eq_scratchLo + S.outSize_le_scratch)
       L.opInfosBase (L.opInfosBase + L.opInfosWords) := by
-  unfold MemFrame.Disjoint
+  unfold Disjoint
   exact callOutputBuffer_disjoint_from_opInfos L S
 
 end Benchmark.Cases.ERC4337.EntryPointInvariant.Layout
