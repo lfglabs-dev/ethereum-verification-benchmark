@@ -1,7 +1,7 @@
 import Lake
 open Lake DSL
 
-package «verity-benchmark» where
+package «ethereum-verification-benchmark» where
   version := v!"0.1.0"
 
 require verity from git

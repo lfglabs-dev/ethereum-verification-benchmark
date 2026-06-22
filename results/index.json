@@ -1,5 +1,5 @@
 {
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "latest_version": "0.1",
   "schema_version": 1,
   "versions": [

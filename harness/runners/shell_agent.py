@@ -142,7 +142,7 @@ def run_group(
         api_key,
         usage_path=run_dir / "usage.json",
         completion_token_budget=token_budget,
-        user_agent=os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", "verity-benchmark-harness/1.0"),
+        user_agent=os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", "ethereum-verification-benchmark-harness/1.0"),
     )
     proxy.start()
     fake_home = Path(tempfile.mkdtemp(prefix=f"verity-{harness_id}-home-"))

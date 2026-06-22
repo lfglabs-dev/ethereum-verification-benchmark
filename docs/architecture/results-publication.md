@@ -19,7 +19,7 @@ release assets referenced by the manifest.
 ```json
 {
   "schema_version": 1,
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "latest_version": "0.1",
   "versions": [
     {
@@ -48,7 +48,7 @@ separate source of truth.
 ```json
 {
   "schema_version": 1,
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "benchmark_version": "0.1",
   "task_count": 135,
   "source_summary_url": "results/summaries/v0.1.json",
@@ -104,7 +104,7 @@ should include one row per model run with provider and model split explicitly:
 ```json
 {
   "schema_version": 1,
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "benchmark_version": "0.1",
   "task_count": 135,
   "task_set_id": "sha256:...",

@@ -111,5 +111,5 @@
    "inputRev": "main",
    "inherited": true,
    "configFile": "lakefile.toml"}],
- "name": "«verity-benchmark»",
+ "name": "«ethereum-verification-benchmark»",
  "lakeDir": ".lake"}

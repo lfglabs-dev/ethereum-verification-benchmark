@@ -1,6 +1,6 @@
-# Verity Benchmark Leaderboard
+# Ethereum Verification Benchmark Leaderboard
 
-Benchmark version `0.1` · generated 2026-06-22 08:15Z
+Benchmark version `0.1` · generated 2026-06-22 10:07Z
 
 Complete rows are eligible for rank comparisons. Partial rows are shown for transparency and excluded from complete-rank comparisons.
 

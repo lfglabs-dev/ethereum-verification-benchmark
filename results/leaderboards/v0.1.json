@@ -1,5 +1,5 @@
 {
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "benchmark_version": "0.1",
   "ranking_policy": "complete rows ranked by pass_rate desc, completion_tokens asc, model_id asc; partial/invalid rows have null rank",
   "rows": [

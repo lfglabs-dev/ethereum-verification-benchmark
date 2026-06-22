@@ -242,7 +242,7 @@ def _apply_budget(args: argparse.Namespace) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Verity benchmark group CLI")
+    parser = argparse.ArgumentParser(description="Ethereum verification benchmark group CLI")
     sub = parser.add_subparsers(dest="command", required=True)
 
     list_parser = sub.add_parser("list")

@@ -1,5 +1,5 @@
 {
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "benchmark_version": "0.1",
   "environment_id": "sha256:a4e6af95c29687bb2a727dbae8d9627208e47f0e48ea7a9d26002fbddf156365",
   "harness_id": "sha256:28a43f1654ee468f873f4b308b67fd4308913aa2aa77cd33e094267a8b9b448d",
@@ -7,7 +7,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-claude-opus-4-8.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-claude-opus-4-8.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-claude-opus-4-8.tar.zst",
         "byte_size": 1119975,
         "release_tag": "v0.1",
         "sha256": "82be0bd6ce529ea01d8a643562cd0950747661ad5052de4e418681c5f52f6aa8"
@@ -37,7 +37,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-grok.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-grok.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-grok.tar.zst",
         "byte_size": 1794322,
         "release_tag": "v0.1",
         "sha256": "a1af93ed0007643ea81671de21e9d8a4b13eec2f97da88ffc1e4b97cf605baf7"
@@ -67,7 +67,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-kimi-kimi-for-coding.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-kimi-kimi-for-coding.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-kimi-kimi-for-coding.tar.zst",
         "byte_size": 1466089,
         "release_tag": "v0.1",
         "sha256": "747dd38ee3082212c1805023951fd4f5fe63dec8b44da7451f42f99bc118ad62"
@@ -97,7 +97,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-minimax-minimax-m3.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-minimax-minimax-m3.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-minimax-minimax-m3.tar.zst",
         "byte_size": 1964022,
         "release_tag": "v0.1",
         "sha256": "0619a5b4bec747c4ddd8c18af9817ab0c0029cfb2679002a0727142c58684b76"
@@ -151,7 +151,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-openai-gpt-55.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-openai-gpt-55.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-openai-gpt-55.tar.zst",
         "byte_size": 1280796,
         "release_tag": "v0.1",
         "sha256": "763875a271abc598666d86a8fbc7e62d483974357358f7c3d64634c571c595e5"
@@ -181,7 +181,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-openai-gpt-55-pro.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-openai-gpt-55-pro.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-openai-gpt-55-pro.tar.zst",
         "byte_size": 638216,
         "release_tag": "v0.1",
         "sha256": "d5bcf16110e029cf2b33764ca68492981dd5b4ae0b9bf56e365066477c16d01a"
@@ -213,7 +213,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-virtuals-deepseek-v4-flash.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-virtuals-deepseek-v4-flash.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-virtuals-deepseek-v4-flash.tar.zst",
         "byte_size": 4300519,
         "release_tag": "v0.1",
         "sha256": "8de94f10cce642d31e87dd13cba5ed1e7403ac909338025bf52a0f7ed16521e0"
@@ -243,7 +243,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-virtuals-deepseek-v4-pro.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-virtuals-deepseek-v4-pro.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-virtuals-deepseek-v4-pro.tar.zst",
         "byte_size": 3965810,
         "release_tag": "v0.1",
         "sha256": "051bf8d3544fc135f93ed4cb5e50f18c451fe65983aa947beb04a89e2e25143f"
@@ -275,7 +275,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-virtuals-xiaomi-mimo-v2-5.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-virtuals-xiaomi-mimo-v2-5.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-virtuals-xiaomi-mimo-v2-5.tar.zst",
         "byte_size": 1459995,
         "release_tag": "v0.1",
         "sha256": "8cf48a50f16e0520d0e5c1eb0853e22402ee9724c671cfb9ec7a87f7722daa3a"
@@ -305,7 +305,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-xai-grok-4-3.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-xai-grok-4-3.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-xai-grok-4-3.tar.zst",
         "byte_size": 1551051,
         "release_tag": "v0.1",
         "sha256": "ac6a7ba94d811431111f7e68456fd776c90b40b439a0850c858e69cdb38e62ef"
@@ -335,7 +335,7 @@
     {
       "archive": {
         "asset_name": "benchmark-v0.1-zai-glm-5-2.tar.zst",
-        "asset_url": "https://github.com/lfglabs-dev/verity-benchmark/releases/download/v0.1/benchmark-v0.1-zai-glm-5-2.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-zai-glm-5-2.tar.zst",
         "byte_size": 1656031,
         "release_tag": "v0.1",
         "sha256": "14a99c66bf18253fe981e96dd827baaf79bcc0287fcd31b0d894273a49a705b7"

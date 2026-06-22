@@ -1,4 +1,4 @@
-<h1 align="center">Verity Benchmark</h1>
+<h1 align="center">Ethereum Verification Benchmark</h1>
 
 <p align="center">
   <strong>Measuring AI agents at formally verifying smart contracts in Lean 4.</strong>
@@ -7,8 +7,8 @@
 <p align="center">
   <a href="https://lfglabs.dev/benchmark"><img src="https://img.shields.io/badge/benchmark-lfglabs.dev%2Fbenchmark-0a7d7d.svg" alt="Public benchmark"></a>
   <a href="https://veritylang.com"><img src="https://img.shields.io/badge/docs-veritylang.com-0a7d7d.svg" alt="Verity documentation"></a>
-  <a href="https://github.com/lfglabs-dev/verity-benchmark"><img src="https://img.shields.io/badge/built%20with-Lean%204-blueviolet.svg" alt="Built with Lean 4"></a>
-  <a href="https://github.com/lfglabs-dev/verity-benchmark/actions"><img src="https://img.shields.io/github/actions/workflow/status/lfglabs-dev/verity-benchmark/check.yml?label=check" alt="Check"></a>
+  <a href="https://github.com/lfglabs-dev/ethereum-verification-benchmark"><img src="https://img.shields.io/badge/built%20with-Lean%204-blueviolet.svg" alt="Built with Lean 4"></a>
+  <a href="https://github.com/lfglabs-dev/ethereum-verification-benchmark/actions"><img src="https://img.shields.io/github/actions/workflow/status/lfglabs-dev/ethereum-verification-benchmark/check.yml?label=check" alt="Check"></a>
 </p>
 
 <p align="center">
@@ -27,7 +27,7 @@
 
 ## What is this?
 
-**Verity Benchmark** is an open evaluation suite for measuring whether AI agents can produce **formal proofs** of smart contract correctness in [Lean 4](https://lean-lang.org/). Cases are drawn from production Ethereum protocols, DeFi systems, token standards, and security challenge contracts, and run on top of the [Verity](https://github.com/lfglabs-dev/verity) formally verified smart contract compiler.
+**Ethereum Verification Benchmark** is an open evaluation suite for measuring whether AI agents can produce **formal proofs** of smart contract correctness in [Lean 4](https://lean-lang.org/). Cases are drawn from production Ethereum protocols, DeFi systems, token standards, and security challenge contracts, and run on top of the [Verity](https://github.com/lfglabs-dev/verity) formally verified smart contract compiler.
 
 [Verity](https://veritylang.com) lets you write smart contracts, state what they should do, prove correctness, and compile to EVM bytecode with machine-checked proofs that compilation preserves semantics. This benchmark is an initiative made in partnership with the **Ethereum Foundation** and various protocols of the ecosystem. Full documentation lives at [**veritylang.com**](https://veritylang.com); the team behind it is [**LFG Labs**](https://lfglabs.dev).
 
@@ -80,10 +80,10 @@ Coverage is strongest today for accounting, local state preservation, storage ef
 
 ## Results
 
-[![Verity bench](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Foverall.json)](./leaderboard.md)
-[![GLM 5.2](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Fzai-glm-5-2.json)](./leaderboard.md)
-[![MiniMax M3](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Fminimax-minimax-m3.json)](./leaderboard.md)
-[![Kimi K2.7](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fverity-benchmark%2Fmain%2Fbadges%2Fkimi-kimi-for-coding.json)](./leaderboard.md)
+[![Ethereum verification](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fethereum-verification-benchmark%2Fmain%2Fbadges%2Foverall.json)](./leaderboard.md)
+[![GLM 5.2](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fethereum-verification-benchmark%2Fmain%2Fbadges%2Fzai-glm-5-2.json)](./leaderboard.md)
+[![MiniMax M3](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fethereum-verification-benchmark%2Fmain%2Fbadges%2Fminimax-minimax-m3.json)](./leaderboard.md)
+[![Kimi K2.7](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2Flfglabs-dev%2Fethereum-verification-benchmark%2Fmain%2Fbadges%2Fkimi-kimi-for-coding.json)](./leaderboard.md)
 
 The public leaderboard is at [lfglabs.dev/benchmark](https://lfglabs.dev/benchmark). It shows the current benchmark version, model pass rates, solved/failed counts, and run cost estimates.
 

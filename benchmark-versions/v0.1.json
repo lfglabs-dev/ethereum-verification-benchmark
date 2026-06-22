@@ -1,5 +1,5 @@
 {
-  "benchmark": "verity-benchmark",
+  "benchmark": "ethereum-verification-benchmark",
   "benchmark_version": "0.1",
   "budget": "normal",
   "created_at": "2026-06-16",

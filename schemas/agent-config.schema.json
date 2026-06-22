@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://verity-benchmark.local/schemas/agent-config.schema.json",
+  "$id": "https://ethereum-verification-benchmark.local/schemas/agent-config.schema.json",
   "title": "Benchmark Harness Profile",
   "description": "Metadata for the two supported benchmark harnesses: default Lean-tools and Grok Build.",
   "type": "object",

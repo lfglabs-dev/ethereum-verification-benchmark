@@ -233,7 +233,7 @@ def leaderboard_json(summary: dict[str, Any]) -> dict[str, Any]:
 
 def leaderboard(version: dict[str, Any], summaries: list[dict[str, Any]]) -> str:
     lines = [
-        "# Verity Benchmark Leaderboard",
+        "# Ethereum Verification Benchmark Leaderboard",
         "",
         f"Benchmark version `{version['benchmark_version']}` · generated {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%MZ')}",
         "",
@@ -335,7 +335,7 @@ def main() -> int:
     complete_runs = sum(item["task_count"] for item in summary["models"] if item["status"] == "complete")
     all_runs = sum(item["task_count"] for item in summary["models"])
     (badges_dir / "overall.json").write_text(
-        json.dumps({"schemaVersion": 1, "label": "verity bench", "message": f"{complete_runs}/{all_runs} complete-version runs", "color": "brightgreen" if complete_runs == all_runs and all_runs else "yellow"}) + "\n",
+        json.dumps({"schemaVersion": 1, "label": "ethereum verification", "message": f"{complete_runs}/{all_runs} complete-version runs", "color": "brightgreen" if complete_runs == all_runs and all_runs else "yellow"}) + "\n",
         encoding="utf-8",
     )
     print(f"aggregated benchmark v{version_name}: {len(summary['models'])} model row(s)")

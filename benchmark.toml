@@ -1,4 +1,4 @@
-name = "verity-benchmark"
+name = "ethereum-verification-benchmark"
 version = "0.1.0"
 primary_unit = "group"
 primary_track = "group/lean_tools"

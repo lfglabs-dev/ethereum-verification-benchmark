@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://verity-benchmark.local/schemas/implementation.schema.json",
+  "$id": "https://ethereum-verification-benchmark.local/schemas/implementation.schema.json",
   "title": "Benchmark Implementation Manifest",
   "type": "object",
   "additionalProperties": false,

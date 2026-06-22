@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "description": "Failure-mode taxonomy for Verity benchmark proof attempts. Classification has two levels: (1) the outcome status reported by the harness/verifier, and (2) when a submitted proof fails to type-check, a Lean failure sub-mode parsed from the verifier output. This file is the data-driven source of truth consumed by scripts/classify_failures.py; it can be extended without code changes and is independent of benchmark versioning (it never feeds result_key).",
+  "description": "Failure-mode taxonomy for Ethereum verification benchmark proof attempts. Classification has two levels: (1) the outcome status reported by the harness/verifier, and (2) when a submitted proof fails to type-check, a Lean failure sub-mode parsed from the verifier output. This file is the data-driven source of truth consumed by scripts/classify_failures.py; it can be extended without code changes and is independent of benchmark versioning (it never feeds result_key).",
   "matching": {
     "method": "Outcome status is mapped directly from the verifier/harness status. When the outcome is 'lean_check_failed', the verifier output text is scanned against lean_failure_modes in array order; the first mode with any matching (case-insensitive substring) signature wins. Ordering is deliberate: more specific / more proximate causes are listed before 'unsolved_goals', which is the softest terminal state and is therefore matched last among real Lean errors.",
     "case_sensitive": false

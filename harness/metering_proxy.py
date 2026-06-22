@@ -30,7 +30,7 @@ class MeteringProxy:
         *,
         usage_path: Path | None = None,
         completion_token_budget: int = 0,
-        user_agent: str = "verity-benchmark-harness/1.0",
+        user_agent: str = "ethereum-verification-benchmark-harness/1.0",
     ) -> None:
         self.upstream = upstream_base_url.rstrip("/")
         self.api_key = api_key
@@ -95,7 +95,7 @@ class MeteringProxy:
                 upstream_url = proxy.upstream.removesuffix("/v1") + path
                 if self.command == "POST" and "chat/completions" in path and proxy.budget_exhausted():
                     payload = json.dumps(
-                        {"error": {"message": "verity benchmark completion-token budget exhausted", "type": "error", "code": "budget_exhausted"}}
+                        {"error": {"message": "ethereum verification benchmark completion-token budget exhausted", "type": "error", "code": "budget_exhausted"}}
                     ).encode("utf-8")
                     self.send_response(429)
                     self.send_header("Content-Type", "application/json")
