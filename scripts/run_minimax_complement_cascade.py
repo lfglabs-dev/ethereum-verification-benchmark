@@ -361,13 +361,12 @@ def recover_rows(output: Path, selected: list[dict], profiles: list[BudgetProfil
             if not run_dir:
                 continue
             row = row_from_run_dir(task_ref, profile, run_dir, recovered=True)
-            if row and is_valid_model_row(row):
+            if row:
                 rows[(profile.name, task_ref)] = row
     existing = output / "cascade_results.json"
     if existing.is_file():
         for row in load_json(existing):  # type: ignore[union-attr]
-            if is_valid_model_row(row):
-                rows[(row["profile"], row["task_ref"])] = row
+            rows[(row["profile"], row["task_ref"])] = row
     return sorted(rows.values(), key=lambda row: (profile_index(row["profile"]), task_index(selected, row["task_ref"])))
 
 
