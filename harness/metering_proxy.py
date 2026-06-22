@@ -21,6 +21,8 @@ import urllib.request
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
+from harness.identity import HARNESS_USER_AGENT
+
 
 class MeteringProxy:
     def __init__(
@@ -30,7 +32,7 @@ class MeteringProxy:
         *,
         usage_path: Path | None = None,
         completion_token_budget: int = 0,
-        user_agent: str = "ethereum-verification-benchmark-harness/1.0",
+        user_agent: str = HARNESS_USER_AGENT,
     ) -> None:
         self.upstream = upstream_base_url.rstrip("/")
         self.api_key = api_key

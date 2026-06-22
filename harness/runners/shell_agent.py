@@ -35,6 +35,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 try:
+    from ..identity import HARNESS_USER_AGENT
     from ..manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from ..metering_proxy import MeteringProxy
     from ..paths import RESULTS_DIR, ROOT
@@ -42,6 +43,7 @@ try:
     from ..verifier import verify_group
     from ..workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
 except ImportError:
+    from identity import HARNESS_USER_AGENT
     from manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from metering_proxy import MeteringProxy
     from paths import RESULTS_DIR, ROOT
@@ -142,7 +144,7 @@ def run_group(
         api_key,
         usage_path=run_dir / "usage.json",
         completion_token_budget=token_budget,
-        user_agent=os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", "ethereum-verification-benchmark-harness/1.0"),
+        user_agent=os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", HARNESS_USER_AGENT),
     )
     proxy.start()
     fake_home = Path(tempfile.mkdtemp(prefix=f"verity-{harness_id}-home-"))

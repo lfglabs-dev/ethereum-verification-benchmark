@@ -6,6 +6,11 @@ fail on it. It answers the questions in
 [issue #93](https://github.com/lfglabs-dev/ethereum-verification-benchmark/issues/93) — *which tasks are
 hard, which are divisive, and why* — without changing how the benchmark scores anything.
 
+Keep this directory for curated, reproducible analysis inputs and summaries. Raw
+experiment logs, PID files, and in-progress cascade outputs belong under ignored
+`output/` paths locally, then either get promoted into a small curated analysis
+artifact or attached as release assets.
+
 ## Why this is a separate layer
 
 Scoring (pass/fail, tokens, `result_key`, rerun planning) lives in
@@ -100,8 +105,8 @@ Lean failure-mode columns are omitted (`enrichment_present: false`).
 Cross-model statements (pass rate, divisiveness, P/F signatures) use a **comparison
 cohort**: models that attempted at least `--min-coverage` (default `1.0`, i.e. every task) of
 the version. This is the apples-to-apples set — no model is scored on a task it never
-attempted, and there is no cherry-picking of which models to include. For v0.1 the cohort is
-`kimi/kimi-for-coding`, `minimax/minimax-m3`, `spark/step3p7-flash-148b`, `zai/glm-5.2`.
+attempted, and there is no cherry-picking of which models to include. For v0.1, use the
+complete rows in `results/leaderboards/v0.1.json`.
 
 `divisiveness = 1 - |2·cohort_pass_rate − 1|` (0 = unanimous, 1 = evenly split). Note that a
 very weak full-coverage model can drag a task toward "unanimous fail"; the transparent

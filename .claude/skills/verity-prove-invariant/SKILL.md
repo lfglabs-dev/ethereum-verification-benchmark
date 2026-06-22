@@ -270,7 +270,7 @@ The arbitrator may continue to Phase 4 only after:
 - every axiom is approved by Proof Reviewer and Final Red Team Reviewer
 - counterexamples are confirmed by the Invariant Reviewer
 
-Open a PR on `https://github.com/lfglabs-dev/verity-benchmark` only after this gate
+Open a PR on `https://github.com/lfglabs-dev/ethereum-verification-benchmark` only after this gate
 passes.
 
 ---
@@ -339,7 +339,7 @@ Fricoben <78437165+fricoben@users.noreply.github.com>
 Before committing, set the repo-local Git author config or pass the author explicitly
 so GitHub associates the PR commits with the `fricoben` account.
 
-1. Open a PR on `https://github.com/lfglabs-dev/verity-benchmark` with the complete
+1. Open a PR on `https://github.com/lfglabs-dev/ethereum-verification-benchmark` with the complete
    benchmark case:
    - Verity model
    - specs

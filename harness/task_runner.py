@@ -18,8 +18,11 @@ TASK_RESULTS_DIR = RESULTS_DIR / "tasks"
 
 if str(ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(ROOT / "scripts"))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from manifest_utils import load_manifest_data
+from release_config import BENCHMARK_ID
 
 RUNNABLE_STAGES = {"build_green", "proof_partial", "proof_complete"}
 RUNNABLE_TRANSLATION_STATUSES = {"generated", "translated"}
@@ -163,7 +166,7 @@ def load_task_record(task_manifest: Path) -> dict[str, Any]:
     editable_files = normalize_list(task_data.get("editable_files"))
 
     task = {
-        "benchmark": "ethereum-verification-benchmark",
+        "benchmark": BENCHMARK_ID,
         "schema_version": 1,
         "task_ref": task_ref,
         "task_id": task_id,
@@ -418,7 +421,7 @@ def aggregate_results(task_refs: list[str], suite: str) -> dict[str, Any]:
         )
 
     task_summary = {
-        "benchmark": "ethereum-verification-benchmark",
+        "benchmark": BENCHMARK_ID,
         "schema_version": 1,
         "unit": "task",
         "total_tasks": len(task_refs),
@@ -438,7 +441,7 @@ def aggregate_results(task_refs: list[str], suite: str) -> dict[str, Any]:
         "missing_task_refs": missing_task_refs,
     }
     case_summary = {
-        "benchmark": "ethereum-verification-benchmark",
+        "benchmark": BENCHMARK_ID,
         "schema_version": 1,
         "unit": "case-secondary",
         "total_cases": len(case_rows),

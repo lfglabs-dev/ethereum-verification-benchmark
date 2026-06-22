@@ -62,8 +62,6 @@ separate source of truth.
       "model_name": "gpt-5.5",
       "inference_provider_id": "openai",
       "inference_model_id": "openai-gpt-55",
-      "provider_id": "openai",
-      "provider_model_id": "gpt-5.5",
       "display_name": "GPT 5.5",
       "status": "complete",
       "pass_rate": 0.489,
@@ -93,8 +91,6 @@ optionally `rows[].total_tokens`. The ID fields are intentionally split:
 - `model_name`: model name inside the model provider namespace.
 - `inference_provider_id`: service or route used to run inference, when known.
 - `inference_model_id`: model identifier sent to that inference provider.
-- `provider_id` and `provider_model_id`: deprecated aliases for
-  `model_provider_id` and `model_name`, kept for one release cycle.
 
 ## Summary File
 

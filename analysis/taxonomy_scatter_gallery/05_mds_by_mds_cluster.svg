@@ -7,177 +7,179 @@ text{font-family:Inter,Arial,sans-serif;fill:#111827}.sub{fill:#4b5563}.axis{str
 <text x="105" y="57" font-size="13" class="sub">Reprise de la carte pass/fail coverage-aware avec couleurs de clusters</text>
 <line x1="105.0" y1="74" x2="105.0" y2="728" class="grid"/>
 <line x1="105" y1="74.0" x2="895" y2="74.0" class="grid"/>
-<text x="105.0" y="748" text-anchor="middle" class="tick">-0.74</text>
-<text x="93" y="78.0" text-anchor="end" class="tick">0.41</text>
+<text x="105.0" y="748" text-anchor="middle" class="tick">-0.85</text>
+<text x="93" y="78.0" text-anchor="end" class="tick">0.29</text>
 <line x1="263.0" y1="74" x2="263.0" y2="728" class="grid"/>
 <line x1="105" y1="204.8" x2="895" y2="204.8" class="grid"/>
-<text x="263.0" y="748" text-anchor="middle" class="tick">-0.51</text>
-<text x="93" y="208.8" text-anchor="end" class="tick">0.26</text>
+<text x="263.0" y="748" text-anchor="middle" class="tick">-0.60</text>
+<text x="93" y="208.8" text-anchor="end" class="tick">0.16</text>
 <line x1="421.0" y1="74" x2="421.0" y2="728" class="grid"/>
 <line x1="105" y1="335.6" x2="895" y2="335.6" class="grid"/>
-<text x="421.0" y="748" text-anchor="middle" class="tick">-0.28</text>
-<text x="93" y="339.6" text-anchor="end" class="tick">0.11</text>
+<text x="421.0" y="748" text-anchor="middle" class="tick">-0.36</text>
+<text x="93" y="339.6" text-anchor="end" class="tick">0.03</text>
 <line x1="579.0" y1="74" x2="579.0" y2="728" class="grid"/>
 <line x1="105" y1="466.4" x2="895" y2="466.4" class="grid"/>
-<text x="579.0" y="748" text-anchor="middle" class="tick">-0.05</text>
-<text x="93" y="470.4" text-anchor="end" class="tick">-0.04</text>
+<text x="579.0" y="748" text-anchor="middle" class="tick">-0.12</text>
+<text x="93" y="470.4" text-anchor="end" class="tick">-0.09</text>
 <line x1="737.0" y1="74" x2="737.0" y2="728" class="grid"/>
 <line x1="105" y1="597.2" x2="895" y2="597.2" class="grid"/>
-<text x="737.0" y="748" text-anchor="middle" class="tick">0.18</text>
-<text x="93" y="601.2" text-anchor="end" class="tick">-0.20</text>
+<text x="737.0" y="748" text-anchor="middle" class="tick">0.12</text>
+<text x="93" y="601.2" text-anchor="end" class="tick">-0.22</text>
 <line x1="895.0" y1="74" x2="895.0" y2="728" class="grid"/>
 <line x1="105" y1="728.0" x2="895" y2="728.0" class="grid"/>
-<text x="895.0" y="748" text-anchor="middle" class="tick">0.41</text>
-<text x="93" y="732.0" text-anchor="end" class="tick">-0.35</text>
+<text x="895.0" y="748" text-anchor="middle" class="tick">0.37</text>
+<text x="93" y="732.0" text-anchor="end" class="tick">-0.34</text>
 <line x1="105" y1="728" x2="895" y2="728" class="axis"/>
 <line x1="105" y1="74" x2="105" y2="728" class="axis"/>
 <text x="500.0" y="786" font-size="14" font-weight="600">map_x</text>
 <text transform="translate(32 401.0) rotate(-90)" text-anchor="middle" font-size="14" font-weight="600">map_y</text>
-<ellipse cx="815.0" cy="423.2" rx="111.7" ry="205.9" fill="#2563eb" opacity=".08" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="180.3" cy="343.3" rx="51.2" ry="171.1" fill="#dc2626" opacity=".08" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="334.6" cy="591.1" rx="58.1" ry="175.9" fill="#16a34a" opacity=".08" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="510.2" cy="555.9" rx="62.4" ry="168.2" fill="#9333ea" opacity=".08" stroke="#9333ea" stroke-width="1.2" stroke-dasharray="5 4"/>
-<circle cx="831.5" cy="294.3" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/earmark_preserves_invariant | mds_cluster=cluster_1 | x=0.322 y=0.157</title></circle>
-<circle cx="831.5" cy="294.3" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/redeem_preserves_invariant | mds_cluster=cluster_1 | x=0.322 y=0.157</title></circle>
-<circle cx="831.5" cy="294.5" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_debt_preserves_invariant | mds_cluster=cluster_1 | x=0.322 y=0.157</title></circle>
-<circle cx="831.5" cy="294.5" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant | mds_cluster=cluster_1 | x=0.322 y=0.157</title></circle>
-<circle cx="831.5" cy="294.5" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sync_account_preserves_invariant | mds_cluster=cluster_1 | x=0.322 y=0.157</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>cork/pool_solvency/solvency_preserved | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="312.6" cy="660.1" r="11.3" fill="#16a34a" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | mds_cluster=cluster_3 | x=-0.436 y=-0.27</title></circle>
-<circle cx="200.3" cy="364.2" r="11.3" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit | mds_cluster=cluster_2 | x=-0.6 y=0.0756</title></circle>
-<circle cx="312.6" cy="660.1" r="11.3" fill="#16a34a" class="pt"><title>ethereum/deposit_contract_minimal/chain_start_threshold | mds_cluster=cluster_3 | x=-0.436 y=-0.27</title></circle>
-<circle cx="515.6" cy="601.4" r="9.5" fill="#9333ea" class="pt"><title>ethereum/deposit_contract_minimal/deposit_count | mds_cluster=cluster_4 | x=-0.139 y=-0.201</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_increments_full_count | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="419.3" cy="408.4" r="10.4" fill="#ea580c" class="pt"><title>ethereum/deposit_contract_minimal/small_deposit_preserves_full_count | mds_cluster=cluster_6 | x=-0.28 y=0.024</title></circle>
-<circle cx="524.5" cy="415.0" r="9.5" fill="#9333ea" class="pt"><title>forgeyields/global_solvency/claim_redeem_preserves_global_solvency | mds_cluster=cluster_4 | x=-0.127 y=0.0162</title></circle>
-<circle cx="214.2" cy="167.2" r="11.3" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/deposit_preserves_global_solvency | mds_cluster=cluster_2 | x=-0.58 y=0.306</title></circle>
-<circle cx="441.0" cy="119.1" r="9.5" fill="#0891b2" class="pt"><title>forgeyields/global_solvency/handle_preserves_global_solvency | mds_cluster=cluster_5 | x=-0.248 y=0.362</title></circle>
-<circle cx="312.6" cy="660.1" r="11.3" fill="#16a34a" class="pt"><title>forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency | mds_cluster=cluster_3 | x=-0.436 y=-0.27</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/report_preserves_global_solvency | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="515.6" cy="601.4" r="9.5" fill="#9333ea" class="pt"><title>forgeyields/global_solvency/request_redeem_preserves_global_solvency | mds_cluster=cluster_4 | x=-0.139 y=-0.201</title></circle>
-<circle cx="214.2" cy="167.2" r="11.3" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/transfer_remote_preserves_global_solvency | mds_cluster=cluster_2 | x=-0.58 y=0.306</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/redeem_preserves_pps | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="214.2" cy="167.2" r="11.3" fill="#dc2626" class="pt"><title>kleros/sortition_trees/draw_interval_matches_weights | mds_cluster=cluster_2 | x=-0.58 y=0.306</title></circle>
-<circle cx="524.5" cy="415.0" r="9.5" fill="#9333ea" class="pt"><title>kleros/sortition_trees/draw_selects_valid_leaf | mds_cluster=cluster_4 | x=-0.127 y=0.0162</title></circle>
-<circle cx="321.9" cy="524.7" r="11.3" fill="#ea580c" class="pt"><title>kleros/sortition_trees/node_id_bijection | mds_cluster=cluster_6 | x=-0.423 y=-0.112</title></circle>
-<circle cx="515.6" cy="601.4" r="9.5" fill="#9333ea" class="pt"><title>kleros/sortition_trees/parent_equals_sum_of_children | mds_cluster=cluster_4 | x=-0.139 y=-0.201</title></circle>
-<circle cx="200.3" cy="364.2" r="11.3" fill="#dc2626" class="pt"><title>kleros/sortition_trees/root_equals_sum_of_leaves | mds_cluster=cluster_2 | x=-0.6 y=0.0756</title></circle>
-<circle cx="733.5" cy="353.5" r="7.0" fill="#2563eb" class="pt"><title>kleros/sortition_trees/root_minus_left_equals_right_subtree | mds_cluster=cluster_1 | x=0.179 y=0.088</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/exact_compliance | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/negative_variation_bounded | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/positive_variation_bounded | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="776.1" cy="564.9" r="7.0" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/ceildiv_sandwich | mds_cluster=cluster_1 | x=0.241 y=-0.159</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/locked_funds_solvency | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/max_liability_shares_bound | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/reserve_ratio_bounds | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="776.1" cy="564.9" r="7.0" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/shares_conversion_monotone | mds_cluster=cluster_1 | x=0.241 y=-0.159</title></circle>
-<circle cx="200.3" cy="364.2" r="11.3" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_book_value | mds_cluster=cluster_2 | x=-0.6 y=0.0756</title></circle>
-<circle cx="312.6" cy="660.1" r="11.3" fill="#16a34a" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_buy_price | mds_cluster=cluster_3 | x=-0.436 y=-0.27</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_capital | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="312.6" cy="660.1" r="11.3" fill="#16a34a" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_sell_price | mds_cluster=cluster_3 | x=-0.436 y=-0.27</title></circle>
-<circle cx="321.9" cy="524.7" r="11.3" fill="#ea580c" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller | mds_cluster=cluster_6 | x=-0.423 y=-0.112</title></circle>
-<circle cx="361.1" cy="572.6" r="10.4" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller | mds_cluster=cluster_3 | x=-0.365 y=-0.168</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="312.6" cy="660.1" r="11.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller | mds_cluster=cluster_3 | x=-0.436 y=-0.27</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="465.3" cy="682.9" r="10.4" fill="#9333ea" class="pt"><title>onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller | mds_cluster=cluster_4 | x=-0.213 y=-0.297</title></circle>
-<circle cx="312.6" cy="660.1" r="11.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller | mds_cluster=cluster_3 | x=-0.436 y=-0.27</title></circle>
-<circle cx="312.6" cy="660.1" r="11.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller | mds_cluster=cluster_3 | x=-0.436 y=-0.27</title></circle>
-<circle cx="159.5" cy="440.9" r="12.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.66 y=-0.0141</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="776.1" cy="564.9" r="7.0" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed | mds_cluster=cluster_1 | x=0.241 y=-0.159</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="830.9" cy="296.5" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved | mds_cluster=cluster_1 | x=0.321 y=0.155</title></circle>
-<circle cx="723.3" cy="378.1" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims | mds_cluster=cluster_1 | x=0.164 y=0.0593</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_no_overclaim | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="723.3" cy="378.1" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected | mds_cluster=cluster_1 | x=0.164 y=0.0593</title></circle>
-<circle cx="605.6" cy="142.0" r="8.8" fill="#0891b2" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected | mds_cluster=cluster_5 | x=-0.00805 y=0.335</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="723.3" cy="378.1" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected | mds_cluster=cluster_1 | x=0.164 y=0.0593</title></circle>
-<circle cx="653.1" cy="678.1" r="8.8" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected | mds_cluster=cluster_1 | x=0.0615 y=-0.291</title></circle>
-<circle cx="392.8" cy="336.4" r="10.0" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_marks_user | mds_cluster=cluster_3 | x=-0.319 y=0.108</title></circle>
-<circle cx="723.3" cy="378.1" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed | mds_cluster=cluster_1 | x=0.164 y=0.0593</title></circle>
-<circle cx="485.3" cy="666.0" r="10.0" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated | mds_cluster=cluster_4 | x=-0.184 y=-0.277</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="162.4" cy="437.2" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/double_claim_rejected | mds_cluster=cluster_2 | x=-0.656 y=-0.00968</title></circle>
-<circle cx="323.0" cy="653.3" r="11.0" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/no_overclaim | mds_cluster=cluster_3 | x=-0.421 y=-0.262</title></circle>
-<circle cx="225.9" cy="126.7" r="11.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state | mds_cluster=cluster_2 | x=-0.563 y=0.353</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="410.2" cy="162.7" r="10.0" fill="#0891b2" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user | mds_cluster=cluster_5 | x=-0.294 y=0.311</title></circle>
-<circle cx="485.3" cy="666.0" r="10.0" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed | mds_cluster=cluster_4 | x=-0.184 y=-0.277</title></circle>
-<circle cx="723.3" cy="378.1" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated | mds_cluster=cluster_1 | x=0.164 y=0.0593</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="225.9" cy="126.7" r="11.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected | mds_cluster=cluster_2 | x=-0.563 y=0.353</title></circle>
-<circle cx="554.1" cy="374.6" r="8.8" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim | mds_cluster=cluster_4 | x=-0.0832 y=0.0634</title></circle>
-<circle cx="225.9" cy="126.7" r="11.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state | mds_cluster=cluster_2 | x=-0.563 y=0.353</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>piku/fund_conservation/amount_paid_preserves_fund_conservation | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="392.8" cy="336.4" r="10.0" fill="#16a34a" class="pt"><title>piku/fund_conservation/amount_paid_records_distribution | mds_cluster=cluster_3 | x=-0.319 y=0.108</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_preserves_fund_conservation | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="723.3" cy="378.1" r="7.2" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_records_redemption_buckets | mds_cluster=cluster_1 | x=0.164 y=0.0593</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/buy_preserves_reserve_ratio_zero | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/init_reserve_ratio_zero | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="832.5" cy="305.5" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/sell_preserves_reserve_ratio_zero | mds_cluster=cluster_1 | x=0.324 y=0.144</title></circle>
-<circle cx="840.5" cy="452.6" r="3.5" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier | mds_cluster=cluster_1 | x=0.335 y=-0.0277</title></circle>
-<circle cx="840.5" cy="452.6" r="3.5" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier | mds_cluster=cluster_1 | x=0.335 y=-0.0277</title></circle>
-<circle cx="160.8" cy="337.3" r="11.7" fill="#dc2626" class="pt"><title>reserve/auction_price_band/price_at_end_time | mds_cluster=cluster_2 | x=-0.658 y=0.107</title></circle>
-<circle cx="160.8" cy="337.3" r="11.7" fill="#dc2626" class="pt"><title>reserve/auction_price_band/price_at_start_time | mds_cluster=cluster_2 | x=-0.658 y=0.107</title></circle>
-<circle cx="516.2" cy="535.1" r="9.3" fill="#9333ea" class="pt"><title>reserve/auction_price_band/price_lower_bound | mds_cluster=cluster_4 | x=-0.139 y=-0.124</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>reserve/auction_price_band/price_upper_bound | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_acyclicity | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_is_owner_correctness | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_owner_list_invariant | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/in_list_reachable | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_acyclicity | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_in_list_reachable | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_is_owner_correctness | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_owner_list_invariant | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_acyclicity | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_in_list_reachable | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_owner_list_invariant | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_acyclicity | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_in_list_reachable | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_is_owner_correctness | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_owner_list_invariant | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>term_finance/term_auction_clearing/clearing_assignment_correct | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_conservation | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="168.2" cy="304.1" r="11.5" fill="#dc2626" class="pt"><title>usual/dao_collateral/redeem_fee_formula | mds_cluster=cluster_2 | x=-0.647 y=0.146</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_return_formula | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_conservation | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_value_conservation | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="363.3" cy="207.0" r="11.5" fill="#be123c" class="pt"><title>wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity | mds_cluster=cluster_8 | x=-0.362 y=0.259</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_decreases_supply | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_insufficient | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_ctokens_match_deposit | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_increases_supply | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_overflow_protection | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="379.3" cy="505.0" r="10.0" fill="#16a34a" class="pt"><title>zama/erc7984_confidential_token/setOperator_updates | mds_cluster=cluster_3 | x=-0.339 y=-0.0889</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transferFrom_conservation | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_conservation | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_insufficient | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="627.9" cy="469.5" r="8.1" fill="#4f46e5" class="pt"><title>zama/erc7984_confidential_token/transfer_no_balance_revert | mds_cluster=cluster_7 | x=0.0247 y=-0.0474</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_preserves_supply | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_sufficient | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/metadata_bridge | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<circle cx="825.0" cy="507.1" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_faithful | mds_cluster=cluster_1 | x=0.313 y=-0.0913</title></circle>
-<text x="815.0" y="423.2" class="cent" text-anchor="middle">cluster_1</text>
-<text x="180.3" y="343.3" class="cent" text-anchor="middle">cluster_2</text>
-<text x="334.6" y="591.1" class="cent" text-anchor="middle">cluster_3</text>
-<text x="510.2" y="555.9" class="cent" text-anchor="middle">cluster_4</text>
-<text x="354.4" y="485.9" class="cent" text-anchor="middle">cluster_6</text>
-<text x="485.6" y="141.3" class="cent" text-anchor="middle">cluster_5</text>
+<ellipse cx="806.6" cy="363.9" rx="89.1" ry="231.6" fill="#2563eb" opacity=".08" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="368.1" cy="313.3" rx="114.0" ry="133.9" fill="#dc2626" opacity=".08" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="260.6" cy="311.3" rx="153.5" ry="202.0" fill="#16a34a" opacity=".08" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="615.2" cy="344.0" rx="63.1" ry="193.7" fill="#ea580c" opacity=".08" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="464.1" cy="588.4" rx="144.1" ry="107.3" fill="#9333ea" opacity=".08" stroke="#9333ea" stroke-width="1.2" stroke-dasharray="5 4"/>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/earmark_preserves_invariant | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/redeem_preserves_invariant | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_debt_preserves_invariant | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sync_account_preserves_invariant | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>cork/pool_solvency/solvency_preserved | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="283.7" cy="382.8" r="11.9" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance | mds_cluster=cluster_2 | x=-0.571 y=-0.0118</title></circle>
+<circle cx="208.9" cy="389.3" r="12.0" fill="#16a34a" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit | mds_cluster=cluster_3 | x=-0.686 y=-0.0181</title></circle>
+<circle cx="781.0" cy="306.2" r="6.2" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool | mds_cluster=cluster_1 | x=0.191 y=0.0618</title></circle>
+<circle cx="281.9" cy="216.2" r="11.9" fill="#16a34a" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | mds_cluster=cluster_3 | x=-0.574 y=0.148</title></circle>
+<circle cx="288.7" cy="250.2" r="11.9" fill="#16a34a" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit | mds_cluster=cluster_3 | x=-0.564 y=0.116</title></circle>
+<circle cx="356.2" cy="245.1" r="11.5" fill="#16a34a" class="pt"><title>ethereum/deposit_contract_minimal/chain_start_threshold | mds_cluster=cluster_3 | x=-0.46 y=0.121</title></circle>
+<circle cx="616.2" cy="255.4" r="8.8" fill="#ea580c" class="pt"><title>ethereum/deposit_contract_minimal/deposit_count | mds_cluster=cluster_5 | x=-0.062 y=0.111</title></circle>
+<circle cx="412.7" cy="489.6" r="11.0" fill="#0891b2" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_increments_full_count | mds_cluster=cluster_7 | x=-0.374 y=-0.114</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="575.2" cy="427.4" r="9.4" fill="#0891b2" class="pt"><title>ethereum/deposit_contract_minimal/small_deposit_preserves_full_count | mds_cluster=cluster_7 | x=-0.125 y=-0.0547</title></circle>
+<circle cx="577.2" cy="353.4" r="9.4" fill="#be123c" class="pt"><title>forgeyields/global_solvency/claim_redeem_preserves_global_solvency | mds_cluster=cluster_6 | x=-0.122 y=0.0164</title></circle>
+<circle cx="520.1" cy="602.1" r="10.0" fill="#9333ea" class="pt"><title>forgeyields/global_solvency/deposit_preserves_global_solvency | mds_cluster=cluster_4 | x=-0.209 y=-0.223</title></circle>
+<circle cx="608.9" cy="488.0" r="9.4" fill="#ea580c" class="pt"><title>forgeyields/global_solvency/handle_preserves_global_solvency | mds_cluster=cluster_5 | x=-0.0731 y=-0.113</title></circle>
+<circle cx="462.1" cy="277.5" r="10.5" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency | mds_cluster=cluster_2 | x=-0.298 y=0.0894</title></circle>
+<circle cx="208.9" cy="389.3" r="12.0" fill="#16a34a" class="pt"><title>forgeyields/global_solvency/report_preserves_global_solvency | mds_cluster=cluster_3 | x=-0.686 y=-0.0181</title></circle>
+<circle cx="575.5" cy="240.5" r="9.4" fill="#ea580c" class="pt"><title>forgeyields/global_solvency/request_redeem_preserves_global_solvency | mds_cluster=cluster_5 | x=-0.124 y=0.125</title></circle>
+<circle cx="410.4" cy="546.3" r="11.0" fill="#9333ea" class="pt"><title>forgeyields/global_solvency/transfer_remote_preserves_global_solvency | mds_cluster=cluster_4 | x=-0.377 y=-0.169</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/redeem_preserves_pps | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="548.8" cy="666.2" r="9.4" fill="#9333ea" class="pt"><title>kleros/sortition_trees/draw_interval_matches_weights | mds_cluster=cluster_4 | x=-0.165 y=-0.284</title></circle>
+<circle cx="607.9" cy="514.0" r="8.8" fill="#be123c" class="pt"><title>kleros/sortition_trees/draw_selects_valid_leaf | mds_cluster=cluster_6 | x=-0.0747 y=-0.138</title></circle>
+<circle cx="405.2" cy="342.0" r="11.0" fill="#dc2626" class="pt"><title>kleros/sortition_trees/node_id_bijection | mds_cluster=cluster_2 | x=-0.385 y=0.0274</title></circle>
+<circle cx="566.6" cy="209.4" r="9.4" fill="#ea580c" class="pt"><title>kleros/sortition_trees/parent_equals_sum_of_children | mds_cluster=cluster_5 | x=-0.138 y=0.155</title></circle>
+<circle cx="343.5" cy="273.8" r="11.5" fill="#16a34a" class="pt"><title>kleros/sortition_trees/root_equals_sum_of_leaves | mds_cluster=cluster_3 | x=-0.48 y=0.093</title></circle>
+<circle cx="725.4" cy="336.9" r="7.3" fill="#2563eb" class="pt"><title>kleros/sortition_trees/root_minus_left_equals_right_subtree | mds_cluster=cluster_1 | x=0.105 y=0.0323</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/exact_compliance | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/negative_variation_bounded | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/positive_variation_bounded | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="766.6" cy="218.6" r="6.2" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/ceildiv_sandwich | mds_cluster=cluster_1 | x=0.169 y=0.146</title></circle>
+<circle cx="819.5" cy="383.4" r="3.5" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/locked_funds_solvency | mds_cluster=cluster_1 | x=0.25 y=-0.0124</title></circle>
+<circle cx="159.5" cy="353.0" r="12.0" fill="#16a34a" class="pt"><title>lido/vaulthub_locked/max_liability_shares_bound | mds_cluster=cluster_3 | x=-0.762 y=0.0168</title></circle>
+<circle cx="159.5" cy="353.0" r="12.0" fill="#16a34a" class="pt"><title>lido/vaulthub_locked/reserve_ratio_bounds | mds_cluster=cluster_3 | x=-0.762 y=0.0168</title></circle>
+<circle cx="766.6" cy="218.6" r="6.2" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/shares_conversion_monotone | mds_cluster=cluster_1 | x=0.169 y=0.146</title></circle>
+<circle cx="231.8" cy="219.8" r="12.0" fill="#16a34a" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_book_value | mds_cluster=cluster_3 | x=-0.651 y=0.145</title></circle>
+<circle cx="401.3" cy="251.9" r="11.0" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_buy_price | mds_cluster=cluster_2 | x=-0.391 y=0.114</title></circle>
+<circle cx="272.6" cy="495.1" r="11.9" fill="#16a34a" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_capital | mds_cluster=cluster_3 | x=-0.588 y=-0.12</title></circle>
+<circle cx="338.4" cy="244.2" r="11.5" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_sell_price | mds_cluster=cluster_2 | x=-0.488 y=0.121</title></circle>
+<circle cx="343.2" cy="343.6" r="11.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.48 y=0.0259</title></circle>
+<circle cx="430.5" cy="119.1" r="11.0" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller | mds_cluster=cluster_3 | x=-0.346 y=0.242</title></circle>
+<circle cx="399.1" cy="496.2" r="11.0" fill="#9333ea" class="pt"><title>onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller | mds_cluster=cluster_4 | x=-0.395 y=-0.121</title></circle>
+<circle cx="354.6" cy="215.6" r="11.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.463 y=0.149</title></circle>
+<circle cx="360.1" cy="425.7" r="11.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.454 y=-0.053</title></circle>
+<circle cx="337.6" cy="386.1" r="11.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller | mds_cluster=cluster_2 | x=-0.489 y=-0.015</title></circle>
+<circle cx="407.2" cy="185.9" r="11.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.382 y=0.177</title></circle>
+<circle cx="350.6" cy="215.5" r="11.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.469 y=0.149</title></circle>
+<circle cx="401.3" cy="251.9" r="11.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.391 y=0.114</title></circle>
+<circle cx="337.6" cy="386.1" r="11.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller | mds_cluster=cluster_2 | x=-0.489 y=-0.015</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="769.6" cy="199.1" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed | mds_cluster=cluster_1 | x=0.173 y=0.165</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims | mds_cluster=cluster_1 | x=0.163 y=-0.0225</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_no_overclaim | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected | mds_cluster=cluster_1 | x=0.163 y=-0.0225</title></circle>
+<circle cx="726.0" cy="570.0" r="7.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected | mds_cluster=cluster_1 | x=0.106 y=-0.192</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected | mds_cluster=cluster_1 | x=0.163 y=-0.0225</title></circle>
+<circle cx="706.5" cy="245.7" r="7.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected | mds_cluster=cluster_1 | x=0.0764 y=0.12</title></circle>
+<circle cx="646.1" cy="442.1" r="8.3" fill="#ea580c" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_marks_user | mds_cluster=cluster_5 | x=-0.016 y=-0.0689</title></circle>
+<circle cx="763.2" cy="393.9" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed | mds_cluster=cluster_1 | x=0.163 y=-0.0225</title></circle>
+<circle cx="640.6" cy="285.6" r="8.3" fill="#ea580c" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated | mds_cluster=cluster_5 | x=-0.0245 y=0.0817</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="338.1" cy="521.3" r="11.3" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/double_claim_rejected | mds_cluster=cluster_4 | x=-0.488 y=-0.145</title></circle>
+<circle cx="585.3" cy="321.1" r="9.0" fill="#ea580c" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/no_overclaim | mds_cluster=cluster_5 | x=-0.109 y=0.0475</title></circle>
+<circle cx="538.9" cy="661.8" r="9.7" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state | mds_cluster=cluster_4 | x=-0.18 y=-0.28</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="656.7" cy="568.7" r="8.3" fill="#ea580c" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user | mds_cluster=cluster_5 | x=0.000213 y=-0.191</title></circle>
+<circle cx="640.6" cy="285.6" r="8.3" fill="#ea580c" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed | mds_cluster=cluster_5 | x=-0.0245 y=0.0817</title></circle>
+<circle cx="763.2" cy="393.9" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated | mds_cluster=cluster_1 | x=0.163 y=-0.0225</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="483.0" cy="682.9" r="10.3" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected | mds_cluster=cluster_4 | x=-0.266 y=-0.3</title></circle>
+<circle cx="698.3" cy="412.9" r="7.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim | mds_cluster=cluster_1 | x=0.064 y=-0.0407</title></circle>
+<circle cx="474.1" cy="661.5" r="10.3" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state | mds_cluster=cluster_4 | x=-0.28 y=-0.28</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>piku/fund_conservation/amount_paid_preserves_fund_conservation | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="590.2" cy="524.7" r="9.0" fill="#9333ea" class="pt"><title>piku/fund_conservation/amount_paid_records_distribution | mds_cluster=cluster_4 | x=-0.102 y=-0.148</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_preserves_fund_conservation | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="6.3" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_records_redemption_buckets | mds_cluster=cluster_1 | x=0.163 y=-0.0225</title></circle>
+<circle cx="840.5" cy="278.8" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/buy_preserves_reserve_ratio_zero | mds_cluster=cluster_1 | x=0.282 y=0.0882</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/init_reserve_ratio_zero | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/sell_preserves_reserve_ratio_zero | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="272.9" cy="415.3" r="11.8" fill="#dc2626" class="pt"><title>reserve/auction_price_band/price_at_end_time | mds_cluster=cluster_2 | x=-0.588 y=-0.043</title></circle>
+<circle cx="338.1" cy="521.3" r="11.3" fill="#9333ea" class="pt"><title>reserve/auction_price_band/price_at_start_time | mds_cluster=cluster_4 | x=-0.488 y=-0.145</title></circle>
+<circle cx="436.3" cy="306.7" r="10.8" fill="#4f46e5" class="pt"><title>reserve/auction_price_band/price_lower_bound | mds_cluster=cluster_8 | x=-0.338 y=0.0614</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>reserve/auction_price_band/price_upper_bound | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="6.3" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_acyclicity | mds_cluster=cluster_1 | x=0.163 y=-0.0225</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_is_owner_correctness | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_owner_list_invariant | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/in_list_reachable | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="712.7" cy="493.1" r="7.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_acyclicity | mds_cluster=cluster_1 | x=0.086 y=-0.118</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_in_list_reachable | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_is_owner_correctness | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_owner_list_invariant | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_acyclicity | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_in_list_reachable | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_owner_list_invariant | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="6.3" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_acyclicity | mds_cluster=cluster_1 | x=0.163 y=-0.0225</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_in_list_reachable | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_is_owner_correctness | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_owner_list_invariant | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>term_finance/term_auction_clearing/clearing_assignment_correct | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_conservation | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="208.0" cy="415.0" r="12.0" fill="#16a34a" class="pt"><title>usual/dao_collateral/redeem_fee_formula | mds_cluster=cluster_3 | x=-0.687 y=-0.0427</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_return_formula | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_conservation | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_value_conservation | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="237.6" cy="328.3" r="12.0" fill="#16a34a" class="pt"><title>wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity | mds_cluster=cluster_3 | x=-0.642 y=0.0406</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_decreases_supply | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_insufficient | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="763.2" cy="393.9" r="6.3" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_ctokens_match_deposit | mds_cluster=cluster_1 | x=0.163 y=-0.0225</title></circle>
+<circle cx="775.8" cy="477.2" r="6.3" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_increases_supply | mds_cluster=cluster_1 | x=0.183 y=-0.103</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_overflow_protection | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="464.9" cy="375.3" r="10.3" fill="#dc2626" class="pt"><title>zama/erc7984_confidential_token/setOperator_updates | mds_cluster=cluster_2 | x=-0.294 y=-0.0046</title></circle>
+<circle cx="824.5" cy="375.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transferFrom_conservation | mds_cluster=cluster_1 | x=0.257 y=-0.0051</title></circle>
+<circle cx="840.5" cy="278.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_conservation | mds_cluster=cluster_1 | x=0.282 y=0.0882</title></circle>
+<circle cx="840.5" cy="278.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_insufficient | mds_cluster=cluster_1 | x=0.282 y=0.0882</title></circle>
+<circle cx="716.6" cy="134.8" r="7.6" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_no_balance_revert | mds_cluster=cluster_1 | x=0.0919 y=0.227</title></circle>
+<circle cx="771.0" cy="314.3" r="6.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_preserves_supply | mds_cluster=cluster_1 | x=0.175 y=0.0541</title></circle>
+<circle cx="840.5" cy="278.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_sufficient | mds_cluster=cluster_1 | x=0.282 y=0.0882</title></circle>
+<circle cx="840.5" cy="278.8" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/metadata_bridge | mds_cluster=cluster_1 | x=0.282 y=0.0882</title></circle>
+<circle cx="840.5" cy="278.8" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe | mds_cluster=cluster_1 | x=0.282 y=0.0882</title></circle>
+<circle cx="840.5" cy="278.8" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_faithful | mds_cluster=cluster_1 | x=0.282 y=0.0882</title></circle>
+<text x="806.6" y="363.9" class="cent" text-anchor="middle">cluster_1</text>
+<text x="368.1" y="313.3" class="cent" text-anchor="middle">cluster_2</text>
+<text x="260.6" y="311.3" class="cent" text-anchor="middle">cluster_3</text>
+<text x="615.2" y="344.0" class="cent" text-anchor="middle">cluster_5</text>
+<text x="493.9" y="458.5" class="cent" text-anchor="middle">cluster_7</text>
+<text x="592.5" y="433.7" class="cent" text-anchor="middle">cluster_6</text>
+<text x="464.1" y="588.4" class="cent" text-anchor="middle">cluster_4</text>
 <text x="921" y="74" font-size="14" font-weight="700">Couleur: mds_cluster</text>
 <circle cx="928" cy="94" r="6" fill="#2563eb" stroke="#111827" stroke-width=".5"/>
 <text x="943" y="98" class="legend">cluster 1</text>
@@ -188,12 +190,12 @@ text{font-family:Inter,Arial,sans-serif;fill:#111827}.sub{fill:#4b5563}.axis{str
 <circle cx="928" cy="187" r="6" fill="#9333ea" stroke="#111827" stroke-width=".5"/>
 <text x="943" y="191" class="legend">cluster 4</text>
 <circle cx="928" cy="218" r="6" fill="#ea580c" stroke="#111827" stroke-width=".5"/>
-<text x="943" y="222" class="legend">cluster 6</text>
+<text x="943" y="222" class="legend">cluster 5</text>
 <circle cx="928" cy="249" r="6" fill="#0891b2" stroke="#111827" stroke-width=".5"/>
-<text x="943" y="253" class="legend">cluster 5</text>
+<text x="943" y="253" class="legend">cluster 7</text>
 <circle cx="928" cy="280" r="6" fill="#be123c" stroke="#111827" stroke-width=".5"/>
-<text x="943" y="284" class="legend">cluster 8</text>
+<text x="943" y="284" class="legend">cluster 6</text>
 <circle cx="928" cy="311" r="6" fill="#4f46e5" stroke="#111827" stroke-width=".5"/>
-<text x="943" y="315" class="legend">cluster 7</text>
+<text x="943" y="315" class="legend">cluster 8</text>
 <text x="921" y="716" class="legend" font-weight="700">Taille: pass_rate</text>
 </svg>

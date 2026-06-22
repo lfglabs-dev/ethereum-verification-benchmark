@@ -6,20 +6,20 @@
 ## Overview
 
 - Tasks: **135**
-- Comparison cohort (4 full-coverage models): kimi-for-coding, minimax-m3, step3p7-flash-148b, glm-5.2
-- Total valid attempts (all models): 805; overall pass rate: **31%**
-- Tasks no cohort model solved: **80** / 135
-- Failure-mode enrichment present for 405 (model, task) pairs
+- Comparison cohort (10 full-coverage models): claude-opus-4-8, grok, kimi-for-coding, minimax-m3, Leanstral-2603, openai-gpt-55, deepseek-v4-flash, xiaomi-mimo-v2-5, grok-4.3, glm-5.2
+- Total valid attempts (all models): 1530; overall pass rate: **27%**
+- Tasks no cohort model solved: **63** / 135
+- Failure-mode enrichment: _not present_ (run with `--runs-dir` to populate)
 
 ## Pass rate by proof family
 
 | Proof family | Pass rate | Passes / attempts |
 | --- | --- | --- |
-| refinement_equivalence | 11% | 7 / 61 |
-| state_preservation_local_effects | 20% | 57 / 280 |
-| functional_correctness | 25% | 43 / 170 |
-| protocol_transition_correctness | 45% | 61 / 135 |
-| authorization_enablement | 50% | 79 / 159 |
+| refinement_equivalence | 12% | 13 / 112 |
+| state_preservation_local_effects | 19% | 98 / 519 |
+| functional_correctness | 25% | 91 / 363 |
+| protocol_transition_correctness | 38% | 95 / 252 |
+| authorization_enablement | 41% | 117 / 284 |
 
 ## Pass rate by author-assigned difficulty
 
@@ -27,10 +27,10 @@ Empirical check on the a-priori `difficulty` label: harder labels should track l
 
 | Difficulty | Pass rate | Passes / attempts |
 | --- | --- | --- |
-| easy | 48% | 115 / 240 |
-| medium | 30% | 125 / 421 |
-| hard | 5% | 7 / 137 |
-| low | 0% | 0 / 7 |
+| easy | 42% | 188 / 453 |
+| medium | 27% | 215 / 798 |
+| hard | 4% | 11 / 267 |
+| low | 0% | 0 / 12 |
 
 ## Hardest tasks (no cohort model solved)
 
@@ -39,41 +39,80 @@ expensive dead ends.
 
 | Task | Proof family | Difficulty | Attempts | Mean tokens | Top failure mode |
 | --- | --- | --- | --- | --- | --- |
-| `safe/owner_manager_reach/swap_owner_acyclicity` | state_preservation_local_effects | hard | 4 | 903,194 | simp made no progress |
-| `paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected` | authorization_enablement | easy | 6 | 797,969 | Unsolved goals |
-| `paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed` | protocol_transition_correctness | medium | 7 | 779,300 | Elaboration heartbeat timeout |
-| `paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved` | refinement_equivalence | hard | 7 | 758,457 | Unsolved goals |
-| `lido/vaulthub_locked/ceildiv_sandwich` | functional_correctness | medium | 7 | 746,906 | Syntax / parse error |
-| `zama/erc7984_confidential_token/burn_insufficient` | functional_correctness | medium | 4 | 728,816 | Unsolved goals |
-| `zama/erc7984_confidential_token/transfer_conservation` | state_preservation_local_effects | medium | 4 | 726,428 | Unknown identifier / constant |
-| `lido/vaulthub_locked/locked_funds_solvency` | functional_correctness | hard | 7 | 719,933 | Unsolved goals |
-| `piku/fund_conservation/amount_paid_preserves_fund_conservation` | state_preservation_local_effects | medium | 6 | 719,188 | Syntax / parse error |
-| `polaris/bonding_curve/init_reserve_ratio_zero` | state_preservation_local_effects | medium | 6 | 701,634 | Theorem missing |
-| `lido/vaulthub_locked/shares_conversion_monotone` | functional_correctness | medium | 7 | 694,811 | Harness error / incomplete |
-| `paladin_votes/stream_recovery_claim_usdc/both_no_overclaim` | authorization_enablement | medium | 6 | 687,904 | Elaboration heartbeat timeout |
-| `paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected` | authorization_enablement | medium | 6 | 686,253 | Timeout |
-| `paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved` | refinement_equivalence | medium | 6 | 683,980 | Unsolved goals |
-| `paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved` | refinement_equivalence | medium | 6 | 679,489 | Unsolved goals |
-| `balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing` | state_preservation_local_effects | hard | 7 | 676,425 | Unsolved goals |
-| `zama/erc7984_confidential_token/transfer_sufficient` | functional_correctness | medium | 4 | 675,631 | Elaboration heartbeat timeout |
-| `paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected` | authorization_enablement | easy | 6 | 662,467 | Decision procedure could not close goal |
-| `damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool` | refinement_equivalence | medium | 7 | 659,431 | Unsolved goals |
-| `usual/dao_collateral/swap_conservation` | state_preservation_local_effects | easy | 4 | 649,517 | Tactic failed |
+| `polaris/bonding_curve/init_reserve_ratio_zero` | state_preservation_local_effects | medium | 11 | 1,026,113 | — |
+| `piku/fund_conservation/amount_paid_preserves_fund_conservation` | state_preservation_local_effects | medium | 11 | 1,011,822 | — |
+| `safe/owner_manager_reach/setup_owners_acyclicity` | protocol_transition_correctness | medium | 11 | 985,822 | — |
+| `alchemix/earmark_conservation/redeem_preserves_invariant` | state_preservation_local_effects | hard | 12 | 972,370 | — |
+| `zama/erc7984_confidential_token/transfer_insufficient` | functional_correctness | medium | 10 | 967,898 | — |
+| `piku/fund_conservation/sell_order_preserves_fund_conservation` | state_preservation_local_effects | medium | 11 | 955,422 | — |
+| `usual/dao_collateral/swap_value_conservation` | state_preservation_local_effects | easy | 11 | 953,334 | — |
+| `zama/erc7984_confidential_token/transfer_sufficient` | functional_correctness | medium | 10 | 944,271 | — |
+| `paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected` | authorization_enablement | hard | 11 | 912,781 | — |
+| `polaris/bonding_curve/buy_preserves_reserve_ratio_zero` | state_preservation_local_effects | medium | 10 | 909,958 | — |
+| `damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool` | refinement_equivalence | medium | 12 | 888,626 | — |
+| `usual/dao_collateral/swap_conservation` | state_preservation_local_effects | easy | 11 | 864,996 | — |
+| `polaris/bonding_curve/sell_preserves_reserve_ratio_zero` | state_preservation_local_effects | medium | 11 | 860,737 | — |
+| `rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount` | state_preservation_local_effects | medium | 11 | 850,844 | — |
+| `usual/dao_collateral/redeem_return_formula` | functional_correctness | easy | 11 | 844,072 | — |
+| `alchemix/earmark_conservation/sync_account_preserves_invariant` | state_preservation_local_effects | medium | 12 | 832,250 | — |
+| `safe/owner_manager_reach/remove_owner_is_owner_correctness` | functional_correctness | medium | 11 | 830,548 | — |
+| `usual/dao_collateral/redeem_conservation` | state_preservation_local_effects | medium | 11 | 811,055 | — |
+| `safe/owner_manager_reach/add_owner_owner_list_invariant` | state_preservation_local_effects | hard | 11 | 802,928 | — |
+| `zama/erc7984_confidential_token/burn_insufficient` | functional_correctness | medium | 11 | 794,945 | — |
 
 ## Cohort pass/fail signature clusters
 
-Each task's outcome across the cohort `[kimi-for-coding, minimax-m3, step3p7-flash-148b, glm-5.2]` (`P`=pass, `F`=fail, `-`=no attempt). Clusters with mixed P/F are where comparable models genuinely disagree.
+Each task's outcome across the cohort `[claude-opus-4-8, grok, kimi-for-coding, minimax-m3, Leanstral-2603, openai-gpt-55, deepseek-v4-flash, xiaomi-mimo-v2-5, grok-4.3, glm-5.2]` (`P`=pass, `F`=fail, `-`=no attempt). Clusters with mixed P/F are where comparable models genuinely disagree.
 
 | Signature | Tasks | Example |
 | --- | --- | --- |
-| `P P F P` | 24 | `damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance` |
-| `P F P P` | 1 | `wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity` |
-| `F P F P` | 13 | `damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance` |
-| `P F F P` | 5 | `ethereum/deposit_contract_minimal/small_deposit_preserves_full_count` |
-| `F F F P` | 10 | `ethereum/deposit_contract_minimal/deposit_count` |
-| `P F F F` | 1 | `paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected` |
-| `F P F F` | 1 | `zama/erc7984_confidential_token/transfer_no_balance_revert` |
-| `F F F F` | 80 | `alchemix/earmark_conservation/earmark_preserves_invariant` |
+| `P P P P P P P P P P` | 2 | `lido/vaulthub_locked/max_liability_shares_bound` |
+| `P P P P P P P F P P` | 2 | `damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit` |
+| `P P P P F P P P P P` | 2 | `nexus_mutual/ramm_price_band/sync_sets_capital` |
+| `P F P P P P P P P P` | 1 | `nexus_mutual/ramm_price_band/sync_sets_book_value` |
+| `P P P F P P P P P P` | 1 | `wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity` |
+| `P P P P F P P F P P` | 3 | `paladin_votes/stream_recovery_claim_usdc/double_claim_rejected` |
+| `P P P P P P P F F P` | 1 | `damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance` |
+| `P P F P F P P P P P` | 1 | `damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance` |
+| `P F P P F P P P P P` | 1 | `damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit` |
+| `P P P P F P P F F P` | 3 | `onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller` |
+| `P P F P F P F P P P` | 1 | `ethereum/deposit_contract_minimal/chain_start_threshold` |
+| `P P P P F P F P F P` | 1 | `ethereum/deposit_contract_minimal/full_deposit_increments_full_count` |
+| `P F P P F P P F P P` | 1 | `kleros/sortition_trees/root_equals_sum_of_leaves` |
+| `P P F P F P P F P P` | 1 | `nexus_mutual/ramm_price_band/sync_sets_sell_price` |
+| `P P P F F P P F P P` | 1 | `onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller` |
+| `P P P P F P F F P P` | 1 | `onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller` |
+| `P P F P P P P F F P` | 1 | `onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller` |
+| `P P F P F P P P F P` | 1 | `onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller` |
+| `P P F F P P P F P P` | 1 | `reserve/auction_price_band/price_lower_bound` |
+| `P P F P F P P F F P` | 3 | `nexus_mutual/ramm_price_band/sync_sets_buy_price` |
+| `F P P P F P F F P P` | 2 | `forgeyields/global_solvency/transfer_remote_preserves_global_solvency` |
+| `P P P F F P P F F P` | 1 | `kleros/sortition_trees/node_id_bijection` |
+| `P F F P F P F P P P` | 1 | `onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller` |
+| `P P F F F P P F P P` | 1 | `onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller` |
+| `F P P P F P P F F P` | 1 | `paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state` |
+| `F P P P F P F F F P` | 3 | `forgeyields/global_solvency/deposit_preserves_global_solvency` |
+| `P P F P F P F F F P` | 1 | `forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency` |
+| `P P P F F F F F F P` | 1 | `ethereum/deposit_contract_minimal/small_deposit_preserves_full_count` |
+| `F F P F F P F P F P` | 1 | `forgeyields/global_solvency/handle_preserves_global_solvency` |
+| `P F F F F P F F P P` | 1 | `forgeyields/global_solvency/request_redeem_preserves_global_solvency` |
+| `F P F F F P F F P P` | 1 | `kleros/sortition_trees/draw_selects_valid_leaf` |
+| `P F F F F P P F F P` | 1 | `kleros/sortition_trees/parent_equals_sum_of_children` |
+| `P F F P F P F F F P` | 1 | `paladin_votes/stream_recovery_claim_usdc/no_overclaim` |
+| `F P F P F P F F F P` | 1 | `piku/fund_conservation/amount_paid_records_distribution` |
+| `P F F F F P F F F P` | 3 | `ethereum/deposit_contract_minimal/deposit_count` |
+| `F P F F F P F F F P` | 1 | `forgeyields/global_solvency/claim_redeem_preserves_global_solvency` |
+| `F F F P F P F F F P` | 1 | `paladin_votes/stream_recovery_claim_usdc/claim_marks_user` |
+| `F F P F F P F F F P` | 1 | `paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user` |
+| `F F P F F P F F F F` | 1 | `paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected` |
+| `P F F F F P F F F F` | 1 | `paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected` |
+| `F F F F F P F F F P` | 1 | `paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim` |
+| `F P F F F P F F F F` | 1 | `safe/owner_manager_reach/remove_owner_acyclicity` |
+| `P F F P F F F F F F` | 1 | `zama/erc7984_confidential_token/transfer_no_balance_revert` |
+| `F F F F F P F F F F` | 11 | `kleros/sortition_trees/root_minus_left_equals_right_subtree` |
+| `P F F F F F F F F F` | 3 | `lido/vaulthub_locked/ceildiv_sandwich` |
+| `F P F F F F F F F F` | 1 | `zama/erc7984_confidential_token/mint_increases_supply` |
+| `F F F F F F F F F F` | 63 | `alchemix/earmark_conservation/earmark_preserves_invariant` |
 
 ## Most divisive tasks
 
@@ -81,30 +120,18 @@ Some cohort models pass, others fail — the highest-signal tasks for differenti
 
 | Task | Proof family | Difficulty | Cohort signature | Pass rate |
 | --- | --- | --- | --- | --- |
-| `forgeyields/global_solvency/handle_preserves_global_solvency` | protocol_transition_correctness | medium | `P F F P` | 50% |
-| `piku/fund_conservation/amount_paid_records_distribution` | state_preservation_local_effects | easy | `F P F P` | 50% |
-| `paladin_votes/stream_recovery_claim_usdc/claim_marks_user` | authorization_enablement | easy | `F P F P` | 50% |
-| `paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user` | authorization_enablement | easy | `P F F P` | 50% |
-| `onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller` | authorization_enablement | medium | `F P F P` | 50% |
-| `kleros/sortition_trees/node_id_bijection` | state_preservation_local_effects | medium | `P F F P` | 50% |
-| `ethereum/deposit_contract_minimal/small_deposit_preserves_full_count` | state_preservation_local_effects | easy | `P F F P` | 50% |
-| `paladin_votes/stream_recovery_claim_usdc/no_overclaim` | authorization_enablement | easy | `F P F P` | 50% |
-| `onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller` | authorization_enablement | medium | `P F F P` | 50% |
-| `onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller` | authorization_enablement | medium | `F P F P` | 50% |
-| `damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance` | protocol_transition_correctness | medium | `F P F P` | 50% |
-| `nexus_mutual/ramm_price_band/sync_sets_buy_price` | functional_correctness | medium | `F P F P` | 50% |
-| `onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller` | authorization_enablement | medium | `F P F P` | 50% |
-| `onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller` | authorization_enablement | medium | `F P F P` | 50% |
-| `zama/erc7984_confidential_token/setOperator_updates` | functional_correctness | easy | `F P F P` | 50% |
-
-## Failure modes by proof family
-
-Distribution of parsed Lean failure modes over enriched failing attempts.
-
-| Proof family | Decision procedure could not close goal | Harness error / incomplete | Elaboration heartbeat timeout | Maximum recursion depth | simp made no progress | Syntax / parse error | Tactic failed | Theorem missing | Timeout | Type / elaboration mismatch | Unknown identifier / constant | Unsolved goals |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| authorization_enablement | 1 | 2 | 1 | 0 | 1 | 8 | 1 | 3 | 6 | 1 | 2 | 12 |
-| functional_correctness | 2 | 1 | 2 | 1 | 2 | 11 | 11 | 15 | 0 | 2 | 0 | 24 |
-| protocol_transition_correctness | 3 | 0 | 4 | 0 | 1 | 9 | 3 | 0 | 1 | 1 | 0 | 16 |
-| refinement_equivalence | 2 | 0 | 2 | 0 | 1 | 3 | 4 | 6 | 0 | 1 | 0 | 8 |
-| state_preservation_local_effects | 1 | 4 | 7 | 0 | 2 | 13 | 13 | 15 | 2 | 2 | 11 | 39 |
+| `paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state` | state_preservation_local_effects | easy | `F P P P F P F F F P` | 50% |
+| `forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency` | protocol_transition_correctness | easy | `P P F P F P F F F P` | 50% |
+| `forgeyields/global_solvency/deposit_preserves_global_solvency` | protocol_transition_correctness | medium | `F P P P F P F F F P` | 50% |
+| `kleros/sortition_trees/draw_interval_matches_weights` | functional_correctness | hard | `F P P P F P F F F P` | 50% |
+| `forgeyields/global_solvency/request_redeem_preserves_global_solvency` | protocol_transition_correctness | medium | `P F F F F P F F P P` | 40% |
+| `paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected` | authorization_enablement | easy | `F P P P F P F F P P` | 60% |
+| `forgeyields/global_solvency/handle_preserves_global_solvency` | protocol_transition_correctness | medium | `F F P F F P F P F P` | 40% |
+| `onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller` | authorization_enablement | medium | `P F F P F P F P P P` | 60% |
+| `piku/fund_conservation/amount_paid_records_distribution` | state_preservation_local_effects | easy | `F P F P F P F F F P` | 40% |
+| `paladin_votes/stream_recovery_claim_usdc/no_overclaim` | authorization_enablement | easy | `P F F P F P F F F P` | 40% |
+| `paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state` | state_preservation_local_effects | easy | `F P P P F P P F F P` | 60% |
+| `kleros/sortition_trees/draw_selects_valid_leaf` | functional_correctness | medium | `F P F F F P F F P P` | 40% |
+| `onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller` | authorization_enablement | medium | `P P F F F P P F P P` | 60% |
+| `ethereum/deposit_contract_minimal/small_deposit_preserves_full_count` | state_preservation_local_effects | easy | `P P P F F F F F F P` | 40% |
+| `kleros/sortition_trees/node_id_bijection` | state_preservation_local_effects | medium | `P P P F F P P F F P` | 60% |

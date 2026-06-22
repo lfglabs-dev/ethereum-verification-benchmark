@@ -7,175 +7,175 @@ text{font-family:Inter,Arial,sans-serif;fill:#111827}.sub{fill:#4b5563}.axis{str
 <text x="105" y="57" font-size="13" class="sub">Point=tâche, taille=pass-rate; montre les clusters issus des runs</text>
 <line x1="105.0" y1="74" x2="105.0" y2="728" class="grid"/>
 <line x1="105" y1="74.0" x2="895" y2="74.0" class="grid"/>
-<text x="105.0" y="748" text-anchor="middle" class="tick">-1.52</text>
-<text x="93" y="78.0" text-anchor="end" class="tick">0.94</text>
+<text x="105.0" y="748" text-anchor="middle" class="tick">-2.50</text>
+<text x="93" y="78.0" text-anchor="end" class="tick">1.34</text>
 <line x1="263.0" y1="74" x2="263.0" y2="728" class="grid"/>
 <line x1="105" y1="204.8" x2="895" y2="204.8" class="grid"/>
-<text x="263.0" y="748" text-anchor="middle" class="tick">-1.01</text>
-<text x="93" y="208.8" text-anchor="end" class="tick">0.58</text>
+<text x="263.0" y="748" text-anchor="middle" class="tick">-1.77</text>
+<text x="93" y="208.8" text-anchor="end" class="tick">0.88</text>
 <line x1="421.0" y1="74" x2="421.0" y2="728" class="grid"/>
 <line x1="105" y1="335.6" x2="895" y2="335.6" class="grid"/>
-<text x="421.0" y="748" text-anchor="middle" class="tick">-0.51</text>
-<text x="93" y="339.6" text-anchor="end" class="tick">0.23</text>
+<text x="421.0" y="748" text-anchor="middle" class="tick">-1.03</text>
+<text x="93" y="339.6" text-anchor="end" class="tick">0.42</text>
 <line x1="579.0" y1="74" x2="579.0" y2="728" class="grid"/>
 <line x1="105" y1="466.4" x2="895" y2="466.4" class="grid"/>
-<text x="579.0" y="748" text-anchor="middle" class="tick">0.00</text>
-<text x="93" y="470.4" text-anchor="end" class="tick">-0.13</text>
+<text x="579.0" y="748" text-anchor="middle" class="tick">-0.30</text>
+<text x="93" y="470.4" text-anchor="end" class="tick">-0.04</text>
 <line x1="737.0" y1="74" x2="737.0" y2="728" class="grid"/>
 <line x1="105" y1="597.2" x2="895" y2="597.2" class="grid"/>
-<text x="737.0" y="748" text-anchor="middle" class="tick">0.51</text>
-<text x="93" y="601.2" text-anchor="end" class="tick">-0.49</text>
+<text x="737.0" y="748" text-anchor="middle" class="tick">0.44</text>
+<text x="93" y="601.2" text-anchor="end" class="tick">-0.50</text>
 <line x1="895.0" y1="74" x2="895.0" y2="728" class="grid"/>
 <line x1="105" y1="728.0" x2="895" y2="728.0" class="grid"/>
-<text x="895.0" y="748" text-anchor="middle" class="tick">1.02</text>
-<text x="93" y="732.0" text-anchor="end" class="tick">-0.85</text>
+<text x="895.0" y="748" text-anchor="middle" class="tick">1.17</text>
+<text x="93" y="732.0" text-anchor="end" class="tick">-0.96</text>
 <line x1="105" y1="728" x2="895" y2="728" class="axis"/>
 <line x1="105" y1="74" x2="105" y2="728" class="axis"/>
 <text x="500.0" y="786" font-size="14" font-weight="600">pc1</text>
 <text transform="translate(32 401.0) rotate(-90)" text-anchor="middle" font-size="14" font-weight="600">pc2</text>
-<ellipse cx="765.4" cy="423.5" rx="129.2" ry="199.8" fill="#2563eb" opacity=".08" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="193.6" cy="300.2" rx="69.5" ry="148.5" fill="#dc2626" opacity=".08" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="327.2" cy="485.6" rx="93.4" ry="221.9" fill="#16a34a" opacity=".08" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5 4"/>
-<ellipse cx="491.5" cy="530.4" rx="95.6" ry="249.3" fill="#9333ea" opacity=".08" stroke="#9333ea" stroke-width="1.2" stroke-dasharray="5 4"/>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/earmark_preserves_invariant | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/redeem_preserves_invariant | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_debt_preserves_invariant | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sync_account_preserves_invariant | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>cork/pool_solvency/solvency_preserved | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="284.5" cy="602.5" r="11.3" fill="#16a34a" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="159.5" cy="388.1" r="11.3" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="284.5" cy="602.5" r="11.3" fill="#16a34a" class="pt"><title>ethereum/deposit_contract_minimal/chain_start_threshold | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="438.0" cy="670.2" r="9.5" fill="#9333ea" class="pt"><title>ethereum/deposit_contract_minimal/deposit_count | empirical_family=single_model_solvable_boundary | x=-0.452 y=-0.689</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_increments_full_count | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="435.3" cy="353.3" r="10.4" fill="#16a34a" class="pt"><title>ethereum/deposit_contract_minimal/small_deposit_preserves_full_count | empirical_family=divisive_authorization_or_accounting | x=-0.46 y=0.177</title></circle>
-<circle cx="538.2" cy="401.2" r="9.5" fill="#9333ea" class="pt"><title>forgeyields/global_solvency/claim_redeem_preserves_global_solvency | empirical_family=single_model_solvable_boundary | x=-0.129 y=0.0463</title></circle>
-<circle cx="259.6" cy="119.1" r="11.3" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/deposit_preserves_global_solvency | empirical_family=mostly_solved_local_transition | x=-1.03 y=0.818</title></circle>
-<circle cx="413.2" cy="186.8" r="9.5" fill="#16a34a" class="pt"><title>forgeyields/global_solvency/handle_preserves_global_solvency | empirical_family=divisive_authorization_or_accounting | x=-0.531 y=0.633</title></circle>
-<circle cx="284.5" cy="602.5" r="11.3" fill="#16a34a" class="pt"><title>forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/report_preserves_global_solvency | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="438.0" cy="670.2" r="9.5" fill="#9333ea" class="pt"><title>forgeyields/global_solvency/request_redeem_preserves_global_solvency | empirical_family=single_model_solvable_boundary | x=-0.452 y=-0.689</title></circle>
-<circle cx="259.6" cy="119.1" r="11.3" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/transfer_remote_preserves_global_solvency | empirical_family=mostly_solved_local_transition | x=-1.03 y=0.818</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/redeem_preserves_pps | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="259.6" cy="119.1" r="11.3" fill="#dc2626" class="pt"><title>kleros/sortition_trees/draw_interval_matches_weights | empirical_family=mostly_solved_local_transition | x=-1.03 y=0.818</title></circle>
-<circle cx="538.2" cy="401.2" r="9.5" fill="#9333ea" class="pt"><title>kleros/sortition_trees/draw_selects_valid_leaf | empirical_family=single_model_solvable_boundary | x=-0.129 y=0.0463</title></circle>
-<circle cx="313.0" cy="455.8" r="11.3" fill="#16a34a" class="pt"><title>kleros/sortition_trees/node_id_bijection | empirical_family=divisive_authorization_or_accounting | x=-0.854 y=-0.103</title></circle>
-<circle cx="438.0" cy="670.2" r="9.5" fill="#9333ea" class="pt"><title>kleros/sortition_trees/parent_equals_sum_of_children | empirical_family=single_model_solvable_boundary | x=-0.452 y=-0.689</title></circle>
-<circle cx="159.5" cy="388.1" r="11.3" fill="#dc2626" class="pt"><title>kleros/sortition_trees/root_equals_sum_of_leaves | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="718.2" cy="413.9" r="7.0" fill="#2563eb" class="pt"><title>kleros/sortition_trees/root_minus_left_equals_right_subtree | empirical_family=hard_state_invariant | x=0.45 y=0.0116</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/exact_compliance | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/negative_variation_bounded | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/positive_variation_bounded | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="740.4" cy="580.3" r="7.0" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/ceildiv_sandwich | empirical_family=hard_state_invariant | x=0.521 y=-0.444</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/locked_funds_solvency | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/max_liability_shares_bound | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/reserve_ratio_bounds | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="740.4" cy="580.3" r="7.0" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/shares_conversion_monotone | empirical_family=hard_state_invariant | x=0.521 y=-0.444</title></circle>
-<circle cx="159.5" cy="388.1" r="11.3" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_book_value | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="284.5" cy="602.5" r="11.3" fill="#16a34a" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_buy_price | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_capital | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="284.5" cy="602.5" r="11.3" fill="#16a34a" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_sell_price | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="313.0" cy="455.8" r="11.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-0.854 y=-0.103</title></circle>
-<circle cx="284.5" cy="602.5" r="10.4" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="284.5" cy="602.5" r="11.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="438.0" cy="670.2" r="10.4" fill="#9333ea" class="pt"><title>onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller | empirical_family=single_model_solvable_boundary | x=-0.452 y=-0.689</title></circle>
-<circle cx="284.5" cy="602.5" r="11.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="284.5" cy="602.5" r="11.3" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="159.5" cy="388.1" r="12.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="740.4" cy="580.3" r="7.0" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed | empirical_family=hard_state_invariant | x=0.521 y=-0.444</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="718.2" cy="413.9" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims | empirical_family=hard_state_invariant | x=0.45 y=0.0116</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_no_overclaim | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="718.2" cy="413.9" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected | empirical_family=hard_state_invariant | x=0.45 y=0.0116</title></circle>
-<circle cx="593.3" cy="199.5" r="8.8" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected | empirical_family=single_model_solvable_boundary | x=0.0479 y=0.598</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="718.2" cy="413.9" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected | empirical_family=hard_state_invariant | x=0.45 y=0.0116</title></circle>
-<circle cx="618.1" cy="682.9" r="8.8" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected | empirical_family=hard_state_invariant | x=0.128 y=-0.724</title></circle>
-<circle cx="384.6" cy="333.5" r="10.0" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_marks_user | empirical_family=divisive_authorization_or_accounting | x=-0.623 y=0.231</title></circle>
-<circle cx="718.2" cy="413.9" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed | empirical_family=hard_state_invariant | x=0.45 y=0.0116</title></circle>
-<circle cx="438.0" cy="670.2" r="10.0" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated | empirical_family=single_model_solvable_boundary | x=-0.452 y=-0.689</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="159.5" cy="388.1" r="11.9" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/double_claim_rejected | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.0819</title></circle>
-<circle cx="284.5" cy="602.5" r="11.0" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/no_overclaim | empirical_family=divisive_authorization_or_accounting | x=-0.946 y=-0.504</title></circle>
-<circle cx="259.6" cy="119.1" r="11.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state | empirical_family=mostly_solved_local_transition | x=-1.03 y=0.818</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="413.2" cy="186.8" r="10.0" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user | empirical_family=divisive_authorization_or_accounting | x=-0.531 y=0.633</title></circle>
-<circle cx="438.0" cy="670.2" r="10.0" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed | empirical_family=single_model_solvable_boundary | x=-0.452 y=-0.689</title></circle>
-<circle cx="718.2" cy="413.9" r="7.2" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated | empirical_family=hard_state_invariant | x=0.45 y=0.0116</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="259.6" cy="119.1" r="11.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected | empirical_family=mostly_solved_local_transition | x=-1.03 y=0.818</title></circle>
-<circle cx="538.2" cy="401.2" r="8.8" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim | empirical_family=single_model_solvable_boundary | x=-0.129 y=0.0463</title></circle>
-<circle cx="259.6" cy="119.1" r="11.0" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state | empirical_family=mostly_solved_local_transition | x=-1.03 y=0.818</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>piku/fund_conservation/amount_paid_preserves_fund_conservation | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="384.6" cy="333.5" r="10.0" fill="#16a34a" class="pt"><title>piku/fund_conservation/amount_paid_records_distribution | empirical_family=divisive_authorization_or_accounting | x=-0.623 y=0.231</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_preserves_fund_conservation | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="718.2" cy="413.9" r="7.2" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_records_redemption_buckets | empirical_family=hard_state_invariant | x=0.45 y=0.0116</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/buy_preserves_reserve_ratio_zero | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/init_reserve_ratio_zero | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="840.5" cy="311.3" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/sell_preserves_reserve_ratio_zero | empirical_family=hard_state_invariant | x=0.843 y=0.292</title></circle>
-<circle cx="797.3" cy="427.5" r="3.5" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier | empirical_family=hard_state_invariant | x=0.704 y=-0.0256</title></circle>
-<circle cx="797.3" cy="427.5" r="3.5" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier | empirical_family=hard_state_invariant | x=0.704 y=-0.0256</title></circle>
-<circle cx="216.4" cy="235.3" r="11.7" fill="#dc2626" class="pt"><title>reserve/auction_price_band/price_at_end_time | empirical_family=mostly_solved_local_transition | x=-1.16 y=0.5</title></circle>
-<circle cx="216.4" cy="235.3" r="11.7" fill="#dc2626" class="pt"><title>reserve/auction_price_band/price_at_start_time | empirical_family=mostly_solved_local_transition | x=-1.16 y=0.5</title></circle>
-<circle cx="494.9" cy="517.3" r="9.3" fill="#9333ea" class="pt"><title>reserve/auction_price_band/price_lower_bound | empirical_family=single_model_solvable_boundary | x=-0.269 y=-0.271</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>reserve/auction_price_band/price_upper_bound | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_acyclicity | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_is_owner_correctness | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_owner_list_invariant | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/in_list_reachable | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_acyclicity | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_in_list_reachable | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_is_owner_correctness | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_owner_list_invariant | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_acyclicity | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_in_list_reachable | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_owner_list_invariant | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_acyclicity | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_in_list_reachable | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_is_owner_correctness | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_owner_list_invariant | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>term_finance/term_auction_clearing/clearing_assignment_correct | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_conservation | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="262.4" cy="196.7" r="11.5" fill="#dc2626" class="pt"><title>usual/dao_collateral/redeem_fee_formula | empirical_family=mostly_solved_local_transition | x=-1.02 y=0.606</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_return_formula | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_conservation | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_value_conservation | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="414.0" cy="254.8" r="11.5" fill="#ea580c" class="pt"><title>wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity | empirical_family=simple_bound_regression | x=-0.529 y=0.447</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_decreases_supply | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_insufficient | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_ctokens_match_deposit | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_increases_supply | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_overflow_protection | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="387.4" cy="411.0" r="10.0" fill="#16a34a" class="pt"><title>zama/erc7984_confidential_token/setOperator_updates | empirical_family=divisive_authorization_or_accounting | x=-0.614 y=0.0193</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transferFrom_conservation | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_conservation | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_insufficient | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="567.5" cy="423.7" r="8.1" fill="#9333ea" class="pt"><title>zama/erc7984_confidential_token/transfer_no_balance_revert | empirical_family=single_model_solvable_boundary | x=-0.0351 y=-0.0154</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_preserves_supply | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_sufficient | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/metadata_bridge | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<circle cx="721.0" cy="491.4" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_faithful | empirical_family=hard_state_invariant | x=0.459 y=-0.201</title></circle>
-<text x="765.4" y="423.5" class="cent" text-anchor="middle">hard_state_invariant</text>
-<text x="193.6" y="300.2" class="cent" text-anchor="middle">mostly_solved_local_tran</text>
-<text x="327.2" y="485.6" class="cent" text-anchor="middle">divisive_authorization_o</text>
-<text x="491.5" y="530.4" class="cent" text-anchor="middle">single_model_solvable_bo</text>
+<ellipse cx="820.9" cy="474.6" rx="94.4" ry="170.4" fill="#2563eb" opacity=".08" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="290.0" cy="417.9" rx="171.9" ry="295.9" fill="#dc2626" opacity=".08" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="402.8" cy="439.0" rx="204.8" ry="236.7" fill="#16a34a" opacity=".08" stroke="#16a34a" stroke-width="1.2" stroke-dasharray="5 4"/>
+<ellipse cx="562.2" cy="417.2" rx="197.5" ry="179.6" fill="#9333ea" opacity=".08" stroke="#9333ea" stroke-width="1.2" stroke-dasharray="5 4"/>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/earmark_preserves_invariant | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/redeem_preserves_invariant | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_debt_preserves_invariant | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>alchemix/earmark_conservation/sync_account_preserves_invariant | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>cork/pool_solvency/solvency_preserved | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="242.4" cy="500.4" r="11.9" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance | empirical_family=mostly_solved_local_transition | x=-1.86 y=-0.156</title></circle>
+<circle cx="188.4" cy="568.7" r="12.0" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit | empirical_family=mostly_solved_local_transition | x=-2.12 y=-0.396</title></circle>
+<circle cx="840.5" cy="491.8" r="6.2" fill="#2563eb" class="pt"><title>damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="241.6" cy="627.2" r="11.9" fill="#16a34a" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | empirical_family=divisive_authorization_or_accounting | x=-1.87 y=-0.602</title></circle>
+<circle cx="256.8" cy="620.4" r="11.9" fill="#dc2626" class="pt"><title>damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit | empirical_family=mostly_solved_local_transition | x=-1.8 y=-0.578</title></circle>
+<circle cx="308.8" cy="529.9" r="11.5" fill="#16a34a" class="pt"><title>ethereum/deposit_contract_minimal/chain_start_threshold | empirical_family=divisive_authorization_or_accounting | x=-1.56 y=-0.26</title></circle>
+<circle cx="600.1" cy="383.8" r="8.8" fill="#9333ea" class="pt"><title>ethereum/deposit_contract_minimal/deposit_count | empirical_family=single_model_solvable_boundary | x=-0.201 y=0.254</title></circle>
+<circle cx="363.9" cy="287.9" r="11.0" fill="#dc2626" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_increments_full_count | empirical_family=mostly_solved_local_transition | x=-1.3 y=0.591</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="544.3" cy="411.5" r="9.4" fill="#16a34a" class="pt"><title>ethereum/deposit_contract_minimal/small_deposit_preserves_full_count | empirical_family=divisive_authorization_or_accounting | x=-0.461 y=0.156</title></circle>
+<circle cx="539.4" cy="328.4" r="9.4" fill="#9333ea" class="pt"><title>forgeyields/global_solvency/claim_redeem_preserves_global_solvency | empirical_family=single_model_solvable_boundary | x=-0.483 y=0.449</title></circle>
+<circle cx="467.3" cy="119.1" r="10.0" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/deposit_preserves_global_solvency | empirical_family=mostly_solved_local_transition | x=-0.819 y=1.18</title></circle>
+<circle cx="586.2" cy="268.9" r="9.4" fill="#16a34a" class="pt"><title>forgeyields/global_solvency/handle_preserves_global_solvency | empirical_family=divisive_authorization_or_accounting | x=-0.266 y=0.658</title></circle>
+<circle cx="391.7" cy="403.3" r="10.5" fill="#16a34a" class="pt"><title>forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency | empirical_family=divisive_authorization_or_accounting | x=-1.17 y=0.185</title></circle>
+<circle cx="188.4" cy="568.7" r="12.0" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/report_preserves_global_solvency | empirical_family=mostly_solved_local_transition | x=-2.12 y=-0.396</title></circle>
+<circle cx="546.1" cy="452.0" r="9.4" fill="#9333ea" class="pt"><title>forgeyields/global_solvency/request_redeem_preserves_global_solvency | empirical_family=single_model_solvable_boundary | x=-0.452 y=0.014</title></circle>
+<circle cx="352.9" cy="298.5" r="11.0" fill="#dc2626" class="pt"><title>forgeyields/global_solvency/transfer_remote_preserves_global_solvency | empirical_family=mostly_solved_local_transition | x=-1.35 y=0.554</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>ipor/plasma_vault_redeem_split/redeem_preserves_pps | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="467.3" cy="119.1" r="9.4" fill="#dc2626" class="pt"><title>kleros/sortition_trees/draw_interval_matches_weights | empirical_family=mostly_solved_local_transition | x=-0.819 y=1.18</title></circle>
+<circle cx="546.0" cy="285.6" r="8.8" fill="#9333ea" class="pt"><title>kleros/sortition_trees/draw_selects_valid_leaf | empirical_family=single_model_solvable_boundary | x=-0.453 y=0.599</title></circle>
+<circle cx="338.3" cy="473.5" r="11.0" fill="#16a34a" class="pt"><title>kleros/sortition_trees/node_id_bijection | empirical_family=divisive_authorization_or_accounting | x=-1.42 y=-0.0612</title></circle>
+<circle cx="532.8" cy="481.0" r="9.4" fill="#9333ea" class="pt"><title>kleros/sortition_trees/parent_equals_sum_of_children | empirical_family=single_model_solvable_boundary | x=-0.514 y=-0.0878</title></circle>
+<circle cx="285.8" cy="562.1" r="11.5" fill="#dc2626" class="pt"><title>kleros/sortition_trees/root_equals_sum_of_leaves | empirical_family=mostly_solved_local_transition | x=-1.66 y=-0.373</title></circle>
+<circle cx="762.3" cy="345.4" r="7.3" fill="#2563eb" class="pt"><title>kleros/sortition_trees/root_minus_left_equals_right_subtree | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/exact_compliance | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/negative_variation_bounded | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>lagoon/guardrails/positive_variation_bounded | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="766.0" cy="602.2" r="6.2" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/ceildiv_sandwich | empirical_family=hard_state_invariant | x=0.57 y=-0.514</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/locked_funds_solvency | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="159.5" cy="627.0" r="12.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/max_liability_shares_bound | empirical_family=mostly_solved_local_transition | x=-2.25 y=-0.601</title></circle>
+<circle cx="159.5" cy="627.0" r="12.0" fill="#dc2626" class="pt"><title>lido/vaulthub_locked/reserve_ratio_bounds | empirical_family=mostly_solved_local_transition | x=-2.25 y=-0.601</title></circle>
+<circle cx="766.0" cy="602.2" r="6.2" fill="#2563eb" class="pt"><title>lido/vaulthub_locked/shares_conversion_monotone | empirical_family=hard_state_invariant | x=0.57 y=-0.514</title></circle>
+<circle cx="234.1" cy="682.9" r="12.0" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_book_value | empirical_family=mostly_solved_local_transition | x=-1.9 y=-0.798</title></circle>
+<circle cx="324.5" cy="500.6" r="11.0" fill="#16a34a" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_buy_price | empirical_family=divisive_authorization_or_accounting | x=-1.48 y=-0.157</title></circle>
+<circle cx="242.7" cy="453.4" r="11.9" fill="#dc2626" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_capital | empirical_family=mostly_solved_local_transition | x=-1.86 y=0.0092</title></circle>
+<circle cx="270.6" cy="568.9" r="11.5" fill="#16a34a" class="pt"><title>nexus_mutual/ramm_price_band/sync_sets_sell_price | empirical_family=divisive_authorization_or_accounting | x=-1.73 y=-0.397</title></circle>
+<circle cx="284.3" cy="541.7" r="11.5" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-1.67 y=-0.301</title></circle>
+<circle cx="383.5" cy="585.8" r="11.0" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-1.21 y=-0.456</title></circle>
+<circle cx="338.9" cy="297.9" r="11.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller | empirical_family=mostly_solved_local_transition | x=-1.42 y=0.556</title></circle>
+<circle cx="301.8" cy="563.1" r="11.5" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-1.59 y=-0.376</title></circle>
+<circle cx="265.1" cy="437.9" r="11.0" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller | empirical_family=mostly_solved_local_transition | x=-1.76 y=0.0638</title></circle>
+<circle cx="265.1" cy="437.9" r="11.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller | empirical_family=mostly_solved_local_transition | x=-1.76 y=0.0638</title></circle>
+<circle cx="343.8" cy="604.4" r="11.0" fill="#9333ea" class="pt"><title>onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller | empirical_family=single_model_solvable_boundary | x=-1.39 y=-0.522</title></circle>
+<circle cx="295.6" cy="558.9" r="11.5" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-1.62 y=-0.361</title></circle>
+<circle cx="324.5" cy="500.6" r="11.0" fill="#16a34a" class="pt"><title>onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller | empirical_family=divisive_authorization_or_accounting | x=-1.48 y=-0.157</title></circle>
+<circle cx="265.1" cy="437.9" r="11.5" fill="#dc2626" class="pt"><title>onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller | empirical_family=mostly_solved_local_transition | x=-1.76 y=0.0638</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="766.0" cy="602.2" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed | empirical_family=hard_state_invariant | x=0.57 y=-0.514</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="762.3" cy="345.4" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_no_overclaim | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="762.3" cy="345.4" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="702.9" cy="282.7" r="7.4" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected | empirical_family=single_model_solvable_boundary | x=0.276 y=0.609</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="762.3" cy="345.4" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="687.8" cy="455.8" r="7.4" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected | empirical_family=hard_state_invariant | x=0.206 y=0.00071</title></circle>
+<circle cx="601.4" cy="237.7" r="8.3" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_marks_user | empirical_family=divisive_authorization_or_accounting | x=-0.195 y=0.768</title></circle>
+<circle cx="762.3" cy="345.4" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="600.1" cy="383.8" r="8.3" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated | empirical_family=single_model_solvable_boundary | x=-0.201 y=0.254</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="271.7" cy="395.1" r="11.3" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/double_claim_rejected | empirical_family=mostly_solved_local_transition | x=-1.73 y=0.214</title></circle>
+<circle cx="526.9" cy="348.2" r="9.0" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/no_overclaim | empirical_family=divisive_authorization_or_accounting | x=-0.542 y=0.379</title></circle>
+<circle cx="467.3" cy="119.1" r="9.7" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state | empirical_family=mostly_solved_local_transition | x=-0.819 y=1.18</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="615.1" cy="210.6" r="8.3" fill="#16a34a" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user | empirical_family=divisive_authorization_or_accounting | x=-0.131 y=0.863</title></circle>
+<circle cx="600.1" cy="383.8" r="8.3" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed | empirical_family=single_model_solvable_boundary | x=-0.201 y=0.254</title></circle>
+<circle cx="762.3" cy="345.4" r="6.3" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="413.4" cy="187.4" r="10.3" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected | empirical_family=mostly_solved_local_transition | x=-1.07 y=0.944</title></circle>
+<circle cx="674.6" cy="273.3" r="7.4" fill="#9333ea" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim | empirical_family=single_model_solvable_boundary | x=0.145 y=0.642</title></circle>
+<circle cx="400.1" cy="216.4" r="10.3" fill="#dc2626" class="pt"><title>paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state | empirical_family=mostly_solved_local_transition | x=-1.13 y=0.843</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>piku/fund_conservation/amount_paid_preserves_fund_conservation | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="526.7" cy="181.8" r="9.0" fill="#16a34a" class="pt"><title>piku/fund_conservation/amount_paid_records_distribution | empirical_family=divisive_authorization_or_accounting | x=-0.542 y=0.964</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_preserves_fund_conservation | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="762.3" cy="345.4" r="6.3" fill="#2563eb" class="pt"><title>piku/fund_conservation/sell_order_records_redemption_buckets | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="827.1" cy="516.4" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/buy_preserves_reserve_ratio_zero | empirical_family=hard_state_invariant | x=0.854 y=-0.212</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/init_reserve_ratio_zero | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>polaris/bonding_curve/sell_preserves_reserve_ratio_zero | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="211.2" cy="506.2" r="11.8" fill="#dc2626" class="pt"><title>reserve/auction_price_band/price_at_end_time | empirical_family=mostly_solved_local_transition | x=-2.01 y=-0.176</title></circle>
+<circle cx="271.7" cy="395.1" r="11.3" fill="#dc2626" class="pt"><title>reserve/auction_price_band/price_at_start_time | empirical_family=mostly_solved_local_transition | x=-1.73 y=0.214</title></circle>
+<circle cx="381.6" cy="555.9" r="10.8" fill="#9333ea" class="pt"><title>reserve/auction_price_band/price_lower_bound | empirical_family=single_model_solvable_boundary | x=-1.22 y=-0.351</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>reserve/auction_price_band/price_upper_bound | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="762.3" cy="345.4" r="6.3" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_acyclicity | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_is_owner_correctness | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/add_owner_owner_list_invariant | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/in_list_reachable | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="687.6" cy="289.4" r="7.4" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_acyclicity | empirical_family=hard_state_invariant | x=0.206 y=0.586</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_in_list_reachable | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_is_owner_correctness | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/remove_owner_owner_list_invariant | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_acyclicity | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_in_list_reachable | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/setup_owners_owner_list_invariant | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="762.3" cy="345.4" r="6.3" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_acyclicity | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_in_list_reachable | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_is_owner_correctness | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>safe/owner_manager_reach/swap_owner_owner_list_invariant | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>term_finance/term_auction_clearing/clearing_assignment_correct | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_conservation | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="182.2" cy="564.5" r="12.0" fill="#dc2626" class="pt"><title>usual/dao_collateral/redeem_fee_formula | empirical_family=mostly_solved_local_transition | x=-2.14 y=-0.381</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/redeem_return_formula | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_conservation | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>usual/dao_collateral/swap_value_conservation | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="232.7" cy="662.5" r="12.0" fill="#ea580c" class="pt"><title>wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity | empirical_family=simple_bound_regression | x=-1.91 y=-0.726</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_decreases_supply | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/burn_insufficient | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="762.3" cy="345.4" r="6.3" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_ctokens_match_deposit | empirical_family=hard_state_invariant | x=0.553 y=0.389</title></circle>
+<circle cx="765.9" cy="435.8" r="6.3" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_increases_supply | empirical_family=hard_state_invariant | x=0.569 y=0.0711</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/mint_overflow_protection | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="385.0" cy="389.5" r="10.3" fill="#16a34a" class="pt"><title>zama/erc7984_confidential_token/setOperator_updates | empirical_family=divisive_authorization_or_accounting | x=-1.2 y=0.234</title></circle>
+<circle cx="840.5" cy="491.8" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transferFrom_conservation | empirical_family=hard_state_invariant | x=0.916 y=-0.126</title></circle>
+<circle cx="827.1" cy="516.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_conservation | empirical_family=hard_state_invariant | x=0.854 y=-0.212</title></circle>
+<circle cx="827.1" cy="516.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_insufficient | empirical_family=hard_state_invariant | x=0.854 y=-0.212</title></circle>
+<circle cx="679.4" cy="591.3" r="7.6" fill="#9333ea" class="pt"><title>zama/erc7984_confidential_token/transfer_no_balance_revert | empirical_family=single_model_solvable_boundary | x=0.167 y=-0.476</title></circle>
+<circle cx="748.8" cy="370.0" r="6.4" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_preserves_supply | empirical_family=hard_state_invariant | x=0.49 y=0.302</title></circle>
+<circle cx="827.1" cy="516.4" r="3.5" fill="#2563eb" class="pt"><title>zama/erc7984_confidential_token/transfer_sufficient | empirical_family=hard_state_invariant | x=0.854 y=-0.212</title></circle>
+<circle cx="827.1" cy="516.4" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/metadata_bridge | empirical_family=hard_state_invariant | x=0.854 y=-0.212</title></circle>
+<circle cx="827.1" cy="516.4" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe | empirical_family=hard_state_invariant | x=0.854 y=-0.212</title></circle>
+<circle cx="827.1" cy="516.4" r="3.5" fill="#2563eb" class="pt"><title>zodiac/roles_decoder_faithfulness/roles_decoder_faithful | empirical_family=hard_state_invariant | x=0.854 y=-0.212</title></circle>
+<text x="820.9" y="474.6" class="cent" text-anchor="middle">hard_state_invariant</text>
+<text x="290.0" y="417.9" class="cent" text-anchor="middle">mostly_solved_local_tran</text>
+<text x="402.8" y="439.0" class="cent" text-anchor="middle">divisive_authorization_o</text>
+<text x="562.2" y="417.2" class="cent" text-anchor="middle">single_model_solvable_bo</text>
 <text x="921" y="74" font-size="14" font-weight="700">Couleur: empirical_family</text>
 <circle cx="928" cy="94" r="6" fill="#2563eb" stroke="#111827" stroke-width=".5"/>
 <text x="943" y="98" class="legend">hard state invariant</text>

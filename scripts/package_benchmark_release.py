@@ -9,6 +9,8 @@ import sys
 import tarfile
 from pathlib import Path
 
+from release_config import GITHUB_REPO_URL
+
 
 def slug(value: str) -> str:
     value = value.strip().lower()
@@ -88,6 +90,7 @@ def main() -> int:
     manifest = {
         "schema_version": 1,
         "tag": args.tag,
+        "repository_url": GITHUB_REPO_URL,
         "runs_dir": str(runs_dir),
         "archives": [],
         "skipped_without_model": skipped,

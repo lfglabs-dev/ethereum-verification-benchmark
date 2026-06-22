@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = Path(os.environ.get("MINIMAX_CASCADE_OUTPUT", ROOT / "analysis" / "budget_scaling_minimax_remaining_85"))
+OUTPUT = Path(os.environ.get("MINIMAX_CASCADE_OUTPUT", ROOT / "output" / "budget_scaling_minimax_remaining_85"))
 PROFILES = [
     "p01_ultra_tiny",
     "p02_tiny",

@@ -15,110 +15,149 @@ For current v0.1 data, the most stable empirical cluster key is the cohort signa
 
 ## Axis Interpretation
 
-- Axis 1 explains 85.4% of the two-axis embedding signal and mostly tracks global task difficulty.
-- Axis 2 explains 14.6% of the two-axis embedding signal and mostly tracks model-specialization differences.
+- Axis 1 explains 92.1% of the two-axis embedding signal and mostly tracks global task difficulty.
+- Axis 2 explains 7.9% of the two-axis embedding signal and mostly tracks model-specialization differences.
 - Dot size is failure rate; color is `property_class`; tooltips carry task, cluster, attempts, and pass rate.
 
 ## Coverage Caveat
 
-High-coverage models in this manifest: claude-opus-4-8, kimi/kimi-for-coding, minimax/minimax-m3, openai-gpt-55, spark/step3p7-flash-148b, zai/glm-5.2.
-Low-coverage models are retained but distances are coverage-penalized: deepseek-v4-flash, deepseek-v4-pro, grok, openai-gpt-55-pro, virtuals/deepseek-v4-flash, virtuals/deepseek-v4-pro, virtuals/xiaomi-mimo-v2-5, xai/grok-4.3, xiaomi-mimo-v2-5.
+High-coverage models in this manifest: claude-opus-4-8, grok, kimi/kimi-for-coding, minimax/minimax-m3, mistralai/Leanstral-2603, openai-gpt-55, virtuals/deepseek-v4-flash, virtuals/deepseek-v4-pro, virtuals/xiaomi-mimo-v2-5, xai/grok-4.3, zai/glm-5.2.
+Low-coverage models are retained but distances are coverage-penalized: openai-gpt-55-pro.
 When the backfilled full-result manifest is regenerated, rerun this script; the cluster assignments should be treated as provisional until then.
 
 ## Cohort Signatures
 
 The full-coverage cohort signature is the cleanest behavior-derived category today:
 
-- `FFFF`: 80 tasks, cohort-universal hard
-- `PPFP`: 24 tasks, mostly solved, one-model gap
-- `FPFP`: 13 tasks, divisive 2-of-4
-- `FFFP`: 10 tasks, single-model solvable
-- `PFFP`: 5 tasks, divisive 2-of-4
-- `PFFF`: 1 tasks, single-model solvable
-- `PFPP`: 1 tasks, mostly solved, one-model gap
-- `FPFF`: 1 tasks, single-model solvable
+- `FFFFFFFFFF`: 63 tasks, cohort-universal hard
+- `FFFFFPFFFF`: 11 tasks, single-model solvable
+- `PFFFFPFFFP`: 3 tasks, mixed profile
+- `FPPPFPFFFP`: 3 tasks, mixed profile
+- `PFFFFFFFFF`: 3 tasks, single-model solvable
+- `PPFPFPPFFP`: 3 tasks, mixed profile
+- `PPPPFPPFFP`: 3 tasks, mixed profile
+- `PPPPFPPFPP`: 3 tasks, mixed profile
+- `PPPPPPPFPP`: 2 tasks, mostly solved, one-model gap
+- `FPPPFPFFPP`: 2 tasks, mixed profile
+- `PPPPPPPPPP`: 2 tasks, cohort-universal solved
+- `PPPPFPPPPP`: 2 tasks, mostly solved, one-model gap
+- `PPPPPPPFFP`: 1 tasks, mixed profile
+- `PPFPFPPPPP`: 1 tasks, mixed profile
+- `PFPPFPPPPP`: 1 tasks, mixed profile
+- `PPFPFPFPPP`: 1 tasks, mixed profile
+- `PPPPFPFPFP`: 1 tasks, mixed profile
+- `PPPFFFFFFP`: 1 tasks, mixed profile
+- `FPFFFPFFFP`: 1 tasks, mixed profile
+- `FFPFFPFPFP`: 1 tasks, mixed profile
+- `PPFPFPFFFP`: 1 tasks, mixed profile
+- `PFFFFPFFPP`: 1 tasks, mixed profile
+- `FPFFFPFFPP`: 1 tasks, mixed profile
+- `PPPFFPPFFP`: 1 tasks, mixed profile
+- `PFFFFPPFFP`: 1 tasks, mixed profile
+- `PFPPFPPFPP`: 1 tasks, mixed profile
+- `PFPPPPPPPP`: 1 tasks, mostly solved, one-model gap
+- `PPFPFPPFPP`: 1 tasks, mixed profile
+- `PPPFFPPFPP`: 1 tasks, mixed profile
+- `PFFPFPFPPP`: 1 tasks, mixed profile
+- `PPPPFPFFPP`: 1 tasks, mixed profile
+- `PPFPPPPFFP`: 1 tasks, mixed profile
+- `PPFFFPPFPP`: 1 tasks, mixed profile
+- `PPFPFPPPFP`: 1 tasks, mixed profile
+- `FFPFFPFFFF`: 1 tasks, divisive 2-of-4
+- `PFFFFPFFFF`: 1 tasks, divisive 2-of-4
+- `FFFPFPFFFP`: 1 tasks, mixed profile
+- `PFFPFPFFFP`: 1 tasks, mixed profile
+- `FFPFFPFFFP`: 1 tasks, mixed profile
+- `FFFFFPFFFP`: 1 tasks, divisive 2-of-4
+- `FPPPFPPFFP`: 1 tasks, mixed profile
+- `FPFPFPFFFP`: 1 tasks, mixed profile
+- `PPFFPPPFPP`: 1 tasks, mixed profile
+- `FPFFFPFFFF`: 1 tasks, divisive 2-of-4
+- `PPPFPPPPPP`: 1 tasks, mostly solved, one-model gap
+- `FPFFFFFFFF`: 1 tasks, single-model solvable
+- `PFFPFFFFFF`: 1 tasks, divisive 2-of-4
 
 ## Cluster Summaries
 
 ### Cluster 1
 
-- tasks: 80
-- average pass rate: 2.4%
-- average observed models: 5.6
-- dominant property classes: accounting_conservation (14), accounting_bound (9), linked_list_invariant (8)
-- dominant proof families: state_preservation_local_effects (34), functional_correctness (21), refinement_equivalence (9)
-- dominant cohort signatures: FFFF (80)
+- tasks: 83
+- average pass rate: 2.9%
+- average observed models: 11.1
+- dominant property classes: accounting_conservation (14), accounting_bound (10), linked_list_invariant (8)
+- dominant proof families: state_preservation_local_effects (34), functional_correctness (21), authorization_enablement (10)
+- dominant cohort signatures: FFFFFFFFFF (63), FFFFFPFFFF (11), PFFFFFFFFF (3)
 - examples: `zodiac/roles_decoder_faithfulness/roles_decoder_faithful, zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe, zodiac/roles_decoder_faithfulness/metadata_bridge`
 
 ### Cluster 2
 
-- tasks: 24
-- average pass rate: 78.7%
-- average observed models: 6.5
-- dominant property classes: access_control_identity (4), guarded_solvency (3), price_computation (3)
-- dominant proof families: state_preservation_local_effects (7), authorization_enablement (6), protocol_transition_correctness (5)
-- dominant cohort signatures: PPFP (24)
-- examples: `paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state, paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected, paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state`
+- tasks: 15
+- average pass rate: 70.8%
+- average observed models: 11.9
+- dominant property classes: access_control_identity (8), price_computation (3), storage_update (1)
+- dominant proof families: authorization_enablement (8), functional_correctness (4), state_preservation_local_effects (2)
+- dominant cohort signatures: PPFPFPPFFP (3), PPPPFPPFFP (3), PPPPPPPFFP (1)
+- examples: `zama/erc7984_confidential_token/setOperator_updates, forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency, onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller`
 
 ### Cluster 3
 
 - tasks: 13
-- average pass rate: 65.0%
-- average observed models: 6.5
-- dominant property classes: access_control_identity (4), price_computation (2), accounting_invariant_break (1)
-- dominant proof families: authorization_enablement (6), protocol_transition_correctness (3), functional_correctness (3)
-- dominant cohort signatures: FPFP (13)
-- examples: `zama/erc7984_confidential_token/setOperator_updates, piku/fund_conservation/amount_paid_records_distribution, paladin_votes/stream_recovery_claim_usdc/claim_marks_user`
+- average pass rate: 86.4%
+- average observed models: 11.8
+- dominant property classes: accounting_bound (3), balance_credit_update (2), accounting_invariant_break (1)
+- dominant proof families: state_preservation_local_effects (4), protocol_transition_correctness (4), functional_correctness (3)
+- dominant cohort signatures: PPPPPPPFPP (2), PPPPPPPPPP (2), PPPPFPPPPP (2)
+- examples: `onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller, kleros/sortition_trees/root_equals_sum_of_leaves, ethereum/deposit_contract_minimal/chain_start_threshold`
 
 ### Cluster 4
 
 - tasks: 10
-- average pass rate: 44.5%
-- average observed models: 6.5
-- dominant property classes: guarded_solvency (2), accounting_update (2), monotonic_counter (1)
-- dominant proof families: protocol_transition_correctness (4), state_preservation_local_effects (2), functional_correctness (2)
-- dominant cohort signatures: FFFP (10)
-- examples: `paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim, reserve/auction_price_band/price_lower_bound, kleros/sortition_trees/parent_equals_sum_of_children`
+- average pass rate: 56.1%
+- average observed models: 11.4
+- dominant property classes: guarded_solvency (2), authorization_state (2), frame_property (2)
+- dominant proof families: authorization_enablement (3), state_preservation_local_effects (3), protocol_transition_correctness (2)
+- dominant cohort signatures: FPPPFPFFFP (3), FPPPFPFFPP (2), PPPPFPPFPP (2)
+- examples: `piku/fund_conservation/amount_paid_records_distribution, kleros/sortition_trees/draw_interval_matches_weights, paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state`
 
 ### Cluster 5
 
-- tasks: 3
-- average pass rate: 42.1%
-- average observed models: 6.3
-- dominant property classes: authorization_state (2), guarded_solvency (1)
-- dominant proof families: authorization_enablement (2), protocol_transition_correctness (1)
-- dominant cohort signatures: PFFP (2), PFFF (1)
-- examples: `paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected, forgeyields/global_solvency/handle_preserves_global_solvency, paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user`
+- tasks: 9
+- average pass rate: 33.8%
+- average observed models: 11.4
+- dominant property classes: guarded_solvency (2), authorization_state (2), accounting_update (2)
+- dominant proof families: protocol_transition_correctness (4), authorization_enablement (3), state_preservation_local_effects (2)
+- dominant cohort signatures: PFFFFPFFFP (3), FFPFFPFPFP (1), PFFFFPFFPP (1)
+- examples: `paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed, paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user, paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated`
 
 ### Cluster 6
 
-- tasks: 3
-- average pass rate: 66.7%
-- average observed models: 7.0
-- dominant property classes: threshold_partition (1), mapping_consistency (1), access_control_identity (1)
-- dominant proof families: state_preservation_local_effects (2), authorization_enablement (1)
-- dominant cohort signatures: PFFP (3)
-- examples: `ethereum/deposit_contract_minimal/small_deposit_preserves_full_count, onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller, kleros/sortition_trees/node_id_bijection`
+- tasks: 2
+- average pass rate: 37.5%
+- average observed models: 12.0
+- dominant property classes: guarded_solvency (1), output_range (1)
+- dominant proof families: protocol_transition_correctness (1), functional_correctness (1)
+- dominant cohort signatures: FPFFFPFFFP (1), FPFFFPFFPP (1)
+- examples: `kleros/sortition_trees/draw_selects_valid_leaf, forgeyields/global_solvency/claim_redeem_preserves_global_solvency`
 
 ### Cluster 7
 
-- tasks: 1
-- average pass rate: 25.0%
-- average observed models: 4.0
-- dominant property classes: non_leakage (1)
-- dominant proof families: protocol_transition_correctness (1)
-- dominant cohort signatures: FPFF (1)
-- examples: `zama/erc7984_confidential_token/transfer_no_balance_revert`
+- tasks: 2
+- average pass rate: 54.2%
+- average observed models: 12.0
+- dominant property classes: monotonic_counter (1), threshold_partition (1)
+- dominant proof families: protocol_transition_correctness (1), state_preservation_local_effects (1)
+- dominant cohort signatures: PPPPFPFPFP (1), PPPFFFFFFP (1)
+- examples: `ethereum/deposit_contract_minimal/small_deposit_preserves_full_count, ethereum/deposit_contract_minimal/full_deposit_increments_full_count`
 
 ### Cluster 8
 
 - tasks: 1
-- average pass rate: 75.0%
-- average observed models: 4.0
-- dominant property classes: accounting_bound (1)
+- average pass rate: 63.6%
+- average observed models: 11.0
+- dominant property classes: price_band (1)
 - dominant proof families: functional_correctness (1)
-- dominant cohort signatures: PFPP (1)
-- examples: `wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity`
+- dominant cohort signatures: PPFFPPPFPP (1)
+- examples: `reserve/auction_price_band/price_lower_bound`
 
 ## Method Comparison
 

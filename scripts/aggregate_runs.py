@@ -21,6 +21,8 @@ import statistics
 from datetime import datetime, timezone
 from pathlib import Path
 
+from release_config import BENCHMARK_TITLE, HARNESS_USER_AGENT
+
 
 def _slug(model: str) -> str:
     return "".join(ch if ch.isalnum() else "-" for ch in model).strip("-").lower()
@@ -62,9 +64,7 @@ def _openrouter_prices(mapping_raw: str) -> dict[str, tuple[float, float]]:
     import urllib.request
 
     try:
-        request = urllib.request.Request(
-            "https://openrouter.ai/api/v1/models", headers={"User-Agent": "ethereum-verification-benchmark-harness/1.0"}
-        )
+        request = urllib.request.Request("https://openrouter.ai/api/v1/models", headers={"User-Agent": HARNESS_USER_AGENT})
         with urllib.request.urlopen(request, timeout=30) as response:
             models = json.loads(response.read().decode("utf-8")).get("data", [])
     except Exception as exc:  # noqa: BLE001 - pricing is best-effort decoration
@@ -252,7 +252,7 @@ def _leaderboard_markdown(
 ) -> str:
     estimates = estimates or {}
     lines = [
-        "# Ethereum Verification Benchmark Leaderboard",
+        f"# {BENCHMARK_TITLE} Leaderboard",
         "",
         f"Generated {meta.get('date')} · commit `{meta.get('sha', 'unknown')[:9]}` · budget `{meta.get('budget', '?')}`",
         "",
