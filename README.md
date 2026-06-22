@@ -37,7 +37,9 @@ Each task gives an agent:
 
 The agent passes only if Lean accepts the proof. The verifier rejects theorem changes, hidden imports, `sorry`, `admit`, `axiom`, and other benchmark-policy violations.
 
-The suite runs on [Verity](https://github.com/lfglabs-dev/verity), a formally verified smart contract compiler. The benchmark is maintained by [LFG Labs](https://lfglabs.dev) in partnership with the Ethereum Foundation and ecosystem protocols.
+The suite uses [Verity](https://github.com/lfglabs-dev/verity), a Lean 4 EDSL for modeling EVM smart contracts with a shallow embedding. Verity also provides a proven compilation pipeline backed by a deep embedding, but this benchmark does not exercise that pipeline.
+
+The benchmark is maintained by [LFG Labs](https://lfglabs.dev) in partnership with the Ethereum Foundation and ecosystem protocols.
 
 ## Results
 
@@ -95,4 +97,3 @@ python3 scripts/check.py
 - [Task API](./docs/architecture/task-api.md)
 - [Results publication model](./docs/architecture/results-publication.md)
 - [Evaluation surface](./docs/evaluated-surface.md)
-
