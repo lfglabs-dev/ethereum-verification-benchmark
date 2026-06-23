@@ -249,6 +249,19 @@ def is_transient_failure(text: str, returncode: int) -> bool:
     )
 
 
+def is_retryable_harness_response(response: dict, returncode: int) -> bool:
+    """Classify only harness/provider failures as retryable.
+
+    A completed harness response with a failed proof is a benchmark result, even
+    when the Lean diagnostic contains words like "timeout". Retrying those rows
+    forever biases the scaling cascade and can prevent profile checkpoints.
+    """
+    if response.get("status") == "completed":
+        return False
+    response_text = json.dumps(response, sort_keys=True)
+    return is_rate_limited(response_text) or is_transient_failure(response_text, returncode)
+
+
 def sleep_for_retry(combined_output: str, returncode: int, runner_attempt: int) -> None:
     if is_rate_limited(combined_output):
         delay = max(retry_after_seconds(combined_output) or 0, RATE_LIMIT_SLEEP_SECONDS)
@@ -437,8 +450,9 @@ def run_one_task(
                 raise FatalProviderSetupError(
                     f"{task_ref} {profile.name}: provider setup failed; inspect {run_dir}/harness-response.json"
                 )
-            response_text = json.dumps(harness_response_from_run_dir(Path(run_dir)), sort_keys=True)
-            if is_rate_limited(response_text) or is_transient_failure(response_text, returncode):
+            response = harness_response_from_run_dir(Path(run_dir))
+            if is_retryable_harness_response(response, returncode):
+                response_text = json.dumps(response, sort_keys=True)
                 row.update(run_row)
                 row["rate_limited"] = is_rate_limited(response_text)
                 retryable = True
@@ -597,12 +611,11 @@ def execute(args: argparse.Namespace) -> None:
         profile_dir.mkdir(parents=True, exist_ok=True)
         if pending and args.execute:
             if args.jobs == 1:
-                completed = [
-                    run_one_task(task, profile, profile_dir, args.model, args.base_url, args.retries, args.retry_forever)
-                    for task in pending
-                ]
+                for task in pending:
+                    row = run_one_task(task, profile, profile_dir, args.model, args.base_url, args.retries, args.retry_forever)
+                    rows.append(row)
+                    write_json(output / "cascade_results.json", rows)
             else:
-                completed = []
                 with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as pool:
                     futures = {
                         pool.submit(
@@ -618,8 +631,9 @@ def execute(args: argparse.Namespace) -> None:
                         for task in pending
                     }
                     for future in concurrent.futures.as_completed(futures):
-                        completed.append(future.result())
-            rows.extend(sorted(completed, key=lambda row: task_index(selected, row["task_ref"])))
+                        rows.append(future.result())
+                        rows.sort(key=lambda row: (profile_index(row["profile"]), task_index(selected, row["task_ref"])))
+                        write_json(output / "cascade_results.json", rows)
         write_json(output / "cascade_results.json", rows)
         write_summary(output, rows, selected)
         write_events(output, rows, selected, "cascade")

@@ -7,6 +7,35 @@ from scripts import run_minimax_complement_cascade as cascade
 
 
 class MiniMaxComplementCascadeTests(unittest.TestCase):
+    def test_completed_harness_failures_are_not_retryable(self) -> None:
+        response = {
+            "status": "completed",
+            "tasks": [
+                {
+                    "status": "max_attempts_exceeded",
+                    "failure_class": "max_attempts_exceeded",
+                    "attempts": [
+                        {
+                            "status": "lean_failed",
+                            "output": "deterministic timeout at `isDefEq`",
+                            "failure_kind": "lean_timeout",
+                        }
+                    ],
+                }
+            ],
+            "operational_budget": {"request_timeout_seconds": 600},
+        }
+
+        self.assertFalse(cascade.is_retryable_harness_response(response, returncode=1))
+
+    def test_harness_errors_remain_retryable(self) -> None:
+        response = {
+            "status": "harness_error",
+            "error": "request_timeout while contacting provider",
+        }
+
+        self.assertTrue(cascade.is_retryable_harness_response(response, returncode=1))
+
     def test_recover_rows_preserves_invalid_existing_rows_for_resume_guard(self) -> None:
         selected = [{"task_ref": "family/case/task"}]
         invalid_row = {
