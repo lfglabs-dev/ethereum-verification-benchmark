@@ -47,9 +47,10 @@ This module closes the loop on the original session goals. It:
 /-- The public EOA-gated entry point at the EntryPointV09 level. -/
 def entryPointV09Guarded
     (sender paymaster : Address) (key declaredNonce : Uint256)
-    (beneficiary : Address) (hasInitCode hasCallData : Uint256) : Contract Uint256 :=
+    (beneficiary : Address) (hasInitCode hasCallData : Uint256)
+    (callDataOffset callDataLength : Uint256) : Contract Uint256 :=
   EntryPointV09.handleOp sender paymaster key declaredNonce
-    beneficiary hasInitCode hasCallData
+    beneficiary hasInitCode hasCallData callDataOffset callDataLength
 
 /-- **Step 4 (guard lemma against real EntryPointV09)**: the v0.9
     `nonReentrant` modifier rejects calls whose `tx.origin` differs from
@@ -58,11 +59,12 @@ def entryPointV09Guarded
 theorem entryPointV09_eoa_guard_rejects_origin_mismatch
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256)
+    (callDataOffset callDataLength : Uint256)
     (s : ContractState)
     (hOriginMismatch :
       addressToWord s.txOrigin ≠ addressToWord s.sender) :
     (entryPointV09Guarded sender paymaster key declaredNonce beneficiary
-       hasInitCode hasCallData).run s =
+       hasInitCode hasCallData callDataOffset callDataLength).run s =
       ContractResult.revert "nonReentrant: tx.origin != msg.sender" s := by
   unfold entryPointV09Guarded
   have hOriginMismatch' :
@@ -79,12 +81,13 @@ theorem entryPointV09_eoa_guard_rejects_origin_mismatch
 theorem entryPointV09_eoa_guard_revert_preserves_storage
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256)
+    (callDataOffset callDataLength : Uint256)
     (s : ContractState)
     (hOriginMismatch :
       addressToWord s.txOrigin ≠ addressToWord s.sender) :
     ((entryPointV09Guarded sender paymaster key declaredNonce beneficiary
-       hasInitCode hasCallData).run s).snd = s := by
-  rw [entryPointV09_eoa_guard_rejects_origin_mismatch _ _ _ _ _ _ _ _ hOriginMismatch]
+       hasInitCode hasCallData callDataOffset callDataLength).run s).snd = s := by
+  rw [entryPointV09_eoa_guard_rejects_origin_mismatch _ _ _ _ _ _ _ _ _ _ hOriginMismatch]
   rfl
 
 /-! ## Step 5: top-level theorem universally quantified over external callee bytecode

@@ -133,6 +133,8 @@ verity_contract EntryPointV09 where
     OP_INFO_EXECUTED  : Uint256 := 2
     -- callData.length predicate: caller passes 1 if op.callData is non-empty,
     -- 0 otherwise. The Solidity branch is `if (callData.length > 0)`.
+    -- The projection also carries calldata offset/length words so the compiled
+    -- path can forward the actual calldata slice, not just the branch predicate.
     HAS_CALLDATA : Uint256 := 1
     NO_CALLDATA  : Uint256 := 0
     -- initCode.length predicate: caller passes 1 if op.initCode is non-empty.
@@ -262,13 +264,16 @@ verity_contract EntryPointV09 where
   -- execution-path attempt and accrues the fee, regardless of whether the
   -- inner sender call ran or reverted (try/catch absorption).
   function reentrancy_trusted internal _innerHandleOp
-      (sender : IAccount, _key : Uint256, hasCallData : Uint256) : Uint256 := do
+      (sender : IAccount, _key : Uint256, hasCallData : Uint256,
+       callDataOffset : Uint256, callDataLength : Uint256) : Uint256 := do
     if hasCallData == HAS_CALLDATA then
+      let _callDataOffsetWitness := callDataOffset
+      require (callDataLength != VALIDATION_SUCCESS) "bad callData length"
       unsafe "EntryPoint innerHandleOp sender call boundary" do
         let callDataPtr := intrinsic_prague "entryPointPackInnerCalldata"
           entryPointPackInnerCalldataLowering
-          [addressToWord sender, 100000, 0, 4]
-        tryCatch (call 100000 sender 0 callDataPtr 4 0 0) (do
+          [addressToWord sender, 100000, callDataOffset, callDataLength]
+        tryCatch (call 100000 sender 0 callDataPtr callDataLength 0 0) (do
           pure ())
       return 1
     else
@@ -278,8 +283,9 @@ verity_contract EntryPointV09 where
   -- catches its revert, then records the execution attempt and increments
   -- collected fees.
   function allow_post_interaction_writes internal _executeUserOp
-      (sender : IAccount, key : Uint256, hasCallData : Uint256) : Uint256 := do
-    let _innerResult ← _innerHandleOp sender key hasCallData
+      (sender : IAccount, key : Uint256, hasCallData : Uint256,
+       callDataOffset : Uint256, callDataLength : Uint256) : Uint256 := do
+    let _innerResult ← _innerHandleOp sender key hasCallData callDataOffset callDataLength
     setMappingUint opInfoRecord key OP_INFO_EXECUTED
     return 1
 
@@ -311,14 +317,15 @@ verity_contract EntryPointV09 where
   function allow_post_interaction_writes internal _handleOpUnchecked
       (sender : IAccount, paymaster : IPaymaster,
        key : Uint256, declaredNonce : Uint256, beneficiary : IBeneficiary,
-       hasInitCode : Uint256, hasCallData : Uint256)
+       hasInitCode : Uint256, hasCallData : Uint256,
+       callDataOffset : Uint256, callDataLength : Uint256)
       : Uint256 := do
     -- Phase 1: validation. Optional createSender + account + paymaster.
     let _validationResult ←
       _validatePrepayment sender paymaster key declaredNonce hasInitCode
     -- Phase 2: execution. Inner self-call gated by callData.length > 0,
     -- but the execution-path attempt + fee are recorded either way.
-    let exec ← _executeUserOp sender key hasCallData
+    let exec ← _executeUserOp sender key hasCallData callDataOffset callDataLength
     -- Phase 3: paymaster postOp (when present).
     let _postOpResult ← _postOp paymaster POSTOP_OP_SUCCEEDED
     -- Phase 4: compensation. Constant 1 wei per op in the abstract model.
@@ -336,7 +343,8 @@ verity_contract EntryPointV09 where
   function allow_post_interaction_writes handleOp
       (sender : IAccount, paymaster : IPaymaster,
        key : Uint256, declaredNonce : Uint256, beneficiary : IBeneficiary,
-       hasInitCode : Uint256, hasCallData : Uint256)
+       hasInitCode : Uint256, hasCallData : Uint256,
+       callDataOffset : Uint256, callDataLength : Uint256)
       : Uint256 := do
     let entryCaller ← msgSender
     let txOriginAddr ← txOrigin
@@ -347,7 +355,7 @@ verity_contract EntryPointV09 where
       callerCodeLen := extcodesize entryCaller
     require (callerCodeLen == VALIDATION_SUCCESS) "nonReentrant: caller has code"
     let exec ← _handleOpUnchecked sender paymaster key declaredNonce
-      beneficiary hasInitCode hasCallData
+      beneficiary hasInitCode hasCallData callDataOffset callDataLength
     return exec
 
   -- Flattened one-op `handleOps` projection. The Solidity ABI accepts a dynamic
@@ -358,9 +366,11 @@ verity_contract EntryPointV09 where
   function handleOps
       (sender : IAccount, paymaster : IPaymaster,
        key : Uint256, declaredNonce : Uint256, beneficiary : IBeneficiary,
-       hasInitCode : Uint256, hasCallData : Uint256)
+       hasInitCode : Uint256, hasCallData : Uint256,
+       callDataOffset : Uint256, callDataLength : Uint256)
       : Uint256 := do
     let exec ← handleOp sender paymaster key declaredNonce beneficiary hasInitCode hasCallData
+      callDataOffset callDataLength
     return exec
 
 end Benchmark.Cases.ERC4337.EntryPointInvariant

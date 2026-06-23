@@ -22,7 +22,7 @@ def entryPointHandleOpsSignature : String :=
   "handleOps((address,uint256,bytes,bytes,bytes32,uint256,bytes32,bytes,bytes)[],address)"
 
 def projectedHandleOpsSignature : String :=
-  "handleOps(address,address,uint256,uint256,address,uint256,uint256)"
+  "handleOps(address,address,uint256,uint256,address,uint256,uint256,uint256,uint256)"
 
 def userOperationEventSignature : String :=
   "UserOperationEvent(bytes32,address,address,uint256,bool,uint256,uint256)"
