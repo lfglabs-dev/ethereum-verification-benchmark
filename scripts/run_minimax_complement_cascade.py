@@ -374,7 +374,7 @@ def recover_rows(output: Path, selected: list[dict], profiles: list[BudgetProfil
             if not run_dir:
                 continue
             row = row_from_run_dir(task_ref, profile, run_dir, recovered=True)
-            if row:
+            if row and is_valid_model_row(row):
                 rows[(profile.name, task_ref)] = row
     existing = output / "cascade_results.json"
     if existing.is_file():
