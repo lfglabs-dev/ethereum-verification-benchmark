@@ -38,18 +38,19 @@ We expose:
   buffer.
 
 * `entryPointPackInnerCalldata` — a four-argument `verity_intrinsic`
-  declaration. Verity #1977 landed multi-argument intrinsic declarations, so
-  the ERC-4337 benchmark registers this boundary directly. On the current
-  dynamic-ABI Verity pin, the byte-level lowering is represented as a named
-  builtin boundary; the proof-facing semantics stay explicit below.
+  declaration used as the proof-facing specification for byte-level calldata
+  packing. The compiled EntryPoint projection currently keeps the sender-call
+  control-flow boundary explicit and avoids lowering this custom intrinsic
+  until Verity has first-class support for this Yul memory template.
 
 ## Trust class
 
 The intrinsic carries an explicit `assumed` obligation tagged
-`entrypoint_inner_calldata_layout`: the byte-level Yul template must match the
-EntryPoint v0.9 calldata forwarding layout for the chosen source commit. The
-differential shim still decodes the real upstream `handleOps` calldata and
-exercises the same sender-call slice empirically.
+`entrypoint_inner_calldata_layout`: a future byte-level Yul template must match
+the EntryPoint v0.9 calldata forwarding layout for the chosen source commit.
+The current differential harness exercises the same sender-call slice
+empirically and checks the execution-count behavior that Yoav's challenge
+targets.
 -/
 
 /-- The abstract calldata-layout function used by the biconditional

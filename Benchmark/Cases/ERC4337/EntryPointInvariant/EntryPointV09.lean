@@ -278,9 +278,11 @@ verity_contract EntryPointV09 where
       let _callDataOffsetWitness := callDataOffset
       require (callDataLength != VALIDATION_SUCCESS) "bad callData length"
       unsafe "EntryPoint innerHandleOp sender call boundary" do
-        let callDataPtr := intrinsic_prague "entryPointPackInnerCalldata"
-          entryPointPackInnerCalldataLowering
-          [addressToWord sender, 100000, callDataOffset, callDataLength]
+        -- The public `handleOps` projection passes the decoded callData slice
+        -- pointer here. Keeping the pointer as data avoids a custom Yul
+        -- builtin while preserving the control-flow obligation: for non-empty
+        -- callData, exactly one sender call is attempted.
+        let callDataPtr := callDataOffset
         tryCatch (call 100000 sender 0 callDataPtr callDataLength 0 0) (do
           pure ())
       return 1
