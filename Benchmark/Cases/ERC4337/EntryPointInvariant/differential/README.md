@@ -40,36 +40,13 @@ The generated Verity runtime also exposes the upstream setup views used by the
 Hardhat suite smoke path: `senderCreator()`, `depositTo(address)`,
 `balanceOf(address)`, `getDepositInfo(address)`, `getNonce(address,uint192)`,
 `getSenderAddress(bytes)`, `getUserOpHash(PackedUserOperation)`, and
-`getCurrentUserOpHash()`. On the upstream ABI path, `initCode` factory calls
-create undeployed accounts, account validation calls the real
-`validateUserOp(PackedUserOperation,bytes32,uint256)` ABI, account execution
-forwards the decoded `op.callData` bytes, paymaster validation calls the real
-`validatePaymasterUserOp(PackedUserOperation,bytes32,uint256)` ABI, and
-`UserOperationEvent` is emitted with the canonical topic/argument layout for the
-modeled gas-cost slice. Context-bearing paymaster `postOp` calls use the real
-`postOp(uint8,bytes,uint256,uint256)` ABI, including the upstream
-`PostOpRevertReason` wrapper event for modeled revert cases. The shim also
-models the unused-gas penalty/payment slice needed by the focused upstream
-paymaster smokes and mirrors Solidity-compatible stake/deposit storage for the
-state-override `EntryPointSimulations.simulateValidation` smoke. The shim
-accepts the upstream `handleAggregatedOps` selector, calls the real
-`validateSignatures(PackedUserOperation[],bytes)` aggregator ABI, compares the
-account-returned aggregator against the group aggregator, emits
-`SignatureAggregatorChanged` for every group, and projects each group through
-the same ABI-backed `handleOps` decoder/executor. In raw Verity deployments, the
-test hook installs the real compiled `SenderCreator` runtime, with its
-EntryPoint immutable patched to the Verity deployment, at the same first-created
-address Solidity EntryPoint uses. Packed account/paymaster validation data is
-decoded for the focused upstream time-range and block-range checks. Full gas
-accounting and the complete simulation surface remain compatibility targets.
-Account validation reverts on the ABI path are wrapped as
-`FailedOpWithRevert(0,"AA23 reverted",...)` with the original revert bytes
-preserved for the focused upstream tests; account execution reverts remain
-non-fatal `UserOperationEvent(success=false)` outcomes with modeled beneficiary
-payment. The shim also covers focused gas/control-flow aborts for undeployed
-accounts, insufficient transaction gas, and insufficient verification gas after
-account creation. The non-paymaster unused-gas penalty smoke is modeled at the
-event-field level; exact gas accounting remains out of scope.
+`getCurrentUserOpHash()` as supported by the Verity model. On the upstream ABI
+path, Verity #2057 generates the dynamic tuple-array decoder for
+`handleOps(PackedUserOperation[],address)` directly. The runner no longer
+injects a post-Yul `handleOps` case; it only links the `createSender` external
+adapter and patches the receive/deposit fallback used by the focused
+differential tests. Full gas accounting and the complete simulation surface
+remain compatibility targets.
 
 ## Test scope
 

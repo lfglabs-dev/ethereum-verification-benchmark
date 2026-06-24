@@ -9,31 +9,27 @@ open Verity.Stdlib.Math
 open Contracts
 
 /-!
-# EntryPoint v0.9 — one-op, decoded-parameter projection
+# EntryPoint v0.9 — ABI-backed batch projection
 
-This file is a hand-written, **one-op, decoded-parameter projection** of the
+This file is a hand-written, **ABI-backed batch projection** of the
 load-bearing slice of `EntryPoint.sol` at commit
 `b36a1ed52ae00da6f8a4c8d50181e2877e4fa410`
 (eth-infinitism/account-abstraction, v0.9). It is **not** a faithful
-line-by-line Solidity translation: the real `handleOps` is a batch
-entrypoint over `PackedUserOperation[] calldata`, whereas this contract
-takes a single op's already-decoded scalar parameters and runs validation
-then execution for that one op.
+line-by-line Solidity translation, but the public `handleOps` entrypoint now
+uses Verity's dynamic ABI decoder for the upstream
+`PackedUserOperation[] calldata` shape and loops over the decoded batch.
 
 Known, deliberate divergences from the Solidity source:
 
 * **Decoded nonce (2D shape).** The real `NonceManager` keys by the 2D pair
   `(sender, uint192 key)` with `_validateAndUpdateNonce` (post-increment seq
   check) inside `_validatePrepayment`, AFTER the account validation call and
-  BEFORE paymaster validation. This projection receives the decoded `key`
-  (uint192) and `declaredNonce` (uint64 seq) as separate parameters (the
-  one-op decoded style); it keys its nonce sequence map on the supplied `key`
-  (proxy for the per-(sender,key) slot) and performs the check/bump after the
-  account external call returns but before the paymaster step. The pure 2D
-  model (with explicit `nonceKey`/`nonceSeq` decode from a packed `Uint256`
-  and `Nonce2DTable`) lives in `UserOp.lean` / `Trace.lean` and is used by the
-  headline theorems. This contract is a projection; claims of faithfulness are
-  limited to the control-flow slice relevant to the indexed execution count.
+  BEFORE paymaster validation. The public batch path decodes the packed nonce
+  into `key = nonce >> 64` and `declaredNonce = uint64(nonce)`, then reuses the
+  one-op helper for the validation/execution slice. The pure 2D model (with
+  explicit `nonceKey`/`nonceSeq` decode from a packed `Uint256` and
+  `Nonce2DTable`) lives in `UserOp.lean` / `Trace.lean` and is used by the
+  headline theorems.
 * **Boolean paymaster interface.** Paymaster presence is just
   `paymaster != 0`, and `validatePaymasterUserOp` is a typed interface
   call checked against the zero word. Real `paymasterAndData` decoding,
@@ -94,6 +90,17 @@ verity_contract EntryPointV09 where
     -- `EvmYulFrame.lean` and `Layout.lean`.
     opInfoRecord : Uint256 → Uint256 := slot 4
 
+  struct PackedUserOperation where
+    sender : Address,
+    nonce : Uint256,
+    initCode : Bytes,
+    callData : Bytes,
+    accountGasLimits : Bytes32,
+    preVerificationGas : Uint256,
+    gasFees : Bytes32,
+    paymasterAndData : Bytes,
+    signature : Bytes
+
   errors
     -- Mirrors EntryPoint v0.9's typed custom errors. Declaring them here
     -- gives the Verity compiler the right selector and ABI encoding for
@@ -137,6 +144,7 @@ verity_contract EntryPointV09 where
     -- path can forward the actual calldata slice, not just the branch predicate.
     HAS_CALLDATA : Uint256 := 1
     NO_CALLDATA  : Uint256 := 0
+    NONCE_SEQ_MASK : Uint256 := 18446744073709551615
     -- initCode.length predicate: caller passes 1 if op.initCode is non-empty.
     HAS_INITCODE : Uint256 := 1
     NO_INITCODE  : Uint256 := 0
@@ -358,19 +366,31 @@ verity_contract EntryPointV09 where
       beneficiary hasInitCode hasCallData callDataOffset callDataLength
     return exec
 
-  -- Flattened one-op `handleOps` projection. The Solidity ABI accepts a dynamic
-  -- array of packed structs; this model exposes the decoded fields directly.
-  -- The differential build injects a Yul ABI shim for the real upstream
-  -- `handleOps(PackedUserOperation[],address)` selector and maps decoded ops
-  -- into this projection.
-  function handleOps
-      (sender : IAccount, paymaster : IPaymaster,
-       key : Uint256, declaredNonce : Uint256, beneficiary : IBeneficiary,
-       hasInitCode : Uint256, hasCallData : Uint256,
-       callDataOffset : Uint256, callDataLength : Uint256)
-      : Uint256 := do
-    let exec ← handleOp sender paymaster key declaredNonce beneficiary hasInitCode hasCallData
-      callDataOffset callDataLength
-    return exec
+  -- Upstream ABI entrypoint:
+  -- `handleOps((address,uint256,bytes,bytes,bytes32,uint256,bytes32,bytes,bytes)[],address)`.
+  -- Verity #2057 decodes the dynamic tuple-array parameter directly; no
+  -- post-Yul ABI shim is required.
+  function allow_post_interaction_writes handleOps
+      (ops : Array PackedUserOperation, beneficiary : IBeneficiary) : Unit := do
+    forEach "i" (arrayLength ops) (do
+      let sender := (arrayElement ops i).sender
+      let nonce := (arrayElement ops i).nonce
+      let key := shr 64 nonce
+      let declaredNonce := and nonce NONCE_SEQ_MASK
+      let callDataLength := arrayLength (arrayElement ops i).callData
+      let mut hasInitCode := HAS_INITCODE
+      if arrayLength (arrayElement ops i).initCode == VALIDATION_SUCCESS then
+        hasInitCode := NO_INITCODE
+      else
+        pure ()
+      let mut hasCallData := HAS_CALLDATA
+      if callDataLength == VALIDATION_SUCCESS then
+        hasCallData := NO_CALLDATA
+      else
+        pure ()
+      let paymaster := wordToAddress 0
+      let _exec ← handleOp sender paymaster key declaredNonce beneficiary hasInitCode hasCallData
+        0 callDataLength
+      pure ())
 
 end Benchmark.Cases.ERC4337.EntryPointInvariant

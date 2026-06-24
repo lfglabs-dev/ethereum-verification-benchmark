@@ -397,4 +397,55 @@ theorem yoav_scalar_event_counting_biconditional
   | none =>
     simp [countUserOperationEventsByIndex]
 
+/-- Scalar-event success side of Yoav's challenge: once validation succeeds
+    for the batch and this op is executable, the Verity event log contains
+    exactly one execution event for this op index. -/
+theorem yoav_scalar_event_count_eq_one_when_validated_and_executable
+    (ops : List PackedUserOperation) (table : Nonce2DTable)
+    (approvals : List Bool) (i : Nat)
+    (hLen : ops.length < Verity.Core.Uint256.modulus) (hi : i < ops.length)
+    (hVal : batchValidated ops table approvals = true)
+    (hExec : hasCallData ops[i] = true) :
+    countUserOperationEventsByIndex
+      (handleOpsScalarEvents ops table approvals) i = 1 :=
+  (yoav_scalar_event_counting_biconditional
+    ops table approvals i hLen hi).mpr ⟨hVal, hExec⟩
+
+/-- Scalar-event failure side: if validation fails, no account/paymaster
+    behavior can induce an execution event for any op index. -/
+theorem yoav_scalar_event_count_eq_zero_when_validation_fails
+    (ops : List PackedUserOperation) (table : Nonce2DTable)
+    (approvals : List Bool) (i : Nat)
+    (hFail : batchValidated ops table approvals = false) :
+    countUserOperationEventsByIndex
+      (handleOpsScalarEvents ops table approvals) i = 0 := by
+  unfold batchValidated at hFail
+  unfold handleOpsScalarEvents
+  cases hVL : validationLoop ops table approvals with
+  | some _ =>
+    rw [hVL] at hFail
+    simp at hFail
+  | none =>
+    simp [countUserOperationEventsByIndex]
+
+/-- Scalar-event non-executable side: a validated op with empty callData has
+    no sender-call execution event for its op index. -/
+theorem yoav_scalar_event_count_eq_zero_when_validated_and_not_executable
+    (ops : List PackedUserOperation) (table : Nonce2DTable)
+    (approvals : List Bool) (i : Nat)
+    (hLen : ops.length < Verity.Core.Uint256.modulus) (hi : i < ops.length)
+    (hVal : batchValidated ops table approvals = true)
+    (hExec : hasCallData ops[i] = false) :
+    countUserOperationEventsByIndex
+      (handleOpsScalarEvents ops table approvals) i = 0 := by
+  unfold batchValidated at hVal
+  unfold handleOpsScalarEvents
+  cases hVL : validationLoop ops table approvals with
+  | some _ =>
+    rw [executionLoopScalarEvents_count_eq_countByIndex ops i hLen hi]
+    exact executionLoopIndexed_count_eq_zero_of_not_executable ops i hi hExec
+  | none =>
+    rw [hVL] at hVal
+    simp at hVal
+
 end Benchmark.Cases.ERC4337.EntryPointInvariant

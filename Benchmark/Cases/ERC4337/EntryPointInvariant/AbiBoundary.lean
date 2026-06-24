@@ -1,5 +1,6 @@
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Trace
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Yoav
+import Compiler.Proofs.IRGeneration.DynamicAbiRefinement
 
 namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 
@@ -19,18 +20,29 @@ handleOps(PackedUserOperation[] calldata ops, address beneficiary)
   -> current simplified/proof projection
 ```
 
-The byte-level calldata decoder is inserted into the generated Yul artifact by
-`differential/run.sh` and is exercised by the Foundry suite through the exact
-upstream ABI selector. This file records the semantic object that decoder must
-produce: a decoded batch plus beneficiary, where the batch is the same
-`PackedUserOperation` list consumed by `Trace.lean` and `Yoav.lean`.
+The byte-level calldata decoder is now supplied by Verity's dynamic ABI
+support for tuple-array parameters (`PackedUserOperation[]`), added in
+`lfglabs-dev/verity#2057`. The differential harness now checks that the
+generated Yul contains the upstream selector itself; this Lean module records
+the semantic boundary after decoding: a batch plus beneficiary, where the batch
+is the same `PackedUserOperation` list consumed by `Trace.lean` and
+`Yoav.lean`.
 -/
 
 /-- Canonical selector for
 `handleOps((address,uint256,bytes,bytes,bytes32,uint256,bytes32,bytes,bytes)[],address)`.
 This is the Solidity ABI spelling of
 `handleOps(PackedUserOperation[] calldata ops, address beneficiary)`. -/
-def HANDLE_OPS_PACKED_USER_OPERATION_ARRAY_SELECTOR : Nat := 0x765e827f
+abbrev HANDLE_OPS_PACKED_USER_OPERATION_ARRAY_SELECTOR : Nat :=
+  Compiler.Proofs.IRGeneration.DynamicAbiRefinement.ERC4337.handleOpsSelector
+
+/-- Verity #2057's raw dynamic-ABI view for the upstream EntryPoint call. -/
+abbrev VerityHandleOpsAbiView :=
+  Compiler.Proofs.IRGeneration.DynamicAbiRefinement.ERC4337.HandleOpsAbiView
+
+/-- Verity #2057's byte-level decoder for the upstream EntryPoint call. -/
+abbrev verityDecodeHandleOps? :=
+  Compiler.Proofs.IRGeneration.DynamicAbiRefinement.ERC4337.decodeHandleOps?
 
 /-- The decoded semantic payload of the real Solidity ABI call. -/
 structure HandleOpsAbiCall where
@@ -39,7 +51,7 @@ structure HandleOpsAbiCall where
   beneficiary : Address
   deriving Repr
 
-/-- The exact ABI selector is part of the trusted boundary contract. -/
+/-- The exact ABI selector accepted by the upstream-backed decoder path. -/
 def hasUpstreamHandleOpsSelector (call : HandleOpsAbiCall) : Bool :=
   decide (call.selector = HANDLE_OPS_PACKED_USER_OPERATION_ARRAY_SELECTOR)
 

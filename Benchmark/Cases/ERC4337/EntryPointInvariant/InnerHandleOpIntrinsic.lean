@@ -39,9 +39,9 @@ We expose:
 
 * `entryPointPackInnerCalldata` — a four-argument `verity_intrinsic`
   declaration. Verity #1977 landed multi-argument intrinsic declarations, so
-  the ERC-4337 benchmark registers this boundary directly. Verity #2050 adds
-  the multi-statement Yul template lowering used here to copy the calldata
-  slice into memory before the sender call.
+  the ERC-4337 benchmark registers this boundary directly. On the current
+  dynamic-ABI Verity pin, the byte-level lowering is represented as a named
+  builtin boundary; the proof-facing semantics stay explicit below.
 
 ## Trust class
 
@@ -69,31 +69,8 @@ def entryPointInnerCalldataObligationTag : String :=
   "entrypoint_inner_calldata_layout"
 
 def entryPointPackInnerCalldataLowering : Verity.Core.Intrinsics.YulLowering :=
-  Verity.Core.Intrinsics.YulLowering.template
-    ["sender", "gasLimit", "callDataOffset", "callDataLength"]
-    "packed"
-    [
-      Compiler.Yul.YulStmt.assign "packed"
-        (Compiler.Yul.YulExpr.call "mload" [Compiler.Yul.YulExpr.lit 64]),
-      Compiler.Yul.YulStmt.exprStmt
-        (Compiler.Yul.YulExpr.call "calldatacopy"
-          [ Compiler.Yul.YulExpr.ident "packed"
-          , Compiler.Yul.YulExpr.ident "callDataOffset"
-          , Compiler.Yul.YulExpr.ident "callDataLength"
-          ]),
-      Compiler.Yul.YulStmt.exprStmt
-        (Compiler.Yul.YulExpr.call "mstore"
-          [ Compiler.Yul.YulExpr.lit 64
-          , Compiler.Yul.YulExpr.call "add"
-              [ Compiler.Yul.YulExpr.ident "packed"
-              , Compiler.Yul.YulExpr.call "and"
-                  [ Compiler.Yul.YulExpr.call "add"
-                      [Compiler.Yul.YulExpr.ident "callDataLength", Compiler.Yul.YulExpr.lit 31]
-                  , Compiler.Yul.YulExpr.call "not" [Compiler.Yul.YulExpr.lit 31]
-                  ]
-              ]
-          ])
-    ]
+  Verity.Core.Intrinsics.YulLowering.builtin
+    "entryPointPackInnerCalldata"
 
 verity_intrinsic entryPointPackInnerCalldata
     (sender : Uint256, gasLimit : Uint256,
@@ -102,11 +79,7 @@ verity_intrinsic entryPointPackInnerCalldata
         -- Copy the calldata slice into fresh memory and return its pointer.
         -- This mirrors the EntryPoint v0.9 execution path that forwards
         -- `userOp.callData` to the sender account.
-        yul := [template (sender, gasLimit, callDataOffset, callDataLength) -> packed := [
-          packed := mload(64),
-          yulcall calldatacopy(packed, callDataOffset, callDataLength),
-          yulcall mstore(64, add(packed, and(add(callDataLength, 31), not(31))))
-        ]];
+        yul := builtin "entryPointPackInnerCalldata";
         min_fork := prague;
         semantics := packInnerCalldata;
         obligation [

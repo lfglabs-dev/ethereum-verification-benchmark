@@ -15,9 +15,10 @@ open Contracts
 > live in `Verity.EVM.Frame` (shipped in `lfglabs-dev/verity#1969`) where
 > they are proved once and consumed by every benchmark.
 >
-> The theorems here remain compiled for archival completeness and so the
-> earlier section of the proof history continues to typecheck. New code
-> should import `Verity.EVM.Frame` directly.
+> The theorems here are not part of `Compile.lean`; they remain only for
+> archival proof history. New benchmark code should consume
+> `EvmYulFrame.lean`, whose theorem names are stable wrappers around
+> `Verity.EVM.Frame`.
 
 # EntryPoint frame conditions over Verity's EVM semantics
 
