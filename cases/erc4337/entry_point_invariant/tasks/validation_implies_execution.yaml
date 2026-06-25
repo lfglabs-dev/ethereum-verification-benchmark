@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: validation_implies_execution
+case_id: erc4337/entry_point_invariant
+split: active
+family_id: erc4337
+implementation_id: erc4337_v09
+source_ref: https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.ERC4337.EntryPointInvariant.validation_implies_execution
+proof_family: refinement_equivalence
+property_class: liveness_invariant
+difficulty: medium
+category: control-flow
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/erc4337/entry_point_invariant/verity/Contract.lean
+  - Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean
+specification_files:
+  - cases/erc4337/entry_point_invariant/verity/Specs.lean
+  - Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean
+editable_files:
+  - Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ValidationImpliesExecution.lean
+reference_solution_module: Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs
+reference_solution_declaration: Benchmark.Cases.ERC4337.EntryPointInvariant.validation_implies_execution
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Claim 2 (Liveness): If handleOps succeeds and validation passed at index i,
+  then execution was attempted at index i. This is the "if" direction.
+unsupported_feature_codes: []

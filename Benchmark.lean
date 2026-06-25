@@ -6,3 +6,4 @@ import Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Compile
 import Benchmark.Cases.Lido.VaulthubLocked.Compile
 import Benchmark.Cases.Zama.ERC7984ConfidentialToken.Compile
 import Benchmark.Cases.TermFinance.TermAuctionClearing.Compile
+import Benchmark.Cases.ERC4337.EntryPointInvariant.Compile
