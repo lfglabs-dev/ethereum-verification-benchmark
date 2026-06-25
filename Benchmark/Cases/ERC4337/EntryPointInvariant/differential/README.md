@@ -65,21 +65,23 @@ Out of scope (documented divergences, ignored in assertions):
 
 - Full gas accounting (the Verity model only implements the focused unused-gas
   paymaster penalty/payment slice used by the upstream smokes).
-- Full prefund economics (the shim models the focused low-gas prefund branch
-  used by upstream smoke tests, not the complete gas schedule).
+- Full prefund economics (the Verity projection models the focused low-gas
+  prefund branch used by upstream smoke tests, not the complete gas schedule).
 - Custom-error parameter encoding (Verity translates some projection errors as
   string reverts; we compare revert occurrence and ABI-path behavior, not full
   custom-error payload parity yet).
 - Exact custom-error artifact recognition for the raw Verity EntryPoint
-  bytecode. The aggregation shim currently surfaces `SignatureValidationFailed`
-  as a matcher-compatible reason string because Hardhat does not recognize
-  Verity bytecode as the Solidity EntryPoint artifact.
+  bytecode. The aggregation projection currently surfaces
+  `SignatureValidationFailed` as a matcher-compatible reason string because
+  Hardhat does not recognize Verity bytecode as the Solidity EntryPoint
+  artifact.
 - Full `EntryPoint.simulateValidation` / off-chain helper coverage beyond the
   paymaster stake/delay smoke.
-- The ABI shim decodes the fields needed by the current proof projection:
-  sender, nonce key/sequence, initCode presence, callData presence, paymaster
-  presence/address, and beneficiary. Full byte-for-byte forwarding of every
-  dynamic field remains a named refinement obligation.
+- Native dynamic ABI decoding now accepts the upstream
+  `PackedUserOperation[]` calldata shape. The proof projection consumes the
+  decoded sender, nonce key/sequence, initCode presence, callData presence,
+  paymaster presence/address, and beneficiary fields; full byte-for-byte
+  forwarding of every dynamic field remains a named refinement obligation.
 
 ## Running locally
 
@@ -201,8 +203,8 @@ path reaches the same selected control-flow outcomes as the upstream EntryPoint
 on the chosen scenarios. Combined with the Lean proofs
 `abi_backed_yoav_counting_biconditional` and
 `yoav_counting_biconditional_under_arbitrary_callees`, the residual trust
-assumption is narrowed to the ABI shim's decoded-field projection and the
-explicit ECM boundaries.
+assumption is narrowed to the native ABI decoder's decoded-field projection and
+the explicit ECM boundaries.
 
 A failing test is a model bug. Fix the Verity contract, re-run the proof,
 re-run the test.
