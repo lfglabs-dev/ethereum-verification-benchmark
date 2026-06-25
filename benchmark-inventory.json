@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 28,
-    "implementation_count": 29,
-    "active_case_count": 26,
+    "family_count": 29,
+    "implementation_count": 30,
+    "active_case_count": 27,
     "backlog_case_count": 3,
-    "active_task_count": 168,
+    "active_task_count": 169,
     "backlog_task_count": 8,
-    "buildable_case_count": 28,
-    "runnable_task_count": 176,
+    "buildable_case_count": 29,
+    "runnable_task_count": 177,
     "case_stage_counts": {
-      "build_green": 24,
+      "build_green": 25,
       "candidate": 1,
       "proof_complete": 4
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 28
+      "translated": 29
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 21,
+      "complete": 22,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 176
+      "proof-only": 177
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -86,6 +86,7 @@
       "pps_nondecrease": 1,
       "price_band": 2,
       "price_computation": 5,
+      "redemption_reserve_guard": 1,
       "replay_protection": 2,
       "reserve_state_transition": 5,
       "revert_safety": 1,
@@ -106,12 +107,12 @@
     "task_proof_family_counts": {
       "authorization_enablement": 25,
       "functional_correctness": 37,
-      "protocol_transition_correctness": 22,
+      "protocol_transition_correctness": 23,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 50
     },
     "family_split_counts": {
-      "active": 25,
+      "active": 26,
       "backlog": 2,
       "mixed": 1
     }
@@ -371,6 +372,23 @@
         "solidity"
       ],
       "manifest_path": "families/paladin_votes/family.yaml"
+    },
+    {
+      "family_id": "pareto",
+      "display_name": "Pareto",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Pareto USP redemption queue accounting and Credit Vault withdrawal-reservation invariants.",
+      "implementation_ids": [
+        "usp"
+      ],
+      "case_ids": [
+        "pareto/redemption_backing"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/pareto/family.yaml"
     },
     {
       "family_id": "piku",
@@ -838,6 +856,22 @@
       "manifest_path": "families/paladin_votes/implementations/stream_recovery_claim/implementation.yaml"
     },
     {
+      "family_id": "pareto",
+      "implementation_id": "usp",
+      "display_name": "Pareto USP",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/pareto-credit/USP",
+      "upstream_commit": "2cb0a098c7ccb9813497ef3982d78c44a596c87b",
+      "source_language": "solidity",
+      "source_artifact_path": "src/ParetoDollarQueue.sol",
+      "case_ids": [
+        "pareto/redemption_backing"
+      ],
+      "notes": "Public Pareto USP contracts centered on ParetoDollar and ParetoDollarQueue.",
+      "manifest_path": "families/pareto/implementations/usp/implementation.yaml"
+    },
+    {
       "family_id": "piku",
       "implementation_id": "inverter_oracle_queue",
       "display_name": "Inverter Oracle Queue Funding Manager",
@@ -1281,7 +1315,7 @@
       "failure_reason": null,
       "notes": "ERC-4337 EntryPoint control-flow invariant slice: the operation execution path is reached if and only if validation passed. This is not a full proof of arbitrary account/paymaster EVM behavior or `innerHandleOp` calldata effects; it proves the selected two-loop model for all possible validation outcomes.",
       "buildable": true,
-      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "verity_commit": "a287329d5fb8b3966c8eb62f03173639c7e66307",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
@@ -1707,6 +1741,53 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Specs",
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
+    },
+    {
+      "case_id": "pareto/redemption_backing",
+      "project": "pareto",
+      "case_name": "redemption_backing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pareto/redemption_backing/case.yaml",
+      "split": "active",
+      "family_id": "pareto",
+      "implementation_id": "usp",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/pareto-credit/USP",
+      "upstream_commit": "2cb0a098c7ccb9813497ef3982d78c44a596c87b",
+      "original_contract_path": "src/ParetoDollarQueue.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol",
+      "selected_functions": [
+        "depositFunds",
+        "requestRedeem"
+      ],
+      "lean_target": "Benchmark.Cases.Pareto.RedemptionBacking.Compile",
+      "failure_reason": null,
+      "notes": "Reference proof is complete for the modeled successful depositFunds path: after manager deposits into yield sources, idle scaled collateral plus requested Credit Vault withdrawal value covers burned USP claims from already closed epochs, excluding the still-open current epoch.",
+      "buildable": true,
+      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "redemption_queue",
+        "closed_epoch_reserve_guard",
+        "ghost_unlent_balance",
+        "credit_vault_request_value"
+      ],
+      "abstraction_notes": "Focused ParetoDollarQueue accounting slice for the closed-epoch redemption backing guard enforced by depositFunds. External ERC20 balances, yield-source calls, Credit Vault virtualPrice correctness, and pending withdrawal accounting are represented by scaled ghost totals and documented assumptions.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "yield_source_calls_elided",
+        "credit_vault_virtual_price_assumed",
+        "epoch_mapping_sliced"
+      ],
+      "spec_target": "Benchmark.Cases.Pareto.RedemptionBacking.Specs",
+      "proof_target": "Benchmark.Cases.Pareto.RedemptionBacking.Proofs"
     },
     {
       "case_id": "piku/fund_conservation",
@@ -7575,6 +7656,56 @@
       }
     },
     {
+      "task_ref": "pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard",
+      "task_id": "deposit_funds_preserves_closed_epoch_reserve_guard",
+      "case_id": "pareto/redemption_backing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pareto/redemption_backing/tasks/deposit_funds_preserves_closed_epoch_reserve_guard.yaml",
+      "split": "active",
+      "family_id": "pareto",
+      "implementation_id": "usp",
+      "source_ref": "https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "redemption_reserve_guard",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Pareto.RedemptionBacking.depositFunds_preserves_closed_epoch_reserve_guard",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pareto/redemption_backing/verity/Contract.lean",
+        "Benchmark/Cases/Pareto/RedemptionBacking/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pareto/redemption_backing/verity/Specs.lean",
+        "Benchmark/Cases/Pareto/RedemptionBacking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pareto/RedemptionBacking/Tasks/DepositFundsPreservesClosedEpochReserveGuard.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused ParetoDollarQueue accounting proof for depositFunds preserving the closed-epoch redemption backing guard over scaled idle collateral and requested Credit Vault withdrawal value.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "yield_source_calls_elided",
+        "credit_vault_virtual_price_assumed",
+        "epoch_mapping_sliced"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Pareto.RedemptionBacking.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation",
       "task_id": "amount_paid_preserves_fund_conservation",
       "case_id": "piku/fund_conservation",
@@ -10485,5 +10616,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-25T11:58:35.044580+00:00"
+  "generated_at": "2026-06-26T10:34:15.746826+00:00"
 }

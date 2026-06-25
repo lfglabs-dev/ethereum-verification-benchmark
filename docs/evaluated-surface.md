@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 26 cases and 168 task manifests. Of those, 168 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 27 cases and 169 task manifests. Of those, 169 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -25,6 +25,7 @@ The active suite currently contains 26 cases and 168 task manifests. Of those, 1
 | `nexus_mutual/ramm_price_band` | 4 | `partial` |
 | `onedelta/caller_address_integrity` | 10 | `complete` |
 | `paladin_votes/stream_recovery_claim_usdc` | 26 | `complete` |
+| `pareto/redemption_backing` | 1 | `complete` |
 | `piku/fund_conservation` | 4 | `complete` |
 | `polaris/bonding_curve` | 4 | `complete` |
 | `polygon/agglayer_bridge` | 2 | `complete` |

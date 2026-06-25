@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 28
-- Implementations: 29
-- Active cases: 26
-- Buildable active cases: 26
-- Active tasks: 168
+- Families: 29
+- Implementations: 30
+- Active cases: 27
+- Buildable active cases: 27
+- Active tasks: 169
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -152,6 +152,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `claimUsdc`, `_claimUsdc`, `claimWeth`, `_claimWeth`, `claimBoth`
 - Upstream source artifact: `src/StreamRecoveryClaim.sol`
 - Notes: Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
+
+### `pareto/redemption_backing`
+- Family / implementation: `pareto` / `usp`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Pareto.RedemptionBacking.Compile`
+- Source ref: `https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol`
+- Selected functions: `depositFunds`, `requestRedeem`
+- Upstream source artifact: `src/ParetoDollarQueue.sol`
+- Notes: Reference proof is complete for the modeled successful depositFunds path: after manager deposits into yield sources, idle scaled collateral plus requested Credit Vault withdrawal value covers burned USP claims from already closed epochs, excluding the still-open current epoch.
 
 ### `piku/fund_conservation`
 - Family / implementation: `piku` / `inverter_oracle_queue`
@@ -1408,6 +1418,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard`
+- Track / property class / proof family: `proof-only` / `redemption_reserve_guard` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Pareto.RedemptionBacking.depositFunds_preserves_closed_epoch_reserve_guard`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/pareto/redemption_backing/verity/Contract.lean`, `Benchmark/Cases/Pareto/RedemptionBacking/Contract.lean`
+- Specification files: `cases/pareto/redemption_backing/verity/Specs.lean`, `Benchmark/Cases/Pareto/RedemptionBacking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Pareto/RedemptionBacking/Tasks/DepositFundsPreservesClosedEpochReserveGuard.lean`
+- Hidden reference solution: `Benchmark.Cases.Pareto.RedemptionBacking.Proofs`
 
 ### `piku/fund_conservation/amount_paid_preserves_fund_conservation`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`

@@ -1,0 +1,38 @@
+manifest_kind: task
+schema_version: 1
+task_id: deposit_funds_preserves_closed_epoch_reserve_guard
+case_id: pareto/redemption_backing
+split: active
+family_id: pareto
+implementation_id: usp
+source_ref: https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Pareto.RedemptionBacking.depositFunds_preserves_closed_epoch_reserve_guard
+proof_family: protocol_transition_correctness
+property_class: redemption_reserve_guard
+difficulty: medium
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/pareto/redemption_backing/verity/Contract.lean
+  - Benchmark/Cases/Pareto/RedemptionBacking/Contract.lean
+specification_files:
+  - cases/pareto/redemption_backing/verity/Specs.lean
+  - Benchmark/Cases/Pareto/RedemptionBacking/Specs.lean
+editable_files:
+  - Benchmark/Generated/Pareto/RedemptionBacking/Tasks/DepositFundsPreservesClosedEpochReserveGuard.lean
+reference_solution_module: Benchmark.Cases.Pareto.RedemptionBacking.Proofs
+reference_solution_declaration: Benchmark.Cases.Pareto.RedemptionBacking.depositFunds_preserves_closed_epoch_reserve_guard
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Focused ParetoDollarQueue accounting proof for depositFunds preserving the
+  closed-epoch redemption backing guard over scaled idle collateral and requested
+  Credit Vault withdrawal value.
+unsupported_feature_codes:
+  - external_erc20_balance_ghosted
+  - yield_source_calls_elided
+  - credit_vault_virtual_price_assumed
+  - epoch_mapping_sliced

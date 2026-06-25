@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: pareto
+display_name: Pareto
+split: active
+status: active
+description: >
+  Benchmark family for Pareto USP redemption queue accounting and Credit Vault
+  withdrawal-reservation invariants.
+implementation_ids:
+  - usp
+case_ids:
+  - pareto/redemption_backing
+source_languages:
+  - solidity
