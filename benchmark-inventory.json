@@ -14,10 +14,10 @@
     "implementation_count": 30,
     "active_case_count": 27,
     "backlog_case_count": 3,
-    "active_task_count": 171,
+    "active_task_count": 172,
     "backlog_task_count": 8,
     "buildable_case_count": 29,
-    "runnable_task_count": 179,
+    "runnable_task_count": 180,
     "case_stage_counts": {
       "build_green": 24,
       "candidate": 1,
@@ -33,7 +33,7 @@
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 179
+      "proof-only": 180
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -65,7 +65,7 @@
       "economic_no_double_charge": 1,
       "exploit_trace": 1,
       "failure_propagation": 2,
-      "fee_base_correctness": 1,
+      "fee_base_correctness": 2,
       "fee_conservation": 5,
       "fee_payout_bound": 1,
       "fee_trigger": 1,
@@ -108,7 +108,7 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 40,
+      "functional_correctness": 41,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 50
@@ -9235,6 +9235,55 @@
       }
     },
     {
+      "task_ref": "t3tris/hwm_performance_fee/profit_pnl_uses_cached_hwm",
+      "task_id": "profit_pnl_uses_cached_hwm",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/profit_pnl_uses_cached_hwm.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_base_correctness",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.profit_pnl_uses_cached_hwm",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ProfitPnlUsesCachedHwm.lean"
+      ],
+      "abstraction_level": "arithmetic_slice",
+      "abstraction_notes": "Single-step theorem proving that when the pre-performance PPS exceeds the cached high-water mark, performance PnL is computed from the increment above that cached HWM and old net supply.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "management_fee_timestamp_formula_abstracted",
+        "oracle_and_silo_accounting_ghosted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "t3tris/hwm_performance_fee/recovery_then_new_high_uses_stored_hwm",
       "task_id": "recovery_then_new_high_uses_stored_hwm",
       "case_id": "t3tris/hwm_performance_fee",
@@ -10716,5 +10765,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-26T10:38:04.440183+00:00"
+  "generated_at": "2026-06-26T12:52:46.980259+00:00"
 }

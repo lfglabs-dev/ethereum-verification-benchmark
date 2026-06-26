@@ -8,7 +8,7 @@ This report is generated from the benchmark manifests.
 - Implementations: 30
 - Active cases: 27
 - Buildable active cases: 27
-- Active tasks: 171
+- Active tasks: 172
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -1757,6 +1757,16 @@ This report is generated from the benchmark manifests.
 - Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
 - Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
 - Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/NoPerformanceFeeWhenPrePpsLeHwm.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/profit_pnl_uses_cached_hwm`
+- Track / property class / proof family: `proof-only` / `fee_base_correctness` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.profit_pnl_uses_cached_hwm`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ProfitPnlUsesCachedHwm.lean`
 - Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
 
 ### `t3tris/hwm_performance_fee/recovery_then_new_high_uses_stored_hwm`

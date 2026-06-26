@@ -18,6 +18,25 @@ def successfulPeriodAssumptions
   params.performanceFeeWad <= WAD /\
   params.ppsHighWaterMark >= WAD
 
+def successfulStepAssumptions
+    (s : FeeState)
+    (totalAssets : Nat)
+    (managementFee : ManagementFeeModel := noManagementFee) : Prop :=
+  successfulPeriodAssumptions
+    { totalAssets := totalAssets, totalSupply := s.grossSupply }
+    {
+      unclaimedSharesFee := s.unclaimedSharesFee
+      ppsHighWaterMark := s.ppsHighWaterMark
+      performanceFeeWad := s.performanceFeeWad
+    }
+    managementFee
+
+/-
+Bridge the multi-step theorem back to successful Solidity executions. The
+reference proof discharges the fee/HWM arithmetic under weaker conditions, but
+the benchmark spec keeps these guards explicit so the theorem does not look like
+it covers reverting or invalid-configuration paths.
+-/
 /--
 Single-step HWM trigger property:
 if the pre-performance-fee PPS does not exceed the cached HWM, no performance
@@ -47,13 +66,14 @@ def profit_pnl_uses_cached_hwm_spec
         result.lastPeriodData.oldTotalNetSupply / WAD
 
 /--
-Multi-step no-double-charge trajectory:
+Multi-step no-double-charge trajectory over successful period-fee executions:
 
-1. A profitable step stores a new fee-accounted HWM.
-2. A later loss/recovery step with pre-fee PPS at or below that HWM charges no
-   performance fee and does not move HWM.
-3. A second recovery step still at or below that same HWM also charges no
-   performance fee and leaves HWM unchanged.
+1. A profitable step charges performance fee and persists the fee-accounted HWM
+   as `max previousHwm finalPostFeePps`.
+2. A later loss step below that HWM charges no performance fee and does not move
+   HWM.
+3. A recovery step from the loss, still at or below that same HWM, also charges
+   no performance fee and leaves HWM unchanged.
 
 This is the economic property missing from the Cyfrin suite; monotonic HWM alone
 does not relate the fee base to loss-then-recovery trajectories.
@@ -73,10 +93,23 @@ def gain_loss_recovery_no_double_charge_spec
   let step3 := periodStepNoReanchor s2 recoveryAssets recoveryManagementFee
   let s3 := step3.fst
   let r3 := step3.snd
+  successfulStepAssumptions s0 gainAssets gainManagementFee ->
+  successfulStepAssumptions s1 lossAssets lossManagementFee ->
+  successfulStepAssumptions s2 recoveryAssets recoveryManagementFee ->
   r1.lastPeriodData.prePerformancePps > s0.ppsHighWaterMark ->
   r1.lastPeriodData.performanceFeeShares > 0 ->
-  r2.lastPeriodData.prePerformancePps <= s1.ppsHighWaterMark ->
+  r2.lastPeriodData.prePerformancePps < s1.ppsHighWaterMark ->
+  r2.lastPeriodData.prePerformancePps <= r3.lastPeriodData.prePerformancePps ->
   r3.lastPeriodData.prePerformancePps <= s1.ppsHighWaterMark ->
+    r1.lastPeriodData.pnl =
+      (r1.lastPeriodData.prePerformancePps - s0.ppsHighWaterMark) *
+        r1.lastPeriodData.oldTotalNetSupply / WAD /\
+    r1.lastPeriodData.performanceFeeShares > 0 /\
+    s1.ppsHighWaterMark =
+      max s0.ppsHighWaterMark r1.lastPeriodData.updatedPps /\
+    (r1.lastPeriodData.updatedPps > s0.ppsHighWaterMark ->
+      s1.ppsHighWaterMark = r1.lastPeriodData.updatedPps) /\
+    r2.lastPeriodData.prePerformancePps <= r3.lastPeriodData.prePerformancePps /\
     r2.lastPeriodData.performanceFeeAssets = 0 /\
     r2.lastPeriodData.performanceFeeShares = 0 /\
     s2.ppsHighWaterMark = s1.ppsHighWaterMark /\
@@ -104,7 +137,18 @@ def recovery_then_new_high_uses_stored_hwm_spec
   let s3 := step3.fst
   let step4 := periodStepNoReanchor s3 newHighAssets newHighManagementFee
   let r4 := step4.snd
-  s3.ppsHighWaterMark = s1.ppsHighWaterMark ->
+  let r1 := step1.snd
+  let r2 := step2.snd
+  let r3 := step3.snd
+  successfulStepAssumptions s0 gainAssets gainManagementFee ->
+  successfulStepAssumptions s1 lossAssets lossManagementFee ->
+  successfulStepAssumptions s2 recoveryAssets recoveryManagementFee ->
+  successfulStepAssumptions s3 newHighAssets newHighManagementFee ->
+  r1.lastPeriodData.prePerformancePps > s0.ppsHighWaterMark ->
+  r1.lastPeriodData.performanceFeeShares > 0 ->
+  r2.lastPeriodData.prePerformancePps < s1.ppsHighWaterMark ->
+  r2.lastPeriodData.prePerformancePps <= r3.lastPeriodData.prePerformancePps ->
+  r3.lastPeriodData.prePerformancePps <= s1.ppsHighWaterMark ->
   r4.lastPeriodData.prePerformancePps > s3.ppsHighWaterMark ->
     r4.lastPeriodData.pnl =
       (r4.lastPeriodData.prePerformancePps - s1.ppsHighWaterMark) *

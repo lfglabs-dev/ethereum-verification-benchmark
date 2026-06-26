@@ -115,6 +115,15 @@ private theorem periodStep_hwm_eq_of_prePps_le
     }
     managementFee h
 
+private theorem periodStep_hwm_eq_max
+    (s : FeeState)
+    (totalAssets : Nat)
+    (managementFee : ManagementFeeModel) :
+    (periodStepNoReanchor s totalAssets managementFee).fst.ppsHighWaterMark =
+      max s.ppsHighWaterMark
+        (periodStepNoReanchor s totalAssets managementFee).snd.lastPeriodData.updatedPps := by
+  dsimp [periodStepNoReanchor, recordAccruedFeesNoReanchor]
+
 private theorem periodStep_pnl_uses_hwm_of_prePps_gt
     (s : FeeState)
     (totalAssets : Nat)
@@ -167,35 +176,57 @@ theorem gain_loss_recovery_no_double_charge
       s0 gainAssets lossAssets recoveryAssets
       gainManagementFee lossManagementFee recoveryManagementFee := by
   dsimp [gain_loss_recovery_no_double_charge_spec]
-  intro _hGain _hFee hLossLe hRecoveryLe
+  intro _hGainOk _hLossOk _hRecoveryOk hGain hFee hLossLt hRecoveryFromLoss hRecoveryLe
   let step1 := periodStepNoReanchor s0 gainAssets gainManagementFee
   let s1 := step1.fst
+  let r1 := step1.snd
   let step2 := periodStepNoReanchor s1 lossAssets lossManagementFee
   let s2 := step2.fst
+  let r2 := step2.snd
   let step3 := periodStepNoReanchor s2 recoveryAssets recoveryManagementFee
+  let r3 := step3.snd
+  have hLossLeRaw := Nat.le_of_lt hLossLt
+  have hLossLe :
+      step2.snd.lastPeriodData.prePerformancePps <= s1.ppsHighWaterMark := by
+    simpa [step1, s1, step2] using hLossLeRaw
   have hLossHwm : s2.ppsHighWaterMark = s1.ppsHighWaterMark := by
     exact periodStep_hwm_eq_of_prePps_le s1 lossAssets lossManagementFee hLossLe
   have hRecoveryLeS2 :
       step3.snd.lastPeriodData.prePerformancePps <= s2.ppsHighWaterMark := by
     rw [hLossHwm]
     exact hRecoveryLe
-  exact And.intro
-    (periodStep_performanceFeeAssets_eq_zero_of_prePps_le s1 lossAssets lossManagementFee hLossLe)
-    (And.intro
-      (periodStep_performanceFeeShares_eq_zero_of_prePps_le s1 lossAssets lossManagementFee hLossLe)
-      (And.intro
-        hLossHwm
-        (And.intro
-          (periodStep_performanceFeeAssets_eq_zero_of_prePps_le
-            s2 recoveryAssets recoveryManagementFee hRecoveryLeS2)
-          (And.intro
-            (periodStep_performanceFeeShares_eq_zero_of_prePps_le
-              s2 recoveryAssets recoveryManagementFee hRecoveryLeS2)
-            (by
-              calc
-                step3.fst.ppsHighWaterMark = s2.ppsHighWaterMark :=
-                  periodStep_hwm_eq_of_prePps_le s2 recoveryAssets recoveryManagementFee hRecoveryLeS2
-                _ = s1.ppsHighWaterMark := hLossHwm)))))
+  constructor
+  · exact periodStep_pnl_uses_hwm_of_prePps_gt s0 gainAssets gainManagementFee hGain
+  constructor
+  · exact hFee
+  constructor
+  · exact periodStep_hwm_eq_max s0 gainAssets gainManagementFee
+  constructor
+  · intro hUpdatedGt
+    calc
+      s1.ppsHighWaterMark = max s0.ppsHighWaterMark r1.lastPeriodData.updatedPps :=
+        periodStep_hwm_eq_max s0 gainAssets gainManagementFee
+      _ = r1.lastPeriodData.updatedPps := Nat.max_eq_right (Nat.le_of_lt hUpdatedGt)
+  constructor
+  · exact hRecoveryFromLoss
+  constructor
+  · exact periodStep_performanceFeeAssets_eq_zero_of_prePps_le
+      s1 lossAssets lossManagementFee hLossLe
+  constructor
+  · exact periodStep_performanceFeeShares_eq_zero_of_prePps_le
+      s1 lossAssets lossManagementFee hLossLe
+  constructor
+  · exact hLossHwm
+  constructor
+  · exact periodStep_performanceFeeAssets_eq_zero_of_prePps_le
+      s2 recoveryAssets recoveryManagementFee hRecoveryLeS2
+  constructor
+  · exact periodStep_performanceFeeShares_eq_zero_of_prePps_le
+      s2 recoveryAssets recoveryManagementFee hRecoveryLeS2
+  · calc
+      step3.fst.ppsHighWaterMark = s2.ppsHighWaterMark :=
+        periodStep_hwm_eq_of_prePps_le s2 recoveryAssets recoveryManagementFee hRecoveryLeS2
+      _ = s1.ppsHighWaterMark := hLossHwm
 
 theorem recovery_then_new_high_uses_stored_hwm
     (s0 : FeeState)
@@ -208,13 +239,29 @@ theorem recovery_then_new_high_uses_stored_hwm
       s0 gainAssets lossAssets recoveryAssets newHighAssets
       gainManagementFee lossManagementFee recoveryManagementFee newHighManagementFee := by
   dsimp [recovery_then_new_high_uses_stored_hwm_spec]
-  intro hStored hNewHigh
+  intro _hGainOk _hLossOk _hRecoveryOk _hNewHighOk _hGain _hFee
+    hLossLt _hRecoveryFromLoss hRecoveryLe hNewHigh
   let step1 := periodStepNoReanchor s0 gainAssets gainManagementFee
   let s1 := step1.fst
   let step2 := periodStepNoReanchor s1 lossAssets lossManagementFee
   let s2 := step2.fst
   let step3 := periodStepNoReanchor s2 recoveryAssets recoveryManagementFee
   let s3 := step3.fst
+  have hLossLeRaw := Nat.le_of_lt hLossLt
+  have hLossLe :
+      step2.snd.lastPeriodData.prePerformancePps <= s1.ppsHighWaterMark := by
+    simpa [step1, s1, step2] using hLossLeRaw
+  have hLossHwm : s2.ppsHighWaterMark = s1.ppsHighWaterMark := by
+    exact periodStep_hwm_eq_of_prePps_le s1 lossAssets lossManagementFee hLossLe
+  have hRecoveryLeS2 :
+      step3.snd.lastPeriodData.prePerformancePps <= s2.ppsHighWaterMark := by
+    rw [hLossHwm]
+    exact hRecoveryLe
+  have hStored : s3.ppsHighWaterMark = s1.ppsHighWaterMark := by
+    calc
+      s3.ppsHighWaterMark = s2.ppsHighWaterMark :=
+        periodStep_hwm_eq_of_prePps_le s2 recoveryAssets recoveryManagementFee hRecoveryLeS2
+      _ = s1.ppsHighWaterMark := hLossHwm
   calc
     (periodStepNoReanchor s3 newHighAssets newHighManagementFee).snd.lastPeriodData.pnl =
         ((periodStepNoReanchor s3 newHighAssets newHighManagementFee).snd.lastPeriodData.prePerformancePps -
