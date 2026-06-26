@@ -5,7 +5,7 @@ case_id: t3tris/hwm_performance_fee
 split: active
 family_id: t3tris
 implementation_id: t3tris_vault
-source_ref: https://github.com/t3tris-finance/T3tris-Vault/blob/89ad64a8e945214cd40a18db146e1feed83e417f/src/libraries/feature/FeatureFeesLib.sol
+source_ref: https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol
 task_interface_version: 2
 theorem_name: Benchmark.Cases.T3tris.HwmPerformanceFee.gain_loss_recovery_no_double_charge
 proof_family: functional_correctness

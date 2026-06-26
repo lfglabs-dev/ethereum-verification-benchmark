@@ -12,7 +12,7 @@ proof_status: complete
 upstream_repo: https://github.com/t3tris-finance/T3tris-Vault
 upstream_commit: 89ad64a8e945214cd40a18db146e1feed83e417f
 original_contract_path: src/libraries/feature/FeatureFeesLib.sol
-source_ref: https://github.com/t3tris-finance/T3tris-Vault/blob/89ad64a8e945214cd40a18db146e1feed83e417f/src/libraries/feature/FeatureFeesLib.sol
+source_ref: https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol
 lean_target: Benchmark.Cases.T3tris.HwmPerformanceFee.Compile
 spec_target: Benchmark.Cases.T3tris.HwmPerformanceFee.Specs
 proof_target: Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs
