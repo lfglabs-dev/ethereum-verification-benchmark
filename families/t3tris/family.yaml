@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: t3tris
+display_name: T3tris Finance
+split: active
+status: active
+description: T3tris Vault verification cases.
+implementation_ids:
+  - t3tris_vault
+case_ids:
+  - t3tris/hwm_performance_fee
+source_languages:
+  - solidity

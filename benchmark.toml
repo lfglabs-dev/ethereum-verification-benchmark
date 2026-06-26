@@ -39,6 +39,7 @@ active_cases = [
   "safe/owner_manager_reach",
   "termmax/order_v2_buy_xt_single_segment",
   "term_finance/term_auction_clearing",
+  "t3tris/hwm_performance_fee",
   "usual/dao_collateral",
   "wildcat/borrow_liquidity_safety",
   "zodiac/roles_decoder_faithfulness",

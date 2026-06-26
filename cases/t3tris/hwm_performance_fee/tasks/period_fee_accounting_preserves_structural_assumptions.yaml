@@ -1,0 +1,38 @@
+manifest_kind: task
+schema_version: 1
+task_id: period_fee_accounting_preserves_structural_assumptions
+case_id: t3tris/hwm_performance_fee
+split: active
+family_id: t3tris
+implementation_id: t3tris_vault
+source_ref: https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.T3tris.HwmPerformanceFee.period_fee_accounting_preserves_structural_assumptions
+proof_family: state_preservation_local_effects
+property_class: fee_accounting_bounds
+difficulty: medium
+category: arithmetic-accounting-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/t3tris/hwm_performance_fee/verity/Contract.lean
+  - Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean
+specification_files:
+  - cases/t3tris/hwm_performance_fee/verity/Specs.lean
+  - Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean
+editable_files:
+  - Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/PeriodFeeAccountingPreservesStructuralAssumptions.lean
+reference_solution_module: Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs
+reference_solution_declaration: Benchmark.Cases.T3tris.HwmPerformanceFee.period_fee_accounting_preserves_structural_assumptions
+abstraction_level: structural_fee_state_slice
+abstraction_notes: >
+  Proves the three structural guards are preserved by period-fee accrual:
+  accrued fee shares are added to both gross supply and unclaimed fee shares,
+  the HWM uses a max-ratchet, and the performance-fee rate is unchanged.
+unsupported_feature_codes:
+  - uint256_overflow_modeled_as_preconditions
+  - management_fee_timestamp_formula_abstracted
+  - oracle_and_silo_accounting_ghosted
+
