@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 28,
-    "implementation_count": 29,
-    "active_case_count": 26,
+    "family_count": 29,
+    "implementation_count": 30,
+    "active_case_count": 27,
     "backlog_case_count": 3,
-    "active_task_count": 168,
+    "active_task_count": 169,
     "backlog_task_count": 8,
-    "buildable_case_count": 28,
-    "runnable_task_count": 176,
+    "buildable_case_count": 29,
+    "runnable_task_count": 177,
     "case_stage_counts": {
-      "build_green": 24,
+      "build_green": 25,
       "candidate": 1,
       "proof_complete": 4
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 28
+      "translated": 29
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 21,
+      "complete": 22,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 176
+      "proof-only": 177
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -86,6 +86,7 @@
       "pps_nondecrease": 1,
       "price_band": 2,
       "price_computation": 5,
+      "price_floor": 1,
       "replay_protection": 2,
       "reserve_state_transition": 5,
       "revert_safety": 1,
@@ -105,13 +106,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 37,
+      "functional_correctness": 38,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 50
     },
     "family_split_counts": {
-      "active": 25,
+      "active": 26,
       "backlog": 2,
       "mixed": 1
     }
@@ -269,6 +270,23 @@
         "solidity"
       ],
       "manifest_path": "families/kleros/family.yaml"
+    },
+    {
+      "family_id": "kyberswap",
+      "display_name": "KyberSwap",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for KyberSwap aggregation-router execution checks and swap-safety guard invariants.",
+      "implementation_ids": [
+        "meta-aggregation-router-v2"
+      ],
+      "case_ids": [
+        "kyberswap/partial_fill_price_floor"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/kyberswap/family.yaml"
     },
     {
       "family_id": "lagoon",
@@ -740,6 +758,22 @@
       ],
       "notes": "Active implementation entry for Kleros V2, currently benchmarking a fixed-tree slice of the sortition library.",
       "manifest_path": "families/kleros/implementations/kleros_v2/implementation.yaml"
+    },
+    {
+      "family_id": "kyberswap",
+      "implementation_id": "meta-aggregation-router-v2",
+      "display_name": "MetaAggregationRouterV2",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "upstream_commit": "verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/MetaAggregationRouterV2.sol",
+      "case_ids": [
+        "kyberswap/partial_fill_price_floor"
+      ],
+      "notes": "KyberSwap MetaAggregationRouterV2 verified-source deployment used for the helper-level partial-fill price-floor benchmark.",
+      "manifest_path": "families/kyberswap/implementations/meta-aggregation-router-v2/implementation.yaml"
     },
     {
       "family_id": "lagoon",
@@ -1281,7 +1315,7 @@
       "failure_reason": null,
       "notes": "ERC-4337 EntryPoint control-flow invariant slice: the operation execution path is reached if and only if validation passed. This is not a full proof of arbitrary account/paymaster EVM behavior or `innerHandleOp` calldata effects; it proves the selected two-loop model for all possible validation outcomes.",
       "buildable": true,
-      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "verity_commit": "a287329d5fb8b3966c8eb62f03173639c7e66307",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
@@ -1487,6 +1521,47 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Kleros.SortitionTrees.Specs",
       "proof_target": "Benchmark.Cases.Kleros.SortitionTrees.Proofs"
+    },
+    {
+      "case_id": "kyberswap/partial_fill_price_floor",
+      "project": "kyberswap",
+      "case_name": "partial_fill_price_floor",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kyberswap/partial_fill_price_floor/case.yaml",
+      "split": "active",
+      "family_id": "kyberswap",
+      "implementation_id": "meta-aggregation-router-v2",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "upstream_commit": "verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "original_contract_path": "contracts/MetaAggregationRouterV2.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol",
+      "selected_functions": [
+        "_checkReturnAmount"
+      ],
+      "lean_target": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Compile",
+      "failure_reason": null,
+      "notes": "Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution.",
+      "buildable": true,
+      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "helper_level_guard",
+        "partial_fill_price_floor",
+        "checked_uint256_multiplication",
+        "scalar_struct_projection"
+      ],
+      "abstraction_notes": "This benchmark models the `_checkReturnAmount` enforcement helper from KyberSwap MetaAggregationRouterV2. It proves the partial-fill scaled price-floor guard over the values passed into the helper, with Solidity 0.8 checked multiplication modeled through `mulPanic`. Public swap entrypoints, executor behavior, refunds, fee-on-destination accounting, route quality, ERC20 transfers, and true user balance deltas are intentionally out of scope.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Specs",
+      "proof_target": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs"
     },
     {
       "case_id": "lagoon/guardrails",
@@ -5404,6 +5479,51 @@
       "abstraction_notes": "This task turns the tree conservation slice into a partition theorem: once the root and parent sums are established, subtracting the left subtree mass from the root must leave exactly the right subtree mass.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor",
+      "task_id": "check_return_amount_partial_fill_price_floor",
+      "case_id": "kyberswap/partial_fill_price_floor",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kyberswap/partial_fill_price_floor/tasks/check_return_amount_partial_fill_price_floor.yaml",
+      "split": "active",
+      "family_id": "kyberswap",
+      "implementation_id": "meta-aggregation-router-v2",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_floor",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.checkReturnAmount_partial_fill_price_floor",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/kyberswap/partial_fill_price_floor/verity/Contract.lean",
+        "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/kyberswap/partial_fill_price_floor/verity/Specs.lean",
+        "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/KyberSwap/PartialFillPriceFloor/Tasks/CheckReturnAmountPartialFillPriceFloor.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the helper-level partial-fill price-floor guard over values already computed by the public swap path. Executor behavior, route quality, token transfers, refunds, and fee-on-destination accounting are out of scope.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -10485,5 +10605,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-25T11:58:35.044580+00:00"
+  "generated_at": "2026-06-26T09:17:52.779513+00:00"
 }

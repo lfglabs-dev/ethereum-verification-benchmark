@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 28
-- Implementations: 29
-- Active cases: 26
-- Buildable active cases: 26
-- Active tasks: 168
+- Families: 29
+- Implementations: 30
+- Active cases: 27
+- Buildable active cases: 27
+- Active tasks: 169
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -102,6 +102,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `set`, `updateParents`, `draw`
 - Upstream source artifact: `contracts/src/libraries/SortitionTrees.sol`
 - Notes: Sortition-tree slice focused on additive parent invariants, root conservation, interval-based draws, and ID/index correspondence.
+
+### `kyberswap/partial_fill_price_floor`
+- Family / implementation: `kyberswap` / `meta-aggregation-router-v2`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Compile`
+- Source ref: `https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol`
+- Selected functions: `_checkReturnAmount`
+- Upstream source artifact: `contracts/MetaAggregationRouterV2.sol`
+- Notes: Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution.
 
 ### `lagoon/guardrails`
 - Family / implementation: `lagoon` / `v0_6_0`
@@ -928,6 +938,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/kleros/sortition_trees/verity/Specs.lean`, `Benchmark/Cases/Kleros/SortitionTrees/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Kleros/SortitionTrees/Tasks/RootMinusLeftEqualsRightSubtree.lean`
 - Hidden reference solution: `Benchmark.Cases.Kleros.SortitionTrees.Proofs`
+
+### `kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor`
+- Track / property class / proof family: `proof-only` / `price_floor` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.KyberSwap.PartialFillPriceFloor.checkReturnAmount_partial_fill_price_floor`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/kyberswap/partial_fill_price_floor/verity/Contract.lean`, `Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Contract.lean`
+- Specification files: `cases/kyberswap/partial_fill_price_floor/verity/Specs.lean`, `Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Specs.lean`
+- Editable proof file: `Benchmark/Generated/KyberSwap/PartialFillPriceFloor/Tasks/CheckReturnAmountPartialFillPriceFloor.lean`
+- Hidden reference solution: `Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs`
 
 ### `lagoon/guardrails/exact_compliance`
 - Track / property class / proof family: `proof-only` / `compliance_boundary` / `functional_correctness`

@@ -26,6 +26,7 @@ active_cases = [
   "forgeyields/global_solvency",
   "ipor/plasma_vault_redeem_split",
   "kleros/sortition_trees",
+  "kyberswap/partial_fill_price_floor",
   "lagoon/guardrails",
   "lido/vaulthub_locked",
   "nexus_mutual/ramm_price_band",

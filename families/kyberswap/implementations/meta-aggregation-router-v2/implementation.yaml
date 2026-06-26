@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: kyberswap
+implementation_id: meta-aggregation-router-v2
+display_name: MetaAggregationRouterV2
+split: active
+status: translated
+upstream_repo: https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5
+upstream_commit: verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5
+source_language: solidity
+source_artifact_path: contracts/MetaAggregationRouterV2.sol
+case_ids:
+  - kyberswap/partial_fill_price_floor
+notes: >
+  KyberSwap MetaAggregationRouterV2 verified-source deployment used for the
+  helper-level partial-fill price-floor benchmark.
