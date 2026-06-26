@@ -152,6 +152,8 @@ verity_contract EntryPointV09 where
     POSTOP_OP_SUCCEEDED   : Uint256 := 0
     POSTOP_OP_REVERTED    : Uint256 := 1
     POSTOP_POSTOP_REVERTED : Uint256 := 2
+    SENDER_CREATOR_WORD : Uint256 := 1
+    DOMAIN_SEPARATOR_WORD : Uint256 := keccakString "ERC4337.EntryPointV09"
 
   interfaces
     interface IAccount where
@@ -320,6 +322,47 @@ verity_contract EntryPointV09 where
     beneficiary.receivePrefund amount
     let current ← getMapping deposits beneficiary
     setMapping deposits beneficiary (add current amount)
+
+  function view no_external_calls senderCreator () : Address := do
+    return wordToAddress SENDER_CREATOR_WORD
+
+  function view no_external_calls getNonce (sender : Address, key : Uint256) : Uint256 := do
+    let _senderWord := addressToWord sender
+    let current ← getMappingUint nonces key
+    return current
+
+  function view no_external_calls balanceOf (account : Address) : Uint256 := do
+    let current ← getMapping deposits account
+    return current
+
+  function view no_external_calls getDepositInfo (account : Address) : Uint256 := do
+    let current ← getMapping deposits account
+    return current
+
+  function allow_post_interaction_writes payable depositTo (account : Address) : Unit := do
+    let amount ← msgValue
+    let current ← getMapping deposits account
+    setMapping deposits account (add current amount)
+
+  function allow_post_interaction_writes withdrawTo (withdrawAddress : Address, amount : Uint256) : Unit := do
+    let sender ← msgSender
+    let current ← getMapping deposits sender
+    require (current >= amount) "Withdraw amount too large"
+    setMapping deposits sender (sub current amount)
+    let recipientCurrent ← getMapping deposits withdrawAddress
+    setMapping deposits withdrawAddress (add recipientCurrent amount)
+
+  function view no_external_calls getUserOpHash (op : PackedUserOperation) : Bytes32 := do
+    return add DOMAIN_SEPARATOR_WORD (add (addressToWord op.sender) op.nonce)
+
+  function reentrancy_trusted getSenderAddress (_initCode : Bytes) : Unit := do
+    let senderWord := externalCall "createSender" [SENDER_CREATOR_WORD]
+    revertError SenderAddressResult(wordToAddress senderWord)
+
+  function reentrancy_trusted delegateAndRevert (target : Address, _data : Bytes) : Unit := do
+    unsafe "EntryPoint delegateAndRevert low-level call boundary" do
+      let success := call 100000 target 0 0 0 0 0
+      revertError DelegateAndRevert(success, 0)
 
   -- The single-op slice of `handleOps`. The real function takes
   -- `PackedUserOperation[] calldata ops`; we expose the per-op body so the
