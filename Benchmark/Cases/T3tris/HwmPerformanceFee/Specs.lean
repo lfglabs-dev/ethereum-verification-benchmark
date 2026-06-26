@@ -31,6 +31,52 @@ def successfulStepAssumptions
     }
     managementFee
 
+/--
+Validated initialization establishes the three structural guards previously
+listed as successful-path assumptions: unclaimed fee shares are within gross
+supply, performance fee is capped at WAD, and HWM starts at the WAD floor.
+-/
+def validated_initial_state_satisfies_successful_assumptions_spec
+    (performanceFeeWad : Nat) : Prop :=
+  forall s, initializeFeeState performanceFeeWad = some s ->
+    feeStateStructuralInvariant s
+
+/--
+The validated performance-fee update path preserves the fee cap. This models
+`setNextPerformanceFee` plus the later `_updateFeeRates` application at the
+property level relevant to the fee calculator.
+-/
+def validated_performance_fee_update_preserves_cap_spec
+    (s : FeeState)
+    (nextPerformanceFeeWad : Nat) : Prop :=
+  s.performanceFeeWad <= WAD ->
+    forall s', setValidatedPerformanceFee s nextPerformanceFeeWad = some s' ->
+      s'.performanceFeeWad <= WAD
+
+/--
+Period-fee accrual preserves the structural guards. In particular, newly
+accrued fee shares are added to gross supply and unclaimed fee shares by the
+same amount, HWM is a max-ratchet, and the performance-fee rate is unchanged.
+-/
+def period_fee_accounting_preserves_structural_assumptions_spec
+    (s : FeeState)
+    (totalAssets : Nat)
+    (managementFee : ManagementFeeModel := noManagementFee) : Prop :=
+  feeStateStructuralInvariant s ->
+    feeStateStructuralInvariant (periodStepNoReanchor s totalAssets managementFee).fst
+
+/--
+Fee-share claim/burn accounting preserves `unclaimedSharesFee <= totalSupply`
+because the modeled successful claim removes the same capped share amount from
+both unclaimed fee shares and gross supply.
+-/
+def fee_claim_preserves_unclaimed_le_supply_spec
+    (s : FeeState)
+    (requestedSharesToClaim : Nat) : Prop :=
+  s.unclaimedSharesFee <= s.grossSupply ->
+    (claimFeeShares s requestedSharesToClaim).unclaimedSharesFee <=
+      (claimFeeShares s requestedSharesToClaim).grossSupply
+
 /-
 Bridge the multi-step theorem back to successful Solidity executions. The
 reference proof discharges the fee/HWM arithmetic under weaker conditions, but

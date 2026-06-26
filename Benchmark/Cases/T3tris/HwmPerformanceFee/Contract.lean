@@ -13,6 +13,8 @@ In scope:
 - `FeatureFeesLib._computeLastPeriodFeesAndUpdateResult`
 - the HWM ratchet used by `ReleaseFeesLib.computeAndRecordAccruedFees`
   and `FeatureSettlementLib._updateSettlementValues`
+- the structural fee-state guards established by initialization, validated
+  performance-fee updates, period-fee accrual, and fee-share claim/burn paths
 
 Simplifications:
 - Arithmetic is modeled over `Nat`, not `Uint256`. Solidity 0.8 overflow and
@@ -29,6 +31,13 @@ Simplifications:
   `prePerformancePps` so specs can state the trigger/base condition directly.
 - The zero-supply lifecycle HWM reanchor is factored into `persistHighWaterMark`.
   The main no-double-charge trajectory uses the non-reanchor branch.
+- Fee configuration is modeled as a successful validated assignment. This
+  compresses Solidity's two-phase `setNextPerformanceFee` plus
+  `_updateFeeRates` path to the property relevant here: the stored value can
+  only be updated from a `feeWad <= WAD` input.
+- Fee-claim accounting is modeled as burning/removing the same capped fee-share
+  amount from `unclaimedSharesFee` and gross supply. Asset transfer, silo
+  liquidity, and recipient routing are outside this fee-share invariant.
 - Division by zero is totalized to zero in helper functions. Specs include
   nonzero-denominator/successful-path assumptions where they matter.
 - `uint128` and `uint64` bounds are not encoded in the structures. They are
@@ -253,6 +262,36 @@ structure FeeState where
   ppsHighWaterMark : Nat
   performanceFeeWad : Nat
   deriving Repr, DecidableEq
+
+def feeStateStructuralInvariant (s : FeeState) : Prop :=
+  s.unclaimedSharesFee <= s.grossSupply /\
+  s.performanceFeeWad <= WAD /\
+  s.ppsHighWaterMark >= WAD
+
+def initializeFeeState (performanceFeeWad : Nat) : Option FeeState :=
+  if performanceFeeWad <= WAD then
+    some {
+      grossSupply := 0
+      unclaimedSharesFee := 0
+      ppsHighWaterMark := WAD
+      performanceFeeWad := performanceFeeWad
+    }
+  else
+    none
+
+def setValidatedPerformanceFee (s : FeeState) (nextPerformanceFeeWad : Nat) : Option FeeState :=
+  if nextPerformanceFeeWad <= WAD then
+    some { s with performanceFeeWad := nextPerformanceFeeWad }
+  else
+    none
+
+def claimFeeShares (s : FeeState) (requestedSharesToClaim : Nat) : FeeState :=
+  let sharesToClaim := min requestedSharesToClaim s.unclaimedSharesFee
+  {
+    s with
+    grossSupply := s.grossSupply - sharesToClaim
+    unclaimedSharesFee := s.unclaimedSharesFee - sharesToClaim
+  }
 
 def persistHighWaterMark
     (oldHighWaterMark updatedPps preMintGrossSupply depositMintedVaultShares : Nat) : Nat :=

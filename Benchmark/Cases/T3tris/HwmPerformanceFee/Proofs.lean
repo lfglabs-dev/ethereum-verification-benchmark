@@ -140,6 +140,70 @@ private theorem periodStep_pnl_uses_hwm_of_prePps_gt
   rw [absDist_eq_sub_of_gt h]
   simp [fullMulDiv, WAD]
 
+theorem validated_initial_state_satisfies_successful_assumptions
+    (performanceFeeWad : Nat) :
+    validated_initial_state_satisfies_successful_assumptions_spec performanceFeeWad := by
+  dsimp [validated_initial_state_satisfies_successful_assumptions_spec]
+  intro s hInit
+  unfold initializeFeeState at hInit
+  split at hInit
+  · rename_i hFeeCap
+    cases hInit
+    exact ⟨Nat.le_refl 0, hFeeCap, Nat.le_refl WAD⟩
+  · simp_all
+
+theorem validated_performance_fee_update_preserves_cap
+    (s : FeeState)
+    (nextPerformanceFeeWad : Nat) :
+    validated_performance_fee_update_preserves_cap_spec s nextPerformanceFeeWad := by
+  dsimp [validated_performance_fee_update_preserves_cap_spec]
+  intro _hCurrentCap s' hSet
+  unfold setValidatedPerformanceFee at hSet
+  split at hSet
+  · rename_i hNextFeeCap
+    cases hSet
+    exact hNextFeeCap
+  · simp_all
+
+theorem period_fee_accounting_preserves_structural_assumptions
+    (s : FeeState)
+    (totalAssets : Nat)
+    (managementFee : ManagementFeeModel := noManagementFee) :
+    period_fee_accounting_preserves_structural_assumptions_spec s totalAssets managementFee := by
+  dsimp [period_fee_accounting_preserves_structural_assumptions_spec]
+  intro hInv
+  rcases hInv with ⟨hUnclaimedLeSupply, hFeeCap, hHwmFloor⟩
+  constructor
+  · dsimp [
+      periodStepNoReanchor,
+      recordAccruedFeesNoReanchor,
+      computeLastPeriodFeesAndUpdateResult,
+      finalSupply,
+      periodFeeShares,
+      supplyAfterManagement
+    ]
+    omega
+  constructor
+  · dsimp [periodStepNoReanchor, recordAccruedFeesNoReanchor]
+    exact hFeeCap
+  · dsimp [periodStepNoReanchor, recordAccruedFeesNoReanchor]
+    exact le_trans hHwmFloor (Nat.le_max_left _ _)
+
+theorem fee_claim_preserves_unclaimed_le_supply
+    (s : FeeState)
+    (requestedSharesToClaim : Nat) :
+    fee_claim_preserves_unclaimed_le_supply_spec s requestedSharesToClaim := by
+  dsimp [fee_claim_preserves_unclaimed_le_supply_spec]
+  intro hUnclaimedLeSupply
+  dsimp [claimFeeShares]
+  have hClaimLeUnclaimed :
+      min requestedSharesToClaim s.unclaimedSharesFee <= s.unclaimedSharesFee :=
+    Nat.min_le_right _ _
+  have hClaimLeSupply :
+      min requestedSharesToClaim s.unclaimedSharesFee <= s.grossSupply :=
+    le_trans hClaimLeUnclaimed hUnclaimedLeSupply
+  omega
+
 theorem no_performance_fee_when_pre_pps_le_hwm
     (gross : GrossTvlData)
     (params : PeriodFeesParams)

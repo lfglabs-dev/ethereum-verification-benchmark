@@ -14,10 +14,10 @@
     "implementation_count": 30,
     "active_case_count": 27,
     "backlog_case_count": 3,
-    "active_task_count": 172,
+    "active_task_count": 176,
     "backlog_task_count": 8,
     "buildable_case_count": 29,
-    "runnable_task_count": 180,
+    "runnable_task_count": 184,
     "case_stage_counts": {
       "build_green": 24,
       "candidate": 1,
@@ -33,7 +33,7 @@
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 180
+      "proof-only": 184
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -60,11 +60,13 @@
       "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
       "composition_invariant": 1,
+      "configuration_safety": 2,
       "counting_invariant": 1,
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
       "exploit_trace": 1,
       "failure_propagation": 2,
+      "fee_accounting_bounds": 2,
       "fee_base_correctness": 2,
       "fee_conservation": 5,
       "fee_payout_bound": 1,
@@ -111,7 +113,7 @@
       "functional_correctness": 41,
       "protocol_transition_correctness": 22,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 50
+      "state_preservation_local_effects": 54
     },
     "family_split_counts": {
       "active": 26,
@@ -9139,6 +9141,54 @@
       }
     },
     {
+      "task_ref": "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply",
+      "task_id": "fee_claim_preserves_unclaimed_le_supply",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/fee_claim_preserves_unclaimed_le_supply.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_accounting_bounds",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.fee_claim_preserves_unclaimed_le_supply",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/FeeClaimPreservesUnclaimedLeSupply.lean"
+      ],
+      "abstraction_level": "structural_fee_state_slice",
+      "abstraction_notes": "Models the successful fee-share claim/burn accounting used by fee-claim and settlement paths as removing the same capped share amount from gross supply and unclaimed fee shares, preserving unclaimedSharesFee <= totalSupply.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "asset_transfer_and_silo_liquidity_abstracted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "t3tris/hwm_performance_fee/gain_loss_recovery_no_double_charge",
       "task_id": "gain_loss_recovery_no_double_charge",
       "case_id": "t3tris/hwm_performance_fee",
@@ -9222,6 +9272,55 @@
       "abstraction_notes": "Single-step trigger theorem: when pre-performance PPS is at or below cached HWM, the performance fee branch does not charge assets or shares.",
       "unsupported_feature_codes": [
         "uint256_overflow_modeled_as_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/period_fee_accounting_preserves_structural_assumptions",
+      "task_id": "period_fee_accounting_preserves_structural_assumptions",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/period_fee_accounting_preserves_structural_assumptions.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_accounting_bounds",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.period_fee_accounting_preserves_structural_assumptions",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/PeriodFeeAccountingPreservesStructuralAssumptions.lean"
+      ],
+      "abstraction_level": "structural_fee_state_slice",
+      "abstraction_notes": "Proves the three structural guards are preserved by period-fee accrual: accrued fee shares are added to both gross supply and unclaimed fee shares, the HWM uses a max-ratchet, and the performance-fee rate is unchanged.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "management_fee_timestamp_formula_abstracted",
+        "oracle_and_silo_accounting_ghosted"
       ],
       "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "evaluation": {
@@ -9320,6 +9419,102 @@
         "uint256_overflow_modeled_as_preconditions",
         "management_fee_timestamp_formula_abstracted",
         "oracle_and_silo_accounting_ghosted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/validated_initial_state_satisfies_successful_assumptions",
+      "task_id": "validated_initial_state_satisfies_successful_assumptions",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/validated_initial_state_satisfies_successful_assumptions.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "configuration_safety",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.validated_initial_state_satisfies_successful_assumptions",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ValidatedInitialStateSatisfiesSuccessfulAssumptions.lean"
+      ],
+      "abstraction_level": "structural_fee_state_slice",
+      "abstraction_notes": "Models successful vault initialization for the fee-state fields relevant to the HWM benchmark, following FeatureStorageLib initialization: zero initial unclaimed fee shares and supply, HWM at WAD, and performance fee accepted only when it is at most WAD.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "oracle_and_silo_accounting_ghosted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/validated_performance_fee_update_preserves_cap",
+      "task_id": "validated_performance_fee_update_preserves_cap",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/validated_performance_fee_update_preserves_cap.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "configuration_safety",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.validated_performance_fee_update_preserves_cap",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ValidatedPerformanceFeeUpdatePreservesCap.lean"
+      ],
+      "abstraction_level": "structural_fee_state_slice",
+      "abstraction_notes": "Compresses ReleaseFeesLib.setNextPerformanceFee plus later FeatureFeesLib fee-rate application to the property needed by the fee calculator: a successful validated performance-fee assignment stores only a value at or below WAD.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "access_control_abstracted"
       ],
       "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "evaluation": {
@@ -10765,5 +10960,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-26T12:52:46.980259+00:00"
+  "generated_at": "2026-06-26T14:40:46.413807+00:00"
 }
