@@ -1,0 +1,18 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: lifi
+implementation_id: composer_vm
+display_name: LI.FI Composer VirtualMachine
+split: active
+status: translated
+source_language: solidity
+upstream_repo: https://repo.sourcify.dev/contracts/full_match/8453/0xb57Ce43Be47DF611C98EB0943e5D36EBDb36cc6D/
+upstream_commit: sourcify-exact-match-8453
+source_artifact_path: sources/src/VirtualMachine.sol
+case_ids:
+  - lifi/vm_register_isolation
+notes: >
+  Sourcify exact-match Base deployment source for the LI.FI Composer
+  VirtualMachine register-file slice. This implementation entry covers the
+  VM register and byte-buffer locality model used by the register-isolation
+  benchmark.

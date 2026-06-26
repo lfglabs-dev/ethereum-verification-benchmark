@@ -1,0 +1,57 @@
+manifest_kind: case
+project: lifi
+case_id: vm_register_isolation
+schema_version: 1
+split: active
+family_id: lifi
+implementation_id: composer_vm
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://repo.sourcify.dev/contracts/full_match/8453/0xb57Ce43Be47DF611C98EB0943e5D36EBDb36cc6D/
+upstream_commit: sourcify-exact-match-8453
+original_contract_path: sources/src/VirtualMachine.sol
+source_ref: https://repo.sourcify.dev/contracts/full_match/8453/0xb57Ce43Be47DF611C98EB0943e5D36EBDb36cc6D/@sourcify-exact-match-8453:sources/src/VirtualMachine.sol
+lean_target: Benchmark.Cases.LiFi.VMRegisterIsolation.Compile
+spec_target: Benchmark.Cases.LiFi.VMRegisterIsolation.Specs
+proof_target: Benchmark.Cases.LiFi.VMRegisterIsolation.Proofs
+selected_functions:
+  - VirtualMachine._run
+  - RegisterFile.get
+  - RegisterFile.set
+  - RegisterFile.setDynamic
+  - SurgeryOps.performSurgery
+  - SafeTransferVMLib.execute
+source_language: solidity
+verity_version: 760e9feb7161c6a4f26f8bad4bbcfb3950ff02ce
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - buffer_identity_model
+  - alias_aware_surgery
+  - command_unpacking_elided
+  - external_calls_opaque
+  - byte_values_abstracted
+  - revert_paths_elided
+abstraction_notes: >
+  Models LI.FI Composer VM register slots as masked register indices and
+  register values as explicit byte-buffer ids. Ordinary call-like opcodes write
+  only their masked destination register unless it is the void register 0x7A.
+  CALLDATA_SURGERY mutates only bytes whose offsets are in the modeled surgery
+  descriptor union on the buffer currently referenced by the masked source
+  register, so aliases to that buffer intentionally observe the change.
+  External calls, ERC20 transfers, command unpacking, and byte-level copy
+  contents are abstracted because the benchmark targets successful-step frame
+  isolation of VM registers and buffers.
+unsupported_feature_codes:
+  - external_calls_opaque
+  - byte_values_abstracted
+  - command_unpacking_elided
+  - revert_paths_elided
+notes: >
+  Register isolation benchmark for LI.FI Composer's verified VirtualMachine
+  source. The theorem set proves one-step successful-opcode frame preservation
+  over the abstract buffer-id model for CALL, CALLDATA_BUILD, ABI_ENCODE,
+  DEPOSIT_APPROVED, CALLDATA_SURGERY, and SAFE_TRANSFER, plus void-register
+  reads, surgery byte locality, and void-source surgery.

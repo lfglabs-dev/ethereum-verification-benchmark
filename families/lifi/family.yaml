@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: lifi
+display_name: LI.FI
+split: active
+status: active
+description: >
+  LI.FI Composer VM benchmarks over register-file isolation and byte-buffer
+  mutation boundaries.
+implementation_ids:
+  - composer_vm
+case_ids:
+  - lifi/vm_register_isolation
+source_languages:
+  - solidity

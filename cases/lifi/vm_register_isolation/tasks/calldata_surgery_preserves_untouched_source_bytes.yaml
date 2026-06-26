@@ -1,0 +1,36 @@
+manifest_kind: task
+schema_version: 1
+task_id: calldata_surgery_preserves_untouched_source_bytes
+case_id: lifi/vm_register_isolation
+split: active
+family_id: lifi
+implementation_id: composer_vm
+source_ref: https://repo.sourcify.dev/contracts/full_match/8453/0xb57Ce43Be47DF611C98EB0943e5D36EBDb36cc6D/@sourcify-exact-match-8453:sources/src/VirtualMachine.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.LiFi.VMRegisterIsolation.calldata_surgery_preserves_untouched_source_bytes
+proof_family: state_preservation_local_effects
+property_class: register_file_isolation
+difficulty: medium
+category: vm_register_isolation
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/lifi/vm_register_isolation/verity/Contract.lean
+  - Benchmark/Cases/LiFi/VMRegisterIsolation/Contract.lean
+specification_files:
+  - cases/lifi/vm_register_isolation/verity/Specs.lean
+  - Benchmark/Cases/LiFi/VMRegisterIsolation/Specs.lean
+editable_files:
+  - Benchmark/Generated/LiFi/VMRegisterIsolation/Tasks/CalldataSurgeryPreservesUntouchedSourceBytes.lean
+reference_solution_module: Benchmark.Cases.LiFi.VMRegisterIsolation.Proofs
+reference_solution_declaration: Benchmark.Cases.LiFi.VMRegisterIsolation.calldata_surgery_preserves_untouched_source_bytes
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves byte locality inside the source buffer: offsets outside the modeled
+  surgery descriptor union remain unchanged. The all-false touch predicate
+  models Solidity's surgeryCount == 0 no-op case.
+unsupported_feature_codes:
+  - byte_values_abstracted
+  - surgery_descriptor_union_predicate

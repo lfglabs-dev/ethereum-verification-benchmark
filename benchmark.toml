@@ -28,6 +28,7 @@ active_cases = [
   "kleros/sortition_trees",
   "lagoon/guardrails",
   "lido/vaulthub_locked",
+  "lifi/vm_register_isolation",
   "nexus_mutual/ramm_price_band",
   "onedelta/caller_address_integrity",
   "paladin_votes/stream_recovery_claim_usdc",
