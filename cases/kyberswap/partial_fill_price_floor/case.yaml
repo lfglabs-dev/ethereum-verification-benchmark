@@ -39,4 +39,6 @@ notes: >
   Helper-level proof only. The public paths compute `spentAmount` and
   `returnAmount` before calling `_checkReturnAmount`; this case proves the
   helper enforces the checked scaled inequality for successful partial-fill
-  helper execution.
+  helper execution. Reading the guard as an effective-price floor additionally
+  assumes `spentAmount <= amount`, which the helper does not enforce and the
+  theorem does not assume.

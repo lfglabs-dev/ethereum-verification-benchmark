@@ -28,17 +28,20 @@ open Verity.Stdlib.Math
   - Public entrypoints, executor calls, token transfers, fee receivers, refunds,
     calldata, permits, and events are out of scope. This benchmark proves the
     helper-level guard over values already computed by the public path.
+
+  Economic-reading boundary:
+  - Read as an effective-price floor, the partial-fill guard
+    (`returnAmount * amount >= minReturnAmount * spentAmount`) is a floor only
+    when `spentAmount <= amount`, i.e. the executor spends no more than the user
+    quoted. The helper does not enforce this and the theorem does not assume it;
+    the proof covers the inequality exactly as written.
 -/
 
+/-- `_PARTIAL_FILL = 0x01` in MetaAggregationRouterV2. This is the only flag
+    `_checkReturnAmount` reads. The other router flags (`_REQUIRES_EXTRA_ETH`,
+    `_SHOULD_CLAIM`, `_SIMPLE_SWAP`, ...) are not exercised by this helper and
+    are omitted. -/
 def partialFillFlag : Uint256 := 1
-
-def shouldClaimFlag : Uint256 := 4
-
-def simpleSwapFlag : Uint256 := 32
-
-def feeOnDstFlag : Uint256 := 64
-
-def approveFundFlag : Uint256 := 256
 
 structure SwapDescriptionV2 where
   amount : Uint256
@@ -65,7 +68,10 @@ verity_contract MetaAggregationRouterV2 where
   function _checkReturnAmount
       (spentAmount : Uint256, returnAmount : Uint256, amount : Uint256,
        minReturnAmount : Uint256, flags : Uint256) : Unit := do
+    -- _flagsChecked(desc.flags, _PARTIAL_FILL): desc.flags & 0x01 != 0
     if and flags 1 != 0 then
+      -- Solidity 0.8 checked products (revert on overflow):
+      -- returnAmount * desc.amount and desc.minReturnAmount * spentAmount.
       let left ← mulPanic returnAmount amount
       let right ← mulPanic minReturnAmount spentAmount
       require (left >= right) "Return amount is not enough"
