@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: mint_py_mints_equal_amount
+case_id: pendle/py_supply_pairing
+split: active
+family_id: pendle
+implementation_id: core_v2_public
+source_ref: https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Pendle.PySupplyPairing.mint_py_mints_equal_amount
+proof_family: functional_correctness
+property_class: accounting_update
+difficulty: easy
+category: supply-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/pendle/py_supply_pairing/verity/Contract.lean
+  - Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean
+specification_files:
+  - cases/pendle/py_supply_pairing/verity/Specs.lean
+  - Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean
+editable_files:
+  - Benchmark/Generated/Pendle/PySupplyPairing/Tasks/MintPyMintsEqualAmount.lean
+reference_solution_module: Benchmark.Cases.Pendle.PySupplyPairing.Proofs
+reference_solution_declaration: Benchmark.Cases.Pendle.PySupplyPairing.mint_py_mints_equal_amount
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Successful non-expired mintPY computes one amountPYOut from floating SY and
+  increments YT and PT accounting by that exact amount under checked
+  multiplication/addition and uint248 successful-path assumptions.
+unsupported_feature_codes: []

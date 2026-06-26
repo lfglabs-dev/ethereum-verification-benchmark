@@ -1,0 +1,17 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: pendle
+implementation_id: core_v2_public
+display_name: Pendle Core V2 Public
+split: active
+status: translated
+upstream_repo: https://github.com/pendle-finance/pendle-core-v2-public
+upstream_commit: e8c2cca4c9b329ba8a383a27d7318e5f8b35c843
+source_language: solidity
+source_artifact_path: contracts/core/YieldContracts/PendleYieldToken.sol
+case_ids:
+  - pendle/py_supply_pairing
+notes: >
+  Implementation entry for Pendle V2 core, focused on the PT/YT pair mint and
+  redeem accounting in PendleYieldToken and PendlePrincipalToken.
+
