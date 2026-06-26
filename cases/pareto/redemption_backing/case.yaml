@@ -18,7 +18,6 @@ spec_target: Benchmark.Cases.Pareto.RedemptionBacking.Specs
 proof_target: Benchmark.Cases.Pareto.RedemptionBacking.Proofs
 selected_functions:
   - depositFunds
-  - requestRedeem
 source_language: solidity
 verity_version: d26a6ffa83ec8e8445533f076442c06dd1cdf487
 lean_toolchain: leanprover/lean4:v4.22.0
@@ -30,16 +29,16 @@ abstraction_tags:
   - credit_vault_request_value
 abstraction_notes: >
   Focused ParetoDollarQueue accounting slice for the closed-epoch redemption
-  backing guard enforced by depositFunds. External ERC20 balances, yield-source
-  calls, Credit Vault virtualPrice correctness, and pending withdrawal accounting
-  are represented by scaled ghost totals and documented assumptions.
+  backing guard checked after a successful depositFunds reserve require. External
+  ERC20 balances, deposit-mode yield-source calls, Credit Vault virtualPrice
+  correctness, and pending withdrawal accounting are represented by scaled ghost
+  totals and documented assumptions.
 unsupported_feature_codes:
   - external_erc20_balance_ghosted
   - yield_source_calls_elided
   - credit_vault_virtual_price_assumed
   - epoch_mapping_sliced
 notes: >
-  Reference proof is complete for the modeled successful depositFunds path:
-  after manager deposits into yield sources, idle scaled collateral plus requested
-  Credit Vault withdrawal value covers burned USP claims from already closed
-  epochs, excluding the still-open current epoch.
+  Reference proof is complete for the modeled successful depositFunds path under
+  the source reserve require (`hReserveGuard`) and checked-arithmetic side
+  conditions: the resulting state satisfies the closed-epoch reserve guard.

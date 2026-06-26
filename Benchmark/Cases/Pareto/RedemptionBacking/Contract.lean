@@ -18,8 +18,13 @@ open Verity.EVM.Uint256
     only needs the current epoch excluded from closed-epoch reserves and the optional
     previous-epoch reset performed by `depositFunds`.
   - Yield-source calls, caps, method allowlists, and token decimals are represented
-    by the scalar `depositedScaled` input | those checks determine whether the call
-    succeeds, while the invariant is the final reserve guard over scaled balances.
+    by the scalar `depositedScaled` input | it summarizes the successful post-loop
+    decrease in `getUnlentBalanceScaled()`, while the invariant is the final
+    reserve guard over scaled balances.
+  - `depositFunds` is scoped to deposit-mode yield movements that do not request
+    Credit Vault withdrawals through `_externalCall` | Credit Vault request methods
+    are manager actions for a different queue transition and can mutate
+    `totCreditVaultsRequestedScaled`.
   - `isParetoDollarCollateralized()` is represented by `collateralizedFlag != 0` |
     full external NAV correctness depends on Credit Vault `virtualPrice` and pending
     withdrawal accounting, which are documented assumptions for this case.
@@ -29,8 +34,9 @@ open Verity.EVM.Uint256
     `getUnlentBalanceScaled() + totCreditVaultsRequestedScaled
        >= totReservedWithdrawals - epochPending[epochNumber]`
 
-  This captures the reviewed first theorem: manager deposits cannot complete after
-  spending collateral needed for already closed redemption epochs.
+  This captures the source reserve require used by the reviewed theorem. The
+  proof assumes this require succeeds and checks that the modeled post-state
+  exposes the same closed-epoch reserve guard.
 -/
 
 verity_contract ParetoDollarQueue where
@@ -57,6 +63,7 @@ verity_contract ParetoDollarQueue where
     let reserved_ ← getStorage totReservedWithdrawals
     let currentPending_ ← getStorage currentEpochPending
     require (currentPending_ <= reserved_) "reserved-underflow"
+    require (idleAfter_ <= add idleAfter_ requested_) "addition-overflow"
     require (sub reserved_ currentPending_ <= add idleAfter_ requested_) "insufficient-backing"
 
     let previousPending_ ← getStorage previousEpochPending
@@ -64,16 +71,5 @@ verity_contract ParetoDollarQueue where
       setStorage previousEpochPending 0
     else
       setStorage previousEpochPending previousPending_
-
-  -- src: ParetoDollarQueue.sol requestRedeem — current epoch claims increase both
-  -- current pending requests and total burned-but-unclaimed USP. Per-user
-  -- `userWithdrawalsEpochs` entries are intentionally aggregated away in this
-  -- slice; successful Solidity checked additions are represented by later proof
-  -- hypotheses when this transition is used.
-  function requestRedeem (amount : Uint256) : Unit := do
-    let currentPending_ ← getStorage currentEpochPending
-    let reserved_ ← getStorage totReservedWithdrawals
-    setStorage currentEpochPending (add currentPending_ amount)
-    setStorage totReservedWithdrawals (add reserved_ amount)
 
 end Benchmark.Cases.Pareto.RedemptionBacking

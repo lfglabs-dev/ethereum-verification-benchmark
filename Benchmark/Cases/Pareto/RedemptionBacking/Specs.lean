@@ -26,8 +26,9 @@ def closedClaims (s : ContractState) : Uint256 :=
 Closed-epoch redemption reserve guard from `depositFunds`.
 
 The current epoch is still open, so its `epochPending[epochNumber]` is excluded.
-All burned USP from prior closed epochs remains covered by idle collateral plus
-Credit Vault withdrawal value already requested but not yet claimed.
+The guard states that burned USP from prior closed epochs is covered by idle
+collateral plus Credit Vault withdrawal value already requested but not yet
+claimed.
 -/
 def closed_epoch_reserve_guard (s : ContractState) : Prop :=
   (currentEpochPendingOf s).val <= (totReservedWithdrawalsOf s).val ∧
@@ -39,9 +40,5 @@ def closed_epoch_reserve_guard (s : ContractState) : Prop :=
 def depositFunds_preserves_closed_epoch_reserve_guard_spec
     (_s s' : ContractState) : Prop :=
   closed_epoch_reserve_guard s'
-
-def requestRedeem_preserves_closed_epoch_reserve_guard_spec
-    (s s' : ContractState) : Prop :=
-  closed_epoch_reserve_guard s -> closed_epoch_reserve_guard s'
 
 end Benchmark.Cases.Pareto.RedemptionBacking

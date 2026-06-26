@@ -7,9 +7,9 @@ open Verity
 open Verity.EVM.Uint256
 
 /--
-`depositFunds` enforces the closed-epoch reserve guard on every successful path.
-The hypotheses are the Solidity checked-arithmetic and require conditions for the
-modeled successful branch.
+Under the modeled successful `depositFunds` branch, including the source reserve
+require (`hReserveGuard`) and checked-arithmetic side conditions, the post-state
+satisfies the closed-epoch reserve guard.
 -/
 theorem depositFunds_preserves_closed_epoch_reserve_guard
     (depositedScaled : Uint256) (s : ContractState)
@@ -30,6 +30,19 @@ theorem depositFunds_preserves_closed_epoch_reserve_guard
     simpa [Verity.Core.Uint256.le_def] using hDepositLeIdle
   have hReqReserved : s.storage 3 <= s.storage 2 := by
     simpa [Verity.Core.Uint256.le_def] using hCurrentLeReserved
+  have hAddVal :
+      (add (sub (s.storage 0) depositedScaled) (s.storage 1)).val =
+        (sub (s.storage 0) depositedScaled).val + (s.storage 1).val := by
+    exact Verity.EVM.Uint256.add_eq_of_lt hAddNoOverflow
+  have hReqNoOverflow :
+      sub (s.storage 0) depositedScaled <=
+        add (sub (s.storage 0) depositedScaled) (s.storage 1) := by
+    rw [Verity.Core.Uint256.le_def, hAddVal]
+    exact Nat.le_add_right _ _
+  have hReqNoOverflowVal :
+      (sub (s.storage 0) depositedScaled).val <=
+        (add (sub (s.storage 0) depositedScaled) (s.storage 1)).val := by
+    simpa [Verity.Core.Uint256.le_def] using hReqNoOverflow
   have hReqGuard :
       sub (s.storage 2) (s.storage 3) <= add (sub (s.storage 0) depositedScaled) (s.storage 1) := by
     simpa [Verity.Core.Uint256.le_def] using hReserveGuard
@@ -40,7 +53,7 @@ theorem depositFunds_preserves_closed_epoch_reserve_guard
       ParetoDollarQueue.previousEpochPending, ParetoDollarQueue.collateralizedFlag,
       idleCollateralScaledOf, totCreditVaultsRequestedScaledOf,
       totReservedWithdrawalsOf, currentEpochPendingOf, closedClaims,
-      hCollateralized, hReqIdle,
+      hCollateralized, hReqIdle, hReqNoOverflowVal,
       hPrevReady, getStorage, setStorage, Verity.require, Verity.bind, Bind.bind,
       Contract.run, ContractResult.snd, hAddNoOverflow,
       hCurrentLeReserved, hReserveGuard]
@@ -50,7 +63,7 @@ theorem depositFunds_preserves_closed_epoch_reserve_guard
       ParetoDollarQueue.previousEpochPending, ParetoDollarQueue.collateralizedFlag,
       idleCollateralScaledOf, totCreditVaultsRequestedScaledOf,
       totReservedWithdrawalsOf, currentEpochPendingOf, closedClaims,
-      hCollateralized, hReqIdle,
+      hCollateralized, hReqIdle, hReqNoOverflowVal,
       hPrevReady, getStorage, setStorage, Verity.require, Verity.bind, Bind.bind,
       Contract.run, ContractResult.snd, hAddNoOverflow,
       hCurrentLeReserved, hReserveGuard]

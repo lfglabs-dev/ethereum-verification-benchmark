@@ -159,9 +159,9 @@ This report is generated from the benchmark manifests.
 - Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
 - Lean target: `Benchmark.Cases.Pareto.RedemptionBacking.Compile`
 - Source ref: `https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol`
-- Selected functions: `depositFunds`, `requestRedeem`
+- Selected functions: `depositFunds`
 - Upstream source artifact: `src/ParetoDollarQueue.sol`
-- Notes: Reference proof is complete for the modeled successful depositFunds path: after manager deposits into yield sources, idle scaled collateral plus requested Credit Vault withdrawal value covers burned USP claims from already closed epochs, excluding the still-open current epoch.
+- Notes: Reference proof is complete for the modeled successful depositFunds path under the source reserve require (`hReserveGuard`) and checked-arithmetic side conditions: the resulting state satisfies the closed-epoch reserve guard.
 
 ### `piku/fund_conservation`
 - Family / implementation: `piku` / `inverter_oracle_queue`

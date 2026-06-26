@@ -1763,12 +1763,11 @@
       "generated_artifact_path": null,
       "source_ref": "https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol",
       "selected_functions": [
-        "depositFunds",
-        "requestRedeem"
+        "depositFunds"
       ],
       "lean_target": "Benchmark.Cases.Pareto.RedemptionBacking.Compile",
       "failure_reason": null,
-      "notes": "Reference proof is complete for the modeled successful depositFunds path: after manager deposits into yield sources, idle scaled collateral plus requested Credit Vault withdrawal value covers burned USP claims from already closed epochs, excluding the still-open current epoch.",
+      "notes": "Reference proof is complete for the modeled successful depositFunds path under the source reserve require (`hReserveGuard`) and checked-arithmetic side conditions: the resulting state satisfies the closed-epoch reserve guard.",
       "buildable": true,
       "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
@@ -1779,7 +1778,7 @@
         "ghost_unlent_balance",
         "credit_vault_request_value"
       ],
-      "abstraction_notes": "Focused ParetoDollarQueue accounting slice for the closed-epoch redemption backing guard enforced by depositFunds. External ERC20 balances, yield-source calls, Credit Vault virtualPrice correctness, and pending withdrawal accounting are represented by scaled ghost totals and documented assumptions.",
+      "abstraction_notes": "Focused ParetoDollarQueue accounting slice for the closed-epoch redemption backing guard checked after a successful depositFunds reserve require. External ERC20 balances, deposit-mode yield-source calls, Credit Vault virtualPrice correctness, and pending withdrawal accounting are represented by scaled ghost totals and documented assumptions.",
       "unsupported_feature_codes": [
         "external_erc20_balance_ghosted",
         "yield_source_calls_elided",
@@ -7687,7 +7686,7 @@
         "Benchmark/Generated/Pareto/RedemptionBacking/Tasks/DepositFundsPreservesClosedEpochReserveGuard.lean"
       ],
       "abstraction_level": "protocol_slice",
-      "abstraction_notes": "Focused ParetoDollarQueue accounting proof for depositFunds preserving the closed-epoch redemption backing guard over scaled idle collateral and requested Credit Vault withdrawal value.",
+      "abstraction_notes": "Focused ParetoDollarQueue accounting proof showing the modeled depositFunds post-state satisfies the closed-epoch redemption backing guard when the source reserve require and checked-arithmetic side conditions succeed.",
       "unsupported_feature_codes": [
         "external_erc20_balance_ghosted",
         "yield_source_calls_elided",
@@ -10616,5 +10615,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-26T10:34:15.746826+00:00"
+  "generated_at": "2026-06-26T16:41:35.848956+00:00"
 }

@@ -28,9 +28,9 @@ reference_solution_module: Benchmark.Cases.Pareto.RedemptionBacking.Proofs
 reference_solution_declaration: Benchmark.Cases.Pareto.RedemptionBacking.depositFunds_preserves_closed_epoch_reserve_guard
 abstraction_level: protocol_slice
 abstraction_notes: >
-  Focused ParetoDollarQueue accounting proof for depositFunds preserving the
-  closed-epoch redemption backing guard over scaled idle collateral and requested
-  Credit Vault withdrawal value.
+  Focused ParetoDollarQueue accounting proof showing the modeled depositFunds
+  post-state satisfies the closed-epoch redemption backing guard when the source
+  reserve require and checked-arithmetic side conditions succeed.
 unsupported_feature_codes:
   - external_erc20_balance_ghosted
   - yield_source_calls_elided
