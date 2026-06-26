@@ -1,0 +1,37 @@
+manifest_kind: task
+schema_version: 1
+task_id: recovery_then_new_high_uses_stored_hwm
+case_id: t3tris/hwm_performance_fee
+split: active
+family_id: t3tris
+implementation_id: t3tris_vault
+source_ref: https://github.com/t3tris-finance/T3tris-Vault/blob/89ad64a8e945214cd40a18db146e1feed83e417f/src/libraries/feature/FeatureFeesLib.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.T3tris.HwmPerformanceFee.recovery_then_new_high_uses_stored_hwm
+proof_family: functional_correctness
+property_class: fee_base_correctness
+difficulty: medium
+category: temporal-accounting-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/t3tris/hwm_performance_fee/verity/Contract.lean
+  - Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean
+specification_files:
+  - cases/t3tris/hwm_performance_fee/verity/Specs.lean
+  - Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean
+editable_files:
+  - Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/RecoveryThenNewHighUsesStoredHwm.lean
+reference_solution_module: Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs
+reference_solution_declaration: Benchmark.Cases.T3tris.HwmPerformanceFee.recovery_then_new_high_uses_stored_hwm
+abstraction_level: arithmetic_slice
+abstraction_notes: >
+  New-high theorem after recovery: once recovery exceeds the stored HWM, the PnL
+  base is the increment above the latest fee-accounted HWM, not above an older
+  lower HWM.
+unsupported_feature_codes:
+  - uint256_overflow_modeled_as_preconditions
+  - management_fee_timestamp_formula_abstracted
+  - oracle_and_silo_accounting_ghosted
