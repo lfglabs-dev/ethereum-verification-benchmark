@@ -1,0 +1,44 @@
+manifest_kind: case
+project: pareto
+case_id: redemption_backing
+schema_version: 1
+split: active
+family_id: pareto
+implementation_id: usp
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/pareto-credit/USP
+upstream_commit: 2cb0a098c7ccb9813497ef3982d78c44a596c87b
+original_contract_path: src/ParetoDollarQueue.sol
+source_ref: https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol
+lean_target: Benchmark.Cases.Pareto.RedemptionBacking.Compile
+spec_target: Benchmark.Cases.Pareto.RedemptionBacking.Specs
+proof_target: Benchmark.Cases.Pareto.RedemptionBacking.Proofs
+selected_functions:
+  - depositFunds
+source_language: solidity
+verity_version: d26a6ffa83ec8e8445533f076442c06dd1cdf487
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - redemption_queue
+  - closed_epoch_reserve_guard
+  - ghost_unlent_balance
+  - credit_vault_request_value
+abstraction_notes: >
+  Focused ParetoDollarQueue accounting slice for the closed-epoch redemption
+  backing guard checked after a successful depositFunds reserve require. External
+  ERC20 balances, deposit-mode yield-source calls, Credit Vault virtualPrice
+  correctness, and pending withdrawal accounting are represented by scaled ghost
+  totals and documented assumptions.
+unsupported_feature_codes:
+  - external_erc20_balance_ghosted
+  - yield_source_calls_elided
+  - credit_vault_virtual_price_assumed
+  - epoch_mapping_sliced
+notes: >
+  Reference proof is complete for the modeled successful depositFunds path under
+  the source reserve require (`hReserveGuard`) and checked-arithmetic side
+  conditions: the resulting state satisfies the closed-epoch reserve guard.
