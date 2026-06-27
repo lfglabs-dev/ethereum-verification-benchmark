@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: kyberswap
+display_name: KyberSwap
+split: active
+status: active
+description: >
+  Benchmark family for KyberSwap aggregation-router execution checks and
+  swap-safety guard invariants.
+implementation_ids:
+  - meta-aggregation-router-v2
+case_ids:
+  - kyberswap/partial_fill_price_floor
+source_languages:
+  - solidity

@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 30
-- Implementations: 31
-- Active cases: 28
-- Buildable active cases: 28
-- Active tasks: 177
+- Families: 32
+- Implementations: 33
+- Active cases: 30
+- Buildable active cases: 30
+- Active tasks: 184
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -103,6 +103,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/src/libraries/SortitionTrees.sol`
 - Notes: Sortition-tree slice focused on additive parent invariants, root conservation, interval-based draws, and ID/index correspondence.
 
+### `kyberswap/partial_fill_price_floor`
+- Family / implementation: `kyberswap` / `meta-aggregation-router-v2`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Compile`
+- Source ref: `https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol`
+- Selected functions: `_checkReturnAmount`
+- Upstream source artifact: `contracts/MetaAggregationRouterV2.sol`
+- Notes: Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution. Reading the guard as an effective-price floor additionally assumes `spentAmount <= amount`, which the helper does not enforce and the theorem does not assume.
+
 ### `lagoon/guardrails`
 - Family / implementation: `lagoon` / `v0_6_0`
 - Stage: `build_green`
@@ -122,6 +132,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_locked`, `getPooledEthBySharesRoundUp`
 - Upstream source artifact: `contracts/0.8.25/vaults/VaultHub.sol`
 - Notes: Locked-amount arithmetic slice of Lido VaultHub (V3 vaults branch). Based on the Certora formal verification report (December 2025). F-01 could not be proven by Certora and is the primary benchmark task. P-VH-03 and P-VH-04 were proven by Certora and serve as supporting lemmas.
+
+### `lifi/swap_atomicity`
+- Family / implementation: `lifi` / `contracts`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.LiFi.SwapAtomicity.Compile`
+- Source ref: `https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol`
+- Selected functions: `GenericSwapFacet.swapTokensGeneric`, `SwapperV2._depositAndSwap`, `SwapperV2._executeSwaps`, `LibSwap.swap`, `LibAsset.depositAssets`, `LibUtil.revertWith`
+- Upstream source artifact: `src/Facets/GenericSwapFacet.sol`
+- Notes: This is an atomicity benchmark, not a price-quality or route-optimality benchmark. It proves that the modeled LI.FI route cannot commit a public final transfer unless every modeled public-route gate succeeds, every modeled route step succeeds, and the output amount meets the minimum.
 
 ### `nexus_mutual/ramm_price_band`
 - Family / implementation: `nexus_mutual` / `smart_contracts`
@@ -949,6 +969,16 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Kleros/SortitionTrees/Tasks/RootMinusLeftEqualsRightSubtree.lean`
 - Hidden reference solution: `Benchmark.Cases.Kleros.SortitionTrees.Proofs`
 
+### `kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor`
+- Track / property class / proof family: `proof-only` / `price_floor` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.KyberSwap.PartialFillPriceFloor.checkReturnAmount_partial_fill_price_floor`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/kyberswap/partial_fill_price_floor/verity/Contract.lean`, `Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Contract.lean`
+- Specification files: `cases/kyberswap/partial_fill_price_floor/verity/Specs.lean`, `Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Specs.lean`
+- Editable proof file: `Benchmark/Generated/KyberSwap/PartialFillPriceFloor/Tasks/CheckReturnAmountPartialFillPriceFloor.lean`
+- Hidden reference solution: `Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs`
+
 ### `lagoon/guardrails/exact_compliance`
 - Track / property class / proof family: `proof-only` / `compliance_boundary` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -1028,6 +1058,66 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/lido/vaulthub_locked/verity/Specs.lean`, `Benchmark/Cases/Lido/VaulthubLocked/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Lido/VaulthubLocked/Tasks/SharesConversionMonotone.lean`
 - Hidden reference solution: `Benchmark.Cases.Lido.VaulthubLocked.Proofs`
+
+### `lifi/swap_atomicity/committed_route_executes_every_step`
+- Track / property class / proof family: `proof-only` / `no_partial_success` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.committed_route_executes_every_step`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/CommittedRouteExecutesEveryStep.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/failed_step_reverts`
+- Track / property class / proof family: `proof-only` / `all_or_nothing` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.failed_step_reverts`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FailedStepReverts.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/final_transfer_implies_all_steps_succeeded`
+- Track / property class / proof family: `proof-only` / `all_or_nothing` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.final_transfer_implies_all_steps_succeeded`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FinalTransferImpliesAllStepsSucceeded.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/min_output_required_for_commit`
+- Track / property class / proof family: `proof-only` / `minimum_output_gate` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.min_output_required_for_commit`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/MinOutputRequiredForCommit.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/no_final_transfer_on_failed_step`
+- Track / property class / proof family: `proof-only` / `atomic_finalization` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.no_final_transfer_on_failed_step`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/NoFinalTransferOnFailedStep.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/route_gate_failure_prevents_commit`
+- Track / property class / proof family: `proof-only` / `atomic_finalization` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.route_gate_failure_prevents_commit`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/RouteGateFailurePreventsCommit.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
 
 ### `nexus_mutual/ramm_price_band/sync_sets_book_value`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`

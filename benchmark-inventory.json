@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 30,
-    "implementation_count": 31,
-    "active_case_count": 28,
+    "family_count": 32,
+    "implementation_count": 33,
+    "active_case_count": 30,
     "backlog_case_count": 3,
-    "active_task_count": 177,
+    "active_task_count": 184,
     "backlog_task_count": 8,
-    "buildable_case_count": 30,
-    "runnable_task_count": 185,
+    "buildable_case_count": 32,
+    "runnable_task_count": 192,
     "case_stage_counts": {
-      "build_green": 25,
+      "build_green": 27,
       "candidate": 1,
       "proof_complete": 5
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 30
+      "translated": 32
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 23,
+      "complete": 25,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 185
+      "proof-only": 192
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -44,8 +44,9 @@
       "accounting_invariant_break": 1,
       "accounting_update": 6,
       "additivity": 1,
-      "all_or_nothing": 1,
+      "all_or_nothing": 3,
       "arithmetic_rounding": 3,
+      "atomic_finalization": 2,
       "authority_required": 2,
       "authorization_state": 9,
       "balance_conservation": 2,
@@ -82,7 +83,9 @@
       "linked_list_invariant": 8,
       "liveness_invariant": 1,
       "mapping_consistency": 1,
+      "minimum_output_gate": 1,
       "monotonic_counter": 2,
+      "no_partial_success": 1,
       "non_leakage": 1,
       "nonce_monotonicity": 1,
       "noninterference": 1,
@@ -91,6 +94,7 @@
       "pps_nondecrease": 1,
       "price_band": 2,
       "price_computation": 5,
+      "price_floor": 1,
       "redemption_reserve_guard": 1,
       "replay_protection": 2,
       "reserve_state_transition": 5,
@@ -111,13 +115,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 41,
+      "functional_correctness": 48,
       "protocol_transition_correctness": 23,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 54
     },
     "family_split_counts": {
-      "active": 27,
+      "active": 29,
       "backlog": 2,
       "mixed": 1
     }
@@ -277,6 +281,23 @@
       "manifest_path": "families/kleros/family.yaml"
     },
     {
+      "family_id": "kyberswap",
+      "display_name": "KyberSwap",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for KyberSwap aggregation-router execution checks and swap-safety guard invariants.",
+      "implementation_ids": [
+        "meta-aggregation-router-v2"
+      ],
+      "case_ids": [
+        "kyberswap/partial_fill_price_floor"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/kyberswap/family.yaml"
+    },
+    {
       "family_id": "lagoon",
       "display_name": "Lagoon",
       "split": "active",
@@ -309,6 +330,23 @@
         "solidity"
       ],
       "manifest_path": "families/lido/family.yaml"
+    },
+    {
+      "family_id": "lifi",
+      "display_name": "LI.FI",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for LI.FI route execution invariants. The initial case targets source-chain swap route atomicity in the original GenericSwapFacet and shared SwapperV2 and LibSwap path used by LI.FI facets.",
+      "implementation_ids": [
+        "contracts"
+      ],
+      "case_ids": [
+        "lifi/swap_atomicity"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/lifi/family.yaml"
     },
     {
       "family_id": "nexus_mutual",
@@ -782,6 +820,22 @@
       "manifest_path": "families/kleros/implementations/kleros_v2/implementation.yaml"
     },
     {
+      "family_id": "kyberswap",
+      "implementation_id": "meta-aggregation-router-v2",
+      "display_name": "MetaAggregationRouterV2",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "upstream_commit": "verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/MetaAggregationRouterV2.sol",
+      "case_ids": [
+        "kyberswap/partial_fill_price_floor"
+      ],
+      "notes": "KyberSwap MetaAggregationRouterV2 verified-source deployment used for the helper-level partial-fill price-floor benchmark.",
+      "manifest_path": "families/kyberswap/implementations/meta-aggregation-router-v2/implementation.yaml"
+    },
+    {
       "family_id": "lagoon",
       "implementation_id": "v0_6_0",
       "display_name": "Lagoon v0.6.0",
@@ -812,6 +866,22 @@
       ],
       "notes": "Implementation entry for the Lido core repository (master), benchmarking the VaultHub _locked() collateral computation and its solvency invariants.",
       "manifest_path": "families/lido/implementations/core/implementation.yaml"
+    },
+    {
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "display_name": "LI.FI contracts",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/lifinance/contracts",
+      "upstream_commit": "62bed68d9ba6cd3cd7b92e917f2c47531b20f75d",
+      "source_language": "solidity",
+      "source_artifact_path": "src/Facets/GenericSwapFacet.sol",
+      "case_ids": [
+        "lifi/swap_atomicity"
+      ],
+      "notes": "The implementation entry covers the original LI.FI source-chain swap execution path through GenericSwapFacet, SwapperV2, LibSwap, LibAsset, and LibUtil at the pinned upstream commit. GenericSwapFacetV3 and periphery Executor loops are not part of this case.",
+      "manifest_path": "families/lifi/implementations/contracts/implementation.yaml"
     },
     {
       "family_id": "nexus_mutual",
@@ -1561,6 +1631,47 @@
       "proof_target": "Benchmark.Cases.Kleros.SortitionTrees.Proofs"
     },
     {
+      "case_id": "kyberswap/partial_fill_price_floor",
+      "project": "kyberswap",
+      "case_name": "partial_fill_price_floor",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kyberswap/partial_fill_price_floor/case.yaml",
+      "split": "active",
+      "family_id": "kyberswap",
+      "implementation_id": "meta-aggregation-router-v2",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "upstream_commit": "verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "original_contract_path": "contracts/MetaAggregationRouterV2.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol",
+      "selected_functions": [
+        "_checkReturnAmount"
+      ],
+      "lean_target": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Compile",
+      "failure_reason": null,
+      "notes": "Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution. Reading the guard as an effective-price floor additionally assumes `spentAmount <= amount`, which the helper does not enforce and the theorem does not assume.",
+      "buildable": true,
+      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "helper_level_guard",
+        "partial_fill_price_floor",
+        "checked_uint256_multiplication",
+        "scalar_struct_projection"
+      ],
+      "abstraction_notes": "This benchmark models the `_checkReturnAmount` enforcement helper from KyberSwap MetaAggregationRouterV2. It proves the partial-fill scaled price-floor guard over the values passed into the helper, with Solidity 0.8 checked multiplication modeled through `mulPanic`. Public swap entrypoints, executor behavior, refunds, fee-on-destination accounting, route quality, ERC20 transfers, and true user balance deltas are intentionally out of scope.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Specs",
+      "proof_target": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs"
+    },
+    {
       "case_id": "lagoon/guardrails",
       "project": "lagoon",
       "case_name": "guardrails",
@@ -1642,6 +1753,54 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Lido.VaulthubLocked.Specs",
       "proof_target": "Benchmark.Cases.Lido.VaulthubLocked.Proofs"
+    },
+    {
+      "case_id": "lifi/swap_atomicity",
+      "project": "lifi",
+      "case_name": "swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/case.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/lifinance/contracts",
+      "upstream_commit": "62bed68d9ba6cd3cd7b92e917f2c47531b20f75d",
+      "original_contract_path": "src/Facets/GenericSwapFacet.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "selected_functions": [
+        "GenericSwapFacet.swapTokensGeneric",
+        "SwapperV2._depositAndSwap",
+        "SwapperV2._executeSwaps",
+        "LibSwap.swap",
+        "LibAsset.depositAssets",
+        "LibUtil.revertWith"
+      ],
+      "lean_target": "Benchmark.Cases.LiFi.SwapAtomicity.Compile",
+      "failure_reason": null,
+      "notes": "This is an atomicity benchmark, not a price-quality or route-optimality benchmark. It proves that the modeled LI.FI route cannot commit a public final transfer unless every modeled public-route gate succeeds, every modeled route step succeeds, and the output amount meets the minimum.",
+      "buildable": true,
+      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "decoded_swap_steps",
+        "source_chain_atomicity",
+        "external_call_success_flag",
+        "min_output_gate",
+        "final_transfer_commit",
+        "route_guard_failure"
+      ],
+      "abstraction_notes": "The benchmark models LI.FI source-chain swap route atomicity for the original GenericSwapFacet / SwapperV2 / LibSwap path. Each SwapData item is decoded into a SwapStep with booleans for calldata shape, allow-list checks, approve-target checks including non-zero spender, contract existence, positive amount, required-deposit success, token balance/approval call success, and external-call success. The approve-needed flag means the non-native approval path runs; approve-allowed abstracts the conditional approve-only allow-list check and is true when approveTo equals callTo. RouteGuards model the public receiver and nonReentrant entry checks, pre/post swap balance reads, leftover refund phase, final receiver transfer, and refundExcessNative trailing transfer. A reverting LI.FI route is represented by Option.none, so no RouteCommit, final receiver transfer, or partial-success state is observable. The proof does not model third-party DEX internals or full EVM rollback machinery; it proves LI.FI's source-chain control-flow response to failed modeled steps, failed route gates, and the minimum-output gate. GenericSwapFacetV3 and periphery Executor loops are out of scope.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.LiFi.SwapAtomicity.Specs",
+      "proof_target": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs"
     },
     {
       "case_id": "nexus_mutual/ramm_price_band",
@@ -5583,6 +5742,51 @@
       }
     },
     {
+      "task_ref": "kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor",
+      "task_id": "check_return_amount_partial_fill_price_floor",
+      "case_id": "kyberswap/partial_fill_price_floor",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kyberswap/partial_fill_price_floor/tasks/check_return_amount_partial_fill_price_floor.yaml",
+      "split": "active",
+      "family_id": "kyberswap",
+      "implementation_id": "meta-aggregation-router-v2",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_floor",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.checkReturnAmount_partial_fill_price_floor",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/kyberswap/partial_fill_price_floor/verity/Contract.lean",
+        "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/kyberswap/partial_fill_price_floor/verity/Specs.lean",
+        "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/KyberSwap/PartialFillPriceFloor/Tasks/CheckReturnAmountPartialFillPriceFloor.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the helper-level partial-fill price-floor guard over values already computed by the public swap path. Executor behavior, route quality, token transfers, refunds, and fee-on-destination accounting are out of scope.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "lagoon/guardrails/exact_compliance",
       "task_id": "exact_compliance",
       "case_id": "lagoon/guardrails",
@@ -5932,6 +6136,276 @@
       "abstraction_notes": "Supporting arithmetic lemma for F-01. Proves that getPooledEthBySharesRoundUp is monotone in the shares argument: if a >= b then the conversion of a is at least the conversion of b. Needed to lift the solvency bound from maxLiabilityShares down to liabilityShares.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/committed_route_executes_every_step",
+      "task_id": "committed_route_executes_every_step",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/committed_route_executes_every_step.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "no_partial_success",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.committed_route_executes_every_step",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/CommittedRouteExecutesEveryStep.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A committed route records all modeled steps as executed, never a strict prefix.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/failed_step_reverts",
+      "task_id": "failed_step_reverts",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/failed_step_reverts.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "all_or_nothing",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.failed_step_reverts",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FailedStepReverts.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Any failing modeled step in the LI.FI route executor maps to a reverting route result.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/final_transfer_implies_all_steps_succeeded",
+      "task_id": "final_transfer_implies_all_steps_succeeded",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/final_transfer_implies_all_steps_succeeded.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "all_or_nothing",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.final_transfer_implies_all_steps_succeeded",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FinalTransferImpliesAllStepsSucceeded.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "If the final receiver transfer commits, every modeled LI.FI route step succeeded. Public-route gate failures are covered separately by `route_gate_failure_prevents_commit`.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/min_output_required_for_commit",
+      "task_id": "min_output_required_for_commit",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/min_output_required_for_commit.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "minimum_output_gate",
+      "category": "accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.min_output_required_for_commit",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/MinOutputRequiredForCommit.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A route with output below LI.FI's modeled minimum amount check cannot commit.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/no_final_transfer_on_failed_step",
+      "task_id": "no_final_transfer_on_failed_step",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/no_final_transfer_on_failed_step.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "atomic_finalization",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.no_final_transfer_on_failed_step",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/NoFinalTransferOnFailedStep.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A failed modeled route step prevents the public GenericSwapFacet final receiver transfer from committing.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/route_gate_failure_prevents_commit",
+      "task_id": "route_gate_failure_prevents_commit",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/route_gate_failure_prevents_commit.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "atomic_finalization",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.route_gate_failure_prevents_commit",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/RouteGateFailurePreventsCommit.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Receiver validation, nonReentrant entry, balance reads, required deposits, leftover refunds, final receiver transfer, and excess-native refund are modeled as public-route gates. If any such gate fails, the public LI.FI route cannot commit.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -11090,5 +11564,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-26T18:21:55.185125+00:00"
+  "generated_at": "2026-06-27T13:09:03.898122+00:00"
 }
