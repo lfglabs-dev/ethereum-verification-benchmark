@@ -1,0 +1,60 @@
+manifest_kind: case
+project: lifi
+case_id: swap_atomicity
+schema_version: 1
+split: active
+family_id: lifi
+implementation_id: contracts
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/lifinance/contracts
+upstream_commit: 62bed68d9ba6cd3cd7b92e917f2c47531b20f75d
+original_contract_path: src/Facets/GenericSwapFacet.sol
+source_ref: https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol
+lean_target: Benchmark.Cases.LiFi.SwapAtomicity.Compile
+spec_target: Benchmark.Cases.LiFi.SwapAtomicity.Specs
+proof_target: Benchmark.Cases.LiFi.SwapAtomicity.Proofs
+selected_functions:
+  - GenericSwapFacet.swapTokensGeneric
+  - SwapperV2._depositAndSwap
+  - SwapperV2._executeSwaps
+  - LibSwap.swap
+  - LibAsset.depositAssets
+  - LibUtil.revertWith
+source_language: solidity
+verity_version: d26a6ffa83ec8e8445533f076442c06dd1cdf487
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - decoded_swap_steps
+  - source_chain_atomicity
+  - external_call_success_flag
+  - min_output_gate
+  - final_transfer_commit
+  - route_guard_failure
+abstraction_notes: >
+  The benchmark models LI.FI source-chain swap route atomicity for the original
+  GenericSwapFacet / SwapperV2 / LibSwap path. Each SwapData item is decoded
+  into a SwapStep with booleans for calldata shape, allow-list checks,
+  approve-target checks including non-zero spender, contract existence,
+  positive amount, required-deposit success, token balance/approval call success,
+  and external-call success. The approve-needed flag means the non-native
+  approval path runs; approve-allowed abstracts the conditional approve-only
+  allow-list check and is true when approveTo equals callTo. RouteGuards model
+  the public receiver and nonReentrant entry checks,
+  pre/post swap balance reads, leftover refund phase, final receiver transfer,
+  and refundExcessNative trailing transfer. A reverting LI.FI route is
+  represented by Option.none, so no RouteCommit, final receiver transfer, or
+  partial-success state is observable. The proof does not model third-party DEX
+  internals or full EVM rollback machinery; it proves LI.FI's source-chain
+  control-flow response to failed modeled steps, failed route gates, and the
+  minimum-output gate. GenericSwapFacetV3 and periphery Executor loops are out
+  of scope.
+unsupported_feature_codes: []
+notes: >
+  This is an atomicity benchmark, not a price-quality or route-optimality
+  benchmark. It proves that the modeled LI.FI route cannot commit a public final
+  transfer unless every modeled public-route gate succeeds, every modeled route
+  step succeeds, and the output amount meets the minimum.

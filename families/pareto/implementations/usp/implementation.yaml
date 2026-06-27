@@ -1,0 +1,15 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: pareto
+implementation_id: usp
+display_name: Pareto USP
+split: active
+status: translated
+source_language: solidity
+upstream_repo: https://github.com/pareto-credit/USP
+upstream_commit: 2cb0a098c7ccb9813497ef3982d78c44a596c87b
+source_artifact_path: src/ParetoDollarQueue.sol
+case_ids:
+  - pareto/redemption_backing
+notes: >
+  Public Pareto USP contracts centered on ParetoDollar and ParetoDollarQueue.

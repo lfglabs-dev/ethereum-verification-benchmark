@@ -1,0 +1,16 @@
+manifest_kind: family
+schema_version: 1
+family_id: lifi
+display_name: LI.FI
+split: active
+status: active
+description: >
+  Benchmark family for LI.FI route execution invariants. The initial case
+  targets source-chain swap route atomicity in the original GenericSwapFacet and
+  shared SwapperV2 and LibSwap path used by LI.FI facets.
+implementation_ids:
+  - contracts
+case_ids:
+  - lifi/swap_atomicity
+source_languages:
+  - solidity
