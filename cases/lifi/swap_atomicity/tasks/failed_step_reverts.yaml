@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: failed_step_reverts
+case_id: lifi/swap_atomicity
+split: active
+family_id: lifi
+implementation_id: contracts
+source_ref: https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.LiFi.SwapAtomicity.failed_step_reverts
+proof_family: functional_correctness
+property_class: all_or_nothing
+difficulty: medium
+category: control-flow
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/lifi/swap_atomicity/verity/Contract.lean
+  - Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean
+specification_files:
+  - cases/lifi/swap_atomicity/verity/Specs.lean
+  - Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean
+editable_files:
+  - Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FailedStepReverts.lean
+reference_solution_module: Benchmark.Cases.LiFi.SwapAtomicity.Proofs
+reference_solution_declaration: Benchmark.Cases.LiFi.SwapAtomicity.failed_step_reverts
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Any failing modeled step in the LI.FI route executor maps to a reverting
+  route result.
+unsupported_feature_codes: []
