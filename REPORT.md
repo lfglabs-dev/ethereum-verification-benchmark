@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 29
-- Implementations: 30
-- Active cases: 27
-- Buildable active cases: 27
-- Active tasks: 169
+- Families: 30
+- Implementations: 31
+- Active cases: 28
+- Buildable active cases: 28
+- Active tasks: 177
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -111,7 +111,7 @@ This report is generated from the benchmark manifests.
 - Source ref: `https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol`
 - Selected functions: `_checkReturnAmount`
 - Upstream source artifact: `contracts/MetaAggregationRouterV2.sol`
-- Notes: Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution.
+- Notes: Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution. Reading the guard as an effective-price floor additionally assumes `spentAmount <= amount`, which the helper does not enforce and the theorem does not assume.
 
 ### `lagoon/guardrails`
 - Family / implementation: `lagoon` / `v0_6_0`
@@ -222,6 +222,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `addOwnerWithThreshold`, `removeOwner`, `swapOwner`, `setupOwners`
 - Upstream source artifact: `contracts/base/OwnerManager.sol`
 - Notes: Linked list reachability invariant preservation and functional correctness for the Safe OwnerManager. Based on the Certora OwnerReach.spec which defines the inListReachable and reachableInList invariants. All 15 proof tasks are complete (0 sorry) covering acyclicity, inListReachable, ownerListInvariant preservation, and isOwner functional correctness for all four operations. The unprovable stronglyAcyclic axiom was replaced with the provable uniquePredecessor property. Functional correctness proofs verify that each operation changes exactly the intended owners and leaves all others unchanged.
+
+### `t3tris/hwm_performance_fee`
+- Family / implementation: `t3tris` / `t3tris_vault`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.T3tris.HwmPerformanceFee.Compile`
+- Source ref: `https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol`
+- Selected functions: `FeatureFeesLib._computeLastPeriodFeesAndUpdateResult`, `ReleaseFeesLib.computeAndRecordAccruedFees`, `FeatureSettlementLib._updateSettlementValues`
+- Upstream source artifact: `src/libraries/feature/FeatureFeesLib.sol`
+- Notes: This case targets the coverage gap not present in Cyfrin's T3tris suite: structural HWM facts are already proved, but the multi-step economic property that recovery up to the fee-accounted HWM charges no second performance fee is not.
 
 ### `term_finance/term_auction_clearing`
 - Family / implementation: `term_finance` / `term_finance_contracts`
@@ -1748,6 +1758,86 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/safe/owner_manager_reach/verity/Specs.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerOwnerListInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Safe.OwnerManagerReach.Proofs`
+
+### `t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply`
+- Track / property class / proof family: `proof-only` / `fee_accounting_bounds` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.fee_claim_preserves_unclaimed_le_supply`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/FeeClaimPreservesUnclaimedLeSupply.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/gain_loss_recovery_no_double_charge`
+- Track / property class / proof family: `proof-only` / `economic_no_double_charge` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.gain_loss_recovery_no_double_charge`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/GainLossRecoveryNoDoubleCharge.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/no_performance_fee_when_pre_pps_le_hwm`
+- Track / property class / proof family: `proof-only` / `fee_trigger` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.no_performance_fee_when_pre_pps_le_hwm`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/NoPerformanceFeeWhenPrePpsLeHwm.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/period_fee_accounting_preserves_structural_assumptions`
+- Track / property class / proof family: `proof-only` / `fee_accounting_bounds` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.period_fee_accounting_preserves_structural_assumptions`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/PeriodFeeAccountingPreservesStructuralAssumptions.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/profit_pnl_uses_cached_hwm`
+- Track / property class / proof family: `proof-only` / `fee_base_correctness` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.profit_pnl_uses_cached_hwm`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ProfitPnlUsesCachedHwm.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/recovery_then_new_high_uses_stored_hwm`
+- Track / property class / proof family: `proof-only` / `fee_base_correctness` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.recovery_then_new_high_uses_stored_hwm`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/RecoveryThenNewHighUsesStoredHwm.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/validated_initial_state_satisfies_successful_assumptions`
+- Track / property class / proof family: `proof-only` / `configuration_safety` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.validated_initial_state_satisfies_successful_assumptions`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ValidatedInitialStateSatisfiesSuccessfulAssumptions.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/validated_performance_fee_update_preserves_cap`
+- Track / property class / proof family: `proof-only` / `configuration_safety` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.validated_performance_fee_update_preserves_cap`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ValidatedPerformanceFeeUpdatePreservesCap.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
 
 ### `term_finance/term_auction_clearing/clearing_assignment_correct`
 - Track / property class / proof family: `proof-only` / `accounting_and_rate_guard` / `functional_correctness`
