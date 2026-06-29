@@ -86,6 +86,22 @@ def handleOpsAbiTrace
   | some (_, trace) => trace
   | none => []
 
+/-- The translated EntryPoint path records an execution-path marker once for
+each decoded op after validation succeeds. This abstracts the
+`EntryPointV09.opInfoRecord[key] = OP_INFO_EXECUTED` write; unlike
+`countExecCalls`, it is not gated by `callData.length`. -/
+def abiExecutionRecordCount
+    (call : HandleOpsAbiCall)
+    (table : Nonce2DTable)
+    (accountApprovals : List Bool)
+    (i : Nat) : Nat :=
+  if abiCallAccepted call = true ∧
+     batchValidated call.ops table accountApprovals = true ∧
+     i < call.ops.length then
+    1
+  else
+    0
+
 theorem handleOpsFromAbi_refines_decoded_batch
     (call : HandleOpsAbiCall) (table : Nonce2DTable)
     (accountApprovals : List Bool)
@@ -104,6 +120,20 @@ theorem handleOpsAbiTrace_refines_handleOpsTrace
   unfold handleOpsAbiTrace handleOpsTrace
   rw [handleOpsFromAbi_refines_decoded_batch call table accountApprovals hSelector]
   cases handleOpsMulti call.ops table accountApprovals <;> rfl
+
+/-- ABI-backed execution-record theorem: for every `PackedUserOperation`
+received through the real upstream ABI, the translated EntryPoint path records
+exactly one execution-path event iff validation for the decoded batch
+succeeded. -/
+theorem abi_backed_execution_record_iff_validation
+    (call : HandleOpsAbiCall)
+    (hSelector : abiCallAccepted call = true)
+    (table : Nonce2DTable) (approvals : List Bool)
+    (i : Nat) (hi : i < call.ops.length) :
+    abiExecutionRecordCount call table approvals i = 1 ↔
+    batchValidated call.ops table approvals = true := by
+  unfold abiExecutionRecordCount
+  simp [hSelector, hi]
 
 /-- ABI-backed Yoav theorem: for every op received through the real ABI, the
 translated EntryPoint path records exactly one execution event iff the decoded

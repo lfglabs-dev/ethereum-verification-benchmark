@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: t3tris
+implementation_id: t3tris_vault
+display_name: T3tris Vault
+split: active
+status: translated
+upstream_repo: https://github.com/t3tris-finance/T3tris-Vault
+upstream_commit: 89ad64a8e945214cd40a18db146e1feed83e417f
+source_language: solidity
+source_artifact_path: src/libraries/feature/FeatureFeesLib.sol
+case_ids:
+  - t3tris/hwm_performance_fee
+notes: >
+  Focused T3tris Vault implementation entry for the high-water-mark
+  performance-fee no-double-charge benchmark.

@@ -2,8 +2,10 @@ import Benchmark.Cases.PaladinVotes
 import Benchmark.Cases.Ethereum
 import Benchmark.Cases.NexusMutual
 import Benchmark.Cases.Kleros
+import Benchmark.Cases.KyberSwap
 import Benchmark.Cases.DamnVulnerableDeFi
 import Benchmark.Cases.Lido
+import Benchmark.Cases.LiFi
 import Benchmark.Cases.TermMax
 import Benchmark.Cases.Zama
 import Benchmark.Cases.Wildcat
@@ -18,3 +20,5 @@ import Benchmark.Cases.Zodiac
 import Benchmark.Cases.Polaris
 import Benchmark.Cases.IPOR
 import Benchmark.Cases.ERC4337
+import Benchmark.Cases.Pareto
+import Benchmark.Cases.T3tris

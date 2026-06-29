@@ -1,0 +1,36 @@
+manifest_kind: task
+schema_version: 1
+task_id: fee_claim_preserves_unclaimed_le_supply
+case_id: t3tris/hwm_performance_fee
+split: active
+family_id: t3tris
+implementation_id: t3tris_vault
+source_ref: https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.T3tris.HwmPerformanceFee.fee_claim_preserves_unclaimed_le_supply
+proof_family: state_preservation_local_effects
+property_class: fee_accounting_bounds
+difficulty: easy
+category: arithmetic-accounting-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/t3tris/hwm_performance_fee/verity/Contract.lean
+  - Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean
+specification_files:
+  - cases/t3tris/hwm_performance_fee/verity/Specs.lean
+  - Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean
+editable_files:
+  - Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/FeeClaimPreservesUnclaimedLeSupply.lean
+reference_solution_module: Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs
+reference_solution_declaration: Benchmark.Cases.T3tris.HwmPerformanceFee.fee_claim_preserves_unclaimed_le_supply
+abstraction_level: structural_fee_state_slice
+abstraction_notes: >
+  Models the successful fee-share claim/burn accounting used by fee-claim and
+  settlement paths as removing the same capped share amount from gross supply
+  and unclaimed fee shares, preserving unclaimedSharesFee <= totalSupply.
+unsupported_feature_codes:
+  - uint256_overflow_modeled_as_preconditions
+  - asset_transfer_and_silo_liquidity_abstracted

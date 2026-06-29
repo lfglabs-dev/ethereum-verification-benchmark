@@ -1,0 +1,44 @@
+manifest_kind: case
+project: kyberswap
+case_id: partial_fill_price_floor
+schema_version: 1
+split: active
+family_id: kyberswap
+implementation_id: meta-aggregation-router-v2
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5
+upstream_commit: verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5
+original_contract_path: contracts/MetaAggregationRouterV2.sol
+source_ref: https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol
+lean_target: Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Compile
+spec_target: Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Specs
+proof_target: Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs
+selected_functions:
+  - _checkReturnAmount
+source_language: solidity
+verity_version: d71bf23d908a7a952bf041ee5ebe41ba68b54426
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - helper_level_guard
+  - partial_fill_price_floor
+  - checked_uint256_multiplication
+  - scalar_struct_projection
+abstraction_notes: >
+  This benchmark models the `_checkReturnAmount` enforcement helper from
+  KyberSwap MetaAggregationRouterV2. It proves the partial-fill scaled
+  price-floor guard over the values passed into the helper, with Solidity 0.8
+  checked multiplication modeled through `mulPanic`. Public swap entrypoints,
+  executor behavior, refunds, fee-on-destination accounting, route quality,
+  ERC20 transfers, and true user balance deltas are intentionally out of scope.
+unsupported_feature_codes: []
+notes: >
+  Helper-level proof only. The public paths compute `spentAmount` and
+  `returnAmount` before calling `_checkReturnAmount`; this case proves the
+  helper enforces the checked scaled inequality for successful partial-fill
+  helper execution. Reading the guard as an effective-price floor additionally
+  assumes `spentAmount <= amount`, which the helper does not enforce and the
+  theorem does not assume.

@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 28,
-    "implementation_count": 29,
-    "active_case_count": 26,
+    "family_count": 33,
+    "implementation_count": 34,
+    "active_case_count": 31,
     "backlog_case_count": 3,
-    "active_task_count": 168,
+    "active_task_count": 188,
     "backlog_task_count": 8,
-    "buildable_case_count": 28,
-    "runnable_task_count": 176,
+    "buildable_case_count": 33,
+    "runnable_task_count": 196,
     "case_stage_counts": {
-      "build_green": 24,
+      "build_green": 28,
       "candidate": 1,
-      "proof_complete": 4
+      "proof_complete": 5
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 28
+      "translated": 33
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 21,
+      "complete": 26,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 176
+      "proof-only": 196
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -41,11 +41,13 @@
       "accounting_bound": 16,
       "accounting_conservation": 15,
       "accounting_effect": 2,
+      "accounting_invariant": 2,
       "accounting_invariant_break": 1,
-      "accounting_update": 6,
+      "accounting_update": 8,
       "additivity": 1,
-      "all_or_nothing": 1,
+      "all_or_nothing": 3,
       "arithmetic_rounding": 3,
+      "atomic_finalization": 2,
       "authority_required": 2,
       "authorization_state": 9,
       "balance_conservation": 2,
@@ -60,12 +62,17 @@
       "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
       "composition_invariant": 1,
+      "configuration_safety": 2,
       "counting_invariant": 1,
       "deposit_mint_exactness": 1,
+      "economic_no_double_charge": 1,
       "exploit_trace": 1,
       "failure_propagation": 2,
+      "fee_accounting_bounds": 2,
+      "fee_base_correctness": 2,
       "fee_conservation": 5,
       "fee_payout_bound": 1,
+      "fee_trigger": 1,
       "frame_property": 2,
       "functional_property": 1,
       "guarded_solvency": 7,
@@ -77,7 +84,9 @@
       "linked_list_invariant": 8,
       "liveness_invariant": 1,
       "mapping_consistency": 1,
+      "minimum_output_gate": 1,
       "monotonic_counter": 2,
+      "no_partial_success": 1,
       "non_leakage": 1,
       "nonce_monotonicity": 1,
       "noninterference": 1,
@@ -86,6 +95,8 @@
       "pps_nondecrease": 1,
       "price_band": 2,
       "price_computation": 5,
+      "price_floor": 1,
+      "redemption_reserve_guard": 1,
       "replay_protection": 2,
       "reserve_state_transition": 5,
       "revert_safety": 1,
@@ -105,13 +116,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 37,
-      "protocol_transition_correctness": 22,
+      "functional_correctness": 52,
+      "protocol_transition_correctness": 23,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 50
+      "state_preservation_local_effects": 54
     },
     "family_split_counts": {
-      "active": 25,
+      "active": 30,
       "backlog": 2,
       "mixed": 1
     }
@@ -271,6 +282,23 @@
       "manifest_path": "families/kleros/family.yaml"
     },
     {
+      "family_id": "kyberswap",
+      "display_name": "KyberSwap",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for KyberSwap aggregation-router execution checks and swap-safety guard invariants.",
+      "implementation_ids": [
+        "meta-aggregation-router-v2"
+      ],
+      "case_ids": [
+        "kyberswap/partial_fill_price_floor"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/kyberswap/family.yaml"
+    },
+    {
       "family_id": "lagoon",
       "display_name": "Lagoon",
       "split": "active",
@@ -303,6 +331,23 @@
         "solidity"
       ],
       "manifest_path": "families/lido/family.yaml"
+    },
+    {
+      "family_id": "lifi",
+      "display_name": "LI.FI",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for LI.FI route execution invariants. The initial case targets source-chain swap route atomicity in the original GenericSwapFacet and shared SwapperV2 and LibSwap path used by LI.FI facets.",
+      "implementation_ids": [
+        "contracts"
+      ],
+      "case_ids": [
+        "lifi/swap_atomicity"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/lifi/family.yaml"
     },
     {
       "family_id": "nexus_mutual",
@@ -371,6 +416,40 @@
         "solidity"
       ],
       "manifest_path": "families/paladin_votes/family.yaml"
+    },
+    {
+      "family_id": "pareto",
+      "display_name": "Pareto",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Pareto USP redemption queue accounting and Credit Vault withdrawal-reservation invariants.",
+      "implementation_ids": [
+        "usp"
+      ],
+      "case_ids": [
+        "pareto/redemption_backing"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/pareto/family.yaml"
+    },
+    {
+      "family_id": "pendle",
+      "display_name": "Pendle",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Pendle V2 core tokenization and market accounting invariants.",
+      "implementation_ids": [
+        "core_v2_public"
+      ],
+      "case_ids": [
+        "pendle/py_supply_pairing"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/pendle/family.yaml"
     },
     {
       "family_id": "piku",
@@ -473,6 +552,23 @@
         "solidity"
       ],
       "manifest_path": "families/safe/family.yaml"
+    },
+    {
+      "family_id": "t3tris",
+      "display_name": "T3tris Finance",
+      "split": "active",
+      "status": "active",
+      "description": "T3tris Vault verification cases.",
+      "implementation_ids": [
+        "t3tris_vault"
+      ],
+      "case_ids": [
+        "t3tris/hwm_performance_fee"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/t3tris/family.yaml"
     },
     {
       "family_id": "term_finance",
@@ -742,6 +838,22 @@
       "manifest_path": "families/kleros/implementations/kleros_v2/implementation.yaml"
     },
     {
+      "family_id": "kyberswap",
+      "implementation_id": "meta-aggregation-router-v2",
+      "display_name": "MetaAggregationRouterV2",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "upstream_commit": "verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/MetaAggregationRouterV2.sol",
+      "case_ids": [
+        "kyberswap/partial_fill_price_floor"
+      ],
+      "notes": "KyberSwap MetaAggregationRouterV2 verified-source deployment used for the helper-level partial-fill price-floor benchmark.",
+      "manifest_path": "families/kyberswap/implementations/meta-aggregation-router-v2/implementation.yaml"
+    },
+    {
       "family_id": "lagoon",
       "implementation_id": "v0_6_0",
       "display_name": "Lagoon v0.6.0",
@@ -772,6 +884,22 @@
       ],
       "notes": "Implementation entry for the Lido core repository (master), benchmarking the VaultHub _locked() collateral computation and its solvency invariants.",
       "manifest_path": "families/lido/implementations/core/implementation.yaml"
+    },
+    {
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "display_name": "LI.FI contracts",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/lifinance/contracts",
+      "upstream_commit": "62bed68d9ba6cd3cd7b92e917f2c47531b20f75d",
+      "source_language": "solidity",
+      "source_artifact_path": "src/Facets/GenericSwapFacet.sol",
+      "case_ids": [
+        "lifi/swap_atomicity"
+      ],
+      "notes": "The implementation entry covers the original LI.FI source-chain swap execution path through GenericSwapFacet, SwapperV2, LibSwap, LibAsset, and LibUtil at the pinned upstream commit. GenericSwapFacetV3 and periphery Executor loops are not part of this case.",
+      "manifest_path": "families/lifi/implementations/contracts/implementation.yaml"
     },
     {
       "family_id": "nexus_mutual",
@@ -836,6 +964,38 @@
       ],
       "notes": "Claim accounting contract translated as a single-round slice with Merkle verification abstracted away from the benchmark.",
       "manifest_path": "families/paladin_votes/implementations/stream_recovery_claim/implementation.yaml"
+    },
+    {
+      "family_id": "pareto",
+      "implementation_id": "usp",
+      "display_name": "Pareto USP",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/pareto-credit/USP",
+      "upstream_commit": "2cb0a098c7ccb9813497ef3982d78c44a596c87b",
+      "source_language": "solidity",
+      "source_artifact_path": "src/ParetoDollarQueue.sol",
+      "case_ids": [
+        "pareto/redemption_backing"
+      ],
+      "notes": "Public Pareto USP contracts centered on ParetoDollar and ParetoDollarQueue.",
+      "manifest_path": "families/pareto/implementations/usp/implementation.yaml"
+    },
+    {
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "display_name": "Pendle Core V2 Public",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/pendle-finance/pendle-core-v2-public",
+      "upstream_commit": "e8c2cca4c9b329ba8a383a27d7318e5f8b35c843",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/core/YieldContracts/PendleYieldToken.sol",
+      "case_ids": [
+        "pendle/py_supply_pairing"
+      ],
+      "notes": "Implementation entry for Pendle V2 core, focused on the PT/YT pair mint and redeem accounting in PendleYieldToken and PendlePrincipalToken.",
+      "manifest_path": "families/pendle/implementations/core_v2_public/implementation.yaml"
     },
     {
       "family_id": "piku",
@@ -932,6 +1092,22 @@
       ],
       "notes": "Implementation entry for the Safe smart account OwnerManager module, benchmarking linked list invariant preservation under addOwnerWithThreshold, removeOwner, swapOwner, and setupOwners.",
       "manifest_path": "families/safe/implementations/smart_account/implementation.yaml"
+    },
+    {
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "display_name": "T3tris Vault",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/t3tris-finance/T3tris-Vault",
+      "upstream_commit": "89ad64a8e945214cd40a18db146e1feed83e417f",
+      "source_language": "solidity",
+      "source_artifact_path": "src/libraries/feature/FeatureFeesLib.sol",
+      "case_ids": [
+        "t3tris/hwm_performance_fee"
+      ],
+      "notes": "Focused T3tris Vault implementation entry for the high-water-mark performance-fee no-double-charge benchmark.",
+      "manifest_path": "families/t3tris/implementations/t3tris_vault/implementation.yaml"
     },
     {
       "family_id": "term_finance",
@@ -1281,7 +1457,7 @@
       "failure_reason": null,
       "notes": "ERC-4337 EntryPoint control-flow invariant slice: the operation execution path is reached if and only if validation passed. This is not a full proof of arbitrary account/paymaster EVM behavior or `innerHandleOp` calldata effects; it proves the selected two-loop model for all possible validation outcomes.",
       "buildable": true,
-      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "verity_commit": "a287329d5fb8b3966c8eb62f03173639c7e66307",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
@@ -1489,6 +1665,47 @@
       "proof_target": "Benchmark.Cases.Kleros.SortitionTrees.Proofs"
     },
     {
+      "case_id": "kyberswap/partial_fill_price_floor",
+      "project": "kyberswap",
+      "case_name": "partial_fill_price_floor",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kyberswap/partial_fill_price_floor/case.yaml",
+      "split": "active",
+      "family_id": "kyberswap",
+      "implementation_id": "meta-aggregation-router-v2",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "upstream_commit": "verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5",
+      "original_contract_path": "contracts/MetaAggregationRouterV2.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol",
+      "selected_functions": [
+        "_checkReturnAmount"
+      ],
+      "lean_target": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Compile",
+      "failure_reason": null,
+      "notes": "Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution. Reading the guard as an effective-price floor additionally assumes `spentAmount <= amount`, which the helper does not enforce and the theorem does not assume.",
+      "buildable": true,
+      "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "helper_level_guard",
+        "partial_fill_price_floor",
+        "checked_uint256_multiplication",
+        "scalar_struct_projection"
+      ],
+      "abstraction_notes": "This benchmark models the `_checkReturnAmount` enforcement helper from KyberSwap MetaAggregationRouterV2. It proves the partial-fill scaled price-floor guard over the values passed into the helper, with Solidity 0.8 checked multiplication modeled through `mulPanic`. Public swap entrypoints, executor behavior, refunds, fee-on-destination accounting, route quality, ERC20 transfers, and true user balance deltas are intentionally out of scope.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Specs",
+      "proof_target": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs"
+    },
+    {
       "case_id": "lagoon/guardrails",
       "project": "lagoon",
       "case_name": "guardrails",
@@ -1570,6 +1787,54 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Lido.VaulthubLocked.Specs",
       "proof_target": "Benchmark.Cases.Lido.VaulthubLocked.Proofs"
+    },
+    {
+      "case_id": "lifi/swap_atomicity",
+      "project": "lifi",
+      "case_name": "swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/case.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/lifinance/contracts",
+      "upstream_commit": "62bed68d9ba6cd3cd7b92e917f2c47531b20f75d",
+      "original_contract_path": "src/Facets/GenericSwapFacet.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "selected_functions": [
+        "GenericSwapFacet.swapTokensGeneric",
+        "SwapperV2._depositAndSwap",
+        "SwapperV2._executeSwaps",
+        "LibSwap.swap",
+        "LibAsset.depositAssets",
+        "LibUtil.revertWith"
+      ],
+      "lean_target": "Benchmark.Cases.LiFi.SwapAtomicity.Compile",
+      "failure_reason": null,
+      "notes": "This is an atomicity benchmark, not a price-quality or route-optimality benchmark. It proves that the modeled LI.FI route cannot commit a public final transfer unless every modeled public-route gate succeeds, every modeled route step succeeds, and the output amount meets the minimum.",
+      "buildable": true,
+      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "decoded_swap_steps",
+        "source_chain_atomicity",
+        "external_call_success_flag",
+        "min_output_gate",
+        "final_transfer_commit",
+        "route_guard_failure"
+      ],
+      "abstraction_notes": "The benchmark models LI.FI source-chain swap route atomicity for the original GenericSwapFacet / SwapperV2 / LibSwap path. Each SwapData item is decoded into a SwapStep with booleans for calldata shape, allow-list checks, approve-target checks including non-zero spender, contract existence, positive amount, required-deposit success, token balance/approval call success, and external-call success. The approve-needed flag means the non-native approval path runs; approve-allowed abstracts the conditional approve-only allow-list check and is true when approveTo equals callTo. RouteGuards model the public receiver and nonReentrant entry checks, pre/post swap balance reads, leftover refund phase, final receiver transfer, and refundExcessNative trailing transfer. A reverting LI.FI route is represented by Option.none, so no RouteCommit, final receiver transfer, or partial-success state is observable. The proof does not model third-party DEX internals or full EVM rollback machinery; it proves LI.FI's source-chain control-flow response to failed modeled steps, failed route gates, and the minimum-output gate. GenericSwapFacetV3 and periphery Executor loops are out of scope.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.LiFi.SwapAtomicity.Specs",
+      "proof_target": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs"
     },
     {
       "case_id": "nexus_mutual/ramm_price_band",
@@ -1707,6 +1972,104 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Specs",
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
+    },
+    {
+      "case_id": "pareto/redemption_backing",
+      "project": "pareto",
+      "case_name": "redemption_backing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pareto/redemption_backing/case.yaml",
+      "split": "active",
+      "family_id": "pareto",
+      "implementation_id": "usp",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/pareto-credit/USP",
+      "upstream_commit": "2cb0a098c7ccb9813497ef3982d78c44a596c87b",
+      "original_contract_path": "src/ParetoDollarQueue.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol",
+      "selected_functions": [
+        "depositFunds"
+      ],
+      "lean_target": "Benchmark.Cases.Pareto.RedemptionBacking.Compile",
+      "failure_reason": null,
+      "notes": "Reference proof is complete for the modeled successful depositFunds path under the source reserve require (`hReserveGuard`) and checked-arithmetic side conditions: the resulting state satisfies the closed-epoch reserve guard.",
+      "buildable": true,
+      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "redemption_queue",
+        "closed_epoch_reserve_guard",
+        "ghost_unlent_balance",
+        "credit_vault_request_value"
+      ],
+      "abstraction_notes": "Focused ParetoDollarQueue accounting slice for the closed-epoch redemption backing guard checked after a successful depositFunds reserve require. External ERC20 balances, deposit-mode yield-source calls, Credit Vault virtualPrice correctness, and pending withdrawal accounting are represented by scaled ghost totals and documented assumptions.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "yield_source_calls_elided",
+        "credit_vault_virtual_price_assumed",
+        "epoch_mapping_sliced"
+      ],
+      "spec_target": "Benchmark.Cases.Pareto.RedemptionBacking.Specs",
+      "proof_target": "Benchmark.Cases.Pareto.RedemptionBacking.Proofs"
+    },
+    {
+      "case_id": "pendle/py_supply_pairing",
+      "project": "pendle",
+      "case_name": "py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/case.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/pendle-finance/pendle-core-v2-public",
+      "upstream_commit": "e8c2cca4c9b329ba8a383a27d7318e5f8b35c843",
+      "original_contract_path": "contracts/core/YieldContracts/PendleYieldToken.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "selected_functions": [
+        "PendleYieldToken.mintPY",
+        "PendleYieldToken._mintPY",
+        "PendleYieldToken.redeemPY",
+        "PendleYieldToken._redeemPY",
+        "PendleYieldToken._getAmountPYToRedeem",
+        "PendlePrincipalToken.mintByYT",
+        "PendlePrincipalToken.burnByYT",
+        "SYUtils.syToAsset",
+        "SYUtils.assetToSy"
+      ],
+      "lean_target": "Benchmark.Cases.Pendle.PySupplyPairing.Compile",
+      "failure_reason": null,
+      "notes": "Proves that successful mintPY and successful pre-expiry redeemPY preserve the equality of PT and YT total supplies when that pairing held before the call. Post-expiry redeem is intentionally excluded from the preservation theorem because Pendle burns PT but not YT after maturity.",
+      "buildable": true,
+      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "external_transfer_elided",
+        "reward_accounting_elided",
+        "single_receiver_slice",
+        "successful_path_guards",
+        "paired_contract_inlined",
+        "redeem_sy_tail_elided",
+        "pre_expiry_slice"
+      ],
+      "abstraction_notes": "The model isolates Pendle V2 PY tokenization supply accounting. It inlines the paired PT contract as trusted paired state, models single-receiver mintPY, and models redeemPY as a successful pre-expiry state transition. Mint-side checked arithmetic is represented with Verity checked helpers. Redeem-side source success conditions are theorem hypotheses: not expired, nonzero self address, sufficient PT/YT balances and supplies, uint248 fit, nonzero index, and no fixed-point multiplication overflow. The redeem model returns the source-close amountSyOut expression but elides the SY transfer, SY reserve update, and redeem-side PY-index storage write because they cannot mutate the PT/YT supplies or balances used by this case. Rewards, user interest accrual, transfer-hook side conditions, the `_pyIndexCurrent` uint128 narrowing precondition, events, allowances, reentrancy status, and external token transfer return behavior are outside this case because they do not directly mutate the observed PT/YT accounting state.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Pendle.PySupplyPairing.Specs",
+      "proof_target": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs"
     },
     {
       "case_id": "piku/fund_conservation",
@@ -2000,6 +2363,56 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Safe.OwnerManagerReach.Specs",
       "proof_target": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs"
+    },
+    {
+      "case_id": "t3tris/hwm_performance_fee",
+      "project": "t3tris",
+      "case_name": "hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/case.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/t3tris-finance/T3tris-Vault",
+      "upstream_commit": "89ad64a8e945214cd40a18db146e1feed83e417f",
+      "original_contract_path": "src/libraries/feature/FeatureFeesLib.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "selected_functions": [
+        "FeatureFeesLib._computeLastPeriodFeesAndUpdateResult",
+        "ReleaseFeesLib.computeAndRecordAccruedFees",
+        "FeatureSettlementLib._updateSettlementValues"
+      ],
+      "lean_target": "Benchmark.Cases.T3tris.HwmPerformanceFee.Compile",
+      "failure_reason": null,
+      "notes": "This case targets the coverage gap not present in Cyfrin's T3tris suite: structural HWM facts are already proved, but the multi-step economic property that recovery up to the fee-accounted HWM charges no second performance fee is not.",
+      "buildable": true,
+      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "arithmetic_slice",
+      "abstraction_tags": [
+        "hwm_performance_fee",
+        "multi_settlement_trajectory",
+        "management_fee_abstracted",
+        "assets_oracle_ghosted",
+        "overflow_preconditions_explicit",
+        "zero_supply_reanchor_factored"
+      ],
+      "abstraction_notes": "Focused arithmetic model of the T3tris period-fee computation and HWM persistence. The model preserves the source ordering where management fee shares inflate supply before the performance-fee PPS trigger, computes PnL against the cached HWM and old net supply, mints performance fee shares via the dilutive ceil formula, then persists the final post-fee PPS as the fee-accounted HWM. Management fee computation, oracle/silo valuation, external transfers, and async flow mechanics are abstracted out as explicit inputs because the target property is the multi-settlement no-double-charge behavior after gain, fee, loss, and recovery.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "management_fee_timestamp_formula_abstracted",
+        "oracle_and_silo_accounting_ghosted",
+        "memory_struct_mutation_functionalized"
+      ],
+      "spec_target": "Benchmark.Cases.T3tris.HwmPerformanceFee.Specs",
+      "proof_target": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs"
     },
     {
       "case_id": "term_finance/term_auction_clearing",
@@ -5415,6 +5828,51 @@
       }
     },
     {
+      "task_ref": "kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor",
+      "task_id": "check_return_amount_partial_fill_price_floor",
+      "case_id": "kyberswap/partial_fill_price_floor",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kyberswap/partial_fill_price_floor/tasks/check_return_amount_partial_fill_price_floor.yaml",
+      "split": "active",
+      "family_id": "kyberswap",
+      "implementation_id": "meta-aggregation-router-v2",
+      "source_ref": "https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_floor",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.checkReturnAmount_partial_fill_price_floor",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/kyberswap/partial_fill_price_floor/verity/Contract.lean",
+        "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/kyberswap/partial_fill_price_floor/verity/Specs.lean",
+        "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/KyberSwap/PartialFillPriceFloor/Tasks/CheckReturnAmountPartialFillPriceFloor.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task proves the helper-level partial-fill price-floor guard over values already computed by the public swap path. Executor behavior, route quality, token transfers, refunds, and fee-on-destination accounting are out of scope.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "lagoon/guardrails/exact_compliance",
       "task_id": "exact_compliance",
       "case_id": "lagoon/guardrails",
@@ -5764,6 +6222,276 @@
       "abstraction_notes": "Supporting arithmetic lemma for F-01. Proves that getPooledEthBySharesRoundUp is monotone in the shares argument: if a >= b then the conversion of a is at least the conversion of b. Needed to lift the solvency bound from maxLiabilityShares down to liabilityShares.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/committed_route_executes_every_step",
+      "task_id": "committed_route_executes_every_step",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/committed_route_executes_every_step.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "no_partial_success",
+      "category": "control-flow",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.committed_route_executes_every_step",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/CommittedRouteExecutesEveryStep.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A committed route records all modeled steps as executed, never a strict prefix.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/failed_step_reverts",
+      "task_id": "failed_step_reverts",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/failed_step_reverts.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "all_or_nothing",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.failed_step_reverts",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FailedStepReverts.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Any failing modeled step in the LI.FI route executor maps to a reverting route result.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/final_transfer_implies_all_steps_succeeded",
+      "task_id": "final_transfer_implies_all_steps_succeeded",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/final_transfer_implies_all_steps_succeeded.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "all_or_nothing",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.final_transfer_implies_all_steps_succeeded",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FinalTransferImpliesAllStepsSucceeded.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "If the final receiver transfer commits, every modeled LI.FI route step succeeded. Public-route gate failures are covered separately by `route_gate_failure_prevents_commit`.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/min_output_required_for_commit",
+      "task_id": "min_output_required_for_commit",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/min_output_required_for_commit.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "minimum_output_gate",
+      "category": "accounting",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.min_output_required_for_commit",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/MinOutputRequiredForCommit.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A route with output below LI.FI's modeled minimum amount check cannot commit.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/no_final_transfer_on_failed_step",
+      "task_id": "no_final_transfer_on_failed_step",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/no_final_transfer_on_failed_step.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "atomic_finalization",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.no_final_transfer_on_failed_step",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/NoFinalTransferOnFailedStep.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A failed modeled route step prevents the public GenericSwapFacet final receiver transfer from committing.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "lifi/swap_atomicity/route_gate_failure_prevents_commit",
+      "task_id": "route_gate_failure_prevents_commit",
+      "case_id": "lifi/swap_atomicity",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/lifi/swap_atomicity/tasks/route_gate_failure_prevents_commit.yaml",
+      "split": "active",
+      "family_id": "lifi",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "atomic_finalization",
+      "category": "control-flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.LiFi.SwapAtomicity.route_gate_failure_prevents_commit",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/lifi/swap_atomicity/verity/Contract.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/lifi/swap_atomicity/verity/Specs.lean",
+        "Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/LiFi/SwapAtomicity/Tasks/RouteGateFailurePreventsCommit.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Receiver validation, nonReentrant entry, balance reads, required deposits, leftover refunds, final receiver transfer, and excess-native refund are modeled as public-route gates. If any such gate fails, the public LI.FI route cannot commit.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -7575,6 +8303,236 @@
       }
     },
     {
+      "task_ref": "pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard",
+      "task_id": "deposit_funds_preserves_closed_epoch_reserve_guard",
+      "case_id": "pareto/redemption_backing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pareto/redemption_backing/tasks/deposit_funds_preserves_closed_epoch_reserve_guard.yaml",
+      "split": "active",
+      "family_id": "pareto",
+      "implementation_id": "usp",
+      "source_ref": "https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "redemption_reserve_guard",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Pareto.RedemptionBacking.depositFunds_preserves_closed_epoch_reserve_guard",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pareto/redemption_backing/verity/Contract.lean",
+        "Benchmark/Cases/Pareto/RedemptionBacking/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pareto/redemption_backing/verity/Specs.lean",
+        "Benchmark/Cases/Pareto/RedemptionBacking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pareto/RedemptionBacking/Tasks/DepositFundsPreservesClosedEpochReserveGuard.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Focused ParetoDollarQueue accounting proof showing the modeled depositFunds post-state satisfies the closed-epoch redemption backing guard when the source reserve require and checked-arithmetic side conditions succeed.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "yield_source_calls_elided",
+        "credit_vault_virtual_price_assumed",
+        "epoch_mapping_sliced"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Pareto.RedemptionBacking.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "pendle/py_supply_pairing/mint_py_mints_equal_amount",
+      "task_id": "mint_py_mints_equal_amount",
+      "case_id": "pendle/py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/tasks/mint_py_mints_equal_amount.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "supply-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Pendle.PySupplyPairing.mint_py_mints_equal_amount",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pendle/py_supply_pairing/verity/Contract.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pendle/py_supply_pairing/verity/Specs.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pendle/PySupplyPairing/Tasks/MintPyMintsEqualAmount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful non-expired mintPY computes one amountPYOut from floating SY and increments YT and PT accounting by that exact amount under checked multiplication/addition and uint248 successful-path assumptions.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "pendle/py_supply_pairing/mint_py_preserves_supply_pairing",
+      "task_id": "mint_py_preserves_supply_pairing",
+      "case_id": "pendle/py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/tasks/mint_py_preserves_supply_pairing.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_invariant",
+      "category": "supply-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Pendle.PySupplyPairing.mint_py_preserves_supply_pairing",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pendle/py_supply_pairing/verity/Contract.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pendle/py_supply_pairing/verity/Specs.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pendle/PySupplyPairing/Tasks/MintPyPreservesSupplyPairing.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful non-expired mintPY computes one amountPYOut from floating SY and mints that same amount to both YT and PT under checked multiplication/addition and uint248 successful-path assumptions.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "pendle/py_supply_pairing/redeem_py_pre_expiry_burns_equal_amount",
+      "task_id": "redeem_py_pre_expiry_burns_equal_amount",
+      "case_id": "pendle/py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/tasks/redeem_py_pre_expiry_burns_equal_amount.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "supply-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_burns_equal_amount",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pendle/py_supply_pairing/verity/Contract.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pendle/py_supply_pairing/verity/Specs.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pendle/PySupplyPairing/Tasks/RedeemPyPreExpiryBurnsEqualAmount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful pre-expiry redeemPY burns the exact amountPYToRedeem from both PT and YT supplies and contract-held balances. Source guard/revert conditions and redeem-side fixed-point arithmetic safety are theorem hypotheses for this successful-path slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "pendle/py_supply_pairing/redeem_py_pre_expiry_preserves_supply_pairing",
+      "task_id": "redeem_py_pre_expiry_preserves_supply_pairing",
+      "case_id": "pendle/py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/tasks/redeem_py_pre_expiry_preserves_supply_pairing.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_invariant",
+      "category": "supply-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_preserves_supply_pairing",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pendle/py_supply_pairing/verity/Contract.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pendle/py_supply_pairing/verity/Specs.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pendle/PySupplyPairing/Tasks/RedeemPyPreExpiryPreservesSupplyPairing.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful pre-expiry redeemPY burns the same amountPYToRedeem from PT and YT under source guard/revert hypotheses. Post-expiry is intentionally excluded because the source contract burns PT only after maturity.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation",
       "task_id": "amount_paid_preserves_fund_conservation",
       "case_id": "piku/fund_conservation",
@@ -9053,6 +10011,393 @@
       }
     },
     {
+      "task_ref": "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply",
+      "task_id": "fee_claim_preserves_unclaimed_le_supply",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/fee_claim_preserves_unclaimed_le_supply.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_accounting_bounds",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.fee_claim_preserves_unclaimed_le_supply",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/FeeClaimPreservesUnclaimedLeSupply.lean"
+      ],
+      "abstraction_level": "structural_fee_state_slice",
+      "abstraction_notes": "Models the successful fee-share claim/burn accounting used by fee-claim and settlement paths as removing the same capped share amount from gross supply and unclaimed fee shares, preserving unclaimedSharesFee <= totalSupply.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "asset_transfer_and_silo_liquidity_abstracted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/gain_loss_recovery_no_double_charge",
+      "task_id": "gain_loss_recovery_no_double_charge",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/gain_loss_recovery_no_double_charge.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "economic_no_double_charge",
+      "category": "temporal-accounting-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.gain_loss_recovery_no_double_charge",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/GainLossRecoveryNoDoubleCharge.lean"
+      ],
+      "abstraction_level": "arithmetic_slice",
+      "abstraction_notes": "Multi-settlement theorem for gain, fee-accounted HWM, loss, and recovery. Recovery steps whose pre-performance PPS stays at or below the stored HWM must charge zero performance fee assets and shares and leave HWM unchanged.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "management_fee_timestamp_formula_abstracted",
+        "oracle_and_silo_accounting_ghosted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/no_performance_fee_when_pre_pps_le_hwm",
+      "task_id": "no_performance_fee_when_pre_pps_le_hwm",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/no_performance_fee_when_pre_pps_le_hwm.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_trigger",
+      "category": "arithmetic-invariant",
+      "difficulty": "low",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.no_performance_fee_when_pre_pps_le_hwm",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/NoPerformanceFeeWhenPrePpsLeHwm.lean"
+      ],
+      "abstraction_level": "arithmetic_slice",
+      "abstraction_notes": "Single-step trigger theorem: when pre-performance PPS is at or below cached HWM, the performance fee branch does not charge assets or shares.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/period_fee_accounting_preserves_structural_assumptions",
+      "task_id": "period_fee_accounting_preserves_structural_assumptions",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/period_fee_accounting_preserves_structural_assumptions.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_accounting_bounds",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.period_fee_accounting_preserves_structural_assumptions",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/PeriodFeeAccountingPreservesStructuralAssumptions.lean"
+      ],
+      "abstraction_level": "structural_fee_state_slice",
+      "abstraction_notes": "Proves the three structural guards are preserved by period-fee accrual: accrued fee shares are added to both gross supply and unclaimed fee shares, the HWM uses a max-ratchet, and the performance-fee rate is unchanged.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "management_fee_timestamp_formula_abstracted",
+        "oracle_and_silo_accounting_ghosted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/profit_pnl_uses_cached_hwm",
+      "task_id": "profit_pnl_uses_cached_hwm",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/profit_pnl_uses_cached_hwm.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_base_correctness",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.profit_pnl_uses_cached_hwm",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ProfitPnlUsesCachedHwm.lean"
+      ],
+      "abstraction_level": "arithmetic_slice",
+      "abstraction_notes": "Single-step theorem proving that when the pre-performance PPS exceeds the cached high-water mark, performance PnL is computed from the increment above that cached HWM and old net supply.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "management_fee_timestamp_formula_abstracted",
+        "oracle_and_silo_accounting_ghosted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/recovery_then_new_high_uses_stored_hwm",
+      "task_id": "recovery_then_new_high_uses_stored_hwm",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/recovery_then_new_high_uses_stored_hwm.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_base_correctness",
+      "category": "temporal-accounting-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.recovery_then_new_high_uses_stored_hwm",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/RecoveryThenNewHighUsesStoredHwm.lean"
+      ],
+      "abstraction_level": "arithmetic_slice",
+      "abstraction_notes": "New-high theorem after recovery: once recovery exceeds the stored HWM, the PnL base is the increment above the latest fee-accounted HWM, not above an older lower HWM.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "management_fee_timestamp_formula_abstracted",
+        "oracle_and_silo_accounting_ghosted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/validated_initial_state_satisfies_successful_assumptions",
+      "task_id": "validated_initial_state_satisfies_successful_assumptions",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/validated_initial_state_satisfies_successful_assumptions.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "configuration_safety",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.validated_initial_state_satisfies_successful_assumptions",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ValidatedInitialStateSatisfiesSuccessfulAssumptions.lean"
+      ],
+      "abstraction_level": "structural_fee_state_slice",
+      "abstraction_notes": "Models successful vault initialization for the fee-state fields relevant to the HWM benchmark, following FeatureStorageLib initialization: zero initial unclaimed fee shares and supply, HWM at WAD, and performance fee accepted only when it is at most WAD.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "oracle_and_silo_accounting_ghosted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "t3tris/hwm_performance_fee/validated_performance_fee_update_preserves_cap",
+      "task_id": "validated_performance_fee_update_preserves_cap",
+      "case_id": "t3tris/hwm_performance_fee",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/t3tris/hwm_performance_fee/tasks/validated_performance_fee_update_preserves_cap.yaml",
+      "split": "active",
+      "family_id": "t3tris",
+      "implementation_id": "t3tris_vault",
+      "source_ref": "https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "configuration_safety",
+      "category": "arithmetic-accounting-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.T3tris.HwmPerformanceFee.validated_performance_fee_update_preserves_cap",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Contract.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/t3tris/hwm_performance_fee/verity/Specs.lean",
+        "Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ValidatedPerformanceFeeUpdatePreservesCap.lean"
+      ],
+      "abstraction_level": "structural_fee_state_slice",
+      "abstraction_notes": "Compresses ReleaseFeesLib.setNextPerformanceFee plus later FeatureFeesLib fee-rate application to the property needed by the fee calculator: a successful validated performance-fee assignment stores only a value at or below WAD.",
+      "unsupported_feature_codes": [
+        "uint256_overflow_modeled_as_preconditions",
+        "access_control_abstracted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "term_finance/term_auction_clearing/clearing_assignment_correct",
       "task_id": "clearing_assignment_correct",
       "case_id": "term_finance/term_auction_clearing",
@@ -10485,5 +11830,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-25T11:58:35.044580+00:00"
+  "generated_at": "2026-06-29T08:26:48.629251+00:00"
 }

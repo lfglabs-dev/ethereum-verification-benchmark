@@ -1,0 +1,53 @@
+manifest_kind: case
+project: t3tris
+case_id: hwm_performance_fee
+schema_version: 1
+split: active
+family_id: t3tris
+implementation_id: t3tris_vault
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/t3tris-finance/T3tris-Vault
+upstream_commit: 89ad64a8e945214cd40a18db146e1feed83e417f
+original_contract_path: src/libraries/feature/FeatureFeesLib.sol
+source_ref: https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol
+lean_target: Benchmark.Cases.T3tris.HwmPerformanceFee.Compile
+spec_target: Benchmark.Cases.T3tris.HwmPerformanceFee.Specs
+proof_target: Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs
+selected_functions:
+  - FeatureFeesLib._computeLastPeriodFeesAndUpdateResult
+  - ReleaseFeesLib.computeAndRecordAccruedFees
+  - FeatureSettlementLib._updateSettlementValues
+source_language: solidity
+verity_version: d26a6ffa83ec8e8445533f076442c06dd1cdf487
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: arithmetic_slice
+abstraction_tags:
+  - hwm_performance_fee
+  - multi_settlement_trajectory
+  - management_fee_abstracted
+  - assets_oracle_ghosted
+  - overflow_preconditions_explicit
+  - zero_supply_reanchor_factored
+abstraction_notes: >
+  Focused arithmetic model of the T3tris period-fee computation and HWM
+  persistence. The model preserves the source ordering where management fee
+  shares inflate supply before the performance-fee PPS trigger, computes PnL
+  against the cached HWM and old net supply, mints performance fee shares via
+  the dilutive ceil formula, then persists the final post-fee PPS as the
+  fee-accounted HWM. Management fee computation, oracle/silo valuation,
+  external transfers, and async flow mechanics are abstracted out as explicit
+  inputs because the target property is the multi-settlement no-double-charge
+  behavior after gain, fee, loss, and recovery.
+unsupported_feature_codes:
+  - uint256_overflow_modeled_as_preconditions
+  - management_fee_timestamp_formula_abstracted
+  - oracle_and_silo_accounting_ghosted
+  - memory_struct_mutation_functionalized
+notes: >
+  This case targets the coverage gap not present in Cyfrin's T3tris suite:
+  structural HWM facts are already proved, but the multi-step economic property
+  that recovery up to the fee-accounted HWM charges no second performance fee is
+  not.

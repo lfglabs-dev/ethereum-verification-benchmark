@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: final_transfer_implies_all_steps_succeeded
+case_id: lifi/swap_atomicity
+split: active
+family_id: lifi
+implementation_id: contracts
+source_ref: https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.LiFi.SwapAtomicity.final_transfer_implies_all_steps_succeeded
+proof_family: functional_correctness
+property_class: all_or_nothing
+difficulty: medium
+category: control-flow
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/lifi/swap_atomicity/verity/Contract.lean
+  - Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean
+specification_files:
+  - cases/lifi/swap_atomicity/verity/Specs.lean
+  - Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean
+editable_files:
+  - Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FinalTransferImpliesAllStepsSucceeded.lean
+reference_solution_module: Benchmark.Cases.LiFi.SwapAtomicity.Proofs
+reference_solution_declaration: Benchmark.Cases.LiFi.SwapAtomicity.final_transfer_implies_all_steps_succeeded
+abstraction_level: protocol_slice
+abstraction_notes: >
+  If the final receiver transfer commits, every modeled LI.FI route step
+  succeeded. Public-route gate failures are covered separately by
+  `route_gate_failure_prevents_commit`.
+unsupported_feature_codes: []
