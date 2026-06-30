@@ -46,6 +46,20 @@ PUBLIC_MODEL_ALIASES: dict[str, dict[str, str]] = {
         "model_name": "gpt-5.5-pro",
         "display_name": "gpt-5.5-pro",
     },
+    "minimax/minimax-m3-scaling": {
+        "model_provider_id": "minimax",
+        "model_name": "minimax-m3-scaling",
+        "display_name": "minimax-m3 scaling",
+        "inference_provider_id": "minimax",
+        "inference_model_id": "minimax/minimax-m3",
+    },
+    "spark/qwen3.6-aeon-dflash": {
+        "model_provider_id": "aeon7",
+        "model_name": "qwen3.6-aeon-dflash",
+        "display_name": "qwen3.6-aeon-dflash",
+        "inference_provider_id": "spark",
+        "inference_model_id": "spark/qwen3.6-aeon-dflash",
+    },
     "virtuals/deepseek-v4-flash": {
         "model_provider_id": "deepseek",
         "model_name": "deepseek-v4-flash",
