@@ -125,6 +125,39 @@
       "valid_count": 135
     },
     {
+      "archive": {
+        "asset_name": "benchmark-v0.1-minimax-minimax-m3-scaling.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-minimax-minimax-m3-scaling.tar.zst",
+        "byte_size": 45935,
+        "release_tag": "v0.1",
+        "sha256": "d62d4612c5c1e0257b261b02ce416d059c4b74189ecf6e17630f4ab547296c9e"
+      },
+      "caveats": [
+        "budget_scaling_cascade_p01_to_p10",
+        "not_default_fair_run_budget"
+      ],
+      "completion_tokens": 4515078,
+      "display_name": "minimax-m3 scaling",
+      "failed": 75,
+      "inference_model_id": "minimax/minimax-m3",
+      "inference_provider_id": "minimax",
+      "median_completion_tokens_to_pass": 5858,
+      "median_prompt_tokens_to_pass": 192709,
+      "model": "minimax-m3-scaling",
+      "model_id": "minimax/minimax-m3-scaling",
+      "model_name": "minimax-m3-scaling",
+      "model_provider_id": "minimax",
+      "pass_rate": 0.444,
+      "passed": 60,
+      "prompt_tokens": 293195068,
+      "provider": "minimax",
+      "source_model_id": "minimax/minimax-m3-scaling",
+      "status": "complete",
+      "task_count": 135,
+      "total_tokens": 297710146,
+      "valid_count": 135
+    },
+    {
       "archive": null,
       "caveats": [],
       "completion_tokens": 755013,
@@ -207,6 +240,36 @@
       "task_count": 135,
       "total_tokens": 22775322,
       "valid_count": 126
+    },
+    {
+      "archive": {
+        "asset_name": "benchmark-v0.1-spark-qwen3-6-aeon-dflash.tar.zst",
+        "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-spark-qwen3-6-aeon-dflash.tar.zst",
+        "byte_size": 527909,
+        "release_tag": "v0.1",
+        "sha256": "78ee54c5ae406c252986887b15586add0a52a444c419088d8eab2c1d2a85ba88"
+      },
+      "caveats": [],
+      "completion_tokens": 608960,
+      "display_name": "qwen3.6-aeon-dflash",
+      "failed": 119,
+      "inference_model_id": "spark/qwen3.6-aeon-dflash",
+      "inference_provider_id": "spark",
+      "median_completion_tokens_to_pass": 1391,
+      "median_prompt_tokens_to_pass": 29936,
+      "model": "qwen3.6-aeon-dflash",
+      "model_id": "aeon7/qwen3.6-aeon-dflash",
+      "model_name": "qwen3.6-aeon-dflash",
+      "model_provider_id": "aeon7",
+      "pass_rate": 0.119,
+      "passed": 16,
+      "prompt_tokens": 19683522,
+      "provider": "aeon7",
+      "source_model_id": "spark/qwen3.6-aeon-dflash",
+      "status": "complete",
+      "task_count": 135,
+      "total_tokens": 20292482,
+      "valid_count": 135
     },
     {
       "archive": {
