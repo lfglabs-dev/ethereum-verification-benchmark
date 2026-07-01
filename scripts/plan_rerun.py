@@ -78,6 +78,8 @@ def reusable_result(entry: dict[str, Any] | None) -> tuple[bool, str | None]:
         total_tokens = int(usage.get("prompt_tokens") or 0) + int(usage.get("completion_tokens") or 0)
     if total_tokens <= 0:
         return False, "zero usage"
+    if entry.get("provider_invalid"):
+        return False, "provider/transport failure"
     if not entry.get("verifier_output_present", False):
         return False, "missing verifier output"
     harness_status = str(entry.get("harness_status") or "").strip().lower()

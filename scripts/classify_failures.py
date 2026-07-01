@@ -23,6 +23,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterator
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from infra_failures import provider_failure_reason  # noqa: E402
+
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_TAXONOMY = ROOT / "analysis" / "failure_modes.json"
 
@@ -208,6 +212,13 @@ def iter_run_files(runs_dir: Path) -> Iterator[Path]:
             yield child
 
 
+def _artifact_run_dir(run_file: Path) -> Path:
+    """Return the run root directory (holding harness-response.json / conversations/)."""
+    if run_file.name == "verifier.json" and run_file.parent.name == "verifier":
+        return run_file.parent.parent
+    return run_file.parent
+
+
 def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for run_file in iter_run_files(runs_dir):
@@ -216,6 +227,7 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
             continue
         run_id = artifact_run_id(artifact, run_file)
         model_id = artifact.get("model")
+        run_dir = _artifact_run_dir(run_file)
         for target in iter_run_targets(artifact):
             result = classify(
                 target["status"],
@@ -223,12 +235,20 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
                 taxonomy=taxonomy,
                 harness_status=target.get("harness_status"),
             )
+            row = result.as_dict()
+            # A terminal provider/transport failure makes a non-passing verdict
+            # infrastructure-invalid rather than a genuine model failure.
+            if not result.is_pass:
+                reason = provider_failure_reason(artifact, run_dir)
+                if reason:
+                    row["outcome"] = "infra_invalid"
+                    row["detail"] = reason
             rows.append(
                 {
                     "run_id": run_id,
                     "model_id": model_id,
                     "task_ref": target["task_ref"],
-                    **result.as_dict(),
+                    **row,
                 }
             )
     return rows
