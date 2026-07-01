@@ -196,27 +196,25 @@
       "valid_count": 135
     },
     {
-      "avg_total_tokens_per_task": 145271.8,
-      "caveats": [
-        "partial task coverage: 54/135"
-      ],
-      "completion_tokens": 272215,
+      "avg_total_tokens_per_task": 168706.1,
+      "caveats": [],
+      "completion_tokens": 799281,
       "display_name": "gpt-5.5-pro",
-      "failed": 19,
+      "failed": 81,
       "inference_model_id": "openai-gpt-55-pro",
       "inference_provider_id": "openai",
       "model_id": "openai/gpt-5.5-pro",
       "model_name": "gpt-5.5-pro",
       "model_provider_id": "openai",
-      "pass_rate": 0.648,
-      "passed": 35,
-      "prompt_tokens": 7572463,
+      "pass_rate": 0.4,
+      "passed": 54,
+      "prompt_tokens": 21976041,
       "rank": null,
       "source_model_id": "openai-gpt-55-pro",
       "status": "partial",
-      "total": 54,
-      "total_tokens": 7844678,
-      "valid_count": 54
+      "total": 135,
+      "total_tokens": 22775322,
+      "valid_count": 126
     },
     {
       "avg_total_tokens_per_task": 894196.3,
@@ -240,25 +238,23 @@
       "valid_count": 135
     },
     {
-      "avg_total_tokens_per_task": 759713.0,
-      "caveats": [
-        "partial task coverage: 126/135"
-      ],
+      "avg_total_tokens_per_task": 709065.5,
+      "caveats": [],
       "completion_tokens": 3134542,
       "display_name": "deepseek-v4-pro",
-      "failed": 98,
+      "failed": 107,
       "inference_model_id": "virtuals/deepseek-v4-pro",
       "inference_provider_id": "virtuals",
       "model_id": "deepseek/deepseek-v4-pro",
       "model_name": "deepseek-v4-pro",
       "model_provider_id": "deepseek",
-      "pass_rate": 0.222,
+      "pass_rate": 0.207,
       "passed": 28,
       "prompt_tokens": 92589294,
       "rank": null,
       "source_model_id": "virtuals/deepseek-v4-pro",
       "status": "partial",
-      "total": 126,
+      "total": 135,
       "total_tokens": 95723836,
       "valid_count": 126
     },

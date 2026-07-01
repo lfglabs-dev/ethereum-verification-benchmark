@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: no_final_transfer_on_failed_step
+case_id: lifi/swap_atomicity
+split: active
+family_id: lifi
+implementation_id: contracts
+source_ref: https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.LiFi.SwapAtomicity.no_final_transfer_on_failed_step
+proof_family: functional_correctness
+property_class: atomic_finalization
+difficulty: medium
+category: control-flow
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/lifi/swap_atomicity/verity/Contract.lean
+  - Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean
+specification_files:
+  - cases/lifi/swap_atomicity/verity/Specs.lean
+  - Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean
+editable_files:
+  - Benchmark/Generated/LiFi/SwapAtomicity/Tasks/NoFinalTransferOnFailedStep.lean
+reference_solution_module: Benchmark.Cases.LiFi.SwapAtomicity.Proofs
+reference_solution_declaration: Benchmark.Cases.LiFi.SwapAtomicity.no_final_transfer_on_failed_step
+abstraction_level: protocol_slice
+abstraction_notes: >
+  A failed modeled route step prevents the public GenericSwapFacet final
+  receiver transfer from committing.
+unsupported_feature_codes: []

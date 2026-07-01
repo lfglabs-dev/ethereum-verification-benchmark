@@ -1,0 +1,87 @@
+name: erc4337 differential
+
+# Differential-test runner for the ERC-4337 EntryPoint v0.9 case. Compares
+# the Verity-compiled EntryPointV09 against the original solc-compiled
+# EntryPoint.sol on the scenarios in
+# Benchmark/Cases/ERC4337/EntryPointInvariant/differential/EntryPointDifferential.t.sol.
+#
+# No `verity-cli` binary needed — the Verity compile driver is invoked
+# directly via `lake env lean --run`, mirroring the unlink-monorepo pattern.
+
+on:
+  pull_request:
+    paths:
+      - 'Benchmark/Cases/ERC4337/EntryPointInvariant/**'
+      - 'cases/erc4337/**'
+      - '.github/workflows/erc4337-differential.yml'
+  workflow_dispatch:
+
+env:
+  CACHE_BUCKET: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || format('ref-{0}', github.ref_name) }}
+  MAIN_CACHE_BUCKET: ref-main
+  USE_STICKY_DISKS: "true"
+
+jobs:
+  differential:
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout benchmark
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: ./.github/actions/setup-lean
+        with:
+          use-sticky-disks: ${{ env.USE_STICKY_DISKS }}
+          cache-bucket: ${{ env.CACHE_BUCKET }}
+          main-cache-bucket: ${{ env.MAIN_CACHE_BUCKET }}
+          use-build-sticky-disk: "true"
+
+      - name: Install Foundry
+        run: |
+          curl -sSfL https://foundry.paradigm.xyz | bash
+          FOUNDRYUP="$(find "$HOME" -type f -name foundryup -perm /111 | head -n 1)"
+          if [ -z "$FOUNDRYUP" ]; then
+            echo "::error foundryup was not installed"
+            exit 1
+          fi
+          export PATH="$(dirname "$FOUNDRYUP"):$PATH"
+          echo "$(dirname "$FOUNDRYUP")" >> "$GITHUB_PATH"
+          for attempt in 1 2 3 4 5; do
+            "$FOUNDRYUP" --install 1.6.0-rc1 || true
+            if command -v forge >/dev/null 2>&1 && forge --version; then
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
+
+      - name: Install solc 0.8.28
+        run: |
+          SOLC_URL="https://github.com/ethereum/solidity/releases/download/v0.8.28/solc-static-linux"
+          for attempt in 1 2 3 4 5; do
+            if curl -sSfL "$SOLC_URL" -o /tmp/solc; then
+              chmod +x /tmp/solc
+            fi
+            if [ -x /tmp/solc ] && /tmp/solc --version; then
+              sudo mv /tmp/solc /usr/local/bin/solc
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
+          solc --version
+
+      - name: Build EntryPointInvariant compile gate
+        run: |
+          lake build Benchmark.Cases.ERC4337.EntryPointInvariant.Compile
+
+      - name: Run differential harness
+        run: |
+          bash Benchmark/Cases/ERC4337/EntryPointInvariant/differential/run.sh

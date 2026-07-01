@@ -1,0 +1,17 @@
+manifest_kind: family
+schema_version: 1
+family_id: erc4337
+display_name: ERC-4337
+split: active
+status: active
+description: >
+  Benchmark family for ERC-4337 Account Abstraction EntryPoint contract.
+  Covers the validation-before-execution control-flow slice of handleOps:
+  the operation execution path is reached only after validation, and a
+  non-reverting batch reaches that path once per operation.
+implementation_ids:
+  - erc4337_v09
+case_ids:
+  - erc4337/entry_point_invariant
+source_languages:
+  - solidity

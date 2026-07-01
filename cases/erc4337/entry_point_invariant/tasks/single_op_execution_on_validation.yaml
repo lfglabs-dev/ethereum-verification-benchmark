@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: single_op_execution_on_validation
+case_id: erc4337/entry_point_invariant
+split: active
+family_id: erc4337
+implementation_id: erc4337_v09
+source_ref: https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_execution_on_validation
+proof_family: functional_correctness
+property_class: storage_update
+difficulty: easy
+category: state-transition
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/erc4337/entry_point_invariant/verity/Contract.lean
+  - Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean
+specification_files:
+  - cases/erc4337/entry_point_invariant/verity/Specs.lean
+  - Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean
+editable_files:
+  - Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/SingleOpExecutionOnValidation.lean
+reference_solution_module: Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs
+reference_solution_declaration: Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_execution_on_validation
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Verity contract proof: when processSingleOp succeeds (validation passes),
+  batchExecuted is set to 1.
+unsupported_feature_codes: []

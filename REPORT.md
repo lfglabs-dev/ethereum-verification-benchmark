@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 27
-- Implementations: 28
-- Active cases: 25
-- Buildable active cases: 25
-- Active tasks: 135
+- Families: 32
+- Implementations: 33
+- Active cases: 30
+- Buildable active cases: 30
+- Active tasks: 184
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -53,6 +53,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/side-entrance/SideEntranceLenderPool.sol`
 - Notes: Compact Side Entrance benchmark focused on the broken coherence between pool assets and withdrawable credit when flash-loan repayment is routed through the deposit path.
 
+### `erc4337/entry_point_invariant`
+- Family / implementation: `erc4337` / `erc4337_v09`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.ERC4337.EntryPointInvariant.Compile`
+- Source ref: `https://github.com/eth-infinitism/account-abstraction@b36a1ed52ae00da6f8a4c8d50181e2877e4fa410:contracts/core/EntryPoint.sol`
+- Selected functions: `handleOps`, `_iterateValidationPhase`, `_executeUserOp`
+- Upstream source artifact: `contracts/core/EntryPoint.sol`
+- Notes: ERC-4337 EntryPoint control-flow invariant slice: the operation execution path is reached if and only if validation passed. This is not a full proof of arbitrary account/paymaster EVM behavior or `innerHandleOp` calldata effects; it proves the selected two-loop model for all possible validation outcomes.
+
 ### `ethereum/deposit_contract_minimal`
 - Family / implementation: `ethereum` / `deposit_contract`
 - Stage: `build_green`
@@ -93,6 +103,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/src/libraries/SortitionTrees.sol`
 - Notes: Sortition-tree slice focused on additive parent invariants, root conservation, interval-based draws, and ID/index correspondence.
 
+### `kyberswap/partial_fill_price_floor`
+- Family / implementation: `kyberswap` / `meta-aggregation-router-v2`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Compile`
+- Source ref: `https://www.codeslaw.app/contracts/ethereum/0x6131b5fae19ea4f9d964eac0408e4408b66337b5@verified-source-0x6131b5fae19ea4f9d964eac0408e4408b66337b5:contracts/MetaAggregationRouterV2.sol`
+- Selected functions: `_checkReturnAmount`
+- Upstream source artifact: `contracts/MetaAggregationRouterV2.sol`
+- Notes: Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution. Reading the guard as an effective-price floor additionally assumes `spentAmount <= amount`, which the helper does not enforce and the theorem does not assume.
+
 ### `lagoon/guardrails`
 - Family / implementation: `lagoon` / `v0_6_0`
 - Stage: `build_green`
@@ -112,6 +132,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_locked`, `getPooledEthBySharesRoundUp`
 - Upstream source artifact: `contracts/0.8.25/vaults/VaultHub.sol`
 - Notes: Locked-amount arithmetic slice of Lido VaultHub (V3 vaults branch). Based on the Certora formal verification report (December 2025). F-01 could not be proven by Certora and is the primary benchmark task. P-VH-03 and P-VH-04 were proven by Certora and serve as supporting lemmas.
+
+### `lifi/swap_atomicity`
+- Family / implementation: `lifi` / `contracts`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.LiFi.SwapAtomicity.Compile`
+- Source ref: `https://github.com/lifinance/contracts@62bed68d9ba6cd3cd7b92e917f2c47531b20f75d:src/Facets/GenericSwapFacet.sol`
+- Selected functions: `GenericSwapFacet.swapTokensGeneric`, `SwapperV2._depositAndSwap`, `SwapperV2._executeSwaps`, `LibSwap.swap`, `LibAsset.depositAssets`, `LibUtil.revertWith`
+- Upstream source artifact: `src/Facets/GenericSwapFacet.sol`
+- Notes: This is an atomicity benchmark, not a price-quality or route-optimality benchmark. It proves that the modeled LI.FI route cannot commit a public final transfer unless every modeled public-route gate succeeds, every modeled route step succeeds, and the output amount meets the minimum.
 
 ### `nexus_mutual/ramm_price_band`
 - Family / implementation: `nexus_mutual` / `smart_contracts`
@@ -142,6 +172,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `claimUsdc`, `_claimUsdc`, `claimWeth`, `_claimWeth`, `claimBoth`
 - Upstream source artifact: `src/StreamRecoveryClaim.sol`
 - Notes: Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
+
+### `pareto/redemption_backing`
+- Family / implementation: `pareto` / `usp`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Pareto.RedemptionBacking.Compile`
+- Source ref: `https://github.com/pareto-credit/USP@2cb0a098c7ccb9813497ef3982d78c44a596c87b:src/ParetoDollarQueue.sol`
+- Selected functions: `depositFunds`
+- Upstream source artifact: `src/ParetoDollarQueue.sol`
+- Notes: Reference proof is complete for the modeled successful depositFunds path under the source reserve require (`hReserveGuard`) and checked-arithmetic side conditions: the resulting state satisfies the closed-epoch reserve guard.
 
 ### `piku/fund_conservation`
 - Family / implementation: `piku` / `inverter_oracle_queue`
@@ -202,6 +242,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `addOwnerWithThreshold`, `removeOwner`, `swapOwner`, `setupOwners`
 - Upstream source artifact: `contracts/base/OwnerManager.sol`
 - Notes: Linked list reachability invariant preservation and functional correctness for the Safe OwnerManager. Based on the Certora OwnerReach.spec which defines the inListReachable and reachableInList invariants. All 15 proof tasks are complete (0 sorry) covering acyclicity, inListReachable, ownerListInvariant preservation, and isOwner functional correctness for all four operations. The unprovable stronglyAcyclic axiom was replaced with the provable uniquePredecessor property. Functional correctness proofs verify that each operation changes exactly the intended owners and leaves all others unchanged.
+
+### `t3tris/hwm_performance_fee`
+- Family / implementation: `t3tris` / `t3tris_vault`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.T3tris.HwmPerformanceFee.Compile`
+- Source ref: `https://github.com/t3tris-finance/T3tris-Vault@89ad64a8e945214cd40a18db146e1feed83e417f:src/libraries/feature/FeatureFeesLib.sol`
+- Selected functions: `FeatureFeesLib._computeLastPeriodFeesAndUpdateResult`, `ReleaseFeesLib.computeAndRecordAccruedFees`, `FeatureSettlementLib._updateSettlementValues`
+- Upstream source artifact: `src/libraries/feature/FeatureFeesLib.sol`
+- Notes: This case targets the coverage gap not present in Cyfrin's T3tris suite: structural HWM facts are already proved, but the multi-step economic property that recovery up to the fee-accounted HWM charges no second performance fee is not.
 
 ### `term_finance/term_auction_clearing`
 - Family / implementation: `term_finance` / `term_finance_contracts`
@@ -388,6 +438,336 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean`
 - Editable proof file: `Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/FlashLoanViaDepositSetsSenderCredit.lean`
 - Hidden reference solution: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs`
+
+### `erc4337/entry_point_invariant/account_rejection_reverts`
+- Track / property class / proof family: `proof-only` / `authority_required` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.account_rejection_reverts`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/AccountRejectionReverts.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/all_executed_on_success`
+- Track / property class / proof family: `proof-only` / `batch_completeness` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.all_executed_on_success`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/AllExecutedOnSuccess.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/all_validated_on_success`
+- Track / property class / proof family: `proof-only` / `batch_completeness` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.all_validated_on_success`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/AllValidatedOnSuccess.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/beneficiary_eq_total_prefund`
+- Track / property class / proof family: `proof-only` / `fee_conservation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.beneficiary_eq_total_prefund`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/BeneficiaryEqTotalPrefund.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/count_executed_eq_validated`
+- Track / property class / proof family: `proof-only` / `counting_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.count_executed_eq_validated`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/CountExecutedEqValidated.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/executed_index_in_bounds`
+- Track / property class / proof family: `proof-only` / `bounds_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.executed_index_in_bounds`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutedIndexInBounds.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/execution_iff_validation`
+- Track / property class / proof family: `proof-only` / `biconditional_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.execution_iff_validation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionIffValidation.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/execution_implies_validation`
+- Track / property class / proof family: `proof-only` / `safety_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.execution_implies_validation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionImpliesValidation.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/execution_independent_of_inner_revert`
+- Track / property class / proof family: `proof-only` / `independence_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.execution_independent_of_inner_revert`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionIndependentOfInnerRevert.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/execution_length_eq_validation_length`
+- Track / property class / proof family: `proof-only` / `length_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.execution_length_eq_validation_length`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionLengthEqValidationLength.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/execution_r_iff_in_bounds`
+- Track / property class / proof family: `proof-only` / `biconditional_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.executionR_iff_in_bounds`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ExecutionRIffInBounds.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/fees_collected_eq_ops_length`
+- Track / property class / proof family: `proof-only` / `fee_conservation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.fees_collected_eq_ops_length`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/FeesCollectedEqOpsLength.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/fees_concat_additive`
+- Track / property class / proof family: `proof-only` / `fee_conservation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.fees_concat_additive`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/FeesConcatAdditive.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/full_success_implies_all_account_approved`
+- Track / property class / proof family: `proof-only` / `safety_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.full_success_implies_all_account_approved`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/FullSuccessImpliesAllAccountApproved.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/handle_ops_deterministic`
+- Track / property class / proof family: `proof-only` / `functional_property` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.handleOps_deterministic`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/HandleOpsDeterministic.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/handle_ops_empty`
+- Track / property class / proof family: `proof-only` / `base_case_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.handleOps_empty`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/HandleOpsEmpty.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/no_beneficiary_payout_on_revert`
+- Track / property class / proof family: `proof-only` / `fee_conservation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.no_beneficiary_payout_on_revert`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NoBeneficiaryPayoutOnRevert.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/no_execution_on_revert`
+- Track / property class / proof family: `proof-only` / `revert_safety` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.no_execution_on_revert`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NoExecutionOnRevert.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/no_fees_on_revert`
+- Track / property class / proof family: `proof-only` / `fee_conservation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.no_fees_on_revert`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NoFeesOnRevert.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/nonce_advances_by_batch_size`
+- Track / property class / proof family: `proof-only` / `nonce_monotonicity` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_advances_by_batch_size`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NonceAdvancesByBatchSize.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/nonce_mismatch_reverts`
+- Track / property class / proof family: `proof-only` / `replay_protection` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_mismatch_reverts`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NonceMismatchReverts.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/nonce_strictly_increases`
+- Track / property class / proof family: `proof-only` / `replay_protection` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_strictly_increases`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/NonceStrictlyIncreases.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/paymaster_irrelevant_when_absent`
+- Track / property class / proof family: `proof-only` / `scope_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.paymaster_irrelevant_when_absent`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/PaymasterIrrelevantWhenAbsent.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/paymaster_rejection_reverts_when_present`
+- Track / property class / proof family: `proof-only` / `authority_required` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.paymaster_rejection_reverts_when_present`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/PaymasterRejectionRevertsWhenPresent.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/sender_call_iff_validated_and_calldata`
+- Track / property class / proof family: `proof-only` / `biconditional_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.sender_call_iff_validated_and_calldata`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/SenderCallIffValidatedAndCalldata.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/single_failure_reverts`
+- Track / property class / proof family: `proof-only` / `all_or_nothing` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.single_failure_reverts`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/SingleFailureReverts.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/single_op_execution_on_validation`
+- Track / property class / proof family: `proof-only` / `storage_update` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_execution_on_validation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/SingleOpExecutionOnValidation.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/single_op_fee_collected`
+- Track / property class / proof family: `proof-only` / `storage_update` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_fee_collected`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/SingleOpFeeCollected.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/total_prefund_concat`
+- Track / property class / proof family: `proof-only` / `additivity` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.total_prefund_concat`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/TotalPrefundConcat.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/validation_concat`
+- Track / property class / proof family: `proof-only` / `composition_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ValidationConcat.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/validation_concat_fail_left`
+- Track / property class / proof family: `proof-only` / `failure_propagation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat_fail_left`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ValidationConcatFailLeft.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/validation_concat_fail_right`
+- Track / property class / proof family: `proof-only` / `failure_propagation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat_fail_right`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ValidationConcatFailRight.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
+
+### `erc4337/entry_point_invariant/validation_implies_execution`
+- Track / property class / proof family: `proof-only` / `liveness_invariant` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ERC4337.EntryPointInvariant.validation_implies_execution`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/erc4337/entry_point_invariant/verity/Contract.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Contract.lean`
+- Specification files: `cases/erc4337/entry_point_invariant/verity/Specs.lean`, `Benchmark/Cases/ERC4337/EntryPointInvariant/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ERC4337/EntryPointInvariant/Tasks/ValidationImpliesExecution.lean`
+- Hidden reference solution: `Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs`
 
 ### `ethereum/deposit_contract_minimal/chain_start_threshold`
 - Track / property class / proof family: `proof-only` / `threshold_activation` / `protocol_transition_correctness`
@@ -589,6 +969,16 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Kleros/SortitionTrees/Tasks/RootMinusLeftEqualsRightSubtree.lean`
 - Hidden reference solution: `Benchmark.Cases.Kleros.SortitionTrees.Proofs`
 
+### `kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor`
+- Track / property class / proof family: `proof-only` / `price_floor` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.KyberSwap.PartialFillPriceFloor.checkReturnAmount_partial_fill_price_floor`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/kyberswap/partial_fill_price_floor/verity/Contract.lean`, `Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Contract.lean`
+- Specification files: `cases/kyberswap/partial_fill_price_floor/verity/Specs.lean`, `Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Specs.lean`
+- Editable proof file: `Benchmark/Generated/KyberSwap/PartialFillPriceFloor/Tasks/CheckReturnAmountPartialFillPriceFloor.lean`
+- Hidden reference solution: `Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs`
+
 ### `lagoon/guardrails/exact_compliance`
 - Track / property class / proof family: `proof-only` / `compliance_boundary` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -668,6 +1058,66 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/lido/vaulthub_locked/verity/Specs.lean`, `Benchmark/Cases/Lido/VaulthubLocked/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Lido/VaulthubLocked/Tasks/SharesConversionMonotone.lean`
 - Hidden reference solution: `Benchmark.Cases.Lido.VaulthubLocked.Proofs`
+
+### `lifi/swap_atomicity/committed_route_executes_every_step`
+- Track / property class / proof family: `proof-only` / `no_partial_success` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.committed_route_executes_every_step`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/CommittedRouteExecutesEveryStep.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/failed_step_reverts`
+- Track / property class / proof family: `proof-only` / `all_or_nothing` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.failed_step_reverts`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FailedStepReverts.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/final_transfer_implies_all_steps_succeeded`
+- Track / property class / proof family: `proof-only` / `all_or_nothing` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.final_transfer_implies_all_steps_succeeded`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/FinalTransferImpliesAllStepsSucceeded.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/min_output_required_for_commit`
+- Track / property class / proof family: `proof-only` / `minimum_output_gate` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.min_output_required_for_commit`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/MinOutputRequiredForCommit.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/no_final_transfer_on_failed_step`
+- Track / property class / proof family: `proof-only` / `atomic_finalization` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.no_final_transfer_on_failed_step`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/NoFinalTransferOnFailedStep.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
+
+### `lifi/swap_atomicity/route_gate_failure_prevents_commit`
+- Track / property class / proof family: `proof-only` / `atomic_finalization` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.LiFi.SwapAtomicity.route_gate_failure_prevents_commit`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/lifi/swap_atomicity/verity/Contract.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Contract.lean`
+- Specification files: `cases/lifi/swap_atomicity/verity/Specs.lean`, `Benchmark/Cases/LiFi/SwapAtomicity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/RouteGateFailurePreventsCommit.lean`
+- Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
 
 ### `nexus_mutual/ramm_price_band/sync_sets_book_value`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
@@ -1069,6 +1519,16 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
 
+### `pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard`
+- Track / property class / proof family: `proof-only` / `redemption_reserve_guard` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Pareto.RedemptionBacking.depositFunds_preserves_closed_epoch_reserve_guard`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/pareto/redemption_backing/verity/Contract.lean`, `Benchmark/Cases/Pareto/RedemptionBacking/Contract.lean`
+- Specification files: `cases/pareto/redemption_backing/verity/Specs.lean`, `Benchmark/Cases/Pareto/RedemptionBacking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Pareto/RedemptionBacking/Tasks/DepositFundsPreservesClosedEpochReserveGuard.lean`
+- Hidden reference solution: `Benchmark.Cases.Pareto.RedemptionBacking.Proofs`
+
 ### `piku/fund_conservation/amount_paid_preserves_fund_conservation`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -1388,6 +1848,86 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/safe/owner_manager_reach/verity/Specs.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerOwnerListInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Safe.OwnerManagerReach.Proofs`
+
+### `t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply`
+- Track / property class / proof family: `proof-only` / `fee_accounting_bounds` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.fee_claim_preserves_unclaimed_le_supply`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/FeeClaimPreservesUnclaimedLeSupply.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/gain_loss_recovery_no_double_charge`
+- Track / property class / proof family: `proof-only` / `economic_no_double_charge` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.gain_loss_recovery_no_double_charge`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/GainLossRecoveryNoDoubleCharge.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/no_performance_fee_when_pre_pps_le_hwm`
+- Track / property class / proof family: `proof-only` / `fee_trigger` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.no_performance_fee_when_pre_pps_le_hwm`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/NoPerformanceFeeWhenPrePpsLeHwm.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/period_fee_accounting_preserves_structural_assumptions`
+- Track / property class / proof family: `proof-only` / `fee_accounting_bounds` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.period_fee_accounting_preserves_structural_assumptions`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/PeriodFeeAccountingPreservesStructuralAssumptions.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/profit_pnl_uses_cached_hwm`
+- Track / property class / proof family: `proof-only` / `fee_base_correctness` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.profit_pnl_uses_cached_hwm`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ProfitPnlUsesCachedHwm.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/recovery_then_new_high_uses_stored_hwm`
+- Track / property class / proof family: `proof-only` / `fee_base_correctness` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.recovery_then_new_high_uses_stored_hwm`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/RecoveryThenNewHighUsesStoredHwm.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/validated_initial_state_satisfies_successful_assumptions`
+- Track / property class / proof family: `proof-only` / `configuration_safety` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.validated_initial_state_satisfies_successful_assumptions`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ValidatedInitialStateSatisfiesSuccessfulAssumptions.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
+
+### `t3tris/hwm_performance_fee/validated_performance_fee_update_preserves_cap`
+- Track / property class / proof family: `proof-only` / `configuration_safety` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.T3tris.HwmPerformanceFee.validated_performance_fee_update_preserves_cap`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/t3tris/hwm_performance_fee/verity/Contract.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Contract.lean`
+- Specification files: `cases/t3tris/hwm_performance_fee/verity/Specs.lean`, `Benchmark/Cases/T3tris/HwmPerformanceFee/Specs.lean`
+- Editable proof file: `Benchmark/Generated/T3tris/HwmPerformanceFee/Tasks/ValidatedPerformanceFeeUpdatePreservesCap.lean`
+- Hidden reference solution: `Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs`
 
 ### `term_finance/term_auction_clearing/clearing_assignment_correct`
 - Track / property class / proof family: `proof-only` / `accounting_and_rate_guard` / `functional_correctness`

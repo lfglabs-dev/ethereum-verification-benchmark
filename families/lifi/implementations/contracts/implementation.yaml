@@ -1,0 +1,18 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: lifi
+implementation_id: contracts
+display_name: LI.FI contracts
+split: active
+status: translated
+upstream_repo: https://github.com/lifinance/contracts
+upstream_commit: 62bed68d9ba6cd3cd7b92e917f2c47531b20f75d
+source_language: solidity
+source_artifact_path: src/Facets/GenericSwapFacet.sol
+case_ids:
+  - lifi/swap_atomicity
+notes: >
+  The implementation entry covers the original LI.FI source-chain swap
+  execution path through GenericSwapFacet, SwapperV2, LibSwap, LibAsset, and
+  LibUtil at the pinned upstream commit. GenericSwapFacetV3 and periphery
+  Executor loops are not part of this case.

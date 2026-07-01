@@ -215,33 +215,31 @@
       "archive": {
         "asset_name": "benchmark-v0.1-openai-gpt-55-pro.tar.zst",
         "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-openai-gpt-55-pro.tar.zst",
-        "byte_size": 638216,
+        "byte_size": 935560,
         "release_tag": "v0.1",
-        "sha256": "d5bcf16110e029cf2b33764ca68492981dd5b4ae0b9bf56e365066477c16d01a"
+        "sha256": "39e96f161d0b503324118208a041e0cad6c405aec87ecab40942e275acfd6cf9"
       },
-      "caveats": [
-        "partial task coverage: 54/135"
-      ],
-      "completion_tokens": 272215,
+      "caveats": [],
+      "completion_tokens": 799281,
       "display_name": "gpt-5.5-pro",
-      "failed": 19,
+      "failed": 81,
       "inference_model_id": "openai-gpt-55-pro",
       "inference_provider_id": "openai",
-      "median_completion_tokens_to_pass": 1493,
-      "median_prompt_tokens_to_pass": 54094,
+      "median_completion_tokens_to_pass": 1707,
+      "median_prompt_tokens_to_pass": 70009,
       "model": "gpt-5.5-pro",
       "model_id": "openai/gpt-5.5-pro",
       "model_name": "gpt-5.5-pro",
       "model_provider_id": "openai",
-      "pass_rate": 0.648,
-      "passed": 35,
-      "prompt_tokens": 7572463,
+      "pass_rate": 0.4,
+      "passed": 54,
+      "prompt_tokens": 21976041,
       "provider": "openai",
       "source_model_id": "openai-gpt-55-pro",
       "status": "partial",
-      "task_count": 54,
-      "total_tokens": 7844678,
-      "valid_count": 54
+      "task_count": 135,
+      "total_tokens": 22775322,
+      "valid_count": 126
     },
     {
       "archive": {
@@ -307,16 +305,14 @@
       "archive": {
         "asset_name": "benchmark-v0.1-virtuals-deepseek-v4-pro.tar.zst",
         "asset_url": "https://github.com/lfglabs-dev/ethereum-verification-benchmark/releases/download/v0.1/benchmark-v0.1-virtuals-deepseek-v4-pro.tar.zst",
-        "byte_size": 3965810,
+        "byte_size": 2285665,
         "release_tag": "v0.1",
-        "sha256": "051bf8d3544fc135f93ed4cb5e50f18c451fe65983aa947beb04a89e2e25143f"
+        "sha256": "7fd4ac3a75888a3f091d45ae5adb191374960ea34819beb4fb35b1472f2bd403"
       },
-      "caveats": [
-        "partial task coverage: 126/135"
-      ],
+      "caveats": [],
       "completion_tokens": 3134542,
       "display_name": "deepseek-v4-pro",
-      "failed": 98,
+      "failed": 107,
       "inference_model_id": "virtuals/deepseek-v4-pro",
       "inference_provider_id": "virtuals",
       "median_completion_tokens_to_pass": 8540,
@@ -325,13 +321,13 @@
       "model_id": "deepseek/deepseek-v4-pro",
       "model_name": "deepseek-v4-pro",
       "model_provider_id": "deepseek",
-      "pass_rate": 0.222,
+      "pass_rate": 0.207,
       "passed": 28,
       "prompt_tokens": 92589294,
       "provider": "deepseek",
       "source_model_id": "virtuals/deepseek-v4-pro",
       "status": "partial",
-      "task_count": 126,
+      "task_count": 135,
       "total_tokens": 95723836,
       "valid_count": 126
     },

@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 25 cases and 135 task manifests. Of those, 135 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 30 cases and 184 task manifests. Of those, 184 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -15,21 +15,26 @@ The active suite currently contains 25 cases and 135 task manifests. Of those, 1
 | `balancer/reclamm_swap_rounding` | 1 | `complete` |
 | `cork/pool_solvency` | 1 | `partial` |
 | `damn_vulnerable_defi/side_entrance` | 5 | `partial` |
+| `erc4337/entry_point_invariant` | 33 | `complete` |
 | `ethereum/deposit_contract_minimal` | 5 | `partial` |
 | `forgeyields/global_solvency` | 7 | `complete` |
 | `ipor/plasma_vault_redeem_split` | 2 | `complete` |
 | `kleros/sortition_trees` | 6 | `partial` |
+| `kyberswap/partial_fill_price_floor` | 1 | `complete` |
 | `lagoon/guardrails` | 3 | `complete` |
 | `lido/vaulthub_locked` | 5 | `partial` |
+| `lifi/swap_atomicity` | 6 | `complete` |
 | `nexus_mutual/ramm_price_band` | 4 | `partial` |
 | `onedelta/caller_address_integrity` | 10 | `complete` |
 | `paladin_votes/stream_recovery_claim_usdc` | 26 | `complete` |
+| `pareto/redemption_backing` | 1 | `complete` |
 | `piku/fund_conservation` | 4 | `complete` |
 | `polaris/bonding_curve` | 4 | `complete` |
 | `polygon/agglayer_bridge` | 2 | `complete` |
 | `reserve/auction_price_band` | 4 | `complete` |
 | `rootstock/flyover_quote_lifecycle` | 3 | `complete` |
 | `safe/owner_manager_reach` | 15 | `complete` |
+| `t3tris/hwm_performance_fee` | 8 | `complete` |
 | `term_finance/term_auction_clearing` | 1 | `complete` |
 | `termmax/order_v2_buy_xt_single_segment` | 1 | `complete` |
 | `usual/dao_collateral` | 5 | `complete` |
