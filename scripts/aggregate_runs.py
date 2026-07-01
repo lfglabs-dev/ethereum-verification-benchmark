@@ -18,9 +18,14 @@ from __future__ import annotations
 import argparse
 import json
 import statistics
+import sys
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from harness.result_validity import failure_counts_from_tasks, row_validity  # noqa: E402
 from release_config import BENCHMARK_TITLE, HARNESS_USER_AGENT
 
 
@@ -148,6 +153,7 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
         score = run.get("verifier", {}).get("score", {})
         attempts = None
         tool_calls = None
+        tasks: list[object] = []
         response_path = run_path.parent / "harness-response.json"
         if response_path.is_file():
             try:
@@ -159,6 +165,44 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
             except (OSError, json.JSONDecodeError):
                 pass
         usage = run.get("usage") or {}
+        failure_counts = run.get("failure_counts")
+        if not isinstance(failure_counts, dict):
+            failure_counts = failure_counts_from_tasks(tasks if isinstance(tasks, list) else [])
+        status = str(run.get("harness_status") or "")
+        verifier_passed = score.get("passed_targets", 0) == score.get("total_targets", 0) and score.get("total_targets", 0) > 0
+        task_dicts = [task for task in tasks if isinstance(task, dict)] if isinstance(tasks, list) else []
+        task_status = None
+        if len(task_dicts) == 1:
+            task_status = task_dicts[0].get("status")
+        validity = row_validity(
+            {
+                "status": task_status or ("lean_passed" if verifier_passed else status),
+                "harness_status": status,
+                "provider_setup_error": run.get("provider_setup_error") or status in {"missing_credentials", "preflight_failed"},
+                "usage": usage,
+                "tool_calls": tool_calls,
+                "attempts": (tasks[0].get("attempts") if isinstance(tasks, list) and tasks and isinstance(tasks[0], dict) else None),
+                "benchmark_budget": run.get("benchmark_budget"),
+                "verifier_confirmed": verifier_passed and not tasks,
+            },
+            expected_budget=run.get("benchmark_budget") if isinstance(run.get("benchmark_budget"), dict) else None,
+        )
+        validity_errors = list(validity.get("errors", []))
+        expected_budget = run.get("benchmark_budget") if isinstance(run.get("benchmark_budget"), dict) else None
+        for index, task in enumerate(task_dicts):
+            task_validity = task.get("validity")
+            if not isinstance(task_validity, dict):
+                task_validity = row_validity(task, expected_budget=expected_budget)
+            if not task_validity.get("valid"):
+                task_ref = task.get("task_ref") or task.get("task_id") or index
+                for error in task_validity.get("errors", ["invalid task row"]):
+                    validity_errors.append(f"{task_ref}: {error}")
+        valid = not validity_errors
+        passed = (
+            valid
+            and score.get("passed_targets", 0) == score.get("total_targets", 0)
+            and score.get("total_targets", 0) > 0
+        )
         rows.append(
             {
                 "run_id": run.get("run_id"),
@@ -167,9 +211,12 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
                 "model": run.get("model"),
                 "task_ref": run.get("task_ref") or run.get("group_id"),
                 "mode": run.get("mode"),
-                "passed": score.get("passed_targets", 0) == score.get("total_targets", 0) and score.get("total_targets", 0) > 0,
+                "valid": valid,
+                "validity_errors": validity_errors,
+                "passed": passed,
                 "passed_targets": score.get("passed_targets", 0),
                 "total_targets": score.get("total_targets", 0),
+                "failure_counts": failure_counts,
                 "attempts": attempts,
                 "tool_calls": tool_calls,
                 "prompt_tokens": usage.get("prompt_tokens"),
@@ -191,29 +238,33 @@ def _dedupe_latest(rows: list[dict[str, object]]) -> list[dict[str, object]]:
 
 
 def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
-    passed = [row for row in rows if row["passed"]]
+    valid_rows = [row for row in rows if row.get("valid")]
+    passed = [row for row in valid_rows if row["passed"]]
     costs = [row["cost_usd"] for row in passed if isinstance(row.get("cost_usd"), (int, float))]
-    all_costs = [row["cost_usd"] for row in rows if isinstance(row.get("cost_usd"), (int, float))]
+    all_costs = [row["cost_usd"] for row in valid_rows if isinstance(row.get("cost_usd"), (int, float))]
     completion = [row["completion_tokens"] for row in passed if isinstance(row["completion_tokens"], (int, float))]
     prompt = [row["prompt_tokens"] for row in passed if isinstance(row["prompt_tokens"], (int, float))]
-    attempts = [row["attempts"] for row in passed if isinstance(row["attempts"], int) and row["attempts"] > 0]
+    attempts = [row["attempts"] for row in passed if isinstance(row.get("attempts"), int) and row["attempts"] > 0]
     return {
         "tasks": len(rows),
+        "valid_tasks": len(valid_rows),
+        "invalid_tasks": len(rows) - len(valid_rows),
         "passed": len(passed),
-        "pass_rate": round(len(passed) / len(rows), 3) if rows else 0.0,
+        "pass_rate": round(len(passed) / len(valid_rows), 3) if valid_rows else 0.0,
         "median_attempts_to_pass": statistics.median(attempts) if attempts else None,
         "median_completion_tokens_to_pass": int(statistics.median(completion)) if completion else None,
         "median_prompt_tokens_to_pass": int(statistics.median(prompt)) if prompt else None,
-        "total_completion_tokens": sum(int(row["completion_tokens"]) for row in rows if isinstance(row["completion_tokens"], (int, float))),
-        "total_prompt_tokens": sum(int(row["prompt_tokens"]) for row in rows if isinstance(row["prompt_tokens"], (int, float))),
+        "total_completion_tokens": sum(int(row["completion_tokens"]) for row in valid_rows if isinstance(row["completion_tokens"], (int, float))),
+        "total_prompt_tokens": sum(int(row["prompt_tokens"]) for row in valid_rows if isinstance(row["prompt_tokens"], (int, float))),
         "median_cost_to_pass_usd": round(statistics.median(costs), 4) if costs else None,
         "total_cost_usd": round(sum(all_costs), 4) if all_costs else None,
+        "failure_counts": dict(sorted(sum((Counter(row.get("failure_counts") or {}) for row in rows), Counter()).items())),
     }
 
 
 def _badge(label: str, summary: dict[str, object]) -> dict[str, object]:
     passed = summary["passed"]
-    tasks = summary["tasks"]
+    tasks = summary.get("valid_tasks", summary["tasks"])
     tokens = summary["median_completion_tokens_to_pass"]
     message = f"{passed}/{tasks}"
     if tokens:
@@ -261,8 +312,8 @@ def _leaderboard_markdown(
         "whole agent loop (builtin: in-loop accounting; shell harnesses: metered at the API",
         "boundary by the harness proxy).",
         "",
-        "| Harness | Model | Pass | Median completion tok / pass | Median prompt tok / pass | Median cost / pass | Total completion tok | Total prompt tok | Total cost |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "| Harness | Model | Valid | Pass | Failure taxonomy | Median completion tok / pass | Median prompt tok / pass | Median cost / pass | Total completion tok | Total prompt tok | Total cost |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
 
     def sort_key(item: tuple[str, dict[str, object]]) -> tuple[float, float]:
@@ -287,8 +338,10 @@ def _leaderboard_markdown(
             value = est.get(est_key)
             return f"~{value} *(est.)*" if value else "—"
 
+        failure_counts = summary.get("failure_counts") if isinstance(summary.get("failure_counts"), dict) else {}
+        failures = ", ".join(f"`{key}` {value}" for key, value in sorted(failure_counts.items())) or "—"
         lines.append(
-            f"| {_harness_display(harness)} | {display} | {summary['passed']}/{summary['tasks']} | "
+            f"| {_harness_display(harness)} | {display} | {summary['valid_tasks']}/{summary['tasks']} | {summary['passed']}/{summary['valid_tasks']} | {failures} | "
             f"{cell(_fmt_tokens(summary['median_completion_tokens_to_pass']), 'completion')} | "
             f"{cell(_fmt_tokens(summary['median_prompt_tokens_to_pass']), 'prompt')} | "
             f"{cell(_fmt_cost(summary.get('median_cost_to_pass_usd')), 'cost')} | "
@@ -320,7 +373,7 @@ def _leaderboard_markdown(
             if row is None:
                 cells.append("·")
             else:
-                mark = "✅" if row["passed"] else "❌"
+                mark = "✅" if row["passed"] else ("⚠️" if not row.get("valid") else "❌")
                 cost = row.get("cost_usd")
                 suffix = f" ({_fmt_cost(cost)})" if isinstance(cost, (int, float)) else ""
                 tokens = row["completion_tokens"]
@@ -334,6 +387,7 @@ def _leaderboard_markdown(
         [
             "",
             "Notes: completion tokens are what the model generated (the main cost driver per",
+            "Invalid/setup rows are shown with ⚠️ and excluded from valid/pass denominators.",
             "provider pricing); prompt tokens show how context-hungry each harness is. Shell",
             "harness rows have no attempt counts because iteration happens inside the CLI.",
             "Values marked *(est.)* are estimates, not measurements: grok-cli exposes no token",

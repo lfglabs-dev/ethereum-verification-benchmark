@@ -59,6 +59,13 @@ def check_run(run_dir: Path) -> list[str]:
     for key in ("run_id", "harness_id", "track", "run_mode", "group_id", "verifier"):
         if key not in run:
             errors.append(f"{run_dir}: run.json missing {key}")
+    for key in ("benchmark_budget", "operational_budget"):
+        if key not in run:
+            errors.append(f"{run_dir}: run.json missing {key}")
+    if "benchmark_budget" not in request:
+        errors.append(f"{run_dir}: harness-request.json missing benchmark_budget")
+    if "operational_budget" not in request:
+        errors.append(f"{run_dir}: harness-request.json missing operational_budget")
     if run.get("run_mode") in {"task", "group", "suite"} and "started_at" not in run:
         errors.append(f"{run_dir}: run.json missing started_at")
     if run.get("run_mode") not in {"task", "group", "suite"}:
@@ -82,6 +89,15 @@ def check_run(run_dir: Path) -> list[str]:
             errors.append(f"{run_dir}: fair default run must record generic_grindset_only=true")
         if "max_tool_calls" not in request:
             errors.append(f"{run_dir}: fair default request missing max_tool_calls")
+        response = _load_json(run_dir / "harness-response.json", errors)
+        if isinstance(response, dict) and response.get("status") == "completed":
+            if "failure_counts" not in response:
+                errors.append(f"{run_dir}: fair default response missing failure_counts")
+            tasks = response.get("tasks")
+            if isinstance(tasks, list):
+                for task in tasks:
+                    if isinstance(task, dict) and "validity" not in task:
+                        errors.append(f"{run_dir}: fair default task missing validity metadata")
     if run.get("harness_id") == "grok-build" and run.get("run_mode") in {"task", "group"}:
         for key in ("max_turns", "auth_mode", "timeout_seconds"):
             if key not in request:
