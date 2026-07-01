@@ -77,6 +77,13 @@
       "description": "The harness completed, but the verifier reported an internal infrastructure error rather than a model proof verdict."
     },
     {
+      "id": "infra_invalid",
+      "label": "Provider/transport-invalid",
+      "is_pass": false,
+      "verifier_status": ["request_failed", "request_timeout", "missing_credentials", "provider_or_context_failure"],
+      "description": "A terminal provider/transport failure (HTTP 402/5xx/524, client timeout, or missing credentials) cost the model a turn, so the recorded verdict is not a genuine model result. Excluded from pass/fail scoring; detected from harness-response.json / conversations by scripts/infra_failures.py."
+    },
+    {
       "id": "no_submission",
       "label": "No submission",
       "is_pass": false,
