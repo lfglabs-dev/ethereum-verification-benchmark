@@ -8,4 +8,3 @@ theorem validated_initial_state_satisfies_successful_assumptions
   exact ?_
 
 end Benchmark.Cases.T3tris.HwmPerformanceFee
-

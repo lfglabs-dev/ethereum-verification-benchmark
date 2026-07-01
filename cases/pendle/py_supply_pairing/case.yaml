@@ -1,0 +1,61 @@
+manifest_kind: case
+project: pendle
+case_id: py_supply_pairing
+schema_version: 1
+split: active
+family_id: pendle
+implementation_id: core_v2_public
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/pendle-finance/pendle-core-v2-public
+upstream_commit: e8c2cca4c9b329ba8a383a27d7318e5f8b35c843
+original_contract_path: contracts/core/YieldContracts/PendleYieldToken.sol
+source_ref: https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol
+lean_target: Benchmark.Cases.Pendle.PySupplyPairing.Compile
+spec_target: Benchmark.Cases.Pendle.PySupplyPairing.Specs
+proof_target: Benchmark.Cases.Pendle.PySupplyPairing.Proofs
+selected_functions:
+  - PendleYieldToken.mintPY
+  - PendleYieldToken._mintPY
+  - PendleYieldToken.redeemPY
+  - PendleYieldToken._redeemPY
+  - PendleYieldToken._getAmountPYToRedeem
+  - PendlePrincipalToken.mintByYT
+  - PendlePrincipalToken.burnByYT
+  - SYUtils.syToAsset
+  - SYUtils.assetToSy
+source_language: solidity
+verity_version: d26a6ffa83ec8e8445533f076442c06dd1cdf487
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - external_transfer_elided
+  - reward_accounting_elided
+  - single_receiver_slice
+  - successful_path_guards
+  - paired_contract_inlined
+  - redeem_sy_tail_elided
+  - pre_expiry_slice
+abstraction_notes: >
+  The model isolates Pendle V2 PY tokenization supply accounting. It inlines the
+  paired PT contract as trusted paired state, models single-receiver mintPY, and
+  models redeemPY as a successful pre-expiry state transition. Mint-side checked
+  arithmetic is represented with Verity checked helpers. Redeem-side source
+  success conditions are theorem hypotheses: not expired, nonzero self address,
+  sufficient PT/YT balances and supplies, uint248 fit, nonzero index, and no
+  fixed-point multiplication overflow. The redeem model returns the source-close
+  amountSyOut expression but elides the SY transfer, SY reserve update, and
+  redeem-side PY-index storage write because they cannot mutate the PT/YT
+  supplies or balances used by this case. Rewards, user interest accrual,
+  transfer-hook side conditions, the `_pyIndexCurrent` uint128 narrowing
+  precondition, events, allowances, reentrancy status, and external token
+  transfer return behavior are outside this case because they do not directly
+  mutate the observed PT/YT accounting state.
+unsupported_feature_codes: []
+notes: >
+  Proves that successful mintPY and successful pre-expiry redeemPY preserve the
+  equality of PT and YT total supplies when that pairing held before the call.
+  Post-expiry redeem is intentionally excluded from the preservation theorem
+  because Pendle burns PT but not YT after maturity.

@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 32,
-    "implementation_count": 33,
-    "active_case_count": 30,
+    "family_count": 33,
+    "implementation_count": 34,
+    "active_case_count": 31,
     "backlog_case_count": 3,
-    "active_task_count": 184,
+    "active_task_count": 188,
     "backlog_task_count": 8,
-    "buildable_case_count": 32,
-    "runnable_task_count": 192,
+    "buildable_case_count": 33,
+    "runnable_task_count": 196,
     "case_stage_counts": {
-      "build_green": 27,
+      "build_green": 28,
       "candidate": 1,
       "proof_complete": 5
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 32
+      "translated": 33
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 25,
+      "complete": 26,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 192
+      "proof-only": 196
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -41,8 +41,9 @@
       "accounting_bound": 16,
       "accounting_conservation": 15,
       "accounting_effect": 2,
+      "accounting_invariant": 2,
       "accounting_invariant_break": 1,
-      "accounting_update": 6,
+      "accounting_update": 8,
       "additivity": 1,
       "all_or_nothing": 3,
       "arithmetic_rounding": 3,
@@ -115,13 +116,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 48,
+      "functional_correctness": 52,
       "protocol_transition_correctness": 23,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 54
     },
     "family_split_counts": {
-      "active": 29,
+      "active": 30,
       "backlog": 2,
       "mixed": 1
     }
@@ -432,6 +433,23 @@
         "solidity"
       ],
       "manifest_path": "families/pareto/family.yaml"
+    },
+    {
+      "family_id": "pendle",
+      "display_name": "Pendle",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Pendle V2 core tokenization and market accounting invariants.",
+      "implementation_ids": [
+        "core_v2_public"
+      ],
+      "case_ids": [
+        "pendle/py_supply_pairing"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/pendle/family.yaml"
     },
     {
       "family_id": "piku",
@@ -962,6 +980,22 @@
       ],
       "notes": "Public Pareto USP contracts centered on ParetoDollar and ParetoDollarQueue.",
       "manifest_path": "families/pareto/implementations/usp/implementation.yaml"
+    },
+    {
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "display_name": "Pendle Core V2 Public",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/pendle-finance/pendle-core-v2-public",
+      "upstream_commit": "e8c2cca4c9b329ba8a383a27d7318e5f8b35c843",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/core/YieldContracts/PendleYieldToken.sol",
+      "case_ids": [
+        "pendle/py_supply_pairing"
+      ],
+      "notes": "Implementation entry for Pendle V2 core, focused on the PT/YT pair mint and redeem accounting in PendleYieldToken and PendlePrincipalToken.",
+      "manifest_path": "families/pendle/implementations/core_v2_public/implementation.yaml"
     },
     {
       "family_id": "piku",
@@ -1984,6 +2018,58 @@
       ],
       "spec_target": "Benchmark.Cases.Pareto.RedemptionBacking.Specs",
       "proof_target": "Benchmark.Cases.Pareto.RedemptionBacking.Proofs"
+    },
+    {
+      "case_id": "pendle/py_supply_pairing",
+      "project": "pendle",
+      "case_name": "py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/case.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/pendle-finance/pendle-core-v2-public",
+      "upstream_commit": "e8c2cca4c9b329ba8a383a27d7318e5f8b35c843",
+      "original_contract_path": "contracts/core/YieldContracts/PendleYieldToken.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "selected_functions": [
+        "PendleYieldToken.mintPY",
+        "PendleYieldToken._mintPY",
+        "PendleYieldToken.redeemPY",
+        "PendleYieldToken._redeemPY",
+        "PendleYieldToken._getAmountPYToRedeem",
+        "PendlePrincipalToken.mintByYT",
+        "PendlePrincipalToken.burnByYT",
+        "SYUtils.syToAsset",
+        "SYUtils.assetToSy"
+      ],
+      "lean_target": "Benchmark.Cases.Pendle.PySupplyPairing.Compile",
+      "failure_reason": null,
+      "notes": "Proves that successful mintPY and successful pre-expiry redeemPY preserve the equality of PT and YT total supplies when that pairing held before the call. Post-expiry redeem is intentionally excluded from the preservation theorem because Pendle burns PT but not YT after maturity.",
+      "buildable": true,
+      "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "external_transfer_elided",
+        "reward_accounting_elided",
+        "single_receiver_slice",
+        "successful_path_guards",
+        "paired_contract_inlined",
+        "redeem_sy_tail_elided",
+        "pre_expiry_slice"
+      ],
+      "abstraction_notes": "The model isolates Pendle V2 PY tokenization supply accounting. It inlines the paired PT contract as trusted paired state, models single-receiver mintPY, and models redeemPY as a successful pre-expiry state transition. Mint-side checked arithmetic is represented with Verity checked helpers. Redeem-side source success conditions are theorem hypotheses: not expired, nonzero self address, sufficient PT/YT balances and supplies, uint248 fit, nonzero index, and no fixed-point multiplication overflow. The redeem model returns the source-close amountSyOut expression but elides the SY transfer, SY reserve update, and redeem-side PY-index storage write because they cannot mutate the PT/YT supplies or balances used by this case. Rewards, user interest accrual, transfer-hook side conditions, the `_pyIndexCurrent` uint128 narrowing precondition, events, allowances, reentrancy status, and external token transfer return behavior are outside this case because they do not directly mutate the observed PT/YT accounting state.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Pendle.PySupplyPairing.Specs",
+      "proof_target": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs"
     },
     {
       "case_id": "piku/fund_conservation",
@@ -8267,6 +8353,186 @@
       }
     },
     {
+      "task_ref": "pendle/py_supply_pairing/mint_py_mints_equal_amount",
+      "task_id": "mint_py_mints_equal_amount",
+      "case_id": "pendle/py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/tasks/mint_py_mints_equal_amount.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "supply-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Pendle.PySupplyPairing.mint_py_mints_equal_amount",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pendle/py_supply_pairing/verity/Contract.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pendle/py_supply_pairing/verity/Specs.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pendle/PySupplyPairing/Tasks/MintPyMintsEqualAmount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful non-expired mintPY computes one amountPYOut from floating SY and increments YT and PT accounting by that exact amount under checked multiplication/addition and uint248 successful-path assumptions.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "pendle/py_supply_pairing/mint_py_preserves_supply_pairing",
+      "task_id": "mint_py_preserves_supply_pairing",
+      "case_id": "pendle/py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/tasks/mint_py_preserves_supply_pairing.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_invariant",
+      "category": "supply-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Pendle.PySupplyPairing.mint_py_preserves_supply_pairing",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pendle/py_supply_pairing/verity/Contract.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pendle/py_supply_pairing/verity/Specs.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pendle/PySupplyPairing/Tasks/MintPyPreservesSupplyPairing.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful non-expired mintPY computes one amountPYOut from floating SY and mints that same amount to both YT and PT under checked multiplication/addition and uint248 successful-path assumptions.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "pendle/py_supply_pairing/redeem_py_pre_expiry_burns_equal_amount",
+      "task_id": "redeem_py_pre_expiry_burns_equal_amount",
+      "case_id": "pendle/py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/tasks/redeem_py_pre_expiry_burns_equal_amount.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "supply-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_burns_equal_amount",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pendle/py_supply_pairing/verity/Contract.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pendle/py_supply_pairing/verity/Specs.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pendle/PySupplyPairing/Tasks/RedeemPyPreExpiryBurnsEqualAmount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful pre-expiry redeemPY burns the exact amountPYToRedeem from both PT and YT supplies and contract-held balances. Source guard/revert conditions and redeem-side fixed-point arithmetic safety are theorem hypotheses for this successful-path slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "pendle/py_supply_pairing/redeem_py_pre_expiry_preserves_supply_pairing",
+      "task_id": "redeem_py_pre_expiry_preserves_supply_pairing",
+      "case_id": "pendle/py_supply_pairing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/pendle/py_supply_pairing/tasks/redeem_py_pre_expiry_preserves_supply_pairing.yaml",
+      "split": "active",
+      "family_id": "pendle",
+      "implementation_id": "core_v2_public",
+      "source_ref": "https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_invariant",
+      "category": "supply-invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_preserves_supply_pairing",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/pendle/py_supply_pairing/verity/Contract.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/pendle/py_supply_pairing/verity/Specs.lean",
+        "Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Pendle/PySupplyPairing/Tasks/RedeemPyPreExpiryPreservesSupplyPairing.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful pre-expiry redeemPY burns the same amountPYToRedeem from PT and YT under source guard/revert hypotheses. Post-expiry is intentionally excluded because the source contract burns PT only after maturity.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation",
       "task_id": "amount_paid_preserves_fund_conservation",
       "case_id": "piku/fund_conservation",
@@ -11564,5 +11830,5 @@
       }
     }
   ],
-  "generated_at": "2026-06-27T13:09:03.898122+00:00"
+  "generated_at": "2026-06-29T08:26:48.629251+00:00"
 }

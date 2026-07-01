@@ -9,4 +9,3 @@ theorem fee_claim_preserves_unclaimed_le_supply
   exact ?_
 
 end Benchmark.Cases.T3tris.HwmPerformanceFee
-

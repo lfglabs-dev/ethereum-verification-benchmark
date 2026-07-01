@@ -34,6 +34,7 @@ active_cases = [
   "onedelta/caller_address_integrity",
   "paladin_votes/stream_recovery_claim_usdc",
   "pareto/redemption_backing",
+  "pendle/py_supply_pairing",
   "piku/fund_conservation",
   "polaris/bonding_curve",
   "polygon/agglayer_bridge",
