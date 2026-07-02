@@ -33,6 +33,32 @@ import json
 from pathlib import Path
 from typing import Any, Iterable
 
+# Verifier verdicts that reflect a real, graded model result: the model submitted work
+# and the verifier reached a genuine verdict about it. These are *never* infrastructure-
+# invalid, even when a later turn hit transport noise after the gradeable work was
+# produced -- the model already had, and used, a fair turn. Trusting a terminal transport
+# status over one of these verdicts over-counts genuine model failures as infra outages.
+GENUINE_VERDICT_STATUSES = frozenset(
+    {
+        "passed",
+        "lean_check_failed",
+        "failed",
+        "forbidden_placeholder",
+        "rejected_forbidden_placeholder",
+        "theorem_statement_mismatch",
+        "hidden_import",
+        "timeout",
+        "deterministic_timeout",
+    }
+)
+
+# Non-gradeable verdicts: the model produced nothing the verifier could grade. Only these
+# are eligible for infra-invalidation, and only when a terminal transport failure denied a
+# model that had not already completed genuine work (see ``_has_genuine_work``).
+NON_GRADEABLE_VERDICT_STATUSES = frozenset(
+    {"no_submission", "not_runnable", "missing_candidate", "theorem_missing", "reference_declaration_missing"}
+)
+
 # Per-task harness statuses that mean the model never got a fair, completed turn.
 INFRA_TASK_STATUSES = frozenset({"request_failed", "request_timeout", "missing_credentials"})
 
@@ -102,13 +128,72 @@ def _conversation_reason(run_dir: Path) -> str | None:
     return None
 
 
+def _verdict_statuses(run: dict[str, Any]) -> list[str]:
+    """Return the lower-cased verifier target statuses recorded in ``run.json``."""
+    verifier = run.get("verifier") if isinstance(run.get("verifier"), dict) else None
+    if not isinstance(verifier, dict):
+        return []
+    targets = verifier.get("targets")
+    statuses: list[str] = []
+    if isinstance(targets, list):
+        for target in targets:
+            if isinstance(target, dict):
+                statuses.append(str(target.get("status") or "").strip().lower())
+    return statuses
+
+
+def _has_genuine_work(run_dir: Path | None) -> bool:
+    """True if the run produced a gradeable candidate (a verifier attempt actually ran).
+
+    A non-gradeable *verdict* (``no_submission`` / ``theorem_missing``) can still sit on
+    top of genuine model work: the model may have submitted candidates that the verifier
+    checked (``attempts`` with a Lean status / candidate path) before a tail-turn transport
+    failure. Such a run reflects real capability, so it must not be scored as infra-invalid
+    even though the *final* verdict is non-gradeable.
+    """
+    if run_dir is None:
+        return False
+    response = _load_json(run_dir / "harness-response.json")
+    if not isinstance(response, dict):
+        return False
+    tasks = response.get("tasks")
+    if not isinstance(tasks, list):
+        return False
+    for task in tasks:
+        if not isinstance(task, dict):
+            continue
+        attempts = task.get("attempts")
+        if not isinstance(attempts, list):
+            continue
+        for attempt in attempts:
+            if isinstance(attempt, dict) and (attempt.get("status") or attempt.get("candidate_path")):
+                return True
+    return False
+
+
 def provider_failure_reason(run: dict[str, Any], run_dir: Path | None) -> str | None:
     """Return a human-readable reason when a run's verdict is infrastructure-invalid, else ``None``.
 
-    ``run`` is the parsed ``run.json`` (used for lightweight, path-free signals);
-    ``run_dir`` is the artifact directory holding ``harness-response.json`` and
-    ``conversations/`` (may be ``None`` when only the manifest row is available).
+    ``run`` is the parsed ``run.json`` (used for the verifier verdict); ``run_dir`` is the
+    artifact directory holding ``harness-response.json`` and ``conversations/`` (may be
+    ``None`` when only the manifest row is available).
+
+    The classification is verdict- and work-aware, never transport-blind:
+
+    * A genuine graded verdict (``passed`` / ``lean_check_failed`` / ``forbidden_placeholder``
+      / statement mismatch / verifier ``timeout`` / ...) means the model got and used a fair
+      turn. It is genuine regardless of tail-turn transport noise -- return ``None``.
+    * A non-gradeable verdict (``no_submission`` / ``theorem_missing``) is infra-invalid only
+      when the model had *not* already completed genuine work; if a verifier attempt ran on a
+      submitted candidate, the run is genuine -- return ``None``.
+    * Otherwise, a terminal transport failure that actually cost the model its turn makes the
+      non-gradeable verdict infrastructure-invalid.
     """
+    verdicts = _verdict_statuses(run)
+    if any(status in GENUINE_VERDICT_STATUSES for status in verdicts):
+        return None
+    if _has_genuine_work(run_dir):
+        return None
     if run_dir is not None:
         reason = _harness_response_reason(run_dir)
         if reason:

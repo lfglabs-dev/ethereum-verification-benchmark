@@ -33,6 +33,7 @@ def _make_run_dir(
     failure_class: str | None,
     conv_records: list[dict[str, object]],
     harness_status: str = "completed",
+    attempts: list[dict[str, object]] | None = None,
 ) -> dict[str, object]:
     run_id = task_ref.replace("/", "__")
     run_dir = root / run_id
@@ -52,6 +53,8 @@ def _make_run_dir(
     task_entry: dict[str, object] = {"task_ref": task_ref, "status": harness_task_status}
     if failure_class is not None:
         task_entry["failure_class"] = failure_class
+    if attempts is not None:
+        task_entry["attempts"] = attempts
     _write(run_dir / "harness-response.json", {"status": harness_status, "tasks": [task_entry]})
     conv = run_dir / "conversations" / f"{run_id}.jsonl"
     conv.parent.mkdir(parents=True, exist_ok=True)
@@ -108,6 +111,50 @@ class InfraFailureDetectorTests(unittest.TestCase):
             )
             # detector may see nothing; recover treats passes as genuine regardless.
             self.assertIsNone(provider_failure_reason(run, Path(run["_artifact_path"])))
+
+    def test_graded_verdict_survives_terminal_transport_noise(self) -> None:
+        # Regression: a genuinely graded verdict (the model submitted a proof the verifier
+        # rejected) must stay a genuine model failure even when a tail turn hit a terminal
+        # transport failure. Trusting the transport status here over-counts model failures
+        # as infra outages (the pro-archive 56/135 over-count).
+        for verdict in ("lean_check_failed", "forbidden_placeholder", "timeout", "theorem_statement_mismatch"):
+            with self.subTest(verdict=verdict), tempfile.TemporaryDirectory() as tmp:
+                run = _make_run_dir(
+                    Path(tmp), f"grp/iface/{verdict}",
+                    points_earned=0, verifier_status=verdict,
+                    harness_task_status="request_failed", failure_class="provider_or_context_failure",
+                    conv_records=_terminal_524(),
+                )
+                self.assertIsNone(
+                    provider_failure_reason(run, Path(run["_artifact_path"])),
+                    f"graded verdict {verdict} must not be infra-invalidated by tail transport noise",
+                )
+
+    def test_non_gradeable_verdict_with_genuine_work_is_not_infra_invalid(self) -> None:
+        # theorem_missing on top of real work: the model submitted candidates the verifier
+        # checked (lean_failed attempts) before a terminal transport failure. It had a fair
+        # turn, so it is a genuine failure, not infra-invalid.
+        with tempfile.TemporaryDirectory() as tmp:
+            run = _make_run_dir(
+                Path(tmp), "grp/iface/worked",
+                points_earned=0, verifier_status="theorem_missing",
+                harness_task_status="request_failed", failure_class="provider_or_context_failure",
+                conv_records=_terminal_524(),
+                attempts=[{"attempt": 1, "status": "lean_failed", "candidate_path": "a.lean"}],
+            )
+            self.assertIsNone(provider_failure_reason(run, Path(run["_artifact_path"])))
+
+    def test_non_gradeable_verdict_without_work_is_infra_invalid(self) -> None:
+        # theorem_missing with zero verifier attempts + a terminal transport failure: the
+        # model never got a fair turn, so this is correctly infrastructure-invalid.
+        with tempfile.TemporaryDirectory() as tmp:
+            run = _make_run_dir(
+                Path(tmp), "grp/iface/denied",
+                points_earned=0, verifier_status="theorem_missing",
+                harness_task_status="request_failed", failure_class="provider_or_context_failure",
+                conv_records=_terminal_524(), attempts=[],
+            )
+            self.assertIsNotNone(provider_failure_reason(run, Path(run["_artifact_path"])))
 
     def test_transport_summary_counts(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -178,6 +225,22 @@ class RecoverScoringTests(unittest.TestCase):
         self.assertIn("provider_failure_reason", by_ref["grp/iface/infra"])
         self.assertFalse(by_ref["grp/iface/genfail"]["provider_invalid"])
         self.assertTrue(by_ref["grp/iface/genfail"]["reusable"])
+
+    def test_graded_verdict_with_transport_noise_scores_as_failed(self) -> None:
+        # End-to-end: a graded non-pass contaminated by a terminal transport failure must
+        # count as a genuine failure, never be silently excluded from the failed count.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            graded = _make_run_dir(
+                root, "grp/iface/graded", points_earned=0, verifier_status="lean_check_failed",
+                harness_task_status="request_failed", failure_class="provider_or_context_failure",
+                conv_records=_terminal_524(),
+            )
+            entry = self._build([graded])
+        self.assertEqual(entry["failed"], 1)
+        self.assertEqual(entry["invalid_count"], 0)
+        self.assertEqual(entry["valid_count"], 1)
+        self.assertFalse(entry["task_results"][0]["provider_invalid"])
 
     def test_reusable_result_forces_rerun_of_infra_invalid(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
