@@ -151,6 +151,10 @@ def provider_setup_error_text(text: str) -> str | None:
 
 def provider_setup_error_from_run_dir(run_dir: Path) -> str | None:
     response = harness_response_from_run_dir(run_dir)
+    if not response:
+        return None
+    if response.get("provider_setup_error") or response.get("failure_class") == "provider_setup_error":
+        return "provider_setup_error"
     if response.get("status") != "harness_error":
         return None
     return provider_setup_error_text(json.dumps(response, sort_keys=True))
@@ -249,16 +253,33 @@ def is_transient_failure(text: str, returncode: int) -> bool:
     )
 
 
+NON_RETRYABLE_HARNESS_STATUSES = frozenset(
+    {"completed", "missing_credentials", "preflight_failed", "dry_run"}
+)
+
+# Budget/config metadata is echoed into the harness response (e.g.
+# ``operational_budget.request_timeout_seconds``). It is not failure output, so
+# it must be excluded before scanning for transient/rate-limit markers.
+NON_FAILURE_RESPONSE_KEYS = frozenset(
+    {"benchmark_budget", "operational_budget", "usage", "preflight", "warm_builds"}
+)
+
+
 def is_retryable_harness_response(response: dict, returncode: int) -> bool:
     """Classify only harness/provider failures as retryable.
 
     A completed harness response with a failed proof is a benchmark result, even
     when the Lean diagnostic contains words like "timeout". Retrying those rows
     forever biases the scaling cascade and can prevent profile checkpoints.
+    Provider/setup failures (missing credentials, preflight) are terminal and
+    handled separately, never retried.
     """
-    if response.get("status") == "completed":
+    if response.get("status") in NON_RETRYABLE_HARNESS_STATUSES:
         return False
-    response_text = json.dumps(response, sort_keys=True)
+    if response.get("provider_setup_error") or response.get("failure_class") == "provider_setup_error":
+        return False
+    scored = {key: value for key, value in response.items() if key not in NON_FAILURE_RESPONSE_KEYS}
+    response_text = json.dumps(scored, sort_keys=True)
     return is_rate_limited(response_text) or is_transient_failure(response_text, returncode)
 
 
