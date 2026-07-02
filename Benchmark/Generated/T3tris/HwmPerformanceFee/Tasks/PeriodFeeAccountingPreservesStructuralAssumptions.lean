@@ -10,4 +10,3 @@ theorem period_fee_accounting_preserves_structural_assumptions
   exact ?_
 
 end Benchmark.Cases.T3tris.HwmPerformanceFee
-

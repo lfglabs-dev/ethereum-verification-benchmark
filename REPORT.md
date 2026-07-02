@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 32
-- Implementations: 33
-- Active cases: 30
-- Buildable active cases: 30
-- Active tasks: 184
+- Families: 33
+- Implementations: 34
+- Active cases: 31
+- Buildable active cases: 31
+- Active tasks: 188
 - Backlog cases: 3
 
 ## Buildable active cases
@@ -182,6 +182,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `depositFunds`
 - Upstream source artifact: `src/ParetoDollarQueue.sol`
 - Notes: Reference proof is complete for the modeled successful depositFunds path under the source reserve require (`hReserveGuard`) and checked-arithmetic side conditions: the resulting state satisfies the closed-epoch reserve guard.
+
+### `pendle/py_supply_pairing`
+- Family / implementation: `pendle` / `core_v2_public`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Pendle.PySupplyPairing.Compile`
+- Source ref: `https://github.com/pendle-finance/pendle-core-v2-public@e8c2cca4c9b329ba8a383a27d7318e5f8b35c843:contracts/core/YieldContracts/PendleYieldToken.sol`
+- Selected functions: `PendleYieldToken.mintPY`, `PendleYieldToken._mintPY`, `PendleYieldToken.redeemPY`, `PendleYieldToken._redeemPY`, `PendleYieldToken._getAmountPYToRedeem`, `PendlePrincipalToken.mintByYT`, `PendlePrincipalToken.burnByYT`, `SYUtils.syToAsset`, `SYUtils.assetToSy`
+- Upstream source artifact: `contracts/core/YieldContracts/PendleYieldToken.sol`
+- Notes: Proves that successful mintPY and successful pre-expiry redeemPY preserve the equality of PT and YT total supplies when that pairing held before the call. Post-expiry redeem is intentionally excluded from the preservation theorem because Pendle burns PT but not YT after maturity.
 
 ### `piku/fund_conservation`
 - Family / implementation: `piku` / `inverter_oracle_queue`
@@ -1528,6 +1538,46 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/pareto/redemption_backing/verity/Specs.lean`, `Benchmark/Cases/Pareto/RedemptionBacking/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Pareto/RedemptionBacking/Tasks/DepositFundsPreservesClosedEpochReserveGuard.lean`
 - Hidden reference solution: `Benchmark.Cases.Pareto.RedemptionBacking.Proofs`
+
+### `pendle/py_supply_pairing/mint_py_mints_equal_amount`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Pendle.PySupplyPairing.mint_py_mints_equal_amount`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/pendle/py_supply_pairing/verity/Contract.lean`, `Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean`
+- Specification files: `cases/pendle/py_supply_pairing/verity/Specs.lean`, `Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Pendle/PySupplyPairing/Tasks/MintPyMintsEqualAmount.lean`
+- Hidden reference solution: `Benchmark.Cases.Pendle.PySupplyPairing.Proofs`
+
+### `pendle/py_supply_pairing/mint_py_preserves_supply_pairing`
+- Track / property class / proof family: `proof-only` / `accounting_invariant` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Pendle.PySupplyPairing.mint_py_preserves_supply_pairing`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/pendle/py_supply_pairing/verity/Contract.lean`, `Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean`
+- Specification files: `cases/pendle/py_supply_pairing/verity/Specs.lean`, `Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Pendle/PySupplyPairing/Tasks/MintPyPreservesSupplyPairing.lean`
+- Hidden reference solution: `Benchmark.Cases.Pendle.PySupplyPairing.Proofs`
+
+### `pendle/py_supply_pairing/redeem_py_pre_expiry_burns_equal_amount`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_burns_equal_amount`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/pendle/py_supply_pairing/verity/Contract.lean`, `Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean`
+- Specification files: `cases/pendle/py_supply_pairing/verity/Specs.lean`, `Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Pendle/PySupplyPairing/Tasks/RedeemPyPreExpiryBurnsEqualAmount.lean`
+- Hidden reference solution: `Benchmark.Cases.Pendle.PySupplyPairing.Proofs`
+
+### `pendle/py_supply_pairing/redeem_py_pre_expiry_preserves_supply_pairing`
+- Track / property class / proof family: `proof-only` / `accounting_invariant` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_preserves_supply_pairing`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/pendle/py_supply_pairing/verity/Contract.lean`, `Benchmark/Cases/Pendle/PySupplyPairing/Contract.lean`
+- Specification files: `cases/pendle/py_supply_pairing/verity/Specs.lean`, `Benchmark/Cases/Pendle/PySupplyPairing/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Pendle/PySupplyPairing/Tasks/RedeemPyPreExpiryPreservesSupplyPairing.lean`
+- Hidden reference solution: `Benchmark.Cases.Pendle.PySupplyPairing.Proofs`
 
 ### `piku/fund_conservation/amount_paid_preserves_fund_conservation`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`

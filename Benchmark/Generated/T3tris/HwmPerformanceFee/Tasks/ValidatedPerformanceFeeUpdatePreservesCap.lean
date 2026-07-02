@@ -9,4 +9,3 @@ theorem validated_performance_fee_update_preserves_cap
   exact ?_
 
 end Benchmark.Cases.T3tris.HwmPerformanceFee
-

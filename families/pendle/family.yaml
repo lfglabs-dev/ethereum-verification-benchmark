@@ -1,0 +1,16 @@
+manifest_kind: family
+schema_version: 1
+family_id: pendle
+display_name: Pendle
+split: active
+status: active
+description: >
+  Benchmark family for Pendle V2 core tokenization and market accounting
+  invariants.
+implementation_ids:
+  - core_v2_public
+case_ids:
+  - pendle/py_supply_pairing
+source_languages:
+  - solidity
+
