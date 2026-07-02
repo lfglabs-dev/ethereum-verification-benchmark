@@ -6,10 +6,10 @@ This report is generated from the benchmark manifests.
 
 - Families: 33
 - Implementations: 34
-- Active cases: 31
-- Buildable active cases: 31
-- Active tasks: 188
-- Backlog cases: 3
+- Active cases: 32
+- Buildable active cases: 32
+- Active tasks: 194
+- Backlog cases: 2
 
 ## Buildable active cases
 
@@ -282,6 +282,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `swapExactTokenToToken`, `_swapAndUpdateReserves`, `_buyToken`, `_buyXt`, `_buyXtStep`, `buyXt`, `cutsReverseIter`, `calcIntervalProps`, `plusInt256`
 - Upstream source artifact: `contracts/v2/TermMaxOrderV2.sol`
 - Notes: TermMax range-order AMM slice for pricing-state transition correctness. The proof target is the highest-signal easy theorem in this family: on the successful single-segment `debtToken -> XT` exact-input path, the stored `virtualXtReserve` decreases by exactly the XT amount implied by the curve.
+
+### `uniswap_v2/pair_fee_adjusted_swap`
+- Family / implementation: `uniswap_v2` / `v2_core`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Compile`
+- Source ref: `https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol`
+- Selected functions: `swap`
+- Upstream source artifact: `contracts/UniswapV2Pair.sol`
+- Notes: Active AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. Promoted from the backlog with complete hidden reference proofs, plus harder multi-swap monotonicity and sandwich output-bound tasks layered on the same slice.
 
 ### `usual/dao_collateral`
 - Family / implementation: `usual` / `verified_proxy`
@@ -1999,6 +2009,66 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/TermMax/OrderV2BuyXtSingleSegment/Tasks/SwapDebtTokenToXtUpdatesVirtualXtReserve.lean`
 - Hidden reference solution: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs`
 
+### `uniswap_v2/pair_fee_adjusted_swap/swap_enforces_fee_adjusted_invariant`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_enforces_fee_adjusted_invariant`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapEnforcesFeeAdjustedInvariant.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/swap_sandwich_output_bound`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_swap_sandwich_output_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSandwichOutputBound.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve0`
+- Track / property class / proof family: `proof-only` / `storage_write` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve0`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve0.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1`
+- Track / property class / proof family: `proof-only` / `storage_write` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve1`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve1.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve_product`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve_product`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserveProduct.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/two_swap_k_monotone`
+- Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_two_swap_k_monotone`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/TwoSwapKMonotone.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
 ### `usual/dao_collateral/redeem_conservation`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -2220,16 +2290,6 @@ This report is generated from the benchmark manifests.
 - Selected functions: `previewDeposit`, `deposit`
 - Upstream source artifact: `contracts/token/ERC20/extensions/ERC4626.sol`
 - Notes: Backlog ERC-4626 benchmark slice derived from OpenZeppelin's virtual-offset design and inflation-attack analysis. The committed proof module validates the four arithmetic and state-transition theorems, so the case is runnable in the reference-solution benchmark path while remaining backlog-scoped.
-
-### `uniswap_v2/pair_fee_adjusted_swap`
-- Family / implementation: `uniswap_v2` / `v2_core`
-- Stage: `proof_complete`
-- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
-- Lean target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Compile`
-- Source ref: `https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol`
-- Selected functions: `swap`
-- Upstream source artifact: `contracts/UniswapV2Pair.sol`
-- Notes: Backlog AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. The committed proof module makes the case runnable in the reference-solution benchmark path while it remains backlog-scoped.
 
 ### `usual/placeholder`
 - Family / implementation: `usual` / `private_repo`

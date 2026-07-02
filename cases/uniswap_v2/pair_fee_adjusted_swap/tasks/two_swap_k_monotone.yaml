@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: two_swap_k_monotone
+case_id: uniswap_v2/pair_fee_adjusted_swap
+split: active
+family_id: uniswap_v2
+implementation_id: v2_core
+source_ref: https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_two_swap_k_monotone
+proof_family: functional_correctness
+property_class: arithmetic_rounding
+difficulty: hard
+category: arithmetic-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean
+  - Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean
+specification_files:
+  - cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean
+  - Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean
+editable_files:
+  - Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/TwoSwapKMonotone.lean
+reference_solution_module: Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs
+reference_solution_declaration: Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_two_swap_k_monotone
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Constant-product monotonicity (`k' >= k`) across two sequential
+  fee-adjusted swaps in the abstracted swap slice. No-overflow hypotheses
+  keep the wrapped Uint256 arithmetic aligned with the Nat-level bound.
+unsupported_feature_codes: []

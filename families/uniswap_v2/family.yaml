@@ -2,10 +2,10 @@ manifest_kind: family
 schema_version: 1
 family_id: uniswap_v2
 display_name: Uniswap V2
-split: backlog
-status: backlog
+split: active
+status: active
 description: >
-  Backlog benchmark family for Uniswap V2 core logic, starting with a fee-adjusted
+  Benchmark family for Uniswap V2 core logic, starting with a fee-adjusted
   swap invariant slice over reserve updates.
 implementation_ids:
   - v2_core

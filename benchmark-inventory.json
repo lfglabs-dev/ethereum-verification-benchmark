@@ -12,12 +12,12 @@
   "summary": {
     "family_count": 33,
     "implementation_count": 34,
-    "active_case_count": 31,
-    "backlog_case_count": 3,
-    "active_task_count": 188,
-    "backlog_task_count": 8,
+    "active_case_count": 32,
+    "backlog_case_count": 2,
+    "active_task_count": 194,
+    "backlog_task_count": 4,
     "buildable_case_count": 33,
-    "runnable_task_count": 196,
+    "runnable_task_count": 198,
     "case_stage_counts": {
       "build_green": 28,
       "candidate": 1,
@@ -33,12 +33,12 @@
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 196
+      "proof-only": 198
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
-      "accounting_bound": 16,
+      "accounting_bound": 17,
       "accounting_conservation": 15,
       "accounting_effect": 2,
       "accounting_invariant": 2,
@@ -46,7 +46,7 @@
       "accounting_update": 8,
       "additivity": 1,
       "all_or_nothing": 3,
-      "arithmetic_rounding": 3,
+      "arithmetic_rounding": 4,
       "atomic_finalization": 2,
       "authority_required": 2,
       "authorization_state": 9,
@@ -116,14 +116,14 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 52,
+      "functional_correctness": 54,
       "protocol_transition_correctness": 23,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 54
     },
     "family_split_counts": {
-      "active": 30,
-      "backlog": 2,
+      "active": 31,
+      "backlog": 1,
       "mixed": 1
     }
   },
@@ -607,9 +607,9 @@
     {
       "family_id": "uniswap_v2",
       "display_name": "Uniswap V2",
-      "split": "backlog",
-      "status": "backlog",
-      "description": "Backlog benchmark family for Uniswap V2 core logic, starting with a fee-adjusted swap invariant slice over reserve updates.",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Uniswap V2 core logic, starting with a fee-adjusted swap invariant slice over reserve updates.",
       "implementation_ids": [
         "v2_core"
       ],
@@ -1145,7 +1145,7 @@
       "family_id": "uniswap_v2",
       "implementation_id": "v2_core",
       "display_name": "Uniswap V2 Core",
-      "split": "backlog",
+      "split": "active",
       "status": "translated",
       "upstream_repo": "https://github.com/Uniswap/v2-core",
       "upstream_commit": "ee547b17853e71ed4e0101ccfd52e70d5acded58",
@@ -1154,7 +1154,7 @@
       "case_ids": [
         "uniswap_v2/pair_fee_adjusted_swap"
       ],
-      "notes": "Backlog implementation entry for the canonical Uniswap V2 pair contract, scoped to a compact swap invariant and reserve-update slice.",
+      "notes": "Implementation entry for the canonical Uniswap V2 pair contract, scoped to a compact swap invariant and reserve-update slice.",
       "manifest_path": "families/uniswap_v2/implementations/v2_core/implementation.yaml"
     },
     {
@@ -2518,6 +2518,48 @@
       "proof_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs"
     },
     {
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "project": "uniswap_v2",
+      "case_name": "pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/case.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/Uniswap/v2-core",
+      "upstream_commit": "ee547b17853e71ed4e0101ccfd52e70d5acded58",
+      "original_contract_path": "contracts/UniswapV2Pair.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "selected_functions": [
+        "swap"
+      ],
+      "lean_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Compile",
+      "failure_reason": null,
+      "notes": "Active AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. Promoted from the backlog with complete hidden reference proofs, plus harder multi-swap monotonicity and sandwich output-bound tasks layered on the same slice.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "amm_invariant",
+        "fee_adjusted_product",
+        "reserve_update",
+        "transfers_elided",
+        "callback_elided"
+      ],
+      "abstraction_notes": "The slice starts after the optimistic transfer path and callback, taking the observed token balances and inferred input amounts as arguments. It keeps the SafeMath-backed fee-adjusted product guard and the final reserve writes while omitting token movement, oracle accumulation, and event emission.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Specs",
+      "proof_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs"
+    },
+    {
       "case_id": "usual/dao_collateral",
       "project": "usual",
       "case_name": "dao_collateral",
@@ -2762,48 +2804,6 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Specs",
       "proof_target": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs"
-    },
-    {
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "project": "uniswap_v2",
-      "case_name": "pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/case.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "stage": "proof_complete",
-      "translation_status": "translated",
-      "spec_status": "frozen",
-      "proof_status": "complete",
-      "source_language": "solidity",
-      "upstream_repo": "https://github.com/Uniswap/v2-core",
-      "upstream_commit": "ee547b17853e71ed4e0101ccfd52e70d5acded58",
-      "original_contract_path": "contracts/UniswapV2Pair.sol",
-      "generated_artifact_path": null,
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "selected_functions": [
-        "swap"
-      ],
-      "lean_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Compile",
-      "failure_reason": null,
-      "notes": "Backlog AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. The committed proof module makes the case runnable in the reference-solution benchmark path while it remains backlog-scoped.",
-      "buildable": true,
-      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
-      "abstraction_level": "protocol_slice",
-      "abstraction_tags": [
-        "amm_invariant",
-        "fee_adjusted_product",
-        "reserve_update",
-        "transfers_elided",
-        "callback_elided"
-      ],
-      "abstraction_notes": "The slice starts after the optimistic transfer path and callback, taking the observed token balances and inferred input amounts as arguments. It keeps the SafeMath-backed fee-adjusted product guard and the final reserve writes while omitting token movement, oracle accumulation, and event emission.",
-      "unsupported_feature_codes": [],
-      "spec_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Specs",
-      "proof_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs"
     },
     {
       "case_id": "usual/placeholder",
@@ -10491,6 +10491,276 @@
       }
     },
     {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_enforces_fee_adjusted_invariant",
+      "task_id": "swap_enforces_fee_adjusted_invariant",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_enforces_fee_adjusted_invariant.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_enforces_fee_adjusted_invariant",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapEnforcesFeeAdjustedInvariant.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task captures the core Uniswap V2 fee-adjusted constant-product guard in the abstracted swap slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sandwich_output_bound",
+      "task_id": "swap_sandwich_output_bound",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sandwich_output_bound.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_swap_sandwich_output_bound",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSandwichOutputBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Bounds the victim's token0 output after an adversarial front-run swap by the fee-adjusted no-front-run output bound computed from the original reserves. The front-run direction and no-wrap side conditions are explicit hypotheses over the abstracted swap slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve0",
+      "task_id": "swap_sets_reserve0",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve0.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_write",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve0",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve0.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the first post-guard reserve write in the fee-adjusted Uniswap V2 swap slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1",
+      "task_id": "swap_sets_reserve1",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve1.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_write",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve1",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve1.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the second post-guard reserve write in the fee-adjusted Uniswap V2 swap slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve_product",
+      "task_id": "swap_sets_reserve_product",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve_product.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve_product",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserveProduct.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task composes the two reserve writes into a single post-state arithmetic identity over the stored reserve product.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/two_swap_k_monotone",
+      "task_id": "two_swap_k_monotone",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/two_swap_k_monotone.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "arithmetic_rounding",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_two_swap_k_monotone",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/TwoSwapKMonotone.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Constant-product monotonicity (`k' >= k`) across two sequential fee-adjusted swaps in the abstracted swap slice. No-overflow hypotheses keep the wrapped Uint256 arithmetic aligned with the Nat-level bound.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "usual/dao_collateral/redeem_conservation",
       "task_id": "redeem_conservation",
       "case_id": "usual/dao_collateral",
@@ -11648,187 +11918,7 @@
         "editable_proof": "ready",
         "reference_solution": "ready"
       }
-    },
-    {
-      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_enforces_fee_adjusted_invariant",
-      "task_id": "swap_enforces_fee_adjusted_invariant",
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_enforces_fee_adjusted_invariant.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "accounting_bound",
-      "category": "arithmetic-invariant",
-      "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_enforces_fee_adjusted_invariant",
-      "proof_family": "functional_correctness",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapEnforcesFeeAdjustedInvariant.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task captures the core Uniswap V2 fee-adjusted constant-product guard in the abstracted swap slice.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve0",
-      "task_id": "swap_sets_reserve0",
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve0.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "storage_write",
-      "category": "state-transition",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve0",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve0.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task isolates the first post-guard reserve write in the fee-adjusted Uniswap V2 swap slice.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1",
-      "task_id": "swap_sets_reserve1",
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve1.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "storage_write",
-      "category": "state-transition",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve1",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve1.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task isolates the second post-guard reserve write in the fee-adjusted Uniswap V2 swap slice.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve_product",
-      "task_id": "swap_sets_reserve_product",
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve_product.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "accounting_conservation",
-      "category": "arithmetic-invariant",
-      "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve_product",
-      "proof_family": "refinement_equivalence",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserveProduct.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task composes the two reserve writes into a single post-state arithmetic identity over the stored reserve product.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
     }
   ],
-  "generated_at": "2026-06-29T08:26:48.629251+00:00"
+  "generated_at": "2026-07-02T16:46:41.537135+00:00"
 }

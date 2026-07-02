@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 31 cases and 188 task manifests. Of those, 188 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 32 cases and 194 task manifests. Of those, 194 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -38,6 +38,7 @@ The active suite currently contains 31 cases and 188 task manifests. Of those, 1
 | `t3tris/hwm_performance_fee` | 8 | `complete` |
 | `term_finance/term_auction_clearing` | 1 | `complete` |
 | `termmax/order_v2_buy_xt_single_segment` | 1 | `complete` |
+| `uniswap_v2/pair_fee_adjusted_swap` | 6 | `complete` |
 | `usual/dao_collateral` | 5 | `complete` |
 | `wildcat/borrow_liquidity_safety` | 1 | `complete` |
 | `zama/erc7984_confidential_token` | 12 | `partial` |
@@ -45,7 +46,7 @@ The active suite currently contains 31 cases and 188 task manifests. Of those, 1
 
 ## Backlog
 
-Backlog cases are not part of the default active suite, but the runnable backlog tasks are still checked for hidden reference proofs. The backlog currently has 8 runnable tasks across `openzeppelin/erc4626_virtual_offset_deposit` and `uniswap_v2/pair_fee_adjusted_swap`.
+Backlog cases are not part of the default active suite, but the runnable backlog tasks are still checked for hidden reference proofs. The backlog currently has 4 runnable tasks across `openzeppelin/erc4626_virtual_offset_deposit`.
 Blocked backlog cases with no runnable tasks: `usual/placeholder`.
 
 ## Non-Evaluated Preview Files
