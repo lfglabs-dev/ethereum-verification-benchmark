@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from classify_failures import COMPLETED_HARNESS_STATUSES  # noqa: E402
+from infra_failures import provider_failure_reason  # noqa: E402
 from plan_rerun import result_key  # noqa: E402
 
 
@@ -63,6 +64,7 @@ def iter_runs(runs_dirs: list[Path]) -> list[dict[str, Any]]:
                 print(f"warning: skipping unreadable run: {run_path}: {exc}", file=sys.stderr)
                 continue
             run["_artifact_dir"] = run_path.parent.name
+            run["_artifact_path"] = str(run_path.parent)
             runs.append(run)
     return runs
 
@@ -114,6 +116,7 @@ def build_model_entry(
     token_totals = {"completion_tokens": 0, "prompt_tokens": 0, "requests": 0, "total_tokens": 0}
     passed = 0
     valid_count = 0
+    invalid_count = 0
     temperature_policy = defaults["temperature_policy"]
     provider_caveats = caveats or None
     for task_ref in sorted(selected):
@@ -131,41 +134,60 @@ def build_model_entry(
 
         harness_status = str(run.get("harness_status") or "")
         artifact_status = "ok" if harness_status.strip().lower() in COMPLETED_HARNESS_STATUSES else "error-only"
-        reusable = artifact_status == "ok" and normalized_usage["total_tokens"] > 0 and bool(run.get("verifier"))
         passed_task = is_pass(run)
-        if reusable:
+        run_dir = Path(run["_artifact_path"]) if run.get("_artifact_path") else None
+        # A passing verdict is always genuine; only scrutinize non-passing verdicts for
+        # provider/transport contamination so infra outages are never scored as model failures.
+        provider_reason = None if passed_task else provider_failure_reason(run, run_dir)
+        provider_invalid = provider_reason is not None
+        # "reusable" == the stored verdict can be trusted as a genuine pass/fail.
+        reusable = (
+            artifact_status == "ok"
+            and normalized_usage["total_tokens"] > 0
+            and bool(run.get("verifier"))
+            and not provider_invalid
+        )
+        # A pass is inherently a genuine, valid verdict; a non-pass is valid only when
+        # trustworthy (not contaminated by a provider/transport failure).
+        if reusable or passed_task:
             valid_count += 1
+        else:
+            invalid_count += 1
         if passed_task:
             passed += 1
-        task_results.append(
-            {
-                "artifact_id": str(run.get("run_id") or run.get("_artifact_dir")),
-                "artifact_status": artifact_status,
-                "harness_status": harness_status,
-                "passed": passed_task,
-                "result_key": result_key(
-                    model=model_id,
-                    benchmark_version=str(version["benchmark_version"]),
-                    task_ref=task_ref,
-                    task_fingerprint=str(task["task_fingerprint"]),
-                    task_interface_id=str(task["task_interface_id"]),
-                    harness_id=str(version["harness_id"]),
-                    environment_id=str(version["environment_id"]),
-                    mode=str(version["mode"]),
-                    budget=str(version["budget"]),
-                    temperature_policy=temperature_policy,
-                    provider_caveats=provider_caveats,
-                ),
-                "reusable": reusable,
-                "run_id": str(run.get("run_id") or run.get("_artifact_dir")),
-                "task_fingerprint": str(task["task_fingerprint"]),
-                "task_interface_id": str(task["task_interface_id"]),
-                "task_ref": task_ref,
-                "usage": normalized_usage,
-                "verifier_output_present": bool(run.get("verifier")),
-            }
-        )
+        entry_result = {
+            "artifact_id": str(run.get("run_id") or run.get("_artifact_dir")),
+            "artifact_status": artifact_status,
+            "harness_status": harness_status,
+            "passed": passed_task,
+            "provider_invalid": provider_invalid,
+            "result_key": result_key(
+                model=model_id,
+                benchmark_version=str(version["benchmark_version"]),
+                task_ref=task_ref,
+                task_fingerprint=str(task["task_fingerprint"]),
+                task_interface_id=str(task["task_interface_id"]),
+                harness_id=str(version["harness_id"]),
+                environment_id=str(version["environment_id"]),
+                mode=str(version["mode"]),
+                budget=str(version["budget"]),
+                temperature_policy=temperature_policy,
+                provider_caveats=provider_caveats,
+            ),
+            "reusable": reusable,
+            "run_id": str(run.get("run_id") or run.get("_artifact_dir")),
+            "task_fingerprint": str(task["task_fingerprint"]),
+            "task_interface_id": str(task["task_interface_id"]),
+            "task_ref": task_ref,
+            "usage": normalized_usage,
+            "verifier_output_present": bool(run.get("verifier")),
+        }
+        if provider_reason:
+            entry_result["provider_failure_reason"] = provider_reason
+        task_results.append(entry_result)
 
+    if invalid_count:
+        caveats.append(f"provider/transport-invalid tasks excluded from failed count: {invalid_count}")
     status = "complete" if len(selected) == len(tasks) and valid_count == len(tasks) else "partial" if selected else "invalid"
     task_count = len(selected)
     return {
@@ -173,7 +195,9 @@ def build_model_entry(
         "benchmark_version": str(version["benchmark_version"]),
         "caveats": caveats,
         "display_name": defaults["display_name"],
-        "failed": task_count - passed,
+        # Genuine model failures only: infra-invalid tasks are neither passed nor failed.
+        "failed": max(0, valid_count - passed),
+        "invalid_count": invalid_count,
         "model_id": model_id,
         "passed": passed,
         "status": status,
