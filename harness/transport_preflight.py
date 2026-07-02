@@ -6,7 +6,16 @@ import json
 import urllib.request
 from urllib.parse import urlparse
 
-from harness.transport_request import DEFAULT_BASE_URL, DEFAULT_MODEL, build_chat_request, chat_completion
+from harness.transport_request import (
+    DEFAULT_BASE_URL,
+    DEFAULT_MODEL,
+    DEFAULT_STREAMING_ENABLED,
+    build_chat_request,
+    chat_completion,
+    reset_transport_fallback,
+    streaming_fallback_reason,
+    transport_mode,
+)
 
 
 def endpoint_smoke(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MODEL) -> dict[str, object]:
@@ -29,10 +38,13 @@ def local_no_auth_endpoint(base_url: str) -> bool:
 
 
 def generic_preflight(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MODEL) -> dict[str, object]:
+    if DEFAULT_STREAMING_ENABLED:
+        reset_transport_fallback()
     result: dict[str, object] = {
         "status": "passed",
         "base_url": base_url,
         "model": model,
+        "transport_mode": transport_mode(),
         "checks": {},
         "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0},
     }
@@ -55,6 +67,10 @@ def generic_preflight(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MOD
         max_tokens=16,
     )
     record_usage(text_response)
+    result["transport_mode"] = transport_mode()
+    fallback_reason = streaming_fallback_reason()
+    if fallback_reason:
+        result["streaming_fallback_reason"] = fallback_reason
     result["checks"]["chat_completions"] = True
     result["checks"]["model_selection"] = True
 
@@ -83,6 +99,7 @@ def generic_preflight(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MOD
             tool_choice="auto",
         )
         record_usage(tool_response)
+        result["transport_mode"] = transport_mode()
         message = ((tool_response.get("choices") or [{}])[0] or {}).get("message", {})
         result["checks"]["tool_calls"] = bool(isinstance(message, dict) and message.get("tool_calls"))
         result["checks"]["json_text_fallback"] = True
@@ -90,6 +107,10 @@ def generic_preflight(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MOD
         result["checks"]["tool_calls"] = False
         result["checks"]["json_text_fallback"] = True
         result["tool_call_probe_error"] = str(exc)
+    result["transport_mode"] = transport_mode()
+    fallback_reason = streaming_fallback_reason()
+    if fallback_reason:
+        result["streaming_fallback_reason"] = fallback_reason
     usage = result.get("usage")
     result["checks"]["usage_accounting"] = bool(isinstance(usage, dict) and usage.get("requests"))
     if not result["checks"]["usage_accounting"]:
