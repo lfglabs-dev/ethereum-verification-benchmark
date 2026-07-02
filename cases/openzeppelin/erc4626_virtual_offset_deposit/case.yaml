@@ -2,7 +2,7 @@ manifest_kind: case
 project: openzeppelin
 case_id: erc4626_virtual_offset_deposit
 schema_version: 1
-split: backlog
+split: active
 family_id: openzeppelin
 implementation_id: contracts
 stage: proof_complete
@@ -16,6 +16,7 @@ source_ref: https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a
 lean_target: Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Compile
 selected_functions:
   - previewDeposit
+  - previewRedeem
   - deposit
 failure_reason:
 source_language: solidity
@@ -29,15 +30,20 @@ abstraction_tags:
   - rounding_down
   - inflation_attack_surface
 abstraction_notes: >
-  The slice models only `previewDeposit` and `deposit` using total-assets and
+  The slice models `previewDeposit`, the redeem-direction conversion
+  `previewRedeem`, and the state-changing `deposit` using total-assets and
   total-shares storage together with fixed virtual offsets. Token transfers,
-  fees, hooks, and withdrawals are omitted so the benchmark can focus on
-  rounding-sensitive share minting and the virtual-liquidity defense surface.
+  fees, hooks, and share burning are omitted so the benchmark can focus on
+  rounding-sensitive share/asset conversion and the virtual-liquidity defense
+  surface, including deposit/redeem round-trip loss bounds and share-price
+  behavior under direct asset donations.
 unsupported_feature_codes: []
 spec_target: Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Specs
 proof_target: Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs
 notes: >
-  Backlog ERC-4626 benchmark slice derived from OpenZeppelin's virtual-offset
-  design and inflation-attack analysis. The committed proof module validates the
-  four arithmetic and state-transition theorems, so the case is runnable in the
-  reference-solution benchmark path while remaining backlog-scoped.
+  Active ERC-4626 benchmark slice derived from OpenZeppelin's virtual-offset
+  design and inflation-attack analysis. The committed proof module validates
+  the four original arithmetic and state-transition theorems plus the two
+  harder rounding tasks (deposit/redeem round-trip bound and share-price
+  monotonicity under donation), so every task is runnable in the
+  reference-solution benchmark path.
