@@ -25,6 +25,9 @@ def virtualShares : Uint256 := 1000
 def previewDepositAmount (assets totalAssets totalShares : Uint256) : Uint256 :=
   div (mul assets (add totalShares virtualShares)) (add totalAssets virtualAssets)
 
+def previewRedeemAmount (shares totalAssets totalShares : Uint256) : Uint256 :=
+  div (mul shares (add totalAssets virtualAssets)) (add totalShares virtualShares)
+
 verity_contract ERC4626VirtualOffsetDeposit where
   storage
     totalAssets : Uint256 := slot 0

@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 32 cases and 194 task manifests. Of those, 194 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 33 cases and 200 task manifests. Of those, 200 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -26,6 +26,7 @@ The active suite currently contains 32 cases and 194 task manifests. Of those, 1
 | `lifi/swap_atomicity` | 6 | `complete` |
 | `nexus_mutual/ramm_price_band` | 4 | `partial` |
 | `onedelta/caller_address_integrity` | 10 | `complete` |
+| `openzeppelin/erc4626_virtual_offset_deposit` | 6 | `complete` |
 | `paladin_votes/stream_recovery_claim_usdc` | 26 | `complete` |
 | `pareto/redemption_backing` | 1 | `complete` |
 | `pendle/py_supply_pairing` | 4 | `complete` |
@@ -46,7 +47,7 @@ The active suite currently contains 32 cases and 194 task manifests. Of those, 1
 
 ## Backlog
 
-Backlog cases are not part of the default active suite, but the runnable backlog tasks are still checked for hidden reference proofs. The backlog currently has 4 runnable tasks across `openzeppelin/erc4626_virtual_offset_deposit`.
+Backlog cases are not part of the default active suite, and none currently expose runnable proof tasks.
 Blocked backlog cases with no runnable tasks: `usual/placeholder`.
 
 ## Non-Evaluated Preview Files

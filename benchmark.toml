@@ -32,6 +32,7 @@ active_cases = [
   "lifi/swap_atomicity",
   "nexus_mutual/ramm_price_band",
   "onedelta/caller_address_integrity",
+  "openzeppelin/erc4626_virtual_offset_deposit",
   "paladin_votes/stream_recovery_claim_usdc",
   "pareto/redemption_backing",
   "pendle/py_supply_pairing",
@@ -51,6 +52,5 @@ active_cases = [
   "zama/erc7984_confidential_token",
 ]
 backlog_cases = [
-  "openzeppelin/erc4626_virtual_offset_deposit",
   "usual/placeholder",
 ]
