@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: deposit_redeem_round_trip_bound
+case_id: openzeppelin/erc4626_virtual_offset_deposit
+split: active
+family_id: openzeppelin
+implementation_id: contracts
+source_ref: https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_redeem_round_trip_bound
+proof_family: functional_correctness
+property_class: arithmetic_rounding
+difficulty: hard
+category: arithmetic-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean
+  - Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean
+specification_files:
+  - cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean
+  - Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean
+editable_files:
+  - Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/DepositRedeemRoundTripBound.lean
+reference_solution_module: Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs
+reference_solution_declaration: Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_redeem_round_trip_bound
+abstraction_level: protocol_slice
+abstraction_notes: >
+  This task proves the deposit/redeem round trip under virtual-offset floor
+  rounding never returns more assets than were deposited, and the round-trip
+  loss is bounded by one share's asset value rounded up. The proof requires an
+  explicit floor/ceil rounding sandwich over the two chained integer divisions.
+unsupported_feature_codes: []
