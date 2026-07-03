@@ -33,7 +33,8 @@ try:
     from ..transport import (
         ChatCompletionError, DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, HTTP_USER_AGENT,
         _active_provider, _api_key, _harness_env, _local_no_auth_endpoint, _logged_response_message,
-        _response_text, _append_jsonl, chat_completion, endpoint_smoke, generic_preflight,
+        _response_text, _append_jsonl, _streaming_fallback_reason, _transport_mode,
+        chat_completion, endpoint_smoke, generic_preflight,
     )
     from ..budgets import operational_budget
     from ..lean_check import (
@@ -53,7 +54,8 @@ except ImportError:
     from transport import (
         ChatCompletionError, DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, HTTP_USER_AGENT,
         _active_provider, _api_key, _harness_env, _local_no_auth_endpoint, _logged_response_message,
-        _response_text, _append_jsonl, chat_completion, endpoint_smoke, generic_preflight,
+        _response_text, _append_jsonl, _streaming_fallback_reason, _transport_mode,
+        chat_completion, endpoint_smoke, generic_preflight,
     )
     from budgets import operational_budget
     from lean_check import (
@@ -1047,6 +1049,7 @@ def _attempt_task_fair(
                 "request_index": request_index,
                 "message": _logged_response_message(response_message),
                 "usage": response.get("usage") if isinstance(response, dict) else None,
+                "transport_mode": _transport_mode(),
             },
         )
         assistant_message = {k: v for k, v in response_message.items() if k in {"role", "content", "tool_calls"}}
@@ -1361,6 +1364,7 @@ def run_group(
             "provider_retries": op_budget.provider_retries,
             "infra_restarts": op_budget.infra_restarts,
             "request_timeout_seconds": op_budget.request_timeout_seconds,
+            "stream_idle_timeout_seconds": op_budget.stream_idle_timeout_seconds,
             "warm_build_timeout_seconds": op_budget.warm_build_timeout_seconds,
         },
     }
@@ -1370,6 +1374,7 @@ def run_group(
             "provider": _active_provider(),
             "base_url": base_url,
             "model": DEFAULT_MODEL,
+            "transport_mode": _transport_mode(),
             "mode": "fair",
             "max_attempts": max_attempts,
             "max_tool_calls": max_tool_calls,
@@ -1382,6 +1387,7 @@ def run_group(
             "provider": _active_provider(),
             "base_url": base_url,
             "model": DEFAULT_MODEL,
+            "transport_mode": _transport_mode(),
             "mode": "fair",
             "error": f"fair mode requires DEFAULT_HARNESS_API_KEY{provider_key_hint}, GAZELLA_API_KEY, OPENAI_API_KEY, or a localhost-compatible no-auth endpoint",
             "tasks": [],
@@ -1444,6 +1450,8 @@ def run_group(
                 "provider": _active_provider(),
                 "base_url": base_url,
                 "model": DEFAULT_MODEL,
+                "transport_mode": _transport_mode(),
+                "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
                 "usage": aggregate_usage,
                 "preflight": preflight,
@@ -1460,6 +1468,8 @@ def run_group(
                 "provider": _active_provider(),
                 "base_url": base_url,
                 "model": DEFAULT_MODEL,
+                "transport_mode": _transport_mode(),
+                "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
                 "provider_setup_error": status == "preflight_failed",
                 "failure_class": "provider_setup_error" if status == "preflight_failed" else None,
@@ -1478,6 +1488,8 @@ def run_group(
                 "provider": _active_provider(),
                 "base_url": base_url,
                 "model": DEFAULT_MODEL,
+                "transport_mode": _transport_mode(),
+                "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
                 "max_attempts": max_attempts,
                 "max_tool_calls": max_tool_calls,
@@ -1514,6 +1526,8 @@ def run_group(
         "suite": suite,
         "started_at": started_at,
         "base_url": base_url,
+        "transport_mode": _transport_mode(),
+        "streaming_fallback_reason": _streaming_fallback_reason(),
         "auth_mode": "env" if _api_key() else "none",
         "duration_seconds": round(time.time() - start, 3),
         "harness_status": response["status"],

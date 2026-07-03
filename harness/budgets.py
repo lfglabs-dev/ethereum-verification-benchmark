@@ -17,6 +17,7 @@ class OperationalBudget:
     provider_retries: int
     infra_restarts: int
     request_timeout_seconds: int
+    stream_idle_timeout_seconds: int
     warm_build_timeout_seconds: int
 
 
@@ -25,6 +26,12 @@ def operational_budget() -> OperationalBudget:
         provider_retries=int(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRIES", os.environ.get("GAZELLA_REQUEST_RETRIES", "5"))),
         infra_restarts=int(os.environ.get("DEFAULT_HARNESS_INFRA_RESTARTS", "0")),
         request_timeout_seconds=int(os.environ.get("DEFAULT_HARNESS_REQUEST_TIMEOUT_SECONDS", os.environ.get("GAZELLA_REQUEST_TIMEOUT_SECONDS", "180"))),
+        stream_idle_timeout_seconds=int(
+            os.environ.get(
+                "DEFAULT_HARNESS_STREAM_IDLE_TIMEOUT_SECONDS",
+                os.environ.get("DEFAULT_HARNESS_REQUEST_TIMEOUT_SECONDS", os.environ.get("GAZELLA_REQUEST_TIMEOUT_SECONDS", "180")),
+            )
+        ),
         warm_build_timeout_seconds=int(os.environ.get("DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS", "1800")),
     )
 

@@ -264,6 +264,12 @@ def main() -> int:
         urlopen_calls: list[bytes] = []
 
         class FakeResponse:
+            def __init__(self) -> None:
+                self._sse_lines = [
+                    b'data: {"choices":[{"index":0,"delta":{"role":"assistant","content":"ok"},"finish_reason":"stop"}]}\n',
+                    b"data: [DONE]\n",
+                ]
+
             def __enter__(self) -> "FakeResponse":
                 return self
 
@@ -272,6 +278,11 @@ def main() -> int:
 
             def read(self) -> bytes:
                 return b'{"choices":[{"message":{"role":"assistant","content":"ok"}}]}'
+
+            def readline(self) -> bytes:
+                if self._sse_lines:
+                    return self._sse_lines.pop(0)
+                return b""
 
         def flaky_urlopen(request: object, timeout: object = None) -> FakeResponse:
             data = getattr(request, "data", b"")
