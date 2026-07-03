@@ -38,6 +38,7 @@ try:
     from ..identity import HARNESS_USER_AGENT
     from ..manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from ..metering_proxy import MeteringProxy
+    from ..budgets import operational_budget
     from ..paths import RESULTS_DIR, ROOT
     from ..reports import write_run_report
     from ..verifier import verify_group
@@ -46,6 +47,7 @@ except ImportError:
     from identity import HARNESS_USER_AGENT
     from manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from metering_proxy import MeteringProxy
+    from budgets import operational_budget
     from paths import RESULTS_DIR, ROOT
     from reports import write_run_report
     from verifier import verify_group
@@ -93,6 +95,7 @@ def run_group(
     dry_run: bool = False,
 ) -> tuple[int, Path]:
     profile = load_profile(harness_id)
+    op_budget = operational_budget()
     start = time.time()
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_subject = task_ref or group_id
@@ -346,6 +349,18 @@ def run_group(
         "usage": usage,
         "usage_source": usage_source,
         "token_budget": token_budget,
+        "benchmark_budget": {
+            "max_attempts": None,
+            "max_tool_calls": None,
+            "max_turns": max_turns,
+            "completion_token_budget": token_budget,
+        },
+        "operational_budget": {
+            "provider_retries": op_budget.provider_retries,
+            "infra_restarts": op_budget.infra_restarts,
+            "request_timeout_seconds": op_budget.request_timeout_seconds,
+            "warm_build_timeout_seconds": op_budget.warm_build_timeout_seconds,
+        },
         "workspace": str(built.path) if keep_workspace else None,
         "verifier": verifier_result,
     }
@@ -354,7 +369,20 @@ def run_group(
         encoding="utf-8",
     )
     (run_dir / "harness-request.json").write_text(
-        json.dumps({"group": agent_group_to_json(group), "command": command, "model": model, "timeout_seconds": timeout_seconds, "max_turns": max_turns, "auth_mode": auth_mode}, indent=2) + "\n",
+        json.dumps(
+            {
+                "group": agent_group_to_json(group),
+                "command": command,
+                "model": model,
+                "timeout_seconds": timeout_seconds,
+                "max_turns": max_turns,
+                "auth_mode": auth_mode,
+                "benchmark_budget": run["benchmark_budget"],
+                "operational_budget": run["operational_budget"],
+            },
+            indent=2,
+        )
+        + "\n",
         encoding="utf-8",
     )
     (run_dir / "run.json").write_text(json.dumps(run, indent=2) + "\n", encoding="utf-8")

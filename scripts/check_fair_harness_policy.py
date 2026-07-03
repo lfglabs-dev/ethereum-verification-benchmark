@@ -264,6 +264,12 @@ def main() -> int:
         urlopen_calls: list[bytes] = []
 
         class FakeResponse:
+            def __init__(self) -> None:
+                self._sse_lines = [
+                    b'data: {"choices":[{"index":0,"delta":{"role":"assistant","content":"ok"},"finish_reason":"stop"}]}\n',
+                    b"data: [DONE]\n",
+                ]
+
             def __enter__(self) -> "FakeResponse":
                 return self
 
@@ -272,6 +278,11 @@ def main() -> int:
 
             def read(self) -> bytes:
                 return b'{"choices":[{"message":{"role":"assistant","content":"ok"}}]}'
+
+            def readline(self) -> bytes:
+                if self._sse_lines:
+                    return self._sse_lines.pop(0)
+                return b""
 
         def flaky_urlopen(request: object, timeout: object = None) -> FakeResponse:
             data = getattr(request, "data", b"")
@@ -336,7 +347,7 @@ def main() -> int:
             tool_log_path=temp_workspace / "tool-calls.jsonl",
             conversation_log_path=temp_workspace / "conversation.jsonl",
         )
-        if result.get("status") != "failed_no_attempt":
+        if result.get("status") != "max_tool_calls_exceeded":
             errors.append(f"fair max-tool-call smoke returned unexpected status: {result.get('status')!r}")
         if result.get("tool_calls_executed") != 1:
             errors.append("fair max-tool-call smoke should record one executed tool call")
@@ -400,7 +411,7 @@ def main() -> int:
             tool_log_path=proof_log,
             conversation_log_path=temp_workspace / "proof-conversation.jsonl",
         )
-        if result.get("status") != "failed_submitted":
+        if result.get("status") != "max_attempts_exceeded":
             errors.append(f"fair max-attempt smoke returned unexpected status: {result.get('status')!r}")
         if result.get("tool_calls_executed") != 1:
             errors.append("fair max-attempt smoke should record one executed proof tool call")

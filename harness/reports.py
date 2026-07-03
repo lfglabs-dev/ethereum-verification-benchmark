@@ -18,6 +18,7 @@ def write_run_report(run_dir: Path, run: dict[str, Any]) -> None:
         f"- group: {run.get('group_id')}",
         f"- score: {score.get('points_earned', 0)} / {score.get('points_possible', 0)} points",
         f"- targets: {score.get('passed_targets', 0)} / {score.get('total_targets', 0)} passed",
+        f"- failure taxonomy: {json.dumps(run.get('failure_counts') or {}, sort_keys=True)}",
         "",
         "## Targets",
         "",
@@ -37,7 +38,9 @@ def compare_runs(paths: list[Path]) -> dict[str, Any]:
         run = json.loads(run_path.read_text(encoding="utf-8"))
         score = run.get("verifier", {}).get("score", {})
         targets = run.get("verifier", {}).get("targets", [])
-        if run.get("harness_status") in {"harness_error", "timeout"}:
+        if isinstance(run.get("failure_counts"), dict) and run.get("failure_counts"):
+            failure_modes = Counter({str(k): int(v) for k, v in run.get("failure_counts", {}).items()})
+        elif run.get("harness_status") in {"harness_error", "timeout", "preflight_failed"}:
             failure_modes = Counter({str(run.get("harness_status")): int(score.get("total_targets", 1) or 1)})
         else:
             failure_modes = Counter(
