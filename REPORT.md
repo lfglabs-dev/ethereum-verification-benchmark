@@ -6,10 +6,10 @@ This report is generated from the benchmark manifests.
 
 - Families: 33
 - Implementations: 34
-- Active cases: 31
-- Buildable active cases: 31
-- Active tasks: 188
-- Backlog cases: 3
+- Active cases: 33
+- Buildable active cases: 33
+- Active tasks: 200
+- Backlog cases: 1
 
 ## Buildable active cases
 
@@ -163,6 +163,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/1delta/composer/chains/ethereum/Composer.sol`
 - Notes: This is a caller-identity benchmark, not an accounting benchmark. It proves that every modeled ERC20 and Permit2 fund-pull path uses the outer deltaCompose caller rather than an intermediate callback contract, the composer itself, or an embedded calldata address. The scope is transfer-command pulls plus the V3 callback direct-pull shortcut, not every transferFrom in the full composer source tree.
 
+### `openzeppelin/erc4626_virtual_offset_deposit`
+- Family / implementation: `openzeppelin` / `contracts`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Compile`
+- Source ref: `https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol`
+- Selected functions: `previewDeposit`, `previewRedeem`, `deposit`
+- Upstream source artifact: `contracts/token/ERC20/extensions/ERC4626.sol`
+- Notes: Active ERC-4626 benchmark slice derived from OpenZeppelin's virtual-offset design and inflation-attack analysis. The committed proof module validates the four original arithmetic and state-transition theorems plus the two harder rounding tasks (deposit/redeem round-trip bound and share-price monotonicity under donation), so every task is runnable in the reference-solution benchmark path.
+
 ### `paladin_votes/stream_recovery_claim_usdc`
 - Family / implementation: `paladin_votes` / `stream_recovery_claim`
 - Stage: `build_green`
@@ -282,6 +292,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `swapExactTokenToToken`, `_swapAndUpdateReserves`, `_buyToken`, `_buyXt`, `_buyXtStep`, `buyXt`, `cutsReverseIter`, `calcIntervalProps`, `plusInt256`
 - Upstream source artifact: `contracts/v2/TermMaxOrderV2.sol`
 - Notes: TermMax range-order AMM slice for pricing-state transition correctness. The proof target is the highest-signal easy theorem in this family: on the successful single-segment `debtToken -> XT` exact-input path, the stored `virtualXtReserve` decreases by exactly the XT amount implied by the curve.
+
+### `uniswap_v2/pair_fee_adjusted_swap`
+- Family / implementation: `uniswap_v2` / `v2_core`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Compile`
+- Source ref: `https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol`
+- Selected functions: `swap`
+- Upstream source artifact: `contracts/UniswapV2Pair.sol`
+- Notes: Active AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. Promoted from the backlog with complete hidden reference proofs, plus harder multi-swap monotonicity and sandwich output-bound tasks layered on the same slice.
 
 ### `usual/dao_collateral`
 - Family / implementation: `usual` / `verified_proxy`
@@ -1269,6 +1289,66 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/OneDelta/CallerAddressIntegrity/Tasks/V3CallbackDirectTransferFromUsesOuterCaller.lean`
 - Hidden reference solution: `Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs`
 
+### `openzeppelin/erc4626_virtual_offset_deposit/deposit_redeem_round_trip_bound`
+- Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_redeem_round_trip_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean`
+- Specification files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean`
+- Editable proof file: `Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/DepositRedeemRoundTripBound.lean`
+- Hidden reference solution: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs`
+
+### `openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_assets`
+- Track / property class / proof family: `proof-only` / `storage_write` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalAssets`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean`
+- Specification files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean`
+- Editable proof file: `Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/DepositSetsTotalAssets.lean`
+- Hidden reference solution: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs`
+
+### `openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_shares`
+- Track / property class / proof family: `proof-only` / `storage_write` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalShares`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean`
+- Specification files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean`
+- Editable proof file: `Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/DepositSetsTotalShares.lean`
+- Hidden reference solution: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs`
+
+### `openzeppelin/erc4626_virtual_offset_deposit/positive_deposit_mints_positive_shares_under_rate_bound`
+- Track / property class / proof family: `proof-only` / `output_range` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.positive_deposit_mints_positive_shares_under_rate_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean`
+- Specification files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean`
+- Editable proof file: `Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/PositiveDepositMintsPositiveSharesUnderRateBound.lean`
+- Hidden reference solution: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs`
+
+### `openzeppelin/erc4626_virtual_offset_deposit/preview_deposit_rounds_down`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.previewDeposit_rounds_down`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean`
+- Specification files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean`
+- Editable proof file: `Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/PreviewDepositRoundsDown.lean`
+- Hidden reference solution: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs`
+
+### `openzeppelin/erc4626_virtual_offset_deposit/share_price_monotone_under_donation`
+- Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.share_price_monotone_under_donation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean`
+- Specification files: `cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean`, `Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean`
+- Editable proof file: `Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/SharePriceMonotoneUnderDonation.lean`
+- Hidden reference solution: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs`
+
 ### `paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed`
 - Track / property class / proof family: `proof-only` / `authorization_state` / `authorization_enablement`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -1999,6 +2079,66 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/TermMax/OrderV2BuyXtSingleSegment/Tasks/SwapDebtTokenToXtUpdatesVirtualXtReserve.lean`
 - Hidden reference solution: `Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs`
 
+### `uniswap_v2/pair_fee_adjusted_swap/swap_enforces_fee_adjusted_invariant`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_enforces_fee_adjusted_invariant`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapEnforcesFeeAdjustedInvariant.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/swap_sandwich_output_bound`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_swap_sandwich_output_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSandwichOutputBound.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve0`
+- Track / property class / proof family: `proof-only` / `storage_write` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve0`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve0.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1`
+- Track / property class / proof family: `proof-only` / `storage_write` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve1`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve1.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve_product`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve_product`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserveProduct.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
+### `uniswap_v2/pair_fee_adjusted_swap/two_swap_k_monotone`
+- Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_two_swap_k_monotone`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean`
+- Specification files: `cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean`, `Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean`
+- Editable proof file: `Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/TwoSwapKMonotone.lean`
+- Hidden reference solution: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs`
+
 ### `usual/dao_collateral/redeem_conservation`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -2210,26 +2350,6 @@ This report is generated from the benchmark manifests.
 - Hidden reference solution: `Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs`
 
 ## Backlog
-
-### `openzeppelin/erc4626_virtual_offset_deposit`
-- Family / implementation: `openzeppelin` / `contracts`
-- Stage: `proof_complete`
-- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
-- Lean target: `Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Compile`
-- Source ref: `https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol`
-- Selected functions: `previewDeposit`, `deposit`
-- Upstream source artifact: `contracts/token/ERC20/extensions/ERC4626.sol`
-- Notes: Backlog ERC-4626 benchmark slice derived from OpenZeppelin's virtual-offset design and inflation-attack analysis. The committed proof module validates the four arithmetic and state-transition theorems, so the case is runnable in the reference-solution benchmark path while remaining backlog-scoped.
-
-### `uniswap_v2/pair_fee_adjusted_swap`
-- Family / implementation: `uniswap_v2` / `v2_core`
-- Stage: `proof_complete`
-- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
-- Lean target: `Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Compile`
-- Source ref: `https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol`
-- Selected functions: `swap`
-- Upstream source artifact: `contracts/UniswapV2Pair.sol`
-- Notes: Backlog AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. The committed proof module makes the case runnable in the reference-solution benchmark path while it remains backlog-scoped.
 
 ### `usual/placeholder`
 - Family / implementation: `usual` / `private_repo`

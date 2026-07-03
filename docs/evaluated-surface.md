@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 31 cases and 188 task manifests. Of those, 188 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 33 cases and 200 task manifests. Of those, 200 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -26,6 +26,7 @@ The active suite currently contains 31 cases and 188 task manifests. Of those, 1
 | `lifi/swap_atomicity` | 6 | `complete` |
 | `nexus_mutual/ramm_price_band` | 4 | `partial` |
 | `onedelta/caller_address_integrity` | 10 | `complete` |
+| `openzeppelin/erc4626_virtual_offset_deposit` | 6 | `complete` |
 | `paladin_votes/stream_recovery_claim_usdc` | 26 | `complete` |
 | `pareto/redemption_backing` | 1 | `complete` |
 | `pendle/py_supply_pairing` | 4 | `complete` |
@@ -38,6 +39,7 @@ The active suite currently contains 31 cases and 188 task manifests. Of those, 1
 | `t3tris/hwm_performance_fee` | 8 | `complete` |
 | `term_finance/term_auction_clearing` | 1 | `complete` |
 | `termmax/order_v2_buy_xt_single_segment` | 1 | `complete` |
+| `uniswap_v2/pair_fee_adjusted_swap` | 6 | `complete` |
 | `usual/dao_collateral` | 5 | `complete` |
 | `wildcat/borrow_liquidity_safety` | 1 | `complete` |
 | `zama/erc7984_confidential_token` | 12 | `partial` |
@@ -45,7 +47,7 @@ The active suite currently contains 31 cases and 188 task manifests. Of those, 1
 
 ## Backlog
 
-Backlog cases are not part of the default active suite, but the runnable backlog tasks are still checked for hidden reference proofs. The backlog currently has 8 runnable tasks across `openzeppelin/erc4626_virtual_offset_deposit` and `uniswap_v2/pair_fee_adjusted_swap`.
+Backlog cases are not part of the default active suite, and none currently expose runnable proof tasks.
 Blocked backlog cases with no runnable tasks: `usual/placeholder`.
 
 ## Non-Evaluated Preview Files

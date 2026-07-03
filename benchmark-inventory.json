@@ -12,12 +12,12 @@
   "summary": {
     "family_count": 33,
     "implementation_count": 34,
-    "active_case_count": 31,
-    "backlog_case_count": 3,
-    "active_task_count": 188,
-    "backlog_task_count": 8,
+    "active_case_count": 33,
+    "backlog_case_count": 1,
+    "active_task_count": 200,
+    "backlog_task_count": 0,
     "buildable_case_count": 33,
-    "runnable_task_count": 196,
+    "runnable_task_count": 200,
     "case_stage_counts": {
       "build_green": 28,
       "candidate": 1,
@@ -33,12 +33,12 @@
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 196
+      "proof-only": 200
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
-      "accounting_bound": 16,
+      "accounting_bound": 17,
       "accounting_conservation": 15,
       "accounting_effect": 2,
       "accounting_invariant": 2,
@@ -46,7 +46,7 @@
       "accounting_update": 8,
       "additivity": 1,
       "all_or_nothing": 3,
-      "arithmetic_rounding": 3,
+      "arithmetic_rounding": 6,
       "atomic_finalization": 2,
       "authority_required": 2,
       "authorization_state": 9,
@@ -116,14 +116,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 52,
+      "functional_correctness": 56,
       "protocol_transition_correctness": 23,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 54
     },
     "family_split_counts": {
-      "active": 30,
-      "backlog": 2,
+      "active": 32,
       "mixed": 1
     }
   },
@@ -386,9 +385,9 @@
     {
       "family_id": "openzeppelin",
       "display_name": "OpenZeppelin",
-      "split": "backlog",
-      "status": "backlog",
-      "description": "Backlog benchmark family for OpenZeppelin contract logic, starting with an ERC-4626 virtual-offset deposit slice focused on rounding and inflation-attack mitigation.",
+      "split": "active",
+      "status": "active",
+      "description": "Active benchmark family for OpenZeppelin contract logic, starting with an ERC-4626 virtual-offset deposit slice focused on rounding and inflation-attack mitigation.",
       "implementation_ids": [
         "contracts"
       ],
@@ -607,9 +606,9 @@
     {
       "family_id": "uniswap_v2",
       "display_name": "Uniswap V2",
-      "split": "backlog",
-      "status": "backlog",
-      "description": "Backlog benchmark family for Uniswap V2 core logic, starting with a fee-adjusted swap invariant slice over reserve updates.",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Uniswap V2 core logic, starting with a fee-adjusted swap invariant slice over reserve updates.",
       "implementation_ids": [
         "v2_core"
       ],
@@ -937,7 +936,7 @@
       "family_id": "openzeppelin",
       "implementation_id": "contracts",
       "display_name": "OpenZeppelin Contracts",
-      "split": "backlog",
+      "split": "active",
       "status": "translated",
       "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-contracts",
       "upstream_commit": "45f032d1bcf1a88b7bc90154d7eef76c87bf9d45",
@@ -946,7 +945,7 @@
       "case_ids": [
         "openzeppelin/erc4626_virtual_offset_deposit"
       ],
-      "notes": "Backlog implementation entry for the OpenZeppelin ERC-4626 reference implementation, scoped to a compact virtual-offset deposit slice that captures rounding-sensitive share minting behavior.",
+      "notes": "Active implementation entry for the OpenZeppelin ERC-4626 reference implementation, scoped to a compact virtual-offset deposit slice that captures rounding-sensitive share minting behavior.",
       "manifest_path": "families/openzeppelin/implementations/contracts/implementation.yaml"
     },
     {
@@ -1145,7 +1144,7 @@
       "family_id": "uniswap_v2",
       "implementation_id": "v2_core",
       "display_name": "Uniswap V2 Core",
-      "split": "backlog",
+      "split": "active",
       "status": "translated",
       "upstream_repo": "https://github.com/Uniswap/v2-core",
       "upstream_commit": "ee547b17853e71ed4e0101ccfd52e70d5acded58",
@@ -1154,7 +1153,7 @@
       "case_ids": [
         "uniswap_v2/pair_fee_adjusted_swap"
       ],
-      "notes": "Backlog implementation entry for the canonical Uniswap V2 pair contract, scoped to a compact swap invariant and reserve-update slice.",
+      "notes": "Implementation entry for the canonical Uniswap V2 pair contract, scoped to a compact swap invariant and reserve-update slice.",
       "manifest_path": "families/uniswap_v2/implementations/v2_core/implementation.yaml"
     },
     {
@@ -1930,6 +1929,50 @@
       "proof_target": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs"
     },
     {
+      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
+      "project": "openzeppelin",
+      "case_name": "erc4626_virtual_offset_deposit",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/case.yaml",
+      "split": "active",
+      "family_id": "openzeppelin",
+      "implementation_id": "contracts",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-contracts",
+      "upstream_commit": "45f032d1bcf1a88b7bc90154d7eef76c87bf9d45",
+      "original_contract_path": "contracts/token/ERC20/extensions/ERC4626.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
+      "selected_functions": [
+        "previewDeposit",
+        "previewRedeem",
+        "deposit"
+      ],
+      "lean_target": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Compile",
+      "failure_reason": null,
+      "notes": "Active ERC-4626 benchmark slice derived from OpenZeppelin's virtual-offset design and inflation-attack analysis. The committed proof module validates the four original arithmetic and state-transition theorems plus the two harder rounding tasks (deposit/redeem round-trip bound and share-price monotonicity under donation), so every task is runnable in the reference-solution benchmark path.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "erc4626",
+        "preview_execution_consistency",
+        "virtual_offset",
+        "rounding_down",
+        "inflation_attack_surface"
+      ],
+      "abstraction_notes": "The slice models `previewDeposit`, the redeem-direction conversion `previewRedeem`, and the state-changing `deposit` using total-assets and total-shares storage together with fixed virtual offsets. Token transfers, fees, hooks, and share burning are omitted so the benchmark can focus on rounding-sensitive share/asset conversion and the virtual-liquidity defense surface, including deposit/redeem round-trip loss bounds and share-price behavior under direct asset donations.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Specs",
+      "proof_target": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs"
+    },
+    {
       "case_id": "paladin_votes/stream_recovery_claim_usdc",
       "project": "paladin_votes",
       "case_name": "stream_recovery_claim_usdc",
@@ -2518,6 +2561,48 @@
       "proof_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs"
     },
     {
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "project": "uniswap_v2",
+      "case_name": "pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/case.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/Uniswap/v2-core",
+      "upstream_commit": "ee547b17853e71ed4e0101ccfd52e70d5acded58",
+      "original_contract_path": "contracts/UniswapV2Pair.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "selected_functions": [
+        "swap"
+      ],
+      "lean_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Compile",
+      "failure_reason": null,
+      "notes": "Active AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. Promoted from the backlog with complete hidden reference proofs, plus harder multi-swap monotonicity and sandwich output-bound tasks layered on the same slice.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "amm_invariant",
+        "fee_adjusted_product",
+        "reserve_update",
+        "transfers_elided",
+        "callback_elided"
+      ],
+      "abstraction_notes": "The slice starts after the optimistic transfer path and callback, taking the observed token balances and inferred input amounts as arguments. It keeps the SafeMath-backed fee-adjusted product guard and the final reserve writes while omitting token movement, oracle accumulation, and event emission.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Specs",
+      "proof_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs"
+    },
+    {
       "case_id": "usual/dao_collateral",
       "project": "usual",
       "case_name": "dao_collateral",
@@ -2720,91 +2805,6 @@
     }
   ],
   "backlog": [
-    {
-      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
-      "project": "openzeppelin",
-      "case_name": "erc4626_virtual_offset_deposit",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/openzeppelin/erc4626_virtual_offset_deposit/case.yaml",
-      "split": "backlog",
-      "family_id": "openzeppelin",
-      "implementation_id": "contracts",
-      "stage": "proof_complete",
-      "translation_status": "translated",
-      "spec_status": "frozen",
-      "proof_status": "complete",
-      "source_language": "solidity",
-      "upstream_repo": "https://github.com/OpenZeppelin/openzeppelin-contracts",
-      "upstream_commit": "45f032d1bcf1a88b7bc90154d7eef76c87bf9d45",
-      "original_contract_path": "contracts/token/ERC20/extensions/ERC4626.sol",
-      "generated_artifact_path": null,
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
-      "selected_functions": [
-        "previewDeposit",
-        "deposit"
-      ],
-      "lean_target": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Compile",
-      "failure_reason": null,
-      "notes": "Backlog ERC-4626 benchmark slice derived from OpenZeppelin's virtual-offset design and inflation-attack analysis. The committed proof module validates the four arithmetic and state-transition theorems, so the case is runnable in the reference-solution benchmark path while remaining backlog-scoped.",
-      "buildable": true,
-      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
-      "abstraction_level": "protocol_slice",
-      "abstraction_tags": [
-        "erc4626",
-        "preview_execution_consistency",
-        "virtual_offset",
-        "rounding_down",
-        "inflation_attack_surface"
-      ],
-      "abstraction_notes": "The slice models only `previewDeposit` and `deposit` using total-assets and total-shares storage together with fixed virtual offsets. Token transfers, fees, hooks, and withdrawals are omitted so the benchmark can focus on rounding-sensitive share minting and the virtual-liquidity defense surface.",
-      "unsupported_feature_codes": [],
-      "spec_target": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Specs",
-      "proof_target": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs"
-    },
-    {
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "project": "uniswap_v2",
-      "case_name": "pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/case.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "stage": "proof_complete",
-      "translation_status": "translated",
-      "spec_status": "frozen",
-      "proof_status": "complete",
-      "source_language": "solidity",
-      "upstream_repo": "https://github.com/Uniswap/v2-core",
-      "upstream_commit": "ee547b17853e71ed4e0101ccfd52e70d5acded58",
-      "original_contract_path": "contracts/UniswapV2Pair.sol",
-      "generated_artifact_path": null,
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "selected_functions": [
-        "swap"
-      ],
-      "lean_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Compile",
-      "failure_reason": null,
-      "notes": "Backlog AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. The committed proof module makes the case runnable in the reference-solution benchmark path while it remains backlog-scoped.",
-      "buildable": true,
-      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
-      "abstraction_level": "protocol_slice",
-      "abstraction_tags": [
-        "amm_invariant",
-        "fee_adjusted_product",
-        "reserve_update",
-        "transfers_elided",
-        "callback_elided"
-      ],
-      "abstraction_notes": "The slice starts after the optimistic transfer path and callback, taking the observed token balances and inferred input amounts as arguments. It keeps the SafeMath-backed fee-adjusted product guard and the final reserve writes while omitting token movement, oracle accumulation, and event emission.",
-      "unsupported_feature_codes": [],
-      "spec_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Specs",
-      "proof_target": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs"
-    },
     {
       "case_id": "usual/placeholder",
       "project": "usual",
@@ -7133,6 +7133,276 @@
       }
     },
     {
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_redeem_round_trip_bound",
+      "task_id": "deposit_redeem_round_trip_bound",
+      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_redeem_round_trip_bound.yaml",
+      "split": "active",
+      "family_id": "openzeppelin",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "arithmetic_rounding",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_redeem_round_trip_bound",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/DepositRedeemRoundTripBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task proves the deposit/redeem round trip under virtual-offset floor rounding never returns more assets than were deposited, and the round-trip loss is bounded by one share's asset value rounded up. The proof requires an explicit floor/ceil rounding sandwich over the two chained integer divisions.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_assets",
+      "task_id": "deposit_sets_total_assets",
+      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_sets_total_assets.yaml",
+      "split": "active",
+      "family_id": "openzeppelin",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_write",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalAssets",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/DepositSetsTotalAssets.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the `totalAssets` post-state write performed by the virtual-offset deposit slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_shares",
+      "task_id": "deposit_sets_total_shares",
+      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_sets_total_shares.yaml",
+      "split": "active",
+      "family_id": "openzeppelin",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_write",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalShares",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/DepositSetsTotalShares.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the share-supply update and ties it to the previewed minted amount from the old state.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/positive_deposit_mints_positive_shares_under_rate_bound",
+      "task_id": "positive_deposit_mints_positive_shares_under_rate_bound",
+      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/positive_deposit_mints_positive_shares_under_rate_bound.yaml",
+      "split": "active",
+      "family_id": "openzeppelin",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "output_range",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.positive_deposit_mints_positive_shares_under_rate_bound",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/PositiveDepositMintsPositiveSharesUnderRateBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task expresses the virtual-offset guarantee that a positively sized deposit mints a positive number of shares once the exchange-rate lower bound is met.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/preview_deposit_rounds_down",
+      "task_id": "preview_deposit_rounds_down",
+      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/preview_deposit_rounds_down.yaml",
+      "split": "active",
+      "family_id": "openzeppelin",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.previewDeposit_rounds_down",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/PreviewDepositRoundsDown.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task captures the floor-division bound for ERC-4626 previewed shares under the virtual-offset rule.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/share_price_monotone_under_donation",
+      "task_id": "share_price_monotone_under_donation",
+      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/share_price_monotone_under_donation.yaml",
+      "split": "active",
+      "family_id": "openzeppelin",
+      "implementation_id": "contracts",
+      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "arithmetic_rounding",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.share_price_monotone_under_donation",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
+        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/SharePriceMonotoneUnderDonation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task proves a direct asset donation to the vault never decreases the assets an existing holder can redeem for a fixed share amount, capturing the virtual-offset defense against donation-based share-price manipulation under decimal-offset no-overflow hypotheses.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed",
       "task_id": "both_claim_marks_both_claimed",
       "case_id": "paladin_votes/stream_recovery_claim_usdc",
@@ -10491,6 +10761,276 @@
       }
     },
     {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_enforces_fee_adjusted_invariant",
+      "task_id": "swap_enforces_fee_adjusted_invariant",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_enforces_fee_adjusted_invariant.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_enforces_fee_adjusted_invariant",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapEnforcesFeeAdjustedInvariant.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task captures the core Uniswap V2 fee-adjusted constant-product guard in the abstracted swap slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sandwich_output_bound",
+      "task_id": "swap_sandwich_output_bound",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sandwich_output_bound.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_swap_sandwich_output_bound",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSandwichOutputBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Bounds the victim's token0 output after an adversarial front-run swap by the fee-adjusted no-front-run output bound computed from the original reserves. The front-run direction and no-wrap side conditions are explicit hypotheses over the abstracted swap slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve0",
+      "task_id": "swap_sets_reserve0",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve0.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_write",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve0",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve0.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the first post-guard reserve write in the fee-adjusted Uniswap V2 swap slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1",
+      "task_id": "swap_sets_reserve1",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve1.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_write",
+      "category": "state-transition",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve1",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve1.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task isolates the second post-guard reserve write in the fee-adjusted Uniswap V2 swap slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve_product",
+      "task_id": "swap_sets_reserve_product",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve_product.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve_product",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserveProduct.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task composes the two reserve writes into a single post-state arithmetic identity over the stored reserve product.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/two_swap_k_monotone",
+      "task_id": "two_swap_k_monotone",
+      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/two_swap_k_monotone.yaml",
+      "split": "active",
+      "family_id": "uniswap_v2",
+      "implementation_id": "v2_core",
+      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "arithmetic_rounding",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_two_swap_k_monotone",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
+        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/TwoSwapKMonotone.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Constant-product monotonicity (`k' >= k`) across two sequential fee-adjusted swaps in the abstracted swap slice. No-overflow hypotheses keep the wrapped Uint256 arithmetic aligned with the Nat-level bound.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "usual/dao_collateral/redeem_conservation",
       "task_id": "redeem_conservation",
       "case_id": "usual/dao_collateral",
@@ -11468,367 +12008,6 @@
       }
     }
   ],
-  "backlog_tasks": [
-    {
-      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_assets",
-      "task_id": "deposit_sets_total_assets",
-      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_sets_total_assets.yaml",
-      "split": "backlog",
-      "family_id": "openzeppelin",
-      "implementation_id": "contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "storage_write",
-      "category": "state-transition",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalAssets",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
-        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
-        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/DepositSetsTotalAssets.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task isolates the `totalAssets` post-state write performed by the virtual-offset deposit slice.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_shares",
-      "task_id": "deposit_sets_total_shares",
-      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_sets_total_shares.yaml",
-      "split": "backlog",
-      "family_id": "openzeppelin",
-      "implementation_id": "contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "storage_write",
-      "category": "state-transition",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalShares",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
-        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
-        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/DepositSetsTotalShares.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task isolates the share-supply update and ties it to the previewed minted amount from the old state.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/positive_deposit_mints_positive_shares_under_rate_bound",
-      "task_id": "positive_deposit_mints_positive_shares_under_rate_bound",
-      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/openzeppelin/erc4626_virtual_offset_deposit/tasks/positive_deposit_mints_positive_shares_under_rate_bound.yaml",
-      "split": "backlog",
-      "family_id": "openzeppelin",
-      "implementation_id": "contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "output_range",
-      "category": "arithmetic-invariant",
-      "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.positive_deposit_mints_positive_shares_under_rate_bound",
-      "proof_family": "functional_correctness",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
-        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
-        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/PositiveDepositMintsPositiveSharesUnderRateBound.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task expresses the virtual-offset guarantee that a positively sized deposit mints a positive number of shares once the exchange-rate lower bound is met.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/preview_deposit_rounds_down",
-      "task_id": "preview_deposit_rounds_down",
-      "case_id": "openzeppelin/erc4626_virtual_offset_deposit",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/openzeppelin/erc4626_virtual_offset_deposit/tasks/preview_deposit_rounds_down.yaml",
-      "split": "backlog",
-      "family_id": "openzeppelin",
-      "implementation_id": "contracts",
-      "source_ref": "https://github.com/OpenZeppelin/openzeppelin-contracts@45f032d1bcf1a88b7bc90154d7eef76c87bf9d45:contracts/token/ERC20/extensions/ERC4626.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "accounting_bound",
-      "category": "arithmetic-invariant",
-      "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.previewDeposit_rounds_down",
-      "proof_family": "functional_correctness",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/openzeppelin/erc4626_virtual_offset_deposit/verity/Contract.lean",
-        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/openzeppelin/erc4626_virtual_offset_deposit/verity/Specs.lean",
-        "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/OpenZeppelin/ERC4626VirtualOffsetDeposit/Tasks/PreviewDepositRoundsDown.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task captures the floor-division bound for ERC-4626 previewed shares under the virtual-offset rule.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_enforces_fee_adjusted_invariant",
-      "task_id": "swap_enforces_fee_adjusted_invariant",
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_enforces_fee_adjusted_invariant.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "accounting_bound",
-      "category": "arithmetic-invariant",
-      "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_enforces_fee_adjusted_invariant",
-      "proof_family": "functional_correctness",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapEnforcesFeeAdjustedInvariant.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task captures the core Uniswap V2 fee-adjusted constant-product guard in the abstracted swap slice.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve0",
-      "task_id": "swap_sets_reserve0",
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve0.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "storage_write",
-      "category": "state-transition",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve0",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve0.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task isolates the first post-guard reserve write in the fee-adjusted Uniswap V2 swap slice.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1",
-      "task_id": "swap_sets_reserve1",
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve1.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "storage_write",
-      "category": "state-transition",
-      "difficulty": "easy",
-      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve1",
-      "proof_family": "state_preservation_local_effects",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserve1.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task isolates the second post-guard reserve write in the fee-adjusted Uniswap V2 swap slice.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    },
-    {
-      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve_product",
-      "task_id": "swap_sets_reserve_product",
-      "case_id": "uniswap_v2/pair_fee_adjusted_swap",
-      "suite": "backlog",
-      "schema_version": 1,
-      "manifest_path": "backlog/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve_product.yaml",
-      "split": "backlog",
-      "family_id": "uniswap_v2",
-      "implementation_id": "v2_core",
-      "source_ref": "https://github.com/Uniswap/v2-core@ee547b17853e71ed4e0101ccfd52e70d5acded58:contracts/UniswapV2Pair.sol",
-      "task_interface_version": 2,
-      "track": "proof-only",
-      "property_class": "accounting_conservation",
-      "category": "arithmetic-invariant",
-      "difficulty": "medium",
-      "theorem_name": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve_product",
-      "proof_family": "refinement_equivalence",
-      "translation_status": "translated",
-      "proof_status": "complete",
-      "implementation_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Contract.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Contract.lean"
-      ],
-      "specification_files": [
-        "backlog/uniswap_v2/pair_fee_adjusted_swap/verity/Specs.lean",
-        "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Specs.lean"
-      ],
-      "editable_files": [
-        "Benchmark/Generated/UniswapV2/PairFeeAdjustedSwap/Tasks/SwapSetsReserveProduct.lean"
-      ],
-      "abstraction_level": "protocol_slice",
-      "abstraction_notes": "This task composes the two reserve writes into a single post-state arithmetic identity over the stored reserve product.",
-      "unsupported_feature_codes": [],
-      "reference_solution_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
-      "evaluation": {
-        "engine": "lean_proof_generation",
-        "target_kind": "proof_generation"
-      },
-      "readiness": {
-        "prompt_context": "ready",
-        "editable_proof": "ready",
-        "reference_solution": "ready"
-      }
-    }
-  ],
-  "generated_at": "2026-06-29T08:26:48.629251+00:00"
+  "backlog_tasks": [],
+  "generated_at": "2026-07-03T08:12:01.872326+00:00"
 }

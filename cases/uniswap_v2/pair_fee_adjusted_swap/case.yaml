@@ -2,7 +2,7 @@ manifest_kind: case
 project: uniswap_v2
 case_id: pair_fee_adjusted_swap
 schema_version: 1
-split: backlog
+split: active
 family_id: uniswap_v2
 implementation_id: v2_core
 stage: proof_complete
@@ -36,7 +36,8 @@ unsupported_feature_codes: []
 spec_target: Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Specs
 proof_target: Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs
 notes: >
-  Backlog AMM benchmark slice for reasoning about fee-adjusted constant-product
+  Active AMM benchmark slice for reasoning about fee-adjusted constant-product
   guards and post-swap reserve synchronization without exposing the full
-  Uniswap execution path. The committed proof module makes the case runnable in
-  the reference-solution benchmark path while it remains backlog-scoped.
+  Uniswap execution path. Promoted from the backlog with complete hidden
+  reference proofs, plus harder multi-swap monotonicity and sandwich
+  output-bound tasks layered on the same slice.
