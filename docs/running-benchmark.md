@@ -96,9 +96,47 @@ python3 scripts/plan_rerun.py \
 
 The planner reruns all tasks when the harness, mode, or budget changes. It reruns changed tasks and rejects reuse of zero-token, missing-verifier, stale-fingerprint, or error-only artifacts.
 
+### Fair Rerun Policy
+
+Reruns are allowed only to replace artifacts that did not give the model a fair
+scoring opportunity, or artifacts whose execution context no longer matches the
+target version. Provider setup failures, quota exhaustion, terminal transport
+failures, and context/provider failures are infrastructure-invalid failures, not
+model failures. They must be marked non-reusable and excluded from both the
+pass-rate denominator and the failed count.
+
+Use `scripts/plan_rerun.py` to decide whether a previous artifact can be reused.
+It rejects rows marked `provider_invalid`, rows with zero usage, rows missing
+verifier output, rows with non-completed harness status, and rows whose stored
+fingerprints or result key do not match the target version. Do not manually turn
+an infrastructure-invalid row into a failed model verdict.
+
+When a rerun substitutes for an infrastructure-invalid artifact:
+
+- The selected task row records the replacement `run_id`, `artifact_id`, and
+  `result_key`.
+- The superseded invalid artifact remains visible through `caveats` or explicit
+  substitution metadata, but is not reusable and is not counted as valid.
+- If multiple artifacts exist for the same `(version, model_id, task_ref)`, the
+  manifest indexes the selected latest valid artifact and records why another
+  artifact was superseded.
+- A result row is complete only when every task has a valid selected artifact;
+  partial rows remain visible but are not eligible for rank comparisons.
+
 ## Publishing Results
 
-Detailed run directories should be published as release archives instead of committed. The committed result manifest indexes those archives by release tag, asset name, byte size, SHA-256, caveats, and per-task result keys.
+Detailed run directories should be published as release archives instead of committed. The committed result manifest indexes those archives by release tag, asset name, byte size, SHA-256, caveats, selected run IDs, and per-task result keys. When packaging a corrected or substituted manifest, pass the manifest to the packager so it fails if a selected run artifact is missing from the archive input:
+
+```bash
+python3 scripts/package_benchmark_release.py \
+  --runs-dir results/runs \
+  --out-dir dist \
+  --tag v0.2 \
+  --results-manifest results/manifests/v0.2.json
+```
+
+Do not publish a manifest that points to a replacement `run_id` unless the
+corresponding run directory is included in the release archive manifest.
 
 Regenerate public result files:
 
@@ -124,4 +162,3 @@ python3 scripts/validate_manifests.py
 python3 scripts/check_run_artifacts.py --self-test
 python3 scripts/check.py
 ```
-

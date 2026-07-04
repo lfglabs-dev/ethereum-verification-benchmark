@@ -163,13 +163,27 @@ or updating its release archive metadata, then rerunning
 `scripts/aggregate_version.py` to regenerate the summary, leaderboard, badges,
 and version index.
 
+Substituted reruns must make the selected artifact explicit. The task row that
+counts for scoring stores the replacement `run_id`, `artifact_id`, and
+`result_key`. Superseded provider/quota/transport artifacts may remain as
+caveats or substitution metadata for auditability, but they are
+infrastructure-invalid, non-reusable artifacts and must not count toward
+`valid_count`, `failed`, or pass-rate denominators.
+
+Release archives are part of the manifest contract. When a result manifest
+selects a rerun artifact, the release/archive manifest must include that exact
+run directory. Use `scripts/package_benchmark_release.py --results-manifest ...`
+for corrected or substituted publications; it packages only selected run IDs and
+fails closed when the manifest references a missing selected artifact.
+
 ## Aggregation Rules
 
 - Complete rows have `valid_count == version.task_count` and no invalid
   required artifacts.
 - Partial rows are visible but excluded from rank comparisons.
-- Invalid zero-token or missing-verifier artifacts stay in the manifest only as
-  non-reusable caveats; they must not inflate `valid_count`.
+- Invalid zero-token, missing-verifier, provider/quota, or terminal transport
+  artifacts stay in the manifest only as non-reusable caveats or substitution
+  metadata; they must not inflate `valid_count` or `failed`.
 - If multiple artifacts exist for the same `(version, model_id, task_ref)`, the
   manifest should index the selected latest valid artifact and record a caveat.
 - Versioned summary files are immutable after publication except for explicit
