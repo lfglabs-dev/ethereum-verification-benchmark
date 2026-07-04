@@ -33,6 +33,44 @@ def sha256(path: Path) -> str:
     return h.hexdigest()
 
 
+def selected_run_ids_by_model(results_manifest: dict) -> dict[str, set[str]]:
+    """Return selected run/artifact ids indexed by the published result manifest."""
+    selected: dict[str, set[str]] = {}
+    for model in results_manifest.get("models", []):
+        if not isinstance(model, dict):
+            continue
+        model_id = model.get("model_id")
+        if not isinstance(model_id, str) or not model_id:
+            continue
+        run_ids: set[str] = set()
+        for task in model.get("task_results", []):
+            if not isinstance(task, dict):
+                continue
+            run_id = task.get("run_id") or task.get("artifact_id")
+            if isinstance(run_id, str) and run_id:
+                run_ids.add(run_id)
+        selected[model_id] = run_ids
+    return selected
+
+
+def filter_dirs_by_result_manifest(
+    by_model: dict[str, list[Path]],
+    results_manifest: dict,
+) -> tuple[dict[str, list[Path]], list[str]]:
+    """Keep only selected manifest artifacts and fail closed on missing run directories."""
+    selected = selected_run_ids_by_model(results_manifest)
+    filtered: dict[str, list[Path]] = {}
+    errors: list[str] = []
+    for model, run_ids in sorted(selected.items()):
+        dirs_by_id = {path.name: path for path in by_model.get(model, [])}
+        missing = sorted(run_id for run_id in run_ids if run_id not in dirs_by_id)
+        if missing:
+            for run_id in missing:
+                errors.append(f"{model}: selected manifest run_id is missing from runs-dir: {run_id}")
+        filtered[model] = [dirs_by_id[run_id] for run_id in sorted(run_ids) if run_id in dirs_by_id]
+    return filtered, errors
+
+
 def run_zstd_tar(output: Path, rel_dirs: list[str], cwd: Path, compression_level: int) -> None:
     list_file = output.with_suffix(output.suffix + ".files")
     list_file.write_text("".join(f"{name}\n" for name in rel_dirs))
@@ -68,6 +106,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--runs-dir", type=Path, default=Path("results/runs"))
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument(
+        "--results-manifest",
+        type=Path,
+        help="optional published result manifest; package exactly its selected run_ids and fail if any are missing",
+    )
     parser.add_argument("--tag", default="v0.1")
     parser.add_argument("--compression-level", type=int, default=10)
     args = parser.parse_args()
@@ -87,11 +130,25 @@ def main() -> int:
             continue
         by_model.setdefault(model, []).append(run_dir)
 
+    selected_by_manifest = False
+    if args.results_manifest:
+        selected_by_manifest = True
+        results_manifest = load_json(args.results_manifest)
+        if not isinstance(results_manifest.get("models"), list):
+            print(f"error: results manifest has no models array: {args.results_manifest}", file=sys.stderr)
+            return 1
+        by_model, selection_errors = filter_dirs_by_result_manifest(by_model, results_manifest)
+        if selection_errors:
+            for error in selection_errors:
+                print(f"error: {error}", file=sys.stderr)
+            return 1
+
     manifest = {
         "schema_version": 1,
         "tag": args.tag,
         "repository_url": GITHUB_REPO_URL,
         "runs_dir": str(runs_dir),
+        "selected_by_results_manifest": selected_by_manifest,
         "archives": [],
         "skipped_without_model": skipped,
     }
@@ -164,6 +221,7 @@ def main() -> int:
                 "sha256": sha256(final_archive),
                 "bytes": final_archive.stat().st_size,
                 "run_dirs": len(dirs),
+                "run_ids": sorted(str(task["run_id"]) for task in tasks if task.get("run_id")),
                 "completed": completed,
                 "nonzero_usage": nonzero_usage,
                 "passed": passed,
