@@ -105,6 +105,7 @@ def main() -> int:
     original_context_tokens = transport.DEFAULT_CONTEXT_TOKENS
     original_native_tools = lean_tools.DEFAULT_NATIVE_TOOLS
     original_context_stop_fraction = lean_tools.DEFAULT_CONTEXT_STOP_FRACTION
+    original_max_fair_messages = lean_tools.DEFAULT_MAX_FAIR_MESSAGES
     try:
         proof_rel = "Benchmark/Generated/Sample.lean"
         proof_path = temp_workspace / proof_rel
@@ -441,6 +442,72 @@ def main() -> int:
 
         proof_path.write_text(original, encoding="utf-8")
 
+        compacted_requests: list[list[dict[str, object]]] = []
+        compacted_call_count = 0
+
+        def fake_compacted_chat_completion(messages: list[dict[str, object]], *args: object, **kwargs: object) -> dict[str, object]:
+            nonlocal compacted_call_count
+            compacted_call_count += 1
+            compacted_requests.append([dict(message) for message in messages])
+            if compacted_call_count == 1:
+                return {
+                    "choices": [
+                        {
+                            "message": {
+                                "content": None,
+                                "tool_calls": [
+                                    {"id": "compact-1", "function": {"name": "show_task", "arguments": "{}"}},
+                                ],
+                            }
+                        }
+                    ]
+                }
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {"id": "compact-2", "function": {"name": "check_proof", "arguments": json.dumps({"proof": "trivial"})}},
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        lean_tools.chat_completion = fake_compacted_chat_completion
+        lean_tools._run_lean_module = lambda *args, **kwargs: (0, "")
+        lean_tools.DEFAULT_NATIVE_TOOLS = True
+        lean_tools.DEFAULT_MAX_FAIR_MESSAGES = 2
+        result = lean_tools._attempt_task_fair(
+            {
+                "task_ref": "sample/group/task",
+                "task_id": "task",
+                "target_module": "Benchmark.Generated.Sample",
+                "editable_files": [proof_rel],
+                "specification_files": [],
+                "implementation_files": [],
+            },
+            temp_workspace,
+            base_url="http://example.invalid/v1",
+            max_attempts=1,
+            max_tool_calls=4,
+            attempts_dir=temp_workspace / "attempts",
+            tool_log_path=temp_workspace / "compacted-tool-calls.jsonl",
+            conversation_log_path=temp_workspace / "compacted-conversation.jsonl",
+        )
+        if result.get("status") != "lean_passed":
+            errors.append(f"fair compacted native-tool smoke returned unexpected status: {result.get('status')!r}")
+        if len(compacted_requests) < 2:
+            errors.append("fair compacted native-tool smoke should make a second request")
+        elif any(message.get("role") == "tool" for message in compacted_requests[1]):
+            errors.append("fair message compaction must not leave dangling native tool responses in the next request")
+        lean_tools.DEFAULT_MAX_FAIR_MESSAGES = original_max_fair_messages
+        lean_tools._run_lean_module = original_run_lean_module
+
+        proof_path.write_text(original, encoding="utf-8")
+
         def fake_large_context_chat_completion(*args: object, **kwargs: object) -> dict[str, object]:
             return {
                 "usage": {"prompt_tokens": 29, "completion_tokens": 1, "total_tokens": 30},
@@ -591,6 +658,7 @@ def main() -> int:
         transport.DEFAULT_CONTEXT_TOKENS = original_context_tokens
         lean_tools.DEFAULT_NATIVE_TOOLS = original_native_tools
         lean_tools.DEFAULT_CONTEXT_STOP_FRACTION = original_context_stop_fraction
+        lean_tools.DEFAULT_MAX_FAIR_MESSAGES = original_max_fair_messages
         shutil.rmtree(temp_workspace, ignore_errors=True)
 
     if errors:

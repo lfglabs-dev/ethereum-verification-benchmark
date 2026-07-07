@@ -1215,7 +1215,6 @@ def _attempt_task_fair(
             repeated = repetition_failure("tool:" + name + ":" + json.dumps(args, sort_keys=True, default=str)[:500])
             if repeated is not None:
                 return repeated
-            _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
             if tool_calls_executed >= max_tool_calls:
                 result = {"ok": False, "error": "max_tool_calls_exceeded"}
                 _append_jsonl(
