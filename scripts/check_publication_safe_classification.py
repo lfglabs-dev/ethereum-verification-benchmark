@@ -106,6 +106,38 @@ def main() -> int:
     if _single_class(gradeable_then_request_failure) != "GENUINE_FAIL":
         errors.append("verifier failure after a gradeable submission should stay genuine")
 
+    tool_call_degeneration = classify_run(
+        _verifier("no_submission"),
+        [
+            {
+                "task_ref": "sample/group/task",
+                "status": "failed_no_tool_calls",
+                "failure_class": "no_tool_calls",
+                "no_tool_responses": 7,
+                "attempts": [],
+            }
+        ],
+    )
+    if _single_class(tool_call_degeneration) != "INFRA_INVALID":
+        errors.append("tool-call degeneration with no gradeable submission should be INFRA_INVALID")
+    if tool_call_degeneration.get("reusable") is not False:
+        errors.append("tool-call degeneration should be non-reusable")
+
+    degeneration_after_submission = classify_run(
+        _verifier("lean_check_failed"),
+        [
+            {
+                "task_ref": "sample/group/task",
+                "status": "failed_no_tool_calls",
+                "failure_class": "no_tool_calls",
+                "no_tool_responses": 3,
+                "attempts": [{"status": "lean_failed", "candidate_path": "attempts/sample.lean"}],
+            }
+        ],
+    )
+    if _single_class(degeneration_after_submission) != "GENUINE_FAIL":
+        errors.append("a late no-tool turn must not launder a gradeable failure into infra-invalid")
+
     summary = _model_summary(
         [
             {

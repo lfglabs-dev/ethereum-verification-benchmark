@@ -21,6 +21,21 @@ TERMINAL_REQUEST_STATUSES = {
     "request_timeout",
 }
 
+# Terminal statuses where the provider/model never produced a usable tool call
+# at all: `failed_no_tool_calls` is the no-tool-response limit (chat-template
+# degeneration — the model emits template sentinels instead of tool calls);
+# `malformed_tool_call`/`invalid_tool_call` mean it could not form a valid call
+# even after a corrective reprompt. With no gradeable submission these are
+# provider/tool-protocol breakdowns, not proof failures by the model, so they
+# must not count as GENUINE_FAIL evidence. Note this is deliberately narrow:
+# `failed_no_attempt` (the model made real tool calls but never submitted a
+# proof) is a genuine give-up and stays GENUINE_FAIL.
+TOOL_PROTOCOL_BREAKDOWN_STATUSES = {
+    "failed_no_tool_calls",
+    "malformed_tool_call",
+    "invalid_tool_call",
+}
+
 NON_GRADEABLE_ATTEMPT_STATUSES = {
     "rejected_candidate",
     "rejected_forbidden_placeholder",
@@ -53,6 +68,19 @@ def _is_terminal_request_failure(task_result: dict[str, Any] | None) -> bool:
         or failure_class in INFRA_FAILURE_KINDS
         or error_kind in INFRA_FAILURE_KINDS
     )
+
+
+def _is_tool_protocol_breakdown(task_result: dict[str, Any] | None) -> bool:
+    if not isinstance(task_result, dict):
+        return False
+    return str(task_result.get("status") or "") in TOOL_PROTOCOL_BREAKDOWN_STATUSES
+
+
+def _tool_protocol_breakdown_reason(task_result: dict[str, Any] | None) -> str:
+    if not isinstance(task_result, dict):
+        return "provider_invalid_tool_protocol"
+    marker = task_result.get("failure_class") or task_result.get("status")
+    return f"provider_invalid_tool_protocol:{marker}"
 
 
 def _request_failure_reason(task_result: dict[str, Any] | None) -> str | None:
@@ -115,6 +143,14 @@ def classify_target(
         return {
             "final_class": "INFRA_INVALID",
             "final_reason": _request_failure_reason(task_result) or "terminal_request_failed",
+            "reusable": False,
+            "raw_verifier_status": raw_status,
+        }
+
+    if _is_tool_protocol_breakdown(task_result) and not gradeable_submission:
+        return {
+            "final_class": "INFRA_INVALID",
+            "final_reason": _tool_protocol_breakdown_reason(task_result),
             "reusable": False,
             "raw_verifier_status": raw_status,
         }

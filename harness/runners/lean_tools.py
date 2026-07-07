@@ -832,15 +832,70 @@ def _execute_fair_tool(
     return {"ok": False, "error": f"unknown tool: {name}"}
 
 
+# Chat-template / tool-call sentinels that leak into content when the serving
+# stack does not stop on them. Stripped before JSON parsing so a valid tool
+# call followed by a leaked sentinel (e.g. `{"tool":"show_task",...}<|im_end|>`)
+# is still recovered instead of being counted as a no-tool response.
+_TEMPLATE_SENTINELS = (
+    "<|im_end|>",
+    "<|im_start|>",
+    "<|tool_call_begin|>",
+    "<|tool_call_end|>",
+    "<|tool_calls_begin|>",
+    "<|tool_calls_end|>",
+    "<|tool_sep|>",
+)
+
+
+def _strip_template_sentinels(text: str) -> str:
+    for sentinel in _TEMPLATE_SENTINELS:
+        text = text.replace(sentinel, " ")
+    return text
+
+
+def _first_json_value(text: str) -> object | None:
+    """Return the first balanced top-level JSON object/array in text, if any."""
+    for start, opener in enumerate(text):
+        if opener not in "{[":
+            continue
+        closer = "}" if opener == "{" else "]"
+        depth = 0
+        in_string = False
+        escaped = False
+        for index in range(start, len(text)):
+            char = text[index]
+            if in_string:
+                if escaped:
+                    escaped = False
+                elif char == "\\":
+                    escaped = True
+                elif char == '"':
+                    in_string = False
+                continue
+            if char == '"':
+                in_string = True
+            elif char == opener:
+                depth += 1
+            elif char == closer:
+                depth -= 1
+                if depth == 0:
+                    try:
+                        return json.loads(text[start : index + 1])
+                    except json.JSONDecodeError:
+                        break
+    return None
+
+
 def _json_payload_from_text(text: str) -> object | None:
     stripped = _strip_thinking(text).strip()
     fenced = re.search(r"```(?:json)?\s*(.*?)```", stripped, flags=re.DOTALL | re.IGNORECASE)
     if fenced:
         stripped = fenced.group(1).strip()
+    stripped = _strip_template_sentinels(stripped).strip()
     try:
         return json.loads(stripped)
     except json.JSONDecodeError:
-        return None
+        return _first_json_value(stripped)
 
 
 def _normalise_text_tool_call(raw: object, index: int) -> dict[str, object] | None:
