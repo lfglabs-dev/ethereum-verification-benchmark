@@ -66,6 +66,16 @@ def check_run(run_dir: Path) -> list[str]:
         errors.append(f"{run_dir}: harness-request.json missing benchmark_budget")
     if "operational_budget" not in request:
         errors.append(f"{run_dir}: harness-request.json missing operational_budget")
+    classification = run.get("classification")
+    if run.get("harness_id") == "default":
+        if not isinstance(classification, dict):
+            errors.append(f"{run_dir}: default run missing publication-safe classification")
+        else:
+            if "run_class" not in classification:
+                errors.append(f"{run_dir}: classification missing run_class")
+            counts = classification.get("final_class_counts")
+            if not isinstance(counts, dict):
+                errors.append(f"{run_dir}: classification missing final_class_counts")
     if run.get("run_mode") in {"task", "group", "suite"} and "started_at" not in run:
         errors.append(f"{run_dir}: run.json missing started_at")
     if run.get("run_mode") not in {"task", "group", "suite"}:

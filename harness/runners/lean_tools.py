@@ -17,12 +17,16 @@ from pathlib import Path
 from typing import Any
 
 try:
+    from .. import transport
+    from ..classification import classify_run
     from ..manifests import filter_group_to_task, load_group
     from ..paths import RESULTS_DIR, ROOT
     from ..reports import write_run_report
     from ..verifier import verify_group
     from ..workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
 except ImportError:
+    import transport
+    from classification import classify_run
     from manifests import filter_group_to_task, load_group
     from paths import RESULTS_DIR, ROOT
     from reports import write_run_report
@@ -83,6 +87,8 @@ DEFAULT_TOOL_RESULT_CHARS = int(os.environ.get("DEFAULT_HARNESS_TOOL_RESULT_CHAR
 DEFAULT_TASK_SUMMARY_CHARS = int(os.environ.get("DEFAULT_HARNESS_TASK_SUMMARY_CHARS", "8000"))
 DEFAULT_MAX_NON_PROOF_TOOL_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_NON_PROOF_TOOL_CALLS", "24"))
 DEFAULT_MAX_SANDBOX_CALLS = int(os.environ.get("DEFAULT_HARNESS_MAX_SANDBOX_CALLS", "16"))
+DEFAULT_MAX_FAIR_MESSAGES = int(os.environ.get("DEFAULT_HARNESS_MAX_FAIR_MESSAGES", "16"))
+DEFAULT_CONTEXT_STOP_FRACTION = float(os.environ.get("DEFAULT_HARNESS_CONTEXT_STOP_FRACTION", "0.88"))
 DEFAULT_TOKEN_BUDGET = int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0"))  # 0 = unlimited; counts completion tokens per task
 STUCK_NUDGE = os.environ.get("DEFAULT_HARNESS_STUCK_NUDGE", "1").lower() not in {"0", "false", "no"}
 
@@ -165,6 +171,45 @@ def _run_lean_module_with_proof_content(
 
 def _failure_taxonomy(status: str, attempts: list[dict[str, object]], *, tool_calls: int = 0, no_tool_responses: int = 0) -> str:
     return failure_taxonomy(status, attempts, tool_calls=tool_calls, no_tool_responses=no_tool_responses)
+
+
+def _tool_call_signature(name: str, args: dict[str, object]) -> str:
+    try:
+        encoded_args = json.dumps(args, sort_keys=True, separators=(",", ":"))
+    except TypeError:
+        encoded_args = str(args)
+    return f"{name}:{encoded_args}"
+
+
+def _compact_fair_messages(messages: list[dict[str, Any]], *, system_prompt: str, user_prompt: str) -> None:
+    if DEFAULT_MAX_FAIR_MESSAGES <= 0 or len(messages) <= DEFAULT_MAX_FAIR_MESSAGES:
+        return
+    snippets: list[str] = []
+    for message in messages[-6:]:
+        role = str(message.get("role") or "")
+        if role == "system":
+            continue
+        content = message.get("content")
+        if content is None and message.get("tool_calls"):
+            content = "[assistant requested tool call]"
+        if content is None:
+            continue
+        text = str(content).replace("\n", " ")
+        snippets.append(f"{role}: {text[:500]}")
+    recent_summary = "\n".join(snippets[-6:])
+    messages[:] = [
+        {"role": "system", "content": system_prompt},
+        {
+            "role": "user",
+            "content": (
+                f"{user_prompt}\n"
+                "Earlier tool transcript was compacted to keep the request within context. "
+                "Recent context:\n"
+                f"{recent_summary}\n"
+                "Continue with one allowed tool call and make progress toward check_proof/try_tactics."
+            ),
+        },
+    ]
 
 
 def _stuck_signature(first_error: object) -> str:
@@ -982,6 +1027,13 @@ def _attempt_task_fair(
             }
         return None
 
+    context_limit = 0
+    if transport.DEFAULT_CONTEXT_TOKENS:
+        try:
+            context_limit = int(transport.DEFAULT_CONTEXT_TOKENS)
+        except ValueError:
+            context_limit = 0
+
     def _accumulate_usage(response: dict[str, object]) -> None:
         usage = response.get("usage") if isinstance(response, dict) else None
         if isinstance(usage, dict):
@@ -992,6 +1044,7 @@ def _attempt_task_fair(
                     usage_totals[key] += int(value)
 
     token_budget_exhausted = False
+    context_budget_exhausted = False
     for request_index in range(1, request_limit + 1):
         if _proof_attempt_count(attempts) >= max_attempts:
             break
@@ -1035,6 +1088,26 @@ def _attempt_task_fair(
                 "failure_class": _failure_taxonomy(status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
             }
         _accumulate_usage(response)
+        usage = response.get("usage") if isinstance(response, dict) else None
+        prompt_tokens = usage.get("prompt_tokens") if isinstance(usage, dict) else None
+        if (
+            context_limit > 0
+            and isinstance(prompt_tokens, (int, float))
+            and prompt_tokens >= int(context_limit * DEFAULT_CONTEXT_STOP_FRACTION)
+        ):
+            context_budget_exhausted = True
+            _append_jsonl(
+                conversation_log_path,
+                {
+                    "task_ref": task.get("task_ref"),
+                    "request_index": request_index,
+                    "status": "context_budget_exhausted",
+                    "prompt_tokens": int(prompt_tokens),
+                    "context_limit": context_limit,
+                    "context_stop_fraction": DEFAULT_CONTEXT_STOP_FRACTION,
+                },
+            )
+            break
         response_message = {}
         choices = response.get("choices")
         if isinstance(choices, list) and choices and isinstance(choices[0], dict):
@@ -1083,9 +1156,10 @@ def _attempt_task_fair(
                 messages.append(
                     {
                         "role": "user",
-                        "content": "Fair mode requires a tool call. Reply only with JSON for one allowed tool.",
+                        "content": "Tool call required. Reply only with compact JSON for one allowed tool.",
                     }
                 )
+                _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
                 continue
             break
         for tool_call in tool_calls:
@@ -1296,9 +1370,12 @@ def _attempt_task_fair(
                     "tool_log": str(tool_log_path),
                     "conversation_log": str(conversation_log_path),
                 }
+            _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
-    if tool_calls_executed >= max_tool_calls:
+    if context_budget_exhausted:
+        final_status = "context_budget_exhausted"
+    elif tool_calls_executed >= max_tool_calls:
         final_status = "max_tool_calls_exceeded"
     elif _proof_attempt_count(attempts) >= max_attempts:
         final_status = "max_attempts_exceeded"
@@ -1312,6 +1389,7 @@ def _attempt_task_fair(
         "failure_class": _failure_taxonomy(final_status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
         "usage": usage_totals,
         "token_budget_exhausted": token_budget_exhausted,
+        "context_budget_exhausted": context_budget_exhausted,
         "attempts": attempts,
         "tool_calls_executed": tool_calls_executed,
         "non_proof_tool_calls": non_proof_tool_calls,
@@ -1512,6 +1590,7 @@ def run_group(
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src, dst)
     verifier_result = verify_group(group, built.path, artifact_dir=run_dir / "verifier")
+    classification = classify_run(verifier_result, response.get("tasks") if isinstance(response.get("tasks"), list) else [])
     run = {
         "schema_version": 1,
         "run_id": run_id,
@@ -1535,6 +1614,7 @@ def run_group(
         "benchmark_budget": benchmark_budget,
         "operational_budget": budgets["operational_budget"],
         "failure_counts": response.get("failure_counts") or ({str(response.get("failure_class")): 1} if response.get("failure_class") else {}),
+        "classification": classification,
         "workspace": str(built.path) if keep_workspace else None,
         "verifier": verifier_result,
     }

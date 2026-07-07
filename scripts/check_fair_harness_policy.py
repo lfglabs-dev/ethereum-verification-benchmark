@@ -6,6 +6,7 @@ import inspect
 import shutil
 import sys
 import tempfile
+from io import BytesIO
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -103,6 +104,8 @@ def main() -> int:
     original_request_backoff = transport.REQUEST_RETRY_BACKOFF_SECONDS
     original_context_tokens = transport.DEFAULT_CONTEXT_TOKENS
     original_native_tools = lean_tools.DEFAULT_NATIVE_TOOLS
+    original_context_stop_fraction = lean_tools.DEFAULT_CONTEXT_STOP_FRACTION
+    original_max_fair_messages = lean_tools.DEFAULT_MAX_FAIR_MESSAGES
     try:
         proof_rel = "Benchmark/Generated/Sample.lean"
         proof_path = temp_workspace / proof_rel
@@ -310,6 +313,36 @@ def main() -> int:
         request_events = [json.loads(line) for line in request_log.read_text(encoding="utf-8").splitlines()]
         if [event.get("status") for event in request_events] != ["request_retry", "request_retry_succeeded"]:
             errors.append("chat_completion retry log should record retry and success events")
+
+        http_retry_log = temp_workspace / "http-502-retry.jsonl"
+        http_calls = []
+
+        def flaky_502_urlopen(request: object, timeout: object = None) -> FakeResponse:
+            http_calls.append(request)
+            if len(http_calls) == 1:
+                raise transport.urllib.error.HTTPError(
+                    url="http://example.invalid/v1/chat/completions",
+                    code=502,
+                    msg="bad gateway",
+                    hdrs={},
+                    fp=BytesIO(b"bad gateway"),
+                )
+            return FakeResponse()
+
+        transport.urllib.request.urlopen = flaky_502_urlopen
+        transport.REQUEST_RETRIES = 1
+        transport.REQUEST_RETRY_BACKOFF_SECONDS = 0
+        retry_response = lean_tools.chat_completion(
+            [{"role": "user", "content": "hello"}],
+            base_url="http://example.invalid/v1",
+            request_log_path=http_retry_log,
+            request_index=8,
+        )
+        if retry_response.get("choices") is None or len(http_calls) != 2:
+            errors.append("chat_completion should retry a transient HTTP 502 exactly within the configured bound")
+        http_events = [json.loads(line) for line in http_retry_log.read_text(encoding="utf-8").splitlines()]
+        if [event.get("status") for event in http_events] != ["request_retry", "request_retry_succeeded"]:
+            errors.append("HTTP 502 retry log should record retry and success events")
         transport.urllib.request.urlopen = original_urlopen
         transport.DEFAULT_CONTEXT_TOKENS = original_context_tokens
         lean_tools.DEFAULT_NATIVE_TOOLS = True
@@ -365,6 +398,157 @@ def main() -> int:
             errors.append("fair conversation log should contain the assistant tool-call message")
 
         proof_path.write_text(original, encoding="utf-8")
+
+        def fake_repeated_chat_completion(*args: object, **kwargs: object) -> dict[str, object]:
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "content": None,
+                            "tool_calls": [
+                                {"id": "repeat-1", "function": {"name": "show_task", "arguments": "{}"}},
+                                {"id": "repeat-2", "function": {"name": "show_task", "arguments": "{}"}},
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        repeated_log = temp_workspace / "repeated-tool-calls.jsonl"
+        lean_tools.chat_completion = fake_repeated_chat_completion
+        result = lean_tools._attempt_task_fair(
+            {
+                "task_ref": "sample/group/task",
+                "task_id": "task",
+                "target_module": "Benchmark.Generated.Sample",
+                "editable_files": [proof_rel],
+                "specification_files": [],
+                "implementation_files": [],
+            },
+            temp_workspace,
+            base_url="http://example.invalid/v1",
+            max_attempts=1,
+            max_tool_calls=4,
+            attempts_dir=temp_workspace / "attempts",
+            tool_log_path=repeated_log,
+            conversation_log_path=temp_workspace / "repeated-conversation.jsonl",
+        )
+        if result.get("status") != "repetition_loop":
+            errors.append(f"fair repeated identical tool calls should stop as repetition_loop, found {result.get('status')!r}")
+        if result.get("failure_class") != "repetition_loop":
+            errors.append("fair repeated tool-call loop should classify as repetition_loop")
+        if "show_task" not in str(result.get("loop_signature")):
+            errors.append("fair repeated tool-call loop should record the repeated tool signature")
+
+        proof_path.write_text(original, encoding="utf-8")
+
+        compacted_requests: list[list[dict[str, object]]] = []
+        compacted_call_count = 0
+
+        def fake_compacted_chat_completion(messages: list[dict[str, object]], *args: object, **kwargs: object) -> dict[str, object]:
+            nonlocal compacted_call_count
+            compacted_call_count += 1
+            compacted_requests.append([dict(message) for message in messages])
+            if compacted_call_count == 1:
+                return {
+                    "choices": [
+                        {
+                            "message": {
+                                "content": None,
+                                "tool_calls": [
+                                    {"id": "compact-1", "function": {"name": "show_task", "arguments": "{}"}},
+                                ],
+                            }
+                        }
+                    ]
+                }
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {"id": "compact-2", "function": {"name": "check_proof", "arguments": json.dumps({"proof": "trivial"})}},
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        lean_tools.chat_completion = fake_compacted_chat_completion
+        lean_tools._run_lean_module = lambda *args, **kwargs: (0, "")
+        lean_tools.DEFAULT_NATIVE_TOOLS = True
+        lean_tools.DEFAULT_MAX_FAIR_MESSAGES = 2
+        result = lean_tools._attempt_task_fair(
+            {
+                "task_ref": "sample/group/task",
+                "task_id": "task",
+                "target_module": "Benchmark.Generated.Sample",
+                "editable_files": [proof_rel],
+                "specification_files": [],
+                "implementation_files": [],
+            },
+            temp_workspace,
+            base_url="http://example.invalid/v1",
+            max_attempts=1,
+            max_tool_calls=4,
+            attempts_dir=temp_workspace / "attempts",
+            tool_log_path=temp_workspace / "compacted-tool-calls.jsonl",
+            conversation_log_path=temp_workspace / "compacted-conversation.jsonl",
+        )
+        if result.get("status") != "lean_passed":
+            errors.append(f"fair compacted native-tool smoke returned unexpected status: {result.get('status')!r}")
+        if len(compacted_requests) < 2:
+            errors.append("fair compacted native-tool smoke should make a second request")
+        elif any(message.get("role") == "tool" for message in compacted_requests[1]):
+            errors.append("fair message compaction must not leave dangling native tool responses in the next request")
+        lean_tools.DEFAULT_MAX_FAIR_MESSAGES = original_max_fair_messages
+        lean_tools._run_lean_module = original_run_lean_module
+
+        proof_path.write_text(original, encoding="utf-8")
+
+        def fake_large_context_chat_completion(*args: object, **kwargs: object) -> dict[str, object]:
+            return {
+                "usage": {"prompt_tokens": 29, "completion_tokens": 1, "total_tokens": 30},
+                "choices": [
+                    {
+                        "message": {
+                            "content": None,
+                            "tool_calls": [
+                                {"id": "context-1", "function": {"name": "show_task", "arguments": "{}"}},
+                            ],
+                        }
+                    }
+                ],
+            }
+
+        lean_tools.chat_completion = fake_large_context_chat_completion
+        transport.DEFAULT_CONTEXT_TOKENS = "32"
+        lean_tools.DEFAULT_CONTEXT_STOP_FRACTION = 0.88
+        result = lean_tools._attempt_task_fair(
+            {
+                "task_ref": "sample/group/task",
+                "task_id": "task",
+                "target_module": "Benchmark.Generated.Sample",
+                "editable_files": [proof_rel],
+                "specification_files": [],
+                "implementation_files": [],
+            },
+            temp_workspace,
+            base_url="http://example.invalid/v1",
+            max_attempts=1,
+            max_tool_calls=4,
+            attempts_dir=temp_workspace / "attempts",
+            tool_log_path=temp_workspace / "context-tool-calls.jsonl",
+            conversation_log_path=temp_workspace / "context-conversation.jsonl",
+        )
+        if result.get("status") != "context_budget_exhausted":
+            errors.append(f"fair context budget guard returned unexpected status: {result.get('status')!r}")
+        if result.get("failure_class") != "context_budget_exhausted":
+            errors.append("fair context budget guard should classify as context_budget_exhausted")
+        transport.DEFAULT_CONTEXT_TOKENS = original_context_tokens
+        lean_tools.DEFAULT_CONTEXT_STOP_FRACTION = original_context_stop_fraction
 
         def fake_attempt_chat_completion(*args: object, **kwargs: object) -> dict[str, object]:
             return {
@@ -473,6 +657,8 @@ def main() -> int:
         transport.REQUEST_RETRY_BACKOFF_SECONDS = original_request_backoff
         transport.DEFAULT_CONTEXT_TOKENS = original_context_tokens
         lean_tools.DEFAULT_NATIVE_TOOLS = original_native_tools
+        lean_tools.DEFAULT_CONTEXT_STOP_FRACTION = original_context_stop_fraction
+        lean_tools.DEFAULT_MAX_FAIR_MESSAGES = original_max_fair_messages
         shutil.rmtree(temp_workspace, ignore_errors=True)
 
     if errors:
