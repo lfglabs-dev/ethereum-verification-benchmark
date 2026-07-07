@@ -77,6 +77,31 @@ DEFAULT_CONTEXT_TOKENS = os.environ.get("DEFAULT_HARNESS_CONTEXT_TOKENS", os.env
 DEFAULT_MAX_RESPONSE_TOKENS = int(os.environ.get("DEFAULT_HARNESS_MAX_RESPONSE_TOKENS", "8192"))
 HTTP_USER_AGENT = os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", HARNESS_USER_AGENT)
 DEFAULT_STREAMING_ENABLED = os.environ.get("DEFAULT_HARNESS_STREAMING", "1").strip().lower() not in {"0", "false", "no"}
+
+# Chat-template sentinels that some GGUF servers (e.g. llama.cpp serving a
+# ChatML fine-tune whose <|im_end|> is not registered as an EOG stop token)
+# leak into the OpenAI `content` stream. Without them as explicit stop strings
+# the model runs past its turn boundary and degenerates into generating the
+# whole fake conversation. Sending them as `stop` halts generation at the turn
+# boundary regardless of server-side template/EOG configuration.
+_DEFAULT_STOP_SEQUENCES = (
+    "<|im_end|>",
+    "<|im_start|>",
+    "<|tool_call_begin|>",
+    "<|tool_call_end|>",
+)
+
+
+def _configured_stop_sequences() -> list[str]:
+    raw = os.environ.get("DEFAULT_HARNESS_STOP_SEQUENCES")
+    if raw is None:
+        return list(_DEFAULT_STOP_SEQUENCES)
+    # Newline-separated so sentinels containing commas/pipes survive intact;
+    # empty value disables the default stop list entirely.
+    return [line for line in (segment.strip() for segment in raw.split("\n")) if line]
+
+
+DEFAULT_STOP_SEQUENCES = _configured_stop_sequences()
 _streaming_fallback_reason: str | None = None
 
 
@@ -285,6 +310,8 @@ def chat_completion(
         "max_tokens": max_tokens,
         "temperature": 0,
     }
+    if DEFAULT_STOP_SEQUENCES:
+        payload["stop"] = list(DEFAULT_STOP_SEQUENCES)
     if DEFAULT_CONTEXT_TOKENS:
         payload["n_ctx"] = int(DEFAULT_CONTEXT_TOKENS)
     if tools is not None:
