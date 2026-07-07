@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import time
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -29,6 +30,7 @@ def _load_dotenv() -> None:
 _load_dotenv()
 
 try:
+    from .classification import classify_run
     from .budgets import BUDGET_PROFILES, budget_artifact, budget_profile
     from .manifests import group_id_from_task_ref, group_to_json, list_groups
     from .paths import RESULTS_DIR
@@ -36,6 +38,7 @@ try:
     from .runners.shell_agent import run_group as run_shell_group
     from .runners.lean_tools import run_group as run_lean_tools_group
 except ImportError:
+    from classification import classify_run
     from budgets import BUDGET_PROFILES, budget_artifact, budget_profile
     from manifests import group_id_from_task_ref, group_to_json, list_groups
     from paths import RESULTS_DIR
@@ -140,6 +143,7 @@ def run_suite(
                 "mode": child_run.get("mode"),
                 "harness_status": child_run.get("harness_status"),
                 "score": child_run.get("verifier", {}).get("score", {}),
+                "classification": child_run.get("classification"),
             }
         )
 
@@ -165,6 +169,39 @@ def run_suite(
             for item in child_runs
         ],
         "groups": child_runs,
+    }
+    final_counts: Counter[str] = Counter()
+    reusable_target_count = 0
+    non_reusable_target_count = 0
+    child_classifications = []
+    for child in child_runs:
+        child_classification = child.get("classification")
+        if not isinstance(child_classification, dict):
+            continue
+        child_classifications.append(child_classification)
+        counts = child_classification.get("final_class_counts")
+        if isinstance(counts, dict):
+            for key, value in counts.items():
+                final_counts[str(key)] += int(value)
+        reusable_target_count += int(child_classification.get("reusable_target_count") or 0)
+        non_reusable_target_count += int(child_classification.get("non_reusable_target_count") or 0)
+    if final_counts and final_counts.get("INFRA_INVALID", 0) == sum(final_counts.values()):
+        run_class = "INFRA_INVALID"
+    elif final_counts.get("INFRA_INVALID", 0):
+        run_class = "MIXED_INFRA_INVALID"
+    elif final_counts.get("SOLVED", 0) == sum(final_counts.values()) and final_counts:
+        run_class = "SOLVED"
+    else:
+        run_class = "GENUINE_FAIL"
+    classification = {
+        "schema_version": 1,
+        "policy": classify_run(verifier, []).get("policy"),
+        "run_class": run_class,
+        "reusable": bool(final_counts) and non_reusable_target_count == 0,
+        "final_class_counts": dict(sorted(final_counts.items())),
+        "reusable_target_count": reusable_target_count,
+        "non_reusable_target_count": non_reusable_target_count,
+        "children": child_classifications,
     }
     harness_status = "completed" if exit_code == 0 else "completed_with_failures"
     child_tracks = sorted({str(item.get("track")) for item in child_runs if item.get("track")})
@@ -195,6 +232,7 @@ def run_suite(
             budget_profile("quick"),
             token_budget=int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0")),
         )["operational_budget"],
+        "classification": classification,
         "verifier": verifier,
     }
     (run_dir / "run.json").write_text(json.dumps(run, indent=2) + "\n", encoding="utf-8")

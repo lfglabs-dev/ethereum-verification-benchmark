@@ -168,6 +168,11 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
         failure_counts = run.get("failure_counts")
         if not isinstance(failure_counts, dict):
             failure_counts = failure_counts_from_tasks(tasks if isinstance(tasks, list) else [])
+        classification = run.get("classification") if isinstance(run.get("classification"), dict) else {}
+        final_class = classification.get("run_class")
+        reusable = classification.get("reusable")
+        if not isinstance(reusable, bool):
+            reusable = True
         status = str(run.get("harness_status") or "")
         verifier_passed = score.get("passed_targets", 0) == score.get("total_targets", 0) and score.get("total_targets", 0) > 0
         task_dicts = [task for task in tasks if isinstance(task, dict)] if isinstance(tasks, list) else []
@@ -213,6 +218,8 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
                 "mode": run.get("mode"),
                 "valid": valid,
                 "validity_errors": validity_errors,
+                "final_class": final_class,
+                "reusable": reusable,
                 "passed": passed,
                 "passed_targets": score.get("passed_targets", 0),
                 "total_targets": score.get("total_targets", 0),
@@ -239,9 +246,10 @@ def _dedupe_latest(rows: list[dict[str, object]]) -> list[dict[str, object]]:
 
 def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
     valid_rows = [row for row in rows if row.get("valid")]
-    passed = [row for row in valid_rows if row["passed"]]
+    reusable_rows = [row for row in valid_rows if row.get("reusable") is not False]
+    passed = [row for row in reusable_rows if row["passed"]]
     costs = [row["cost_usd"] for row in passed if isinstance(row.get("cost_usd"), (int, float))]
-    all_costs = [row["cost_usd"] for row in valid_rows if isinstance(row.get("cost_usd"), (int, float))]
+    all_costs = [row["cost_usd"] for row in reusable_rows if isinstance(row.get("cost_usd"), (int, float))]
     completion = [row["completion_tokens"] for row in passed if isinstance(row["completion_tokens"], (int, float))]
     prompt = [row["prompt_tokens"] for row in passed if isinstance(row["prompt_tokens"], (int, float))]
     attempts = [row["attempts"] for row in passed if isinstance(row.get("attempts"), int) and row["attempts"] > 0]
@@ -249,13 +257,15 @@ def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
         "tasks": len(rows),
         "valid_tasks": len(valid_rows),
         "invalid_tasks": len(rows) - len(valid_rows),
+        "reusable_tasks": len(reusable_rows),
+        "infra_invalid": len(valid_rows) - len(reusable_rows),
         "passed": len(passed),
-        "pass_rate": round(len(passed) / len(valid_rows), 3) if valid_rows else 0.0,
+        "pass_rate": round(len(passed) / len(reusable_rows), 3) if reusable_rows else 0.0,
         "median_attempts_to_pass": statistics.median(attempts) if attempts else None,
         "median_completion_tokens_to_pass": int(statistics.median(completion)) if completion else None,
         "median_prompt_tokens_to_pass": int(statistics.median(prompt)) if prompt else None,
-        "total_completion_tokens": sum(int(row["completion_tokens"]) for row in valid_rows if isinstance(row["completion_tokens"], (int, float))),
-        "total_prompt_tokens": sum(int(row["prompt_tokens"]) for row in valid_rows if isinstance(row["prompt_tokens"], (int, float))),
+        "total_completion_tokens": sum(int(row["completion_tokens"]) for row in reusable_rows if isinstance(row["completion_tokens"], (int, float))),
+        "total_prompt_tokens": sum(int(row["prompt_tokens"]) for row in reusable_rows if isinstance(row["prompt_tokens"], (int, float))),
         "median_cost_to_pass_usd": round(statistics.median(costs), 4) if costs else None,
         "total_cost_usd": round(sum(all_costs), 4) if all_costs else None,
         "failure_counts": dict(sorted(sum((Counter(row.get("failure_counts") or {}) for row in rows), Counter()).items())),
@@ -340,8 +350,11 @@ def _leaderboard_markdown(
 
         failure_counts = summary.get("failure_counts") if isinstance(summary.get("failure_counts"), dict) else {}
         failures = ", ".join(f"`{key}` {value}" for key, value in sorted(failure_counts.items())) or "—"
+        pass_cell = f"{summary['passed']}/{summary['reusable_tasks']}"
+        if summary.get("infra_invalid"):
+            pass_cell += f" · {summary['infra_invalid']} infra-invalid"
         lines.append(
-            f"| {_harness_display(harness)} | {display} | {summary['valid_tasks']}/{summary['tasks']} | {summary['passed']}/{summary['valid_tasks']} | {failures} | "
+            f"| {_harness_display(harness)} | {display} | {summary['valid_tasks']}/{summary['tasks']} | {pass_cell} | {failures} | "
             f"{cell(_fmt_tokens(summary['median_completion_tokens_to_pass']), 'completion')} | "
             f"{cell(_fmt_tokens(summary['median_prompt_tokens_to_pass']), 'prompt')} | "
             f"{cell(_fmt_cost(summary.get('median_cost_to_pass_usd')), 'cost')} | "
@@ -372,6 +385,8 @@ def _leaderboard_markdown(
             row = by_key.get((harness, model, task))
             if row is None:
                 cells.append("·")
+            elif row.get("reusable") is False:
+                cells.append("⚠ infra")
             else:
                 mark = "✅" if row["passed"] else ("⚠️" if not row.get("valid") else "❌")
                 cost = row.get("cost_usd")

@@ -14,6 +14,7 @@ ALLOWED_TERMINAL_STATUSES = {
     "invalid_tool_call",
     "request_timeout",
     "request_failed",
+    "context_budget_exhausted",
     "context_length_exceeded",
     "max_attempts_exceeded",
     "max_tool_calls_exceeded",
@@ -26,7 +27,7 @@ PROVIDER_SETUP_STATUSES = {"missing_credentials", "provider_setup_error", "prefl
 def failure_taxonomy(status: str, attempts: list[dict[str, object]], *, tool_calls: int = 0, no_tool_responses: int = 0) -> str:
     if status in {"missing_credentials", "provider_setup_error", "preflight_failed"}:
         return "provider_setup_error"
-    if status in {"request_timeout", "request_failed", "context_length_exceeded"}:
+    if status in {"request_timeout", "request_failed", "context_budget_exhausted", "context_length_exceeded"}:
         return status
     if status in {"malformed_tool_call", "invalid_tool_call"}:
         return "malformed_tool_call"
