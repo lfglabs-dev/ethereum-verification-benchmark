@@ -730,7 +730,14 @@ def _draft_proof_with_prover(
         errors=errors,
     )
     prover_base_url = DEFAULT_PROVER_BASE_URL or base_url
-    prover_api_key_override = DEFAULT_PROVER_API_KEY or None
+    if DEFAULT_PROVER_API_KEY:
+        prover_api_key_override = DEFAULT_PROVER_API_KEY
+    elif prover_base_url.rstrip("/") == base_url.rstrip("/"):
+        prover_api_key_override = None
+    else:
+        # Never fall back to the driver credential on a separate prover host; an
+        # empty override sends no Authorization header (no-auth/local endpoints).
+        prover_api_key_override = ""
     started = time.time()
     try:
         response = chat_completion(

@@ -70,7 +70,9 @@ Default harness API env:
   driver/tool loop and the prover live on different providers.
 - `DEFAULT_HARNESS_PROVER_API_KEY`: optional API key for
   `DEFAULT_HARNESS_PROVER_BASE_URL`. When unset the prover reuses the driver key
-  (`DEFAULT_HARNESS_API_KEY`).
+  (`DEFAULT_HARNESS_API_KEY`) only if it targets the driver endpoint; on a
+  separate prover host no Authorization header is sent, so the driver credential
+  is never shared with another provider.
 - `DEFAULT_HARNESS_API_KEY`
 - `DEFAULT_HARNESS_REQUEST_TIMEOUT_SECONDS`
 - `DEFAULT_HARNESS_STREAMING` (`1` default; set `0` to disable SSE streaming)
