@@ -91,6 +91,11 @@ DEFAULT_MAX_FAIR_MESSAGES = int(os.environ.get("DEFAULT_HARNESS_MAX_FAIR_MESSAGE
 DEFAULT_CONTEXT_STOP_FRACTION = float(os.environ.get("DEFAULT_HARNESS_CONTEXT_STOP_FRACTION", "0.88"))
 DEFAULT_TOKEN_BUDGET = int(os.environ.get("DEFAULT_HARNESS_TOKEN_BUDGET", "0"))  # 0 = unlimited; counts completion tokens per task
 STUCK_NUDGE = os.environ.get("DEFAULT_HARNESS_STUCK_NUDGE", "1").lower() not in {"0", "false", "no"}
+DEFAULT_DRIVER_MODEL = os.environ.get("DEFAULT_HARNESS_DRIVER_MODEL", DEFAULT_MODEL).strip() or DEFAULT_MODEL
+DEFAULT_PROVER_MODEL = os.environ.get("DEFAULT_HARNESS_PROVER_MODEL", "").strip()
+DEFAULT_PROVER_MODE = os.environ.get("DEFAULT_HARNESS_PROVER_MODE", "").strip().lower()
+DRAFT_PROOF_ENABLED = DEFAULT_PROVER_MODE == "draft_proof" and bool(DEFAULT_PROVER_MODEL)
+DRAFT_PROOF_CONTEXT_CHARS = int(os.environ.get("DEFAULT_HARNESS_DRAFT_PROOF_CONTEXT_CHARS", "12000"))
 
 
 def _read_workspace_file(workspace: Path, rel: str) -> str:
@@ -326,6 +331,33 @@ FAIR_TOOLS: list[dict[str, Any]] = [
         },
     },
 ]
+
+DRAFT_PROOF_TOOL: dict[str, Any] = {
+    "type": "function",
+    "function": {
+        "name": "draft_proof",
+        "description": (
+            "Ask the configured prover model for one Lean proof-body candidate. "
+            "This does not check Lean and does not count as a proof attempt; use check_proof or try_tactics to submit it."
+        ),
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "task_context": {"type": "string"},
+                "goal": {"type": "string"},
+                "errors": {"type": "string"},
+            },
+            "required": ["task_context"],
+            "additionalProperties": False,
+        },
+    },
+}
+
+
+def _fair_tools() -> list[dict[str, Any]]:
+    if not DRAFT_PROOF_ENABLED:
+        return FAIR_TOOLS
+    return [*FAIR_TOOLS, DRAFT_PROOF_TOOL]
 
 
 def _safe_workspace_path(workspace: Path, rel: str) -> Path:
@@ -615,6 +647,150 @@ def _task_summary_with_live_editable(summary: str, *, task: dict[str, object], w
     return summary.rstrip() + "\n\n" + block + "\n"
 
 
+def _draft_proof_prompt(*, task: dict[str, object], theorem_statement: str, task_context: str, goal: str, errors: str) -> list[dict[str, Any]]:
+    context_parts = [
+        f"Task ref: {task.get('task_ref')}",
+        f"Target module: {task.get('target_module')}",
+        "Target theorem statement:",
+        theorem_statement.strip(),
+        "Task context:",
+        task_context.strip(),
+    ]
+    if goal.strip():
+        context_parts.extend(["Current Lean goal/diagnostics:", goal.strip()])
+    if errors.strip():
+        context_parts.extend(["Recent Lean errors or failed attempts:", errors.strip()])
+    user_content = "\n\n".join(part for part in context_parts if part)
+    if len(user_content) > DRAFT_PROOF_CONTEXT_CHARS:
+        user_content = user_content[:DRAFT_PROOF_CONTEXT_CHARS] + "\n...[truncated for prover prompt]"
+    return [
+        {
+            "role": "system",
+            "content": (
+                "You draft Lean proof bodies for an external driver. "
+                "Return only the Lean proof body that belongs after `:= by`. "
+                "Do not return markdown fences, JSON, explanations, imports, theorem statements, or comments. "
+                "Do not use sorry, admit, axiom, placeholder holes such as ?_, or TODO-style placeholders. "
+                "If you are uncertain, still provide the best complete Lean tactic proof body only."
+            ),
+        },
+        {"role": "user", "content": user_content},
+    ]
+
+
+def _reject_draft_reason(text: str) -> str | None:
+    stripped = text.strip()
+    if not stripped:
+        return "empty_prover_output"
+    if "```" in stripped:
+        return "prover_output_contains_markdown"
+    if stripped.startswith("{") or stripped.startswith("["):
+        return "prover_output_looks_like_json"
+    if re.search(r"\b(theorem|lemma)\s+[A-Za-z_]", stripped):
+        return "prover_output_contains_theorem_statement"
+    if re.search(r"\b(TODO|FIXME|placeholder|fill\s+in|omitted)\b", stripped, flags=re.IGNORECASE):
+        return "prover_output_contains_placeholder_text"
+    if _contains_forbidden_proof_token(stripped):
+        return "prover_output_contains_forbidden_placeholder"
+    return None
+
+
+def _draft_proof_with_prover(
+    args: dict[str, object],
+    *,
+    task: dict[str, object],
+    original: str,
+    base_url: str,
+    draft_log_path: Path | None,
+) -> dict[str, object]:
+    if not DRAFT_PROOF_ENABLED:
+        return {"ok": False, "error": "draft_proof_not_enabled"}
+    task_context = args.get("task_context")
+    goal = args.get("goal", "")
+    errors = args.get("errors", "")
+    if not isinstance(task_context, str) or not task_context.strip():
+        return {"ok": False, "error": "task_context must be a non-empty string"}
+    if not isinstance(goal, str):
+        return {"ok": False, "error": "goal must be a string when provided"}
+    if not isinstance(errors, str):
+        return {"ok": False, "error": "errors must be a string when provided"}
+
+    messages = _draft_proof_prompt(
+        task=task,
+        theorem_statement=_theorem_statement(original, task.get("theorem_name")),
+        task_context=task_context,
+        goal=goal,
+        errors=errors,
+    )
+    started = time.time()
+    try:
+        response = chat_completion(
+            messages,
+            base_url=base_url,
+            model=DEFAULT_PROVER_MODEL,
+            tools=None,
+            tool_choice=None,
+            request_log_path=draft_log_path,
+        )
+    except Exception as exc:
+        error_payload = exc.to_dict() if isinstance(exc, ChatCompletionError) else {"message": str(exc)}
+        if draft_log_path is not None:
+            _append_jsonl(
+                draft_log_path,
+                {
+                    "task_ref": task.get("task_ref"),
+                    "tool": "draft_proof",
+                    "status": "request_failed",
+                    "driver_model": DEFAULT_DRIVER_MODEL,
+                    "prover_model": DEFAULT_PROVER_MODEL,
+                    "error": error_payload,
+                    "duration_seconds": round(time.time() - started, 3),
+                },
+            )
+        return {"ok": False, "error": "prover_request_failed", "detail": error_payload, "prover_model": DEFAULT_PROVER_MODEL}
+
+    proof = _strip_thinking(_response_text(response)).strip()
+    reject_reason = _reject_draft_reason(proof)
+    usage = response.get("usage") if isinstance(response, dict) else None
+    metadata = {
+        key: response.get(key)
+        for key in ("id", "model", "system_fingerprint")
+        if isinstance(response, dict) and response.get(key) is not None
+    }
+    log_payload = {
+        "task_ref": task.get("task_ref"),
+        "tool": "draft_proof",
+        "status": "rejected" if reject_reason else "drafted",
+        "driver_model": DEFAULT_DRIVER_MODEL,
+        "prover_model": DEFAULT_PROVER_MODEL,
+        "usage": usage,
+        "metadata": metadata,
+        "duration_seconds": round(time.time() - started, 3),
+        "proof_preview": proof[:1000],
+        "reject_reason": reject_reason,
+    }
+    if draft_log_path is not None:
+        _append_jsonl(draft_log_path, log_payload)
+    if reject_reason:
+        return {
+            "ok": False,
+            "error": reject_reason,
+            "prover_model": DEFAULT_PROVER_MODEL,
+            "usage": usage,
+            "metadata": metadata,
+            "message": "Prover draft was rejected before any Lean proof attempt. Ask for a different draft or submit your own proof via check_proof.",
+        }
+    return {
+        "ok": True,
+        "proof": proof,
+        "prover_model": DEFAULT_PROVER_MODEL,
+        "driver_model": DEFAULT_DRIVER_MODEL,
+        "usage": usage,
+        "metadata": metadata,
+        "message": "Draft only; submit with check_proof or try_tactics to count as a proof attempt.",
+    }
+
+
 def _execute_fair_tool(
     name: str,
     args: dict[str, object],
@@ -627,6 +803,8 @@ def _execute_fair_tool(
     attempts_dir: Path,
     attempts: list[dict[str, object]],
     sandbox_state: dict[str, int] | None = None,
+    base_url: str | None = None,
+    draft_log_path: Path | None = None,
 ) -> dict[str, object]:
     if name == "show_task":
         summary_path = workspace / "harness" / "TASK_SUMMARY.md"
@@ -700,6 +878,10 @@ def _execute_fair_tool(
             target_module=target_module,
             tactic=prefix,
         ) | {"sandbox_calls_used": state["count"], "sandbox_calls_max": limit}
+    if name == "draft_proof":
+        if base_url is None:
+            return {"ok": False, "error": "base_url is required for draft_proof"}
+        return _draft_proof_with_prover(args, task=task, original=original, base_url=base_url, draft_log_path=draft_log_path)
     if name in {"check_proof", "try_tactics"}:
         baseline_code, baseline_output = _run_lean_module_with_proof_content(
             proof_path=proof_path,
@@ -950,6 +1132,7 @@ def _attempt_task_fair(
     attempts_dir: Path,
     tool_log_path: Path,
     conversation_log_path: Path,
+    draft_log_path: Path | None = None,
 ) -> dict[str, object]:
     editable_files = task.get("editable_files")
     target_module = task.get("target_module")
@@ -961,6 +1144,12 @@ def _attempt_task_fair(
     attempts: list[dict[str, object]] = []
 
     if DEFAULT_NATIVE_TOOLS:
+        draft_tool_instruction = (
+            " When enabled, draft_proof asks a separate prover model for a proof-body candidate only; "
+            "you must inspect its output and submit it with check_proof or try_tactics before it counts as an attempt."
+            if DRAFT_PROOF_ENABLED
+            else ""
+        )
         system_prompt = (
             "You are an agent solving one public Lean benchmark task through tools only. "
             "Call show_task first; it returns the shared TASK_SUMMARY.md and a proof_patterns guide with the Verity-specific "
@@ -969,6 +1158,7 @@ def _attempt_task_fair(
             "Then inspect files with read_file, show_goal, definition_outline, and search_declarations. "
             "Use tactic_sandbox for exploratory tactic prefixes (it shows the resulting goal and does not count as a proof attempt), "
             "show_goal to see the current goal state, and check_proof or try_tactics for proof attempts. "
+            f"{draft_tool_instruction} "
             "check_proof accepts either a tactic body to place under `:= by`, or a complete Lean file "
             "(with imports, namespace, helper lemmas, and the target theorem); the theorem statement must stay byte-identical. "
             "Iterate: submit, read the Lean error, fix, resubmit. "
@@ -981,11 +1171,16 @@ def _attempt_task_fair(
             "Call show_task first, then inspect the public files and check proof bodies until Lean passes."
         )
     else:
+        draft_tool_instruction = (
+            " draft_proof {task_context,goal,errors} asks a separate prover for an unchecked proof-body draft;"
+            if DRAFT_PROOF_ENABLED
+            else ""
+        )
         system_prompt = (
             "Solve one Lean task by JSON tool calls only. "
             "Allowed tools: show_task {}, read_file {path}, show_goal {}, "
             "definition_outline {query,limit}, search_declarations {query,limit}, "
-            "tactic_sandbox {prefix}, try_tactics {tactics}, check_proof {proof}. "
+            f"tactic_sandbox {{prefix}},{draft_tool_instruction} try_tactics {{tactics}}, check_proof {{proof}}. "
             "Non-proof tools are capped; reserve budget for try_tactics/check_proof. "
             "No sorry/admit/axiom/hidden imports/reference Proofs. "
             "Reply only as JSON, e.g. {\"tool\":\"show_task\",\"arguments\":{}}."
@@ -1112,7 +1307,8 @@ def _attempt_task_fair(
             response = chat_completion(
                 messages,
                 base_url=base_url,
-                tools=FAIR_TOOLS if DEFAULT_NATIVE_TOOLS else None,
+                model=DEFAULT_DRIVER_MODEL,
+                tools=_fair_tools() if DEFAULT_NATIVE_TOOLS else None,
                 tool_choice="auto" if DEFAULT_NATIVE_TOOLS else None,
                 request_log_path=conversation_log_path,
                 request_index=request_index,
@@ -1381,7 +1577,11 @@ def _attempt_task_fair(
                 attempts_dir=attempts_dir,
                 attempts=attempts,
                 sandbox_state=sandbox_state,
+                base_url=base_url,
+                draft_log_path=draft_log_path,
             )
+            if name == "draft_proof":
+                _accumulate_usage(result)
             tool_calls_executed += 1
             if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"}:
                 non_proof_tool_calls += 1
@@ -1472,7 +1672,7 @@ def run_group(
         raise ValueError("max_tool_calls must be non-negative")
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_subject = task_ref or group_id
-    model_slug = "".join(ch if ch.isalnum() else "-" for ch in DEFAULT_MODEL).strip("-").lower()
+    model_slug = "".join(ch if ch.isalnum() else "-" for ch in DEFAULT_DRIVER_MODEL).strip("-").lower()
     run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{RUN_SLUG}-fair-{model_slug}-{run_subject.replace('/', '__')}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -1506,7 +1706,10 @@ def run_group(
             "status": "dry_run",
             "provider": _active_provider(),
             "base_url": base_url,
-            "model": DEFAULT_MODEL,
+            "model": DEFAULT_DRIVER_MODEL,
+            "driver_model": DEFAULT_DRIVER_MODEL,
+            "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
+            "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
             "transport_mode": _transport_mode(),
             "mode": "fair",
             "max_attempts": max_attempts,
@@ -1519,7 +1722,10 @@ def run_group(
             "status": "missing_credentials",
             "provider": _active_provider(),
             "base_url": base_url,
-            "model": DEFAULT_MODEL,
+            "model": DEFAULT_DRIVER_MODEL,
+            "driver_model": DEFAULT_DRIVER_MODEL,
+            "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
+            "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
             "transport_mode": _transport_mode(),
             "mode": "fair",
             "error": f"fair mode requires DEFAULT_HARNESS_API_KEY{provider_key_hint}, GAZELLA_API_KEY, OPENAI_API_KEY, or a localhost-compatible no-auth endpoint",
@@ -1533,7 +1739,7 @@ def run_group(
         warm_builds: list[dict[str, object]] = []
         preflight_passed = False
         try:
-            preflight = generic_preflight(base_url, DEFAULT_MODEL)
+            preflight = generic_preflight(base_url, DEFAULT_DRIVER_MODEL)
             if preflight.get("status") != "passed":
                 raise RuntimeError(f"provider preflight failed: {preflight.get('error') or preflight}")
             preflight_passed = True
@@ -1566,6 +1772,7 @@ def run_group(
                             attempts_dir=run_dir / "attempts",
                             tool_log_path=run_dir / "tool-calls" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                             conversation_log_path=run_dir / "conversations" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
+                            draft_log_path=run_dir / "draft-proofs" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                         )
                     )
                     task_results[-1]["benchmark_budget"] = benchmark_budget
@@ -1582,7 +1789,10 @@ def run_group(
                 "status": "completed",
                 "provider": _active_provider(),
                 "base_url": base_url,
-                "model": DEFAULT_MODEL,
+                "model": DEFAULT_DRIVER_MODEL,
+                "driver_model": DEFAULT_DRIVER_MODEL,
+                "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
+                "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
@@ -1600,7 +1810,10 @@ def run_group(
                 "error": str(exc),
                 "provider": _active_provider(),
                 "base_url": base_url,
-                "model": DEFAULT_MODEL,
+                "model": DEFAULT_DRIVER_MODEL,
+                "driver_model": DEFAULT_DRIVER_MODEL,
+                "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
+                "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
@@ -1620,7 +1833,10 @@ def run_group(
                 "group": agent_group_to_json(group),
                 "provider": _active_provider(),
                 "base_url": base_url,
-                "model": DEFAULT_MODEL,
+                "model": DEFAULT_DRIVER_MODEL,
+                "driver_model": DEFAULT_DRIVER_MODEL,
+                "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
+                "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
@@ -1651,7 +1867,10 @@ def run_group(
         "run_id": run_id,
         "harness_id": HARNESS_ID,
         "provider": _active_provider(),
-        "model": DEFAULT_MODEL,
+        "model": DEFAULT_DRIVER_MODEL,
+        "driver_model": DEFAULT_DRIVER_MODEL,
+        "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
+        "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
         "track": "group/lean_tools",
         "mode": "fair",
         "run_mode": "task" if task_ref else "group",
@@ -1694,7 +1913,7 @@ def main() -> int:
     run.add_argument("--task-ref")
     args = parser.parse_args()
     if args.command == "smoke":
-        print(json.dumps(endpoint_smoke(DEFAULT_BASE_URL, DEFAULT_MODEL), indent=2))
+        print(json.dumps(endpoint_smoke(DEFAULT_BASE_URL, DEFAULT_DRIVER_MODEL), indent=2))
         return 0
     code, run_dir = run_group(
         args.group_id,
