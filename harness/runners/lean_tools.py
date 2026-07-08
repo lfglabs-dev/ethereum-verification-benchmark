@@ -1580,6 +1580,8 @@ def _attempt_task_fair(
                 base_url=base_url,
                 draft_log_path=draft_log_path,
             )
+            if name == "draft_proof":
+                _accumulate_usage(result)
             tool_calls_executed += 1
             if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"}:
                 non_proof_tool_calls += 1

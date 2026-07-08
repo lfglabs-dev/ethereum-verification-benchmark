@@ -139,6 +139,77 @@ class HybridDraftProofTests(unittest.TestCase):
             entries = [json.loads(line) for line in (workspace / "tool-calls.jsonl").read_text(encoding="utf-8").splitlines()]
             self.assertEqual([entry["tool"] for entry in entries], ["draft_proof", "check_proof"])
 
+    def test_draft_proof_usage_counts_toward_task_budget(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            proof_rel = "Benchmark/Generated/Sample.lean"
+            proof_path = workspace / proof_rel
+            proof_path.parent.mkdir(parents=True, exist_ok=True)
+            proof_path.write_text(ORIGINAL, encoding="utf-8")
+            calls: list[str] = []
+
+            def fake_chat_completion(messages: list[dict[str, object]], **kwargs: object) -> dict[str, object]:
+                model = str(kwargs.get("model"))
+                calls.append(model)
+                if model == "prover-model":
+                    return {
+                        "choices": [{"message": {"role": "assistant", "content": "trivial"}}],
+                        "usage": {"prompt_tokens": 8, "completion_tokens": 3, "total_tokens": 11},
+                    }
+                return {
+                    "choices": [
+                        {
+                            "message": {
+                                "role": "assistant",
+                                "content": None,
+                                "tool_calls": [
+                                    {
+                                        "id": "draft-1",
+                                        "function": {
+                                            "name": "draft_proof",
+                                            "arguments": json.dumps({"task_context": "Need a proof of True"}),
+                                        },
+                                    }
+                                ],
+                            }
+                        }
+                    ],
+                    "usage": {"prompt_tokens": 5, "completion_tokens": 2, "total_tokens": 7},
+                }
+
+            with (
+                mock.patch.object(lean_tools, "DRAFT_PROOF_ENABLED", True),
+                mock.patch.object(lean_tools, "DEFAULT_DRIVER_MODEL", "driver-model"),
+                mock.patch.object(lean_tools, "DEFAULT_PROVER_MODEL", "prover-model"),
+                mock.patch.object(lean_tools, "DEFAULT_TOKEN_BUDGET", 5),
+                mock.patch.object(lean_tools, "chat_completion", fake_chat_completion),
+                mock.patch.object(lean_tools, "_run_lean_module", lambda *args, **kwargs: (0, "")),
+            ):
+                result = lean_tools._attempt_task_fair(
+                    {
+                        "task_ref": "sample/group/task",
+                        "task_id": "task",
+                        "target_module": "Benchmark.Generated.Sample",
+                        "editable_files": [proof_rel],
+                        "specification_files": [],
+                        "implementation_files": [],
+                    },
+                    workspace,
+                    base_url="http://provider.test/v1",
+                    max_attempts=1,
+                    max_tool_calls=3,
+                    attempts_dir=workspace / "attempts",
+                    tool_log_path=workspace / "tool-calls.jsonl",
+                    conversation_log_path=workspace / "conversation.jsonl",
+                    draft_log_path=workspace / "draft.jsonl",
+                )
+
+            self.assertEqual(calls, ["driver-model", "prover-model"])
+            self.assertEqual(result["status"], "failed_no_attempt")
+            self.assertTrue(result["token_budget_exhausted"])
+            self.assertEqual(result["usage"], {"prompt_tokens": 13, "completion_tokens": 5, "total_tokens": 18, "requests": 2})
+            self.assertEqual(result["attempts"], [])
+
     def test_forbidden_prover_output_is_rejected_without_proof_attempt(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             workspace = Path(tmp)
