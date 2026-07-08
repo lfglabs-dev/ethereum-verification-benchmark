@@ -210,6 +210,69 @@ class HybridDraftProofTests(unittest.TestCase):
             self.assertEqual(result["usage"], {"prompt_tokens": 13, "completion_tokens": 5, "total_tokens": 18, "requests": 2})
             self.assertEqual(result["attempts"], [])
 
+    def test_prover_reuses_driver_endpoint_when_prover_endpoint_unset(self) -> None:
+        # Fallback / backwards-compatible: with no prover endpoint configured the
+        # prover call must reuse the driver base_url and driver credentials
+        # (api_key_override None => transport resolves the driver api_key()).
+        calls: list[dict[str, object]] = []
+
+        def fake_chat_completion(messages: list[dict[str, object]], **kwargs: object) -> dict[str, object]:
+            calls.append(dict(kwargs))
+            return {"choices": [{"message": {"role": "assistant", "content": "trivial"}}]}
+
+        with (
+            mock.patch.object(lean_tools, "DRAFT_PROOF_ENABLED", True),
+            mock.patch.object(lean_tools, "DEFAULT_PROVER_MODEL", "prover-model"),
+            mock.patch.object(lean_tools, "DEFAULT_PROVER_BASE_URL", ""),
+            mock.patch.object(lean_tools, "DEFAULT_PROVER_API_KEY", ""),
+            mock.patch.object(lean_tools, "chat_completion", fake_chat_completion),
+        ):
+            result = lean_tools._draft_proof_with_prover(
+                {"task_context": "Need a proof of True", "goal": "⊢ True", "errors": ""},
+                task={"task_ref": "sample/group/task", "target_module": "Benchmark.Generated.Sample"},
+                original=ORIGINAL,
+                base_url="http://driver.test/v1",
+                draft_log_path=None,
+            )
+
+        self.assertTrue(result["ok"])
+        self.assertEqual(calls[0]["base_url"], "http://driver.test/v1")
+        self.assertIsNone(calls[0]["api_key_override"])
+
+    def test_prover_routes_to_separate_endpoint_when_configured(self) -> None:
+        # Cross-provider: the prover call routes to its own base_url and api key
+        # while the driver base_url passed in is ignored for the prover request.
+        with tempfile.TemporaryDirectory() as tmp:
+            log_path = Path(tmp) / "draft.jsonl"
+            calls: list[dict[str, object]] = []
+
+            def fake_chat_completion(messages: list[dict[str, object]], **kwargs: object) -> dict[str, object]:
+                calls.append(dict(kwargs))
+                return {"choices": [{"message": {"role": "assistant", "content": "trivial"}}]}
+
+            with (
+                mock.patch.object(lean_tools, "DRAFT_PROOF_ENABLED", True),
+                mock.patch.object(lean_tools, "DEFAULT_PROVER_MODEL", "prover-model"),
+                mock.patch.object(lean_tools, "DEFAULT_PROVER_BASE_URL", "http://prover.test/v1"),
+                mock.patch.object(lean_tools, "DEFAULT_PROVER_API_KEY", "prover-secret"),
+                mock.patch.object(lean_tools, "chat_completion", fake_chat_completion),
+            ):
+                result = lean_tools._draft_proof_with_prover(
+                    {"task_context": "Need a proof of True", "goal": "⊢ True", "errors": ""},
+                    task={"task_ref": "sample/group/task", "target_module": "Benchmark.Generated.Sample"},
+                    original=ORIGINAL,
+                    base_url="http://driver.test/v1",
+                    draft_log_path=log_path,
+                )
+
+            self.assertTrue(result["ok"])
+            self.assertEqual(calls[0]["base_url"], "http://prover.test/v1")
+            self.assertEqual(calls[0]["api_key_override"], "prover-secret")
+            audit = json.loads(log_path.read_text(encoding="utf-8").strip())
+            # Endpoint host is auditable; the api key is never logged.
+            self.assertEqual(audit["prover_base_url"], "http://prover.test/v1")
+            self.assertNotIn("prover-secret", log_path.read_text(encoding="utf-8"))
+
     def test_forbidden_prover_output_is_rejected_without_proof_attempt(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             workspace = Path(tmp)

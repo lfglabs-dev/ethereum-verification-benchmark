@@ -118,14 +118,14 @@ def active_provider() -> str:
     return DEFAULT_PROVIDER or "custom"
 
 
-def build_chat_request(base_url: str, body: bytes) -> urllib.request.Request:
+def build_chat_request(base_url: str, body: bytes, *, api_key_override: str | None = None) -> urllib.request.Request:
     request = urllib.request.Request(
         f"{base_url.rstrip('/')}/chat/completions",
         data=body,
         headers={"Content-Type": "application/json", "User-Agent": HTTP_USER_AGENT},
         method="POST",
     )
-    key = api_key()
+    key = api_key_override if api_key_override is not None else api_key()
     if key:
         request.add_header("Authorization", f"Bearer {key}")
     return request
@@ -279,13 +279,13 @@ def _decode_sse_response(response: Any) -> dict[str, object]:
     return result
 
 
-def _execute_chat_request(base_url: str, payload: dict[str, Any], *, stream: bool) -> dict[str, object]:
+def _execute_chat_request(base_url: str, payload: dict[str, Any], *, stream: bool, api_key_override: str | None = None) -> dict[str, object]:
     request_payload = dict(payload)
     if stream:
         request_payload["stream"] = True
         request_payload["stream_options"] = {"include_usage": True}
     body = json.dumps(request_payload).encode("utf-8")
-    request = build_chat_request(base_url, body)
+    request = build_chat_request(base_url, body, api_key_override=api_key_override)
     timeout = STREAM_IDLE_TIMEOUT_SECONDS if stream else REQUEST_TIMEOUT_SECONDS
     with urllib.request.urlopen(request, timeout=timeout) as response:
         if stream:
@@ -303,6 +303,7 @@ def chat_completion(
     tool_choice: object | None = None,
     request_log_path: Path | None = None,
     request_index: int | None = None,
+    api_key_override: str | None = None,
 ) -> dict[str, object]:
     payload: dict[str, Any] = {
         "model": model,
@@ -327,7 +328,7 @@ def chat_completion(
         started = time.time()
         stream = _streaming_allowed()
         try:
-            decoded = _execute_chat_request(base_url, payload, stream=stream)
+            decoded = _execute_chat_request(base_url, payload, stream=stream, api_key_override=api_key_override)
             if request_log_path is not None and attempt > 1:
                 append_jsonl(
                     request_log_path,
@@ -358,7 +359,7 @@ def chat_completion(
                     )
                 started = time.time()
                 try:
-                    decoded = _execute_chat_request(base_url, payload, stream=False)
+                    decoded = _execute_chat_request(base_url, payload, stream=False, api_key_override=api_key_override)
                     return decoded
                 except urllib.error.HTTPError as fallback_exc:
                     detail = fallback_exc.read().decode("utf-8", errors="replace")

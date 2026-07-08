@@ -64,6 +64,13 @@ Default harness API env:
   proof-drafting tool
 - `DEFAULT_HARNESS_PROVER_MODE=draft_proof`: exposes the hybrid `draft_proof`
   tool to the driver when `DEFAULT_HARNESS_PROVER_MODEL` is also set
+- `DEFAULT_HARNESS_PROVER_BASE_URL`: optional separate OpenAI-compatible endpoint
+  for the hybrid prover. When unset the prover reuses `DEFAULT_HARNESS_BASE_URL`
+  (single-endpoint hybrid). Set it to run a cross-provider hybrid where the
+  driver/tool loop and the prover live on different providers.
+- `DEFAULT_HARNESS_PROVER_API_KEY`: optional API key for
+  `DEFAULT_HARNESS_PROVER_BASE_URL`. When unset the prover reuses the driver key
+  (`DEFAULT_HARNESS_API_KEY`).
 - `DEFAULT_HARNESS_API_KEY`
 - `DEFAULT_HARNESS_REQUEST_TIMEOUT_SECONDS`
 - `DEFAULT_HARNESS_STREAMING` (`1` default; set `0` to disable SSE streaming)
@@ -109,6 +116,14 @@ Fair-mode behavior notes:
   is reported as a tool result and is not counted as a proof attempt. Only
   `check_proof`/`try_tactics` submissions count as proof attempts. Draft audit
   logs are written under `results/runs/<run_id>/draft-proofs/`.
+- The prover can run on a separate provider from the driver. Set
+  `DEFAULT_HARNESS_PROVER_BASE_URL` (and optionally `DEFAULT_HARNESS_PROVER_API_KEY`)
+  to route only the `draft_proof` prover calls to that endpoint; the driver/tool
+  loop keeps using `DEFAULT_HARNESS_BASE_URL`/`DEFAULT_HARNESS_API_KEY`. When these
+  prover values are unset the prover reuses the driver endpoint, so existing
+  single-endpoint hybrid runs are unaffected. The resolved `prover_base_url` is
+  recorded in the run manifest (`harness-response.json`) and in each draft audit
+  log entry; API keys are never logged.
 
 Local runtime configuration:
 - Copy `.env.example` to `.env`.
@@ -138,6 +153,11 @@ Useful commands:
 python3 -m harness.cli list --suite active --unit group
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --keep-workspace
 DEFAULT_HARNESS_DRIVER_MODEL=minimax/minimax-m3 DEFAULT_HARNESS_PROVER_MODEL=mistralai/Leanstral-2603 DEFAULT_HARNESS_PROVER_MODE=draft_proof python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --max-tool-calls 12 --keep-workspace
+# Cross-provider hybrid: MiniMax driver controls tools on the default endpoint,
+# Leanstral prover drafts proof bodies on a separate provider endpoint.
+# Set DEFAULT_HARNESS_BASE_URL / DEFAULT_HARNESS_API_KEY for the MiniMax driver and
+# DEFAULT_HARNESS_PROVER_BASE_URL / DEFAULT_HARNESS_PROVER_API_KEY for Leanstral.
+DEFAULT_HARNESS_DRIVER_MODEL=minimax/minimax-m3 DEFAULT_HARNESS_PROVER_MODEL=mistralai/Leanstral-2603 DEFAULT_HARNESS_PROVER_MODE=draft_proof DEFAULT_HARNESS_PROVER_BASE_URL=https://leanstral-provider.example/v1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --max-tool-calls 12 --keep-workspace
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --budget deep
 python3 -m harness.cli run-group ethereum/deposit_contract_minimal --harness default --max-attempts 2 --keep-workspace
 python3 -m harness.cli run-suite --suite active --harness default --max-attempts 1

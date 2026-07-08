@@ -209,5 +209,28 @@ class TransportStreamingTests(unittest.TestCase):
         self.assertTrue(all(not payload.get("stream") for payload in payloads[1:]))
 
 
+class BuildChatRequestAuthTests(unittest.TestCase):
+    def test_uses_module_api_key_when_no_override(self) -> None:
+        with mock.patch.object(transport_request, "api_key", lambda: "driver-key"):
+            request = transport_request.build_chat_request("http://provider.test/v1", b"{}")
+        self.assertEqual(request.get_header("Authorization"), "Bearer driver-key")
+
+    def test_override_takes_precedence_over_module_api_key(self) -> None:
+        with mock.patch.object(transport_request, "api_key", lambda: "driver-key"):
+            request = transport_request.build_chat_request(
+                "http://prover.test/v1", b"{}", api_key_override="prover-key"
+            )
+        self.assertEqual(request.get_header("Authorization"), "Bearer prover-key")
+
+    def test_none_override_falls_back_to_module_api_key(self) -> None:
+        # Callers pass None (not "") to request driver-key fallback, so an
+        # explicit None must resolve the driver key rather than dropping auth.
+        with mock.patch.object(transport_request, "api_key", lambda: "driver-key"):
+            request = transport_request.build_chat_request(
+                "http://provider.test/v1", b"{}", api_key_override=None
+            )
+        self.assertEqual(request.get_header("Authorization"), "Bearer driver-key")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -94,6 +94,13 @@ STUCK_NUDGE = os.environ.get("DEFAULT_HARNESS_STUCK_NUDGE", "1").lower() not in 
 DEFAULT_DRIVER_MODEL = os.environ.get("DEFAULT_HARNESS_DRIVER_MODEL", DEFAULT_MODEL).strip() or DEFAULT_MODEL
 DEFAULT_PROVER_MODEL = os.environ.get("DEFAULT_HARNESS_PROVER_MODEL", "").strip()
 DEFAULT_PROVER_MODE = os.environ.get("DEFAULT_HARNESS_PROVER_MODE", "").strip().lower()
+# Optional prover-specific OpenAI-compatible endpoint. Unset values fall back to
+# the driver endpoint so single-endpoint hybrid runs keep working unchanged. When
+# set, the driver/tool loop still uses DEFAULT_HARNESS_BASE_URL/API_KEY while the
+# draft_proof prover routes to this cross-provider endpoint (e.g. MiniMax driver
+# controlling tools, Leanstral prover drafting proof bodies on a second provider).
+DEFAULT_PROVER_BASE_URL = os.environ.get("DEFAULT_HARNESS_PROVER_BASE_URL", "").strip()
+DEFAULT_PROVER_API_KEY = os.environ.get("DEFAULT_HARNESS_PROVER_API_KEY", "").strip()
 DRAFT_PROOF_ENABLED = DEFAULT_PROVER_MODE == "draft_proof" and bool(DEFAULT_PROVER_MODEL)
 DRAFT_PROOF_CONTEXT_CHARS = int(os.environ.get("DEFAULT_HARNESS_DRAFT_PROOF_CONTEXT_CHARS", "12000"))
 
@@ -722,15 +729,18 @@ def _draft_proof_with_prover(
         goal=goal,
         errors=errors,
     )
+    prover_base_url = DEFAULT_PROVER_BASE_URL or base_url
+    prover_api_key_override = DEFAULT_PROVER_API_KEY or None
     started = time.time()
     try:
         response = chat_completion(
             messages,
-            base_url=base_url,
+            base_url=prover_base_url,
             model=DEFAULT_PROVER_MODEL,
             tools=None,
             tool_choice=None,
             request_log_path=draft_log_path,
+            api_key_override=prover_api_key_override,
         )
     except Exception as exc:
         error_payload = exc.to_dict() if isinstance(exc, ChatCompletionError) else {"message": str(exc)}
@@ -743,6 +753,7 @@ def _draft_proof_with_prover(
                     "status": "request_failed",
                     "driver_model": DEFAULT_DRIVER_MODEL,
                     "prover_model": DEFAULT_PROVER_MODEL,
+                    "prover_base_url": prover_base_url,
                     "error": error_payload,
                     "duration_seconds": round(time.time() - started, 3),
                 },
@@ -763,6 +774,7 @@ def _draft_proof_with_prover(
         "status": "rejected" if reject_reason else "drafted",
         "driver_model": DEFAULT_DRIVER_MODEL,
         "prover_model": DEFAULT_PROVER_MODEL,
+        "prover_base_url": prover_base_url,
         "usage": usage,
         "metadata": metadata,
         "duration_seconds": round(time.time() - started, 3),
@@ -1710,6 +1722,7 @@ def run_group(
             "driver_model": DEFAULT_DRIVER_MODEL,
             "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
             "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
+            "prover_base_url": (DEFAULT_PROVER_BASE_URL or base_url) if DRAFT_PROOF_ENABLED else None,
             "transport_mode": _transport_mode(),
             "mode": "fair",
             "max_attempts": max_attempts,
@@ -1871,6 +1884,7 @@ def run_group(
         "driver_model": DEFAULT_DRIVER_MODEL,
         "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
         "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
+        "prover_base_url": (DEFAULT_PROVER_BASE_URL or base_url) if DRAFT_PROOF_ENABLED else None,
         "track": "group/lean_tools",
         "mode": "fair",
         "run_mode": "task" if task_ref else "group",
