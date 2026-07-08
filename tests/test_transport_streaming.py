@@ -230,6 +230,12 @@ class BuildChatRequestAuthTests(unittest.TestCase):
                 "http://provider.test/v1", b"{}", api_key_override=None
             )
         self.assertEqual(request.get_header("Authorization"), "Bearer driver-key")
+    def test_empty_override_suppresses_module_api_key(self) -> None:
+        with mock.patch.object(transport_request, "api_key", lambda: "driver-key"):
+            request = transport_request.build_chat_request(
+                "http://prover.test/v1", b"{}", api_key_override=""
+            )
+        self.assertIsNone(request.get_header("Authorization"))
 
 
 if __name__ == "__main__":

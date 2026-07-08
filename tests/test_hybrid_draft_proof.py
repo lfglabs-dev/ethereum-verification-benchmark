@@ -273,6 +273,34 @@ class HybridDraftProofTests(unittest.TestCase):
             self.assertEqual(audit["prover_base_url"], "http://prover.test/v1")
             self.assertNotIn("prover-secret", log_path.read_text(encoding="utf-8"))
 
+    def test_separate_prover_endpoint_without_key_does_not_reuse_driver_key(self) -> None:
+        # Cross-provider with no prover key must not pass None, because transport
+        # treats None as "use the driver key". Empty override means no auth header.
+        calls: list[dict[str, object]] = []
+
+        def fake_chat_completion(messages: list[dict[str, object]], **kwargs: object) -> dict[str, object]:
+            calls.append(dict(kwargs))
+            return {"choices": [{"message": {"role": "assistant", "content": "trivial"}}]}
+
+        with (
+            mock.patch.object(lean_tools, "DRAFT_PROOF_ENABLED", True),
+            mock.patch.object(lean_tools, "DEFAULT_PROVER_MODEL", "prover-model"),
+            mock.patch.object(lean_tools, "DEFAULT_PROVER_BASE_URL", "http://prover.test/v1"),
+            mock.patch.object(lean_tools, "DEFAULT_PROVER_API_KEY", ""),
+            mock.patch.object(lean_tools, "chat_completion", fake_chat_completion),
+        ):
+            result = lean_tools._draft_proof_with_prover(
+                {"task_context": "Need a proof of True", "goal": "⊢ True", "errors": ""},
+                task={"task_ref": "sample/group/task", "target_module": "Benchmark.Generated.Sample"},
+                original=ORIGINAL,
+                base_url="http://driver.test/v1",
+                draft_log_path=None,
+            )
+
+        self.assertTrue(result["ok"])
+        self.assertEqual(calls[0]["base_url"], "http://prover.test/v1")
+        self.assertEqual(calls[0]["api_key_override"], "")
+
     def test_forbidden_prover_output_is_rejected_without_proof_attempt(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             workspace = Path(tmp)

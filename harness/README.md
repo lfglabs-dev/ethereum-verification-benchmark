@@ -69,8 +69,11 @@ Default harness API env:
   (single-endpoint hybrid). Set it to run a cross-provider hybrid where the
   driver/tool loop and the prover live on different providers.
 - `DEFAULT_HARNESS_PROVER_API_KEY`: optional API key for
-  `DEFAULT_HARNESS_PROVER_BASE_URL`. When unset the prover reuses the driver key
-  (`DEFAULT_HARNESS_API_KEY`).
+  `DEFAULT_HARNESS_PROVER_BASE_URL`. When unset and the prover endpoint is also
+  unset, the prover reuses the driver key (`DEFAULT_HARNESS_API_KEY`). When
+  `DEFAULT_HARNESS_PROVER_BASE_URL` points at a different provider and this key
+  is unset, prover calls are sent without an `Authorization` header so the
+  driver credential is never leaked cross-provider.
 - `DEFAULT_HARNESS_API_KEY`
 - `DEFAULT_HARNESS_REQUEST_TIMEOUT_SECONDS`
 - `DEFAULT_HARNESS_STREAMING` (`1` default; set `0` to disable SSE streaming)

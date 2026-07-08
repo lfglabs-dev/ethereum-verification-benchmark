@@ -730,7 +730,14 @@ def _draft_proof_with_prover(
         errors=errors,
     )
     prover_base_url = DEFAULT_PROVER_BASE_URL or base_url
-    prover_api_key_override = DEFAULT_PROVER_API_KEY or None
+    # Auth fallback is only safe when the prover reuses the driver endpoint.
+    # For a distinct prover endpoint with no prover key, pass an explicit empty
+    # override so transport sends no Authorization header instead of leaking the
+    # driver bearer token to the prover host.
+    if DEFAULT_PROVER_BASE_URL:
+        prover_api_key_override = DEFAULT_PROVER_API_KEY
+    else:
+        prover_api_key_override = DEFAULT_PROVER_API_KEY or None
     started = time.time()
     try:
         response = chat_completion(
