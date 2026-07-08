@@ -58,6 +58,12 @@ Budget profiles:
 Default harness API env:
 - `DEFAULT_HARNESS_BASE_URL`
 - `DEFAULT_HARNESS_MODEL`
+- `DEFAULT_HARNESS_DRIVER_MODEL`: optional orchestration-loop model override
+  (defaults to `DEFAULT_HARNESS_MODEL`)
+- `DEFAULT_HARNESS_PROVER_MODEL`: optional model used only by the hybrid
+  proof-drafting tool
+- `DEFAULT_HARNESS_PROVER_MODE=draft_proof`: exposes the hybrid `draft_proof`
+  tool to the driver when `DEFAULT_HARNESS_PROVER_MODEL` is also set
 - `DEFAULT_HARNESS_API_KEY`
 - `DEFAULT_HARNESS_REQUEST_TIMEOUT_SECONDS`
 - `DEFAULT_HARNESS_STREAMING` (`1` default; set `0` to disable SSE streaming)
@@ -94,6 +100,15 @@ Fair-mode behavior notes:
   helper lemmas, and the target theorem. Submissions that change the target theorem
   statement are rejected with `statement_mismatch` feedback.
 - `show_goal` does not consume the non-proof tool budget.
+- Hybrid draft-proof mode keeps the driver responsible for all tool orchestration,
+  Lean diagnostics, and proof submission. When `DEFAULT_HARNESS_PROVER_MODE` is
+  `draft_proof`, the driver also sees `draft_proof {task_context, goal, errors}`.
+  That tool calls `DEFAULT_HARNESS_PROVER_MODEL` with a strict proof-body-only
+  prompt and returns an unchecked candidate. Rejected prover output containing
+  markdown, JSON, theorem statements, `sorry`, `admit`, `axiom`, or placeholders
+  is reported as a tool result and is not counted as a proof attempt. Only
+  `check_proof`/`try_tactics` submissions count as proof attempts. Draft audit
+  logs are written under `results/runs/<run_id>/draft-proofs/`.
 
 Local runtime configuration:
 - Copy `.env.example` to `.env`.
@@ -122,6 +137,7 @@ Useful commands:
 ```bash
 python3 -m harness.cli list --suite active --unit group
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --keep-workspace
+DEFAULT_HARNESS_DRIVER_MODEL=minimax/minimax-m3 DEFAULT_HARNESS_PROVER_MODEL=mistralai/Leanstral-2603 DEFAULT_HARNESS_PROVER_MODE=draft_proof python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --max-tool-calls 12 --keep-workspace
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --budget deep
 python3 -m harness.cli run-group ethereum/deposit_contract_minimal --harness default --max-attempts 2 --keep-workspace
 python3 -m harness.cli run-suite --suite active --harness default --max-attempts 1
