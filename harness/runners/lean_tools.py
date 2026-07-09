@@ -124,6 +124,15 @@ MINIMAL_PROOF_HINT = (
 )
 AUTOMATION_FALLBACK_KINDS = {"lean_timeout", "lean_unsolved_goals", "lean_error"}
 AUTOMATION_FALLBACK_MARKERS = ("maximum recursion depth", "grind", "deterministic timeout", "simp made no progress")
+# The base system prompt tells the model to call show_task first; after the
+# repair reset drops the transcript, that instruction would outrank the user
+# message and send the model back to inspection tools. Override it explicitly.
+REPAIR_SYSTEM_SUFFIX = (
+    " REPAIR MODE: you already called show_task and inspected the task earlier in this session; the user "
+    "message below contains the current proof and the Lean diagnostics. Ignore the instruction above to call "
+    "show_task first - do not call show_task or other inspection tools again. Repair the proof and submit it "
+    "with a single check_proof call."
+)
 
 
 def _read_workspace_file(workspace: Path, rel: str) -> str:
@@ -342,7 +351,7 @@ def _diagnostic_repair_messages(
     """Compact [system, user] messages that focus the model on repairing the
     last failed proof, dropping the accumulated group transcript."""
     return [
-        {"role": "system", "content": system_prompt},
+        {"role": "system", "content": system_prompt + REPAIR_SYSTEM_SUFFIX},
         {
             "role": "user",
             "content": _repair_prompt_user_content(

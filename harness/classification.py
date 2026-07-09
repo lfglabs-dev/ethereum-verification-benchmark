@@ -242,12 +242,9 @@ def submission_state(task_result: dict[str, Any] | None) -> str:
             attempt_status or attempt.get("candidate_path")
         ):
             # An attempt the harness graded but whose status label we do not
-            # recognize: treat a non-zero exit code as a failed check, else a
-            # pass. Falls back to "failed" so we never over-report success.
-            if attempt.get("exit_code") in (0, None) and attempt_status == "lean_passed":
-                saw_lean_pass = True
-            else:
-                saw_lean_fail = True
+            # recognize: count it as a failed check so we never over-report
+            # success.
+            saw_lean_fail = True
 
     if saw_lean_pass:
         return SUBMISSION_STATE_CHECK_PASSED

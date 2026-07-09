@@ -134,7 +134,11 @@ class RepairMessagesTests(unittest.TestCase):
             minimal_hint=False,
         )
         self.assertEqual([m["role"] for m in messages], ["system", "user"])
-        self.assertEqual(messages[0]["content"], SYSTEM_PROMPT)
+        # The base system prompt is kept but must be overridden so the model
+        # does not obey its "call show_task first" instruction during repair.
+        self.assertTrue(messages[0]["content"].startswith(SYSTEM_PROMPT))
+        self.assertIn("REPAIR MODE", messages[0]["content"])
+        self.assertIn("do not call show_task", messages[0]["content"])
         self.assertIn("Repair the existing proof", messages[1]["content"])
 
 
