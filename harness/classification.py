@@ -39,7 +39,28 @@ TOOL_PROTOCOL_BREAKDOWN_STATUSES = {
 NON_GRADEABLE_ATTEMPT_STATUSES = {
     "rejected_candidate",
     "rejected_forbidden_placeholder",
+    "rejected_statement_mismatch",
 }
+
+# Attempt statuses where the model produced a submission the harness declined to
+# run against Lean (placeholder/forbidden token, or a statement that no longer
+# matches the target theorem). These are real model output, but never a graded
+# proof, so they read as "placeholder" rather than "no submission".
+PLACEHOLDER_ATTEMPT_STATUSES = {
+    "rejected_forbidden_placeholder",
+    "rejected_statement_mismatch",
+}
+
+# Coarse, model-agnostic description of how far the model got before the
+# verifier ran. Orthogonal to final_class: it summarizes the in-loop submission
+# funnel (did the model submit anything, was it a placeholder, did check_proof
+# actually run, and did it pass) so genuine proof failures can be told apart
+# from give-ups and provider/tool breakdowns without reading raw transcripts.
+SUBMISSION_STATE_NO_SUBMISSION = "no_submission"
+SUBMISSION_STATE_PLACEHOLDER = "placeholder_submission"
+SUBMISSION_STATE_CHECK_FAILED = "check_proof_failed"
+SUBMISSION_STATE_CHECK_PASSED = "check_proof_passed"
+SUBMISSION_STATE_UNKNOWN = "unknown"
 
 # Verifier build statuses that can be caused by a shared *support* module (one
 # the agent never edits) failing to build, rather than by the submitted proof.
@@ -189,6 +210,51 @@ def _has_gradeable_submission(task_result: dict[str, Any] | None) -> bool:
     return False
 
 
+def submission_state(task_result: dict[str, Any] | None) -> str:
+    """Summarize how far the model's proof funnel got, independent of the verifier.
+
+    Distinguishes: never submitted a proof, only placeholder/rejected
+    submissions, submitted a proof that ``check_proof`` ran and failed, or one
+    that passed. Provider/tool breakdowns that never yield an attempt read as
+    ``no_submission``; the verifier + ``final_class`` still capture the infra
+    reason separately.
+    """
+    if not isinstance(task_result, dict):
+        return SUBMISSION_STATE_UNKNOWN
+    status = str(task_result.get("status") or "")
+    attempts = task_result.get("attempts")
+    attempts = attempts if isinstance(attempts, list) else []
+
+    saw_lean_pass = status == "lean_passed"
+    saw_lean_fail = False
+    saw_placeholder = False
+    for attempt in attempts:
+        if not isinstance(attempt, dict):
+            continue
+        attempt_status = str(attempt.get("status") or "")
+        if attempt_status == "lean_passed":
+            saw_lean_pass = True
+        elif attempt_status == "lean_failed":
+            saw_lean_fail = True
+        elif attempt_status in PLACEHOLDER_ATTEMPT_STATUSES:
+            saw_placeholder = True
+        elif attempt_status not in NON_GRADEABLE_ATTEMPT_STATUSES and (
+            attempt_status or attempt.get("candidate_path")
+        ):
+            # An attempt the harness graded but whose status label we do not
+            # recognize: count it as a failed check so we never over-report
+            # success.
+            saw_lean_fail = True
+
+    if saw_lean_pass:
+        return SUBMISSION_STATE_CHECK_PASSED
+    if saw_lean_fail:
+        return SUBMISSION_STATE_CHECK_FAILED
+    if saw_placeholder:
+        return SUBMISSION_STATE_PLACEHOLDER
+    return SUBMISSION_STATE_NO_SUBMISSION
+
+
 def classify_target(
     verifier_target: dict[str, Any],
     task_result: dict[str, Any] | None,
@@ -201,12 +267,15 @@ def classify_target(
     """
 
     raw_status = _target_status(verifier_target)
+    state = submission_state(task_result)
     if raw_status == "passed":
         return {
             "final_class": "SOLVED",
             "final_reason": "verifier_passed",
             "reusable": True,
             "raw_verifier_status": raw_status,
+            "submission_state": state,
+            "verifier_outcome": "passed",
         }
 
     terminal_request_failure = _is_terminal_request_failure(task_result)
@@ -217,6 +286,8 @@ def classify_target(
             "final_reason": _request_failure_reason(task_result) or "terminal_request_failed",
             "reusable": False,
             "raw_verifier_status": raw_status,
+            "submission_state": state,
+            "verifier_outcome": "not_run_terminal_request_failure",
         }
 
     if _is_tool_protocol_breakdown(task_result) and not gradeable_submission:
@@ -225,6 +296,8 @@ def classify_target(
             "final_reason": _tool_protocol_breakdown_reason(task_result),
             "reusable": False,
             "raw_verifier_status": raw_status,
+            "submission_state": state,
+            "verifier_outcome": "not_run_tool_protocol_breakdown",
         }
 
     support_module = _support_module_build_failure(verifier_target)
@@ -234,6 +307,8 @@ def classify_target(
             "final_reason": f"support_module_build_failure:{support_module}",
             "reusable": False,
             "raw_verifier_status": raw_status,
+            "submission_state": state,
+            "verifier_outcome": "support_module_failure",
         }
 
     return {
@@ -241,6 +316,8 @@ def classify_target(
         "final_reason": raw_status or "verifier_failed",
         "reusable": True,
         "raw_verifier_status": raw_status,
+        "submission_state": state,
+        "verifier_outcome": "task_failure",
     }
 
 
@@ -262,6 +339,12 @@ def classify_run(verifier: dict[str, Any], task_results: list[dict[str, Any]] | 
             target_classes.append(entry)
 
     counts = Counter(str(item["final_class"]) for item in target_classes)
+    submission_state_counts = Counter(
+        str(item.get("submission_state") or SUBMISSION_STATE_UNKNOWN) for item in target_classes
+    )
+    verifier_outcome_counts = Counter(
+        str(item.get("verifier_outcome")) for item in target_classes if item.get("verifier_outcome")
+    )
     reusable_targets = [item for item in target_classes if item.get("reusable")]
     if target_classes and counts.get("INFRA_INVALID", 0) == len(target_classes):
         run_class = "INFRA_INVALID"
@@ -283,6 +366,8 @@ def classify_run(verifier: dict[str, Any], task_results: list[dict[str, Any]] | 
         "run_class": run_class,
         "reusable": bool(target_classes) and all(bool(item.get("reusable")) for item in target_classes),
         "final_class_counts": dict(sorted(counts.items())),
+        "submission_state_counts": dict(sorted(submission_state_counts.items())),
+        "verifier_outcome_counts": dict(sorted(verifier_outcome_counts.items())),
         "reusable_target_count": len(reusable_targets),
         "non_reusable_target_count": len(target_classes) - len(reusable_targets),
         "targets": target_classes,

@@ -103,6 +103,36 @@ DEFAULT_PROVER_BASE_URL = os.environ.get("DEFAULT_HARNESS_PROVER_BASE_URL", "").
 DEFAULT_PROVER_API_KEY = os.environ.get("DEFAULT_HARNESS_PROVER_API_KEY", "").strip()
 DRAFT_PROOF_ENABLED = DEFAULT_PROVER_MODE == "draft_proof" and bool(DEFAULT_PROVER_MODEL)
 DRAFT_PROOF_CONTEXT_CHARS = int(os.environ.get("DEFAULT_HARNESS_DRAFT_PROOF_CONTEXT_CHARS", "12000"))
+# After a failed check_proof/try_tactics attempt, replace the accumulated group
+# transcript with a compact, model-agnostic repair prompt (current candidate +
+# Lean errors/goal + target names + a strict "modify the existing proof"
+# instruction). Keeps the next request small and focused for both strict
+# providers and frontier chat models. Disable with DEFAULT_HARNESS_DIAGNOSTIC_RETRY=0.
+DIAGNOSTIC_RETRY_ENABLED = os.environ.get("DEFAULT_HARNESS_DIAGNOSTIC_RETRY", "1").lower() not in {"0", "false", "no"}
+REPAIR_PROMPT_CANDIDATE_CHARS = int(os.environ.get("DEFAULT_HARNESS_REPAIR_PROMPT_CANDIDATE_CHARS", "4000"))
+REPAIR_PROMPT_ERROR_CHARS = int(os.environ.get("DEFAULT_HARNESS_REPAIR_PROMPT_ERROR_CHARS", "2500"))
+# Generic, content-free nudge appended to the repair prompt when a proof failed
+# via automation-heavy tactics (grind/broad simp/timeout/recursion). Points the
+# model at a minimal explicit proof instead of leaking any task-specific answer.
+# Disable with DEFAULT_HARNESS_MINIMAL_PROOF_HINT=0.
+MINIMAL_PROOF_HINT_ENABLED = os.environ.get("DEFAULT_HARNESS_MINIMAL_PROOF_HINT", "1").lower() not in {"0", "false", "no"}
+MINIMAL_PROOF_HINT = (
+    "Fallback: if heavy automation (grind, Grindset, or a broad simp over the whole contract) keeps failing "
+    "or timing out, drop it and build a minimal explicit proof instead - intro the hypotheses, unfold the "
+    "*_spec definition and the concrete contract function, then close each branch with a small `simp only` on "
+    "the named lemmas, `rfl`, or `decide`. Prefer the smallest proof Lean accepts over more automation."
+)
+AUTOMATION_FALLBACK_KINDS = {"lean_timeout", "lean_unsolved_goals", "lean_error"}
+AUTOMATION_FALLBACK_MARKERS = ("maximum recursion depth", "grind", "deterministic timeout", "simp made no progress")
+# The base system prompt tells the model to call show_task first; after the
+# repair reset drops the transcript, that instruction would outrank the user
+# message and send the model back to inspection tools. Override it explicitly.
+REPAIR_SYSTEM_SUFFIX = (
+    " REPAIR MODE: you already called show_task and inspected the task earlier in this session; the user "
+    "message below contains the current proof and the Lean diagnostics. Ignore the instruction above to call "
+    "show_task first - do not call show_task or other inspection tools again. Repair the proof and submit it "
+    "with a single check_proof call."
+)
 
 
 def _read_workspace_file(workspace: Path, rel: str) -> str:
@@ -235,6 +265,116 @@ def _compact_fair_messages(messages: list[dict[str, Any]], *, system_prompt: str
 def _stuck_signature(first_error: object) -> str:
     text = re.sub(r"\d+", "#", str(first_error or "")).strip()
     return text[:200]
+
+
+def _minimal_proof_hint_applies(attempt: dict[str, Any]) -> bool:
+    """Whether an automation-heavy failure should get the minimal-proof nudge.
+
+    Generic and content-free: triggers on timeout/recursion/grind-style failure
+    kinds and markers, never on the task identity, so it cannot leak a solution.
+    """
+    failure_kind = str(attempt.get("failure_kind") or "")
+    diagnostics = attempt.get("diagnostics")
+    if isinstance(diagnostics, dict) and not failure_kind:
+        failure_kind = str(diagnostics.get("failure_kind") or "")
+    output = str(attempt.get("output") or "").lower()
+    if failure_kind in AUTOMATION_FALLBACK_KINDS:
+        return True
+    return any(marker in output for marker in AUTOMATION_FALLBACK_MARKERS)
+
+
+def _repair_prompt_user_content(
+    *,
+    task: dict[str, Any],
+    editable: str,
+    candidate: str,
+    attempt: dict[str, Any],
+    minimal_hint: bool,
+) -> str:
+    diagnostics = attempt.get("diagnostics") if isinstance(attempt.get("diagnostics"), dict) else {}
+    first_error = str(diagnostics.get("first_error") or attempt.get("failure_kind") or "").strip()
+    goal = str(diagnostics.get("new_goal") or diagnostics.get("target") or "").strip()
+    hypotheses = diagnostics.get("local_hypotheses") if isinstance(diagnostics, dict) else None
+    output = str(attempt.get("output") or "").strip()
+    hint = str(attempt.get("hint") or "").strip()
+    theorem_name = str(task.get("theorem_name") or "").strip()
+    spec_files = task.get("specification_files")
+    candidate_block = candidate.rstrip()
+    if len(candidate_block) > REPAIR_PROMPT_CANDIDATE_CHARS:
+        candidate_block = candidate_block[:REPAIR_PROMPT_CANDIDATE_CHARS] + "\n-- [candidate truncated for repair prompt] --"
+    if len(output) > REPAIR_PROMPT_ERROR_CHARS:
+        output = output[-REPAIR_PROMPT_ERROR_CHARS:]
+
+    lines: list[str] = [
+        f"Your last proof attempt for task {task.get('task_ref')} did not pass Lean. "
+        "Repair the existing proof - do not restart from scratch, re-read the task summary, or call other inspection tools first.",
+        "",
+    ]
+    if theorem_name:
+        lines.append(f"Target theorem: {theorem_name}")
+    if isinstance(spec_files, list) and spec_files:
+        lines.append("Specification files: " + ", ".join(str(item) for item in spec_files))
+    lines.append(f"Editable file: {editable}")
+    lines += [
+        "",
+        "Current proof (edit this; keep the theorem statement byte-identical, only change the body after := by):",
+        "```lean",
+        candidate_block,
+        "```",
+        "",
+    ]
+    if first_error:
+        lines += ["Lean first error:", first_error, ""]
+    if output and output != first_error:
+        lines += ["Lean output:", output, ""]
+    if goal:
+        lines += ["Remaining goal:", goal, ""]
+    if isinstance(hypotheses, list) and hypotheses:
+        lines += ["Local hypotheses:", "\n".join(str(item) for item in hypotheses[:20]), ""]
+    if hint:
+        lines += ["Fix hint:", hint, ""]
+    if minimal_hint and _minimal_proof_hint_applies(attempt):
+        lines += [MINIMAL_PROOF_HINT, ""]
+    lines.append("Submit the corrected proof with a single check_proof call.")
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def _diagnostic_repair_messages(
+    *,
+    system_prompt: str,
+    task: dict[str, Any],
+    editable: str,
+    candidate: str,
+    attempt: dict[str, Any],
+    minimal_hint: bool = MINIMAL_PROOF_HINT_ENABLED,
+) -> list[dict[str, Any]]:
+    """Compact [system, user] messages that focus the model on repairing the
+    last failed proof, dropping the accumulated group transcript."""
+    return [
+        {"role": "system", "content": system_prompt + REPAIR_SYSTEM_SUFFIX},
+        {
+            "role": "user",
+            "content": _repair_prompt_user_content(
+                task=task,
+                editable=editable,
+                candidate=candidate,
+                attempt=attempt,
+                minimal_hint=minimal_hint,
+            ),
+        },
+    ]
+
+
+def _last_failed_proof_attempt(result: dict[str, object]) -> dict[str, Any] | None:
+    """The most recent gradeable-or-rejected proof attempt from a check_proof/
+    try_tactics result that did not pass, if any."""
+    results = result.get("results")
+    if not isinstance(results, list):
+        return None
+    for attempt in reversed(results):
+        if isinstance(attempt, dict) and attempt.get("status") != "lean_passed":
+            return attempt
+    return None
 
 
 FAIR_TOOLS: list[dict[str, Any]] = [
@@ -1652,7 +1792,32 @@ def _attempt_task_fair(
                     "tool_log": str(tool_log_path),
                     "conversation_log": str(conversation_log_path),
                 }
-            _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+            repaired = False
+            if DIAGNOSTIC_RETRY_ENABLED and name in {"check_proof", "try_tactics"}:
+                failed_attempt = _last_failed_proof_attempt(result)
+                if failed_attempt is not None:
+                    candidate_source = failed_attempt.get("candidate_path")
+                    current_candidate: str | None = None
+                    if isinstance(candidate_source, str) and candidate_source:
+                        try:
+                            current_candidate = Path(candidate_source).read_text(encoding="utf-8")
+                        except (OSError, UnicodeDecodeError):
+                            current_candidate = None
+                    if current_candidate is None:
+                        try:
+                            current_candidate = proof_path.read_text(encoding="utf-8")
+                        except (OSError, UnicodeDecodeError):
+                            current_candidate = original
+                    messages[:] = _diagnostic_repair_messages(
+                        system_prompt=system_prompt,
+                        task=task,
+                        editable=editable,
+                        candidate=current_candidate,
+                        attempt=failed_attempt,
+                    )
+                    repaired = True
+            if not repaired:
+                _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
     if context_budget_exhausted:
