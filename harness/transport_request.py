@@ -55,15 +55,10 @@ def _sanitize_tool_message_order(messages: list[dict[str, Any]]) -> list[dict[st
         for call in message["tool_calls"]
         if isinstance(call, dict)
     }
-    orphan_reply_indices = [
-        idx
-        for idx, message in enumerate(messages)
-        if message.get("role") == "tool" and str(message.get("tool_call_id")) not in known_call_ids
-    ]
 
     used: set[int] = set()
     result: list[dict[str, Any]] = []
-    for message in messages:
+    for current_idx, message in enumerate(messages):
         if message.get("role") == "tool":
             continue  # emitted next to its originating assistant turn
         result.append(message)
@@ -72,6 +67,27 @@ def _sanitize_tool_message_order(messages: list[dict[str, Any]]) -> list[dict[st
         tool_calls = message.get("tool_calls")
         if not isinstance(tool_calls, list):
             continue
+
+        # Only fallback/orphan tool replies from this assistant turn's segment
+        # may answer this assistant. A later assistant with a missing id can also
+        # produce a fallback ``call-{request_index}`` reply; consuming that
+        # globally for an earlier unanswered call would attach real tool output
+        # to the wrong turn and hide the result that should guide the next
+        # request.
+        next_assistant_idx = next(
+            (
+                idx
+                for idx in range(current_idx + 1, len(messages))
+                if messages[idx].get("role") == "assistant"
+            ),
+            len(messages),
+        )
+        current_orphan_reply_indices = [
+            idx
+            for idx in range(current_idx + 1, next_assistant_idx)
+            if messages[idx].get("role") == "tool"
+            and str(messages[idx].get("tool_call_id")) not in known_call_ids
+        ]
         for call in tool_calls:
             if not isinstance(call, dict):
                 continue
@@ -81,7 +97,7 @@ def _sanitize_tool_message_order(messages: list[dict[str, Any]]) -> list[dict[st
                 None,
             )
             if reply_idx is None:
-                reply_idx = next((i for i in orphan_reply_indices if i not in used), None)
+                reply_idx = next((i for i in current_orphan_reply_indices if i not in used), None)
             if reply_idx is not None:
                 used.add(reply_idx)
                 result.append(messages[reply_idx])

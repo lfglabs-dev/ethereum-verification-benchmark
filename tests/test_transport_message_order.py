@@ -124,6 +124,38 @@ class SanitizeMessageOrderTests(unittest.TestCase):
         self.assertEqual(reply["content"], "real result")
         self.assertEqual(reply["tool_call_id"], "call-3")
 
+    def test_fallback_reply_is_bounded_to_current_assistant_turn(self) -> None:
+        messages = [
+            {"role": "user", "content": "task"},
+            {
+                "role": "assistant",
+                "content": None,
+                "tool_calls": [
+                    {"id": "call-a", "type": "function", "function": {"name": "bad_args", "arguments": "{}"}}
+                ],
+            },
+            {"role": "user", "content": "malformed correction"},
+            {
+                "role": "assistant",
+                "content": None,
+                "tool_calls": [
+                    {"id": "", "type": "function", "function": {"name": "read_file", "arguments": "{}"}}
+                ],
+            },
+            {"role": "tool", "tool_call_id": "call-9", "name": "read_file", "content": "later real result"},
+        ]
+
+        sanitized = transport_request._sanitize_tool_message_order(messages)
+        self.assertFalse(_tool_after_user(sanitized), sanitized)
+        self.assertFalse(_missing_tool_replies(sanitized), sanitized)
+        # First assistant had no tool reply in its own segment, so it gets a stub.
+        self.assertEqual(sanitized[2]["role"], "tool")
+        self.assertEqual(sanitized[2]["tool_call_id"], "call-a")
+        self.assertEqual(sanitized[2]["content"], "")
+        # The orphan fallback reply belongs to the later missing-id assistant.
+        self.assertEqual(sanitized[5]["role"], "tool")
+        self.assertEqual(sanitized[5]["content"], "later real result")
+
     def test_valid_transcript_is_unchanged(self) -> None:
         good = [
             {"role": "system", "content": "sys"},
