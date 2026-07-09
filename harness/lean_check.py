@@ -50,7 +50,20 @@ def _compact_lean_output(output: str, limit: int = 4000) -> str:
     error_blocks: list[str] = []
     for index, line in enumerate(lines):
         if "error:" in line.lower():
-            error_blocks.extend(lines[index : min(len(lines), index + 8)])
+            end = index + 1
+            while end < len(lines):
+                current = lines[end]
+                if "error:" in current.lower() and end > index + 1:
+                    break
+                if (
+                    not current.strip()
+                    and end + 1 < len(lines)
+                    and "error:" in lines[end + 1].lower()
+                    and end > index + 1
+                ):
+                    break
+                end += 1
+            error_blocks.extend(lines[index:end])
     if error_blocks:
         filtered = [line for line in error_blocks if not line.startswith("trace: .>") and "LEAN_PATH=" not in line]
         return "\n".join(filtered)[-limit:]
@@ -100,7 +113,7 @@ def _extract_goal_blocks(output: str, *, limit: int = 2400) -> list[str]:
         end = index + 1
         while end < len(lines):
             current = lines[end]
-            if "error:" in current.lower() and end > index + 1:
+            if "error:" in current.lower() and end > index:
                 break
             if not current.strip() and end > index + 2:
                 break

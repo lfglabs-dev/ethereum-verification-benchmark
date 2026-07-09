@@ -18,7 +18,7 @@
   "system_prompt_files": ["harness/PROMPT.md", "harness/POLICY.md", "harness/TOOLS.md", "harness/PROOF_PATTERNS.md"],
   "temperature": 0.0,
   "max_completion_tokens": 1,
-  "max_attempts": 1,
+  "max_attempts": 2,
   "max_tool_calls": 24,
   "headers": {},
   "header_envs": {},
