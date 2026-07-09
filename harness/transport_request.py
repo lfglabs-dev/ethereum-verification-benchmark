@@ -37,11 +37,29 @@ def _sanitize_tool_message_order(messages: list[dict[str, Any]]) -> list[dict[st
     and defer any interleaved non-tool message to just after them, and we
     synthesize an empty stub reply for any tool_call id that never got one so
     the call/response counts always match.
+
+    Some endpoints omit ``tool_call.id``; the fair loop then records the real
+    result under a fallback ``tool_call_id`` (``call-{request_index}``), so an
+    unanswered call first consumes the next orphan tool reply (one whose id
+    matches no assistant call) before falling back to an empty stub.
     """
     tool_slots: dict[str, list[int]] = {}
     for idx, message in enumerate(messages):
         if message.get("role") == "tool":
             tool_slots.setdefault(str(message.get("tool_call_id")), []).append(idx)
+
+    known_call_ids = {
+        str(call.get("id"))
+        for message in messages
+        if message.get("role") == "assistant" and isinstance(message.get("tool_calls"), list)
+        for call in message["tool_calls"]
+        if isinstance(call, dict)
+    }
+    orphan_reply_indices = [
+        idx
+        for idx, message in enumerate(messages)
+        if message.get("role") == "tool" and str(message.get("tool_call_id")) not in known_call_ids
+    ]
 
     used: set[int] = set()
     result: list[dict[str, Any]] = []
@@ -62,6 +80,8 @@ def _sanitize_tool_message_order(messages: list[dict[str, Any]]) -> list[dict[st
                 (i for i in tool_slots.get(str(call_id), []) if i not in used),
                 None,
             )
+            if reply_idx is None:
+                reply_idx = next((i for i in orphan_reply_indices if i not in used), None)
             if reply_idx is not None:
                 used.add(reply_idx)
                 result.append(messages[reply_idx])

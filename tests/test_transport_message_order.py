@@ -100,6 +100,30 @@ class SanitizeMessageOrderTests(unittest.TestCase):
         self.assertEqual(stub["role"], "tool")
         self.assertEqual(stub["tool_call_id"], "call-x")
 
+    def test_preserves_fallback_reply_when_call_id_is_missing(self) -> None:
+        # Native-tool endpoints sometimes omit tool_call.id; lean_tools then
+        # stores the real result under the fallback id ``call-{request_index}``.
+        # The sanitizer must attach that orphan reply instead of stubbing it.
+        messages = [
+            {"role": "user", "content": "task"},
+            {
+                "role": "assistant",
+                "content": None,
+                "tool_calls": [
+                    {"id": "", "type": "function", "function": {"name": "read_file", "arguments": "{}"}}
+                ],
+            },
+            {"role": "user", "content": "corrective warning"},
+            {"role": "tool", "tool_call_id": "call-3", "name": "read_file", "content": "real result"},
+        ]
+        sanitized = transport_request._sanitize_tool_message_order(messages)
+        self.assertFalse(_tool_after_user(sanitized), sanitized)
+        self.assertFalse(_missing_tool_replies(sanitized), sanitized)
+        reply = sanitized[2]
+        self.assertEqual(reply["role"], "tool")
+        self.assertEqual(reply["content"], "real result")
+        self.assertEqual(reply["tool_call_id"], "call-3")
+
     def test_valid_transcript_is_unchanged(self) -> None:
         good = [
             {"role": "system", "content": "sys"},
