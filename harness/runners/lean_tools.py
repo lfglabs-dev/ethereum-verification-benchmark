@@ -129,6 +129,14 @@ def _run_lean_module(
         dependency_error = re.search(r"unknown module prefix|unknown package|object file .* does not exist|no such file or directory|bad import", lowered)
         if code not in (0, 124) and dependency_error:
             return _run_lean_command(workspace, ["lake", "build", module], timeout_seconds)
+        if code == 0:
+            build_code, build_output = _run_lean_command(workspace, ["lake", "build", module], timeout_seconds)
+            if build_code != 0:
+                combined = output
+                if combined:
+                    combined += "\n"
+                combined += build_output
+                return build_code, combined
         return code, output
     return _run_lean_command(workspace, ["lake", "build", module], timeout_seconds)
 
