@@ -103,6 +103,25 @@ DEFAULT_PROVER_BASE_URL = os.environ.get("DEFAULT_HARNESS_PROVER_BASE_URL", "").
 DEFAULT_PROVER_API_KEY = os.environ.get("DEFAULT_HARNESS_PROVER_API_KEY", "").strip()
 DRAFT_PROOF_ENABLED = DEFAULT_PROVER_MODE == "draft_proof" and bool(DEFAULT_PROVER_MODEL)
 DRAFT_PROOF_CONTEXT_CHARS = int(os.environ.get("DEFAULT_HARNESS_DRAFT_PROOF_CONTEXT_CHARS", "12000"))
+# Strict driver/prover role separation for hybrid draft_proof runs. When enabled
+# (and draft_proof is active), the driver model is treated as a pure orchestrator
+# (context_builder): it never writes or edits proof bodies itself. All proof
+# bodies come from the prover model in two explicit stages - prover_writer for the
+# first draft and proof_repairer for bounded minimal-edit repairs after a failed
+# Lean check. This keeps hybrid ensemble scores honest: the driver's own Lean
+# ability is never mixed into the recorded result. Backward compatible: defaults
+# off, so existing draft_proof runs keep the driver-side diagnostic repair loop.
+STRICT_ROLE_SEPARATION = (
+    os.environ.get("DEFAULT_HARNESS_STRICT_ROLE_SEPARATION", "0").lower() in {"1", "true", "yes"}
+    and DRAFT_PROOF_ENABLED
+)
+# Maximum number of proof_repairer (prover repair-mode) calls per task. 0 disables
+# prover repairs and leaves only the initial prover_writer draft.
+PROVER_REPAIR_ATTEMPTS = max(0, int(os.environ.get("DEFAULT_HARNESS_PROVER_REPAIR_ATTEMPTS", "2")))
+# Bounded, content-free public declaration index injected into prover prompts to
+# curb invented theorem names. Public declarations only (never hidden Proofs/
+# GeneratedPreview). 0 disables the index.
+DRAFT_PROOF_DECL_INDEX_LIMIT = max(0, int(os.environ.get("DEFAULT_HARNESS_DRAFT_PROOF_DECL_INDEX", "40")))
 # After a failed check_proof/try_tactics attempt, replace the accumulated group
 # transcript with a compact, model-agnostic repair prompt (current candidate +
 # Lean errors/goal + target names + a strict "modify the existing proof"
@@ -133,6 +152,127 @@ REPAIR_SYSTEM_SUFFIX = (
     "show_task first - do not call show_task or other inspection tools again. Repair the proof and submit it "
     "with a single check_proof call."
 )
+
+# Explicit hybrid stages. The driver/context_builder orchestrates tools and
+# assembles context; the prover_writer drafts the first proof body; the
+# proof_repairer edits a failed proof; the verifier/checker runs Lean. Recorded in
+# artifacts so ensemble runs can be compared honestly by role.
+STAGE_DRIVER = "context_builder"
+STAGE_WRITER = "prover_writer"
+STAGE_REPAIRER = "proof_repairer"
+STAGE_VERIFIER = "verifier"
+PROVER_PROMPT_KINDS = {"write": STAGE_WRITER, "repair": STAGE_REPAIRER}
+# When strict role separation is on, the driver is told to route every failed
+# proof to the prover repairer instead of editing the proof itself.
+STRICT_DRIVER_REPAIR_NUDGE = (
+    "STRICT ROLE SEPARATION: you are the orchestrator only and must not write or edit Lean proof bodies "
+    "yourself. The last proof from the prover did not pass Lean. Call draft_proof with "
+    '{"mode":"repair"} to ask the prover for a minimal repair of the current proof, then submit the '
+    "returned body verbatim with check_proof."
+)
+
+
+def _role_config() -> dict[str, object]:
+    """Publication-honest description of which model plays which role.
+
+    ``role_label`` is a human-readable ensemble tag so a hybrid driver+prover
+    result is never confused with a standalone writer-model score.
+    """
+    driver = DEFAULT_DRIVER_MODEL
+    prover = DEFAULT_PROVER_MODEL or None
+    if DRAFT_PROOF_ENABLED and prover:
+        writer = repairer = prover
+        ensemble = prover != driver
+    else:
+        writer = repairer = driver
+        ensemble = False
+    if STRICT_ROLE_SEPARATION:
+        driver_writes_proofs = False
+        role_label = f"strict-hybrid: driver={driver}; writer={writer}; repairer={repairer}"
+    elif DRAFT_PROOF_ENABLED and prover:
+        # Non-strict hybrid: the driver may still edit proofs via diagnostic retry.
+        driver_writes_proofs = True
+        role_label = f"hybrid: driver={driver}; prover={prover}; driver_may_repair"
+    else:
+        driver_writes_proofs = True
+        role_label = f"standalone: {driver}"
+    return {
+        "strict_role_separation": STRICT_ROLE_SEPARATION,
+        "draft_proof_enabled": DRAFT_PROOF_ENABLED,
+        "ensemble": ensemble,
+        "driver_writes_proofs": driver_writes_proofs,
+        "driver_model": driver,
+        "prover_model": prover,
+        "prover_mode": DEFAULT_PROVER_MODE or None,
+        "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
+        "stages": {
+            STAGE_DRIVER: driver,
+            STAGE_WRITER: writer,
+            STAGE_REPAIRER: repairer,
+            STAGE_VERIFIER: "lean",
+        },
+        "role_label": role_label,
+    }
+
+
+ROLE_METRIC_COUNTERS = (
+    "prover_writer_calls",
+    "prover_repair_calls",
+    "draft_valid_syntax_count",
+    "draft_rejected_count",
+    "repair_no_submission",
+    "repair_improved",
+    "repair_regressed",
+    "repair_no_change",
+    "strict_submission_blocked",
+    "strict_context_blocked",
+)
+
+
+def _normalize_proof_body(text: str) -> str:
+    """Whitespace-insensitive form used to match a submission against prover
+    drafts, so re-indentation never defeats strict-mode enforcement."""
+    return " ".join(text.split())
+
+
+_TACTIC_LINE_RE = re.compile(
+    r"^\s*(?:simp\b|ring\b|omega\b|decide\b|rfl\b|exact\b|apply\b|intro\b|intros\b|rw\b|rewrite\b"
+    r"|unfold\b|constructor\b|rcases\b|induction\b|obtain\b|refine\b|calc\b|linarith\b|nlinarith\b"
+    r"|norm_num\b|aesop\b|field_simp\b|positivity\b)",
+    re.MULTILINE,
+)
+
+
+def _strict_context_proof_reason(text: str) -> str | None:
+    """Reject driver-supplied prover context that looks like a Lean proof.
+
+    In strict mode the driver is a context builder only; letting it pass a
+    tactic script through task_context would let the prover echo driver-authored
+    Lean back as a "draft". Heuristic and conservative: declarative summaries,
+    goal displays, and declaration names all pass."""
+    if ":= by" in text:
+        return "strict_context_contains_proof_assignment"
+    if "```" in text:
+        return "strict_context_contains_markdown_fence"
+    if len(_TACTIC_LINE_RE.findall(text)) >= 2:
+        return "strict_context_contains_tactic_script"
+    return None
+
+
+def _aggregate_role_metrics(task_results: list[dict[str, object]]) -> dict[str, object]:
+    """Sum per-task role_metrics counters into a run-level total for honest,
+    per-role reporting of a hybrid ensemble run."""
+    totals = {key: 0 for key in ROLE_METRIC_COUNTERS}
+    for task_result in task_results:
+        metrics = task_result.get("role_metrics") if isinstance(task_result, dict) else None
+        if not isinstance(metrics, dict):
+            continue
+        for key in ROLE_METRIC_COUNTERS:
+            value = metrics.get(key)
+            if isinstance(value, (int, float)):
+                totals[key] += int(value)
+    totals["role_config"] = _role_config()
+    return totals
 
 
 def _read_workspace_file(workspace: Path, rel: str) -> str:
@@ -377,6 +517,28 @@ def _last_failed_proof_attempt(result: dict[str, object]) -> dict[str, Any] | No
     return None
 
 
+def _classify_repair_outcome(baseline: dict[str, object] | None, attempt: dict[str, object]) -> str:
+    """Compare a post-repair proof attempt against the pre-repair failure.
+
+    Deliberately conservative so hybrid ensemble metrics never over-claim: only a
+    proof that actually passes Lean counts as ``improved``. A repair that fails to
+    reach Lean (rejected) or newly fails to parse is a ``regressed``. Everything
+    else - including a still-failing proof with a changed error - is ``no_change``.
+    """
+    status = str(attempt.get("status") or "")
+    if status == "lean_passed":
+        return "improved"
+    if status.startswith("rejected"):
+        return "regressed"
+    new_kind = attempt.get("failure_kind") or (attempt.get("diagnostics") or {}).get("failure_kind")
+    base_kind = None
+    if isinstance(baseline, dict):
+        base_kind = baseline.get("failure_kind") or (baseline.get("diagnostics") or {}).get("failure_kind")
+    if new_kind == "lean_parse_error" and base_kind != "lean_parse_error":
+        return "regressed"
+    return "no_change"
+
+
 FAIR_TOOLS: list[dict[str, Any]] = [
     {
         "type": "function",
@@ -493,6 +655,8 @@ DRAFT_PROOF_TOOL: dict[str, Any] = {
         "name": "draft_proof",
         "description": (
             "Ask the configured prover model for one Lean proof-body candidate. "
+            "mode='write' (default) drafts a fresh proof from task_context/goal; task_context is required for mode='write'. "
+            "mode='repair' asks for a minimal edit of the current failing proof given the Lean errors and needs no other arguments. "
             "This does not check Lean and does not count as a proof attempt; use check_proof or try_tactics to submit it."
         ),
         "parameters": {
@@ -501,8 +665,14 @@ DRAFT_PROOF_TOOL: dict[str, Any] = {
                 "task_context": {"type": "string"},
                 "goal": {"type": "string"},
                 "errors": {"type": "string"},
+                "mode": {"type": "string", "enum": ["write", "repair"]},
+                "current_proof": {"type": "string"},
             },
-            "required": ["task_context"],
+            # task_context is enforced at runtime for mode='write' only; keeping
+            # it out of the JSON-schema required list lets schema-validating
+            # providers make the bare {"mode":"repair"} call the strict nudge
+            # asks for.
+            "required": [],
             "additionalProperties": False,
         },
     },
@@ -720,6 +890,107 @@ def _definition_outline(workspace: Path, query: str, *, limit: int = 12) -> list
     return results
 
 
+def _task_index_source_files(task: dict[str, object]) -> list[str]:
+    """Relative paths whose PUBLIC declarations are safe to index for prompts.
+
+    Only editable/specification/implementation files named by the task manifest,
+    each screened by ``_fair_tool_can_read`` so hidden reference Proofs, the
+    GeneratedPreview module, and .env can never enter the index. This keeps the
+    declaration index content-free with respect to hidden solutions.
+    """
+    rels: list[str] = []
+    seen: set[str] = set()
+    for key in ("specification_files", "implementation_files", "editable_files"):
+        value = task.get(key)
+        if not isinstance(value, list):
+            continue
+        for rel in value:
+            if not isinstance(rel, str) or rel in seen:
+                continue
+            seen.add(rel)
+            if _fair_tool_can_read(rel):
+                rels.append(rel)
+    return rels
+
+
+def _task_declaration_index(
+    workspace: Path,
+    task: dict[str, object],
+    *,
+    limit: int = DRAFT_PROOF_DECL_INDEX_LIMIT,
+) -> list[dict[str, object]]:
+    """Bounded index of public declaration names + signatures for a task.
+
+    Public declarations only (see ``_task_index_source_files``); used to reduce
+    invented theorem names in prover prompts without leaking any hidden proof.
+    """
+    if limit <= 0:
+        return []
+    index: list[dict[str, object]] = []
+    seen_names: set[str] = set()
+    for rel in _task_index_source_files(task):
+        try:
+            path = _safe_workspace_path(workspace, rel)
+        except ValueError:
+            continue
+        if not path.is_file():
+            continue
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except (OSError, UnicodeDecodeError):
+            continue
+        namespace_stack: list[str] = []
+        for lineno, raw in enumerate(lines, start=1):
+            stripped = raw.strip()
+            ns_match = re.match(r"namespace\s+([A-Za-z0-9_'.]+)", stripped)
+            if ns_match:
+                namespace_stack.append(ns_match.group(1))
+                continue
+            if stripped == "end" or stripped.startswith("end "):
+                if namespace_stack:
+                    namespace_stack.pop()
+                continue
+            if stripped.startswith("private "):
+                continue
+            match = DECL_RE.match(stripped)
+            if not match:
+                continue
+            kind, name = match.groups()
+            namespace = ".".join(namespace_stack)
+            qualified = name if "." in name or not namespace else f"{namespace}.{name}"
+            if qualified in seen_names:
+                continue
+            seen_names.add(qualified)
+            index.append(
+                {
+                    "name": qualified,
+                    "kind": kind,
+                    "path": rel,
+                    "signature": _declaration_signature(lines, lineno - 1),
+                }
+            )
+            if len(index) >= limit:
+                return index
+    return index
+
+
+def _declaration_index_block(index: list[dict[str, object]], *, char_limit: int = 3000) -> str:
+    """Compact newline list of `kind name : signature-tail` for prompt context."""
+    if not index:
+        return ""
+    lines: list[str] = []
+    for item in index:
+        signature = str(item.get("signature") or "").strip()
+        name = str(item.get("name") or "")
+        kind = str(item.get("kind") or "")
+        entry = signature if signature else f"{kind} {name}".strip()
+        lines.append(f"- {entry}")
+    block = "\n".join(lines)
+    if len(block) > char_limit:
+        block = block[:char_limit].rstrip() + "\n- ...[declaration index truncated]"
+    return block
+
+
 def _write_attempt_artifact(
     attempts_dir: Path,
     task: dict[str, object],
@@ -802,15 +1073,51 @@ def _task_summary_with_live_editable(summary: str, *, task: dict[str, object], w
     return summary.rstrip() + "\n\n" + block + "\n"
 
 
-def _draft_proof_prompt(*, task: dict[str, object], theorem_statement: str, task_context: str, goal: str, errors: str) -> list[dict[str, Any]]:
+PROVER_WRITER_SYSTEM = (
+    "You are the proof writer in a strict driver/prover pipeline. "
+    "You are given a compact theorem, goal, context, an index of available public declarations, and any errors. "
+    "Return only the Lean proof body that belongs after `:= by`. "
+    "Do not return markdown fences, JSON, explanations, imports, theorem statements, or comments. "
+    "Do not invent theorem or lemma names: prefer names from the declaration index. "
+    "Do not use sorry, admit, axiom, placeholder holes such as ?_, or TODO-style placeholders, and do not add hidden imports. "
+    "If you are uncertain, still provide the best complete Lean tactic proof body only."
+)
+
+PROVER_REPAIR_SYSTEM = (
+    "You are the proof repairer in a strict driver/prover pipeline. "
+    "You are given the current failing Lean proof body, a compact Lean diagnostic, and the available public declarations. "
+    "Make the smallest edit that fixes the reported error - do not rewrite the proof from scratch. "
+    "Return only the corrected Lean proof body that belongs after `:= by`. "
+    "Do not return markdown fences, JSON, explanations, imports, theorem statements, or comments. "
+    "Do not invent theorem or lemma names: prefer names from the declaration index. "
+    "Do not use sorry, admit, axiom, placeholder holes such as ?_, or TODO-style placeholders, and do not add hidden imports."
+)
+
+
+def _draft_proof_prompt(
+    *,
+    task: dict[str, object],
+    theorem_statement: str,
+    task_context: str,
+    goal: str,
+    errors: str,
+    prompt_kind: str = "write",
+    current_proof: str = "",
+    declaration_index: str = "",
+) -> list[dict[str, Any]]:
+    is_repair = prompt_kind == "repair"
     context_parts = [
         f"Task ref: {task.get('task_ref')}",
         f"Target module: {task.get('target_module')}",
         "Target theorem statement:",
         theorem_statement.strip(),
-        "Task context:",
-        task_context.strip(),
     ]
+    if task_context.strip():
+        context_parts.extend(["Task context:", task_context.strip()])
+    if declaration_index.strip():
+        context_parts.extend(["Available public declarations (use these names; do not invent others):", declaration_index.strip()])
+    if is_repair and current_proof.strip():
+        context_parts.extend(["Current failing proof body (edit this minimally):", current_proof.strip()])
     if goal.strip():
         context_parts.extend(["Current Lean goal/diagnostics:", goal.strip()])
     if errors.strip():
@@ -819,16 +1126,7 @@ def _draft_proof_prompt(*, task: dict[str, object], theorem_statement: str, task
     if len(user_content) > DRAFT_PROOF_CONTEXT_CHARS:
         user_content = user_content[:DRAFT_PROOF_CONTEXT_CHARS] + "\n...[truncated for prover prompt]"
     return [
-        {
-            "role": "system",
-            "content": (
-                "You draft Lean proof bodies for an external driver. "
-                "Return only the Lean proof body that belongs after `:= by`. "
-                "Do not return markdown fences, JSON, explanations, imports, theorem statements, or comments. "
-                "Do not use sorry, admit, axiom, placeholder holes such as ?_, or TODO-style placeholders. "
-                "If you are uncertain, still provide the best complete Lean tactic proof body only."
-            ),
-        },
+        {"role": "system", "content": PROVER_REPAIR_SYSTEM if is_repair else PROVER_WRITER_SYSTEM},
         {"role": "user", "content": user_content},
     ]
 
@@ -850,6 +1148,29 @@ def _reject_draft_reason(text: str) -> str | None:
     return None
 
 
+def _draft_valid_syntax(body: str) -> bool | None:
+    """Cheap, best-effort syntax sanity flag for a proof body (no Lean call).
+
+    Returns True/False when we can judge it cheaply, else None. Conservative:
+    only flags clearly-broken bodies (unbalanced delimiters or a duplicate
+    `:= by`/bare-`by` mistake) so a False is a strong signal, not noise.
+    """
+    text = body.strip()
+    if not text:
+        return False
+    if text.count("(") != text.count(")"):
+        return False
+    if text.count("[") != text.count("]"):
+        return False
+    if text.count("{") != text.count("}"):
+        return False
+    if ":= by" in text and re.search(r":=\s*by\b[\s\S]*?\bby\b\s*$", text):
+        return False
+    if re.match(r"^by\b", text):
+        return False
+    return True
+
+
 def _draft_proof_with_prover(
     args: dict[str, object],
     *,
@@ -857,18 +1178,34 @@ def _draft_proof_with_prover(
     original: str,
     base_url: str,
     draft_log_path: Path | None,
+    workspace: Path | None = None,
+    current_proof: str = "",
 ) -> dict[str, object]:
     if not DRAFT_PROOF_ENABLED:
         return {"ok": False, "error": "draft_proof_not_enabled"}
-    task_context = args.get("task_context")
+    task_context = args.get("task_context", "")
     goal = args.get("goal", "")
     errors = args.get("errors", "")
-    if not isinstance(task_context, str) or not task_context.strip():
+    raw_mode = args.get("mode", "write")
+    prompt_kind = "repair" if str(raw_mode).strip().lower() == "repair" else "write"
+    stage = PROVER_PROMPT_KINDS[prompt_kind]
+    if prompt_kind == "write" and (not isinstance(task_context, str) or not task_context.strip()):
         return {"ok": False, "error": "task_context must be a non-empty string"}
+    if not isinstance(task_context, str):
+        return {"ok": False, "error": "task_context must be a string when provided"}
     if not isinstance(goal, str):
         return {"ok": False, "error": "goal must be a string when provided"}
     if not isinstance(errors, str):
         return {"ok": False, "error": "errors must be a string when provided"}
+    arg_proof = args.get("current_proof")
+    if isinstance(arg_proof, str) and arg_proof.strip():
+        current_proof = arg_proof
+    if prompt_kind == "repair" and not current_proof.strip():
+        return {"ok": False, "error": "current_proof is required for repair mode"}
+
+    declaration_index = ""
+    if workspace is not None and DRAFT_PROOF_DECL_INDEX_LIMIT > 0:
+        declaration_index = _declaration_index_block(_task_declaration_index(workspace, task))
 
     messages = _draft_proof_prompt(
         task=task,
@@ -876,6 +1213,9 @@ def _draft_proof_with_prover(
         task_context=task_context,
         goal=goal,
         errors=errors,
+        prompt_kind=prompt_kind,
+        current_proof=current_proof,
+        declaration_index=declaration_index,
     )
     prover_base_url = DEFAULT_PROVER_BASE_URL or base_url
     if DEFAULT_PROVER_API_KEY:
@@ -905,6 +1245,8 @@ def _draft_proof_with_prover(
                 {
                     "task_ref": task.get("task_ref"),
                     "tool": "draft_proof",
+                    "stage": stage,
+                    "prompt_kind": prompt_kind,
                     "status": "request_failed",
                     "driver_model": DEFAULT_DRIVER_MODEL,
                     "prover_model": DEFAULT_PROVER_MODEL,
@@ -913,10 +1255,11 @@ def _draft_proof_with_prover(
                     "duration_seconds": round(time.time() - started, 3),
                 },
             )
-        return {"ok": False, "error": "prover_request_failed", "detail": error_payload, "prover_model": DEFAULT_PROVER_MODEL}
+        return {"ok": False, "error": "prover_request_failed", "detail": error_payload, "prover_model": DEFAULT_PROVER_MODEL, "stage": stage, "prompt_kind": prompt_kind}
 
     proof = _strip_thinking(_response_text(response)).strip()
     reject_reason = _reject_draft_reason(proof)
+    valid_syntax = None if reject_reason else _draft_valid_syntax(proof)
     usage = response.get("usage") if isinstance(response, dict) else None
     metadata = {
         key: response.get(key)
@@ -926,10 +1269,14 @@ def _draft_proof_with_prover(
     log_payload = {
         "task_ref": task.get("task_ref"),
         "tool": "draft_proof",
+        "stage": stage,
+        "prompt_kind": prompt_kind,
         "status": "rejected" if reject_reason else "drafted",
         "driver_model": DEFAULT_DRIVER_MODEL,
         "prover_model": DEFAULT_PROVER_MODEL,
         "prover_base_url": prover_base_url,
+        "declaration_index_size": declaration_index.count("\n- ") + (1 if declaration_index else 0),
+        "draft_valid_syntax": valid_syntax,
         "usage": usage,
         "metadata": metadata,
         "duration_seconds": round(time.time() - started, 3),
@@ -942,6 +1289,8 @@ def _draft_proof_with_prover(
         return {
             "ok": False,
             "error": reject_reason,
+            "stage": stage,
+            "prompt_kind": prompt_kind,
             "prover_model": DEFAULT_PROVER_MODEL,
             "usage": usage,
             "metadata": metadata,
@@ -950,11 +1299,18 @@ def _draft_proof_with_prover(
     return {
         "ok": True,
         "proof": proof,
+        "stage": stage,
+        "prompt_kind": prompt_kind,
+        "draft_valid_syntax": valid_syntax,
         "prover_model": DEFAULT_PROVER_MODEL,
         "driver_model": DEFAULT_DRIVER_MODEL,
         "usage": usage,
         "metadata": metadata,
-        "message": "Draft only; submit with check_proof or try_tactics to count as a proof attempt.",
+        "message": (
+            "Repair draft only; submit the returned body with check_proof to count as an attempt."
+            if prompt_kind == "repair"
+            else "Draft only; submit with check_proof or try_tactics to count as a proof attempt."
+        ),
     }
 
 
@@ -972,6 +1328,8 @@ def _execute_fair_tool(
     sandbox_state: dict[str, int] | None = None,
     base_url: str | None = None,
     draft_log_path: Path | None = None,
+    prover_state: dict[str, object] | None = None,
+    role_metrics: dict[str, object] | None = None,
 ) -> dict[str, object]:
     if name == "show_task":
         summary_path = workspace / "harness" / "TASK_SUMMARY.md"
@@ -1048,7 +1406,111 @@ def _execute_fair_tool(
     if name == "draft_proof":
         if base_url is None:
             return {"ok": False, "error": "base_url is required for draft_proof"}
-        return _draft_proof_with_prover(args, task=task, original=original, base_url=base_url, draft_log_path=draft_log_path)
+        raw_mode = str(args.get("mode", "write")).strip().lower()
+        prompt_kind = "repair" if raw_mode == "repair" else "write"
+        current_proof = ""
+        if prompt_kind == "repair":
+            if prover_state is not None:
+                used = int(prover_state.get("repair_count", 0))
+                limit = int(prover_state.get("repair_limit", PROVER_REPAIR_ATTEMPTS))
+                if used >= limit:
+                    return {
+                        "ok": False,
+                        "error": "prover_repair_budget_exceeded",
+                        "max_repairs": limit,
+                        "stage": STAGE_REPAIRER,
+                        "prompt_kind": "repair",
+                        "message": "No more prover repair drafts are allowed for this task; submit the best proof you have with check_proof.",
+                    }
+            try:
+                current_proof = proof_path.read_text(encoding="utf-8")
+            except (OSError, UnicodeDecodeError):
+                current_proof = original
+            if STRICT_ROLE_SEPARATION:
+                # Strict repair builds the entire prover input from trusted state
+                # (workspace proof + recorded Lean failure). Honoring any driver
+                # free-text here (current_proof, task_context, goal, errors) would
+                # let the driver smuggle its own Lean into the prover prompt and
+                # get it echoed back as a "draft".
+                args = {"mode": "repair"}
+            else:
+                args = dict(args)
+            # The repair prompt promises the prover a Lean diagnostic. Do not
+            # depend on the driver forwarding it: when goal/errors are missing,
+            # fill them from the most recent failed attempt so the independent
+            # prover chat always sees why the current proof failed.
+            last_failed = _last_failed_proof_attempt({"results": attempts})
+            if isinstance(last_failed, dict):
+                diagnostics = last_failed.get("diagnostics")
+                diagnostics = diagnostics if isinstance(diagnostics, dict) else {}
+                if not str(args.get("errors") or "").strip():
+                    fallback_errors = str(last_failed.get("output") or "").strip() or str(diagnostics.get("first_error") or "").strip()
+                    if fallback_errors:
+                        args["errors"] = fallback_errors
+                if not str(args.get("goal") or "").strip():
+                    fallback_goal = str(diagnostics.get("new_goal") or "").strip()
+                    if fallback_goal:
+                        args["goal"] = fallback_goal
+        elif STRICT_ROLE_SEPARATION:
+            # Strict write mode: the driver may only pass declarative context.
+            # Proof-like context (tactic scripts, `:= by` bodies, code fences) is
+            # rejected so the prover cannot be used to launder driver-authored
+            # proofs into "prover drafts".
+            combined_context = "\n".join(
+                str(args.get(key) or "") for key in ("task_context", "goal", "errors")
+            )
+            context_reason = _strict_context_proof_reason(combined_context)
+            if context_reason:
+                if role_metrics is not None:
+                    role_metrics["strict_context_blocked"] = int(role_metrics.get("strict_context_blocked", 0)) + 1
+                return {
+                    "ok": False,
+                    "error": context_reason,
+                    "stage": STAGE_WRITER,
+                    "prompt_kind": "write",
+                    "message": (
+                        "STRICT ROLE SEPARATION: draft_proof context must be declarative (definitions, goals, "
+                        "constraints, declaration names) and must not contain Lean proof scripts or code "
+                        "fences. Remove the proof-like text and call draft_proof again."
+                    ),
+                }
+        result = _draft_proof_with_prover(
+            args,
+            task=task,
+            original=original,
+            base_url=base_url,
+            draft_log_path=draft_log_path,
+            workspace=workspace,
+            current_proof=current_proof,
+        )
+        if role_metrics is not None:
+            if prompt_kind == "repair":
+                role_metrics["prover_repair_calls"] = int(role_metrics.get("prover_repair_calls", 0)) + 1
+            else:
+                role_metrics["prover_writer_calls"] = int(role_metrics.get("prover_writer_calls", 0)) + 1
+            if result.get("ok"):
+                if result.get("draft_valid_syntax") is True:
+                    role_metrics["draft_valid_syntax_count"] = int(role_metrics.get("draft_valid_syntax_count", 0)) + 1
+            else:
+                role_metrics["draft_rejected_count"] = int(role_metrics.get("draft_rejected_count", 0)) + 1
+        if prover_state is not None:
+            if result.get("ok") and isinstance(result.get("proof"), str):
+                # Only the most recent draft is submittable in strict mode, so a
+                # stale draft can never be graded as the current stage's output.
+                prover_state["latest_draft"] = _normalize_proof_body(str(result["proof"]))
+            if prompt_kind == "repair":
+                prover_state["repair_count"] = int(prover_state.get("repair_count", 0)) + 1
+                if result.get("ok"):
+                    # Baseline for outcome classification = the last failed attempt
+                    # before this repair draft. Cleared once a submission grades it.
+                    prover_state["pending_repair"] = True
+                    prover_state["pending_repair_baseline"] = _last_failed_proof_attempt({"results": attempts})
+                elif role_metrics is not None:
+                    # A rejected repair draft never reaches Lean = no submission.
+                    role_metrics["repair_no_submission"] = int(role_metrics.get("repair_no_submission", 0)) + 1
+            else:
+                prover_state["write_count"] = int(prover_state.get("write_count", 0)) + 1
+        return result
     if name in {"check_proof", "try_tactics"}:
         baseline_code, baseline_output = _run_lean_module_with_proof_content(
             proof_path=proof_path,
@@ -1073,8 +1535,52 @@ def _execute_fair_tool(
                     proofs.append((f"try_tactics-{index}", tactic))
             if not proofs:
                 return {"ok": False, "error": "tactics must contain at least one string"}
+        if STRICT_ROLE_SEPARATION and prover_state is not None:
+            # Enforce the role split in the tool loop, not just the prompt: a
+            # submission is only accepted if its body is (whitespace-normalized)
+            # verbatim the LATEST prover draft. Anything else - a driver-authored
+            # proof or a stale earlier draft - is rejected without reaching Lean,
+            # so driver_writes_proofs=false stays true and repair outcomes are
+            # always graded against the draft they belong to.
+            latest_draft = prover_state.get("latest_draft")
+            latest_draft = latest_draft if isinstance(latest_draft, str) and latest_draft else None
+            for _, submitted in proofs:
+                if latest_draft is None or _normalize_proof_body(submitted) != latest_draft:
+                    if role_metrics is not None:
+                        role_metrics["strict_submission_blocked"] = int(role_metrics.get("strict_submission_blocked", 0)) + 1
+                    return {
+                        "ok": False,
+                        "error": "strict_role_separation_violation",
+                        "message": (
+                            "STRICT ROLE SEPARATION: this submission is not the most recent prover draft, so it "
+                            "was not checked. You must never write or edit Lean proof bodies yourself. Call "
+                            "draft_proof (mode=write for a fresh proof, mode=repair after a failure) and submit "
+                            "the most recently returned proof body verbatim."
+                        ),
+                    }
         results: list[dict[str, object]] = []
         original_statement = " ".join(_theorem_statement(original, task.get("theorem_name")).split())
+        repair_pending = bool(prover_state is not None and prover_state.get("pending_repair"))
+        repair_baseline = prover_state.get("pending_repair_baseline") if prover_state is not None else None
+
+        def _grade_repair(graded: dict[str, object]) -> None:
+            nonlocal repair_pending
+            if not repair_pending:
+                return
+            repair_pending = False
+            if prover_state is not None:
+                prover_state["pending_repair"] = False
+                prover_state["pending_repair_baseline"] = None
+            outcome = _classify_repair_outcome(repair_baseline if isinstance(repair_baseline, dict) else None, graded)
+            graded["repair_outcome"] = outcome
+            if role_metrics is not None:
+                key = {
+                    "improved": "repair_improved",
+                    "regressed": "repair_regressed",
+                    "no_change": "repair_no_change",
+                }[outcome]
+                role_metrics[key] = int(role_metrics.get(key, 0)) + 1
+
         for label, proof in proofs:
             candidate = _candidate_from_response(original, proof, task.get("theorem_name"))
             candidate_statement = " ".join(_theorem_statement(candidate, task.get("theorem_name")).split())
@@ -1105,6 +1611,7 @@ def _execute_fair_tool(
                 }
                 attempts.append(attempt)
                 results.append(attempt)
+                _grade_repair(attempt)
                 continue
             if _contains_forbidden_proof_token(candidate):
                 candidate_path = _write_attempt_artifact(attempts_dir, task, f"fair-{len(attempts) + 1}-{label}", candidate)
@@ -1126,6 +1633,7 @@ def _execute_fair_tool(
                 }
                 attempts.append(attempt)
                 results.append(attempt)
+                _grade_repair(attempt)
                 continue
             proof_path.write_text(candidate, encoding="utf-8")
             candidate_path = _write_attempt_artifact(attempts_dir, task, f"fair-{len(attempts) + 1}-{label}", candidate)
@@ -1163,6 +1671,7 @@ def _execute_fair_tool(
                         )
             attempts.append(attempt)
             results.append(attempt)
+            _grade_repair(attempt)
             if code == 0:
                 return {"ok": True, "passed": True, "results": results}
         return {"ok": True, "passed": False, "results": results}
@@ -1354,6 +1863,18 @@ def _attempt_task_fair(
         )
         user_prompt = f"Task file: {editable}. First call show_task."
 
+    if STRICT_ROLE_SEPARATION:
+        system_prompt += (
+            " STRICT ROLE SEPARATION: you are the orchestrator only and must never write or edit Lean proof "
+            "bodies yourself. Get the initial proof from draft_proof with {\"mode\":\"write\"} and submit it "
+            "verbatim with check_proof; pass only declarative context (definitions, goals, constraints, "
+            "declaration names) to draft_proof, never Lean proof scripts. After a failed Lean check, call "
+            "draft_proof with {\"mode\":\"repair\"} to "
+            "obtain a minimal repair of the current proof, then submit that body verbatim. Submissions that "
+            "are not verbatim the most recent prover draft are rejected without being checked. At most "
+            f"{PROVER_REPAIR_ATTEMPTS} prover repair(s) are allowed per task."
+        )
+
     messages: list[dict[str, Any]] = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt},
@@ -1374,6 +1895,26 @@ def _attempt_task_fair(
     )
     no_tool_responses = 0
     sandbox_state = {"count": 0, "limit": min(DEFAULT_MAX_SANDBOX_CALLS, max(1, max_tool_calls // 4))}
+    prover_state: dict[str, object] = {
+        "write_count": 0,
+        "repair_count": 0,
+        "repair_limit": PROVER_REPAIR_ATTEMPTS,
+        "pending_repair": False,
+        "pending_repair_baseline": None,
+    }
+    role_metrics: dict[str, object] = {
+        "role_config": _role_config(),
+        "prover_writer_calls": 0,
+        "prover_repair_calls": 0,
+        "draft_valid_syntax_count": 0,
+        "draft_rejected_count": 0,
+        "repair_no_submission": 0,
+        "repair_improved": 0,
+        "repair_regressed": 0,
+        "repair_no_change": 0,
+        "strict_submission_blocked": 0,
+        "strict_context_blocked": 0,
+    }
     usage_totals = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
     corrective_protocol_sent = False
     repeated_signatures: dict[str, int] = {}
@@ -1746,6 +2287,8 @@ def _attempt_task_fair(
                 sandbox_state=sandbox_state,
                 base_url=base_url,
                 draft_log_path=draft_log_path,
+                prover_state=prover_state,
+                role_metrics=role_metrics,
             )
             if name == "draft_proof":
                 _accumulate_usage(result)
@@ -1789,11 +2332,20 @@ def _attempt_task_fair(
                     "non_proof_tool_calls": non_proof_tool_calls,
                     "non_proof_tool_limit": non_proof_tool_limit,
                     "tactic_sandbox_calls": sandbox_state["count"],
+                    "role_metrics": role_metrics,
                     "tool_log": str(tool_log_path),
                     "conversation_log": str(conversation_log_path),
                 }
             repaired = False
-            if DIAGNOSTIC_RETRY_ENABLED and name in {"check_proof", "try_tactics"}:
+            if STRICT_ROLE_SEPARATION and name in {"check_proof", "try_tactics"}:
+                # The driver must not edit the proof itself; route the repair to
+                # the prover via draft_proof(mode=repair) while budget remains.
+                failed_attempt = _last_failed_proof_attempt(result)
+                if failed_attempt is not None and int(prover_state["repair_count"]) < int(prover_state["repair_limit"]):
+                    messages.append({"role": "user", "content": STRICT_DRIVER_REPAIR_NUDGE})
+                    _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+                    repaired = True
+            elif DIAGNOSTIC_RETRY_ENABLED and name in {"check_proof", "try_tactics"}:
                 failed_attempt = _last_failed_proof_attempt(result)
                 if failed_attempt is not None:
                     candidate_source = failed_attempt.get("candidate_path")
@@ -1843,6 +2395,7 @@ def _attempt_task_fair(
         "non_proof_tool_limit": non_proof_tool_limit,
         "no_tool_responses": no_tool_responses,
         "tactic_sandbox_calls": sandbox_state["count"],
+        "role_metrics": role_metrics,
         "tool_log": str(tool_log_path),
         "conversation_log": str(conversation_log_path),
     }
@@ -1876,6 +2429,7 @@ def run_group(
     assert_workspace_isolated(built.path)
     base_url = DEFAULT_BASE_URL
     response: dict[str, object]
+    role_config = _role_config()
     benchmark_budget = {
         "max_attempts": max_attempts,
         "max_tool_calls": max_tool_calls,
@@ -1903,6 +2457,9 @@ def run_group(
             "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
             "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
             "prover_base_url": (DEFAULT_PROVER_BASE_URL or base_url) if DRAFT_PROOF_ENABLED else None,
+            "strict_role_separation": STRICT_ROLE_SEPARATION,
+            "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
+            "role_config": role_config,
             "transport_mode": _transport_mode(),
             "mode": "fair",
             "max_attempts": max_attempts,
@@ -1978,6 +2535,7 @@ def run_group(
                         value = task_usage.get(key)
                         if isinstance(value, (int, float)):
                             aggregate_usage[key] += int(value)
+            aggregate_role_metrics = _aggregate_role_metrics(task_results)
             response = {
                 "status": "completed",
                 "provider": _active_provider(),
@@ -1986,6 +2544,10 @@ def run_group(
                 "driver_model": DEFAULT_DRIVER_MODEL,
                 "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
                 "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
+                "strict_role_separation": STRICT_ROLE_SEPARATION,
+                "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
+                "role_config": role_config,
+                "role_metrics_totals": aggregate_role_metrics,
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
@@ -2007,6 +2569,8 @@ def run_group(
                 "driver_model": DEFAULT_DRIVER_MODEL,
                 "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
                 "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
+                "strict_role_separation": STRICT_ROLE_SEPARATION,
+                "role_config": role_config,
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
@@ -2030,6 +2594,9 @@ def run_group(
                 "driver_model": DEFAULT_DRIVER_MODEL,
                 "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
                 "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
+                "strict_role_separation": STRICT_ROLE_SEPARATION,
+                "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
+                "role_config": role_config,
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
@@ -2065,6 +2632,10 @@ def run_group(
         "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
         "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
         "prover_base_url": (DEFAULT_PROVER_BASE_URL or base_url) if DRAFT_PROOF_ENABLED else None,
+        "strict_role_separation": STRICT_ROLE_SEPARATION,
+        "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
+        "role_config": role_config,
+        "role_metrics_totals": response.get("role_metrics_totals"),
         "track": "group/lean_tools",
         "mode": "fair",
         "run_mode": "task" if task_ref else "group",
