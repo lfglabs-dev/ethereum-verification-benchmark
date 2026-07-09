@@ -41,6 +41,63 @@ NON_GRADEABLE_ATTEMPT_STATUSES = {
     "rejected_forbidden_placeholder",
 }
 
+# Verifier build statuses that can be caused by a shared *support* module (one
+# the agent never edits) failing to build, rather than by the submitted proof.
+SUPPORT_MODULE_FAILURE_STATUSES = {
+    "lean_check_failed",
+    "timeout",
+}
+
+# Prefixes of Lean modules that are shipped read-only to every workspace. When
+# the verifier build dies inside one of these, no submitted proof was ever
+# elaborated, so the target is not model evidence regardless of any attempts.
+SUPPORT_MODULE_PREFIXES = (
+    "Benchmark.Grindset",
+    "Verity.",
+)
+
+
+def _is_support_module(module: str) -> bool:
+    return any(
+        module == prefix or module.startswith(prefix if prefix.endswith(".") else prefix + ".")
+        for prefix in SUPPORT_MODULE_PREFIXES
+    )
+
+
+def _failed_build_modules(output: str) -> list[str]:
+    """Modules named under Lake's ``Some required builds logged failures:``."""
+    modules: list[str] = []
+    for line in output.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("- "):
+            candidate = stripped[2:].strip()
+            if candidate and all(part.isidentifier() for part in candidate.split(".")):
+                modules.append(candidate)
+    return modules
+
+
+def _support_module_build_failure(verifier_target: dict[str, Any] | None) -> str | None:
+    """Return the offending support module if a target failed because a shared,
+    non-editable module failed to build; otherwise ``None``.
+
+    Guards against a support-layer build break (e.g. the ``Benchmark.Grindset``
+    umbrella failing to import) being misread as a genuine proof failure. The
+    check is deliberately conservative: it only fires when *every* module Lake
+    reported as failed is a support module, so a real error in the submitted
+    task module never gets excused.
+    """
+    if not isinstance(verifier_target, dict):
+        return None
+    if _target_status(verifier_target) not in SUPPORT_MODULE_FAILURE_STATUSES:
+        return None
+    output = verifier_target.get("output")
+    if not isinstance(output, str) or not output:
+        return None
+    modules = _failed_build_modules(output)
+    if not modules or not all(_is_support_module(module) for module in modules):
+        return None
+    return modules[0]
+
 
 def _target_status(target: dict[str, Any] | None) -> str | None:
     status = target.get("status") if isinstance(target, dict) else None
@@ -151,6 +208,15 @@ def classify_target(
         return {
             "final_class": "INFRA_INVALID",
             "final_reason": _tool_protocol_breakdown_reason(task_result),
+            "reusable": False,
+            "raw_verifier_status": raw_status,
+        }
+
+    support_module = _support_module_build_failure(verifier_target)
+    if support_module is not None:
+        return {
+            "final_class": "INFRA_INVALID",
+            "final_reason": f"support_module_build_failure:{support_module}",
             "reusable": False,
             "raw_verifier_status": raw_status,
         }
