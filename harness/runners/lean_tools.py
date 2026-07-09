@@ -1397,6 +1397,12 @@ def _execute_fair_tool(
                 current_proof = proof_path.read_text(encoding="utf-8")
             except (OSError, UnicodeDecodeError):
                 current_proof = original
+            if STRICT_ROLE_SEPARATION:
+                # The workspace-derived failing proof is authoritative: honoring a
+                # driver-supplied current_proof would let the driver smuggle its own
+                # Lean into the prover prompt and get it echoed back as a "draft".
+                args = dict(args)
+                args.pop("current_proof", None)
             # The repair prompt promises the prover a Lean diagnostic. Do not
             # depend on the driver forwarding it: when goal/errors are missing,
             # fill them from the most recent failed attempt so the independent
@@ -1435,9 +1441,9 @@ def _execute_fair_tool(
                 role_metrics["draft_rejected_count"] = int(role_metrics.get("draft_rejected_count", 0)) + 1
         if prover_state is not None:
             if result.get("ok") and isinstance(result.get("proof"), str):
-                drafts = prover_state.setdefault("drafts", [])
-                if isinstance(drafts, list):
-                    drafts.append(_normalize_proof_body(str(result["proof"])))
+                # Only the most recent draft is submittable in strict mode, so a
+                # stale draft can never be graded as the current stage's output.
+                prover_state["latest_draft"] = _normalize_proof_body(str(result["proof"]))
             if prompt_kind == "repair":
                 prover_state["repair_count"] = int(prover_state.get("repair_count", 0)) + 1
                 if result.get("ok"):
@@ -1478,23 +1484,24 @@ def _execute_fair_tool(
         if STRICT_ROLE_SEPARATION and prover_state is not None:
             # Enforce the role split in the tool loop, not just the prompt: a
             # submission is only accepted if its body is (whitespace-normalized)
-            # verbatim one of this task's prover drafts. Otherwise a driver that
-            # ignores the instructions could hand-write proofs and still be
-            # recorded as driver_writes_proofs=false.
-            drafts = prover_state.get("drafts")
-            known_drafts = set(drafts) if isinstance(drafts, list) else set()
+            # verbatim the LATEST prover draft. Anything else - a driver-authored
+            # proof or a stale earlier draft - is rejected without reaching Lean,
+            # so driver_writes_proofs=false stays true and repair outcomes are
+            # always graded against the draft they belong to.
+            latest_draft = prover_state.get("latest_draft")
+            latest_draft = latest_draft if isinstance(latest_draft, str) and latest_draft else None
             for _, submitted in proofs:
-                if _normalize_proof_body(submitted) not in known_drafts:
+                if latest_draft is None or _normalize_proof_body(submitted) != latest_draft:
                     if role_metrics is not None:
                         role_metrics["strict_submission_blocked"] = int(role_metrics.get("strict_submission_blocked", 0)) + 1
                     return {
                         "ok": False,
                         "error": "strict_role_separation_violation",
                         "message": (
-                            "STRICT ROLE SEPARATION: this submission is not a prover draft, so it was not "
-                            "checked. You must never write or edit Lean proof bodies yourself. Call draft_proof "
-                            "(mode=write for a fresh proof, mode=repair after a failure) and submit the returned "
-                            "proof body verbatim."
+                            "STRICT ROLE SEPARATION: this submission is not the most recent prover draft, so it "
+                            "was not checked. You must never write or edit Lean proof bodies yourself. Call "
+                            "draft_proof (mode=write for a fresh proof, mode=repair after a failure) and submit "
+                            "the most recently returned proof body verbatim."
                         ),
                     }
         results: list[dict[str, object]] = []
@@ -1808,7 +1815,7 @@ def _attempt_task_fair(
             "bodies yourself. Get the initial proof from draft_proof with {\"mode\":\"write\"} and submit it "
             "verbatim with check_proof. After a failed Lean check, call draft_proof with {\"mode\":\"repair\"} to "
             "obtain a minimal repair of the current proof, then submit that body verbatim. Submissions that "
-            "are not verbatim prover drafts are rejected without being checked. At most "
+            "are not verbatim the most recent prover draft are rejected without being checked. At most "
             f"{PROVER_REPAIR_ATTEMPTS} prover repair(s) are allowed per task."
         )
 

@@ -308,6 +308,108 @@ class StrictLoopTests(unittest.TestCase):
         self.assertEqual(metrics["strict_submission_blocked"], 1)
         self.assertEqual(metrics["prover_writer_calls"], 1)
 
+    def test_stale_prover_draft_is_blocked_in_strict_mode(self) -> None:
+        # Only the LATEST prover draft is submittable: resubmitting an earlier
+        # failed draft would let _grade_repair misattribute it as the repair
+        # outcome.
+        driver_calls = {"n": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                is_repair = "repairer" in str(messages[0].get("content"))
+                body = "trivial" if is_repair else "simp"
+                return {"choices": [{"message": {"role": "assistant", "content": body}}]}
+            driver_calls["n"] += 1
+            n = driver_calls["n"]
+            if n == 1:
+                name, args = "draft_proof", {"task_context": "prove transfer"}
+            elif n == 2:
+                name, args = "check_proof", {"proof": "simp"}
+            elif n == 3:
+                name, args = "draft_proof", {"task_context": "prove transfer", "mode": "repair"}
+            elif n == 4:
+                # Stale: resubmit the old writer draft instead of the repair.
+                name, args = "check_proof", {"proof": "simp"}
+            else:
+                name, args = "check_proof", {"proof": "trivial"}
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {"id": f"c{n}", "function": {"name": name, "arguments": json.dumps(args)}}
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        def fake_run(workspace_arg, module, file_rel):
+            text = (workspace_arg / file_rel).read_text(encoding="utf-8")
+            return (0, "") if "trivial" in text else (1, "error: unsolved goals\n⊢ True")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, fake_run, max_tool_calls=10)
+
+        self.assertEqual(result["status"], "lean_passed")
+        metrics = result["role_metrics"]
+        self.assertEqual(metrics["strict_submission_blocked"], 1)
+        # The repair outcome is graded on the repair draft, not the stale one.
+        self.assertEqual(metrics["repair_improved"], 1)
+        self.assertEqual(metrics["repair_no_change"], 0)
+
+    def test_driver_supplied_current_proof_is_ignored_in_strict_repair(self) -> None:
+        # A driver must not be able to smuggle hand-written Lean into the prover
+        # repair prompt via the current_proof argument; the workspace-derived
+        # failing proof is authoritative.
+        prover_prompts: list[list[dict[str, object]]] = []
+        driver_calls = {"n": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                prover_prompts.append([dict(m) for m in messages])
+                is_repair = "repairer" in str(messages[0].get("content"))
+                body = "trivial" if is_repair else "simp"
+                return {"choices": [{"message": {"role": "assistant", "content": body}}]}
+            driver_calls["n"] += 1
+            n = driver_calls["n"]
+            if n == 1:
+                name, args = "draft_proof", {"task_context": "prove transfer"}
+            elif n == 2:
+                name, args = "check_proof", {"proof": "simp"}
+            elif n == 3:
+                name, args = "draft_proof", {"mode": "repair", "current_proof": "exact driver_smuggled_proof"}
+            else:
+                name, args = "check_proof", {"proof": "trivial"}
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {"id": f"c{n}", "function": {"name": name, "arguments": json.dumps(args)}}
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        def fake_run(workspace_arg, module, file_rel):
+            text = (workspace_arg / file_rel).read_text(encoding="utf-8")
+            return (0, "") if "trivial" in text else (1, "error: unsolved goals\n⊢ True")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, fake_run)
+
+        self.assertEqual(result["status"], "lean_passed")
+        repair_prompt = next(p for p in prover_prompts if "repairer" in str(p[0].get("content")))
+        user = str(repair_prompt[1]["content"])
+        self.assertNotIn("driver_smuggled_proof", user)
+        self.assertIn("simp", user)
+
     def test_failed_check_routes_repair_to_prover_and_records_metrics(self) -> None:
         # Driver: writes then repairs via the prover. Prover: first draft is a
         # failing `simp`, repair draft is `trivial`. Lean passes only on trivial.
