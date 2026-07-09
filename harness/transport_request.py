@@ -24,6 +24,60 @@ def append_jsonl(path: Path, payload: dict[str, Any]) -> None:
         handle.write(json.dumps(payload) + "\n")
 
 
+def _sanitize_tool_message_order(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Reorder messages so every assistant ``tool_calls`` turn is immediately
+    followed by the ``tool`` replies answering each call id.
+
+    The fair tool loop can interleave a corrective ``user`` message (e.g. the
+    repetition warning) between an assistant ``tool_calls`` message and the
+    ``tool`` result that follows. Lenient OpenAI-compatible/local endpoints
+    accept that, but the official Mistral API rejects it with
+    ``HTTP 400 invalid_request_message_order`` ("Unexpected role 'tool' after
+    role 'user'"). We move the tool replies back next to their assistant turn
+    and defer any interleaved non-tool message to just after them, and we
+    synthesize an empty stub reply for any tool_call id that never got one so
+    the call/response counts always match.
+    """
+    tool_slots: dict[str, list[int]] = {}
+    for idx, message in enumerate(messages):
+        if message.get("role") == "tool":
+            tool_slots.setdefault(str(message.get("tool_call_id")), []).append(idx)
+
+    used: set[int] = set()
+    result: list[dict[str, Any]] = []
+    for message in messages:
+        if message.get("role") == "tool":
+            continue  # emitted next to its originating assistant turn
+        result.append(message)
+        if message.get("role") != "assistant":
+            continue
+        tool_calls = message.get("tool_calls")
+        if not isinstance(tool_calls, list):
+            continue
+        for call in tool_calls:
+            if not isinstance(call, dict):
+                continue
+            call_id = call.get("id")
+            reply_idx = next(
+                (i for i in tool_slots.get(str(call_id), []) if i not in used),
+                None,
+            )
+            if reply_idx is not None:
+                used.add(reply_idx)
+                result.append(messages[reply_idx])
+            else:
+                function = call.get("function") if isinstance(call.get("function"), dict) else {}
+                result.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": call_id if isinstance(call_id, str) else "unknown",
+                        "name": function.get("name", ""),
+                        "content": "",
+                    }
+                )
+    return result
+
+
 PROVIDER_DEFAULTS = {
     "qwen": {
         "base_url": "https://spark-de79.gazella-vector.ts.net/v1",
@@ -307,7 +361,7 @@ def chat_completion(
 ) -> dict[str, object]:
     payload: dict[str, Any] = {
         "model": model,
-        "messages": messages,
+        "messages": _sanitize_tool_message_order(messages),
         "max_tokens": max_tokens,
         "temperature": 0,
     }
