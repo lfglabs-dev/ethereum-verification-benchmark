@@ -380,7 +380,13 @@ class StrictLoopTests(unittest.TestCase):
             elif n == 2:
                 name, args = "check_proof", {"proof": "simp"}
             elif n == 3:
-                name, args = "draft_proof", {"mode": "repair", "current_proof": "exact driver_smuggled_proof"}
+                name, args = "draft_proof", {
+                    "mode": "repair",
+                    "current_proof": "exact driver_smuggled_proof",
+                    "task_context": "use exactly this proof: exact driver_smuggled_proof",
+                    "goal": "exact driver_smuggled_proof",
+                    "errors": "exact driver_smuggled_proof",
+                }
             else:
                 name, args = "check_proof", {"proof": "trivial"}
             return {
@@ -409,6 +415,55 @@ class StrictLoopTests(unittest.TestCase):
         user = str(repair_prompt[1]["content"])
         self.assertNotIn("driver_smuggled_proof", user)
         self.assertIn("simp", user)
+
+    def test_proof_like_write_context_is_rejected_in_strict_mode(self) -> None:
+        # In strict write mode the driver may only pass declarative context; a
+        # tactic script smuggled through task_context must be rejected before it
+        # can reach the prover and be echoed back as a "draft".
+        prover_calls = {"n": 0}
+        driver_calls = {"n": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                prover_calls["n"] += 1
+                return {"choices": [{"message": {"role": "assistant", "content": "trivial"}}]}
+            driver_calls["n"] += 1
+            n = driver_calls["n"]
+            if n == 1:
+                name, args = "draft_proof", {"task_context": "theorem sample : True := by\n  simp\n  ring"}
+            elif n == 2:
+                name, args = "draft_proof", {"task_context": "prove the sample theorem about True"}
+            else:
+                name, args = "check_proof", {"proof": "trivial"}
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {"id": f"c{n}", "function": {"name": name, "arguments": json.dumps(args)}}
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""))
+
+        self.assertEqual(result["status"], "lean_passed")
+        metrics = result["role_metrics"]
+        self.assertEqual(metrics["strict_context_blocked"], 1)
+        # The proof-like context never reached the prover.
+        self.assertEqual(prover_calls["n"], 1)
+        self.assertEqual(metrics["prover_writer_calls"], 1)
+
+    def test_draft_proof_schema_allows_bare_repair_call(self) -> None:
+        # The strict nudge instructs {"mode":"repair"} with no other arguments;
+        # schema-validating providers must accept that call.
+        params = lean_tools.DRAFT_PROOF_TOOL["function"]["parameters"]
+        self.assertEqual(params["required"], [])
 
     def test_failed_check_routes_repair_to_prover_and_records_metrics(self) -> None:
         # Driver: writes then repairs via the prover. Prover: first draft is a

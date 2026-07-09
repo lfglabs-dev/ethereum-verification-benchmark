@@ -225,6 +225,7 @@ ROLE_METRIC_COUNTERS = (
     "repair_regressed",
     "repair_no_change",
     "strict_submission_blocked",
+    "strict_context_blocked",
 )
 
 
@@ -232,6 +233,30 @@ def _normalize_proof_body(text: str) -> str:
     """Whitespace-insensitive form used to match a submission against prover
     drafts, so re-indentation never defeats strict-mode enforcement."""
     return " ".join(text.split())
+
+
+_TACTIC_LINE_RE = re.compile(
+    r"^\s*(?:simp\b|ring\b|omega\b|decide\b|rfl\b|exact\b|apply\b|intro\b|intros\b|rw\b|rewrite\b"
+    r"|unfold\b|constructor\b|rcases\b|induction\b|obtain\b|refine\b|calc\b|linarith\b|nlinarith\b"
+    r"|norm_num\b|aesop\b|field_simp\b|positivity\b)",
+    re.MULTILINE,
+)
+
+
+def _strict_context_proof_reason(text: str) -> str | None:
+    """Reject driver-supplied prover context that looks like a Lean proof.
+
+    In strict mode the driver is a context builder only; letting it pass a
+    tactic script through task_context would let the prover echo driver-authored
+    Lean back as a "draft". Heuristic and conservative: declarative summaries,
+    goal displays, and declaration names all pass."""
+    if ":= by" in text:
+        return "strict_context_contains_proof_assignment"
+    if "```" in text:
+        return "strict_context_contains_markdown_fence"
+    if len(_TACTIC_LINE_RE.findall(text)) >= 2:
+        return "strict_context_contains_tactic_script"
+    return None
 
 
 def _aggregate_role_metrics(task_results: list[dict[str, object]]) -> dict[str, object]:
@@ -630,8 +655,8 @@ DRAFT_PROOF_TOOL: dict[str, Any] = {
         "name": "draft_proof",
         "description": (
             "Ask the configured prover model for one Lean proof-body candidate. "
-            "mode='write' (default) drafts a fresh proof from task_context/goal; "
-            "mode='repair' asks for a minimal edit of current_proof given the Lean errors. "
+            "mode='write' (default) drafts a fresh proof from task_context/goal; task_context is required for mode='write'. "
+            "mode='repair' asks for a minimal edit of the current failing proof given the Lean errors and needs no other arguments. "
             "This does not check Lean and does not count as a proof attempt; use check_proof or try_tactics to submit it."
         ),
         "parameters": {
@@ -643,7 +668,11 @@ DRAFT_PROOF_TOOL: dict[str, Any] = {
                 "mode": {"type": "string", "enum": ["write", "repair"]},
                 "current_proof": {"type": "string"},
             },
-            "required": ["task_context"],
+            # task_context is enforced at runtime for mode='write' only; keeping
+            # it out of the JSON-schema required list lets schema-validating
+            # providers make the bare {"mode":"repair"} call the strict nudge
+            # asks for.
+            "required": [],
             "additionalProperties": False,
         },
     },
@@ -1398,18 +1427,20 @@ def _execute_fair_tool(
             except (OSError, UnicodeDecodeError):
                 current_proof = original
             if STRICT_ROLE_SEPARATION:
-                # The workspace-derived failing proof is authoritative: honoring a
-                # driver-supplied current_proof would let the driver smuggle its own
-                # Lean into the prover prompt and get it echoed back as a "draft".
+                # Strict repair builds the entire prover input from trusted state
+                # (workspace proof + recorded Lean failure). Honoring any driver
+                # free-text here (current_proof, task_context, goal, errors) would
+                # let the driver smuggle its own Lean into the prover prompt and
+                # get it echoed back as a "draft".
+                args = {"mode": "repair"}
+            else:
                 args = dict(args)
-                args.pop("current_proof", None)
             # The repair prompt promises the prover a Lean diagnostic. Do not
             # depend on the driver forwarding it: when goal/errors are missing,
             # fill them from the most recent failed attempt so the independent
             # prover chat always sees why the current proof failed.
             last_failed = _last_failed_proof_attempt({"results": attempts})
             if isinstance(last_failed, dict):
-                args = dict(args)
                 diagnostics = last_failed.get("diagnostics")
                 diagnostics = diagnostics if isinstance(diagnostics, dict) else {}
                 if not str(args.get("errors") or "").strip():
@@ -1420,6 +1451,29 @@ def _execute_fair_tool(
                     fallback_goal = str(diagnostics.get("new_goal") or "").strip()
                     if fallback_goal:
                         args["goal"] = fallback_goal
+        elif STRICT_ROLE_SEPARATION:
+            # Strict write mode: the driver may only pass declarative context.
+            # Proof-like context (tactic scripts, `:= by` bodies, code fences) is
+            # rejected so the prover cannot be used to launder driver-authored
+            # proofs into "prover drafts".
+            combined_context = "\n".join(
+                str(args.get(key) or "") for key in ("task_context", "goal", "errors")
+            )
+            context_reason = _strict_context_proof_reason(combined_context)
+            if context_reason:
+                if role_metrics is not None:
+                    role_metrics["strict_context_blocked"] = int(role_metrics.get("strict_context_blocked", 0)) + 1
+                return {
+                    "ok": False,
+                    "error": context_reason,
+                    "stage": STAGE_WRITER,
+                    "prompt_kind": "write",
+                    "message": (
+                        "STRICT ROLE SEPARATION: draft_proof context must be declarative (definitions, goals, "
+                        "constraints, declaration names) and must not contain Lean proof scripts or code "
+                        "fences. Remove the proof-like text and call draft_proof again."
+                    ),
+                }
         result = _draft_proof_with_prover(
             args,
             task=task,
@@ -1813,7 +1867,9 @@ def _attempt_task_fair(
         system_prompt += (
             " STRICT ROLE SEPARATION: you are the orchestrator only and must never write or edit Lean proof "
             "bodies yourself. Get the initial proof from draft_proof with {\"mode\":\"write\"} and submit it "
-            "verbatim with check_proof. After a failed Lean check, call draft_proof with {\"mode\":\"repair\"} to "
+            "verbatim with check_proof; pass only declarative context (definitions, goals, constraints, "
+            "declaration names) to draft_proof, never Lean proof scripts. After a failed Lean check, call "
+            "draft_proof with {\"mode\":\"repair\"} to "
             "obtain a minimal repair of the current proof, then submit that body verbatim. Submissions that "
             "are not verbatim the most recent prover draft are rejected without being checked. At most "
             f"{PROVER_REPAIR_ATTEMPTS} prover repair(s) are allowed per task."
@@ -1857,6 +1913,7 @@ def _attempt_task_fair(
         "repair_regressed": 0,
         "repair_no_change": 0,
         "strict_submission_blocked": 0,
+        "strict_context_blocked": 0,
     }
     usage_totals = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
     corrective_protocol_sent = False
