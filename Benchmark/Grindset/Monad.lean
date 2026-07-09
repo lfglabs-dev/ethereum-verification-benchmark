@@ -19,6 +19,15 @@
 -/
 
 import Verity.Core
+-- `Verity.Proofs.Stdlib.Automation` also force-generates the equation lemma
+-- `Verity.getStorage.eq_1` (via its storage-operation lemmas). Importing it
+-- here means that lemma is elaborated once, in Automation, before this module's
+-- `attribute [grind_norm] Verity.getStorage` runs — so no second copy is emitted
+-- into this module. Without this, the umbrella `Benchmark.Grindset` imports both
+-- this module and `Automation` (through `ArithCore`) as siblings, each carrying
+-- its own `getStorage.eq_1`, and the import fails with
+-- "environment already contains 'Verity.getStorage.eq_1'".
+import Verity.Proofs.Stdlib.Automation
 import Benchmark.Grindset.Attr
 
 namespace Benchmark.Grindset
