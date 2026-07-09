@@ -237,10 +237,17 @@ class StrictLoopTests(unittest.TestCase):
 
     def test_strict_system_prompt_forbids_driver_edits(self) -> None:
         captured: list[list[dict[str, object]]] = []
+        driver_calls = {"n": 0}
 
         def fake_chat(messages, **kwargs):
             captured.append([dict(m) for m in messages])
-            # Immediately submit a passing proof so the run ends quickly.
+            if str(kwargs.get("model")) == "prover-model":
+                return {"choices": [{"message": {"role": "assistant", "content": "trivial"}}]}
+            driver_calls["n"] += 1
+            if driver_calls["n"] == 1:
+                name, args = "draft_proof", {"task_context": "prove it"}
+            else:
+                name, args = "check_proof", {"proof": "trivial"}
             return {
                 "choices": [
                     {
@@ -248,7 +255,7 @@ class StrictLoopTests(unittest.TestCase):
                             "role": "assistant",
                             "content": None,
                             "tool_calls": [
-                                {"id": "c1", "function": {"name": "check_proof", "arguments": json.dumps({"proof": "trivial"})}}
+                                {"id": f"c{driver_calls['n']}", "function": {"name": name, "arguments": json.dumps(args)}}
                             ],
                         }
                     }
@@ -261,6 +268,45 @@ class StrictLoopTests(unittest.TestCase):
         system = captured[0][0]["content"]
         self.assertIn("STRICT ROLE SEPARATION", system)
         self.assertIn("must never write or edit Lean proof", system)
+
+    def test_driver_authored_submission_is_blocked_in_strict_mode(self) -> None:
+        # A driver that ignores the strict instructions and hand-writes a proof
+        # must be rejected by the tool loop itself, not just nudged by prompts.
+        driver_calls = {"n": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                return {"choices": [{"message": {"role": "assistant", "content": "trivial"}}]}
+            driver_calls["n"] += 1
+            n = driver_calls["n"]
+            if n == 1:
+                # Hand-written proof with no prover draft: must be blocked.
+                name, args = "check_proof", {"proof": "trivial"}
+            elif n == 2:
+                name, args = "draft_proof", {"task_context": "prove it"}
+            else:
+                name, args = "check_proof", {"proof": "trivial"}
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {"id": f"c{n}", "function": {"name": name, "arguments": json.dumps(args)}}
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""))
+
+        self.assertEqual(result["status"], "lean_passed")
+        metrics = result["role_metrics"]
+        self.assertEqual(metrics["strict_submission_blocked"], 1)
+        self.assertEqual(metrics["prover_writer_calls"], 1)
 
     def test_failed_check_routes_repair_to_prover_and_records_metrics(self) -> None:
         # Driver: writes then repairs via the prover. Prover: first draft is a
@@ -320,19 +366,22 @@ class StrictLoopTests(unittest.TestCase):
     def test_prover_repair_budget_is_enforced(self) -> None:
         # Every proof fails; the driver keeps asking for repairs. Only
         # PROVER_REPAIR_ATTEMPTS repair drafts may reach the prover.
+        driver_calls = {"n": 0}
+
         def fake_chat(messages, **kwargs):
             model = str(kwargs.get("model"))
             if model == "prover-model":
                 return {"choices": [{"message": {"role": "assistant", "content": "simp"}}]}
-            # Driver: alternate check_proof (fails) then draft_proof repair forever.
-            # Use the transcript length to decide the next action deterministically.
-            has_pending_fail = any(
-                m.get("role") == "tool" and "lean_failed" in str(m.get("content")) for m in messages
-            )
-            if has_pending_fail:
-                name, args = "draft_proof", {"task_context": "x", "mode": "repair"}
-            else:
+            # Driver: initial write draft, then alternate check_proof (fails)
+            # with draft_proof repair requests forever.
+            driver_calls["n"] += 1
+            n = driver_calls["n"]
+            if n == 1:
+                name, args = "draft_proof", {"task_context": "x"}
+            elif n % 2 == 0:
                 name, args = "check_proof", {"proof": "simp"}
+            else:
+                name, args = "draft_proof", {"task_context": "x", "mode": "repair"}
             return {
                 "choices": [
                     {
@@ -340,7 +389,7 @@ class StrictLoopTests(unittest.TestCase):
                             "role": "assistant",
                             "content": None,
                             "tool_calls": [
-                                {"id": "c", "function": {"name": name, "arguments": json.dumps(args)}}
+                                {"id": f"c{n}", "function": {"name": name, "arguments": json.dumps(args)}}
                             ],
                         }
                     }
@@ -356,7 +405,60 @@ class StrictLoopTests(unittest.TestCase):
             # requests.
             entries = [json.loads(line) for line in draft_log.read_text(encoding="utf-8").splitlines()]
         repair_drafts = [e for e in entries if e.get("prompt_kind") == "repair"]
-        self.assertLessEqual(len(repair_drafts), 1)
+        self.assertEqual(len(repair_drafts), 1)
+        self.assertGreaterEqual(len([e for e in entries if e.get("prompt_kind") == "write"]), 1)
+
+    def test_repair_prompt_receives_diagnostics_when_driver_omits_them(self) -> None:
+        # The nudge tells the driver to call draft_proof with only
+        # {"mode":"repair"}; the harness must still hand the prover the last
+        # failed attempt's Lean error and current proof body.
+        prover_prompts: list[list[dict[str, object]]] = []
+        driver_calls = {"n": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                prover_prompts.append([dict(m) for m in messages])
+                is_repair = "repairer" in str(messages[0].get("content"))
+                body = "trivial" if is_repair else "simp"
+                return {"choices": [{"message": {"role": "assistant", "content": body}}]}
+            driver_calls["n"] += 1
+            n = driver_calls["n"]
+            if n == 1:
+                name, args = "draft_proof", {"task_context": "prove transfer"}
+            elif n == 2:
+                name, args = "check_proof", {"proof": "simp"}
+            elif n == 3:
+                # Bare repair request: no goal/errors/current_proof forwarded.
+                name, args = "draft_proof", {"mode": "repair"}
+            else:
+                name, args = "check_proof", {"proof": "trivial"}
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {"id": f"c{n}", "function": {"name": name, "arguments": json.dumps(args)}}
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        def fake_run(workspace_arg, module, file_rel):
+            text = (workspace_arg / file_rel).read_text(encoding="utf-8")
+            return (0, "") if "trivial" in text else (1, "error: unsolved goals\n⊢ True")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, fake_run)
+
+        self.assertEqual(result["status"], "lean_passed")
+        repair_prompt = next(p for p in prover_prompts if "repairer" in str(p[0].get("content")))
+        user = str(repair_prompt[1]["content"])
+        self.assertIn("Current failing proof body", user)
+        self.assertIn("simp", user)
+        self.assertIn("unsolved goals", user)
 
     def test_backward_compat_non_strict_keeps_driver_diagnostic_retry(self) -> None:
         # With strict mode off but draft_proof enabled, a failed check must still
