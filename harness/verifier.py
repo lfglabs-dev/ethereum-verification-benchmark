@@ -47,6 +47,28 @@ def _run(command: list[str], cwd: Path, timeout: int) -> tuple[int, str]:
     return completed.returncode, (completed.stdout + completed.stderr).strip()
 
 
+LAKE_FAILURE_HEADER = "Some required builds logged failures:"
+
+
+def _lake_failure_footer(lines: list[str]) -> list[str]:
+    """Lake's ``Some required builds logged failures:`` block, if present."""
+    footer: list[str] = []
+    in_footer = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped == LAKE_FAILURE_HEADER:
+            if not footer:
+                footer.append(line)
+            in_footer = True
+            continue
+        if in_footer:
+            if stripped.startswith("- "):
+                footer.append(line)
+            else:
+                in_footer = False
+    return footer
+
+
 def _compact_output(output: str, limit: int = 4000) -> str:
     lines = output.splitlines()
     error_lines: list[str] = []
@@ -55,6 +77,15 @@ def _compact_output(output: str, limit: int = 4000) -> str:
             error_lines.extend(lines[index : min(len(lines), index + 8)])
     if error_lines:
         filtered = [line for line in error_lines if not line.startswith("trace: .>") and "LEAN_PATH=" not in line]
+        # Classification reads the Lake failure footer to tell support-module
+        # build breaks from proof failures; verbose diagnostics can push it
+        # outside the per-error windows above, so re-append it as one
+        # contiguous block at the end (where the tail truncation keeps it).
+        footer = _lake_failure_footer(lines)
+        if footer:
+            footer_set = set(footer)
+            filtered = [line for line in filtered if line not in footer_set]
+            filtered.extend(footer)
         return "\n".join(filtered)[-limit:]
     return output[-limit:]
 

@@ -64,15 +64,30 @@ def _is_support_module(module: str) -> bool:
     )
 
 
+LAKE_FAILURE_HEADER = "Some required builds logged failures:"
+
+
 def _failed_build_modules(output: str) -> list[str]:
-    """Modules named under Lake's ``Some required builds logged failures:``."""
+    """Modules named under Lake's ``Some required builds logged failures:``.
+
+    Only bullets inside that footer count: stray ``- `` bullets elsewhere in a
+    Lean diagnostic must not feed the support-module guard.
+    """
     modules: list[str] = []
+    in_footer = False
     for line in output.splitlines():
         stripped = line.strip()
+        if stripped == LAKE_FAILURE_HEADER:
+            in_footer = True
+            continue
+        if not in_footer:
+            continue
         if stripped.startswith("- "):
             candidate = stripped[2:].strip()
             if candidate and all(part.isidentifier() for part in candidate.split(".")):
                 modules.append(candidate)
+        else:
+            in_footer = False
     return modules
 
 

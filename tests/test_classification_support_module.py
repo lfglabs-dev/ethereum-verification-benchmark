@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 
 from harness.classification import classify_run, classify_target
+from harness.verifier import _compact_output
 
 GRINDSET_COLLISION_OUTPUT = (
     "error: Benchmark/Grindset.lean:1:0: import Verity.Proofs.Stdlib.Automation "
@@ -78,6 +79,36 @@ class SupportModuleClassificationTests(unittest.TestCase):
         target = {"task_ref": "foo/bar/baz", "status": "passed", "output": ""}
         result = classify_target(target, None)
         self.assertEqual(result["final_class"], "SOLVED")
+
+    def test_support_bullets_outside_lake_footer_are_ignored(self) -> None:
+        # A stray "- Verity.Core" bullet inside a Lean diagnostic must not let
+        # a real task-module failure be excused as infra.
+        output = (
+            "error: Benchmark/Generated/Foo/Bar/Tasks/Baz.lean:12:4: unsolved goals\n"
+            "- Verity.Core\n"
+            "Some required builds logged failures:\n"
+            "- Benchmark.Generated.Foo.Bar.Tasks.Baz\n"
+            "error: build failed"
+        )
+        target = {"task_ref": "foo/bar/baz", "status": "lean_check_failed", "output": output}
+        result = classify_target(target, _gradeable_task_result(target["task_ref"]))
+        self.assertEqual(result["final_class"], "GENUINE_FAIL")
+
+    def test_compact_output_preserves_lake_footer_after_verbose_error(self) -> None:
+        # _compact_output keeps only 8 lines after each error line; the Lake
+        # footer must survive compaction so the support-module guard still
+        # sees the failed module list.
+        verbose = "\n".join(
+            ["error: Benchmark/Grindset/Core.lean:1:0: elaboration failed"]
+            + [f"  diagnostic detail line {i}" for i in range(20)]
+            + ["Some required builds logged failures:", "- Benchmark.Grindset.Core"]
+        )
+        compacted = _compact_output(verbose)
+        self.assertIn("Some required builds logged failures:", compacted)
+        self.assertIn("- Benchmark.Grindset.Core", compacted)
+        target = {"task_ref": "foo/bar/baz", "status": "lean_check_failed", "output": compacted}
+        result = classify_target(target, _gradeable_task_result(target["task_ref"]))
+        self.assertEqual(result["final_class"], "INFRA_INVALID")
 
     def test_run_with_only_support_failures_is_infra_invalid(self) -> None:
         verifier = {
