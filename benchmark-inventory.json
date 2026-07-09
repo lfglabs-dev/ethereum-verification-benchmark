@@ -10,35 +10,35 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 33,
-    "implementation_count": 34,
-    "active_case_count": 33,
+    "family_count": 34,
+    "implementation_count": 35,
+    "active_case_count": 34,
     "backlog_case_count": 1,
-    "active_task_count": 200,
+    "active_task_count": 201,
     "backlog_task_count": 0,
-    "buildable_case_count": 33,
-    "runnable_task_count": 200,
+    "buildable_case_count": 34,
+    "runnable_task_count": 201,
     "case_stage_counts": {
       "build_green": 28,
       "candidate": 1,
-      "proof_complete": 5
+      "proof_complete": 6
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 33
+      "translated": 34
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 26,
+      "complete": 27,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 200
+      "proof-only": 201
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
-      "accounting_bound": 17,
+      "accounting_bound": 18,
       "accounting_conservation": 15,
       "accounting_effect": 2,
       "accounting_invariant": 2,
@@ -116,17 +116,34 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 56,
+      "functional_correctness": 57,
       "protocol_transition_correctness": 23,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 54
     },
     "family_split_counts": {
-      "active": 32,
+      "active": 33,
       "mixed": 1
     }
   },
   "families": [
+    {
+      "family_id": "1inch",
+      "display_name": "1inch Aqua",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for 1inch Aqua shared liquidity layer, starting with the XYCSwap constant-product AMM curve safety invariant.",
+      "implementation_ids": [
+        "aqua_xycswap"
+      ],
+      "case_ids": [
+        "1inch/xycswap_curve_safety"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/1inch/family.yaml"
+    },
     {
       "family_id": "alchemix",
       "display_name": "Alchemix",
@@ -693,6 +710,22 @@
   ],
   "implementations": [
     {
+      "family_id": "1inch",
+      "implementation_id": "aqua_xycswap",
+      "display_name": "1inch Aqua XYCSwap",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/1inch/aqua",
+      "upstream_commit": "81c26e4619ce21556ab02b3284ee2685de21fb18",
+      "source_language": "solidity",
+      "source_artifact_path": "examples/apps/XYCSwap.sol",
+      "case_ids": [
+        "1inch/xycswap_curve_safety"
+      ],
+      "notes": "Implementation entry for the 1inch Aqua XYCSwap constant-product AMM app, scoped to the curve safety invariant over _quoteExactIn.",
+      "manifest_path": "families/1inch/implementations/aqua_xycswap/implementation.yaml"
+    },
+    {
       "family_id": "alchemix",
       "implementation_id": "v3",
       "display_name": "Alchemix V3",
@@ -1238,6 +1271,50 @@
     }
   ],
   "cases": [
+    {
+      "case_id": "1inch/xycswap_curve_safety",
+      "project": "1inch",
+      "case_name": "xycswap_curve_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/1inch/xycswap_curve_safety/case.yaml",
+      "split": "active",
+      "family_id": "1inch",
+      "implementation_id": "aqua_xycswap",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/1inch/aqua",
+      "upstream_commit": "81c26e4619ce21556ab02b3284ee2685de21fb18",
+      "original_contract_path": "examples/apps/XYCSwap.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/1inch/aqua@81c26e4619ce21556ab02b3284ee2685de21fb18:examples/apps/XYCSwap.sol",
+      "selected_functions": [
+        "_quoteExactIn",
+        "swapExactIn"
+      ],
+      "lean_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Compile",
+      "failure_reason": null,
+      "notes": "Benchmark case proving the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The theorem states that the output amount computed by _quoteExactIn satisfies the integer-division rounding bound: output * denominator <= feeAdjustedInput * balanceOut. This is the direct analog of the Uniswap V2 K invariant, adapted to XYCSwap's basis-points fee structure.",
+      "buildable": true,
+      "verity_commit": "1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "amm_invariant",
+        "fee_adjusted_curve",
+        "constant_product",
+        "output_bound",
+        "external_calls_elided",
+        "storage_elided"
+      ],
+      "abstraction_notes": "The slice isolates the pure arithmetic of _quoteExactIn, which computes the output amount for a swap using the fee-adjusted constant-product formula. External calls (AQUA.pull, xycSwapCallback, _safeCheckAquaPush) are elided because the output amount is a pure function of the formula inputs. The Strategy struct is flattened: feeBps is a direct parameter. The zeroForOne direction selector is abstracted. _quoteExactOut is not modeled.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Specs",
+      "proof_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs"
+    },
     {
       "case_id": "alchemix/earmark_conservation",
       "project": "alchemix",
@@ -2846,6 +2923,51 @@
     }
   ],
   "tasks": [
+    {
+      "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+      "task_id": "quote_exact_in_curve_safety",
+      "case_id": "1inch/xycswap_curve_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/1inch/xycswap_curve_safety/tasks/quote_exact_in_curve_safety.yaml",
+      "split": "active",
+      "family_id": "1inch",
+      "implementation_id": "aqua_xycswap",
+      "source_ref": "https://github.com/1inch/aqua@81c26e4619ce21556ab02b3284ee2685de21fb18:examples/apps/XYCSwap.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.quoteExactIn_curve_safety",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/1inch/xycswap_curve_safety/verity/Contract.lean",
+        "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/1inch/xycswap_curve_safety/verity/Specs.lean",
+        "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneInch/XYCSwapCurveSafety/Tasks/QuoteExactInCurveSafety.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task captures the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The output of _quoteExactIn satisfies the integer division rounding bound that prevents over-extraction of maker reserves.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
     {
       "task_ref": "alchemix/earmark_conservation/earmark_preserves_invariant",
       "task_id": "earmark_preserves_invariant",
@@ -12009,5 +12131,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-03T08:12:01.872326+00:00"
+  "generated_at": "2026-07-09T15:06:03.755752+00:00"
 }
