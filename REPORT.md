@@ -4,14 +4,24 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 33
-- Implementations: 34
-- Active cases: 33
-- Buildable active cases: 33
-- Active tasks: 200
+- Families: 34
+- Implementations: 35
+- Active cases: 34
+- Buildable active cases: 34
+- Active tasks: 201
 - Backlog cases: 1
 
 ## Buildable active cases
+
+### `1inch/xycswap_curve_safety`
+- Family / implementation: `1inch` / `aqua_xycswap`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.OneInch.XYCSwapCurveSafety.Compile`
+- Source ref: `https://github.com/1inch/aqua@81c26e4619ce21556ab02b3284ee2685de21fb18:examples/apps/XYCSwap.sol`
+- Selected functions: `_quoteExactIn`, `swapExactIn`
+- Upstream source artifact: `examples/apps/XYCSwap.sol`
+- Notes: Benchmark case proving the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The theorem states that the output amount computed by _quoteExactIn satisfies the integer-division rounding bound: output * denominator <= feeAdjustedInput * balanceOut. This is the direct analog of the Uniswap V2 K invariant, adapted to XYCSwap's basis-points fee structure.
 
 ### `alchemix/earmark_conservation`
 - Family / implementation: `alchemix` / `v3`
@@ -348,6 +358,16 @@ This report is generated from the benchmark manifests.
 - None
 
 ## Active tasks
+
+### `1inch/xycswap_curve_safety/quote_exact_in_curve_safety`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.OneInch.XYCSwapCurveSafety.quoteExactIn_curve_safety`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/1inch/xycswap_curve_safety/verity/Contract.lean`, `Benchmark/Cases/OneInch/XYCSwapCurveSafety/Contract.lean`
+- Specification files: `cases/1inch/xycswap_curve_safety/verity/Specs.lean`, `Benchmark/Cases/OneInch/XYCSwapCurveSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/OneInch/XYCSwapCurveSafety/Tasks/QuoteExactInCurveSafety.lean`
+- Hidden reference solution: `Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs`
 
 ### `alchemix/earmark_conservation/earmark_preserves_invariant`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
