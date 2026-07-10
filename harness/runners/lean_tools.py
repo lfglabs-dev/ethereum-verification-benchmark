@@ -220,7 +220,11 @@ ROLE_METRIC_COUNTERS = (
     "prover_repair_calls",
     "draft_valid_syntax_count",
     "draft_rejected_count",
+    "draft_normalized_count",
+    "draft_submitted_count",
+    "lean_check_failed_count",
     "repair_no_submission",
+    "repair_blocked_no_failure",
     "repair_improved",
     "repair_regressed",
     "repair_no_change",
@@ -1131,6 +1135,87 @@ def _draft_proof_prompt(
     ]
 
 
+# A single fenced code block: ```lang\n ... ``` . The info string (``lang``)
+# is optional; the closing fence is required, so an unterminated fence never
+# matches and is treated as unbalanced/ambiguous below.
+_CODE_FENCE_RE = re.compile(r"```[^\n]*\n(.*?)```", re.DOTALL)
+# A leading ``by`` or ``:= by`` wrapper. The prover is asked for the body that
+# belongs *after* ``:= by``; some models still echo the keyword.
+_LEADING_BY_RE = re.compile(r"^\s*(?::=\s*)?by\b[ \t]*\r?\n?")
+
+
+def _strip_leading_by(text: str) -> tuple[str, bool]:
+    """Drop a leading ``by`` / ``:= by`` wrapper from a proof body.
+
+    Returns ``(body, stripped)``. Only strips when a non-empty body follows, so a
+    bare ``by`` (nothing to keep) is left untouched for the caller to reject."""
+    match = _LEADING_BY_RE.match(text)
+    if not match:
+        return text, False
+    rest = text[match.end():].strip()
+    if not rest:
+        return text, False
+    return rest, True
+
+
+def _normalize_prover_draft(raw: str) -> dict[str, object]:
+    """Deterministically extract a single Lean proof body from prover output.
+
+    Accepts a bare body plus common harmless presentational wrappers: exactly one
+    Markdown code fence, a leading ``by``/``:= by``, and surrounding explanatory
+    prose *only* when an unambiguous fenced Lean block delimits the proof. Rejects
+    empty output, unbalanced fences, and multiple/ambiguous candidates. This is a
+    structural boundary only - content safety (forbidden tokens, theorem
+    statements, leftover JSON) stays in :func:`_reject_draft_reason`, applied by
+    the caller to the extracted body. ``raw`` is always returned unmodified so the
+    caller can persist it for audit."""
+    text = raw.strip()
+    provenance: list[str] = []
+    if not text:
+        return {"body": None, "provenance": "empty", "reject_reason": "empty_prover_output", "raw": raw}
+
+    fences = _CODE_FENCE_RE.findall(text)
+    if fences:
+        if len(fences) > 1:
+            return {
+                "body": None,
+                "provenance": "multiple_fences",
+                "reject_reason": "prover_output_multiple_code_blocks",
+                "raw": raw,
+            }
+        # Exactly one closed fence. Text outside it must be explanatory prose,
+        # not additional Lean, or the real candidate is ambiguous.
+        outside = _CODE_FENCE_RE.sub("", text)
+        if ":= by" in outside or _TACTIC_LINE_RE.search(outside) is not None:
+            return {
+                "body": None,
+                "provenance": "ambiguous_outside_fence",
+                "reject_reason": "prover_output_ambiguous_multiple_candidates",
+                "raw": raw,
+            }
+        text = fences[0].strip()
+        provenance.append("code_fence")
+        if not text:
+            return {"body": None, "provenance": "code_fence", "reject_reason": "empty_prover_output", "raw": raw}
+    elif "```" in text:
+        # Backticks present but no complete fence pair: unbalanced/ambiguous.
+        return {
+            "body": None,
+            "provenance": "unbalanced_fence",
+            "reject_reason": "prover_output_unbalanced_fence",
+            "raw": raw,
+        }
+    else:
+        provenance.append("bare")
+
+    stripped_body, stripped_by = _strip_leading_by(text)
+    if stripped_by:
+        text = stripped_body
+        provenance.append("stripped_leading_by")
+
+    return {"body": text, "provenance": "+".join(provenance), "reject_reason": None, "raw": raw}
+
+
 def _reject_draft_reason(text: str) -> str | None:
     stripped = text.strip()
     if not stripped:
@@ -1257,8 +1342,15 @@ def _draft_proof_with_prover(
             )
         return {"ok": False, "error": "prover_request_failed", "detail": error_payload, "prover_model": DEFAULT_PROVER_MODEL, "stage": stage, "prompt_kind": prompt_kind}
 
-    proof = _strip_thinking(_response_text(response)).strip()
-    reject_reason = _reject_draft_reason(proof)
+    raw_proof = _strip_thinking(_response_text(response)).strip()
+    normalized = _normalize_prover_draft(raw_proof)
+    provenance = str(normalized["provenance"])
+    proof = str(normalized["body"]) if normalized["body"] is not None else ""
+    reject_reason = normalized["reject_reason"]
+    if not reject_reason:
+        # Content safety runs on the extracted body: a fenced draft carrying
+        # `sorry` or a full theorem statement must still be rejected.
+        reject_reason = _reject_draft_reason(proof)
     valid_syntax = None if reject_reason else _draft_valid_syntax(proof)
     usage = response.get("usage") if isinstance(response, dict) else None
     metadata = {
@@ -1277,9 +1369,13 @@ def _draft_proof_with_prover(
         "prover_base_url": prover_base_url,
         "declaration_index_size": declaration_index.count("\n- ") + (1 if declaration_index else 0),
         "draft_valid_syntax": valid_syntax,
+        "provenance": provenance,
         "usage": usage,
         "metadata": metadata,
         "duration_seconds": round(time.time() - started, 3),
+        # Persist both the raw model output and the normalized body so an audit
+        # can see exactly what wrapper (if any) was stripped before submission.
+        "raw_preview": raw_proof[:1000],
         "proof_preview": proof[:1000],
         "reject_reason": reject_reason,
     }
@@ -1291,6 +1387,7 @@ def _draft_proof_with_prover(
             "error": reject_reason,
             "stage": stage,
             "prompt_kind": prompt_kind,
+            "provenance": provenance,
             "prover_model": DEFAULT_PROVER_MODEL,
             "usage": usage,
             "metadata": metadata,
@@ -1301,6 +1398,7 @@ def _draft_proof_with_prover(
         "proof": proof,
         "stage": stage,
         "prompt_kind": prompt_kind,
+        "provenance": provenance,
         "draft_valid_syntax": valid_syntax,
         "prover_model": DEFAULT_PROVER_MODEL,
         "driver_model": DEFAULT_DRIVER_MODEL,
@@ -1422,6 +1520,29 @@ def _execute_fair_tool(
                         "prompt_kind": "repair",
                         "message": "No more prover repair drafts are allowed for this task; submit the best proof you have with check_proof.",
                     }
+            if STRICT_ROLE_SEPARATION:
+                # A repairer only edits something that actually failed Lean. Allow
+                # repair when: an attempt failed a real Lean check, OR a normalized
+                # prover candidate exists to repair, OR the previous draft carried
+                # an explicit structured rejection reason. Otherwise (a bare repair
+                # after a parse-only rejection with nothing to work from) refuse -
+                # the driver must produce a write draft and submit it first.
+                has_lean_failure = isinstance(_last_failed_proof_attempt({"results": attempts}), dict)
+                has_candidate = bool(prover_state and prover_state.get("latest_draft"))
+                has_structured_reason = bool(prover_state and prover_state.get("last_reject_reason"))
+                if not (has_lean_failure or has_candidate or has_structured_reason):
+                    if role_metrics is not None:
+                        role_metrics["repair_blocked_no_failure"] = int(role_metrics.get("repair_blocked_no_failure", 0)) + 1
+                    return {
+                        "ok": False,
+                        "error": "repair_requires_prior_failure_or_candidate",
+                        "stage": STAGE_REPAIRER,
+                        "prompt_kind": "repair",
+                        "message": (
+                            "Repair mode needs a prior Lean check failure or an existing prover draft to repair. "
+                            "Call draft_proof with mode=write and submit the returned body with check_proof first."
+                        ),
+                    }
             try:
                 current_proof = proof_path.read_text(encoding="utf-8")
             except (OSError, UnicodeDecodeError):
@@ -1491,9 +1612,20 @@ def _execute_fair_tool(
             if result.get("ok"):
                 if result.get("draft_valid_syntax") is True:
                     role_metrics["draft_valid_syntax_count"] = int(role_metrics.get("draft_valid_syntax_count", 0)) + 1
+                # A draft accepted only because a harmless wrapper was stripped
+                # (fence / leading `by`) is the false-negative this boundary fixes.
+                if str(result.get("provenance") or "bare") != "bare":
+                    role_metrics["draft_normalized_count"] = int(role_metrics.get("draft_normalized_count", 0)) + 1
             else:
                 role_metrics["draft_rejected_count"] = int(role_metrics.get("draft_rejected_count", 0)) + 1
         if prover_state is not None:
+            if not result.get("ok"):
+                # Remember the structured rejection reason so a follow-up repair
+                # request can distinguish a parse-only rejection with a concrete
+                # reason from a repair with no antecedent at all.
+                prover_state["last_reject_reason"] = result.get("error")
+            elif isinstance(result.get("proof"), str):
+                prover_state["last_reject_reason"] = None
             if result.get("ok") and isinstance(result.get("proof"), str):
                 # Only the most recent draft is submittable in strict mode, so a
                 # stale draft can never be graded as the current stage's output.
@@ -1637,9 +1769,15 @@ def _execute_fair_tool(
                 continue
             proof_path.write_text(candidate, encoding="utf-8")
             candidate_path = _write_attempt_artifact(attempts_dir, task, f"fair-{len(attempts) + 1}-{label}", candidate)
+            if role_metrics is not None:
+                # This candidate cleared the provenance/statement/placeholder
+                # guards and is actually being handed to Lean.
+                role_metrics["draft_submitted_count"] = int(role_metrics.get("draft_submitted_count", 0)) + 1
             lean_start = time.time()
             code, output = _run_lean_module(workspace, target_module, file_rel=_workspace_rel(workspace, proof_path))
             failure_kind = None if code == 0 else _classify_lean_failure(output)
+            if role_metrics is not None and code != 0:
+                role_metrics["lean_check_failed_count"] = int(role_metrics.get("lean_check_failed_count", 0)) + 1
             diagnostics = _proof_result_diagnostics(output, baseline_goal=baseline_goal)
             attempt = {
                 "attempt": f"tool:{name}",
@@ -1908,7 +2046,11 @@ def _attempt_task_fair(
         "prover_repair_calls": 0,
         "draft_valid_syntax_count": 0,
         "draft_rejected_count": 0,
+        "draft_normalized_count": 0,
+        "draft_submitted_count": 0,
+        "lean_check_failed_count": 0,
         "repair_no_submission": 0,
+        "repair_blocked_no_failure": 0,
         "repair_improved": 0,
         "repair_regressed": 0,
         "repair_no_change": 0,
