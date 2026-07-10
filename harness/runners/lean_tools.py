@@ -226,6 +226,7 @@ ROLE_METRIC_COUNTERS = (
     "repair_no_submission",
     "repair_blocked_no_failure",
     "repair_improved",
+    "repair_improved_no_baseline",
     "repair_regressed",
     "repair_no_change",
     "strict_submission_blocked",
@@ -1391,6 +1392,11 @@ def _draft_proof_with_prover(
             "prover_model": DEFAULT_PROVER_MODEL,
             "usage": usage,
             "metadata": metadata,
+            # Preserve what the prover produced so a follow-up repair authorized by
+            # this structured rejection can forward the rejected draft (raw output,
+            # or the extracted body when a wrapper was stripped) back to the prover.
+            "raw": raw_proof,
+            "body": proof,
             "message": "Prover draft was rejected before any Lean proof attempt. Ask for a different draft or submit your own proof via check_proof.",
         }
     return {
@@ -1521,16 +1527,17 @@ def _execute_fair_tool(
                         "message": "No more prover repair drafts are allowed for this task; submit the best proof you have with check_proof.",
                     }
             if STRICT_ROLE_SEPARATION:
-                # A repairer only edits something that actually failed Lean. Allow
-                # repair when: an attempt failed a real Lean check, OR a normalized
-                # prover candidate exists to repair, OR the previous draft carried
-                # an explicit structured rejection reason. Otherwise (a bare repair
-                # after a parse-only rejection with nothing to work from) refuse -
-                # the driver must produce a write draft and submit it first.
+                # A repairer only edits something with a concrete antecedent to
+                # work from: either an attempt that actually failed a real Lean
+                # check, OR a previous prover draft that carried an explicit
+                # structured pre-Lean rejection reason. A merely unsubmitted /
+                # latest normalized draft is NOT sufficient - it never failed
+                # anything, so there is nothing measured to repair; the driver
+                # must submit it with check_proof first. A bare repair with no
+                # antecedent at all is likewise refused.
                 has_lean_failure = isinstance(_last_failed_proof_attempt({"results": attempts}), dict)
-                has_candidate = bool(prover_state and prover_state.get("latest_draft"))
                 has_structured_reason = bool(prover_state and prover_state.get("last_reject_reason"))
-                if not (has_lean_failure or has_candidate or has_structured_reason):
+                if not (has_lean_failure or has_structured_reason):
                     if role_metrics is not None:
                         role_metrics["repair_blocked_no_failure"] = int(role_metrics.get("repair_blocked_no_failure", 0)) + 1
                     return {
@@ -1539,20 +1546,34 @@ def _execute_fair_tool(
                         "stage": STAGE_REPAIRER,
                         "prompt_kind": "repair",
                         "message": (
-                            "Repair mode needs a prior Lean check failure or an existing prover draft to repair. "
-                            "Call draft_proof with mode=write and submit the returned body with check_proof first."
+                            "Repair mode needs a prior Lean check failure or a structured pre-Lean rejection to "
+                            "repair. Call draft_proof with mode=write and submit the returned body with check_proof first."
                         ),
                     }
             try:
                 current_proof = proof_path.read_text(encoding="utf-8")
             except (OSError, UnicodeDecodeError):
                 current_proof = original
+            last_failed = _last_failed_proof_attempt({"results": attempts})
+            structured_reason = ""
+            rejected_draft = ""
+            if prover_state is not None:
+                structured_reason = str(prover_state.get("last_reject_reason") or "").strip()
+                rejected_draft = str(prover_state.get("last_rejected_draft") or "").strip()
+            # When there is no real Lean failure, repair was authorized solely by
+            # a structured pre-Lean rejection. Forward the rejected prover draft so
+            # the prover edits what it actually produced (the untouched skeleton in
+            # the workspace is not the thing that was rejected).
+            forward_rejected = not isinstance(last_failed, dict) and bool(structured_reason)
+            if forward_rejected and rejected_draft:
+                current_proof = rejected_draft
             if STRICT_ROLE_SEPARATION:
                 # Strict repair builds the entire prover input from trusted state
-                # (workspace proof + recorded Lean failure). Honoring any driver
-                # free-text here (current_proof, task_context, goal, errors) would
-                # let the driver smuggle its own Lean into the prover prompt and
-                # get it echoed back as a "draft".
+                # (workspace proof / recorded prover draft + recorded Lean failure
+                # or structured rejection). Honoring any driver free-text here
+                # (current_proof, task_context, goal, errors) would let the driver
+                # smuggle its own Lean into the prover prompt and get it echoed
+                # back as a "draft".
                 args = {"mode": "repair"}
             else:
                 args = dict(args)
@@ -1560,7 +1581,6 @@ def _execute_fair_tool(
             # depend on the driver forwarding it: when goal/errors are missing,
             # fill them from the most recent failed attempt so the independent
             # prover chat always sees why the current proof failed.
-            last_failed = _last_failed_proof_attempt({"results": attempts})
             if isinstance(last_failed, dict):
                 diagnostics = last_failed.get("diagnostics")
                 diagnostics = diagnostics if isinstance(diagnostics, dict) else {}
@@ -1572,6 +1592,15 @@ def _execute_fair_tool(
                     fallback_goal = str(diagnostics.get("new_goal") or "").strip()
                     if fallback_goal:
                         args["goal"] = fallback_goal
+            elif forward_rejected:
+                # No Lean diagnostic exists (nothing reached Lean). Hand the prover
+                # the structured rejection reason so it knows why its previous draft
+                # was refused before any Lean run.
+                if not str(args.get("errors") or "").strip():
+                    args["errors"] = (
+                        f"Your previous draft was rejected before Lean checking ({structured_reason}). "
+                        "Return a corrected Lean proof body."
+                    )
         elif STRICT_ROLE_SEPARATION:
             # Strict write mode: the driver may only pass declarative context.
             # Proof-like context (tactic scripts, `:= by` bodies, code fences) is
@@ -1620,12 +1649,15 @@ def _execute_fair_tool(
                 role_metrics["draft_rejected_count"] = int(role_metrics.get("draft_rejected_count", 0)) + 1
         if prover_state is not None:
             if not result.get("ok"):
-                # Remember the structured rejection reason so a follow-up repair
-                # request can distinguish a parse-only rejection with a concrete
-                # reason from a repair with no antecedent at all.
+                # Remember the structured rejection reason AND the rejected draft
+                # so a follow-up repair authorized by this rejection can forward
+                # both back to the prover, and can distinguish a parse-only
+                # rejection with a concrete reason from a repair with no antecedent.
                 prover_state["last_reject_reason"] = result.get("error")
+                prover_state["last_rejected_draft"] = result.get("raw") or result.get("body") or ""
             elif isinstance(result.get("proof"), str):
                 prover_state["last_reject_reason"] = None
+                prover_state["last_rejected_draft"] = None
             if result.get("ok") and isinstance(result.get("proof"), str):
                 # Only the most recent draft is submittable in strict mode, so a
                 # stale draft can never be graded as the current stage's output.
@@ -1694,6 +1726,16 @@ def _execute_fair_tool(
         original_statement = " ".join(_theorem_statement(original, task.get("theorem_name")).split())
         repair_pending = bool(prover_state is not None and prover_state.get("pending_repair"))
         repair_baseline = prover_state.get("pending_repair_baseline") if prover_state is not None else None
+        # draft_submitted_count / lean_check_failed_count are PROVER-specific: they
+        # must only count submissions whose body is the prover's latest draft under
+        # strict/draft conditions. In standalone (non-draft) mode there is no prover,
+        # so a driver-authored submission must never be attributed to one.
+        attribute_to_prover = STRICT_ROLE_SEPARATION or DRAFT_PROOF_ENABLED
+        prover_latest_draft = None
+        if prover_state is not None:
+            _latest = prover_state.get("latest_draft")
+            if isinstance(_latest, str) and _latest:
+                prover_latest_draft = _latest
 
         def _grade_repair(graded: dict[str, object]) -> None:
             nonlocal repair_pending
@@ -1703,15 +1745,24 @@ def _execute_fair_tool(
             if prover_state is not None:
                 prover_state["pending_repair"] = False
                 prover_state["pending_repair_baseline"] = None
-            outcome = _classify_repair_outcome(repair_baseline if isinstance(repair_baseline, dict) else None, graded)
+            valid_baseline = isinstance(repair_baseline, dict)
+            outcome = _classify_repair_outcome(repair_baseline if valid_baseline else None, graded)
             graded["repair_outcome"] = outcome
             if role_metrics is not None:
-                key = {
-                    "improved": "repair_improved",
-                    "regressed": "repair_regressed",
-                    "no_change": "repair_no_change",
-                }[outcome]
-                role_metrics[key] = int(role_metrics.get(key, 0)) + 1
+                if outcome == "improved" and not valid_baseline:
+                    # The repair passed, but it was authorized only by a structured
+                    # pre-Lean rejection with no measured Lean failure to improve
+                    # over. Record the pass separately so repair_improved never
+                    # over-claims an improvement without a valid pre-repair baseline.
+                    graded["repair_outcome"] = "improved_no_baseline"
+                    role_metrics["repair_improved_no_baseline"] = int(role_metrics.get("repair_improved_no_baseline", 0)) + 1
+                else:
+                    key = {
+                        "improved": "repair_improved",
+                        "regressed": "repair_regressed",
+                        "no_change": "repair_no_change",
+                    }[outcome]
+                    role_metrics[key] = int(role_metrics.get(key, 0)) + 1
 
         for label, proof in proofs:
             candidate = _candidate_from_response(original, proof, task.get("theorem_name"))
@@ -1769,14 +1820,25 @@ def _execute_fair_tool(
                 continue
             proof_path.write_text(candidate, encoding="utf-8")
             candidate_path = _write_attempt_artifact(attempts_dir, task, f"fair-{len(attempts) + 1}-{label}", candidate)
-            if role_metrics is not None:
+            # Only attribute this submission to the prover when it is prover-derived:
+            # strict/draft conditions are active AND the submitted body is verbatim
+            # (whitespace-normalized) the prover's latest draft. In strict mode the
+            # provenance guard above already guarantees this; in draft-only mode the
+            # driver could submit its own body, and in standalone mode there is no
+            # prover at all, so those must not touch these prover-specific counters.
+            prover_derived = (
+                attribute_to_prover
+                and prover_latest_draft is not None
+                and _normalize_proof_body(proof) == prover_latest_draft
+            )
+            if role_metrics is not None and prover_derived:
                 # This candidate cleared the provenance/statement/placeholder
                 # guards and is actually being handed to Lean.
                 role_metrics["draft_submitted_count"] = int(role_metrics.get("draft_submitted_count", 0)) + 1
             lean_start = time.time()
             code, output = _run_lean_module(workspace, target_module, file_rel=_workspace_rel(workspace, proof_path))
             failure_kind = None if code == 0 else _classify_lean_failure(output)
-            if role_metrics is not None and code != 0:
+            if role_metrics is not None and prover_derived and code != 0:
                 role_metrics["lean_check_failed_count"] = int(role_metrics.get("lean_check_failed_count", 0)) + 1
             diagnostics = _proof_result_diagnostics(output, baseline_goal=baseline_goal)
             attempt = {
@@ -2052,6 +2114,7 @@ def _attempt_task_fair(
         "repair_no_submission": 0,
         "repair_blocked_no_failure": 0,
         "repair_improved": 0,
+        "repair_improved_no_baseline": 0,
         "repair_regressed": 0,
         "repair_no_change": 0,
         "strict_submission_blocked": 0,
