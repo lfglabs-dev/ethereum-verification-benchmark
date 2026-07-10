@@ -498,14 +498,14 @@ class RepairAntecedentAndBaselineTests(unittest.TestCase):
         self.assertEqual(metrics["draft_submitted_count"], 1)
         self.assertEqual(metrics["lean_check_failed_count"], 0)
 
-    def test_structured_rejection_repair_forwards_draft_and_reason_no_false_improved(self) -> None:
-        # Writer draft is rejected pre-Lean (multiple code blocks). A repair is
-        # authorized by that structured rejection: the rejected draft AND the
-        # reason must be forwarded to the prover, and a passing repair must NOT
-        # count as repair_improved (there is no measured Lean baseline).
+    def test_prelean_rejection_does_not_license_repair(self) -> None:
+        # A malformed writer output never reached Lean. Strict repair must reject
+        # it rather than letting a repairer produce a fresh proof with no measured
+        # baseline; the driver must obtain a fresh write draft instead.
         rejected_raw = "```lean\nsimp\n```\n```lean\nring\n```"
         prover_repair_prompts: list[str] = []
         driver_calls = {"n": 0}
+        writer_calls = {"n": 0}
 
         def fake_chat(messages, **kwargs):
             if str(kwargs.get("model")) == "prover-model":
@@ -513,13 +513,17 @@ class RepairAntecedentAndBaselineTests(unittest.TestCase):
                 if is_repair:
                     prover_repair_prompts.append("\n".join(str(m.get("content")) for m in messages))
                     return {"choices": [{"message": {"role": "assistant", "content": "trivial"}}]}
-                return {"choices": [{"message": {"role": "assistant", "content": rejected_raw}}]}
+                writer_calls["n"] += 1
+                content = rejected_raw if writer_calls["n"] == 1 else "trivial"
+                return {"choices": [{"message": {"role": "assistant", "content": content}}]}
             driver_calls["n"] += 1
             n = driver_calls["n"]
             if n == 1:
                 name, args = "draft_proof", {"task_context": "prove it"}
             elif n == 2:
                 name, args = "draft_proof", {"mode": "repair"}
+            elif n == 3:
+                name, args = "draft_proof", {"task_context": "prove it"}
             else:
                 name, args = "check_proof", {"proof": "trivial"}
             return {
@@ -541,19 +545,16 @@ class RepairAntecedentAndBaselineTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "lean_passed")
         metrics = result["role_metrics"]
-        # The write draft was rejected pre-Lean; the repair was authorized by the
-        # structured reason and never blocked.
+        # The malformed draft is rejected and the repair is blocked. A fresh
+        # writer draft is then submitted; no repairer call or repair outcome is
+        # attributed without an actual failed Lean attempt.
         self.assertEqual(metrics["draft_rejected_count"], 1)
-        self.assertEqual(metrics["repair_blocked_no_failure"], 0)
-        self.assertEqual(metrics["prover_repair_calls"], 1)
-        # A pass with no measured pre-repair Lean baseline is NOT repair_improved.
+        self.assertEqual(metrics["repair_blocked_no_failure"], 1)
+        self.assertEqual(metrics["prover_repair_calls"], 0)
         self.assertEqual(metrics["repair_improved"], 0)
-        self.assertEqual(metrics["repair_improved_no_baseline"], 1)
-        # The repair prompt forwarded both the rejected draft body and the reason.
-        self.assertTrue(prover_repair_prompts)
-        joined = prover_repair_prompts[0]
-        self.assertIn("ring", joined)
-        self.assertIn("prover_output_multiple_code_blocks", joined)
+        self.assertEqual(metrics["repair_improved_no_baseline"], 0)
+        self.assertEqual(writer_calls["n"], 2)
+        self.assertFalse(prover_repair_prompts)
 
 
 class StandaloneAttributionTests(unittest.TestCase):
