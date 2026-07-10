@@ -383,7 +383,7 @@ class StrictLoopIntegrationTests(unittest.TestCase):
 
     def test_provenance_guard_still_blocks_driver_authored_submission(self) -> None:
         # Normalization must not weaken the provenance guard: a body the driver
-        # invents (never returned by the prover) is still rejected pre-Lean.
+        # invents after a prover draft exists is still rejected pre-Lean.
         driver_calls = {"n": 0}
 
         def fake_chat(messages, **kwargs):
@@ -392,9 +392,9 @@ class StrictLoopIntegrationTests(unittest.TestCase):
             driver_calls["n"] += 1
             n = driver_calls["n"]
             if n == 1:
-                name, args = "check_proof", {"proof": "exact my_own_lemma"}
-            elif n == 2:
                 name, args = "draft_proof", {"task_context": "prove it"}
+            elif n == 2:
+                name, args = "check_proof", {"proof": "exact my_own_lemma"}
             else:
                 name, args = "check_proof", {"proof": "trivial"}
             return {

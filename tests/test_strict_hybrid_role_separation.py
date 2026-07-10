@@ -269,21 +269,23 @@ class StrictLoopTests(unittest.TestCase):
         self.assertIn("STRICT ROLE SEPARATION", system)
         self.assertIn("must never write or edit Lean proof", system)
 
-    def test_driver_authored_submission_is_blocked_in_strict_mode(self) -> None:
-        # A driver that ignores the strict instructions and hand-writes a proof
-        # must be rejected by the tool loop itself, not just nudged by prompts.
+    def test_check_before_draft_auto_routes_to_writer_without_driver_proof(self) -> None:
+        # Production liveness regression: an ordinary driver may try check_proof
+        # before draft_proof. Strict mode must ignore that body, invoke the writer
+        # with trusted context only, and submit the prover-derived draft.
         driver_calls = {"n": 0}
+        prover_prompts: list[list[dict[str, object]]] = []
 
         def fake_chat(messages, **kwargs):
             if str(kwargs.get("model")) == "prover-model":
+                prover_prompts.append([dict(m) for m in messages])
                 return {"choices": [{"message": {"role": "assistant", "content": "trivial"}}]}
             driver_calls["n"] += 1
             n = driver_calls["n"]
             if n == 1:
-                # Hand-written proof with no prover draft: must be blocked.
-                name, args = "check_proof", {"proof": "trivial"}
-            elif n == 2:
-                name, args = "draft_proof", {"task_context": "prove it"}
+                # Hand-written proof with no prover draft: ignored, never
+                # forwarded to the writer, and never submitted to Lean.
+                name, args = "check_proof", {"proof": "exact driver_smuggled_proof"}
             else:
                 name, args = "check_proof", {"proof": "trivial"}
             return {
@@ -305,8 +307,52 @@ class StrictLoopTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "lean_passed")
         metrics = result["role_metrics"]
-        self.assertEqual(metrics["strict_submission_blocked"], 1)
+        self.assertEqual(metrics["strict_submission_blocked"], 0)
         self.assertEqual(metrics["prover_writer_calls"], 1)
+        self.assertEqual(metrics["draft_submitted_count"], 1)
+        self.assertEqual(driver_calls["n"], 1)
+        writer_prompt = "\n".join(str(m.get("content")) for m in prover_prompts[0])
+        self.assertNotIn("driver_smuggled_proof", writer_prompt)
+        self.assertIn("The driver attempted to submit before obtaining a prover draft", writer_prompt)
+
+    def test_auto_writer_failure_is_precise_not_budget_spin(self) -> None:
+        driver_calls = {"n": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                return {"choices": [{"message": {"role": "assistant", "content": "sorry"}}]}
+            driver_calls["n"] += 1
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {
+                                    "id": f"c{driver_calls['n']}",
+                                    "function": {
+                                        "name": "check_proof",
+                                        "arguments": json.dumps({"proof": "exact driver_smuggled_proof"}),
+                                    },
+                                }
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), max_tool_calls=1)
+            log = Path(result["tool_log"]).read_text(encoding="utf-8")
+
+        self.assertEqual(result["status"], "max_tool_calls_exceeded")
+        metrics = result["role_metrics"]
+        self.assertEqual(metrics["prover_writer_calls"], 1)
+        self.assertEqual(metrics["draft_rejected_count"], 1)
+        self.assertEqual(metrics["strict_submission_blocked"], 0)
+        self.assertIn("strict_auto_writer_failed", log)
+        self.assertIn("prover_output_contains_forbidden_placeholder", log)
 
     def test_stale_prover_draft_is_blocked_in_strict_mode(self) -> None:
         # Only the LATEST prover draft is submittable: resubmitting an earlier
