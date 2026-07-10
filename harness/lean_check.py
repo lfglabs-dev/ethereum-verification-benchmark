@@ -12,11 +12,20 @@ import signal
 import subprocess
 from pathlib import Path
 
+try:
+    from .verify_lease import verify_lease
+except ImportError:
+    from verify_lease import verify_lease
+
 LEAN_CHECK_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_LEAN_CHECK_TIMEOUT_SECONDS", os.environ.get("GAZELLA_LEAN_CHECK_TIMEOUT_SECONDS", "240")))
 
 LEAN_CHECK_MODE = os.environ.get("DEFAULT_HARNESS_CHECK_MODE", "file").strip().lower()  # "file" = lake env lean <editable>, "module" = lake build
 
 def _run_lean_command(workspace: Path, command: list[str], timeout_seconds: int) -> tuple[int, str]:
+    with verify_lease(label="lean_check"):
+        return _run_lean_command_unleased(workspace, command, timeout_seconds)
+
+def _run_lean_command_unleased(workspace: Path, command: list[str], timeout_seconds: int) -> tuple[int, str]:
     process: subprocess.Popen[str] | None = None
     try:
         process = subprocess.Popen(

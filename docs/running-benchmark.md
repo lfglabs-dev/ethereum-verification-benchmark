@@ -56,6 +56,26 @@ python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count 
 VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget deep
 ```
 
+### Parallel multi-provider runs and the verification lease
+
+Running several providers at once is safe for the model-API portion of each
+attempt, but the Lean verification/build step is memory-heavy: a single `lean`
+can peak at tens of GB, and overlapping several of them across independent
+runner processes has OOM-killed the host kernel mid-verification (which
+corrupts comparison artifacts and reads as a spurious proof failure).
+
+To make overlap safe, the harness holds an advisory cross-process lease
+(`harness/verify_lease.py`) around every memory-heavy Lean invocation in both
+the interactive check path (`harness/lean_check.py`) and the grader
+(`harness/verifier.py`). At most `DEFAULT_HARNESS_VERIFY_CONCURRENCY`
+verifications run concurrently across every runner process on the host (default
+`1`); the cheap model-API work stays fully parallel. The lease is advisory and
+fail-open — if it cannot be acquired within
+`DEFAULT_HARNESS_VERIFY_LEASE_TIMEOUT_SECONDS` it proceeds anyway rather than
+deadlock a run — and provider-neutral (slots are anonymous, first-come). Set
+`DEFAULT_HARNESS_VERIFY_CONCURRENCY=0` to disable it (e.g. on a host with
+memory headroom to spare). See `.env.example` for all lease knobs.
+
 Budget profiles:
 
 - `quick`: CI-sized smoke budget.
