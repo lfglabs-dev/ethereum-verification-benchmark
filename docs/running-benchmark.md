@@ -76,6 +76,17 @@ deadlock a run — and provider-neutral (slots are anonymous, first-come). Set
 `DEFAULT_HARNESS_VERIFY_CONCURRENCY=0` to disable it (e.g. on a host with
 memory headroom to spare). See `.env.example` for all lease knobs.
 
+### Strict provider request-shape compatibility
+
+Some strict OpenAI-compatible providers reject any chat-completions request that
+carries a token-limit field and answer with a generic `400` (observed with
+Virtuals' `openai-gpt-56-sol-pro`, which `400`s when `max_tokens`,
+`max_completion_tokens`, or `reasoning_effort` is present but returns `201` with
+none of them). Set `DEFAULT_HARNESS_OMIT_MAX_TOKENS=1` to drop every token-limit
+parameter from the outgoing request entirely. The switch is generic and
+provider-neutral — it does no provider-name special casing — and is off by
+default, so the request shape is unchanged for every other provider.
+
 Budget profiles:
 
 - `quick`: CI-sized smoke budget.
