@@ -1,0 +1,50 @@
+manifest_kind: case
+project: starkware
+case_id: starkgate_escrow
+schema_version: 1
+split: active
+family_id: starkware
+implementation_id: starkgate_bridge
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/starknet-io/starkgate-contracts
+upstream_commit: 07e11c39119a10d5742735be5b1d51894ebf5311
+original_contract_path: src/solidity/StarknetTokenBridge.sol
+source_ref: https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol
+lean_target: Benchmark.Cases.Starkware.StarkgateEscrow.Compile
+spec_target: Benchmark.Cases.Starkware.StarkgateEscrow.Specs
+proof_target: Benchmark.Cases.Starkware.StarkgateEscrow.Proofs
+selected_functions:
+  - deposit
+  - withdraw
+  - depositReclaim
+source_language: solidity
+verity_version: 4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - ghost_erc20_balance
+  - ghost_cumulative_counters
+  - messaging_gate_elided
+  - fee_donation_equivalent
+  - single_token_slice
+abstraction_notes: >
+  Focused StarkGate L1 accounting slice for the escrow lower-bound invariant.
+  The ghost `assetBalance` represents `IERC20.balanceOf(address(this))` (or
+  `address(this).balance` for the ETH bridge). The ghost counters
+  `cumulativeDeposits` and `cumulativeWithdrawals` track total accepted deposits
+  and total outflows (withdrawals plus reclaims). Cross-domain messaging
+  (sendMessageToL2, consumeMessageFromL2, cancelL1ToL2Message) is abstracted as
+  gates that succeed on the modeled path. The max-balance cap is modeled as a
+  hypothesis, not an internal constraint.
+unsupported_feature_codes:
+  - external_erc20_balance_ghosted
+  - cross_domain_messaging_elided
+  - fee_logic_donation_equivalent
+notes: >
+  Reference proofs are complete for the escrow lower-bound invariant across the
+  three modeled transitions (deposit, withdraw, depositReclaim). Arithmetic
+  hypotheses expose Solidity checked-arithmetic obligations (no-overflow on
+  additions, sufficient-balance on subtractions).
