@@ -165,6 +165,15 @@ REQUEST_RETRIES = int(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRIES", os.envir
 REQUEST_RETRY_BACKOFF_SECONDS = float(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRY_BACKOFF_SECONDS", os.environ.get("GAZELLA_REQUEST_RETRY_BACKOFF_SECONDS", "2")))
 DEFAULT_CONTEXT_TOKENS = os.environ.get("DEFAULT_HARNESS_CONTEXT_TOKENS", os.environ.get("GAZELLA_N_CTX"))
 DEFAULT_MAX_RESPONSE_TOKENS = int(os.environ.get("DEFAULT_HARNESS_MAX_RESPONSE_TOKENS", "8192"))
+# Some strict OpenAI-compatible providers reject any request that carries a
+# token-limit field and answer with a generic 400 (observed with Virtuals'
+# openai-gpt-56-sol-pro, which 400s on max_tokens / max_completion_tokens /
+# reasoning_effort but returns 201 with none of them). This opt-in switch drops
+# every token-limit parameter from the outgoing request so such providers can be
+# evaluated fairly. It is generic (no provider-name special casing), off by
+# default, and leaves the request shape unchanged for every other provider.
+_TOKEN_LIMIT_PARAM_KEYS = ("max_tokens", "max_completion_tokens", "reasoning_effort")
+DEFAULT_OMIT_MAX_TOKENS = os.environ.get("DEFAULT_HARNESS_OMIT_MAX_TOKENS", "0").strip().lower() in {"1", "true", "yes"}
 HTTP_USER_AGENT = os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", HARNESS_USER_AGENT)
 DEFAULT_STREAMING_ENABLED = os.environ.get("DEFAULT_HARNESS_STREAMING", "1").strip().lower() not in {"0", "false", "no"}
 
@@ -398,9 +407,10 @@ def chat_completion(
     payload: dict[str, Any] = {
         "model": model,
         "messages": _sanitize_tool_message_order(messages),
-        "max_tokens": max_tokens,
         "temperature": 0,
     }
+    if not DEFAULT_OMIT_MAX_TOKENS:
+        payload["max_tokens"] = max_tokens
     if DEFAULT_STOP_SEQUENCES:
         payload["stop"] = list(DEFAULT_STOP_SEQUENCES)
     if DEFAULT_CONTEXT_TOKENS:
@@ -409,6 +419,11 @@ def chat_completion(
         payload["tools"] = tools
     if tool_choice is not None:
         payload["tool_choice"] = tool_choice
+    if DEFAULT_OMIT_MAX_TOKENS:
+        # Fail-safe: drop any token-limit key regardless of how it entered the
+        # payload, so a strict provider never sees one.
+        for key in _TOKEN_LIMIT_PARAM_KEYS:
+            payload.pop(key, None)
 
     max_request_attempts = max(1, REQUEST_RETRIES + 1)
     last_error: ChatCompletionError | None = None
