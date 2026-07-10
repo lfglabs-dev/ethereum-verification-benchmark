@@ -264,6 +264,34 @@ def _strict_context_proof_reason(text: str) -> str | None:
     return None
 
 
+def _strict_auto_writer_context(*, task: dict[str, object], workspace: Path, original: str) -> str:
+    """Trusted context for the strict liveness bridge.
+
+    This is deliberately built only from task metadata and workspace files, never
+    from the driver's rejected proof text or free-form tool arguments.
+    """
+    lines = [
+        "The driver attempted to submit before obtaining a prover draft. Produce the initial proof body.",
+        f"Task metadata: {json.dumps(_task_public_view(task), sort_keys=True)}",
+    ]
+    theorem = _theorem_statement(original, task.get("theorem_name")).strip()
+    if theorem:
+        lines += ["Target theorem statement:", theorem]
+    summary_path = workspace / "harness" / "TASK_SUMMARY.md"
+    if summary_path.is_file():
+        try:
+            summary = _task_summary_with_live_editable(
+                summary_path.read_text(encoding="utf-8"),
+                task=task,
+                workspace=workspace,
+            )
+            if summary.strip():
+                lines += ["Task summary:", summary[-DEFAULT_TASK_SUMMARY_CHARS:]]
+        except (OSError, UnicodeDecodeError):
+            pass
+    return "\n".join(lines)
+
+
 def _aggregate_role_metrics(task_results: list[dict[str, object]]) -> dict[str, object]:
     """Sum per-task role_metrics counters into a run-level total for honest,
     per-role reporting of a hybrid ensemble run."""
@@ -1660,6 +1688,7 @@ def _execute_fair_tool(
                     proofs.append((f"try_tactics-{index}", tactic))
             if not proofs:
                 return {"ok": False, "error": "tactics must contain at least one string"}
+        auto_writer_usage: object | None = None
         if STRICT_ROLE_SEPARATION and prover_state is not None:
             # Enforce the role split in the tool loop, not just the prompt: a
             # submission is only accepted if its body is (whitespace-normalized)
@@ -1671,6 +1700,47 @@ def _execute_fair_tool(
             latest_draft = latest_draft if isinstance(latest_draft, str) and latest_draft else None
             for _, submitted in proofs:
                 if latest_draft is None or _normalize_proof_body(submitted) != latest_draft:
+                    if latest_draft is None and DRAFT_PROOF_ENABLED:
+                        if base_url is None:
+                            return {"ok": False, "error": "base_url is required for strict auto writer"}
+                        auto_result = _draft_proof_with_prover(
+                            {"mode": "write", "task_context": _strict_auto_writer_context(task=task, workspace=workspace, original=original)},
+                            task=task,
+                            original=original,
+                            base_url=base_url,
+                            draft_log_path=draft_log_path,
+                            workspace=workspace,
+                        )
+                        if role_metrics is not None:
+                            role_metrics["prover_writer_calls"] = int(role_metrics.get("prover_writer_calls", 0)) + 1
+                            if auto_result.get("ok"):
+                                if auto_result.get("draft_valid_syntax") is True:
+                                    role_metrics["draft_valid_syntax_count"] = int(role_metrics.get("draft_valid_syntax_count", 0)) + 1
+                                if str(auto_result.get("provenance") or "bare") != "bare":
+                                    role_metrics["draft_normalized_count"] = int(role_metrics.get("draft_normalized_count", 0)) + 1
+                            else:
+                                role_metrics["draft_rejected_count"] = int(role_metrics.get("draft_rejected_count", 0)) + 1
+                        if auto_result.get("ok") and isinstance(auto_result.get("proof"), str):
+                            auto_proof = str(auto_result["proof"])
+                            auto_writer_usage = auto_result.get("usage")
+                            latest_draft = _normalize_proof_body(auto_proof)
+                            prover_state["latest_draft"] = latest_draft
+                            prover_state["write_count"] = int(prover_state.get("write_count", 0)) + 1
+                            proofs = [("auto_draft_proof", auto_proof)]
+                            break
+                        return {
+                            "ok": False,
+                            "error": "strict_auto_writer_failed",
+                            "stage": STAGE_WRITER,
+                            "prompt_kind": "write",
+                            "writer_error": auto_result.get("error"),
+                            "message": (
+                                "STRICT ROLE SEPARATION: the driver attempted to submit before any prover draft. "
+                                "The harness ignored the driver proof and routed to the prover writer, but the writer "
+                                "did not return a usable draft."
+                            ),
+                            "usage": auto_result.get("usage"),
+                        }
                     if role_metrics is not None:
                         role_metrics["strict_submission_blocked"] = int(role_metrics.get("strict_submission_blocked", 0)) + 1
                     return {
@@ -1834,8 +1904,14 @@ def _execute_fair_tool(
             results.append(attempt)
             _grade_repair(attempt)
             if code == 0:
-                return {"ok": True, "passed": True, "results": results}
-        return {"ok": True, "passed": False, "results": results}
+                response: dict[str, object] = {"ok": True, "passed": True, "results": results}
+                if isinstance(auto_writer_usage, dict):
+                    response["usage"] = auto_writer_usage
+                return response
+        response = {"ok": True, "passed": False, "results": results}
+        if isinstance(auto_writer_usage, dict):
+            response["usage"] = auto_writer_usage
+        return response
     if name == "search_declarations":
         query = args.get("query")
         if not isinstance(query, str) or not query:
@@ -2456,8 +2532,7 @@ def _attempt_task_fair(
                 prover_state=prover_state,
                 role_metrics=role_metrics,
             )
-            if name == "draft_proof":
-                _accumulate_usage(result)
+            _accumulate_usage(result)
             tool_calls_executed += 1
             if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"}:
                 non_proof_tool_calls += 1
