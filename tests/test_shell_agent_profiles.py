@@ -8,8 +8,10 @@ from pathlib import Path
 from unittest import mock
 
 from harness.paths import ROOT
+from harness.manifests import load_group
 from harness.runners.shell_agent import _run_profile_preflights
 from harness.result_validity import row_validity
+from harness.verifier import setup_failure_verifier_result
 
 
 class ShellAgentProfileTests(unittest.TestCase):
@@ -78,6 +80,24 @@ class ShellAgentProfileTests(unittest.TestCase):
 
         self.assertTrue(row_validity(run_row, expected_budget=budget)["valid"])
         self.assertTrue(row_validity(task_row, expected_budget=budget)["valid"])
+
+    def test_setup_failure_verifier_never_spawns_lean(self) -> None:
+        group = load_group("ethereum/deposit_contract_minimal", "active")
+        with tempfile.TemporaryDirectory() as raw_dir, mock.patch(
+            "harness.verifier.subprocess.run"
+        ) as run:
+            result = setup_failure_verifier_result(
+                group,
+                Path(raw_dir),
+                failure_class="infra_dependency_warm_failed",
+                artifact_dir=Path(raw_dir) / "verifier",
+            )
+
+        run.assert_not_called()
+        self.assertEqual(result["score"]["total_targets"], len(group.tasks))
+        self.assertTrue(
+            all(target["status"] == "verifier_infra_error" for target in result["targets"])
+        )
 
 
 if __name__ == "__main__":

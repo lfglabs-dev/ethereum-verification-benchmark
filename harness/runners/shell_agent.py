@@ -43,7 +43,7 @@ try:
     from ..paths import RESULTS_DIR, ROOT
     from ..reports import write_run_report
     from ..transport import generic_preflight
-    from ..verifier import verify_group
+    from ..verifier import setup_failure_verifier_result, verify_group
     from ..workspace_builder import (
         agent_group_to_json,
         assert_workspace_isolated,
@@ -59,7 +59,7 @@ except ImportError:
     from paths import RESULTS_DIR, ROOT
     from reports import write_run_report
     from transport import generic_preflight
-    from verifier import verify_group
+    from verifier import setup_failure_verifier_result, verify_group
     from workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace, warm_public_dependencies
 
 
@@ -465,7 +465,16 @@ def run_group(
                 shutil.copy2(src, dst)
     (run_dir / "workspace.diff").write_text("".join(chunks), encoding="utf-8")
 
-    verifier_result = verify_group(group, built.path, artifact_dir=run_dir / "verifier")
+    verifier_result = (
+        setup_failure_verifier_result(
+            group,
+            built.path,
+            failure_class=setup_failure_class,
+            artifact_dir=run_dir / "verifier",
+        )
+        if setup_failure_class is not None
+        else verify_group(group, built.path, artifact_dir=run_dir / "verifier")
+    )
     response_tasks: list[dict[str, object]]
     if setup_failure_class is not None:
         response_tasks = [

@@ -22,7 +22,7 @@ try:
     from ..manifests import filter_group_to_task, load_group
     from ..paths import RESULTS_DIR, ROOT
     from ..reports import write_run_report
-    from ..verifier import verify_group
+    from ..verifier import setup_failure_verifier_result, verify_group
     from ..workspace_builder import (
         agent_group_to_json,
         assert_workspace_isolated,
@@ -35,7 +35,7 @@ except ImportError:
     from manifests import filter_group_to_task, load_group
     from paths import RESULTS_DIR, ROOT
     from reports import write_run_report
-    from verifier import verify_group
+    from verifier import setup_failure_verifier_result, verify_group
     from workspace_builder import (
         agent_group_to_json,
         assert_workspace_isolated,
@@ -2973,7 +2973,16 @@ def run_group(
                 dst = submitted_dir / rel
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src, dst)
-    verifier_result = verify_group(group, built.path, artifact_dir=run_dir / "verifier")
+    verifier_result = (
+        setup_failure_verifier_result(
+            group,
+            built.path,
+            failure_class=setup_failure_class,
+            artifact_dir=run_dir / "verifier",
+        )
+        if setup_failure_class is not None
+        else verify_group(group, built.path, artifact_dir=run_dir / "verifier")
+    )
     classification = classify_run(verifier_result, response.get("tasks") if isinstance(response.get("tasks"), list) else [])
     run = {
         "schema_version": 1,
