@@ -111,13 +111,10 @@ def _run_profile_preflights(
         command = [str(part) for part in raw]
         started = time.time()
         try:
-            completed = subprocess.run(
+            completed = _run_setup_process_group(
                 command,
                 cwd=cwd,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=timeout_seconds,
+                timeout_seconds=timeout_seconds,
             )
             output = (completed.stdout + completed.stderr).strip()
             result = {

@@ -51,7 +51,7 @@ class ShellAgentProfileTests(unittest.TestCase):
             subprocess.CompletedProcess([], 9, stdout="", stderr="broken"),
         ]
         with tempfile.TemporaryDirectory() as raw_dir, mock.patch(
-            "harness.runners.shell_agent.subprocess.run", side_effect=results
+            "harness.runners.shell_agent._run_setup_process_group", side_effect=results
         ) as run:
             actual = _run_profile_preflights(profile, cwd=Path(raw_dir))
 
