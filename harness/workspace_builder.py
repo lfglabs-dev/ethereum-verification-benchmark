@@ -62,12 +62,19 @@ def warm_public_dependencies(
     results: list[dict[str, object]] = []
     with log_path.open("a", encoding="utf-8") as log:
         for module in public_dependency_modules(group):
-            started = time.monotonic()
-            print(f"[dependency-warm] module={module} state=starting", flush=True)
+            queued_at = time.monotonic()
+            print(f"[dependency-warm] module={module} state=waiting_for_lease", flush=True)
             log.write(f"\n$ lake build {module}\n")
             log.flush()
             timed_out = False
-            with verify_lease(label="dependency_warm"):
+            with verify_lease(label="dependency_warm") as lease_reason:
+                started = time.monotonic()
+                lease_wait_seconds = round(started - queued_at, 3)
+                print(
+                    f"[dependency-warm] module={module} state=starting "
+                    f"lease={lease_reason} lease_wait_seconds={lease_wait_seconds}",
+                    flush=True,
+                )
                 process = subprocess.Popen(
                     ["lake", "build", module],
                     cwd=ROOT,
@@ -131,6 +138,8 @@ def warm_public_dependencies(
                     "status": status,
                     "exit_code": exit_code,
                     "duration_seconds": duration,
+                    "lease": lease_reason,
+                    "lease_wait_seconds": lease_wait_seconds,
                     "log_path": str(log_path),
                 }
             )

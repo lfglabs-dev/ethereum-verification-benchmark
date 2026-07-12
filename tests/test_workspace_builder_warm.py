@@ -114,6 +114,46 @@ class PublicDependencyWarmTests(unittest.TestCase):
             ["lease_enter", "process_start", "process_poll", "lease_exit"],
         )
 
+    def test_lease_wait_does_not_consume_build_timeout_or_duration(self) -> None:
+        group = Group(
+            group_id="erc20/state",
+            suite="active",
+            tasks=(
+                _task(
+                    implementation=("Benchmark/Cases/ERC20/State/Impl.lean",),
+                    specification=(),
+                ),
+            ),
+        )
+
+        @contextmanager
+        def delayed_lease(*, label: str):
+            self.assertEqual(label, "dependency_warm")
+            yield "acquired"
+
+        class FinishedProcess:
+            returncode = 0
+            pid = 123
+
+            def poll(self):
+                return 0
+
+        clock = iter([0.0, 50.0, 55.0])
+        with TemporaryDirectory() as tmp, patch(
+            "harness.workspace_builder.verify_lease", delayed_lease
+        ), patch("harness.workspace_builder.subprocess.Popen", return_value=FinishedProcess()), patch(
+            "harness.workspace_builder.time.monotonic", side_effect=lambda: next(clock)
+        ):
+            result = warm_public_dependencies(
+                group,
+                timeout_seconds=30,
+                log_path=Path(tmp) / "warm.log",
+            )[0]
+
+        self.assertEqual(result["exit_code"], 0)
+        self.assertEqual(result["lease_wait_seconds"], 50.0)
+        self.assertEqual(result["duration_seconds"], 5.0)
+
     def test_pre_provider_warm_failure_is_infra_invalid(self) -> None:
         task_ref = "erc20/state/transfer"
         classification = classify_run(
