@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import unittest
+from contextlib import contextmanager
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from unittest.mock import patch
 
 from harness.classification import classify_run
 from harness.manifests import Group, Task
-from harness.workspace_builder import public_dependency_modules
+from harness.workspace_builder import public_dependency_modules, warm_public_dependencies
 
 
 def _task(*, implementation: tuple[str, ...], specification: tuple[str, ...]) -> Task:
@@ -63,6 +67,52 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "forbidden dependency"):
             public_dependency_modules(group)
+
+    def test_dependency_build_holds_verify_lease_until_process_finishes(self) -> None:
+        group = Group(
+            group_id="erc20/state",
+            suite="active",
+            tasks=(
+                _task(
+                    implementation=("Benchmark/Cases/ERC20/State/Impl.lean",),
+                    specification=(),
+                ),
+            ),
+        )
+        events: list[str] = []
+
+        @contextmanager
+        def fake_lease(*, label: str):
+            self.assertEqual(label, "dependency_warm")
+            events.append("lease_enter")
+            yield "acquired"
+            events.append("lease_exit")
+
+        class FinishedProcess:
+            returncode = 0
+            pid = 123
+
+            def __init__(self, *args, **kwargs):
+                events.append("process_start")
+
+            def poll(self):
+                events.append("process_poll")
+                return 0
+
+        with TemporaryDirectory() as tmp, patch(
+            "harness.workspace_builder.verify_lease", fake_lease
+        ), patch("harness.workspace_builder.subprocess.Popen", FinishedProcess):
+            results = warm_public_dependencies(
+                group,
+                timeout_seconds=30,
+                log_path=Path(tmp) / "warm.log",
+            )
+
+        self.assertEqual(results[0]["exit_code"], 0)
+        self.assertEqual(
+            events,
+            ["lease_enter", "process_start", "process_poll", "lease_exit"],
+        )
 
     def test_pre_provider_warm_failure_is_infra_invalid(self) -> None:
         task_ref = "erc20/state/transfer"

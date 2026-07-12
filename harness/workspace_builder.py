@@ -14,9 +14,11 @@ from pathlib import Path
 try:
     from .manifests import Group, group_to_json
     from .paths import ROOT
+    from .verify_lease import verify_lease
 except ImportError:
     from manifests import Group, group_to_json
     from paths import ROOT
+    from verify_lease import verify_lease
 
 
 @dataclass(frozen=True)
@@ -64,21 +66,44 @@ def warm_public_dependencies(
             print(f"[dependency-warm] module={module} state=starting", flush=True)
             log.write(f"\n$ lake build {module}\n")
             log.flush()
-            process = subprocess.Popen(
-                ["lake", "build", module],
-                cwd=ROOT,
-                stdout=log,
-                stderr=subprocess.STDOUT,
-                text=True,
-                start_new_session=True,
-            )
             timed_out = False
-            try:
-                while process.poll() is None:
-                    elapsed = time.monotonic() - started
-                    remaining = timeout_seconds - elapsed
-                    if remaining <= 0:
-                        timed_out = True
+            with verify_lease(label="dependency_warm"):
+                process = subprocess.Popen(
+                    ["lake", "build", module],
+                    cwd=ROOT,
+                    stdout=log,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    start_new_session=True,
+                )
+                try:
+                    while process.poll() is None:
+                        elapsed = time.monotonic() - started
+                        remaining = timeout_seconds - elapsed
+                        if remaining <= 0:
+                            timed_out = True
+                            try:
+                                os.killpg(process.pid, signal.SIGTERM)
+                            except ProcessLookupError:
+                                pass
+                            try:
+                                process.wait(timeout=5)
+                            except subprocess.TimeoutExpired:
+                                try:
+                                    os.killpg(process.pid, signal.SIGKILL)
+                                except ProcessLookupError:
+                                    pass
+                                process.wait()
+                            break
+                        try:
+                            process.wait(timeout=min(heartbeat_seconds, remaining))
+                        except subprocess.TimeoutExpired:
+                            print(
+                                f"[dependency-warm] module={module} state=running elapsed_seconds={int(elapsed)}",
+                                flush=True,
+                            )
+                except BaseException:
+                    if process.poll() is None:
                         try:
                             os.killpg(process.pid, signal.SIGTERM)
                         except ProcessLookupError:
@@ -91,29 +116,7 @@ def warm_public_dependencies(
                             except ProcessLookupError:
                                 pass
                             process.wait()
-                        break
-                    try:
-                        process.wait(timeout=min(heartbeat_seconds, remaining))
-                    except subprocess.TimeoutExpired:
-                        print(
-                            f"[dependency-warm] module={module} state=running elapsed_seconds={int(elapsed)}",
-                            flush=True,
-                        )
-            except BaseException:
-                if process.poll() is None:
-                    try:
-                        os.killpg(process.pid, signal.SIGTERM)
-                    except ProcessLookupError:
-                        pass
-                    try:
-                        process.wait(timeout=5)
-                    except subprocess.TimeoutExpired:
-                        try:
-                            os.killpg(process.pid, signal.SIGKILL)
-                        except ProcessLookupError:
-                            pass
-                        process.wait()
-                raise
+                    raise
             duration = round(time.monotonic() - started, 3)
             exit_code = 124 if timed_out else int(process.returncode or 0)
             status = "timeout" if timed_out else "passed" if exit_code == 0 else "failed"
