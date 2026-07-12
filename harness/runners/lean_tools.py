@@ -2827,7 +2827,7 @@ def run_group(
             for task in group.tasks
         ]
         response = {
-            "status": "preflight_failed",
+            "status": "harness_error",
             "error": "Lean setup failed; no model request attempted",
             "provider": _active_provider(),
             "base_url": base_url,

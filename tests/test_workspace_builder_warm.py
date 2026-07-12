@@ -154,6 +154,39 @@ class PublicDependencyWarmTests(unittest.TestCase):
         self.assertEqual(result["lease_wait_seconds"], 50.0)
         self.assertEqual(result["duration_seconds"], 5.0)
 
+    def test_spawn_failure_returns_failed_warm_result(self) -> None:
+        group = Group(
+            group_id="erc20/state",
+            suite="active",
+            tasks=(
+                _task(
+                    implementation=("Benchmark/Cases/ERC20/State/Impl.lean",),
+                    specification=(),
+                ),
+            ),
+        )
+
+        @contextmanager
+        def fake_lease(*, label: str):
+            self.assertEqual(label, "dependency_warm")
+            yield "acquired"
+
+        with TemporaryDirectory() as tmp, patch(
+            "harness.workspace_builder.verify_lease", fake_lease
+        ), patch(
+            "harness.workspace_builder.subprocess.Popen",
+            side_effect=FileNotFoundError("lake not found"),
+        ):
+            result = warm_public_dependencies(
+                group,
+                timeout_seconds=30,
+                log_path=Path(tmp) / "warm.log",
+            )[0]
+
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["exit_code"], 127)
+        self.assertIn("lake not found", result["error"])
+
     def test_pre_provider_warm_failure_is_infra_invalid(self) -> None:
         task_ref = "erc20/state/transfer"
         classification = classify_run(

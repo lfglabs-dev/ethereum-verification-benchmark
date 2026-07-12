@@ -75,14 +75,38 @@ def warm_public_dependencies(
                     f"lease={lease_reason} lease_wait_seconds={lease_wait_seconds}",
                     flush=True,
                 )
-                process = subprocess.Popen(
-                    ["lake", "build", module],
-                    cwd=ROOT,
-                    stdout=log,
-                    stderr=subprocess.STDOUT,
-                    text=True,
-                    start_new_session=True,
-                )
+                try:
+                    process = subprocess.Popen(
+                        ["lake", "build", module],
+                        cwd=ROOT,
+                        stdout=log,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        start_new_session=True,
+                    )
+                except OSError as exc:
+                    duration = round(time.monotonic() - started, 3)
+                    message = f"failed to start lake build: {exc}"
+                    log.write(f"{message}\n")
+                    log.flush()
+                    print(
+                        f"[dependency-warm] module={module} state=failed "
+                        f"exit_code=127 duration_seconds={duration}",
+                        flush=True,
+                    )
+                    results.append(
+                        {
+                            "module": module,
+                            "status": "failed",
+                            "exit_code": 127,
+                            "duration_seconds": duration,
+                            "lease": lease_reason,
+                            "lease_wait_seconds": lease_wait_seconds,
+                            "log_path": str(log_path),
+                            "error": message,
+                        }
+                    )
+                    break
                 try:
                     while process.poll() is None:
                         elapsed = time.monotonic() - started

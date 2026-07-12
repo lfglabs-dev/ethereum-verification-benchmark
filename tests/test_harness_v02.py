@@ -134,6 +134,53 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertTrue(rows[0]["valid"])
         self.assertFalse(rows[0]["passed"])
 
+    def test_aggregate_keeps_warm_setup_failure_out_of_provider_setup_bucket(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp) / "run"
+            run_dir.mkdir()
+            (run_dir / "run.json").write_text(
+                json.dumps(
+                    {
+                        "run_id": "warm-failure",
+                        "harness_id": "default",
+                        "model": "local",
+                        "task_ref": "case/task",
+                        "harness_status": "harness_error",
+                        "failure_counts": {"infra_dependency_warm_failed": 1},
+                        "classification": {
+                            "run_class": "INFRA_INVALID",
+                            "reusable": False,
+                        },
+                        "verifier": {
+                            "score": {"passed_targets": 0, "total_targets": 1}
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (run_dir / "harness-response.json").write_text(
+                json.dumps(
+                    {
+                        "tasks": [
+                            {
+                                "task_ref": "case/task",
+                                "status": "request_failed",
+                                "failure_class": "infra_dependency_warm_failed",
+                                "attempts": [],
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            rows = aggregate_runs.collect_runs(Path(tmp))
+
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["final_class"], "INFRA_INVALID")
+        self.assertFalse(rows[0]["reusable"])
+        self.assertNotIn("provider setup error", rows[0]["validity_errors"])
+
     def test_aggregate_uses_all_child_task_validity(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_dir = Path(tmp) / "run"
