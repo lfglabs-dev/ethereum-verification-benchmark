@@ -32,21 +32,59 @@ _load_dotenv()
 try:
     from .classification import classify_run
     from .budgets import BUDGET_PROFILES, budget_artifact, budget_profile
-    from .manifests import group_id_from_task_ref, group_to_json, list_groups
+    from .manifests import (
+        filter_group_to_task,
+        group_id_from_task_ref,
+        group_to_json,
+        list_groups,
+        load_group,
+    )
     from .paths import RESULTS_DIR
     from .reports import compare_runs, write_run_report
     from .runners.shell_agent import run_group as run_shell_group
     from .runners.lean_tools import _role_config as default_role_config
     from .runners.lean_tools import run_group as run_lean_tools_group
+    from .workspace_builder import warm_public_dependencies
 except ImportError:
     from classification import classify_run
     from budgets import BUDGET_PROFILES, budget_artifact, budget_profile
-    from manifests import group_id_from_task_ref, group_to_json, list_groups
+    from manifests import (
+        filter_group_to_task,
+        group_id_from_task_ref,
+        group_to_json,
+        list_groups,
+        load_group,
+    )
     from paths import RESULTS_DIR
     from reports import compare_runs, write_run_report
     from runners.shell_agent import run_group as run_shell_group
     from runners.lean_tools import _role_config as default_role_config
     from runners.lean_tools import run_group as run_lean_tools_group
+    from workspace_builder import warm_public_dependencies
+
+
+def warm_task_dependencies(task_ref: str, *, suite: str, timeout_seconds: int) -> tuple[int, Path]:
+    """Explicit setup phase, intentionally separate from per-task model time."""
+    group = filter_group_to_task(load_group(group_id_from_task_ref(task_ref), suite), task_ref)
+    started_at = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    artifact_dir = RESULTS_DIR / "setup" / f"{started_at}-dependency-warm-{task_ref.replace('/', '__')}"
+    artifact_dir.mkdir(parents=True, exist_ok=True)
+    results = warm_public_dependencies(
+        group,
+        timeout_seconds=timeout_seconds,
+        log_path=artifact_dir / "dependency-warm.log",
+    )
+    payload = {
+        "schema_version": 1,
+        "task_ref": task_ref,
+        "timeout_seconds_per_module": timeout_seconds,
+        "results": results,
+        "passed": bool(results) and all(item.get("exit_code") == 0 for item in results),
+    }
+    (artifact_dir / "result.json").write_text(
+        json.dumps(payload, indent=2) + "\n", encoding="utf-8"
+    )
+    return (0 if payload["passed"] else 1), artifact_dir
 
 
 def run_group(
@@ -337,6 +375,14 @@ def main() -> int:
     task_parser.add_argument("--shell-timeout-seconds", type=int)
     task_parser.add_argument("--max-tool-calls", type=int)
 
+    warm_parser = sub.add_parser(
+        "warm-task",
+        help="warm public Lean dependencies outside the per-task model budget",
+    )
+    warm_parser.add_argument("task_ref")
+    warm_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
+    warm_parser.add_argument("--timeout-seconds", type=int, default=600)
+
     suite_parser = sub.add_parser("run-suite")
     suite_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
     suite_parser.add_argument("--harness", default="default", help="default (built-in fair harness) or a shell agent profile id from harness/agents/ (e.g. grok-build, opencode, codex)")
@@ -395,6 +441,14 @@ def main() -> int:
             task_ref=args.task_ref,
         )
         print(run_dir)
+        return code
+    if args.command == "warm-task":
+        code, artifact_dir = warm_task_dependencies(
+            args.task_ref,
+            suite=args.suite,
+            timeout_seconds=args.timeout_seconds,
+        )
+        print(artifact_dir)
         return code
     if args.command == "run-suite":
         _apply_budget(args)

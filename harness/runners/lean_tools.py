@@ -23,7 +23,12 @@ try:
     from ..paths import RESULTS_DIR, ROOT
     from ..reports import write_run_report
     from ..verifier import verify_group
-    from ..workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
+    from ..workspace_builder import (
+        agent_group_to_json,
+        assert_workspace_isolated,
+        build_group_workspace,
+        warm_public_dependencies,
+    )
 except ImportError:
     import transport
     from classification import classify_run
@@ -31,7 +36,12 @@ except ImportError:
     from paths import RESULTS_DIR, ROOT
     from reports import write_run_report
     from verifier import verify_group
-    from workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
+    from workspace_builder import (
+        agent_group_to_json,
+        assert_workspace_isolated,
+        build_group_workspace,
+        warm_public_dependencies,
+    )
 
 try:
     from ..transport import (
@@ -2685,9 +2695,19 @@ def run_group(
     group = load_group(group_id, suite)
     if task_ref:
         group = filter_group_to_task(group, task_ref)
+    base_url = DEFAULT_BASE_URL
+    credentials_available = bool(_api_key()) or _local_no_auth_endpoint(base_url)
+    dependency_warm_builds: list[dict[str, object]] = []
+    if not dry_run and credentials_available:
+        dependency_warm_builds = warm_public_dependencies(
+            group,
+            timeout_seconds=int(
+                os.environ.get("DEFAULT_HARNESS_DEPENDENCY_WARM_TIMEOUT_SECONDS", "600")
+            ),
+            log_path=run_dir / "dependency-warm.log",
+        )
     built = build_group_workspace(group, run_id=run_id)
     assert_workspace_isolated(built.path)
-    base_url = DEFAULT_BASE_URL
     response: dict[str, object]
     role_config = _role_config()
     benchmark_budget = {
@@ -2707,6 +2727,50 @@ def run_group(
             "warm_build_timeout_seconds": op_budget.warm_build_timeout_seconds,
         },
     }
+    target_warm_builds: list[dict[str, object]] = []
+    if (
+        not dry_run
+        and credentials_available
+        and not any(item.get("exit_code") != 0 for item in dependency_warm_builds)
+    ):
+        tasks_payload = json.loads(
+            (built.path / "harness" / "TASKS.json").read_text(encoding="utf-8")
+        )
+        warm_timeout = int(os.environ.get("DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS", "1800"))
+        for task in tasks_payload.get("tasks", []):
+            module = task.get("target_module") if isinstance(task, dict) else None
+            if isinstance(module, str) and module:
+                warm_start = time.time()
+                print(f"[target-warm] module={module} state=starting", flush=True)
+                warm_code, warm_output = _run_lean_module(
+                    built.path, module, timeout_seconds=warm_timeout
+                )
+                with (run_dir / "target-warm.log").open("a", encoding="utf-8") as handle:
+                    handle.write(f"\n$ lake build {module}\n{warm_output}\n")
+                print(
+                    f"[target-warm] module={module} state=finished exit_code={warm_code} "
+                    f"duration_seconds={round(time.time() - warm_start, 3)}",
+                    flush=True,
+                )
+                target_warm_builds.append(
+                    {
+                        "task_ref": task.get("task_ref"),
+                        "module": module,
+                        "exit_code": warm_code,
+                        "duration_seconds": round(time.time() - warm_start, 3),
+                    }
+                )
+    dependency_warm_failed = any(
+        item.get("exit_code") != 0 for item in dependency_warm_builds
+    )
+    target_warm_timed_out = any(item.get("exit_code") == 124 for item in target_warm_builds)
+    setup_failure_class = (
+        "infra_dependency_warm_failed"
+        if dependency_warm_failed
+        else "infra_target_warm_timeout"
+        if target_warm_timed_out
+        else None
+    )
     if dry_run:
         response = {
             "status": "dry_run",
@@ -2744,32 +2808,59 @@ def run_group(
             "failure_class": "provider_setup_error",
             **budgets,
         }
+    elif setup_failure_class is not None:
+        warm_failure_tasks = [
+            {
+                "task_ref": task.task_ref,
+                "status": "request_failed",
+                "failure_class": setup_failure_class,
+                "error": {
+                    "kind": "transport_error",
+                    "message": "Lean setup failed before provider preflight",
+                },
+                "attempts": [],
+                "usage": {
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0,
+                    "total_tokens": 0,
+                    "requests": 0,
+                },
+            }
+            for task in group.tasks
+        ]
+        response = {
+            "status": "preflight_failed",
+            "error": "Lean setup failed; no model request attempted",
+            "provider": _active_provider(),
+            "base_url": base_url,
+            "model": DEFAULT_DRIVER_MODEL,
+            "driver_model": DEFAULT_DRIVER_MODEL,
+            "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
+            "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
+            "strict_role_separation": STRICT_ROLE_SEPARATION,
+            "role_config": role_config,
+            "transport_mode": _transport_mode(),
+            "mode": "fair",
+            "provider_setup_error": False,
+            "failure_class": setup_failure_class,
+            "dependency_warm_builds": dependency_warm_builds,
+            "warm_builds": target_warm_builds,
+            "tasks": warm_failure_tasks,
+            "failure_counts": {setup_failure_class: len(group.tasks)},
+            **budgets,
+        }
     else:
         task_results: list[dict[str, object]] = []
-        warm_builds: list[dict[str, object]] = []
+        warm_builds = target_warm_builds
         preflight_passed = False
         try:
             preflight = generic_preflight(base_url, DEFAULT_DRIVER_MODEL)
             if preflight.get("status") != "passed":
                 raise RuntimeError(f"provider preflight failed: {preflight.get('error') or preflight}")
             preflight_passed = True
-            tasks_payload = json.loads((built.path / "harness" / "TASKS.json").read_text(encoding="utf-8"))
-            # Warm the Lean dependency graph once per target module so agent-visible
-            # check timeouts measure proof elaboration, not cold dependency builds.
-            warm_timeout = int(os.environ.get("DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS", "1800"))
-            for task in tasks_payload.get("tasks", []):
-                module = task.get("target_module") if isinstance(task, dict) else None
-                if isinstance(module, str) and module:
-                    warm_start = time.time()
-                    warm_code, _warm_output = _run_lean_module(built.path, module, timeout_seconds=warm_timeout)
-                    warm_builds.append(
-                        {
-                            "task_ref": task.get("task_ref"),
-                            "module": module,
-                            "exit_code": warm_code,
-                            "duration_seconds": round(time.time() - warm_start, 3),
-                        }
-                    )
+            tasks_payload = json.loads(
+                (built.path / "harness" / "TASKS.json").read_text(encoding="utf-8")
+            )
             for task in tasks_payload.get("tasks", []):
                 if isinstance(task, dict):
                     task_results.append(
@@ -2813,6 +2904,7 @@ def run_group(
                 "mode": "fair",
                 "usage": aggregate_usage,
                 "preflight": preflight,
+                "dependency_warm_builds": dependency_warm_builds,
                 "warm_builds": warm_builds,
                 "tasks": task_results,
                 "failure_counts": failure_counts_from_tasks(task_results),
@@ -2836,6 +2928,7 @@ def run_group(
                 "mode": "fair",
                 "provider_setup_error": status == "preflight_failed",
                 "failure_class": "provider_setup_error" if status == "preflight_failed" else None,
+                "dependency_warm_builds": dependency_warm_builds,
                 "warm_builds": warm_builds,
                 "tasks": task_results,
                 "failure_counts": failure_counts_from_tasks(task_results),
@@ -2857,6 +2950,7 @@ def run_group(
                 "strict_role_separation": STRICT_ROLE_SEPARATION,
                 "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
                 "role_config": role_config,
+                "dependency_warm_builds": dependency_warm_builds,
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
@@ -2896,6 +2990,7 @@ def run_group(
         "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
         "role_config": role_config,
         "role_metrics_totals": response.get("role_metrics_totals"),
+        "dependency_warm_builds": response.get("dependency_warm_builds", dependency_warm_builds),
         "track": "group/lean_tools",
         "mode": "fair",
         "run_mode": "task" if task_ref else "group",

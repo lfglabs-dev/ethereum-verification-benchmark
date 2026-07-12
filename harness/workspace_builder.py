@@ -3,8 +3,11 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import signal
 import shutil
+import subprocess
 import tempfile
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -20,6 +23,117 @@ except ImportError:
 class BuiltWorkspace:
     path: Path
     manifest_path: Path
+
+
+def public_dependency_modules(group: Group) -> list[str]:
+    """Return public, non-editable Lean modules worth warming once at repo scope."""
+    modules: set[str] = set()
+    for task in group.tasks:
+        for rel_path in (*task.implementation_files, *task.specification_files):
+            path = Path(rel_path)
+            if path.suffix != ".lean":
+                continue
+            if "Proofs.lean" in rel_path or "GeneratedPreview" in path.parts:
+                raise ValueError(f"refusing to warm forbidden dependency {rel_path}")
+            # The configured Lean library is rooted at Benchmark/. Lower-case
+            # cases/** files are translation/context inputs, not Lake targets.
+            if not path.parts or path.parts[0] != "Benchmark":
+                continue
+            modules.add(".".join(path.with_suffix("").parts))
+    return sorted(modules)
+
+
+def warm_public_dependencies(
+    group: Group,
+    *,
+    timeout_seconds: int,
+    log_path: Path,
+    heartbeat_seconds: float = 10.0,
+) -> list[dict[str, object]]:
+    """Warm public implementation/spec modules in the persistent repo cache.
+
+    Workspaces clone ``ROOT/.lake/build`` after this step, so repeated task
+    runs do not recompile the same dependency graph. Output stays in a durable
+    log while concise heartbeats make long cold builds externally observable.
+    """
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    results: list[dict[str, object]] = []
+    with log_path.open("a", encoding="utf-8") as log:
+        for module in public_dependency_modules(group):
+            started = time.monotonic()
+            print(f"[dependency-warm] module={module} state=starting", flush=True)
+            log.write(f"\n$ lake build {module}\n")
+            log.flush()
+            process = subprocess.Popen(
+                ["lake", "build", module],
+                cwd=ROOT,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                text=True,
+                start_new_session=True,
+            )
+            timed_out = False
+            try:
+                while process.poll() is None:
+                    elapsed = time.monotonic() - started
+                    remaining = timeout_seconds - elapsed
+                    if remaining <= 0:
+                        timed_out = True
+                        try:
+                            os.killpg(process.pid, signal.SIGTERM)
+                        except ProcessLookupError:
+                            pass
+                        try:
+                            process.wait(timeout=5)
+                        except subprocess.TimeoutExpired:
+                            try:
+                                os.killpg(process.pid, signal.SIGKILL)
+                            except ProcessLookupError:
+                                pass
+                            process.wait()
+                        break
+                    try:
+                        process.wait(timeout=min(heartbeat_seconds, remaining))
+                    except subprocess.TimeoutExpired:
+                        print(
+                            f"[dependency-warm] module={module} state=running elapsed_seconds={int(elapsed)}",
+                            flush=True,
+                        )
+            except BaseException:
+                if process.poll() is None:
+                    try:
+                        os.killpg(process.pid, signal.SIGTERM)
+                    except ProcessLookupError:
+                        pass
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        try:
+                            os.killpg(process.pid, signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+                        process.wait()
+                raise
+            duration = round(time.monotonic() - started, 3)
+            exit_code = 124 if timed_out else int(process.returncode or 0)
+            status = "timeout" if timed_out else "passed" if exit_code == 0 else "failed"
+            print(
+                f"[dependency-warm] module={module} state={status} exit_code={exit_code} "
+                f"duration_seconds={duration}",
+                flush=True,
+            )
+            results.append(
+                {
+                    "module": module,
+                    "status": status,
+                    "exit_code": exit_code,
+                    "duration_seconds": duration,
+                    "log_path": str(log_path),
+                }
+            )
+            if exit_code != 0:
+                break
+    return results
 
 
 def sha256_file(path: Path) -> str:
