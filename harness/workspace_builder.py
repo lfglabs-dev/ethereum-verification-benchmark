@@ -27,9 +27,23 @@ class BuiltWorkspace:
     manifest_path: Path
 
 
+# Every generated fair/shell workspace gets this restricted, public Grindset
+# surface. Warm the component modules in the repo cache up front; otherwise the
+# first provider arm silently pays their multi-minute cold build even after a
+# successful `warm-task`. Do not warm the repository's broader Grindset
+# umbrella, whose imports intentionally differ from the generated workspace.
+PUBLIC_WORKSPACE_GRINDSET_MODULES = (
+    "Benchmark.Grindset.ArithCore",
+    "Benchmark.Grindset.Attr",
+    "Benchmark.Grindset.Core",
+    "Benchmark.Grindset.Monad",
+    "Benchmark.Grindset.Reach",
+)
+
+
 def public_dependency_modules(group: Group) -> list[str]:
     """Return public, non-editable Lean modules worth warming once at repo scope."""
-    modules: set[str] = set()
+    modules: set[str] = set(PUBLIC_WORKSPACE_GRINDSET_MODULES)
     for task in group.tasks:
         for rel_path in (*task.implementation_files, *task.specification_files):
             path = Path(rel_path)

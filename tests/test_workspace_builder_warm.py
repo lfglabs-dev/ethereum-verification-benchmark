@@ -50,7 +50,15 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         self.assertEqual(
             public_dependency_modules(group),
-            ["Benchmark.Cases.ERC20.State.Impl", "Benchmark.Cases.ERC20.State.Spec"],
+            [
+                "Benchmark.Cases.ERC20.State.Impl",
+                "Benchmark.Cases.ERC20.State.Spec",
+                "Benchmark.Grindset.ArithCore",
+                "Benchmark.Grindset.Attr",
+                "Benchmark.Grindset.Core",
+                "Benchmark.Grindset.Monad",
+                "Benchmark.Grindset.Reach",
+            ],
         )
 
     def test_hidden_proof_dependencies_are_rejected(self) -> None:
@@ -101,6 +109,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         with TemporaryDirectory() as tmp, patch(
             "harness.workspace_builder.verify_lease", fake_lease
+        ), patch(
+            "harness.workspace_builder.public_dependency_modules",
+            return_value=["Benchmark.Cases.ERC20.State.Impl"],
         ), patch("harness.workspace_builder.subprocess.Popen", FinishedProcess):
             results = warm_public_dependencies(
                 group,
@@ -141,6 +152,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
         clock = iter([0.0, 50.0, 55.0])
         with TemporaryDirectory() as tmp, patch(
             "harness.workspace_builder.verify_lease", delayed_lease
+        ), patch(
+            "harness.workspace_builder.public_dependency_modules",
+            return_value=["Benchmark.Cases.ERC20.State.Impl"],
         ), patch("harness.workspace_builder.subprocess.Popen", return_value=FinishedProcess()), patch(
             "harness.workspace_builder.time.monotonic", side_effect=lambda: next(clock)
         ):
