@@ -52,6 +52,12 @@ class DefaultRequestShapeTests(unittest.TestCase):
 
 
 class GreedyAndSamplingRequestShapeTests(unittest.TestCase):
+    def test_effective_sampling_matches_greedy_wire_policy(self) -> None:
+        self.assertEqual(
+            transport_request.effective_sampling(),
+            {"temperature": 0, "top_p": 1},
+        )
+
     def test_greedy_default_pins_top_p(self) -> None:
         # temperature 0 (harness default) must send top_p=1 so providers that
         # reject greedy-without-top_p (Mistral Labs 400) accept the request.
@@ -65,6 +71,12 @@ class GreedyAndSamplingRequestShapeTests(unittest.TestCase):
         self.assertEqual(payload["reasoning_effort"], "high")
         # top_p is not force-pinned once temperature is non-zero.
         self.assertNotIn("top_p", payload)
+        self.assertEqual(
+            transport_request.effective_sampling(
+                {"temperature": 1.0, "reasoning_effort": "high"}
+            ),
+            {"temperature": 1.0, "reasoning_effort": "high"},
+        )
 
     def test_env_temperature_and_effort(self) -> None:
         self.addCleanup(importlib.reload, transport_request)

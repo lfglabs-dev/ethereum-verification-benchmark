@@ -36,6 +36,7 @@ try:
     from .paths import RESULTS_DIR
     from .reports import compare_runs, write_run_report
     from .runners.shell_agent import run_group as run_shell_group
+    from .runners.lean_tools import _role_config as default_role_config
     from .runners.lean_tools import run_group as run_lean_tools_group
 except ImportError:
     from classification import classify_run
@@ -44,6 +45,7 @@ except ImportError:
     from paths import RESULTS_DIR
     from reports import compare_runs, write_run_report
     from runners.shell_agent import run_group as run_shell_group
+    from runners.lean_tools import _role_config as default_role_config
     from runners.lean_tools import run_group as run_lean_tools_group
 
 
@@ -206,6 +208,7 @@ def run_suite(
     harness_status = "completed" if exit_code == 0 else "completed_with_failures"
     child_tracks = sorted({str(item.get("track")) for item in child_runs if item.get("track")})
     child_models = sorted({str(item.get("model")) for item in child_runs if item.get("model")})
+    role_config = default_role_config() if harness == "default" else None
     run = {
         "schema_version": 1,
         "run_id": run_id,
@@ -222,6 +225,7 @@ def run_suite(
         "harness_status": harness_status,
         "harness_exit_code": exit_code,
         "child_runs": child_runs,
+        "role_config": role_config,
         "benchmark_budget": {
             "max_attempts": max_attempts,
             "max_tool_calls": max_tool_calls,
@@ -248,6 +252,7 @@ def run_suite(
                 "shell_timeout_seconds": shell_timeout_seconds,
                 "mode": "fair" if harness == "default" else None,
                 "max_tool_calls": max_tool_calls if harness == "default" else None,
+                "role_config": role_config,
                 "benchmark_budget": {
                     "max_attempts": max_attempts,
                     "max_tool_calls": max_tool_calls,

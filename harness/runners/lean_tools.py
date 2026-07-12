@@ -37,7 +37,7 @@ try:
     from ..transport import (
         ChatCompletionError, DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, HTTP_USER_AGENT,
         _active_provider, _api_key, _harness_env, _local_no_auth_endpoint, _logged_response_message,
-        _response_text, _append_jsonl, _streaming_fallback_reason, _transport_mode,
+        _response_text, _append_jsonl, _effective_sampling, _streaming_fallback_reason, _transport_mode,
         chat_completion, endpoint_smoke, generic_preflight,
     )
     from ..budgets import operational_budget
@@ -58,7 +58,7 @@ except ImportError:
     from transport import (
         ChatCompletionError, DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, HTTP_USER_AGENT,
         _active_provider, _api_key, _harness_env, _local_no_auth_endpoint, _logged_response_message,
-        _response_text, _append_jsonl, _streaming_fallback_reason, _transport_mode,
+        _response_text, _append_jsonl, _effective_sampling, _streaming_fallback_reason, _transport_mode,
         chat_completion, endpoint_smoke, generic_preflight,
     )
     from budgets import operational_budget
@@ -205,6 +205,12 @@ def _role_config() -> dict[str, object]:
         "prover_model": prover,
         "prover_mode": DEFAULT_PROVER_MODE or None,
         "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
+        "sampling": {
+            "driver": _effective_sampling(),
+            "prover": _effective_sampling(PROVER_SAMPLING or None)
+            if DRAFT_PROOF_ENABLED and prover
+            else None,
+        },
         "stages": {
             STAGE_DRIVER: driver,
             STAGE_WRITER: writer,

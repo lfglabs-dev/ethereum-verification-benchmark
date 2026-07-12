@@ -7,6 +7,7 @@ from contextlib import ExitStack
 from pathlib import Path
 from unittest import mock
 
+from harness import transport_request
 from harness.runners import lean_tools
 
 
@@ -69,6 +70,16 @@ class RoleConfigTests(unittest.TestCase):
     def test_role_config_marks_strict_hybrid_ensemble(self) -> None:
         with ExitStack() as stack:
             _strict_env(stack)
+            stack.enter_context(
+                mock.patch.object(
+                    lean_tools,
+                    "PROVER_SAMPLING",
+                    {"temperature": 1.0, "reasoning_effort": "high"},
+                )
+            )
+            stack.enter_context(
+                mock.patch.object(transport_request, "DEFAULT_OMIT_MAX_TOKENS", False)
+            )
             config = lean_tools._role_config()
         self.assertTrue(config["strict_role_separation"])
         self.assertTrue(config["ensemble"])
@@ -77,6 +88,11 @@ class RoleConfigTests(unittest.TestCase):
         self.assertEqual(config["stages"][lean_tools.STAGE_WRITER], "prover-model")
         self.assertEqual(config["stages"][lean_tools.STAGE_REPAIRER], "prover-model")
         self.assertEqual(config["stages"][lean_tools.STAGE_DRIVER], "driver-model")
+        self.assertEqual(config["sampling"]["driver"], {"temperature": 0, "top_p": 1})
+        self.assertEqual(
+            config["sampling"]["prover"],
+            {"temperature": 1.0, "reasoning_effort": "high"},
+        )
         # The ensemble label must name both roles so it cannot be mistaken for a
         # standalone writer-model score.
         self.assertIn("driver=driver-model", config["role_label"])

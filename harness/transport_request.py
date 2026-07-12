@@ -206,6 +206,28 @@ DEFAULT_STOP_SEQUENCES = _configured_stop_sequences()
 _streaming_fallback_reason: str | None = None
 
 
+def effective_sampling(sampling: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Return the sampling fields that will actually be sent on the wire.
+
+    Keeping this derivation separate from ``chat_completion`` lets artifact
+    writers persist the same effective policy, including implicit greedy
+    ``top_p=1`` and compatibility-mode removal of ``reasoning_effort``.
+    """
+    effective: dict[str, Any] = {"temperature": DEFAULT_TEMPERATURE}
+    if DEFAULT_REASONING_EFFORT:
+        effective["reasoning_effort"] = DEFAULT_REASONING_EFFORT
+    if sampling:
+        for key in ("temperature", "top_p", "reasoning_effort"):
+            value = sampling.get(key)
+            if value is not None:
+                effective[key] = value
+    if effective.get("temperature") == 0 and "top_p" not in effective:
+        effective["top_p"] = 1
+    if DEFAULT_OMIT_MAX_TOKENS:
+        effective.pop("reasoning_effort", None)
+    return effective
+
+
 def api_key() -> str | None:
     return (
         provider_env("API_KEY")
@@ -410,23 +432,10 @@ def chat_completion(
     payload: dict[str, Any] = {
         "model": model,
         "messages": _sanitize_tool_message_order(messages),
-        "temperature": DEFAULT_TEMPERATURE,
     }
-    if DEFAULT_REASONING_EFFORT:
-        payload["reasoning_effort"] = DEFAULT_REASONING_EFFORT
-    if sampling:
-        # Per-call sampling override (e.g. the hybrid prover running at its
-        # vendor-recommended regime while the driver keeps the harness default).
-        for key in ("temperature", "top_p", "reasoning_effort"):
-            value = sampling.get(key)
-            if value is not None:
-                payload[key] = value
-    if payload.get("temperature") == 0 and "top_p" not in payload:
-        # Greedy sampling: pin top_p=1 explicitly. Some OpenAI-compatible
-        # providers (notably the Mistral API serving the Labs Leanstral
-        # models) reject temperature=0 combined with their non-1 default
-        # top_p: HTTP 400 "top_p must be 1 when using greedy sampling".
-        payload["top_p"] = 1
+    # Per-call overrides (for example the hybrid prover's vendor-recommended
+    # regime) are folded into the exact policy persisted in run artifacts.
+    payload.update(effective_sampling(sampling))
     if not DEFAULT_OMIT_MAX_TOKENS:
         payload["max_tokens"] = max_tokens
     if DEFAULT_STOP_SEQUENCES:
