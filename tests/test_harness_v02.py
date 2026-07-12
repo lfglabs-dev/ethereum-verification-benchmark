@@ -151,7 +151,7 @@ class HarnessV02Tests(unittest.TestCase):
                         "harness_id": "default",
                         "model": "local",
                         "task_ref": "case/task",
-                        "harness_status": "harness_error",
+                        "harness_status": "completed_with_failures",
                         "benchmark_budget": benchmark_budget,
                         "failure_counts": {"infra_dependency_warm_failed": 1},
                         "classification": {

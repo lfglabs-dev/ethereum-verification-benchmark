@@ -9,6 +9,7 @@ from unittest import mock
 
 from harness.paths import ROOT
 from harness.runners.shell_agent import _run_profile_preflights
+from harness.result_validity import row_validity
 
 
 class ShellAgentProfileTests(unittest.TestCase):
@@ -54,6 +55,29 @@ class ShellAgentProfileTests(unittest.TestCase):
     def test_invalid_preflight_shape_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "non-empty string list"):
             _run_profile_preflights({"preflight_commands": ["vibe --version"]}, cwd=ROOT)
+
+    def test_multi_task_setup_failure_rows_keep_budget_and_valid_status(self) -> None:
+        budget = {
+            "max_attempts": None,
+            "max_tool_calls": None,
+            "max_turns": 20,
+            "completion_token_budget": 1000,
+        }
+        run_row = {
+            "status": "completed_with_failures",
+            "harness_status": "completed_with_failures",
+            "benchmark_budget": budget,
+        }
+        task_row = {
+            "status": "request_failed",
+            "failure_class": "infra_dependency_warm_failed",
+            "error": {"kind": "transport_error"},
+            "attempts": [],
+            "benchmark_budget": budget,
+        }
+
+        self.assertTrue(row_validity(run_row, expected_budget=budget)["valid"])
+        self.assertTrue(row_validity(task_row, expected_budget=budget)["valid"])
 
 
 if __name__ == "__main__":

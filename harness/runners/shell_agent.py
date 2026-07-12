@@ -156,6 +156,12 @@ def run_group(
 ) -> tuple[int, Path]:
     profile = load_profile(harness_id)
     op_budget = operational_budget()
+    benchmark_budget = {
+        "max_attempts": None,
+        "max_tool_calls": None,
+        "max_turns": max_turns,
+        "completion_token_budget": token_budget,
+    }
     start = time.time()
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_subject = task_ref or group_id
@@ -366,7 +372,11 @@ def run_group(
     max_invocations = int(os.environ.get("SHELL_AGENT_MAX_INVOCATIONS", "6"))
     continue_template = profile.get("continue_command")
     if not dry_run and setup_failure_class is not None:
-        harness_status = "preflight_failed" if setup_failure_class == "provider_setup_error" else "harness_error"
+        harness_status = (
+            "preflight_failed"
+            if setup_failure_class == "provider_setup_error"
+            else "completed_with_failures"
+        )
         stderr = setup_error or setup_failure_class
     elif not dry_run:
         deadline = time.time() + timeout_seconds
@@ -470,6 +480,7 @@ def run_group(
                     "message": setup_error or setup_failure_class,
                 },
                 "attempts": [],
+                "benchmark_budget": benchmark_budget,
                 "usage": {
                     "prompt_tokens": 0,
                     "completion_tokens": 0,
@@ -519,12 +530,7 @@ def run_group(
         "usage": usage,
         "usage_source": usage_source,
         "token_budget": token_budget,
-        "benchmark_budget": {
-            "max_attempts": None,
-            "max_tool_calls": None,
-            "max_turns": max_turns,
-            "completion_token_budget": token_budget,
-        },
+        "benchmark_budget": benchmark_budget,
         "operational_budget": {
             "provider_retries": op_budget.provider_retries,
             "infra_restarts": op_budget.infra_restarts,
