@@ -135,6 +135,12 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertFalse(rows[0]["passed"])
 
     def test_aggregate_keeps_warm_setup_failure_out_of_provider_setup_bucket(self) -> None:
+        benchmark_budget = {
+            "max_attempts": 1,
+            "max_tool_calls": 80,
+            "max_turns": None,
+            "completion_token_budget": 32768,
+        }
         with tempfile.TemporaryDirectory() as tmp:
             run_dir = Path(tmp) / "run"
             run_dir.mkdir()
@@ -146,6 +152,7 @@ class HarnessV02Tests(unittest.TestCase):
                         "model": "local",
                         "task_ref": "case/task",
                         "harness_status": "harness_error",
+                        "benchmark_budget": benchmark_budget,
                         "failure_counts": {"infra_dependency_warm_failed": 1},
                         "classification": {
                             "run_class": "INFRA_INVALID",
@@ -167,6 +174,7 @@ class HarnessV02Tests(unittest.TestCase):
                                 "status": "request_failed",
                                 "failure_class": "infra_dependency_warm_failed",
                                 "attempts": [],
+                                "benchmark_budget": benchmark_budget,
                             }
                         ]
                     }
@@ -180,6 +188,7 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(rows[0]["final_class"], "INFRA_INVALID")
         self.assertFalse(rows[0]["reusable"])
         self.assertNotIn("provider setup error", rows[0]["validity_errors"])
+        self.assertNotIn("benchmark budget does not match manifest", rows[0]["validity_errors"])
 
     def test_aggregate_uses_all_child_task_validity(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

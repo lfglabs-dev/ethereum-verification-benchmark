@@ -2817,6 +2817,7 @@ def run_group(
                     "message": "Lean setup failed before provider preflight",
                 },
                 "attempts": [],
+                "benchmark_budget": benchmark_budget,
                 "usage": {
                     "prompt_tokens": 0,
                     "completion_tokens": 0,
