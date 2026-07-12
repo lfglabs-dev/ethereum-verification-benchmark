@@ -1285,6 +1285,18 @@ def _draft_valid_syntax(body: str) -> bool | None:
     return True
 
 
+# Optional per-call sampling for the hybrid prover, so it can run at its
+# vendor-recommended regime (e.g. Leanstral: temperature=1.0, high reasoning
+# effort) without changing the driver's sampling. Empty by default.
+PROVER_SAMPLING: dict[str, object] = {}
+_prover_temp = (os.environ.get("DEFAULT_HARNESS_PROVER_TEMPERATURE", "") or "").strip()
+if _prover_temp:
+    PROVER_SAMPLING["temperature"] = float(_prover_temp)
+_prover_effort = (os.environ.get("DEFAULT_HARNESS_PROVER_REASONING_EFFORT", "") or "").strip()
+if _prover_effort:
+    PROVER_SAMPLING["reasoning_effort"] = _prover_effort
+
+
 def _draft_proof_with_prover(
     args: dict[str, object],
     *,
@@ -1350,6 +1362,7 @@ def _draft_proof_with_prover(
             tool_choice=None,
             request_log_path=draft_log_path,
             api_key_override=prover_api_key_override,
+            sampling=PROVER_SAMPLING or None,
         )
     except Exception as exc:
         error_payload = exc.to_dict() if isinstance(exc, ChatCompletionError) else {"message": str(exc)}

@@ -165,6 +165,8 @@ REQUEST_RETRIES = int(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRIES", os.envir
 REQUEST_RETRY_BACKOFF_SECONDS = float(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRY_BACKOFF_SECONDS", os.environ.get("GAZELLA_REQUEST_RETRY_BACKOFF_SECONDS", "2")))
 DEFAULT_CONTEXT_TOKENS = os.environ.get("DEFAULT_HARNESS_CONTEXT_TOKENS", os.environ.get("GAZELLA_N_CTX"))
 DEFAULT_MAX_RESPONSE_TOKENS = int(os.environ.get("DEFAULT_HARNESS_MAX_RESPONSE_TOKENS", "8192"))
+DEFAULT_TEMPERATURE = float(os.environ.get("DEFAULT_HARNESS_TEMPERATURE", "0") or 0)
+DEFAULT_REASONING_EFFORT = (os.environ.get("DEFAULT_HARNESS_REASONING_EFFORT", "") or "").strip()
 # Some strict OpenAI-compatible providers reject any request that carries a
 # token-limit field and answer with a generic 400 (observed with Virtuals'
 # openai-gpt-56-sol-pro, which 400s on max_tokens / max_completion_tokens /
@@ -403,12 +405,28 @@ def chat_completion(
     request_log_path: Path | None = None,
     request_index: int | None = None,
     api_key_override: str | None = None,
+    sampling: dict[str, Any] | None = None,
 ) -> dict[str, object]:
     payload: dict[str, Any] = {
         "model": model,
         "messages": _sanitize_tool_message_order(messages),
-        "temperature": 0,
+        "temperature": DEFAULT_TEMPERATURE,
     }
+    if DEFAULT_REASONING_EFFORT:
+        payload["reasoning_effort"] = DEFAULT_REASONING_EFFORT
+    if sampling:
+        # Per-call sampling override (e.g. the hybrid prover running at its
+        # vendor-recommended regime while the driver keeps the harness default).
+        for key in ("temperature", "top_p", "reasoning_effort"):
+            value = sampling.get(key)
+            if value is not None:
+                payload[key] = value
+    if payload.get("temperature") == 0 and "top_p" not in payload:
+        # Greedy sampling: pin top_p=1 explicitly. Some OpenAI-compatible
+        # providers (notably the Mistral API serving the Labs Leanstral
+        # models) reject temperature=0 combined with their non-1 default
+        # top_p: HTTP 400 "top_p must be 1 when using greedy sampling".
+        payload["top_p"] = 1
     if not DEFAULT_OMIT_MAX_TOKENS:
         payload["max_tokens"] = max_tokens
     if DEFAULT_STOP_SEQUENCES:
