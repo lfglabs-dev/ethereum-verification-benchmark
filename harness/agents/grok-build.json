@@ -2,6 +2,7 @@
   "schema_version": 1,
   "agent_id": "grok-build",
   "adapter": "shell",
+  "uses_proxy": false,
   "track": "group/grok-build",
   "command": [
     "grok",

@@ -35,23 +35,32 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 try:
+    from ..classification import classify_run
     from ..identity import HARNESS_USER_AGENT
     from ..manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from ..metering_proxy import MeteringProxy
-    from ..budgets import operational_budget
+    from ..budgets import dependency_warm_timeout_seconds, operational_budget
     from ..paths import RESULTS_DIR, ROOT
     from ..reports import write_run_report
+    from ..transport import generic_preflight
     from ..verifier import verify_group
-    from ..workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
+    from ..workspace_builder import (
+        agent_group_to_json,
+        assert_workspace_isolated,
+        build_group_workspace,
+        warm_public_dependencies,
+    )
 except ImportError:
+    from classification import classify_run
     from identity import HARNESS_USER_AGENT
     from manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from metering_proxy import MeteringProxy
-    from budgets import operational_budget
+    from budgets import dependency_warm_timeout_seconds, operational_budget
     from paths import RESULTS_DIR, ROOT
     from reports import write_run_report
+    from transport import generic_preflight
     from verifier import verify_group
-    from workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
+    from workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace, warm_public_dependencies
 
 
 def load_profile(harness_id: str) -> dict[str, object]:
@@ -79,6 +88,57 @@ def _expand(value: str, substitutions: dict[str, str]) -> str:
     for key, replacement in substitutions.items():
         value = value.replace("{" + key + "}", replacement)
     return value
+
+
+def _run_profile_preflights(
+    profile: dict[str, object],
+    *,
+    cwd: Path,
+    timeout_seconds: int = 180,
+) -> list[dict[str, object]]:
+    """Resolve pinned agent/MCP executables before expensive Lean setup.
+
+    A missing CLI must become a zero-request infrastructure artifact rather
+    than failing after the metering proxy and provider path are live.
+    """
+    results: list[dict[str, object]] = []
+    raw_commands = profile.get("preflight_commands") or []
+    if not isinstance(raw_commands, list):
+        raise ValueError("preflight_commands must be a list")
+    for raw in raw_commands:
+        if not isinstance(raw, list) or not raw or not all(isinstance(part, str) for part in raw):
+            raise ValueError("each preflight command must be a non-empty string list")
+        command = [str(part) for part in raw]
+        started = time.time()
+        try:
+            completed = subprocess.run(
+                command,
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=timeout_seconds,
+            )
+            output = (completed.stdout + completed.stderr).strip()
+            result = {
+                "command": command,
+                "status": "passed" if completed.returncode == 0 else "failed",
+                "exit_code": completed.returncode,
+                "duration_seconds": round(time.time() - started, 3),
+                "output_tail": output[-1200:],
+            }
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            result = {
+                "command": command,
+                "status": "failed",
+                "exit_code": 127 if isinstance(exc, OSError) else 124,
+                "duration_seconds": round(time.time() - started, 3),
+                "output_tail": str(exc)[-1200:],
+            }
+        results.append(result)
+        if result["status"] != "passed":
+            break
+    return results
 
 
 def run_group(
@@ -117,6 +177,41 @@ def run_group(
     ]
     if dirty:
         raise RuntimeError(f"editable files modified in source repo (restore before benchmarking): {', '.join(dirty)}")
+
+    setup_failure_class: str | None = None
+    setup_error: str | None = None
+    cli_preflights: list[dict[str, object]] = []
+    dependency_warm_builds: list[dict[str, object]] = []
+    if not dry_run:
+        cli_preflights = _run_profile_preflights(profile, cwd=ROOT)
+        failed_cli = next((item for item in cli_preflights if item.get("status") != "passed"), None)
+        if failed_cli is not None:
+            setup_failure_class = "infra_agent_preflight_failed"
+            setup_error = f"agent executable preflight failed: {failed_cli.get('output_tail') or failed_cli}"
+        else:
+            try:
+                dependency_warm_builds = warm_public_dependencies(
+                    group,
+                    timeout_seconds=dependency_warm_timeout_seconds(),
+                    log_path=run_dir / "dependency-warm.log",
+                )
+            except Exception as exc:  # setup must still produce a complete zero-request artifact
+                dependency_warm_builds = [
+                    {
+                        "status": "failed",
+                        "exit_code": 1,
+                        "error": str(exc),
+                        "log_path": str(run_dir / "dependency-warm.log"),
+                    }
+                ]
+            failed_dependency = next(
+                (item for item in dependency_warm_builds if item.get("exit_code") != 0),
+                None,
+            )
+            if failed_dependency is not None:
+                setup_failure_class = "infra_dependency_warm_failed"
+                setup_error = f"public dependency warm failed: {failed_dependency}"
+
     built = build_group_workspace(group, run_id=run_id)
     assert_workspace_isolated(built.path)
     initial_editable: dict[str, str] = {}
@@ -126,30 +221,61 @@ def run_group(
             if path.is_file():
                 initial_editable[rel] = path.read_text(encoding="utf-8")
 
-    # Warm the Lean build once so agent check latency measures proofs, not deps.
+    # Let the target check populate target-specific cache entries. The editable
+    # theorem is intentionally a placeholder, so a normal non-zero exit is not
+    # itself a setup failure; only a timeout is infrastructure-invalid.
     warm: dict[str, object] = {"status": "skipped_dry_run"}
-    if not dry_run:
+    if not dry_run and setup_failure_class is None:
         warm_started = time.time()
         warm_timeout = int(os.environ.get("DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS", "1800"))
-        completed = subprocess.run(
-            ["./harness/check.sh"], cwd=built.path, capture_output=True, text=True, check=False, timeout=warm_timeout
-        )
-        warm = {
-            "status": "passed" if completed.returncode == 0 else "failed",
-            "exit_code": completed.returncode,
-            "duration_seconds": round(time.time() - warm_started, 3),
-        }
+        try:
+            completed = subprocess.run(
+                ["./harness/check.sh"],
+                cwd=built.path,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=warm_timeout,
+            )
+            warm = {
+                "status": "passed" if completed.returncode == 0 else "placeholder_failed",
+                "exit_code": completed.returncode,
+                "duration_seconds": round(time.time() - warm_started, 3),
+                "output_tail": (completed.stdout + completed.stderr)[-1200:],
+            }
+        except subprocess.TimeoutExpired as exc:
+            warm = {
+                "status": "timeout",
+                "exit_code": 124,
+                "duration_seconds": round(time.time() - warm_started, 3),
+                "output_tail": str(exc)[-1200:],
+            }
+            setup_failure_class = "infra_target_warm_timeout"
+            setup_error = "target cache warm timed out before provider preflight"
 
     upstream = os.environ.get("DEFAULT_HARNESS_BASE_URL", "")
     api_key = os.environ.get("DEFAULT_HARNESS_API_KEY")
-    proxy = MeteringProxy(
-        upstream,
-        api_key,
-        usage_path=run_dir / "usage.json",
-        completion_token_budget=token_budget,
-        user_agent=os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", HARNESS_USER_AGENT),
-    )
-    proxy.start()
+    uses_proxy = bool(profile.get("uses_proxy", True))
+    provider_preflight: dict[str, object] | None = None
+    if not dry_run and setup_failure_class is None and uses_proxy:
+        try:
+            provider_preflight = generic_preflight(upstream, model)
+        except Exception as exc:
+            provider_preflight = {"status": "failed", "error": str(exc)}
+        if provider_preflight.get("status") != "passed":
+            setup_failure_class = "provider_setup_error"
+            setup_error = f"provider preflight failed: {provider_preflight}"
+
+    proxy: MeteringProxy | None = None
+    if not dry_run and setup_failure_class is None and uses_proxy:
+        proxy = MeteringProxy(
+            upstream,
+            api_key,
+            usage_path=run_dir / "usage.json",
+            completion_token_budget=token_budget,
+            user_agent=os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", HARNESS_USER_AGENT),
+        )
+        proxy.start()
     fake_home = Path(tempfile.mkdtemp(prefix=f"verity-{harness_id}-home-"))
     prompt_file = built.path / "harness" / f"PROMPT.{harness_id}.md"
     prompt_file.write_text(_prompt(group), encoding="utf-8")
@@ -158,8 +284,8 @@ def run_group(
         "workspace": str(built.path),
         "prompt": _prompt(group),
         "prompt_file": str(prompt_file),
-        "proxy_url": proxy.base_url,
-        "proxy_key": proxy.local_key,
+        "proxy_url": proxy.base_url if proxy is not None else "http://127.0.0.1:0/v1",
+        "proxy_key": proxy.local_key if proxy is not None else "not-started",
         "home": str(fake_home),
         "max_turns": str(max_turns),
     }
@@ -184,7 +310,8 @@ def run_group(
         elif fallback_env and os.environ.get(fallback_env):
             auth_mode = "env"
         else:
-            proxy.stop()
+            if proxy is not None:
+                proxy.stop()
             shutil.rmtree(fake_home, ignore_errors=True)
             raise RuntimeError(
                 f"harness {harness_id} requires host auth: set {flag}=1 with {source} present"
@@ -233,12 +360,15 @@ def run_group(
         return completed.returncode == 0, output[-1500:]
 
     stdout = stderr = ""
-    return_code = 0
+    return_code = 0 if dry_run else 1
     harness_status = "dry_run"
     invocations: list[dict[str, object]] = []
     max_invocations = int(os.environ.get("SHELL_AGENT_MAX_INVOCATIONS", "6"))
     continue_template = profile.get("continue_command")
-    if not dry_run:
+    if not dry_run and setup_failure_class is not None:
+        harness_status = "preflight_failed" if setup_failure_class == "provider_setup_error" else "harness_error"
+        stderr = setup_error or setup_failure_class
+    elif not dry_run:
         deadline = time.time() + timeout_seconds
         for invocation_index in range(1, max_invocations + 1):
             cli_command = command
@@ -270,16 +400,25 @@ def run_group(
                 }
             )
             harness_status = "completed" if return_code == 0 else ("timeout" if return_code == 124 else "harness_error")
-            if return_code == 124 or time.time() >= deadline or proxy.budget_exhausted():
+            if (
+                return_code == 124
+                or time.time() >= deadline
+                or (proxy is not None and proxy.budget_exhausted())
+            ):
                 break
             # A non-zero exit only ends the loop when there is no configured
             # continue path; otherwise the next iteration re-checks and resumes.
             if return_code != 0 and not isinstance(continue_template, list):
                 break
-    proxy.stop()
+    if proxy is not None:
+        proxy.stop()
     shutil.rmtree(fake_home, ignore_errors=True)
 
-    usage = dict(proxy.usage)
+    usage = (
+        dict(proxy.usage)
+        if proxy is not None
+        else {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
+    )
     usage_source = "metered"
     usage_pattern = profile.get("usage_pattern")
     if isinstance(usage_pattern, str) and usage["total_tokens"] == 0:
@@ -317,6 +456,32 @@ def run_group(
     (run_dir / "workspace.diff").write_text("".join(chunks), encoding="utf-8")
 
     verifier_result = verify_group(group, built.path, artifact_dir=run_dir / "verifier")
+    response_tasks: list[dict[str, object]]
+    if setup_failure_class is not None:
+        response_tasks = [
+            {
+                "task_ref": task.task_ref,
+                "status": "request_failed",
+                "failure_class": setup_failure_class,
+                "error": {
+                    "kind": "provider_setup_error"
+                    if setup_failure_class == "provider_setup_error"
+                    else "transport_error",
+                    "message": setup_error or setup_failure_class,
+                },
+                "attempts": [],
+                "usage": {
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0,
+                    "total_tokens": 0,
+                    "requests": 0,
+                },
+            }
+            for task in group.tasks
+        ]
+    else:
+        response_tasks = [{"task_ref": task_ref or group_id, "usage": usage}]
+    classification = classify_run(verifier_result, response_tasks)
     version = None
     version_command = profile.get("version_command")
     if isinstance(version_command, list):
@@ -345,6 +510,11 @@ def run_group(
         "invocations": invocations,
         "timeout_seconds": timeout_seconds,
         "warm_build": warm,
+        "dependency_warm_builds": dependency_warm_builds,
+        "agent_preflights": cli_preflights,
+        "provider_preflight": provider_preflight,
+        "failure_class": setup_failure_class,
+        "provider_setup_error": setup_failure_class == "provider_setup_error",
         "auth_mode": auth_mode,
         "usage": usage,
         "usage_source": usage_source,
@@ -363,9 +533,24 @@ def run_group(
         },
         "workspace": str(built.path) if keep_workspace else None,
         "verifier": verifier_result,
+        "classification": classification,
     }
     (run_dir / "harness-response.json").write_text(
-        json.dumps({"status": harness_status, "command": command, "tasks": [{"task_ref": task_ref or group_id, "usage": usage}]}, indent=2) + "\n",
+        json.dumps(
+            {
+                "status": harness_status,
+                "command": command,
+                "failure_class": setup_failure_class,
+                "provider_setup_error": setup_failure_class == "provider_setup_error",
+                "dependency_warm_builds": dependency_warm_builds,
+                "warm_build": warm,
+                "agent_preflights": cli_preflights,
+                "provider_preflight": provider_preflight,
+                "tasks": response_tasks,
+            },
+            indent=2,
+        )
+        + "\n",
         encoding="utf-8",
     )
     (run_dir / "harness-request.json").write_text(
@@ -377,6 +562,9 @@ def run_group(
                 "timeout_seconds": timeout_seconds,
                 "max_turns": max_turns,
                 "auth_mode": auth_mode,
+                "dependency_warm_builds": dependency_warm_builds,
+                "agent_preflights": cli_preflights,
+                "provider_preflight": provider_preflight,
                 "benchmark_budget": run["benchmark_budget"],
                 "operational_budget": run["operational_budget"],
             },

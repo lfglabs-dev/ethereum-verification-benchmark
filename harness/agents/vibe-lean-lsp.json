@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "agent_id": "vibe-lean-lsp",
+  "adapter": "shell",
+  "uses_proxy": true,
+  "track": "group/vibe-lean-lsp",
+  "command": [
+    "uvx",
+    "--from",
+    "mistral-vibe==2.19.1",
+    "vibe",
+    "--workdir",
+    "{workspace}",
+    "--trust",
+    "--prompt",
+    "{prompt}",
+    "--max-turns",
+    "{max_turns}",
+    "--output",
+    "streaming",
+    "--auto-approve",
+    "--disabled-tools",
+    "task",
+    "--disabled-tools",
+    "ask_user_question",
+    "--disabled-tools",
+    "web_search",
+    "--disabled-tools",
+    "web_fetch"
+  ],
+  "env": {
+    "VIBE_HOME": "{home}/.vibe",
+    "VERITY_PROXY_KEY": "{proxy_key}"
+  },
+  "config_files": {
+    "~/.vibe/config.toml": "active_model = \"verity-model\"\ndefault_agent = \"auto-approve\"\nenable_auto_update = false\nenable_notifications = false\nenable_telemetry = false\n\n[[providers]]\nname = \"verity\"\napi_base = \"{proxy_url}\"\napi_key_env_var = \"VERITY_PROXY_KEY\"\napi_style = \"openai\"\nbackend = \"generic\"\n\n[[models]]\nname = \"{model}\"\nprovider = \"verity\"\nalias = \"verity-model\"\n\n[[mcp_servers]]\nname = \"lean-lsp\"\ntransport = \"stdio\"\ncommand = \"uvx\"\nargs = [\"--from\", \"lean-lsp-mcp==0.28.0\", \"lean-lsp-mcp\"]\nstartup_timeout_sec = 180\ntool_timeout_sec = 600\nenv = { LEAN_PROJECT_PATH = \"{workspace}\", LEAN_LOG_LEVEL = \"NONE\", LEAN_BUILD_CONCURRENCY = \"share\", LEAN_MCP_DISABLED_TOOLS = \"lean_run_code,lean_profile_proof,lean_minimal_hypotheses,lean_get_widgets,lean_get_widget_source,lean_leansearch,lean_loogle,lean_leanfinder,lean_state_search,lean_hammer_premise,lean_build\" }\n"
+  },
+  "preflight_commands": [
+    [
+      "uvx",
+      "--from",
+      "mistral-vibe==2.19.1",
+      "vibe",
+      "--version"
+    ],
+    [
+      "uvx",
+      "--from",
+      "lean-lsp-mcp==0.28.0",
+      "lean-lsp-mcp",
+      "--help"
+    ]
+  ],
+  "usage_pattern": "\\\"total_tokens\\\"\\s*:\\s*(\\d+)",
+  "version_command": [
+    "uvx",
+    "--from",
+    "mistral-vibe==2.19.1",
+    "vibe",
+    "--version"
+  ]
+}
