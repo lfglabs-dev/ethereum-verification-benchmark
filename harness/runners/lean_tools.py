@@ -50,7 +50,7 @@ try:
         _response_text, _append_jsonl, _effective_sampling, _streaming_fallback_reason, _transport_mode,
         chat_completion, endpoint_smoke, generic_preflight,
     )
-    from ..budgets import operational_budget
+    from ..budgets import dependency_warm_timeout_seconds, operational_budget
     from ..lean_check import (
         FAILURE_HINTS, LEAN_CHECK_MODE, LEAN_CHECK_TIMEOUT_SECONDS, _classify_lean_failure,
         _compact_lean_output, _constants_from_text, _extract_goal_blocks, _first_meaningful_lean_error,
@@ -71,7 +71,7 @@ except ImportError:
         _response_text, _append_jsonl, _effective_sampling, _streaming_fallback_reason, _transport_mode,
         chat_completion, endpoint_smoke, generic_preflight,
     )
-    from budgets import operational_budget
+    from budgets import dependency_warm_timeout_seconds, operational_budget
     from lean_check import (
         FAILURE_HINTS, LEAN_CHECK_MODE, LEAN_CHECK_TIMEOUT_SECONDS, _classify_lean_failure,
         _compact_lean_output, _constants_from_text, _extract_goal_blocks, _first_meaningful_lean_error,
@@ -2701,9 +2701,7 @@ def run_group(
     if not dry_run and credentials_available:
         dependency_warm_builds = warm_public_dependencies(
             group,
-            timeout_seconds=int(
-                os.environ.get("DEFAULT_HARNESS_DEPENDENCY_WARM_TIMEOUT_SECONDS", "600")
-            ),
+            timeout_seconds=dependency_warm_timeout_seconds(),
             log_path=run_dir / "dependency-warm.log",
         )
     built = build_group_workspace(group, run_id=run_id)

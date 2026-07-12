@@ -4,8 +4,9 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
-from harness.budgets import BudgetProfile, budget_artifact
+from harness.budgets import BudgetProfile, budget_artifact, dependency_warm_timeout_seconds
 from harness.result_validity import failure_taxonomy, row_validity
 from scripts import aggregate_runs
 
@@ -64,6 +65,16 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(artifact["benchmark_budget"]["max_attempts"], 4)
         self.assertIn("request_timeout_seconds", artifact["operational_budget"])
         self.assertNotIn("request_timeout_seconds", artifact["benchmark_budget"])
+
+    def test_dependency_warm_timeout_follows_target_warm_default_and_override(self) -> None:
+        with patch.dict("os.environ", {}, clear=True):
+            self.assertEqual(dependency_warm_timeout_seconds(), 1800)
+        with patch.dict(
+            "os.environ",
+            {"DEFAULT_HARNESS_DEPENDENCY_WARM_TIMEOUT_SECONDS": "2400"},
+            clear=True,
+        ):
+            self.assertEqual(dependency_warm_timeout_seconds(), 2400)
 
     def test_aggregate_excludes_invalid_rows_from_pass_denominator(self) -> None:
         rows = [

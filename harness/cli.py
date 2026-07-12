@@ -31,7 +31,12 @@ _load_dotenv()
 
 try:
     from .classification import classify_run
-    from .budgets import BUDGET_PROFILES, budget_artifact, budget_profile
+    from .budgets import (
+        BUDGET_PROFILES,
+        budget_artifact,
+        budget_profile,
+        dependency_warm_timeout_seconds,
+    )
     from .manifests import (
         filter_group_to_task,
         group_id_from_task_ref,
@@ -47,7 +52,12 @@ try:
     from .workspace_builder import warm_public_dependencies
 except ImportError:
     from classification import classify_run
-    from budgets import BUDGET_PROFILES, budget_artifact, budget_profile
+    from budgets import (
+        BUDGET_PROFILES,
+        budget_artifact,
+        budget_profile,
+        dependency_warm_timeout_seconds,
+    )
     from manifests import (
         filter_group_to_task,
         group_id_from_task_ref,
@@ -381,7 +391,9 @@ def main() -> int:
     )
     warm_parser.add_argument("task_ref")
     warm_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    warm_parser.add_argument("--timeout-seconds", type=int, default=600)
+    warm_parser.add_argument(
+        "--timeout-seconds", type=int, default=dependency_warm_timeout_seconds()
+    )
 
     suite_parser = sub.add_parser("run-suite")
     suite_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
