@@ -37,7 +37,7 @@ try:
     from ..transport import (
         ChatCompletionError, DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, HTTP_USER_AGENT,
         _active_provider, _api_key, _harness_env, _local_no_auth_endpoint, _logged_response_message,
-        _response_text, _append_jsonl, _streaming_fallback_reason, _transport_mode,
+        _response_text, _append_jsonl, _effective_sampling, _streaming_fallback_reason, _transport_mode,
         chat_completion, endpoint_smoke, generic_preflight,
     )
     from ..budgets import operational_budget
@@ -58,7 +58,7 @@ except ImportError:
     from transport import (
         ChatCompletionError, DEFAULT_BASE_URL, DEFAULT_MODEL, DEFAULT_PROVIDER, HTTP_USER_AGENT,
         _active_provider, _api_key, _harness_env, _local_no_auth_endpoint, _logged_response_message,
-        _response_text, _append_jsonl, _streaming_fallback_reason, _transport_mode,
+        _response_text, _append_jsonl, _effective_sampling, _streaming_fallback_reason, _transport_mode,
         chat_completion, endpoint_smoke, generic_preflight,
     )
     from budgets import operational_budget
@@ -205,6 +205,12 @@ def _role_config() -> dict[str, object]:
         "prover_model": prover,
         "prover_mode": DEFAULT_PROVER_MODE or None,
         "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
+        "sampling": {
+            "driver": _effective_sampling(),
+            "prover": _effective_sampling(PROVER_SAMPLING or None)
+            if DRAFT_PROOF_ENABLED and prover
+            else None,
+        },
         "stages": {
             STAGE_DRIVER: driver,
             STAGE_WRITER: writer,
@@ -1285,6 +1291,18 @@ def _draft_valid_syntax(body: str) -> bool | None:
     return True
 
 
+# Optional per-call sampling for the hybrid prover, so it can run at its
+# vendor-recommended regime (e.g. Leanstral: temperature=1.0, high reasoning
+# effort) without changing the driver's sampling. Empty by default.
+PROVER_SAMPLING: dict[str, object] = {}
+_prover_temp = (os.environ.get("DEFAULT_HARNESS_PROVER_TEMPERATURE", "") or "").strip()
+if _prover_temp:
+    PROVER_SAMPLING["temperature"] = float(_prover_temp)
+_prover_effort = (os.environ.get("DEFAULT_HARNESS_PROVER_REASONING_EFFORT", "") or "").strip()
+if _prover_effort:
+    PROVER_SAMPLING["reasoning_effort"] = _prover_effort
+
+
 def _draft_proof_with_prover(
     args: dict[str, object],
     *,
@@ -1350,6 +1368,7 @@ def _draft_proof_with_prover(
             tool_choice=None,
             request_log_path=draft_log_path,
             api_key_override=prover_api_key_override,
+            sampling=PROVER_SAMPLING or None,
         )
     except Exception as exc:
         error_payload = exc.to_dict() if isinstance(exc, ChatCompletionError) else {"message": str(exc)}

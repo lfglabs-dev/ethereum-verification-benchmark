@@ -13,6 +13,8 @@ captured payload is inspected directly.
 
 from __future__ import annotations
 
+import importlib
+import os
 import unittest
 from unittest import mock
 
@@ -47,6 +49,53 @@ class DefaultRequestShapeTests(unittest.TestCase):
     def test_default_flag_is_off(self) -> None:
         # The compatibility switch must not change behaviour unless opted in.
         self.assertFalse(transport_request.DEFAULT_OMIT_MAX_TOKENS)
+
+
+class GreedyAndSamplingRequestShapeTests(unittest.TestCase):
+    def test_effective_sampling_matches_greedy_wire_policy(self) -> None:
+        self.assertEqual(
+            transport_request.effective_sampling(),
+            {"temperature": 0, "top_p": 1},
+        )
+
+    def test_greedy_default_pins_top_p(self) -> None:
+        # temperature 0 (harness default) must send top_p=1 so providers that
+        # reject greedy-without-top_p (Mistral Labs 400) accept the request.
+        payload = _capture_payload()
+        self.assertEqual(payload["temperature"], 0)
+        self.assertEqual(payload["top_p"], 1)
+
+    def test_per_call_sampling_overrides_greedy(self) -> None:
+        payload = _capture_payload(sampling={"temperature": 1.0, "reasoning_effort": "high"})
+        self.assertEqual(payload["temperature"], 1.0)
+        self.assertEqual(payload["reasoning_effort"], "high")
+        # top_p is not force-pinned once temperature is non-zero.
+        self.assertNotIn("top_p", payload)
+        self.assertEqual(
+            transport_request.effective_sampling(
+                {"temperature": 1.0, "reasoning_effort": "high"}
+            ),
+            {"temperature": 1.0, "reasoning_effort": "high"},
+        )
+
+    def test_env_temperature_and_effort(self) -> None:
+        self.addCleanup(importlib.reload, transport_request)
+        with mock.patch.dict(os.environ, {"DEFAULT_HARNESS_TEMPERATURE": "1.0",
+                                          "DEFAULT_HARNESS_REASONING_EFFORT": "high"}):
+            reloaded = importlib.reload(transport_request)
+            try:
+                captured: list = []
+                def fake_execute(base_url, payload, *, stream, api_key_override=None):
+                    captured.append(payload)
+                    return {"choices": [{"message": {"role": "assistant", "content": "ok"}}], "usage": {}}
+                with mock.patch.object(reloaded, "_execute_chat_request", side_effect=fake_execute):
+                    reloaded.chat_completion([{"role": "user", "content": "hi"}],
+                                             base_url="http://provider.test/v1")
+                self.assertEqual(captured[0]["temperature"], 1.0)
+                self.assertEqual(captured[0]["reasoning_effort"], "high")
+                self.assertNotIn("top_p", captured[0])
+            finally:
+                importlib.reload(transport_request)
 
 
 class OmitMaxTokensRequestShapeTests(unittest.TestCase):

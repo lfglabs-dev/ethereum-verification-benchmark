@@ -165,6 +165,8 @@ REQUEST_RETRIES = int(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRIES", os.envir
 REQUEST_RETRY_BACKOFF_SECONDS = float(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRY_BACKOFF_SECONDS", os.environ.get("GAZELLA_REQUEST_RETRY_BACKOFF_SECONDS", "2")))
 DEFAULT_CONTEXT_TOKENS = os.environ.get("DEFAULT_HARNESS_CONTEXT_TOKENS", os.environ.get("GAZELLA_N_CTX"))
 DEFAULT_MAX_RESPONSE_TOKENS = int(os.environ.get("DEFAULT_HARNESS_MAX_RESPONSE_TOKENS", "8192"))
+DEFAULT_TEMPERATURE = float(os.environ.get("DEFAULT_HARNESS_TEMPERATURE", "0") or 0)
+DEFAULT_REASONING_EFFORT = (os.environ.get("DEFAULT_HARNESS_REASONING_EFFORT", "") or "").strip()
 # Some strict OpenAI-compatible providers reject any request that carries a
 # token-limit field and answer with a generic 400 (observed with Virtuals'
 # openai-gpt-56-sol-pro, which 400s on max_tokens / max_completion_tokens /
@@ -202,6 +204,28 @@ def _configured_stop_sequences() -> list[str]:
 
 DEFAULT_STOP_SEQUENCES = _configured_stop_sequences()
 _streaming_fallback_reason: str | None = None
+
+
+def effective_sampling(sampling: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Return the sampling fields that will actually be sent on the wire.
+
+    Keeping this derivation separate from ``chat_completion`` lets artifact
+    writers persist the same effective policy, including implicit greedy
+    ``top_p=1`` and compatibility-mode removal of ``reasoning_effort``.
+    """
+    effective: dict[str, Any] = {"temperature": DEFAULT_TEMPERATURE}
+    if DEFAULT_REASONING_EFFORT:
+        effective["reasoning_effort"] = DEFAULT_REASONING_EFFORT
+    if sampling:
+        for key in ("temperature", "top_p", "reasoning_effort"):
+            value = sampling.get(key)
+            if value is not None:
+                effective[key] = value
+    if effective.get("temperature") == 0 and "top_p" not in effective:
+        effective["top_p"] = 1
+    if DEFAULT_OMIT_MAX_TOKENS:
+        effective.pop("reasoning_effort", None)
+    return effective
 
 
 def api_key() -> str | None:
@@ -403,12 +427,15 @@ def chat_completion(
     request_log_path: Path | None = None,
     request_index: int | None = None,
     api_key_override: str | None = None,
+    sampling: dict[str, Any] | None = None,
 ) -> dict[str, object]:
     payload: dict[str, Any] = {
         "model": model,
         "messages": _sanitize_tool_message_order(messages),
-        "temperature": 0,
     }
+    # Per-call overrides (for example the hybrid prover's vendor-recommended
+    # regime) are folded into the exact policy persisted in run artifacts.
+    payload.update(effective_sampling(sampling))
     if not DEFAULT_OMIT_MAX_TOKENS:
         payload["max_tokens"] = max_tokens
     if DEFAULT_STOP_SEQUENCES:
