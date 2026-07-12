@@ -147,6 +147,32 @@ def _should_validate_host_auth(
     return isinstance(host_auth, dict) and not dry_run and setup_failure_class is None
 
 
+def _run_setup_process_group(
+    command: list[str], *, cwd: Path, timeout_seconds: int
+) -> subprocess.CompletedProcess[str]:
+    """Run setup in a killable session so Lean descendants cannot escape."""
+    process = subprocess.Popen(
+        command,
+        cwd=cwd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+    )
+    try:
+        stdout, stderr = process.communicate(timeout=timeout_seconds)
+    except subprocess.TimeoutExpired as exc:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        stdout, stderr = process.communicate()
+        exc.stdout = stdout
+        exc.stderr = stderr
+        raise
+    return subprocess.CompletedProcess(command, process.returncode, stdout, stderr)
+
+
 def run_group(
     group_id: str,
     *,
@@ -241,13 +267,10 @@ def run_group(
         warm_started = time.time()
         warm_timeout = int(os.environ.get("DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS", "1800"))
         try:
-            completed = subprocess.run(
+            completed = _run_setup_process_group(
                 ["./harness/check.sh"],
                 cwd=built.path,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=warm_timeout,
+                timeout_seconds=warm_timeout,
             )
             warm = {
                 "status": "passed" if completed.returncode == 0 else "placeholder_failed",

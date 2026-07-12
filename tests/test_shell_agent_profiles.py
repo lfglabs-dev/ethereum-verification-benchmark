@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import signal
 import subprocess
 import tempfile
 import unittest
@@ -9,7 +10,11 @@ from unittest import mock
 
 from harness.paths import ROOT
 from harness.manifests import load_group
-from harness.runners.shell_agent import _run_profile_preflights, _should_validate_host_auth
+from harness.runners.shell_agent import (
+    _run_profile_preflights,
+    _run_setup_process_group,
+    _should_validate_host_auth,
+)
 from harness.result_validity import row_validity
 from harness.verifier import setup_failure_verifier_result
 
@@ -113,6 +118,23 @@ class ShellAgentProfileTests(unittest.TestCase):
                 setup_failure_class="infra_dependency_warm_failed",
             )
         )
+
+    def test_target_warm_timeout_kills_the_process_group(self) -> None:
+        process = mock.Mock(pid=4242, returncode=-9)
+        process.communicate.side_effect = [
+            subprocess.TimeoutExpired(["./harness/check.sh"], 1),
+            ("partial stdout", "partial stderr"),
+        ]
+        with mock.patch(
+            "harness.runners.shell_agent.subprocess.Popen", return_value=process
+        ), mock.patch("harness.runners.shell_agent.os.killpg") as killpg:
+            with self.assertRaises(subprocess.TimeoutExpired):
+                _run_setup_process_group(
+                    ["./harness/check.sh"], cwd=ROOT, timeout_seconds=1
+                )
+
+        killpg.assert_called_once_with(4242, signal.SIGKILL)
+        self.assertEqual(process.communicate.call_count, 2)
 
 
 if __name__ == "__main__":
