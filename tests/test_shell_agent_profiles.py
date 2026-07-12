@@ -9,7 +9,7 @@ from unittest import mock
 
 from harness.paths import ROOT
 from harness.manifests import load_group
-from harness.runners.shell_agent import _run_profile_preflights
+from harness.runners.shell_agent import _run_profile_preflights, _should_validate_host_auth
 from harness.result_validity import row_validity
 from harness.verifier import setup_failure_verifier_result
 
@@ -97,6 +97,21 @@ class ShellAgentProfileTests(unittest.TestCase):
         self.assertEqual(result["score"]["total_targets"], len(group.tasks))
         self.assertTrue(
             all(target["status"] == "verifier_infra_error" for target in result["targets"])
+        )
+
+    def test_setup_failure_precedes_host_auth_validation(self) -> None:
+        host_auth = {"env_flag": "ALLOW_HOST_AUTH"}
+        self.assertTrue(
+            _should_validate_host_auth(
+                host_auth, dry_run=False, setup_failure_class=None
+            )
+        )
+        self.assertFalse(
+            _should_validate_host_auth(
+                host_auth,
+                dry_run=False,
+                setup_failure_class="infra_dependency_warm_failed",
+            )
         )
 
 

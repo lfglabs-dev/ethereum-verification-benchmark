@@ -141,6 +141,12 @@ def _run_profile_preflights(
     return results
 
 
+def _should_validate_host_auth(
+    host_auth: object, *, dry_run: bool, setup_failure_class: str | None
+) -> bool:
+    return isinstance(host_auth, dict) and not dry_run and setup_failure_class is None
+
+
 def run_group(
     group_id: str,
     *,
@@ -304,7 +310,9 @@ def run_group(
         target.write_text(_expand(str(template), substitutions), encoding="utf-8")
     host_auth = profile.get("host_auth")
     auth_mode = "proxy"
-    if isinstance(host_auth, dict) and not dry_run:
+    if _should_validate_host_auth(
+        host_auth, dry_run=dry_run, setup_failure_class=setup_failure_class
+    ):
         flag = str(host_auth.get("env_flag") or "")
         source = Path(str(host_auth.get("source") or "")).expanduser()
         fallback_env = str(host_auth.get("fallback_env") or "")
