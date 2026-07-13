@@ -29,10 +29,13 @@ jobs:
           assert "    Foo.baz]" in patched, patched
           assert "    _ = c := by" in patched, patched
 
-          # Full-file submissions pass through untouched.
+          # Full-file submissions contribute only their proof body; the
+          # benchmark skeleton and preamble stay untouched.
           full = "import A.B\nnamespace Foo\ntheorem t : True := by trivial\nend Foo\n"
           assert _looks_like_full_file(full)
-          assert _patch_proof_body("theorem t : True := by\n  sorry\n", full) == full
+          full_patched = _patch_proof_body("theorem t : True := by\n  sorry\n", full)
+          assert "import A.B" not in full_patched, full_patched
+          assert full_patched.rstrip() == "theorem t : True := by\n  trivial", full_patched
           print("patcher ok")
           EOF
       - name: Aggregator smoke
