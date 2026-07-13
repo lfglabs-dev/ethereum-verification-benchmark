@@ -258,6 +258,45 @@ def _provider_setup_task_rows(
     ]
 
 
+def _warm_target_modules(
+    *,
+    workspace: Path,
+    run_dir: Path,
+    tasks: list[object],
+    timeout_seconds: int,
+) -> list[dict[str, object]]:
+    """Warm target modules, stopping once the setup is known invalid."""
+    results: list[dict[str, object]] = []
+    for task in tasks:
+        module = task.get("target_module") if isinstance(task, dict) else None
+        if not isinstance(module, str) or not module:
+            continue
+        warm_start = time.time()
+        print(f"[target-warm] module={module} state=starting", flush=True)
+        warm_code, warm_output = _run_lean_module(
+            workspace, module, timeout_seconds=timeout_seconds
+        )
+        with (run_dir / "target-warm.log").open("a", encoding="utf-8") as handle:
+            handle.write(f"\n$ lake build {module}\n{warm_output}\n")
+        duration = round(time.time() - warm_start, 3)
+        print(
+            f"[target-warm] module={module} state=finished exit_code={warm_code} "
+            f"duration_seconds={duration}",
+            flush=True,
+        )
+        results.append(
+            {
+                "task_ref": task.get("task_ref"),
+                "module": module,
+                "exit_code": warm_code,
+                "duration_seconds": duration,
+            }
+        )
+        if warm_code == 124:
+            break
+    return results
+
+
 ROLE_METRIC_COUNTERS = (
     "prover_writer_calls",
     "prover_repair_calls",
@@ -2899,29 +2938,12 @@ def run_group(
             (built.path / "harness" / "TASKS.json").read_text(encoding="utf-8")
         )
         warm_timeout = int(os.environ.get("DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS", "1800"))
-        for task in tasks_payload.get("tasks", []):
-            module = task.get("target_module") if isinstance(task, dict) else None
-            if isinstance(module, str) and module:
-                warm_start = time.time()
-                print(f"[target-warm] module={module} state=starting", flush=True)
-                warm_code, warm_output = _run_lean_module(
-                    built.path, module, timeout_seconds=warm_timeout
-                )
-                with (run_dir / "target-warm.log").open("a", encoding="utf-8") as handle:
-                    handle.write(f"\n$ lake build {module}\n{warm_output}\n")
-                print(
-                    f"[target-warm] module={module} state=finished exit_code={warm_code} "
-                    f"duration_seconds={round(time.time() - warm_start, 3)}",
-                    flush=True,
-                )
-                target_warm_builds.append(
-                    {
-                        "task_ref": task.get("task_ref"),
-                        "module": module,
-                        "exit_code": warm_code,
-                        "duration_seconds": round(time.time() - warm_start, 3),
-                    }
-                )
+        target_warm_builds = _warm_target_modules(
+            workspace=built.path,
+            run_dir=run_dir,
+            tasks=tasks_payload.get("tasks", []),
+            timeout_seconds=warm_timeout,
+        )
     dependency_warm_failed = any(warm_result_failed(item) for item in dependency_warm_builds)
     target_warm_timed_out = any(item.get("exit_code") == 124 for item in target_warm_builds)
     setup_failure_class = (

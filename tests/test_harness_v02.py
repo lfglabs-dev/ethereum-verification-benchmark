@@ -10,11 +10,32 @@ from harness.budgets import BudgetProfile, budget_artifact, dependency_warm_time
 from harness.classification import classify_run
 from harness.manifests import load_group
 from harness.result_validity import failure_taxonomy, row_validity
-from harness.runners.lean_tools import _provider_setup_task_rows
+from harness.runners.lean_tools import _provider_setup_task_rows, _warm_target_modules
 from scripts import aggregate_runs
 
 
 class HarnessV02Tests(unittest.TestCase):
+    def test_target_warming_stops_after_first_timeout(self) -> None:
+        tasks = [
+            {"task_ref": "case/one", "target_module": "Target.One"},
+            {"task_ref": "case/two", "target_module": "Target.Two"},
+        ]
+        with tempfile.TemporaryDirectory() as tmp, patch(
+            "harness.runners.lean_tools._run_lean_module",
+            side_effect=[(124, "timed out"), (0, "must not run")],
+        ) as run:
+            root = Path(tmp)
+            results = _warm_target_modules(
+                workspace=root,
+                run_dir=root,
+                tasks=tasks,
+                timeout_seconds=10,
+            )
+
+        self.assertEqual(run.call_count, 1)
+        self.assertEqual([item["task_ref"] for item in results], ["case/one"])
+        self.assertEqual(results[0]["exit_code"], 124)
+
     def test_provider_preflight_failure_emits_non_reusable_task_rows(self) -> None:
         group = load_group("ethereum/deposit_contract_minimal", "active")
         budget = {
