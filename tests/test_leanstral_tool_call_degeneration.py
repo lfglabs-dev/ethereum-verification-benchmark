@@ -204,6 +204,62 @@ class ToolProtocolSelectionTests(unittest.TestCase):
             self.assertEqual(result["status"], "repetition_loop")
             self.assertIn("role_metrics", result)
 
+    def test_json_compaction_preserves_repetition_correction(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            editable = "Benchmark/Generated/Test.lean"
+            proof_path = tmp / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem test : True := by\n  exact True.intro\n", encoding="utf-8")
+            task = {
+                "task_ref": "test/group/task",
+                "task_id": "task",
+                "theorem_name": "test",
+                "editable_files": [editable],
+                "target_module": "Benchmark.Generated.Test",
+            }
+            responses = [
+                '{"tool":"show_task","arguments":{}}',
+                f'{{"tool":"read_file","arguments":{{"path":"{editable}"}}}}',
+                f'{{"tool":"read_file","arguments":{{"path":"{editable}"}}}}',
+                '{"tool":"check_proof","arguments":{"proof":"exact True.intro"}}',
+            ]
+            request_index = 0
+
+            def completion(messages: list[dict[str, object]], **_: object) -> dict[str, object]:
+                nonlocal request_index
+                if request_index == 3:
+                    latest = str(messages[-1].get("content") or "")
+                    self.assertIn("repeated the same unproductive action", latest)
+                    self.assertIn("Tool result for read_file", latest)
+                response = non_streaming_response(responses[request_index])
+                request_index += 1
+                return response
+
+            def execute(name: str, *_: object, **__: object) -> dict[str, object]:
+                if name == "check_proof":
+                    return {"ok": True, "passed": True}
+                return {"ok": True}
+
+            with (
+                mock.patch.object(lean_tools, "chat_completion", side_effect=completion),
+                mock.patch.object(lean_tools, "_execute_fair_tool", side_effect=execute),
+            ):
+                result = lean_tools._attempt_task_fair(
+                    task,
+                    tmp,
+                    base_url="http://provider.test/v1",
+                    max_attempts=1,
+                    max_tool_calls=4,
+                    attempts_dir=tmp / "attempts",
+                    tool_log_path=tmp / "tools.jsonl",
+                    conversation_log_path=tmp / "conversation.jsonl",
+                    native_tools=False,
+                )
+
+            self.assertEqual(result["status"], "lean_passed")
+            self.assertEqual(request_index, 4)
+
     def test_json_tool_results_do_not_reissue_first_call_instruction(self) -> None:
         with tempfile.TemporaryDirectory() as raw_tmp:
             tmp = Path(raw_tmp)

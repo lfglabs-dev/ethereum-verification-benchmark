@@ -2190,8 +2190,13 @@ def _attempt_task_fair(
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt},
     ]
+    pending_repetition_warning: str | None = None
 
     def set_compact_user_context(content: str) -> None:
+        nonlocal pending_repetition_warning
+        if pending_repetition_warning:
+            content = f"{content}\n\n{pending_repetition_warning}"
+            pending_repetition_warning = None
         messages[:] = [
             {"role": "system", "content": system_prompt},
             {
@@ -2199,6 +2204,13 @@ def _attempt_task_fair(
                 "content": f"{continuation_prompt}\n{content}\nReply with the next JSON tool call.",
             },
         ]
+
+    def flush_pending_repetition_warning() -> None:
+        nonlocal pending_repetition_warning
+        if pending_repetition_warning:
+            messages.append({"role": "user", "content": pending_repetition_warning})
+            pending_repetition_warning = None
+
     no_tool_response_limit = max(3, min(20, max_tool_calls))
     request_limit = max_tool_calls + max_attempts + no_tool_response_limit
     tool_calls_executed = 0
@@ -2278,14 +2290,12 @@ def _attempt_task_fair(
         }
 
     def repetition_failure(signature: str) -> dict[str, object] | None:
+        nonlocal pending_repetition_warning
         count = repeated_signatures.get(signature, 0) + 1
         repeated_signatures[signature] = count
         if count == 2:
-            messages.append(
-                {
-                    "role": "user",
-                    "content": "You repeated the same unproductive action. Change strategy: inspect a different goal/file or submit a materially different proof attempt.",
-                }
+            pending_repetition_warning = (
+                "You repeated the same unproductive action. Change strategy: inspect a different goal/file or submit a materially different proof attempt."
             )
             return None
         if count >= 3:
@@ -2524,6 +2534,7 @@ def _attempt_task_fair(
                             "content": _tool_result_content(result),
                         }
                     )
+                flush_pending_repetition_warning()
                 continue
             if name in {"check_proof", "try_tactics"} and _proof_attempt_count(attempts) >= max_attempts:
                 result = {"ok": False, "error": "max_attempts_exceeded"}
@@ -2553,6 +2564,7 @@ def _attempt_task_fair(
                             "content": _tool_result_content(result),
                         }
                     )
+                flush_pending_repetition_warning()
                 continue
             if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"} and non_proof_tool_calls >= non_proof_tool_limit:
                 result = {
@@ -2589,6 +2601,7 @@ def _attempt_task_fair(
                             "content": _tool_result_content(result),
                         }
                     )
+                flush_pending_repetition_warning()
                 continue
             if name == "try_tactics":
                 remaining = max(0, max_attempts - _proof_attempt_count(attempts))
@@ -2642,6 +2655,7 @@ def _attempt_task_fair(
                         "content": _tool_result_content(result),
                     }
                 )
+            flush_pending_repetition_warning()
             if result.get("passed") is True:
                 return {
                     "task_ref": task.get("task_ref"),
