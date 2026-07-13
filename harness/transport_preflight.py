@@ -37,7 +37,12 @@ def local_no_auth_endpoint(base_url: str) -> bool:
     return host in {"127.0.0.1", "localhost", "::1"}
 
 
-def generic_preflight(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MODEL) -> dict[str, object]:
+def generic_preflight(
+    base_url: str = DEFAULT_BASE_URL,
+    model: str = DEFAULT_MODEL,
+    *,
+    api_key_override: str | None = None,
+) -> dict[str, object]:
     if DEFAULT_STREAMING_ENABLED:
         reset_transport_fallback()
     result: dict[str, object] = {
@@ -65,6 +70,7 @@ def generic_preflight(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MOD
         base_url=base_url,
         model=model,
         max_tokens=16,
+        api_key_override=api_key_override,
     )
     record_usage(text_response)
     result["transport_mode"] = transport_mode()
@@ -97,6 +103,7 @@ def generic_preflight(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MOD
             max_tokens=64,
             tools=probe_tools,
             tool_choice="auto",
+            api_key_override=api_key_override,
         )
         record_usage(tool_response)
         result["transport_mode"] = transport_mode()

@@ -363,6 +363,87 @@ def _native_tools_for_preflight(preflight: dict[str, object]) -> bool:
     return True
 
 
+def _role_provider_preflight(base_url: str) -> dict[str, object]:
+    """Preflight every model endpoint required by the configured role graph."""
+
+    def run_role(
+        role: str,
+        role_base_url: str,
+        model: str,
+        api_key_override: str | None = None,
+    ) -> dict[str, object]:
+        try:
+            result = generic_preflight(
+                role_base_url,
+                model,
+                api_key_override=api_key_override,
+            )
+        except Exception as exc:  # noqa: BLE001 - normalize setup failures into artifacts
+            result = {
+                "status": "failed",
+                "base_url": role_base_url,
+                "model": model,
+                "error": str(exc),
+                "usage": {
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0,
+                    "total_tokens": 0,
+                    "requests": 0,
+                },
+            }
+        result["role"] = role
+        return result
+
+    driver = run_role("driver", base_url, DEFAULT_DRIVER_MODEL)
+    combined = dict(driver)
+    roles: dict[str, dict[str, object]] = {"driver": driver}
+
+    if DRAFT_PROOF_ENABLED and DEFAULT_PROVER_MODEL:
+        prover_base_url = DEFAULT_PROVER_BASE_URL or base_url
+        if DEFAULT_PROVER_API_KEY:
+            prover_api_key_override: str | None = DEFAULT_PROVER_API_KEY
+        elif prover_base_url.rstrip("/") == base_url.rstrip("/"):
+            prover_api_key_override = None
+        else:
+            prover_api_key_override = ""
+        roles["prover"] = run_role(
+            "prover",
+            prover_base_url,
+            DEFAULT_PROVER_MODEL,
+            prover_api_key_override,
+        )
+
+    combined["roles"] = roles
+    combined["status"] = (
+        "passed"
+        if all(result.get("status") == "passed" for result in roles.values())
+        else "failed"
+    )
+    if combined["status"] != "passed":
+        failures = [
+            f"{role}: {result.get('error') or result}"
+            for role, result in roles.items()
+            if result.get("status") != "passed"
+        ]
+        combined["error"] = "; ".join(failures)
+    aggregate_usage = {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "requests": 0,
+    }
+    for result in roles.values():
+        usage = result.get("usage")
+        if not isinstance(usage, dict):
+            continue
+        for key in aggregate_usage:
+            value = usage.get(key)
+            if isinstance(value, (int, float)):
+                aggregate_usage[key] += int(value)
+    combined["usage"] = aggregate_usage
+    return combined
+
+
 def _read_workspace_file(workspace: Path, rel: str) -> str:
     text = (workspace / rel).read_text(encoding="utf-8")
     if len(text) <= MAX_FILE_CHARS:
@@ -2927,7 +3008,7 @@ def run_group(
         preflight_passed = False
         preflight: dict[str, object] | None = None
         try:
-            preflight = generic_preflight(base_url, DEFAULT_DRIVER_MODEL)
+            preflight = _role_provider_preflight(base_url)
             if preflight.get("status") != "passed":
                 raise RuntimeError(f"provider preflight failed: {preflight.get('error') or preflight}")
             preflight_passed = True
