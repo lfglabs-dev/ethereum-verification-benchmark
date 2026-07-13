@@ -141,6 +141,11 @@
       "type": "string",
       "minLength": 1
     },
+    "minimum_lean_version": {
+      "description": "Minimum Lean toolchain version required by the selected MCP client.",
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
     "request_timeout_seconds": {
       "description": "HTTP timeout for both model probe and chat-completions requests.",
       "type": "integer",

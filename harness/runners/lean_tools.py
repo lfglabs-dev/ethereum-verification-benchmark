@@ -915,6 +915,22 @@ def _fair_tools(mcp_tools: list[dict[str, object]] | None = None) -> list[dict[s
     return tools
 
 
+def _compact_tool_schemas(tools: list[dict[str, object]]) -> str:
+    schemas: list[dict[str, object]] = []
+    for tool in tools:
+        function = tool.get("function")
+        if not isinstance(function, dict) or not isinstance(function.get("name"), str):
+            continue
+        parameters = function.get("parameters")
+        schemas.append(
+            {
+                "name": function["name"],
+                "parameters": parameters if isinstance(parameters, dict) else {},
+            }
+        )
+    return json.dumps(schemas, separators=(",", ":"), sort_keys=True)
+
+
 def _safe_workspace_path(workspace: Path, rel: str) -> Path:
     if rel.startswith("/") or ".." in Path(rel).parts:
         raise ValueError("path must be a relative workspace path")
@@ -2289,21 +2305,30 @@ def _attempt_task_fair(
         system_prompt = (
             "You are an agent solving one public Lean benchmark task in an isolated Lean project. "
             "This is the builtin benchmark loop, but its Lean IDE tools come directly from lean-lsp-mcp, "
-            "matching the tool names and schemas used by MCP coding agents. Call show_task first, then use "
+            "matching the tool names and schemas used by MCP coding agents. "
+            "Call show_task first; it returns the shared TASK_SUMMARY.md and a proof_patterns guide with the Verity-specific "
+            "simp/unfold recipe (contract function + storage field names + getStorage/setStorage/Verity.require/Verity.bind/Bind.bind/"
+            "Verity.pure/Pure.pure/Contract.run/ContractResult.snd) that closes most goals; follow it before inventing your own approach. "
+            "Then use "
             "read_file for source text and the lean_* tools for goals, diagnostics, navigation, completion, "
             "local declaration search, code actions, and non-mutating tactic experiments. "
             "lean-lsp-mcp does not edit files: submit a complete proof body with check_proof when ready; "
-            "check_proof patches only the benchmark theorem, runs Lean, and counts against max_attempts. "
+            "check_proof accepts either a tactic body to place under `:= by`, or a complete Lean file "
+            "(with imports, namespace, helper lemmas, and the target theorem); the theorem statement must stay byte-identical. "
+            "It patches only the benchmark theorem, runs Lean, and counts against max_attempts. "
             f"Available MCP tools: {mcp_names}. "
             "Use lean_local_search before guessing declaration names and lean_multi_attempt to compare small "
-            "tactic snippets at a proof position. Iterate from actual Lean diagnostics. Do not use sorry, "
+            "tactic snippets at a proof position. Iterate: submit, read the Lean error, fix, resubmit. "
+            "Do not use sorry, "
             "admit, axiom, hidden imports, Benchmark.GeneratedPreview, or reference Proofs modules. "
             "Do not assume a hardcoded solution from the task name."
         )
         if not native_tools:
+            compact_schemas = _compact_tool_schemas(_fair_tools(mcp_tools))
             system_prompt += (
                 " Native tool calling is unavailable, so reply only with one JSON tool call shaped like "
-                '{"tool":"show_task","arguments":{}}.'
+                '{"tool":"show_task","arguments":{}}. '
+                f"Allowed JSON tool schemas (name + parameters): {compact_schemas}"
             )
         user_prompt = (
             f"Solve the Lean task in editable file {editable}. Call show_task first, inspect the goal through "
@@ -2828,7 +2853,6 @@ def _attempt_task_fair(
                 if (
                     mcp_session is not None
                     and name in {"check_proof", "try_tactics"}
-                    and result.get("passed") is not True
                 ):
                     mcp_session.mark_workspace_files_changed()
             _accumulate_usage(result)
@@ -3140,17 +3164,19 @@ def run_group(
         preflight: dict[str, object] | None = None
         mcp_session: LeanLspMcpSession | None = None
         mcp_metadata: dict[str, object] | None = None
+        mcp_preflight_passed = tool_backend != "lean-lsp-mcp"
         try:
+            if tool_backend == "lean-lsp-mcp":
+                mcp_session = LeanLspMcpSession(built.path)
+                mcp_session.start()
+                mcp_metadata = mcp_session.metadata()
+                mcp_preflight_passed = True
             preflight = _role_provider_preflight(base_url)
             if preflight.get("status") != "passed":
                 raise RuntimeError(f"provider preflight failed: {preflight.get('error') or preflight}")
             preflight_passed = True
             native_tools = _native_tools_for_preflight(preflight)
             preflight["selected_tool_protocol"] = "native" if native_tools else "json_text_fallback"
-            if tool_backend == "lean-lsp-mcp":
-                mcp_session = LeanLspMcpSession(built.path)
-                mcp_session.start()
-                mcp_metadata = mcp_session.metadata()
             tasks_payload = json.loads(
                 (built.path / "harness" / "TASKS.json").read_text(encoding="utf-8")
             )
@@ -3200,6 +3226,10 @@ def run_group(
                 "mode": "fair",
                 "tool_backend": tool_backend,
                 "lean_lsp_mcp": mcp_metadata,
+                "mcp_setup_error": False,
+                "mcp_preflight": {"status": "passed"}
+                if tool_backend == "lean-lsp-mcp"
+                else None,
                 "usage": aggregate_usage,
                 "preflight": preflight,
                 "dependency_warm_builds": dependency_warm_builds,
@@ -3209,9 +3239,13 @@ def run_group(
                 **budgets,
             }
         except Exception as exc:
-            mcp_setup_error = isinstance(exc, LeanLspMcpError) and preflight_passed
+            mcp_setup_error = (
+                isinstance(exc, LeanLspMcpError)
+                and tool_backend == "lean-lsp-mcp"
+                and not mcp_preflight_passed
+            )
             status = (
-                "completed_with_failures"
+                "mcp_preflight_failed"
                 if mcp_setup_error
                 else "harness_error"
                 if preflight_passed
@@ -3222,8 +3256,8 @@ def run_group(
                     {
                         "task_ref": task.task_ref,
                         "status": "request_failed",
-                        "failure_class": "transport_error",
-                        "error": {"kind": "transport_error", "message": str(exc)},
+                        "failure_class": "mcp_setup_error",
+                        "error": {"kind": "mcp_setup_error", "message": str(exc)},
                         "attempts": [],
                         "usage": {
                             "prompt_tokens": 0,
@@ -3253,12 +3287,19 @@ def run_group(
                 "lean_lsp_mcp": mcp_metadata,
                 "provider_setup_error": status == "preflight_failed",
                 "failure_class": (
-                    "transport_error"
+                    "mcp_setup_error"
                     if mcp_setup_error
                     else "provider_setup_error"
                     if status == "preflight_failed"
                     else None
                 ),
+                "mcp_setup_error": mcp_setup_error,
+                "mcp_preflight": {
+                    "status": "failed" if mcp_setup_error else "passed",
+                    "error": str(exc) if mcp_setup_error else None,
+                }
+                if tool_backend == "lean-lsp-mcp"
+                else None,
                 "setup_failure_class": "infra_agent_preflight_failed" if mcp_setup_error else None,
                 "preflight": preflight,
                 "dependency_warm_builds": dependency_warm_builds,
@@ -3270,6 +3311,9 @@ def run_group(
         finally:
             if mcp_session is not None:
                 mcp_session.close()
+                mcp_metadata = mcp_session.metadata()
+        if mcp_metadata is not None:
+            response["lean_lsp_mcp"] = mcp_metadata
 
     if response.get("provider_setup_error") and not response.get("tasks"):
         provider_error = str(response.get("error") or "provider setup failed before model execution")
@@ -3364,6 +3408,8 @@ def run_group(
         "harness_status": response["status"],
         "failure_class": response.get("failure_class"),
         "provider_setup_error": bool(response.get("provider_setup_error")),
+        "mcp_setup_error": bool(response.get("mcp_setup_error")),
+        "mcp_preflight": response.get("mcp_preflight"),
         "provider_preflight": response.get("preflight"),
         "usage": response.get("usage"),
         "benchmark_budget": benchmark_budget,

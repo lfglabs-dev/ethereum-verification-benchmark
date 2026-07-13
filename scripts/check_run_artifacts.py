@@ -109,6 +109,29 @@ def check_run(run_dir: Path) -> list[str]:
                 for task in tasks:
                     if isinstance(task, dict) and "validity" not in task:
                         errors.append(f"{run_dir}: builtin fair task missing validity metadata")
+    if (
+        run.get("harness_id") == "builtin-lean-lsp"
+        and run.get("run_mode") in {"task", "group"}
+        and run.get("harness_status") != "dry_run"
+    ):
+        metadata = run.get("lean_lsp_mcp")
+        if not isinstance(metadata, dict):
+            errors.append(f"{run_dir}: builtin-lean-lsp run missing MCP lifecycle metadata")
+        else:
+            for key in (
+                "package_version",
+                "minimum_lean_version",
+                "workspace_lean_version",
+                "initialization_count",
+                "tool_call_count",
+                "tool_call_counts",
+                "tool_call_duration_seconds",
+                "clean_shutdown",
+            ):
+                if key not in metadata:
+                    errors.append(f"{run_dir}: MCP lifecycle metadata missing {key}")
+        if not isinstance(run.get("mcp_preflight"), dict):
+            errors.append(f"{run_dir}: builtin-lean-lsp run missing MCP preflight result")
     if run.get("harness_id") == "grok-build" and run.get("run_mode") in {"task", "group"}:
         for key in ("max_turns", "auth_mode", "timeout_seconds"):
             if key not in request:

@@ -21,6 +21,9 @@ Current group harnesses are concrete adapters over this task contract:
   verifier as `default`, but obtains its Lean inspection schemas and results from
   a pinned local `lean-lsp-mcp` stdio server. This isolates the effect of the MCP
   tool surface from the much larger architectural differences of a shell agent.
+  The target is `lean-lsp-mcp==0.28.0`, so this mode has a hard preflight on Lean
+  4.24 or newer; it is not runnable on the benchmark's pre-migration Lean 4.22
+  checkout.
 - shell agent profiles (`grok-build`, `opencode`, `codex`, ... from `harness/agents/*.json`) are custom adapters running coding-agent CLIs over an isolated generated workspace, metered by a local proxy, with the same final verifier.
 
 For controlled model comparisons, run the same task panel and benchmark budget

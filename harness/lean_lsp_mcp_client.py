@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import select
 import signal
 import subprocess
@@ -11,10 +12,8 @@ from collections import deque
 from pathlib import Path
 
 
-# 0.28.0's leanclient requires Lean >= 4.24.  The benchmark intentionally pins
-# Lean 4.22, while 0.27.0 exposes the same selected tool schemas and supports
-# this project toolchain.
-LEAN_LSP_MCP_VERSION = "0.27.0"
+LEAN_LSP_MCP_VERSION = "0.28.0"
+MINIMUM_LEAN_VERSION = (4, 24, 0)
 PROTOCOL_VERSION = "2025-06-18"
 
 # Keep the same local, non-networked Lean surface as the Vibe profile.  The
@@ -59,6 +58,40 @@ class LeanLspMcpTransportError(LeanLspMcpError):
     """MCP process/protocol failure, as opposed to rejected model arguments."""
 
     pass
+
+
+class LeanLspMcpCompatibilityError(LeanLspMcpError):
+    pass
+
+
+def lean_toolchain_version(workspace: Path) -> tuple[int, int, int]:
+    toolchain_path = workspace / "lean-toolchain"
+    try:
+        raw = toolchain_path.read_text(encoding="utf-8").strip()
+    except OSError as exc:
+        raise LeanLspMcpCompatibilityError(
+            "builtin-lean-lsp requires a readable lean-toolchain file"
+        ) from exc
+    match = re.search(r"(?:^|:)v?(\d+)\.(\d+)\.(\d+)(?:$|[-+])", raw)
+    if match is None:
+        raise LeanLspMcpCompatibilityError(
+            f"cannot determine Lean version from lean-toolchain: {raw!r}"
+        )
+    major, minor, patch = (int(part) for part in match.groups())
+    return major, minor, patch
+
+
+def assert_compatible_lean_toolchain(workspace: Path) -> tuple[int, int, int]:
+    version = lean_toolchain_version(workspace)
+    if version < MINIMUM_LEAN_VERSION:
+        found = ".".join(str(part) for part in version)
+        required = ".".join(str(part) for part in MINIMUM_LEAN_VERSION)
+        raise LeanLspMcpCompatibilityError(
+            f"lean-lsp-mcp=={LEAN_LSP_MCP_VERSION} requires Lean >= {required}; "
+            f"workspace pins Lean {found}. Migrate the benchmark and Verity dependency "
+            "before running builtin-lean-lsp."
+        )
+    return version
 
 
 def _openai_tool(tool: dict[str, object]) -> dict[str, object]:
@@ -182,6 +215,12 @@ class LeanLspMcpSession:
         self.instructions = ""
         self.tools: list[dict[str, object]] = []
         self._workspace_files_changed = False
+        self.initialization_count = 0
+        self.tool_call_count = 0
+        self.tool_call_counts: dict[str, int] = {}
+        self.tool_call_duration_seconds = 0.0
+        self.clean_shutdown: bool | None = None
+        self.shutdown_signal: str | None = None
 
     @property
     def command(self) -> list[str]:
@@ -215,6 +254,7 @@ class LeanLspMcpSession:
     def start(self) -> None:
         if self.process is not None:
             return
+        assert_compatible_lean_toolchain(self.workspace)
         env = {
             **os.environ,
             "LEAN_PROJECT_PATH": str(self.workspace),
@@ -278,6 +318,9 @@ class LeanLspMcpSession:
             )
         self.tools = [_openai_tool(by_name[name]) for name in sorted(by_name)]
         self._workspace_files_changed = False
+        self.initialization_count += 1
+        self.clean_shutdown = False
+        self.shutdown_signal = None
 
     def mark_workspace_files_changed(self) -> None:
         """Ensure the next IDE call observes a proof written outside the LSP."""
@@ -288,11 +331,29 @@ class LeanLspMcpSession:
         self.start()
 
     def metadata(self) -> dict[str, object]:
+        try:
+            observed_lean_version: str | None = ".".join(
+                str(part) for part in lean_toolchain_version(self.workspace)
+            )
+        except LeanLspMcpCompatibilityError:
+            observed_lean_version = None
         return {
             "package": "lean-lsp-mcp",
             "package_version": LEAN_LSP_MCP_VERSION,
+            "minimum_lean_version": ".".join(
+                str(part) for part in MINIMUM_LEAN_VERSION
+            ),
+            "workspace_lean_version": observed_lean_version,
             "protocol_version": PROTOCOL_VERSION,
             "server_info": self.server_info,
+            "initialization_count": self.initialization_count,
+            "tool_call_count": self.tool_call_count,
+            "tool_call_counts": dict(sorted(self.tool_call_counts.items())),
+            "tool_call_duration_seconds": round(
+                self.tool_call_duration_seconds, 3
+            ),
+            "clean_shutdown": self.clean_shutdown,
+            "shutdown_signal": self.shutdown_signal,
             "tools": [
                 str(tool.get("function", {}).get("name"))
                 for tool in self.tools
@@ -307,11 +368,17 @@ class LeanLspMcpSession:
             # keep later goals/diagnostics synchronized with the submitted file.
             self.restart()
         normalized = normalize_tool_arguments(name, arguments, workspace=self.workspace)
-        result = self._request(
-            "tools/call",
-            {"name": name, "arguments": normalized},
-            timeout_seconds=self.tool_timeout_seconds,
-        )
+        started = time.monotonic()
+        self.tool_call_count += 1
+        self.tool_call_counts[name] = self.tool_call_counts.get(name, 0) + 1
+        try:
+            result = self._request(
+                "tools/call",
+                {"name": name, "arguments": normalized},
+                timeout_seconds=self.tool_timeout_seconds,
+            )
+        finally:
+            self.tool_call_duration_seconds += time.monotonic() - started
         return normalize_call_result(name, result)
 
     def _send(self, payload: dict[str, object]) -> None:
@@ -405,15 +472,33 @@ class LeanLspMcpSession:
         process, self.process = self.process, None
         if process is None:
             return
+        if process.poll() is not None:
+            self.clean_shutdown = True
+            self.shutdown_signal = "already_exited"
+            return
         try:
-            os.killpg(process.pid, signal.SIGTERM)
+            if process.stdin is not None:
+                process.stdin.close()
             process.wait(timeout=5)
+            self.clean_shutdown = True
+            self.shutdown_signal = "stdin_eof"
         except (OSError, subprocess.TimeoutExpired):
             try:
-                os.killpg(process.pid, signal.SIGKILL)
+                os.killpg(process.pid, signal.SIGTERM)
             except OSError:
                 pass
             try:
                 process.wait(timeout=2)
+                self.clean_shutdown = False
+                self.shutdown_signal = "SIGTERM"
             except subprocess.TimeoutExpired:
-                pass
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except OSError:
+                    pass
+                try:
+                    process.wait(timeout=2)
+                except subprocess.TimeoutExpired:
+                    pass
+                self.clean_shutdown = False
+                self.shutdown_signal = "SIGKILL"

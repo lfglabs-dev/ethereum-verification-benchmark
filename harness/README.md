@@ -62,10 +62,17 @@ access, and metered final submissions. Network search, arbitrary Lean snippets,
 builds, widgets, profiling, and verifier-like MCP tools are disabled. Every MCP
 file argument is checked against the isolated public workspace before dispatch.
 
-The builtin profile pins `lean-lsp-mcp==0.27.0`. Version 0.28.0 exposes the same
-selected surface but its client requires Lean 4.24 or newer, while this benchmark
-pins Lean 4.22. Comparisons must record the resolved package version from
+The builtin profile targets `lean-lsp-mcp==0.28.0`, whose client requires Lean
+4.24 or newer. The runner checks the workspace `lean-toolchain` before starting
+MCP and records both required and observed versions. Until the separately
+audited benchmark/Verity Lean 4.24 migration lands, the current Lean 4.22 checkout
+is expected to fail this preflight and must not produce comparison results.
+Comparisons must record the resolved package and Lean versions from
 `run.json`/`harness-response.json`.
+MCP lifecycle metadata also records initialization count, effective tool-call
+count and names, aggregate MCP-call duration, and whether subprocess shutdown
+completed. Provider preflight runs only after MCP preflight succeeds, so an
+incompatible or broken MCP installation cannot consume a billed model request.
 
 Task briefing:
 - Every task/group workspace contains `harness/TASK_SUMMARY.md`.
@@ -182,7 +189,7 @@ Useful commands:
 python3 -m harness.cli list --suite active --unit group
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --keep-workspace
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness builtin-lean-lsp --max-attempts 2 --max-tool-calls 24 --keep-workspace
-# Provider-free MCP smoke: performs initialize, tools/list, and a real lean_local_search call.
+# On a Lean 4.24 checkout: initialize, tools/list, and one real lean_local_search call.
 python3 scripts/smoke_builtin_lean_lsp_mcp.py
 DEFAULT_HARNESS_DRIVER_MODEL=minimax/minimax-m3 DEFAULT_HARNESS_PROVER_MODEL=mistralai/Leanstral-2603 DEFAULT_HARNESS_PROVER_MODE=draft_proof python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --max-tool-calls 12 --keep-workspace
 # Cross-provider hybrid: MiniMax driver controls tools on the default endpoint,

@@ -9,6 +9,7 @@ INFRA_FAILURE_KINDS = {
     "context_length_exceeded",
     "http_error",
     "http_transient",
+    "mcp_setup_error",
     "provider_setup_error",
     "provider_or_context_failure",
     "request_failed",
