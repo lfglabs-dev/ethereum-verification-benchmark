@@ -35,7 +35,7 @@
       "enum": ["custom"]
     },
     "track": {
-      "enum": ["group/shell", "group/lean_tools"]
+      "enum": ["group/shell", "group/lean_tools", "group/lean_tools_mcp"]
     },
     "run_slug": {
       "type": "string",
@@ -135,6 +135,11 @@
         "minLength": 1
       },
       "minItems": 1
+    },
+    "lean_lsp_mcp_version": {
+      "description": "Pinned lean-lsp-mcp package version for builtin MCP harnesses.",
+      "type": "string",
+      "minLength": 1
     },
     "request_timeout_seconds": {
       "description": "HTTP timeout for both model probe and chat-completions requests.",

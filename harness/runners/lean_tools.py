@@ -19,6 +19,11 @@ from typing import Any
 try:
     from .. import transport
     from ..classification import classify_run
+    from ..lean_lsp_mcp_client import (
+        LeanLspMcpError,
+        LeanLspMcpSession,
+        LeanLspMcpTransportError,
+    )
     from ..manifests import Group, filter_group_to_task, load_group
     from ..paths import RESULTS_DIR, ROOT
     from ..reports import write_run_report
@@ -33,6 +38,11 @@ try:
 except ImportError:
     import transport
     from classification import classify_run
+    from lean_lsp_mcp_client import (
+        LeanLspMcpError,
+        LeanLspMcpSession,
+        LeanLspMcpTransportError,
+    )
     from manifests import Group, filter_group_to_task, load_group
     from paths import RESULTS_DIR, ROOT
     from reports import write_run_report
@@ -887,10 +897,22 @@ DRAFT_PROOF_TOOL: dict[str, Any] = {
 }
 
 
-def _fair_tools() -> list[dict[str, Any]]:
-    if not DRAFT_PROOF_ENABLED:
+MCP_BENCHMARK_TOOLS = [
+    tool
+    for tool in FAIR_TOOLS
+    if tool.get("function", {}).get("name") in {"show_task", "read_file", "check_proof"}
+]
+
+
+def _fair_tools(mcp_tools: list[dict[str, object]] | None = None) -> list[dict[str, Any]]:
+    if mcp_tools is None and not DRAFT_PROOF_ENABLED:
         return FAIR_TOOLS
-    return [*FAIR_TOOLS, DRAFT_PROOF_TOOL]
+    tools: list[dict[str, Any]] = (
+        [*MCP_BENCHMARK_TOOLS, *mcp_tools] if mcp_tools is not None else list(FAIR_TOOLS)
+    )
+    if DRAFT_PROOF_ENABLED:
+        tools.append(DRAFT_PROOF_TOOL)
+    return tools
 
 
 def _safe_workspace_path(workspace: Path, rel: str) -> Path:
@@ -2245,6 +2267,7 @@ def _attempt_task_fair(
     conversation_log_path: Path,
     draft_log_path: Path | None = None,
     native_tools: bool | None = None,
+    mcp_session: LeanLspMcpSession | None = None,
 ) -> dict[str, object]:
     editable_files = task.get("editable_files")
     target_module = task.get("target_module")
@@ -2256,7 +2279,37 @@ def _attempt_task_fair(
     attempts: list[dict[str, object]] = []
     native_tools = DEFAULT_NATIVE_TOOLS if native_tools is None else native_tools
 
-    if native_tools:
+    mcp_tools = mcp_session.tools if mcp_session is not None else None
+    if mcp_session is not None:
+        mcp_names = ", ".join(
+            str(tool.get("function", {}).get("name"))
+            for tool in mcp_tools or []
+            if isinstance(tool.get("function"), dict)
+        )
+        system_prompt = (
+            "You are an agent solving one public Lean benchmark task in an isolated Lean project. "
+            "This is the builtin benchmark loop, but its Lean IDE tools come directly from lean-lsp-mcp, "
+            "matching the tool names and schemas used by MCP coding agents. Call show_task first, then use "
+            "read_file for source text and the lean_* tools for goals, diagnostics, navigation, completion, "
+            "local declaration search, code actions, and non-mutating tactic experiments. "
+            "lean-lsp-mcp does not edit files: submit a complete proof body with check_proof when ready; "
+            "check_proof patches only the benchmark theorem, runs Lean, and counts against max_attempts. "
+            f"Available MCP tools: {mcp_names}. "
+            "Use lean_local_search before guessing declaration names and lean_multi_attempt to compare small "
+            "tactic snippets at a proof position. Iterate from actual Lean diagnostics. Do not use sorry, "
+            "admit, axiom, hidden imports, Benchmark.GeneratedPreview, or reference Proofs modules. "
+            "Do not assume a hardcoded solution from the task name."
+        )
+        if not native_tools:
+            system_prompt += (
+                " Native tool calling is unavailable, so reply only with one JSON tool call shaped like "
+                '{"tool":"show_task","arguments":{}}.'
+            )
+        user_prompt = (
+            f"Solve the Lean task in editable file {editable}. Call show_task first, inspect the goal through "
+            "lean-lsp-mcp, then submit proof bodies with check_proof until Lean passes."
+        )
+    elif native_tools:
         draft_tool_instruction = (
             " When enabled, draft_proof asks a separate prover model for a proof-body candidate only; "
             "you must inspect its output and submit it with check_proof or try_tactics before it counts as an attempt."
@@ -2477,7 +2530,7 @@ def _attempt_task_fair(
                 messages,
                 base_url=base_url,
                 model=DEFAULT_DRIVER_MODEL,
-                tools=_fair_tools() if native_tools else None,
+                tools=_fair_tools(mcp_tools) if native_tools else None,
                 tool_choice="auto" if native_tools else None,
                 request_log_path=conversation_log_path,
                 request_index=request_index,
@@ -2739,22 +2792,45 @@ def _attempt_task_fair(
                 if isinstance(raw_tactics, list):
                     args["tactics"] = raw_tactics[:remaining]
             tool_start = time.time()
-            result = _execute_fair_tool(
-                name,
-                args,
-                task=task,
-                workspace=workspace,
-                original=original,
-                proof_path=proof_path,
-                target_module=target_module,
-                attempts_dir=attempts_dir,
-                attempts=attempts,
-                sandbox_state=sandbox_state,
-                base_url=base_url,
-                draft_log_path=draft_log_path,
-                prover_state=prover_state,
-                role_metrics=role_metrics,
-            )
+            if mcp_session is not None and name.startswith("lean_"):
+                try:
+                    result = mcp_session.call_tool(name, args)
+                except LeanLspMcpTransportError as exc:
+                    result = {
+                        "ok": False,
+                        "error": str(exc),
+                        "failure_kind": "lean_lsp_mcp_transport_error",
+                        "terminal_transport_error": True,
+                    }
+                except LeanLspMcpError as exc:
+                    result = {
+                        "ok": False,
+                        "error": str(exc),
+                        "failure_kind": "lean_lsp_mcp_error",
+                    }
+            else:
+                result = _execute_fair_tool(
+                    name,
+                    args,
+                    task=task,
+                    workspace=workspace,
+                    original=original,
+                    proof_path=proof_path,
+                    target_module=target_module,
+                    attempts_dir=attempts_dir,
+                    attempts=attempts,
+                    sandbox_state=sandbox_state,
+                    base_url=base_url,
+                    draft_log_path=draft_log_path,
+                    prover_state=prover_state,
+                    role_metrics=role_metrics,
+                )
+                if (
+                    mcp_session is not None
+                    and name in {"check_proof", "try_tactics"}
+                    and result.get("passed") is not True
+                ):
+                    mcp_session.mark_workspace_files_changed()
             _accumulate_usage(result)
             tool_calls_executed += 1
             if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"}:
@@ -2786,6 +2862,22 @@ def _attempt_task_fair(
                     }
                 )
             flush_pending_repetition_warning()
+            if result.get("terminal_transport_error") is True:
+                return {
+                    "task_ref": task.get("task_ref"),
+                    "status": "request_failed",
+                    "failure_class": "transport_error",
+                    "error": {"kind": "transport_error", "message": result.get("error")},
+                    "usage": usage_totals,
+                    "attempts": attempts,
+                    "tool_calls_executed": tool_calls_executed,
+                    "non_proof_tool_calls": non_proof_tool_calls,
+                    "non_proof_tool_limit": non_proof_tool_limit,
+                    "tactic_sandbox_calls": sandbox_state["count"],
+                    "role_metrics": role_metrics,
+                    "tool_log": str(tool_log_path),
+                    "conversation_log": str(conversation_log_path),
+                }
             if result.get("passed") is True:
                 return {
                     "task_ref": task.get("task_ref"),
@@ -2883,6 +2975,10 @@ def run_group(
     max_attempts: int = 1,
     max_tool_calls: int = DEFAULT_MAX_TOOL_CALLS,
     task_ref: str | None = None,
+    harness_id: str = HARNESS_ID,
+    run_slug: str = RUN_SLUG,
+    track: str = "group/lean_tools",
+    tool_backend: str = "builtin",
 ) -> tuple[int, Path]:
     if max_attempts < 0:
         raise ValueError("max_attempts must be non-negative")
@@ -2891,7 +2987,7 @@ def run_group(
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_subject = task_ref or group_id
     model_slug = "".join(ch if ch.isalnum() else "-" for ch in DEFAULT_DRIVER_MODEL).strip("-").lower()
-    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{RUN_SLUG}-fair-{model_slug}-{run_subject.replace('/', '__')}"
+    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{run_slug}-fair-{model_slug}-{run_subject.replace('/', '__')}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     start = time.time()
@@ -2917,6 +3013,8 @@ def run_group(
         "max_turns": None,
         "completion_token_budget": DEFAULT_TOKEN_BUDGET,
     }
+    if tool_backend not in {"builtin", "lean-lsp-mcp"}:
+        raise ValueError(f"unknown builtin tool backend: {tool_backend}")
     op_budget = operational_budget()
     budgets = {
         "benchmark_budget": benchmark_budget,
@@ -2968,6 +3066,7 @@ def run_group(
             "role_config": role_config,
             "transport_mode": _transport_mode(),
             "mode": "fair",
+            "tool_backend": tool_backend,
             "max_attempts": max_attempts,
             "max_tool_calls": max_tool_calls,
             **budgets,
@@ -2984,6 +3083,7 @@ def run_group(
             "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
             "transport_mode": _transport_mode(),
             "mode": "fair",
+            "tool_backend": tool_backend,
             "error": f"fair mode requires DEFAULT_HARNESS_API_KEY{provider_key_hint}, GAZELLA_API_KEY, OPENAI_API_KEY, or a localhost-compatible no-auth endpoint",
             "tasks": [],
             "provider_setup_error": True,
@@ -3024,6 +3124,7 @@ def run_group(
             "role_config": role_config,
             "transport_mode": _transport_mode(),
             "mode": "fair",
+            "tool_backend": tool_backend,
             "provider_setup_error": False,
             "failure_class": setup_failure_class,
             "dependency_warm_builds": dependency_warm_builds,
@@ -3037,6 +3138,8 @@ def run_group(
         warm_builds = target_warm_builds
         preflight_passed = False
         preflight: dict[str, object] | None = None
+        mcp_session: LeanLspMcpSession | None = None
+        mcp_metadata: dict[str, object] | None = None
         try:
             preflight = _role_provider_preflight(base_url)
             if preflight.get("status") != "passed":
@@ -3044,6 +3147,10 @@ def run_group(
             preflight_passed = True
             native_tools = _native_tools_for_preflight(preflight)
             preflight["selected_tool_protocol"] = "native" if native_tools else "json_text_fallback"
+            if tool_backend == "lean-lsp-mcp":
+                mcp_session = LeanLspMcpSession(built.path)
+                mcp_session.start()
+                mcp_metadata = mcp_session.metadata()
             tasks_payload = json.loads(
                 (built.path / "harness" / "TASKS.json").read_text(encoding="utf-8")
             )
@@ -3061,6 +3168,7 @@ def run_group(
                             conversation_log_path=run_dir / "conversations" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                             draft_log_path=run_dir / "draft-proofs" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                             native_tools=native_tools,
+                            mcp_session=mcp_session,
                         )
                     )
                     task_results[-1]["benchmark_budget"] = benchmark_budget
@@ -3090,6 +3198,8 @@ def run_group(
                 "tool_protocol": "native" if native_tools else "json_text_fallback",
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
+                "tool_backend": tool_backend,
+                "lean_lsp_mcp": mcp_metadata,
                 "usage": aggregate_usage,
                 "preflight": preflight,
                 "dependency_warm_builds": dependency_warm_builds,
@@ -3099,7 +3209,32 @@ def run_group(
                 **budgets,
             }
         except Exception as exc:
-            status = "harness_error" if preflight_passed else "preflight_failed"
+            mcp_setup_error = isinstance(exc, LeanLspMcpError) and preflight_passed
+            status = (
+                "completed_with_failures"
+                if mcp_setup_error
+                else "harness_error"
+                if preflight_passed
+                else "preflight_failed"
+            )
+            if mcp_setup_error:
+                task_results = [
+                    {
+                        "task_ref": task.task_ref,
+                        "status": "request_failed",
+                        "failure_class": "transport_error",
+                        "error": {"kind": "transport_error", "message": str(exc)},
+                        "attempts": [],
+                        "usage": {
+                            "prompt_tokens": 0,
+                            "completion_tokens": 0,
+                            "total_tokens": 0,
+                            "requests": 0,
+                        },
+                        "benchmark_budget": benchmark_budget,
+                    }
+                    for task in group.tasks
+                ]
             response = {
                 "status": status,
                 "error": str(exc),
@@ -3114,8 +3249,17 @@ def run_group(
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
+                "tool_backend": tool_backend,
+                "lean_lsp_mcp": mcp_metadata,
                 "provider_setup_error": status == "preflight_failed",
-                "failure_class": "provider_setup_error" if status == "preflight_failed" else None,
+                "failure_class": (
+                    "transport_error"
+                    if mcp_setup_error
+                    else "provider_setup_error"
+                    if status == "preflight_failed"
+                    else None
+                ),
+                "setup_failure_class": "infra_agent_preflight_failed" if mcp_setup_error else None,
                 "preflight": preflight,
                 "dependency_warm_builds": dependency_warm_builds,
                 "warm_builds": warm_builds,
@@ -3123,6 +3267,9 @@ def run_group(
                 "failure_counts": failure_counts_from_tasks(task_results),
                 **budgets,
             }
+        finally:
+            if mcp_session is not None:
+                mcp_session.close()
 
     if response.get("provider_setup_error") and not response.get("tasks"):
         provider_error = str(response.get("error") or "provider setup failed before model execution")
@@ -3148,6 +3295,7 @@ def run_group(
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
+                "tool_backend": tool_backend,
                 "max_attempts": max_attempts,
                 "max_tool_calls": max_tool_calls,
                 **budgets,
@@ -3169,6 +3317,8 @@ def run_group(
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src, dst)
     artifact_setup_failure_class = setup_failure_class
+    if isinstance(response.get("setup_failure_class"), str):
+        artifact_setup_failure_class = str(response["setup_failure_class"])
     if response.get("provider_setup_error"):
         artifact_setup_failure_class = "provider_setup_error"
     verifier_result = (
@@ -3185,7 +3335,7 @@ def run_group(
     run = {
         "schema_version": 1,
         "run_id": run_id,
-        "harness_id": HARNESS_ID,
+        "harness_id": harness_id,
         "provider": _active_provider(),
         "model": DEFAULT_DRIVER_MODEL,
         "driver_model": DEFAULT_DRIVER_MODEL,
@@ -3197,8 +3347,10 @@ def run_group(
         "role_config": role_config,
         "role_metrics_totals": response.get("role_metrics_totals"),
         "dependency_warm_builds": response.get("dependency_warm_builds", dependency_warm_builds),
-        "track": "group/lean_tools",
+        "track": track,
         "mode": "fair",
+        "tool_backend": tool_backend,
+        "lean_lsp_mcp": response.get("lean_lsp_mcp"),
         "run_mode": "task" if task_ref else "group",
         "group_id": group_id,
         "task_ref": task_ref,

@@ -49,6 +49,7 @@ try:
     from .runners.shell_agent import run_group as run_shell_group
     from .runners.lean_tools import _role_config as default_role_config
     from .runners.lean_tools import run_group as run_lean_tools_group
+    from .runners.lean_tools_mcp import run_group as run_lean_tools_mcp_group
     from .workspace_builder import warm_public_dependencies, warm_result_failed
 except ImportError:
     from classification import classify_run
@@ -70,6 +71,7 @@ except ImportError:
     from runners.shell_agent import run_group as run_shell_group
     from runners.lean_tools import _role_config as default_role_config
     from runners.lean_tools import run_group as run_lean_tools_group
+    from runners.lean_tools_mcp import run_group as run_lean_tools_mcp_group
     from workspace_builder import warm_public_dependencies, warm_result_failed
 
 
@@ -109,6 +111,16 @@ def run_group(
     max_tool_calls: int,
     task_ref: str | None = None,
 ) -> tuple[int, Path]:
+    if harness == "builtin-lean-lsp":
+        return run_lean_tools_mcp_group(
+            group_id,
+            suite=suite,
+            keep_workspace=keep_workspace,
+            dry_run=dry_run,
+            max_attempts=max_attempts,
+            max_tool_calls=max_tool_calls,
+            task_ref=task_ref,
+        )
     if harness != "default":
         return run_shell_group(
             group_id,
@@ -163,7 +175,8 @@ def run_suite(
 ) -> tuple[int, Path]:
     start = time.time()
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    mode_slug = "-fair" if harness == "default" else ""
+    builtin_harness = harness in {"default", "builtin-lean-lsp"}
+    mode_slug = "-fair" if builtin_harness else ""
     run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{harness}{mode_slug}-suite-{suite}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -256,14 +269,14 @@ def run_suite(
     harness_status = "completed" if exit_code == 0 else "completed_with_failures"
     child_tracks = sorted({str(item.get("track")) for item in child_runs if item.get("track")})
     child_models = sorted({str(item.get("model")) for item in child_runs if item.get("model")})
-    role_config = default_role_config() if harness == "default" else None
+    role_config = default_role_config() if builtin_harness else None
     run = {
         "schema_version": 1,
         "run_id": run_id,
         "harness_id": harness,
         "model": child_models[0] if len(child_models) == 1 else "suite-aggregate",
         "track": child_tracks[0] if len(child_tracks) == 1 else "mixed",
-        "mode": "fair" if harness == "default" else None,
+        "mode": "fair" if builtin_harness else None,
         "run_mode": "suite",
         "group_id": None,
         "task_ref": None,
@@ -298,8 +311,8 @@ def run_suite(
                 "max_attempts": max_attempts,
                 "max_turns": max_turns,
                 "shell_timeout_seconds": shell_timeout_seconds,
-                "mode": "fair" if harness == "default" else None,
-                "max_tool_calls": max_tool_calls if harness == "default" else None,
+                "mode": "fair" if builtin_harness else None,
+                "max_tool_calls": max_tool_calls if builtin_harness else None,
                 "role_config": role_config,
                 "benchmark_budget": {
                     "max_attempts": max_attempts,
@@ -364,7 +377,7 @@ def main() -> int:
     group_parser = sub.add_parser("run-group")
     group_parser.add_argument("group_id")
     group_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    group_parser.add_argument("--harness", default="default", help="default (built-in fair harness) or a shell agent profile id from harness/agents/ (e.g. grok-build, opencode, codex)")
+    group_parser.add_argument("--harness", default="default", help="default, builtin-lean-lsp, or a shell agent profile id from harness/agents/ (e.g. vibe-lean-lsp, grok-build, opencode, codex)")
     group_parser.add_argument("--keep-workspace", action="store_true")
     group_parser.add_argument("--dry-run", action="store_true")
     group_parser.add_argument("--budget", choices=sorted(BUDGET_PROFILES), default="quick")
@@ -376,7 +389,7 @@ def main() -> int:
     task_parser = sub.add_parser("run-task")
     task_parser.add_argument("task_ref")
     task_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    task_parser.add_argument("--harness", default="default", help="default (built-in fair harness) or a shell agent profile id from harness/agents/ (e.g. grok-build, opencode, codex)")
+    task_parser.add_argument("--harness", default="default", help="default, builtin-lean-lsp, or a shell agent profile id from harness/agents/ (e.g. vibe-lean-lsp, grok-build, opencode, codex)")
     task_parser.add_argument("--keep-workspace", action="store_true")
     task_parser.add_argument("--dry-run", action="store_true")
     task_parser.add_argument("--budget", choices=sorted(BUDGET_PROFILES), default="quick")
@@ -397,7 +410,7 @@ def main() -> int:
 
     suite_parser = sub.add_parser("run-suite")
     suite_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    suite_parser.add_argument("--harness", default="default", help="default (built-in fair harness) or a shell agent profile id from harness/agents/ (e.g. grok-build, opencode, codex)")
+    suite_parser.add_argument("--harness", default="default", help="default, builtin-lean-lsp, or a shell agent profile id from harness/agents/ (e.g. vibe-lean-lsp, grok-build, opencode, codex)")
     suite_parser.add_argument("--keep-workspace", action="store_true")
     suite_parser.add_argument("--dry-run", action="store_true")
     suite_parser.add_argument("--budget", choices=sorted(BUDGET_PROFILES), default="quick")
