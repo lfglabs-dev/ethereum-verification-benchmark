@@ -151,6 +151,28 @@ def _should_validate_host_auth(
     return isinstance(host_auth, dict) and not dry_run and setup_failure_class is None
 
 
+def _shell_task_status(
+    *,
+    verifier_passed: bool,
+    harness_status: str,
+    exit_code: int,
+    editable_changed: bool,
+) -> str:
+    """Separate gradeable shell output from a CLI/transport crash.
+
+    A non-zero shell invocation may still leave a real candidate behind, so
+    modified files remain gradeable. With an untouched placeholder, however,
+    timeout/error exits are infrastructure evidence rather than submissions.
+    """
+    if verifier_passed:
+        return "lean_passed"
+    if not editable_changed and (harness_status == "timeout" or exit_code == 124):
+        return "request_timeout"
+    if not editable_changed and (harness_status == "harness_error" or exit_code != 0):
+        return "request_failed"
+    return "failed_submitted"
+
+
 def _run_setup_process_group(
     command: list[str], *, cwd: Path, timeout_seconds: int
 ) -> subprocess.CompletedProcess[str]:
@@ -483,12 +505,15 @@ def run_group(
 
     chunks: list[str] = []
     submitted_dir = run_dir / "submitted"
+    task_editable_changed: dict[str, bool] = {}
     for task in group.tasks:
+        editable_changed = False
         for rel in task.editable_files:
             src = built.path / rel
             after = src.read_text(encoding="utf-8") if src.is_file() else ""
             before = initial_editable.get(rel, "")
             if before != after:
+                editable_changed = True
                 chunks.extend(
                     difflib.unified_diff(
                         before.splitlines(keepends=True), after.splitlines(keepends=True), fromfile=f"a/{rel}", tofile=f"b/{rel}"
@@ -498,6 +523,7 @@ def run_group(
                 dst = submitted_dir / rel
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src, dst)
+        task_editable_changed[task.task_ref] = editable_changed
     (run_dir / "workspace.diff").write_text("".join(chunks), encoding="utf-8")
 
     verifier_result = (
@@ -544,16 +570,30 @@ def run_group(
         for task in group.tasks:
             target = verifier_targets.get(task.task_ref, {})
             verifier_passed = target.get("status") == "passed"
-            response_tasks.append(
-                {
-                    "task_ref": task.task_ref,
-                    "status": "lean_passed" if verifier_passed else "failed_submitted",
-                    "attempts": invocations,
-                    "benchmark_budget": benchmark_budget,
-                    "usage": usage,
-                    "verifier_confirmed": verifier_passed,
-                }
+            editable_changed = task_editable_changed.get(task.task_ref, False)
+            task_status = _shell_task_status(
+                verifier_passed=verifier_passed,
+                harness_status=harness_status,
+                exit_code=return_code,
+                editable_changed=editable_changed,
             )
+            task_result: dict[str, object] = {
+                "task_ref": task.task_ref,
+                "status": task_status,
+                "attempts": invocations,
+                "benchmark_budget": benchmark_budget,
+                "usage": usage,
+                "verifier_confirmed": verifier_passed,
+                "editable_changed": editable_changed,
+            }
+            if task_status in {"request_failed", "request_timeout"}:
+                task_result["failure_class"] = task_status
+                task_result["error"] = {
+                    "kind": task_status,
+                    "harness_status": harness_status,
+                    "exit_code": return_code,
+                }
+            response_tasks.append(task_result)
     classification = classify_run(verifier_result, response_tasks)
     version = None
     version_command = profile.get("version_command")

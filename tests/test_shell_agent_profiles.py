@@ -13,6 +13,7 @@ from harness.manifests import load_group
 from harness.runners.shell_agent import (
     _run_profile_preflights,
     _run_setup_process_group,
+    _shell_task_status,
     _should_validate_host_auth,
 )
 from harness.result_validity import row_validity
@@ -112,6 +113,48 @@ class ShellAgentProfileTests(unittest.TestCase):
 
         self.assertTrue(row_validity(passed, expected_budget=budget)["valid"])
         self.assertTrue(row_validity(failed, expected_budget=budget)["valid"])
+
+    def test_untouched_shell_crash_is_not_a_gradeable_submission(self) -> None:
+        self.assertEqual(
+            _shell_task_status(
+                verifier_passed=False,
+                harness_status="harness_error",
+                exit_code=1,
+                editable_changed=False,
+            ),
+            "request_failed",
+        )
+        self.assertEqual(
+            _shell_task_status(
+                verifier_passed=False,
+                harness_status="timeout",
+                exit_code=124,
+                editable_changed=False,
+            ),
+            "request_timeout",
+        )
+
+    def test_shell_crash_with_modified_candidate_remains_gradeable(self) -> None:
+        self.assertEqual(
+            _shell_task_status(
+                verifier_passed=False,
+                harness_status="harness_error",
+                exit_code=1,
+                editable_changed=True,
+            ),
+            "failed_submitted",
+        )
+
+    def test_verified_shell_candidate_wins_over_cli_exit(self) -> None:
+        self.assertEqual(
+            _shell_task_status(
+                verifier_passed=True,
+                harness_status="harness_error",
+                exit_code=1,
+                editable_changed=True,
+            ),
+            "lean_passed",
+        )
 
     def test_setup_failure_verifier_never_spawns_lean(self) -> None:
         group = load_group("ethereum/deposit_contract_minimal", "active")
