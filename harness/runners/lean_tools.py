@@ -19,7 +19,7 @@ from typing import Any
 try:
     from .. import transport
     from ..classification import classify_run
-    from ..manifests import filter_group_to_task, load_group
+    from ..manifests import Group, filter_group_to_task, load_group
     from ..paths import RESULTS_DIR, ROOT
     from ..reports import write_run_report
     from ..verifier import setup_failure_verifier_result, verify_group
@@ -33,7 +33,7 @@ try:
 except ImportError:
     import transport
     from classification import classify_run
-    from manifests import filter_group_to_task, load_group
+    from manifests import Group, filter_group_to_task, load_group
     from paths import RESULTS_DIR, ROOT
     from reports import write_run_report
     from verifier import setup_failure_verifier_result, verify_group
@@ -231,6 +231,31 @@ def _role_config() -> dict[str, object]:
         },
         "role_label": role_label,
     }
+
+
+def _provider_setup_task_rows(
+    group: Group,
+    benchmark_budget: dict[str, object],
+    error: str,
+) -> list[dict[str, object]]:
+    return [
+        {
+            "task_ref": task.task_ref,
+            "status": "preflight_failed",
+            "failure_class": "provider_setup_error",
+            "provider_setup_error": True,
+            "error": {"kind": "provider_setup_error", "message": error},
+            "attempts": [],
+            "benchmark_budget": benchmark_budget,
+            "usage": {
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "total_tokens": 0,
+                "requests": 0,
+            },
+        }
+        for task in group.tasks
+    ]
 
 
 ROLE_METRIC_COUNTERS = (
@@ -2852,6 +2877,7 @@ def run_group(
         task_results: list[dict[str, object]] = []
         warm_builds = target_warm_builds
         preflight_passed = False
+        preflight: dict[str, object] | None = None
         try:
             preflight = generic_preflight(base_url, DEFAULT_DRIVER_MODEL)
             if preflight.get("status") != "passed":
@@ -2927,12 +2953,18 @@ def run_group(
                 "mode": "fair",
                 "provider_setup_error": status == "preflight_failed",
                 "failure_class": "provider_setup_error" if status == "preflight_failed" else None,
+                "preflight": preflight,
                 "dependency_warm_builds": dependency_warm_builds,
                 "warm_builds": warm_builds,
                 "tasks": task_results,
                 "failure_counts": failure_counts_from_tasks(task_results),
                 **budgets,
             }
+
+    if response.get("provider_setup_error") and not response.get("tasks"):
+        provider_error = str(response.get("error") or "provider setup failed before model execution")
+        response["tasks"] = _provider_setup_task_rows(group, benchmark_budget, provider_error)
+        response["failure_counts"] = {"provider_setup_error": len(group.tasks)}
 
     (run_dir / "workspace-manifest.json").write_text((built.path / "workspace-manifest.json").read_text(encoding="utf-8"), encoding="utf-8")
     shutil.copy2(built.path / "harness" / "TASK_SUMMARY.md", run_dir / "TASK_SUMMARY.md")
@@ -2973,14 +3005,17 @@ def run_group(
                 dst = submitted_dir / rel
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src, dst)
+    artifact_setup_failure_class = setup_failure_class
+    if response.get("provider_setup_error"):
+        artifact_setup_failure_class = "provider_setup_error"
     verifier_result = (
         setup_failure_verifier_result(
             group,
             built.path,
-            failure_class=setup_failure_class,
+            failure_class=artifact_setup_failure_class,
             artifact_dir=run_dir / "verifier",
         )
-        if setup_failure_class is not None
+        if artifact_setup_failure_class is not None
         else verify_group(group, built.path, artifact_dir=run_dir / "verifier")
     )
     classification = classify_run(verifier_result, response.get("tasks") if isinstance(response.get("tasks"), list) else [])
@@ -3012,6 +3047,9 @@ def run_group(
         "auth_mode": "env" if _api_key() else "none",
         "duration_seconds": round(time.time() - start, 3),
         "harness_status": response["status"],
+        "failure_class": response.get("failure_class"),
+        "provider_setup_error": bool(response.get("provider_setup_error")),
+        "provider_preflight": response.get("preflight"),
         "usage": response.get("usage"),
         "benchmark_budget": benchmark_budget,
         "operational_budget": budgets["operational_budget"],

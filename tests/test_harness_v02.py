@@ -7,11 +7,30 @@ from pathlib import Path
 from unittest.mock import patch
 
 from harness.budgets import BudgetProfile, budget_artifact, dependency_warm_timeout_seconds
+from harness.manifests import load_group
 from harness.result_validity import failure_taxonomy, row_validity
+from harness.runners.lean_tools import _provider_setup_task_rows
 from scripts import aggregate_runs
 
 
 class HarnessV02Tests(unittest.TestCase):
+    def test_provider_preflight_failure_emits_non_reusable_task_rows(self) -> None:
+        group = load_group("ethereum/deposit_contract_minimal", "active")
+        budget = {
+            "max_attempts": 4,
+            "max_tool_calls": 40,
+            "max_turns": None,
+            "completion_token_budget": 0,
+        }
+        rows = _provider_setup_task_rows(group, budget, "model not found")
+
+        self.assertEqual(len(rows), len(group.tasks))
+        self.assertTrue(all(row["status"] == "preflight_failed" for row in rows))
+        self.assertTrue(all(row["provider_setup_error"] for row in rows))
+        self.assertTrue(
+            all(not row_validity(row, expected_budget=budget)["valid"] for row in rows)
+        )
+
     def test_failure_taxonomy_uses_release_buckets(self) -> None:
         self.assertEqual(failure_taxonomy("malformed_tool_call", []), "malformed_tool_call")
         self.assertEqual(failure_taxonomy("preflight_failed", []), "provider_setup_error")
