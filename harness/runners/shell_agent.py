@@ -335,6 +335,7 @@ def run_group(
             usage_path=run_dir / "usage.json",
             completion_token_budget=token_budget,
             user_agent=os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", HARNESS_USER_AGENT),
+            text_tool_fallback=bool(profile.get("text_tool_fallback", False)),
         )
         proxy.start()
     fake_home = Path(tempfile.mkdtemp(prefix=f"verity-{harness_id}-home-"))
@@ -349,6 +350,8 @@ def run_group(
         "proxy_key": proxy.local_key if proxy is not None else "not-started",
         "home": str(fake_home),
         "max_turns": str(max_turns),
+        "temperature": os.environ.get("DEFAULT_HARNESS_TEMPERATURE", "0.2"),
+        "reasoning_effort": os.environ.get("DEFAULT_HARNESS_REASONING_EFFORT", "off"),
     }
     for rel, template in (profile.get("config_files") or {}).items():
         rel = _expand(str(rel), substitutions)

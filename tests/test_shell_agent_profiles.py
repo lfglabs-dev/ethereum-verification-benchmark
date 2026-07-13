@@ -10,6 +10,7 @@ from unittest import mock
 
 from harness.paths import ROOT
 from harness.manifests import load_group
+from harness.metering_proxy import adapt_text_tool_response
 from harness.runners.shell_agent import (
     _run_profile_preflights,
     _run_setup_process_group,
@@ -26,12 +27,57 @@ class ShellAgentProfileTests(unittest.TestCase):
 
         self.assertTrue(profile["uses_proxy"])
         self.assertIn("mistral-vibe==2.19.1", profile["command"])
+        self.assertIn("verity-lean", profile["command"])
         self.assertIn("--trust", profile["command"])
+        self.assertTrue(profile["text_tool_fallback"])
         config = profile["config_files"]["~/.vibe/config.toml"]
         self.assertIn('api_base = "{proxy_url}"', config)
         self.assertIn('api_key_env_var = "VERITY_PROXY_KEY"', config)
         self.assertIn('"lean-lsp-mcp==0.28.0"', config)
         self.assertIn('LEAN_PROJECT_PATH = "{workspace}"', config)
+        self.assertIn('system_prompt_id = "lean"', profile["config_files"]["~/.vibe/agents/verity-lean.toml"])
+
+    def test_vibe_text_tool_fallback_recovers_multiple_calls(self) -> None:
+        request = {
+            "tools": [
+                {"type": "function", "function": {"name": "read_file"}},
+                {"type": "function", "function": {"name": "lean-lsp_lean_diagnostic_messages"}},
+            ]
+        }
+        response = {
+            "choices": [
+                {
+                    "message": {
+                        "role": "assistant",
+                        "content": 'I will inspect it.read{"path":"Foo.lean"}lean-lsp_lean_diagnostic_messages{"file_path":"Foo.lean"}',
+                    },
+                    "finish_reason": "stop",
+                }
+            ],
+            "usage": {"total_tokens": 10},
+        }
+
+        adapted = json.loads(
+            adapt_text_tool_response(
+                json.dumps(response).encode(),
+                json.dumps(request).encode(),
+            )
+        )
+
+        message = adapted["choices"][0]["message"]
+        self.assertEqual(message["content"], "I will inspect it.")
+        self.assertEqual(
+            [call["function"]["name"] for call in message["tool_calls"]],
+            ["read_file", "lean-lsp_lean_diagnostic_messages"],
+        )
+        self.assertEqual(adapted["choices"][0]["finish_reason"], "tool_calls")
+
+    def test_vibe_text_tool_fallback_leaves_prose_unchanged(self) -> None:
+        request = {"tools": [{"type": "function", "function": {"name": "read_file"}}]}
+        response = {"choices": [{"message": {"role": "assistant", "content": "No tool call needed."}}]}
+        encoded = json.dumps(response).encode()
+
+        self.assertEqual(adapt_text_tool_response(encoded, json.dumps(request).encode()), encoded)
 
     def test_host_authenticated_profiles_do_not_start_metering_proxy(self) -> None:
         for name in ("codex", "grok-build"):

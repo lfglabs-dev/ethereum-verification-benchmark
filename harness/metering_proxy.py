@@ -13,6 +13,7 @@ chat requests get HTTP 429 so budgets mean the same thing across harnesses.
 from __future__ import annotations
 
 import json
+import re
 import secrets
 import threading
 import time
@@ -24,6 +25,100 @@ from pathlib import Path
 from harness.identity import HARNESS_USER_AGENT
 
 
+_TEXT_TOOL_ALIASES = {
+    "read": ("read", "read_file"),
+    "write": ("write", "write_file"),
+    "search_replace": ("search_replace", "edit"),
+}
+
+
+def _available_tool_names(request_payload: dict[str, object]) -> set[str]:
+    names: set[str] = set()
+    tools = request_payload.get("tools")
+    if not isinstance(tools, list):
+        return names
+    for tool in tools:
+        function = tool.get("function") if isinstance(tool, dict) else None
+        name = function.get("name") if isinstance(function, dict) else None
+        if isinstance(name, str):
+            names.add(name)
+    return names
+
+
+def _text_tool_calls(content: str, available_names: set[str]) -> tuple[list[dict[str, object]], int | None]:
+    """Recover Vibe-style ``read{...}`` calls from a text-only model turn."""
+    calls: list[dict[str, object]] = []
+    first_start: int | None = None
+    decoder = json.JSONDecoder()
+    for match in re.finditer(r"(?<![\w-])([A-Za-z_][\w.-]*)\s*(?=\{)", content):
+        emitted_name = match.group(1)
+        emitted_candidates = (emitted_name, emitted_name.rsplit(".", 1)[-1])
+        resolved = next(
+            (
+                (emitted, candidate)
+                for emitted in emitted_candidates
+                for candidate in _TEXT_TOOL_ALIASES.get(emitted, (emitted,))
+                if candidate in available_names
+            ),
+            None,
+        )
+        if resolved is None:
+            continue
+        matched_emitted, name = resolved
+        try:
+            arguments, _ = decoder.raw_decode(content, match.end())
+        except json.JSONDecodeError:
+            continue
+        if not isinstance(arguments, dict):
+            continue
+        if first_start is None:
+            first_start = match.end(1) - len(matched_emitted)
+        calls.append(
+            {
+                "id": f"text-fallback-{len(calls) + 1}",
+                "type": "function",
+                "function": {
+                    "name": name,
+                    "arguments": json.dumps(arguments, separators=(",", ":")),
+                },
+            }
+        )
+    return calls, first_start
+
+
+def adapt_text_tool_response(response_data: bytes, request_data: bytes | None) -> bytes:
+    """Translate text-only Vibe tool syntax into OpenAI ``tool_calls``."""
+    if not request_data:
+        return response_data
+    try:
+        request_payload = json.loads(request_data.decode("utf-8"))
+        response_payload = json.loads(response_data.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError):
+        return response_data
+    if not isinstance(request_payload, dict) or not isinstance(response_payload, dict):
+        return response_data
+    available_names = _available_tool_names(request_payload)
+    if not available_names:
+        return response_data
+    choices = response_payload.get("choices")
+    if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
+        return response_data
+    message = choices[0].get("message")
+    if not isinstance(message, dict) or message.get("tool_calls"):
+        return response_data
+    content = message.get("content")
+    if not isinstance(content, str):
+        return response_data
+    calls, first_start = _text_tool_calls(content, available_names)
+    if not calls:
+        return response_data
+    prefix = content[:first_start].rstrip() if first_start is not None else ""
+    message["content"] = prefix or None
+    message["tool_calls"] = calls
+    choices[0]["finish_reason"] = "tool_calls"
+    return json.dumps(response_payload, ensure_ascii=False).encode("utf-8")
+
+
 class MeteringProxy:
     def __init__(
         self,
@@ -33,12 +128,14 @@ class MeteringProxy:
         usage_path: Path | None = None,
         completion_token_budget: int = 0,
         user_agent: str = HARNESS_USER_AGENT,
+        text_tool_fallback: bool = False,
     ) -> None:
         self.upstream = upstream_base_url.rstrip("/")
         self.api_key = api_key
         self.usage_path = usage_path
         self.completion_token_budget = completion_token_budget
         self.user_agent = user_agent
+        self.text_tool_fallback = text_tool_fallback
         self.local_key = "verity-proxy-" + secrets.token_hex(16)
         self.lock = threading.Lock()
         self.usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
@@ -158,6 +255,8 @@ class MeteringProxy:
                     self.wfile.write(b"0\r\n\r\n")
                 else:
                     data = response.read()
+                    if proxy.text_tool_fallback:
+                        data = adapt_text_tool_response(data, body)
                     self.send_header("Content-Length", str(len(data)))
                     self.end_headers()
                     self.wfile.write(data)
