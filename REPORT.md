@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 34
-- Implementations: 35
-- Active cases: 34
-- Buildable active cases: 34
-- Active tasks: 201
+- Families: 35
+- Implementations: 36
+- Active cases: 35
+- Buildable active cases: 35
+- Active tasks: 204
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -272,6 +272,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `addOwnerWithThreshold`, `removeOwner`, `swapOwner`, `setupOwners`
 - Upstream source artifact: `contracts/base/OwnerManager.sol`
 - Notes: Linked list reachability invariant preservation and functional correctness for the Safe OwnerManager. Based on the Certora OwnerReach.spec which defines the inListReachable and reachableInList invariants. All 15 proof tasks are complete (0 sorry) covering acyclicity, inListReachable, ownerListInvariant preservation, and isOwner functional correctness for all four operations. The unprovable stronglyAcyclic axiom was replaced with the provable uniquePredecessor property. Functional correctness proofs verify that each operation changes exactly the intended owners and leaves all others unchanged.
+
+### `starkware/starkgate_escrow`
+- Family / implementation: `starkware` / `starkgate_bridge`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Starkware.StarkgateEscrow.Compile`
+- Source ref: `https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol`
+- Selected functions: `deposit`, `withdraw`, `depositReclaim`
+- Upstream source artifact: `src/solidity/StarknetTokenBridge.sol`
+- Notes: Reference proofs are complete for the escrow lower-bound invariant across the three modeled transitions (deposit, withdraw, depositReclaim). Arithmetic hypotheses expose Solidity checked-arithmetic obligations (no-overflow on additions, sufficient-balance on subtractions).
 
 ### `t3tris/hwm_performance_fee`
 - Family / implementation: `t3tris` / `t3tris_vault`
@@ -1998,6 +2008,36 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/safe/owner_manager_reach/verity/Specs.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerOwnerListInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Safe.OwnerManagerReach.Proofs`
+
+### `starkware/starkgate_escrow/deposit_preserves_escrow_lower_bound`
+- Track / property class / proof family: `proof-only` / `escrow_lower_bound` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Starkware.StarkgateEscrow.deposit_preserves_escrow_lower_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/starkware/starkgate_escrow/verity/Contract.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean`
+- Specification files: `cases/starkware/starkgate_escrow/verity/Specs.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/DepositPreservesEscrowLowerBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Starkware.StarkgateEscrow.Proofs`
+
+### `starkware/starkgate_escrow/deposit_reclaim_preserves_escrow_lower_bound`
+- Track / property class / proof family: `proof-only` / `escrow_lower_bound` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Starkware.StarkgateEscrow.depositReclaim_preserves_escrow_lower_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/starkware/starkgate_escrow/verity/Contract.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean`
+- Specification files: `cases/starkware/starkgate_escrow/verity/Specs.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/DepositReclaimPreservesEscrowLowerBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Starkware.StarkgateEscrow.Proofs`
+
+### `starkware/starkgate_escrow/withdraw_preserves_escrow_lower_bound`
+- Track / property class / proof family: `proof-only` / `escrow_lower_bound` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Starkware.StarkgateEscrow.withdraw_preserves_escrow_lower_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/starkware/starkgate_escrow/verity/Contract.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean`
+- Specification files: `cases/starkware/starkgate_escrow/verity/Specs.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/WithdrawPreservesEscrowLowerBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Starkware.StarkgateEscrow.Proofs`
 
 ### `t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply`
 - Track / property class / proof family: `proof-only` / `fee_accounting_bounds` / `state_preservation_local_effects`

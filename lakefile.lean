@@ -6,7 +6,7 @@ package «ethereum-verification-benchmark» where
 
 require verity from git
   "https://github.com/lfglabs-dev/verity.git" @
-  "1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e"
+  "506bae406185497d5c2cb2a143f2d063ef31e04d"
 
 @[default_target]
 lean_lib «Benchmark» where
