@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import urllib.request
 from urllib.parse import urlparse
 
@@ -15,6 +16,11 @@ from harness.transport_request import (
     reset_transport_fallback,
     streaming_fallback_reason,
     transport_mode,
+)
+
+
+PROTOCOL_PROBE_ATTEMPTS = max(
+    1, int(os.environ.get("DEFAULT_HARNESS_PROTOCOL_PROBE_ATTEMPTS", "3"))
 )
 
 
@@ -152,31 +158,39 @@ def generic_preflight(
         result["checks"]["json_text_fallback"] = None
         result["checks"]["json_text_fallback_probed"] = False
     else:
-        try:
-            fallback_response = chat_completion(
-                [
-                    {
-                        "role": "system",
-                        "content": (
-                            "Reply only with one JSON tool call. The exact required shape is "
-                            '{"tool":"preflight_echo","arguments":{"value":"ok"}}. '
-                            "Do not emit prose, booleans, XML, sentinel tokens, or markdown."
-                        ),
-                    },
-                    {"role": "user", "content": "Call preflight_echo now with value ok."},
-                ],
-                base_url=base_url,
-                model=model,
-                max_tokens=96,
-                api_key_override=api_key_override,
-            )
-            record_usage(fallback_response)
-            result["checks"]["json_text_fallback"] = _valid_json_text_echo(fallback_response)
-            result["checks"]["json_text_fallback_probed"] = True
-        except Exception as exc:  # noqa: BLE001 - normalized into preflight evidence
-            result["checks"]["json_text_fallback"] = False
-            result["checks"]["json_text_fallback_probed"] = True
-            result["json_text_fallback_probe_error"] = str(exc)
+        fallback_valid = False
+        fallback_errors: list[str] = []
+        fallback_attempts = 0
+        for fallback_attempts in range(1, PROTOCOL_PROBE_ATTEMPTS + 1):
+            try:
+                fallback_response = chat_completion(
+                    [
+                        {
+                            "role": "system",
+                            "content": (
+                                "Reply only with one JSON tool call. The exact required shape is "
+                                '{"tool":"preflight_echo","arguments":{"value":"ok"}}. '
+                                "Do not emit prose, booleans, XML, sentinel tokens, or markdown."
+                            ),
+                        },
+                        {"role": "user", "content": "Call preflight_echo now with value ok."},
+                    ],
+                    base_url=base_url,
+                    model=model,
+                    max_tokens=96,
+                    api_key_override=api_key_override,
+                )
+                record_usage(fallback_response)
+                fallback_valid = _valid_json_text_echo(fallback_response)
+                if fallback_valid:
+                    break
+            except Exception as exc:  # noqa: BLE001 - normalized into preflight evidence
+                fallback_errors.append(str(exc))
+        result["checks"]["json_text_fallback"] = fallback_valid
+        result["checks"]["json_text_fallback_probed"] = True
+        result["checks"]["json_text_fallback_attempts"] = fallback_attempts
+        if fallback_errors:
+            result["json_text_fallback_probe_errors"] = fallback_errors
 
     if not result["checks"]["tool_calls"] and not result["checks"]["json_text_fallback"]:
         result["status"] = "failed"
