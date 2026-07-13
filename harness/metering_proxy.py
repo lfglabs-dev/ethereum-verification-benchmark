@@ -30,6 +30,22 @@ _TEXT_TOOL_ALIASES = {
     "write": ("write", "write_file"),
     "search_replace": ("search_replace", "edit"),
 }
+_SAMPLING_FIELDS = ("temperature", "top_p", "reasoning_effort")
+
+
+def omit_sampling_fields(request_data: bytes | None) -> bytes | None:
+    """Drop sampling overrides at the API boundary while preserving the request."""
+    if not request_data:
+        return request_data
+    try:
+        payload = json.loads(request_data.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError):
+        return request_data
+    if not isinstance(payload, dict):
+        return request_data
+    for key in _SAMPLING_FIELDS:
+        payload.pop(key, None)
+    return json.dumps(payload, ensure_ascii=False).encode("utf-8")
 
 
 def _available_tool_names(request_payload: dict[str, object]) -> set[str]:
@@ -129,6 +145,7 @@ class MeteringProxy:
         completion_token_budget: int = 0,
         user_agent: str = HARNESS_USER_AGENT,
         text_tool_fallback: bool = False,
+        omit_sampling: bool = False,
     ) -> None:
         self.upstream = upstream_base_url.rstrip("/")
         self.api_key = api_key
@@ -136,6 +153,7 @@ class MeteringProxy:
         self.completion_token_budget = completion_token_budget
         self.user_agent = user_agent
         self.text_tool_fallback = text_tool_fallback
+        self.omit_sampling = omit_sampling
         self.local_key = "verity-proxy-" + secrets.token_hex(16)
         self.lock = threading.Lock()
         self.usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
@@ -202,6 +220,8 @@ class MeteringProxy:
                     self.end_headers()
                     self.wfile.write(payload)
                     return
+                if self.command == "POST" and "chat/completions" in path and proxy.omit_sampling:
+                    body = omit_sampling_fields(body)
                 request = urllib.request.Request(upstream_url, data=body, method=self.command)
                 request.add_header("Content-Type", self.headers.get("Content-Type") or "application/json")
                 request.add_header("User-Agent", proxy.user_agent)

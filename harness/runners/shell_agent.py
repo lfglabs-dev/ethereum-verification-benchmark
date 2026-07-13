@@ -394,6 +394,11 @@ def run_group(
             setup_error = f"provider preflight failed: {provider_preflight}"
 
     proxy: MeteringProxy | None = None
+    omit_sampling = os.environ.get("DEFAULT_HARNESS_OMIT_SAMPLING", "0").strip().lower() in {
+        "1",
+        "true",
+        "yes",
+    }
     if not dry_run and setup_failure_class is None and uses_proxy:
         proxy = MeteringProxy(
             upstream,
@@ -402,6 +407,7 @@ def run_group(
             completion_token_budget=token_budget,
             user_agent=os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", HARNESS_USER_AGENT),
             text_tool_fallback=bool(profile.get("text_tool_fallback", False)),
+            omit_sampling=omit_sampling,
         )
         proxy.start()
     fake_home = Path(tempfile.mkdtemp(prefix=f"verity-{harness_id}-home-"))
@@ -700,6 +706,14 @@ def run_group(
         "agent_preflights": cli_preflights,
         "mcp_preflight": mcp_preflight,
         "provider_preflight": provider_preflight,
+        "sampling_policy": (
+            {"omitted_fields": ["temperature", "top_p", "reasoning_effort"]}
+            if omit_sampling
+            else {
+                "temperature": substitutions["temperature"],
+                "reasoning_effort": substitutions["reasoning_effort"],
+            }
+        ),
         "failure_class": setup_failure_class,
         "provider_setup_error": setup_failure_class == "provider_setup_error",
         "auth_mode": auth_mode,
@@ -730,6 +744,7 @@ def run_group(
                 "agent_preflights": cli_preflights,
                 "mcp_preflight": mcp_preflight,
                 "provider_preflight": provider_preflight,
+                "sampling_policy": run["sampling_policy"],
                 "tasks": response_tasks,
             },
             indent=2,
@@ -750,6 +765,7 @@ def run_group(
                 "agent_preflights": cli_preflights,
                 "mcp_preflight": mcp_preflight,
                 "provider_preflight": provider_preflight,
+                "sampling_policy": run["sampling_policy"],
                 "benchmark_budget": run["benchmark_budget"],
                 "operational_budget": run["operational_budget"],
             },

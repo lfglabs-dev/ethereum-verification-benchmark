@@ -10,7 +10,7 @@ from unittest import mock
 
 from harness.paths import ROOT
 from harness.manifests import load_group
-from harness.metering_proxy import adapt_text_tool_response
+from harness.metering_proxy import adapt_text_tool_response, omit_sampling_fields
 from harness.runners.shell_agent import (
     _completed_shell_status,
     _preserve_toolchain_env,
@@ -25,6 +25,26 @@ from harness.verifier import setup_failure_verifier_result
 
 
 class ShellAgentProfileTests(unittest.TestCase):
+    def test_metering_proxy_omits_sampling_fields_for_shell_harnesses(self) -> None:
+        request = json.dumps(
+            {
+                "model": "gpt-test",
+                "messages": [{"role": "user", "content": "hi"}],
+                "temperature": 0.2,
+                "top_p": 0.9,
+                "reasoning_effort": "off",
+                "max_tokens": 100,
+            }
+        ).encode()
+
+        rewritten = json.loads(omit_sampling_fields(request).decode())
+
+        self.assertNotIn("temperature", rewritten)
+        self.assertNotIn("top_p", rewritten)
+        self.assertNotIn("reasoning_effort", rewritten)
+        self.assertEqual(rewritten["max_tokens"], 100)
+        self.assertEqual(rewritten["model"], "gpt-test")
+
     def test_shell_prompt_avoids_broad_build_and_prefers_lean_tools(self) -> None:
         from harness.runners.shell_agent import _prompt
 
