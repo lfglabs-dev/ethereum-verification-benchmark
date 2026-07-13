@@ -204,6 +204,48 @@ class ToolProtocolSelectionTests(unittest.TestCase):
             self.assertEqual(result["status"], "repetition_loop")
             self.assertIn("role_metrics", result)
 
+    def test_json_tool_results_do_not_reissue_first_call_instruction(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            editable = "Benchmark/Generated/Test.lean"
+            proof_path = tmp / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem test : True := by\n  sorry\n", encoding="utf-8")
+            task = {
+                "task_ref": "test/group/task",
+                "task_id": "task",
+                "theorem_name": "test",
+                "editable_files": [editable],
+                "target_module": "Benchmark.Generated.Test",
+            }
+            request_count = 0
+
+            def completion(messages: list[dict[str, object]], **_: object) -> dict[str, object]:
+                nonlocal request_count
+                request_count += 1
+                if request_count == 1:
+                    return non_streaming_response('{"tool":"show_task","arguments":{}}')
+                if request_count == 2:
+                    latest = str(messages[-1].get("content") or "")
+                    self.assertIn("show_task was already called", latest)
+                    self.assertNotIn("First call show_task", latest)
+                return non_streaming_response("")
+
+            with mock.patch.object(lean_tools, "chat_completion", side_effect=completion):
+                result = lean_tools._attempt_task_fair(
+                    task,
+                    tmp,
+                    base_url="http://provider.test/v1",
+                    max_attempts=1,
+                    max_tool_calls=2,
+                    attempts_dir=tmp / "attempts",
+                    tool_log_path=tmp / "tools.jsonl",
+                    conversation_log_path=tmp / "conversation.jsonl",
+                    native_tools=False,
+                )
+            self.assertEqual(result["tool_calls_executed"], 1)
+            self.assertEqual(result["status"], "failed_no_tool_calls")
+
 
 class DegenerationClassificationTests(unittest.TestCase):
     def _verifier_target(self, task_ref: str, status: str = "no_submission") -> dict[str, object]:

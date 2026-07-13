@@ -2169,6 +2169,10 @@ def _attempt_task_fair(
             "Reply only as JSON, e.g. {\"tool\":\"show_task\",\"arguments\":{}}."
         )
         user_prompt = f"Task file: {editable}. First call show_task."
+    continuation_prompt = (
+        f"Task file: {editable}. show_task was already called. Continue from the tool result below; "
+        "do not restart task discovery or repeat an unchanged tool call."
+    )
 
     if STRICT_ROLE_SEPARATION:
         system_prompt += (
@@ -2190,7 +2194,10 @@ def _attempt_task_fair(
     def set_compact_user_context(content: str) -> None:
         messages[:] = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"{user_prompt}\n{content}\nReply with the next JSON tool call."},
+            {
+                "role": "user",
+                "content": f"{continuation_prompt}\n{content}\nReply with the next JSON tool call.",
+            },
         ]
     no_tool_response_limit = max(3, min(20, max_tool_calls))
     request_limit = max_tool_calls + max_attempts + no_tool_response_limit
@@ -2657,7 +2664,11 @@ def _attempt_task_fair(
                 failed_attempt = _last_failed_proof_attempt(result)
                 if failed_attempt is not None and int(prover_state["repair_count"]) < int(prover_state["repair_limit"]):
                     messages.append({"role": "user", "content": STRICT_DRIVER_REPAIR_NUDGE})
-                    _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+                    _compact_fair_messages(
+                        messages,
+                        system_prompt=system_prompt,
+                        user_prompt=continuation_prompt,
+                    )
                     repaired = True
             elif DIAGNOSTIC_RETRY_ENABLED and name in {"check_proof", "try_tactics"}:
                 failed_attempt = _last_failed_proof_attempt(result)
@@ -2683,7 +2694,11 @@ def _attempt_task_fair(
                     )
                     repaired = True
             if not repaired:
-                _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+                _compact_fair_messages(
+                    messages,
+                    system_prompt=system_prompt,
+                    user_prompt=continuation_prompt,
+                )
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
     if context_budget_exhausted:
