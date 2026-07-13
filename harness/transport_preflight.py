@@ -37,6 +37,39 @@ def local_no_auth_endpoint(base_url: str) -> bool:
     return host in {"127.0.0.1", "localhost", "::1"}
 
 
+def _valid_json_text_echo(response: dict[str, object]) -> bool:
+    """Return whether a no-native-tools probe produced the requested JSON call.
+
+    Some OpenAI-compatible models, notably Leanstral 1.5, do not emit native
+    ``tool_calls`` but can drive the harness through JSON text.  Validate that
+    protocol from the actual response instead of merely assuming it exists.
+    ``raw_decode`` intentionally accepts a valid first JSON value followed by a
+    leaked chat-template sentinel, matching the runtime parser's tolerance.
+    """
+    choices = response.get("choices")
+    if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
+        return False
+    message = choices[0].get("message")
+    if not isinstance(message, dict):
+        return False
+    content = message.get("content")
+    if not isinstance(content, str):
+        return False
+    start = content.find("{")
+    if start < 0:
+        return False
+    try:
+        payload, _ = json.JSONDecoder().raw_decode(content[start:])
+    except json.JSONDecodeError:
+        return False
+    return bool(
+        isinstance(payload, dict)
+        and payload.get("tool") == "preflight_echo"
+        and isinstance(payload.get("arguments"), dict)
+        and payload["arguments"].get("value") == "ok"
+    )
+
+
 def generic_preflight(
     base_url: str = DEFAULT_BASE_URL,
     model: str = DEFAULT_MODEL,
@@ -95,6 +128,7 @@ def generic_preflight(
             },
         }
     ]
+    native_tool_calls = False
     try:
         tool_response = chat_completion(
             [{"role": "user", "content": "Call preflight_echo with value ok."}],
@@ -108,12 +142,45 @@ def generic_preflight(
         record_usage(tool_response)
         result["transport_mode"] = transport_mode()
         message = ((tool_response.get("choices") or [{}])[0] or {}).get("message", {})
-        result["checks"]["tool_calls"] = bool(isinstance(message, dict) and message.get("tool_calls"))
-        result["checks"]["json_text_fallback"] = True
+        native_tool_calls = bool(isinstance(message, dict) and message.get("tool_calls"))
+        result["checks"]["tool_calls"] = native_tool_calls
     except Exception as exc:  # noqa: BLE001 - fallback is an accepted protocol mode
         result["checks"]["tool_calls"] = False
-        result["checks"]["json_text_fallback"] = True
         result["tool_call_probe_error"] = str(exc)
+
+    if native_tool_calls:
+        result["checks"]["json_text_fallback"] = None
+        result["checks"]["json_text_fallback_probed"] = False
+    else:
+        try:
+            fallback_response = chat_completion(
+                [
+                    {
+                        "role": "system",
+                        "content": (
+                            "Reply only with one JSON tool call. The exact required shape is "
+                            '{"tool":"preflight_echo","arguments":{"value":"ok"}}. '
+                            "Do not emit prose, booleans, XML, sentinel tokens, or markdown."
+                        ),
+                    },
+                    {"role": "user", "content": "Call preflight_echo now with value ok."},
+                ],
+                base_url=base_url,
+                model=model,
+                max_tokens=96,
+                api_key_override=api_key_override,
+            )
+            record_usage(fallback_response)
+            result["checks"]["json_text_fallback"] = _valid_json_text_echo(fallback_response)
+            result["checks"]["json_text_fallback_probed"] = True
+        except Exception as exc:  # noqa: BLE001 - normalized into preflight evidence
+            result["checks"]["json_text_fallback"] = False
+            result["checks"]["json_text_fallback_probed"] = True
+            result["json_text_fallback_probe_error"] = str(exc)
+
+    if not result["checks"]["tool_calls"] and not result["checks"]["json_text_fallback"]:
+        result["status"] = "failed"
+        result["error"] = "provider supports neither native tool calls nor validated JSON-text fallback"
     result["transport_mode"] = transport_mode()
     fallback_reason = streaming_fallback_reason()
     if fallback_reason:
