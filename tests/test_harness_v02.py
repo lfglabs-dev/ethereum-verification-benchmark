@@ -7,6 +7,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from harness.budgets import BudgetProfile, budget_artifact, dependency_warm_timeout_seconds
+from harness.classification import classify_run
 from harness.manifests import load_group
 from harness.result_validity import failure_taxonomy, row_validity
 from harness.runners.lean_tools import _provider_setup_task_rows
@@ -29,6 +30,21 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertTrue(all(row["provider_setup_error"] for row in rows))
         self.assertTrue(
             all(not row_validity(row, expected_budget=budget)["valid"] for row in rows)
+        )
+
+        verifier = {
+            "score": {"passed_targets": 0, "total_targets": len(rows)},
+            "targets": [
+                {"task_ref": row["task_ref"], "status": "verifier_infra_error"}
+                for row in rows
+            ],
+        }
+        classification = classify_run(verifier, rows)
+        self.assertEqual(classification["run_class"], "INFRA_INVALID")
+        self.assertFalse(classification["reusable"])
+        self.assertEqual(
+            classification["final_class_counts"],
+            {"INFRA_INVALID": len(rows)},
         )
 
     def test_failure_taxonomy_uses_release_buckets(self) -> None:
