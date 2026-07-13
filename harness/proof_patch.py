@@ -28,6 +28,11 @@ def _indent_proof_body(text: str) -> str:
     theorem_body = re.search(r"(?s)\b(?:theorem|lemma)\s+[A-Za-z0-9_'.]+.*?:=\s*by[ \t]*(?:\n)?", body)
     if theorem_body:
         body = body[theorem_body.end() :]
+    else:
+        # The tool contract asks for the body that belongs after `:= by`, but
+        # models commonly return the natural standalone spelling `by\n  ...`.
+        # Accept that wrapper without turning it into the invalid `:= by\n  by`.
+        body = re.sub(r"\A\s*(?::=\s*)?by\b[ \t]*(?:\n)?", "", body, count=1)
     body = re.sub(r"(?m)^end\s+[A-Za-z0-9_'.]+\s*$.*", "", body, flags=re.DOTALL)
     lines: list[str] = []
     in_preamble = True
