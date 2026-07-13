@@ -12,6 +12,8 @@ from harness.paths import ROOT
 from harness.manifests import load_group
 from harness.metering_proxy import adapt_text_tool_response
 from harness.runners.shell_agent import (
+    _completed_shell_status,
+    _preserve_toolchain_env,
     _run_profile_preflights,
     _run_setup_process_group,
     _shell_task_status,
@@ -22,6 +24,36 @@ from harness.verifier import setup_failure_verifier_result
 
 
 class ShellAgentProfileTests(unittest.TestCase):
+    def test_shell_prompt_avoids_broad_build_and_prefers_lean_tools(self) -> None:
+        from harness.runners.shell_agent import _prompt
+
+        prompt = _prompt(load_group("ethereum/deposit_contract_minimal", "active"))
+        self.assertIn("Do not run a broad `lake build`", prompt)
+        self.assertIn("Prefer available Lean MCP", prompt)
+
+    def test_isolated_home_preserves_existing_elan_toolchains(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_home:
+            elan_home = Path(raw_home) / ".elan"
+            elan_home.mkdir()
+            env: dict[str, str] = {}
+            _preserve_toolchain_env(env, Path(raw_home))
+            self.assertEqual(env["ELAN_HOME"], str(elan_home))
+
+            explicit = {"ELAN_HOME": "/custom/elan"}
+            _preserve_toolchain_env(explicit, Path(raw_home))
+            self.assertEqual(explicit["ELAN_HOME"], "/custom/elan")
+
+    def test_gradeable_shell_exit_is_a_completed_run(self) -> None:
+        tasks = [{"status": "failed_submitted"}]
+        self.assertEqual(
+            _completed_shell_status(tasks, "harness_error"),
+            "completed_with_failures",
+        )
+        self.assertEqual(
+            _completed_shell_status([{"status": "lean_passed"}], "harness_error"),
+            "completed",
+        )
+
     def test_vibe_and_lean_lsp_are_pinned_and_proxy_metered(self) -> None:
         profile = json.loads((ROOT / "harness/agents/vibe-lean-lsp.json").read_text())
 

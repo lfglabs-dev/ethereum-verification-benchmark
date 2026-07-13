@@ -86,6 +86,9 @@ def _prompt(group: Group) -> str:
         "Edit only files listed as editable in harness/TASKS.json. Keep the theorem statement byte-identical; "
         "only replace the proof after := by (helper lemmas in the same file are allowed).\n"
         "Do not import hidden Proofs modules or Benchmark/GeneratedPreview. Do not use sorry, admit, or axiom.\n"
+        "Do not run a broad `lake build`: this isolated workspace intentionally omits the aggregate "
+        "Benchmark.lean entry point. Prefer available Lean MCP diagnostics/goals tools, and only check the "
+        "exact editable file or ./harness/check.sh.\n"
         "Check your proof by running: lake env lean <editable-file.lean> (fast) or ./harness/check.sh (full).\n"
         "Iterate until Lean reports no errors, then stop.\n"
     )
@@ -171,6 +174,27 @@ def _shell_task_status(
     if not editable_changed and (harness_status == "harness_error" or exit_code != 0):
         return "request_failed"
     return "failed_submitted"
+
+
+def _completed_shell_status(tasks: list[dict[str, object]], raw_status: str) -> str:
+    """Report that the benchmark run completed even if the agent CLI exited 1.
+
+    Shell agents commonly use a non-zero exit for a turn limit. Once the
+    independent verifier has graded the resulting workspace, that raw process
+    status is invocation metadata rather than the run's terminal status.
+    """
+    if raw_status in {"dry_run", "preflight_failed"}:
+        return raw_status
+    if tasks and all(task.get("status") == "lean_passed" for task in tasks):
+        return "completed"
+    return "completed_with_failures"
+
+
+def _preserve_toolchain_env(env: dict[str, str], original_home: Path) -> None:
+    """Keep shared Lean toolchains reachable while isolating agent config."""
+    elan_home = original_home / ".elan"
+    if "ELAN_HOME" not in env and elan_home.is_dir():
+        env["ELAN_HOME"] = str(elan_home)
 
 
 def _run_setup_process_group(
@@ -385,6 +409,7 @@ def run_group(
             )
     command = [_expand(str(part), substitutions) for part in profile["command"]]
     env = os.environ.copy()
+    original_home = Path(env.get("HOME") or str(Path.home()))
     env["HOME"] = str(fake_home)
     env["PWD"] = str(built.path)  # some CLIs trust $PWD over getcwd
     env["OLDPWD"] = str(built.path)
@@ -393,6 +418,7 @@ def run_group(
             env.pop(key)
     for key, template in (profile.get("env") or {}).items():
         env[str(key)] = _expand(str(template), substitutions)
+    _preserve_toolchain_env(env, original_home)
 
     def _run_cli(cli_command: list[str], remaining_seconds: float) -> tuple[int, str, str]:
         process: subprocess.Popen[str] | None = None
@@ -598,6 +624,7 @@ def run_group(
                 }
             response_tasks.append(task_result)
     classification = classify_run(verifier_result, response_tasks)
+    completed_status = _completed_shell_status(response_tasks, harness_status)
     version = None
     version_command = profile.get("version_command")
     if isinstance(version_command, list):
@@ -621,7 +648,8 @@ def run_group(
         "suite": suite,
         "started_at": started_at,
         "duration_seconds": round(time.time() - start, 3),
-        "harness_status": harness_status,
+        "harness_status": completed_status,
+        "agent_exit_status": harness_status,
         "harness_exit_code": return_code,
         "invocations": invocations,
         "timeout_seconds": timeout_seconds,
@@ -649,7 +677,8 @@ def run_group(
     (run_dir / "harness-response.json").write_text(
         json.dumps(
             {
-                "status": harness_status,
+                "status": completed_status,
+                "agent_exit_status": harness_status,
                 "command": command,
                 "failure_class": setup_failure_class,
                 "provider_setup_error": setup_failure_class == "provider_setup_error",
