@@ -23,6 +23,17 @@ def _looks_like_full_file(body: str) -> bool:
         re.search(r"(?m)^\s*(?:theorem|lemma)\s+\S", body)
     )
 
+def _file_context_signature(text: str) -> tuple[str, ...]:
+    """Context lines a full-file proof submission is never allowed to alter."""
+    return tuple(
+        line.strip()
+        for line in text.splitlines()
+        if re.match(r"^\s*(?:import|namespace|open|end)\s+\S", line)
+    )
+
+def _full_file_context_preserved(original: str, candidate: str) -> bool:
+    return _file_context_signature(candidate) == _file_context_signature(original)
+
 def _indent_proof_body(text: str) -> str:
     body = _extract_lean_file(text)
     theorem_body = re.search(r"(?s)\b(?:theorem|lemma)\s+[A-Za-z0-9_'.]+.*?:=\s*by[ \t]*(?:\n)?", body)
@@ -60,10 +71,12 @@ def _indent_proof_body(text: str) -> str:
     return "\n".join(f"  {line}" if line else "" for line in normalized) + "\n"
 
 def _patch_proof_body(original: str, proof_body: str) -> str:
-    # Even when the model echoes a whole file, retain the benchmark skeleton
-    # byte-for-byte and extract only the body following its theorem's `:= by`.
-    # This prevents a proof submission from smuggling changed imports,
-    # namespaces, comments, or helper declarations into the candidate.
+    extracted = _extract_lean_file(proof_body)
+    if _looks_like_full_file(extracted):
+        # Whole-file mode preserves file-level helper declarations. The caller
+        # separately rejects changed imports/namespaces/opens/end markers and
+        # a changed target statement before invoking Lean.
+        return extracted
     replacement = ":= by\n" + _indent_proof_body(proof_body)
     pattern = re.compile(
         r":=\s*by\s*(?:--[^\n]*\n\s*)?(?:exact\s+\?_[A-Za-z0-9_']*|sorry|admit)\b",

@@ -61,7 +61,7 @@ try:
     )
     from ..proof_patch import (
         FORBIDDEN_PROOF_RE, _candidate_from_response, _contains_forbidden_proof_token, _decl_basename,
-        _extract_lean_file, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
+        _extract_lean_file, _full_file_context_preserved, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
         _strip_thinking, _theorem_statement,
     )
     from ..result_validity import failure_counts_from_tasks, failure_taxonomy, row_validity
@@ -82,7 +82,7 @@ except ImportError:
     )
     from proof_patch import (
         FORBIDDEN_PROOF_RE, _candidate_from_response, _contains_forbidden_proof_token, _decl_basename,
-        _extract_lean_file, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
+        _extract_lean_file, _full_file_context_preserved, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
         _strip_thinking, _theorem_statement,
     )
     from result_validity import failure_counts_from_tasks, failure_taxonomy, row_validity
@@ -1947,21 +1947,29 @@ def _execute_fair_tool(
         for label, proof in proofs:
             candidate = _candidate_from_response(original, proof, task.get("theorem_name"))
             candidate_statement = " ".join(_theorem_statement(candidate, task.get("theorem_name")).split())
+            submitted_full_file = _looks_like_full_file(_extract_lean_file(proof))
+            context_guard_failed = submitted_full_file and not _full_file_context_preserved(
+                original, candidate
+            )
             # Fail closed when the skeleton statement cannot be extracted:
             # proof-body patches keep the statement byte-identical by
-            # construction, so only whole-file submissions can change it.
+            # construction. Whole-file submissions may add helper declarations
+            # but cannot alter imports, namespace/open/end context, or target.
             statement_guard_failed = (
                 candidate_statement != original_statement
                 if original_statement
-                else _looks_like_full_file(_extract_lean_file(proof))
+                else submitted_full_file
             )
-            if statement_guard_failed:
+            if statement_guard_failed or context_guard_failed:
                 attempt = {
                     "attempt": f"tool:{name}",
                     "status": "rejected_statement_mismatch",
                     "exit_code": None,
                     "candidate_path": None,
-                    "output": "the submitted file changes or drops the target theorem statement; keep the theorem signature byte-identical and only change the proof after := by",
+                    "output": (
+                        "the submitted file changes imports, namespace/open/end context, or the target theorem statement; "
+                        "keep the benchmark context and theorem signature byte-identical; file-level helper declarations are allowed"
+                    ),
                     "failure_kind": "statement_mismatch",
                     "diagnostics": {
                         "changed_goal": False,
