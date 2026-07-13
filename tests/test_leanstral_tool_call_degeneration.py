@@ -15,6 +15,7 @@ conversation. Two harness defects turned that into scored model failures:
 from __future__ import annotations
 
 import json
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -118,6 +119,90 @@ class SentinelParsingTests(unittest.TestCase):
             if "expected_tool" in record:
                 records.append(record)
         return records
+
+
+class ToolProtocolSelectionTests(unittest.TestCase):
+    def test_preflight_downgrades_to_json_when_native_tools_are_missing(self) -> None:
+        preflight = {
+            "checks": {
+                "tool_calls": False,
+                "json_text_fallback": True,
+            }
+        }
+        with mock.patch.object(lean_tools, "DEFAULT_NATIVE_TOOLS", True):
+            self.assertFalse(lean_tools._native_tools_for_preflight(preflight))
+
+    def test_preflight_keeps_native_tools_when_supported(self) -> None:
+        preflight = {
+            "checks": {
+                "tool_calls": True,
+                "json_text_fallback": True,
+            }
+        }
+        with mock.patch.object(lean_tools, "DEFAULT_NATIVE_TOOLS", True):
+            self.assertTrue(lean_tools._native_tools_for_preflight(preflight))
+
+    def test_empty_completions_are_retried_and_keep_role_metrics(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            editable = "Benchmark/Generated/Test.lean"
+            proof_path = tmp / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem test : True := by\n  sorry\n", encoding="utf-8")
+            task = {
+                "task_ref": "test/group/task",
+                "task_id": "task",
+                "theorem_name": "test",
+                "editable_files": [editable],
+                "target_module": "Benchmark.Generated.Test",
+            }
+            empty = non_streaming_response("")
+            with mock.patch.object(lean_tools, "chat_completion", return_value=empty) as completion:
+                result = lean_tools._attempt_task_fair(
+                    task,
+                    tmp,
+                    base_url="http://provider.test/v1",
+                    max_attempts=1,
+                    max_tool_calls=1,
+                    attempts_dir=tmp / "attempts",
+                    tool_log_path=tmp / "tools.jsonl",
+                    conversation_log_path=tmp / "conversation.jsonl",
+                    native_tools=False,
+                )
+            self.assertEqual(completion.call_count, 3)
+            self.assertEqual(result["status"], "failed_no_tool_calls")
+            self.assertEqual(result["no_tool_responses"], 3)
+            self.assertIn("role_metrics", result)
+
+    def test_repetition_termination_keeps_role_metrics(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            editable = "Benchmark/Generated/Test.lean"
+            proof_path = tmp / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem test : True := by\n  sorry\n", encoding="utf-8")
+            task = {
+                "task_ref": "test/group/task",
+                "task_id": "task",
+                "theorem_name": "test",
+                "editable_files": [editable],
+                "target_module": "Benchmark.Generated.Test",
+            }
+            response = non_streaming_response("not a tool call")
+            with mock.patch.object(lean_tools, "chat_completion", return_value=response):
+                result = lean_tools._attempt_task_fair(
+                    task,
+                    tmp,
+                    base_url="http://provider.test/v1",
+                    max_attempts=1,
+                    max_tool_calls=1,
+                    attempts_dir=tmp / "attempts",
+                    tool_log_path=tmp / "tools.jsonl",
+                    conversation_log_path=tmp / "conversation.jsonl",
+                    native_tools=False,
+                )
+            self.assertEqual(result["status"], "repetition_loop")
+            self.assertIn("role_metrics", result)
 
 
 class DegenerationClassificationTests(unittest.TestCase):

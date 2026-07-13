@@ -351,6 +351,18 @@ def _aggregate_role_metrics(task_results: list[dict[str, object]]) -> dict[str, 
     return totals
 
 
+def _native_tools_for_preflight(preflight: dict[str, object]) -> bool:
+    """Select the tool protocol from observed provider capabilities."""
+    if not DEFAULT_NATIVE_TOOLS:
+        return False
+    checks = preflight.get("checks")
+    if not isinstance(checks, dict):
+        return True
+    if checks.get("tool_calls") is False and checks.get("json_text_fallback") is True:
+        return False
+    return True
+
+
 def _read_workspace_file(workspace: Path, rel: str) -> str:
     text = (workspace / rel).read_text(encoding="utf-8")
     if len(text) <= MAX_FILE_CHARS:
@@ -2102,6 +2114,7 @@ def _attempt_task_fair(
     tool_log_path: Path,
     conversation_log_path: Path,
     draft_log_path: Path | None = None,
+    native_tools: bool | None = None,
 ) -> dict[str, object]:
     editable_files = task.get("editable_files")
     target_module = task.get("target_module")
@@ -2111,8 +2124,9 @@ def _attempt_task_fair(
     proof_path = workspace / editable
     original = proof_path.read_text(encoding="utf-8")
     attempts: list[dict[str, object]] = []
+    native_tools = DEFAULT_NATIVE_TOOLS if native_tools is None else native_tools
 
-    if DEFAULT_NATIVE_TOOLS:
+    if native_tools:
         draft_tool_instruction = (
             " When enabled, draft_proof asks a separate prover model for a proof-body candidate only; "
             "you must inspect its output and submit it with check_proof or try_tactics before it counts as an attempt."
@@ -2253,6 +2267,7 @@ def _attempt_task_fair(
             "non_proof_tool_limit": non_proof_tool_limit,
             "tool_log": str(tool_log_path),
             "conversation_log": str(conversation_log_path),
+            "role_metrics": role_metrics,
         }
 
     def repetition_failure(signature: str) -> dict[str, object] | None:
@@ -2280,6 +2295,7 @@ def _attempt_task_fair(
                 "tool_log": str(tool_log_path),
                 "conversation_log": str(conversation_log_path),
                 "loop_signature": signature,
+                "role_metrics": role_metrics,
             }
         return None
 
@@ -2314,8 +2330,8 @@ def _attempt_task_fair(
                 messages,
                 base_url=base_url,
                 model=DEFAULT_DRIVER_MODEL,
-                tools=_fair_tools() if DEFAULT_NATIVE_TOOLS else None,
-                tool_choice="auto" if DEFAULT_NATIVE_TOOLS else None,
+                tools=_fair_tools() if native_tools else None,
+                tool_choice="auto" if native_tools else None,
                 request_log_path=conversation_log_path,
                 request_index=request_index,
             )
@@ -2343,6 +2359,7 @@ def _attempt_task_fair(
                 "tool_log": str(tool_log_path),
                 "conversation_log": str(conversation_log_path),
                 "failure_class": _failure_taxonomy(status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
+                "role_metrics": role_metrics,
             }
         _accumulate_usage(response)
         usage = response.get("usage") if isinstance(response, dict) else None
@@ -2394,31 +2411,31 @@ def _attempt_task_fair(
         text_protocol = bool(tool_calls and all(isinstance(call, dict) and call.get("text_protocol") is True for call in tool_calls))
         if not isinstance(tool_calls, list) or not tool_calls:
             text = _response_text(response)
+            no_tool_responses += 1
             if text.strip():
-                no_tool_responses += 1
                 repeated = repetition_failure("no-tool:" + re.sub(r"\s+", " ", text.strip())[:300])
                 if repeated is not None:
                     return repeated
-                if no_tool_responses >= no_tool_response_limit:
-                    _append_jsonl(
-                        conversation_log_path,
-                        {
-                            "task_ref": task.get("task_ref"),
-                            "request_index": request_index,
-                            "status": "no_tool_response_limit_exceeded",
-                            "no_tool_responses": no_tool_responses,
-                        },
-                    )
-                    break
-                messages.append(
+            if no_tool_responses >= no_tool_response_limit:
+                _append_jsonl(
+                    conversation_log_path,
                     {
-                        "role": "user",
-                        "content": "Tool call required. Reply only with compact JSON for one allowed tool.",
-                    }
+                        "task_ref": task.get("task_ref"),
+                        "request_index": request_index,
+                        "status": "no_tool_response_limit_exceeded",
+                        "no_tool_responses": no_tool_responses,
+                        "empty_content": not bool(text.strip()),
+                    },
                 )
-                _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
-                continue
-            break
+                break
+            messages.append(
+                {
+                    "role": "user",
+                    "content": "Tool call required. Reply only with compact JSON for one allowed tool.",
+                }
+            )
+            _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+            continue
         for tool_call in tool_calls:
             if not isinstance(tool_call, dict):
                 failure = protocol_failure("invalid_tool_call", request_index, {"error": "tool call is not an object", "raw_type": type(tool_call).__name__})
@@ -2487,7 +2504,7 @@ def _attempt_task_fair(
                 )
                 if text_protocol:
                     content = f"Tool result for {name}: {_tool_result_content(result)}"
-                    if DEFAULT_NATIVE_TOOLS:
+                    if native_tools:
                         messages.append({"role": "user", "content": content})
                     else:
                         set_compact_user_context(content)
@@ -2516,7 +2533,7 @@ def _attempt_task_fair(
                 )
                 if text_protocol:
                     content = f"Tool result for {name}: {_tool_result_content(result)}"
-                    if DEFAULT_NATIVE_TOOLS:
+                    if native_tools:
                         messages.append({"role": "user", "content": content})
                     else:
                         set_compact_user_context(content)
@@ -2552,7 +2569,7 @@ def _attempt_task_fair(
                 )
                 if text_protocol:
                     content = f"Tool result for {name}: {_tool_result_content(result)}"
-                    if DEFAULT_NATIVE_TOOLS:
+                    if native_tools:
                         messages.append({"role": "user", "content": content})
                     else:
                         set_compact_user_context(content)
@@ -2605,7 +2622,7 @@ def _attempt_task_fair(
             )
             if text_protocol:
                 content = f"Tool result for {name}: {_tool_result_content(result)}"
-                if DEFAULT_NATIVE_TOOLS:
+                if native_tools:
                     messages.append({"role": "user", "content": content})
                 else:
                     set_compact_user_context(content)
@@ -2883,6 +2900,8 @@ def run_group(
             if preflight.get("status") != "passed":
                 raise RuntimeError(f"provider preflight failed: {preflight.get('error') or preflight}")
             preflight_passed = True
+            native_tools = _native_tools_for_preflight(preflight)
+            preflight["selected_tool_protocol"] = "native" if native_tools else "json_text_fallback"
             tasks_payload = json.loads(
                 (built.path / "harness" / "TASKS.json").read_text(encoding="utf-8")
             )
@@ -2899,6 +2918,7 @@ def run_group(
                             tool_log_path=run_dir / "tool-calls" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                             conversation_log_path=run_dir / "conversations" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                             draft_log_path=run_dir / "draft-proofs" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
+                            native_tools=native_tools,
                         )
                     )
                     task_results[-1]["benchmark_budget"] = benchmark_budget
@@ -2925,6 +2945,7 @@ def run_group(
                 "role_config": role_config,
                 "role_metrics_totals": aggregate_role_metrics,
                 "transport_mode": _transport_mode(),
+                "tool_protocol": "native" if native_tools else "json_text_fallback",
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
                 "usage": aggregate_usage,
