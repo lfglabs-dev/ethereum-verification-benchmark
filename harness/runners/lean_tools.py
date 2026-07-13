@@ -1253,8 +1253,8 @@ def _normalize_prover_draft(raw: str) -> dict[str, object]:
     statements, leftover JSON) stays in :func:`_reject_draft_reason`, applied by
     the caller to the extracted body. ``raw`` is always returned unmodified so the
     caller can persist it for audit."""
-    text = raw.strip()
-    provenance: list[str] = []
+    text = _strip_template_sentinels(raw).strip()
+    provenance: list[str] = ["stripped_template_sentinel"] if text != raw.strip() else []
     if not text:
         return {"body": None, "provenance": "empty", "reject_reason": "empty_prover_output", "raw": raw}
 
@@ -2001,7 +2001,9 @@ def _execute_fair_tool(
 # is still recovered instead of being counted as a no-tool response.
 _TEMPLATE_SENTINELS = (
     "<|im_end|>",
+    "</|im_end|>",
     "<|im_start|>",
+    "</|im_start|>",
     "<|tool_call_begin|>",
     "<|tool_call_end|>",
     "<|tool_calls_begin|>",

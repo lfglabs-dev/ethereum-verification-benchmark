@@ -42,7 +42,14 @@ class StopSequenceTests(unittest.TestCase):
         transport_request.reset_transport_fallback()
 
     def test_default_stop_sequences_cover_chatml_and_tool_sentinels(self) -> None:
-        for sentinel in ("<|im_end|>", "<|im_start|>", "<|tool_call_begin|>", "<|tool_call_end|>"):
+        for sentinel in (
+            "<|im_end|>",
+            "</|im_end|>",
+            "<|im_start|>",
+            "</|im_start|>",
+            "<|tool_call_begin|>",
+            "<|tool_call_end|>",
+        ):
             self.assertIn(sentinel, transport_request.DEFAULT_STOP_SEQUENCES)
 
     def test_chat_completion_sends_stop_sequences(self) -> None:
