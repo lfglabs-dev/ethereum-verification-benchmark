@@ -24,6 +24,22 @@ class ProofPatchTests(unittest.TestCase):
         candidate = _patch_proof_body(ORIGINAL, "by_cases h : True\n· trivial\n· contradiction")
         self.assertIn("  by_cases h : True", candidate)
 
+    def test_full_file_submission_cannot_change_preamble(self) -> None:
+        submitted = """import Hidden.Proofs
+
+namespace Sample
+
+theorem sample : True := by
+  exact True.intro
+
+end Sample
+"""
+        candidate = _patch_proof_body(ORIGINAL, submitted)
+
+        self.assertNotIn("Hidden.Proofs", candidate)
+        self.assertTrue(candidate.startswith("theorem sample : True := by\n"))
+        self.assertIn("  exact True.intro", candidate)
+
 
 if __name__ == "__main__":
     unittest.main()

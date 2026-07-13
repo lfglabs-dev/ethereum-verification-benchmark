@@ -60,9 +60,10 @@ def _indent_proof_body(text: str) -> str:
     return "\n".join(f"  {line}" if line else "" for line in normalized) + "\n"
 
 def _patch_proof_body(original: str, proof_body: str) -> str:
-    extracted = _extract_lean_file(proof_body)
-    if _looks_like_full_file(extracted):
-        return extracted
+    # Even when the model echoes a whole file, retain the benchmark skeleton
+    # byte-for-byte and extract only the body following its theorem's `:= by`.
+    # This prevents a proof submission from smuggling changed imports,
+    # namespaces, comments, or helper declarations into the candidate.
     replacement = ":= by\n" + _indent_proof_body(proof_body)
     pattern = re.compile(
         r":=\s*by\s*(?:--[^\n]*\n\s*)?(?:exact\s+\?_[A-Za-z0-9_']*|sorry|admit)\b",
