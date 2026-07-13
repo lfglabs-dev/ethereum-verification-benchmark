@@ -2126,7 +2126,7 @@ def _first_json_value(text: str) -> object | None:
                 depth -= 1
                 if depth == 0:
                     try:
-                        return json.loads(text[start : index + 1])
+                        return json.loads(text[start : index + 1], strict=False)
                     except json.JSONDecodeError:
                         break
     return None
@@ -2139,7 +2139,7 @@ def _json_payload_from_text(text: str) -> object | None:
         stripped = fenced.group(1).strip()
     stripped = _strip_template_sentinels(stripped).strip()
     try:
-        return json.loads(stripped)
+        return json.loads(stripped, strict=False)
     except json.JSONDecodeError:
         return _first_json_value(stripped)
 

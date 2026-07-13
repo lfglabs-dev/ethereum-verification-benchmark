@@ -100,6 +100,15 @@ class SentinelParsingTests(unittest.TestCase):
         calls = lean_tools._tool_calls_from_text('{"tool":"show_task","arguments":{}}<|im_end|>')
         self.assertEqual([c["function"]["name"] for c in calls], ["show_task"])
 
+    def test_literal_newlines_in_proof_argument_are_salvaged(self) -> None:
+        text = '''{"tool":"check_proof","arguments":{"proof":"
+theorem sample : True := by
+  exact True.intro"}}'''
+        calls = lean_tools._tool_calls_from_text(text)
+
+        self.assertEqual([call["function"]["name"] for call in calls], ["check_proof"])
+        self.assertIn("exact True.intro", calls[0]["function"]["arguments"]["proof"])
+
     def test_degeneration_recovers_first_valid_call(self) -> None:
         for record in self._fixture_records():
             with self.subTest(request_index=record.get("request_index")):
