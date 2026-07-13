@@ -8,7 +8,21 @@ from unittest.mock import patch
 
 from harness.classification import classify_run
 from harness.manifests import Group, Task
-from harness.workspace_builder import public_dependency_modules, setup_private_lake, warm_public_dependencies
+from harness.workspace_builder import (
+    _prefetch_mathlib_cache,
+    public_dependency_modules,
+    setup_private_lake,
+    warm_public_dependencies,
+    warm_result_failed,
+)
+
+
+SKIPPED_CACHE_PREFETCH = {
+    "kind": "mathlib_cache",
+    "required": False,
+    "status": "cached",
+    "exit_code": 0,
+}
 
 
 def _task(*, implementation: tuple[str, ...], specification: tuple[str, ...]) -> Task:
@@ -28,6 +42,63 @@ def _task(*, implementation: tuple[str, ...], specification: tuple[str, ...]) ->
 
 
 class PublicDependencyWarmTests(unittest.TestCase):
+    def test_mathlib_cache_prefetch_is_persistent_and_best_effort(self) -> None:
+        @contextmanager
+        def fake_lease(*, label: str):
+            self.assertEqual(label, "dependency_cache_get")
+            yield "acquired"
+
+        class FinishedProcess:
+            returncode = 0
+            pid = 123
+
+            def poll(self):
+                return 0
+
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.22.0\n")
+            log_path = Path(tmp) / "warm.log"
+            with log_path.open("a", encoding="utf-8") as log, patch(
+                "harness.workspace_builder.ROOT", root
+            ), patch(
+                "harness.workspace_builder.verify_lease", fake_lease
+            ), patch(
+                "harness.workspace_builder.subprocess.Popen",
+                return_value=FinishedProcess(),
+            ) as popen:
+                first = _prefetch_mathlib_cache(
+                    timeout_seconds=30,
+                    log=log,
+                    log_path=log_path,
+                    heartbeat_seconds=1,
+                )
+                second = _prefetch_mathlib_cache(
+                    timeout_seconds=30,
+                    log=log,
+                    log_path=log_path,
+                    heartbeat_seconds=1,
+                )
+
+        self.assertEqual(first["status"], "passed")
+        self.assertEqual(second["status"], "cached")
+        self.assertFalse(warm_result_failed(first))
+        popen.assert_called_once()
+        self.assertEqual(popen.call_args.args[0], ["lake", "exe", "cache", "get"])
+
+    def test_failed_cache_prefetch_does_not_fail_required_warm(self) -> None:
+        self.assertFalse(
+            warm_result_failed(
+                {
+                    "kind": "mathlib_cache",
+                    "required": False,
+                    "status": "failed",
+                    "exit_code": 124,
+                }
+            )
+        )
+
     def test_modules_are_public_deduplicated_and_sorted(self) -> None:
         group = Group(
             group_id="erc20/state",
@@ -112,6 +183,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
         ), patch(
             "harness.workspace_builder.public_dependency_modules",
             return_value=["Benchmark.Cases.ERC20.State.Impl"],
+        ), patch(
+            "harness.workspace_builder._prefetch_mathlib_cache",
+            return_value=SKIPPED_CACHE_PREFETCH,
         ), patch("harness.workspace_builder.subprocess.Popen", FinishedProcess):
             results = warm_public_dependencies(
                 group,
@@ -119,7 +193,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 log_path=Path(tmp) / "warm.log",
             )
 
-        self.assertEqual(results[0]["exit_code"], 0)
+        self.assertEqual(results[1]["exit_code"], 0)
         self.assertEqual(
             events,
             ["lease_enter", "process_start", "process_poll", "lease_exit"],
@@ -155,6 +229,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
         ), patch(
             "harness.workspace_builder.public_dependency_modules",
             return_value=["Benchmark.Cases.ERC20.State.Impl"],
+        ), patch(
+            "harness.workspace_builder._prefetch_mathlib_cache",
+            return_value=SKIPPED_CACHE_PREFETCH,
         ), patch("harness.workspace_builder.subprocess.Popen", return_value=FinishedProcess()), patch(
             "harness.workspace_builder.time.monotonic", side_effect=lambda: next(clock)
         ):
@@ -162,7 +239,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[0]
+            )[1]
 
         self.assertEqual(result["exit_code"], 0)
         self.assertEqual(result["lease_wait_seconds"], 50.0)
@@ -188,6 +265,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
         with TemporaryDirectory() as tmp, patch(
             "harness.workspace_builder.verify_lease", fake_lease
         ), patch(
+            "harness.workspace_builder._prefetch_mathlib_cache",
+            return_value=SKIPPED_CACHE_PREFETCH,
+        ), patch(
             "harness.workspace_builder.subprocess.Popen",
             side_effect=FileNotFoundError("lake not found"),
         ):
@@ -195,7 +275,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[0]
+            )[1]
 
         self.assertEqual(result["status"], "failed")
         self.assertEqual(result["exit_code"], 127)

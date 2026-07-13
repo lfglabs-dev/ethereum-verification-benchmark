@@ -49,6 +49,7 @@ try:
         assert_workspace_isolated,
         build_group_workspace,
         warm_public_dependencies,
+        warm_result_failed,
     )
 except ImportError:
     from classification import classify_run
@@ -60,7 +61,13 @@ except ImportError:
     from reports import write_run_report
     from transport import generic_preflight
     from verifier import setup_failure_verifier_result, verify_group
-    from workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace, warm_public_dependencies
+    from workspace_builder import (
+        agent_group_to_json,
+        assert_workspace_isolated,
+        build_group_workspace,
+        warm_public_dependencies,
+        warm_result_failed,
+    )
 
 
 def load_profile(harness_id: str) -> dict[str, object]:
@@ -240,7 +247,7 @@ def run_group(
                     }
                 ]
             failed_dependency = next(
-                (item for item in dependency_warm_builds if item.get("exit_code") != 0),
+                (item for item in dependency_warm_builds if warm_result_failed(item)),
                 None,
             )
             if failed_dependency is not None:

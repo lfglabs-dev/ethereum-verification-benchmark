@@ -49,7 +49,7 @@ try:
     from .runners.shell_agent import run_group as run_shell_group
     from .runners.lean_tools import _role_config as default_role_config
     from .runners.lean_tools import run_group as run_lean_tools_group
-    from .workspace_builder import warm_public_dependencies
+    from .workspace_builder import warm_public_dependencies, warm_result_failed
 except ImportError:
     from classification import classify_run
     from budgets import (
@@ -70,7 +70,7 @@ except ImportError:
     from runners.shell_agent import run_group as run_shell_group
     from runners.lean_tools import _role_config as default_role_config
     from runners.lean_tools import run_group as run_lean_tools_group
-    from workspace_builder import warm_public_dependencies
+    from workspace_builder import warm_public_dependencies, warm_result_failed
 
 
 def warm_task_dependencies(task_ref: str, *, suite: str, timeout_seconds: int) -> tuple[int, Path]:
@@ -89,7 +89,7 @@ def warm_task_dependencies(task_ref: str, *, suite: str, timeout_seconds: int) -
         "task_ref": task_ref,
         "timeout_seconds_per_module": timeout_seconds,
         "results": results,
-        "passed": bool(results) and all(item.get("exit_code") == 0 for item in results),
+        "passed": bool(results) and not any(warm_result_failed(item) for item in results),
     }
     (artifact_dir / "result.json").write_text(
         json.dumps(payload, indent=2) + "\n", encoding="utf-8"

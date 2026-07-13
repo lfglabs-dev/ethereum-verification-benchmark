@@ -41,6 +41,138 @@ PUBLIC_WORKSPACE_GRINDSET_MODULES = (
 )
 
 
+def warm_result_failed(item: dict[str, object]) -> bool:
+    """Return whether a required warm step failed."""
+    return item.get("required", True) is not False and item.get("exit_code") != 0
+
+
+def _mathlib_cache_fingerprint() -> str:
+    digest = hashlib.sha256()
+    for name in ("lean-toolchain", "lake-manifest.json"):
+        path = ROOT / name
+        if path.is_file():
+            digest.update(name.encode())
+            digest.update(path.read_bytes())
+    return digest.hexdigest()[:20]
+
+
+def _prefetch_mathlib_cache(
+    *, timeout_seconds: int, log, log_path: Path, heartbeat_seconds: float
+) -> dict[str, object]:
+    """Best-effort Mathlib binary-cache fetch before source compilation."""
+    sentinel = ROOT / ".lake" / f".verity-mathlib-cache-{_mathlib_cache_fingerprint()}"
+    if sentinel.is_file():
+        print("[dependency-warm] cache=mathlib state=cached", flush=True)
+        return {
+            "kind": "mathlib_cache",
+            "required": False,
+            "status": "cached",
+            "exit_code": 0,
+            "duration_seconds": 0.0,
+            "log_path": str(log_path),
+        }
+
+    queued_at = time.monotonic()
+    print("[dependency-warm] cache=mathlib state=waiting_for_lease", flush=True)
+    with verify_lease(label="dependency_cache_get") as lease_reason:
+        if sentinel.is_file():
+            return {
+                "kind": "mathlib_cache",
+                "required": False,
+                "status": "cached",
+                "exit_code": 0,
+                "duration_seconds": 0.0,
+                "lease": lease_reason,
+                "lease_wait_seconds": round(time.monotonic() - queued_at, 3),
+                "log_path": str(log_path),
+            }
+        started = time.monotonic()
+        lease_wait_seconds = round(started - queued_at, 3)
+        log.write("\n$ lake exe cache get\n")
+        log.flush()
+        try:
+            process = subprocess.Popen(
+                ["lake", "exe", "cache", "get"],
+                cwd=ROOT,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                text=True,
+                start_new_session=True,
+            )
+        except OSError as exc:
+            duration = round(time.monotonic() - started, 3)
+            log.write(f"best-effort cache prefetch could not start: {exc}\n")
+            log.flush()
+            return {
+                "kind": "mathlib_cache",
+                "required": False,
+                "status": "failed",
+                "exit_code": 127,
+                "duration_seconds": duration,
+                "lease": lease_reason,
+                "lease_wait_seconds": lease_wait_seconds,
+                "log_path": str(log_path),
+                "error": str(exc),
+            }
+        timed_out = False
+        try:
+            while process.poll() is None:
+                elapsed = time.monotonic() - started
+                remaining = timeout_seconds - elapsed
+                if remaining <= 0:
+                    timed_out = True
+                    try:
+                        os.killpg(process.pid, signal.SIGTERM)
+                    except ProcessLookupError:
+                        pass
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        try:
+                            os.killpg(process.pid, signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+                        process.wait()
+                    break
+                try:
+                    process.wait(timeout=min(heartbeat_seconds, remaining))
+                except subprocess.TimeoutExpired:
+                    print(
+                        f"[dependency-warm] cache=mathlib state=running elapsed_seconds={int(elapsed)}",
+                        flush=True,
+                    )
+        except BaseException:
+            if process.poll() is None:
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                process.wait()
+            raise
+
+        duration = round(time.monotonic() - started, 3)
+        exit_code = 124 if timed_out else int(process.returncode or 0)
+        status = "timeout" if timed_out else "passed" if exit_code == 0 else "failed"
+        if exit_code == 0:
+            sentinel.parent.mkdir(parents=True, exist_ok=True)
+            sentinel.write_text("ok\n", encoding="utf-8")
+        print(
+            f"[dependency-warm] cache=mathlib state={status} exit_code={exit_code} "
+            f"duration_seconds={duration}",
+            flush=True,
+        )
+        return {
+            "kind": "mathlib_cache",
+            "required": False,
+            "status": status,
+            "exit_code": exit_code,
+            "duration_seconds": duration,
+            "lease": lease_reason,
+            "lease_wait_seconds": lease_wait_seconds,
+            "log_path": str(log_path),
+        }
+
+
 def public_dependency_modules(group: Group) -> list[str]:
     """Return public, non-editable Lean modules worth warming once at repo scope."""
     modules: set[str] = set(PUBLIC_WORKSPACE_GRINDSET_MODULES)
@@ -75,6 +207,18 @@ def warm_public_dependencies(
     log_path.parent.mkdir(parents=True, exist_ok=True)
     results: list[dict[str, object]] = []
     with log_path.open("a", encoding="utf-8") as log:
+        cache_timeout = min(
+            timeout_seconds,
+            int(os.environ.get("VERITY_CACHE_GET_TIMEOUT_SECONDS", "1800")),
+        )
+        results.append(
+            _prefetch_mathlib_cache(
+                timeout_seconds=cache_timeout,
+                log=log,
+                log_path=log_path,
+                heartbeat_seconds=heartbeat_seconds,
+            )
+        )
         for module in public_dependency_modules(group):
             queued_at = time.monotonic()
             print(f"[dependency-warm] module={module} state=waiting_for_lease", flush=True)

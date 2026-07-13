@@ -28,6 +28,7 @@ try:
         assert_workspace_isolated,
         build_group_workspace,
         warm_public_dependencies,
+        warm_result_failed,
     )
 except ImportError:
     import transport
@@ -41,6 +42,7 @@ except ImportError:
         assert_workspace_isolated,
         build_group_workspace,
         warm_public_dependencies,
+        warm_result_failed,
     )
 
 try:
@@ -2729,7 +2731,7 @@ def run_group(
     if (
         not dry_run
         and credentials_available
-        and not any(item.get("exit_code") != 0 for item in dependency_warm_builds)
+        and not any(warm_result_failed(item) for item in dependency_warm_builds)
     ):
         tasks_payload = json.loads(
             (built.path / "harness" / "TASKS.json").read_text(encoding="utf-8")
@@ -2758,9 +2760,7 @@ def run_group(
                         "duration_seconds": round(time.time() - warm_start, 3),
                     }
                 )
-    dependency_warm_failed = any(
-        item.get("exit_code") != 0 for item in dependency_warm_builds
-    )
+    dependency_warm_failed = any(warm_result_failed(item) for item in dependency_warm_builds)
     target_warm_timed_out = any(item.get("exit_code") == 124 for item in target_warm_builds)
     setup_failure_class = (
         "infra_dependency_warm_failed"
