@@ -86,6 +86,33 @@ class ShellAgentProfileTests(unittest.TestCase):
         self.assertTrue(row_validity(run_row, expected_budget=budget)["valid"])
         self.assertTrue(row_validity(task_row, expected_budget=budget)["valid"])
 
+    def test_normal_shell_task_rows_are_aggregatable(self) -> None:
+        budget = {
+            "max_attempts": None,
+            "max_tool_calls": None,
+            "max_turns": 20,
+            "completion_token_budget": 1000,
+        }
+        passed = {
+            "task_ref": "case/a",
+            "status": "lean_passed",
+            "attempts": [{"index": 1, "exit_code": 0}],
+            "benchmark_budget": budget,
+            "usage": {"requests": 1, "total_tokens": 100},
+            "verifier_confirmed": True,
+        }
+        failed = {
+            "task_ref": "case/b",
+            "status": "failed_submitted",
+            "attempts": [{"index": 1, "exit_code": 0}],
+            "benchmark_budget": budget,
+            "usage": {"requests": 1, "total_tokens": 100},
+            "verifier_confirmed": False,
+        }
+
+        self.assertTrue(row_validity(passed, expected_budget=budget)["valid"])
+        self.assertTrue(row_validity(failed, expected_budget=budget)["valid"])
+
     def test_setup_failure_verifier_never_spawns_lean(self) -> None:
         group = load_group("ethereum/deposit_contract_minimal", "active")
         with tempfile.TemporaryDirectory() as raw_dir, mock.patch(

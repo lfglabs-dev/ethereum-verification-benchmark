@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from harness.classification import classify_run
 from harness.manifests import Group, Task
-from harness.workspace_builder import public_dependency_modules, warm_public_dependencies
+from harness.workspace_builder import public_dependency_modules, setup_private_lake, warm_public_dependencies
 
 
 def _task(*, implementation: tuple[str, ...], specification: tuple[str, ...]) -> Task:
@@ -200,6 +200,33 @@ class PublicDependencyWarmTests(unittest.TestCase):
         self.assertEqual(result["status"], "failed")
         self.assertEqual(result["exit_code"], 127)
         self.assertIn("lake not found", result["error"])
+
+    def test_shared_build_cache_clone_holds_verify_lease(self) -> None:
+        events: list[str] = []
+
+        @contextmanager
+        def fake_lease(*, label: str):
+            self.assertEqual(label, "dependency_cache_clone")
+            events.append("lease_enter")
+            yield "acquired"
+            events.append("lease_exit")
+
+        def fake_clone(src: Path, dst: Path) -> None:
+            self.assertTrue(src.name == "build")
+            events.append("clone")
+            dst.mkdir(parents=True)
+
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            workspace = Path(tmp) / "workspace"
+            (root / ".lake" / "build").mkdir(parents=True)
+            workspace.mkdir()
+            with patch("harness.workspace_builder.ROOT", root), patch(
+                "harness.workspace_builder.verify_lease", fake_lease
+            ), patch("harness.workspace_builder._clone_tree", fake_clone):
+                setup_private_lake(workspace)
+
+        self.assertEqual(events, ["lease_enter", "clone", "lease_exit"])
 
     def test_pre_provider_warm_failure_is_infra_invalid(self) -> None:
         task_ref = "erc20/state/transfer"

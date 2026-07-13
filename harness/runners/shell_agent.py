@@ -528,7 +528,25 @@ def run_group(
             for task in group.tasks
         ]
     else:
-        response_tasks = [{"task_ref": task_ref or group_id, "usage": usage}]
+        verifier_targets = {
+            str(target.get("task_ref")): target
+            for target in verifier_result.get("targets", [])
+            if isinstance(target, dict) and target.get("task_ref")
+        }
+        response_tasks = []
+        for task in group.tasks:
+            target = verifier_targets.get(task.task_ref, {})
+            verifier_passed = target.get("status") == "passed"
+            response_tasks.append(
+                {
+                    "task_ref": task.task_ref,
+                    "status": "lean_passed" if verifier_passed else "failed_submitted",
+                    "attempts": invocations,
+                    "benchmark_budget": benchmark_budget,
+                    "usage": usage,
+                    "verifier_confirmed": verifier_passed,
+                }
+            )
     classification = classify_run(verifier_result, response_tasks)
     version = None
     version_command = profile.get("version_command")

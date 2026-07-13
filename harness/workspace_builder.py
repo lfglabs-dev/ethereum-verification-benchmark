@@ -359,7 +359,12 @@ def setup_private_lake(root_dir: Path, *, prune_to_sources: bool = False) -> dic
         (root_dir / ".lake" / "packages").symlink_to(lake_cache / "packages", target_is_directory=True)
         dependency_cache = {"path": ".lake/packages", "target": str(lake_cache / "packages")}
     if (lake_cache / "build").is_dir():
-        _clone_tree(lake_cache / "build", root_dir / ".lake" / "build")
+        # Dependency warms mutate the shared repo build cache under this same
+        # lease. Reacquire it for the complete clone so another runner cannot
+        # change the source tree halfway through our copy and produce a mixed
+        # workspace cache.
+        with verify_lease(label="dependency_cache_clone"):
+            _clone_tree(lake_cache / "build", root_dir / ".lake" / "build")
         if prune_to_sources:
             _prune_build_to_sources(root_dir)
     return dependency_cache
