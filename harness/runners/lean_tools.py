@@ -3245,7 +3245,9 @@ def run_group(
                 and not mcp_preflight_passed
             )
             status = (
-                "mcp_preflight_failed"
+                # Keep the setup failure details in mcp_preflight and failure_class,
+                # but persist an aggregatable terminal status for group runs.
+                "completed_with_failures"
                 if mcp_setup_error
                 else "harness_error"
                 if preflight_passed

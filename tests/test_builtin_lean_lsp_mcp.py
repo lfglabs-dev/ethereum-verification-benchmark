@@ -20,6 +20,7 @@ from harness.lean_lsp_mcp_client import (
 )
 from harness.classification import classify_target
 from harness.runners import lean_tools
+from scripts import aggregate_runs
 from scripts.check_run_artifacts import check_run
 
 
@@ -322,16 +323,87 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
                 (run_dir / "run.json").read_text(encoding="utf-8")
             )
             artifact_errors = check_run(run_dir)
+            aggregate_rows = aggregate_runs.collect_runs(Path(tmp))
 
         self.assertEqual(code, 1)
         provider_preflight.assert_not_called()
-        self.assertEqual(response["status"], "mcp_preflight_failed")
+        self.assertEqual(response["status"], "completed_with_failures")
         self.assertTrue(response["mcp_setup_error"])
         self.assertFalse(response["provider_setup_error"])
         self.assertEqual(response["failure_class"], "mcp_setup_error")
         self.assertEqual(run["classification"]["run_class"], "INFRA_INVALID")
         self.assertFalse(run["classification"]["reusable"])
         self.assertEqual(artifact_errors, [])
+        self.assertEqual(len(aggregate_rows), 1)
+        self.assertTrue(aggregate_rows[0]["valid"])
+        self.assertEqual(aggregate_rows[0]["final_class"], "INFRA_INVALID")
+        self.assertFalse(aggregate_rows[0]["reusable"])
+
+    def test_aggregate_accepts_multi_task_mcp_preflight_failure(self) -> None:
+        budget = {
+            "max_attempts": 1,
+            "max_tool_calls": 4,
+            "max_turns": None,
+            "completion_token_budget": 32768,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp) / "run"
+            run_dir.mkdir()
+            (run_dir / "run.json").write_text(
+                json.dumps(
+                    {
+                        "run_id": "mcp-group-preflight-failure",
+                        "harness_id": "builtin-lean-lsp",
+                        "model": "local",
+                        "group_id": "case/group",
+                        "harness_status": "completed_with_failures",
+                        "benchmark_budget": budget,
+                        "failure_counts": {"mcp_setup_error": 2},
+                        "classification": {
+                            "run_class": "INFRA_INVALID",
+                            "reusable": False,
+                        },
+                        "verifier": {
+                            "score": {"passed_targets": 0, "total_targets": 2}
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (run_dir / "harness-response.json").write_text(
+                json.dumps(
+                    {
+                        "mcp_preflight": {"status": "failed"},
+                        "tasks": [
+                            {
+                                "task_ref": "case/group/one",
+                                "status": "request_failed",
+                                "failure_class": "mcp_setup_error",
+                                "attempts": [],
+                                "usage": {"requests": 0, "total_tokens": 0},
+                                "benchmark_budget": budget,
+                            },
+                            {
+                                "task_ref": "case/group/two",
+                                "status": "request_failed",
+                                "failure_class": "mcp_setup_error",
+                                "attempts": [],
+                                "usage": {"requests": 0, "total_tokens": 0},
+                                "benchmark_budget": budget,
+                            },
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            rows = aggregate_runs.collect_runs(Path(tmp))
+
+        self.assertEqual(len(rows), 1)
+        self.assertTrue(rows[0]["valid"])
+        self.assertFalse(rows[0]["passed"])
+        self.assertEqual(rows[0]["final_class"], "INFRA_INVALID")
+        self.assertFalse(rows[0]["reusable"])
+        self.assertNotIn("terminal status", " ".join(rows[0]["validity_errors"]))
 
     def test_session_metadata_records_effective_calls_and_shutdown(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
