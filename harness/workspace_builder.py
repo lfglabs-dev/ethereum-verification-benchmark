@@ -41,6 +41,100 @@ PUBLIC_WORKSPACE_GRINDSET_MODULES = (
 )
 
 
+def declared_lean_toolchain() -> str:
+    """Return the exact repository toolchain used by every setup command."""
+    path = ROOT / "lean-toolchain"
+    value = path.read_text(encoding="utf-8").strip()
+    if not value or any(char.isspace() for char in value):
+        raise RuntimeError(f"invalid lean-toolchain declaration: {value!r}")
+    return value
+
+
+def toolchain_command(program: str, *args: str) -> list[str]:
+    """Run a Lean tool through the declared Elan toolchain, never host default."""
+    return ["elan", "run", declared_lean_toolchain(), program, *args]
+
+
+def toolchain_environment() -> dict[str, str]:
+    env = os.environ.copy()
+    # A workspace-level override must not silently beat the repository pin.
+    env.pop("ELAN_TOOLCHAIN", None)
+    return env
+
+
+def _validate_effective_toolchain(log_path: Path) -> dict[str, object]:
+    expected = declared_lean_toolchain().rsplit(":v", 1)[-1]
+    command = toolchain_command("lean", "--version")
+    started = time.monotonic()
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=toolchain_environment(),
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        output = (completed.stdout + completed.stderr).strip()
+        exit_code = completed.returncode
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        output = str(exc)
+        exit_code = 127
+    matched = exit_code == 0 and f"version {expected}" in output
+    return {
+        "kind": "lean_toolchain",
+        "required": True,
+        "status": "passed" if matched else "failed",
+        "exit_code": 0 if matched else exit_code or 1,
+        "duration_seconds": round(time.monotonic() - started, 3),
+        "declared_toolchain": declared_lean_toolchain(),
+        "effective_version": output.splitlines()[0] if output else "",
+        "command": command,
+        "log_path": str(log_path),
+    }
+
+
+def _invalid_package_checkouts() -> list[str]:
+    packages = ROOT / ".lake" / "packages"
+    if not packages.is_dir():
+        return []
+    invalid = []
+    for package in sorted(packages.iterdir()):
+        if not package.is_dir():
+            continue
+        completed = subprocess.run(
+            ["git", "-C", str(package), "rev-parse", "--verify", "HEAD"],
+            env=toolchain_environment(),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=10,
+            check=False,
+        )
+        if completed.returncode != 0:
+            invalid.append(package.name)
+    return invalid
+
+
+def _wait_for_package_checkouts(log_path: Path) -> dict[str, object]:
+    """Wait out a concurrent Lake checkout instead of observing partial Git state."""
+    timeout = float(os.environ.get("VERITY_PACKAGE_CHECKOUT_TIMEOUT_SECONDS", "180"))
+    started = time.monotonic()
+    invalid = _invalid_package_checkouts()
+    while invalid and time.monotonic() - started < timeout:
+        time.sleep(1)
+        invalid = _invalid_package_checkouts()
+    return {
+        "kind": "package_checkout_health",
+        "required": True,
+        "status": "passed" if not invalid else "failed",
+        "exit_code": 0 if not invalid else 1,
+        "duration_seconds": round(time.monotonic() - started, 3),
+        "invalid_packages": invalid,
+        "log_path": str(log_path),
+    }
+
+
 def warm_result_failed(item: dict[str, object]) -> bool:
     """Return whether a required warm step failed."""
     return item.get("required", True) is not False and item.get("exit_code") != 0
@@ -92,8 +186,9 @@ def _prefetch_mathlib_cache(
         log.flush()
         try:
             process = subprocess.Popen(
-                ["lake", "exe", "cache", "get"],
+                toolchain_command("lake", "exe", "cache", "get"),
                 cwd=ROOT,
+                env=toolchain_environment(),
                 stdout=log,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -207,6 +302,36 @@ def warm_public_dependencies(
     log_path.parent.mkdir(parents=True, exist_ok=True)
     results: list[dict[str, object]] = []
     with log_path.open("a", encoding="utf-8") as log:
+        toolchain_result = _validate_effective_toolchain(log_path)
+        results.append(toolchain_result)
+        log.write(
+            "$ " + " ".join(toolchain_result["command"]) + "\n"
+            + str(toolchain_result["effective_version"]) + "\n"
+        )
+        log.flush()
+        if warm_result_failed(toolchain_result):
+            print(
+                "[dependency-warm] toolchain state=failed "
+                f"declared={toolchain_result['declared_toolchain']}",
+                flush=True,
+            )
+            return results
+        with verify_lease(label="dependency_checkout_health"):
+            checkout_result = _wait_for_package_checkouts(log_path)
+        results.append(checkout_result)
+        if warm_result_failed(checkout_result):
+            log.write(
+                "invalid package checkouts: "
+                + ", ".join(checkout_result["invalid_packages"])
+                + "\n"
+            )
+            log.flush()
+            print(
+                "[dependency-warm] package_checkout state=failed invalid="
+                + ",".join(checkout_result["invalid_packages"]),
+                flush=True,
+            )
+            return results
         cache_timeout = min(
             timeout_seconds,
             int(os.environ.get("VERITY_CACHE_GET_TIMEOUT_SECONDS", "1800")),
@@ -235,8 +360,9 @@ def warm_public_dependencies(
                 )
                 try:
                     process = subprocess.Popen(
-                        ["lake", "build", module],
+                        toolchain_command("lake", "build", module),
                         cwd=ROOT,
+                        env=toolchain_environment(),
                         stdout=log,
                         stderr=subprocess.STDOUT,
                         text=True,

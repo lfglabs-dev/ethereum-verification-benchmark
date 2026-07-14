@@ -10,6 +10,8 @@ from harness.classification import classify_run
 from harness.manifests import Group, Task
 from harness.workspace_builder import (
     _prefetch_mathlib_cache,
+    _validate_effective_toolchain,
+    _wait_for_package_checkouts,
     public_dependency_modules,
     setup_private_lake,
     warm_public_dependencies,
@@ -22,6 +24,23 @@ SKIPPED_CACHE_PREFETCH = {
     "required": False,
     "status": "cached",
     "exit_code": 0,
+}
+
+VALID_TOOLCHAIN = {
+    "kind": "lean_toolchain",
+    "required": True,
+    "status": "passed",
+    "exit_code": 0,
+    "declared_toolchain": "leanprover/lean4:v4.24.0",
+    "effective_version": "Lean (version 4.24.0)",
+    "command": ["elan", "run", "leanprover/lean4:v4.24.0", "lean", "--version"],
+}
+VALID_CHECKOUTS = {
+    "kind": "package_checkout_health",
+    "required": True,
+    "status": "passed",
+    "exit_code": 0,
+    "invalid_packages": [],
 }
 
 
@@ -58,7 +77,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             root = Path(tmp) / "repo"
             root.mkdir()
-            (root / "lean-toolchain").write_text("leanprover/lean4:v4.22.0\n")
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
             log_path = Path(tmp) / "warm.log"
             with log_path.open("a", encoding="utf-8") as log, patch(
                 "harness.workspace_builder.ROOT", root
@@ -85,7 +104,40 @@ class PublicDependencyWarmTests(unittest.TestCase):
         self.assertEqual(second["status"], "cached")
         self.assertFalse(warm_result_failed(first))
         popen.assert_called_once()
-        self.assertEqual(popen.call_args.args[0], ["lake", "exe", "cache", "get"])
+        self.assertEqual(
+            popen.call_args.args[0],
+            ["elan", "run", "leanprover/lean4:v4.24.0", "lake", "exe", "cache", "get"],
+        )
+
+    def test_effective_toolchain_must_match_repository_pin(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            with patch("harness.workspace_builder.ROOT", root), patch(
+                "harness.workspace_builder.subprocess.run"
+            ) as run:
+                run.return_value.returncode = 0
+                run.return_value.stdout = "Lean (version 4.22.0)"
+                run.return_value.stderr = ""
+                result = _validate_effective_toolchain(root / "warm.log")
+
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(
+            run.call_args.args[0],
+            ["elan", "run", "leanprover/lean4:v4.24.0", "lean", "--version"],
+        )
+
+    def test_transient_package_checkout_race_is_waited_out(self) -> None:
+        with TemporaryDirectory() as tmp, patch(
+            "harness.workspace_builder._invalid_package_checkouts",
+            side_effect=[["mathlib"], ["mathlib"], []],
+        ), patch("harness.workspace_builder.time.sleep") as sleep, patch.dict(
+            "os.environ", {"VERITY_PACKAGE_CHECKOUT_TIMEOUT_SECONDS": "30"}
+        ):
+            result = _wait_for_package_checkouts(Path(tmp) / "warm.log")
+
+        self.assertEqual(result["status"], "passed")
+        self.assertEqual(sleep.call_count, 2)
 
     def test_failed_cache_prefetch_does_not_fail_required_warm(self) -> None:
         self.assertFalse(
@@ -162,6 +214,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         @contextmanager
         def fake_lease(*, label: str):
+            if label == "dependency_checkout_health":
+                yield "acquired"
+                return
             self.assertEqual(label, "dependency_warm")
             events.append("lease_enter")
             yield "acquired"
@@ -186,6 +241,12 @@ class PublicDependencyWarmTests(unittest.TestCase):
         ), patch(
             "harness.workspace_builder._prefetch_mathlib_cache",
             return_value=SKIPPED_CACHE_PREFETCH,
+        ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            return_value=VALID_CHECKOUTS,
         ), patch("harness.workspace_builder.subprocess.Popen", FinishedProcess):
             results = warm_public_dependencies(
                 group,
@@ -193,7 +254,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 log_path=Path(tmp) / "warm.log",
             )
 
-        self.assertEqual(results[1]["exit_code"], 0)
+        self.assertEqual(results[3]["exit_code"], 0)
         self.assertEqual(
             events,
             ["lease_enter", "process_start", "process_poll", "lease_exit"],
@@ -213,6 +274,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         @contextmanager
         def delayed_lease(*, label: str):
+            if label == "dependency_checkout_health":
+                yield "acquired"
+                return
             self.assertEqual(label, "dependency_warm")
             yield "acquired"
 
@@ -232,6 +296,12 @@ class PublicDependencyWarmTests(unittest.TestCase):
         ), patch(
             "harness.workspace_builder._prefetch_mathlib_cache",
             return_value=SKIPPED_CACHE_PREFETCH,
+        ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            return_value=VALID_CHECKOUTS,
         ), patch("harness.workspace_builder.subprocess.Popen", return_value=FinishedProcess()), patch(
             "harness.workspace_builder.time.monotonic", side_effect=lambda: next(clock)
         ):
@@ -239,7 +309,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[1]
+            )[3]
 
         self.assertEqual(result["exit_code"], 0)
         self.assertEqual(result["lease_wait_seconds"], 50.0)
@@ -259,6 +329,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         @contextmanager
         def fake_lease(*, label: str):
+            if label == "dependency_checkout_health":
+                yield "acquired"
+                return
             self.assertEqual(label, "dependency_warm")
             yield "acquired"
 
@@ -268,6 +341,12 @@ class PublicDependencyWarmTests(unittest.TestCase):
             "harness.workspace_builder._prefetch_mathlib_cache",
             return_value=SKIPPED_CACHE_PREFETCH,
         ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            return_value=VALID_CHECKOUTS,
+        ), patch(
             "harness.workspace_builder.subprocess.Popen",
             side_effect=FileNotFoundError("lake not found"),
         ):
@@ -275,7 +354,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[1]
+            )[3]
 
         self.assertEqual(result["status"], "failed")
         self.assertEqual(result["exit_code"], 127)
