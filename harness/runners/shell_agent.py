@@ -37,6 +37,7 @@ from pathlib import Path
 try:
     from ..classification import classify_run
     from ..identity import HARNESS_USER_AGENT
+    from ..lean_lsp_mcp_client import LeanLspMcpSession
     from ..manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from ..metering_proxy import MeteringProxy
     from ..budgets import dependency_warm_timeout_seconds, operational_budget
@@ -54,6 +55,7 @@ try:
 except ImportError:
     from classification import classify_run
     from identity import HARNESS_USER_AGENT
+    from lean_lsp_mcp_client import LeanLspMcpSession
     from manifests import Group, filter_group_to_task, group_id_from_task_ref, group_to_json, load_group
     from metering_proxy import MeteringProxy
     from budgets import dependency_warm_timeout_seconds, operational_budget
@@ -149,6 +151,36 @@ def _run_profile_preflights(
         if result["status"] != "passed":
             break
     return results
+
+
+def _run_workspace_mcp_preflight(
+    profile: dict[str, object], *, workspace: Path
+) -> dict[str, object] | None:
+    """Initialize profiles' MCP server before a provider can receive a request."""
+    if profile.get("lean_lsp_mcp_preflight") is not True:
+        return None
+    started = time.time()
+    session: LeanLspMcpSession | None = None
+    try:
+        session = LeanLspMcpSession(workspace)
+        session.start()
+        metadata = session.metadata()
+        session.close()
+        return {
+            "status": "passed",
+            "duration_seconds": round(time.time() - started, 3),
+            "metadata": metadata,
+        }
+    except Exception as exc:
+        metadata = session.metadata() if session is not None else None
+        if session is not None:
+            session.close()
+        return {
+            "status": "failed",
+            "duration_seconds": round(time.time() - started, 3),
+            "error": str(exc),
+            "metadata": metadata,
+        }
 
 
 def _should_validate_host_auth(
@@ -272,6 +304,7 @@ def run_group(
     setup_failure_class: str | None = None
     setup_error: str | None = None
     cli_preflights: list[dict[str, object]] = []
+    mcp_preflight: dict[str, object] | None = None
     dependency_warm_builds: list[dict[str, object]] = []
     if not dry_run:
         cli_preflights = _run_profile_preflights(profile, cwd=ROOT)
@@ -340,6 +373,12 @@ def run_group(
             }
             setup_failure_class = "infra_target_warm_timeout"
             setup_error = "target cache warm timed out before provider preflight"
+
+    if not dry_run and setup_failure_class is None:
+        mcp_preflight = _run_workspace_mcp_preflight(profile, workspace=built.path)
+        if mcp_preflight is not None and mcp_preflight.get("status") != "passed":
+            setup_failure_class = "infra_agent_preflight_failed"
+            setup_error = f"Lean MCP workspace preflight failed: {mcp_preflight.get('error') or mcp_preflight}"
 
     upstream = os.environ.get("DEFAULT_HARNESS_BASE_URL", "")
     api_key = os.environ.get("DEFAULT_HARNESS_API_KEY")
@@ -659,6 +698,7 @@ def run_group(
         "warm_build": warm,
         "dependency_warm_builds": dependency_warm_builds,
         "agent_preflights": cli_preflights,
+        "mcp_preflight": mcp_preflight,
         "provider_preflight": provider_preflight,
         "failure_class": setup_failure_class,
         "provider_setup_error": setup_failure_class == "provider_setup_error",
@@ -688,6 +728,7 @@ def run_group(
                 "dependency_warm_builds": dependency_warm_builds,
                 "warm_build": warm,
                 "agent_preflights": cli_preflights,
+                "mcp_preflight": mcp_preflight,
                 "provider_preflight": provider_preflight,
                 "tasks": response_tasks,
             },
@@ -707,6 +748,7 @@ def run_group(
                 "auth_mode": auth_mode,
                 "dependency_warm_builds": dependency_warm_builds,
                 "agent_preflights": cli_preflights,
+                "mcp_preflight": mcp_preflight,
                 "provider_preflight": provider_preflight,
                 "benchmark_budget": run["benchmark_budget"],
                 "operational_budget": run["operational_budget"],

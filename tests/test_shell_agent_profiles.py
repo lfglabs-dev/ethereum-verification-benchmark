@@ -15,6 +15,7 @@ from harness.runners.shell_agent import (
     _completed_shell_status,
     _preserve_toolchain_env,
     _run_profile_preflights,
+    _run_workspace_mcp_preflight,
     _run_setup_process_group,
     _shell_task_status,
     _should_validate_host_auth,
@@ -149,6 +150,24 @@ class ShellAgentProfileTests(unittest.TestCase):
         self.assertEqual(actual[0]["command"], ["agent", "--version"])
         self.assertEqual(actual[0]["status"], "passed")
         run.assert_called_once()
+
+    def test_workspace_mcp_preflight_initializes_the_generated_workspace(self) -> None:
+        session = mock.Mock()
+        session.metadata.return_value = {"initialization_count": 1}
+        with tempfile.TemporaryDirectory() as raw_dir, mock.patch(
+            "harness.runners.shell_agent.LeanLspMcpSession", return_value=session
+        ) as constructor:
+            result = _run_workspace_mcp_preflight(
+                {"lean_lsp_mcp_preflight": True}, workspace=Path(raw_dir)
+            )
+
+        self.assertEqual(result["status"], "passed")
+        constructor.assert_called_once_with(Path(raw_dir))
+        session.start.assert_called_once_with()
+        session.close.assert_called_once_with()
+
+    def test_workspace_mcp_preflight_is_opt_in(self) -> None:
+        self.assertIsNone(_run_workspace_mcp_preflight({}, workspace=ROOT))
 
     def test_invalid_preflight_shape_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "non-empty string list"):

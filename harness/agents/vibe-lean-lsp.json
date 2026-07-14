@@ -4,6 +4,7 @@
   "adapter": "shell",
   "uses_proxy": true,
   "text_tool_fallback": true,
+  "lean_lsp_mcp_preflight": true,
   "track": "group/vibe-lean-lsp",
   "command": [
     "uvx",
