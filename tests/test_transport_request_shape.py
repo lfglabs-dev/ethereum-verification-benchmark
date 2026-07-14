@@ -52,6 +52,25 @@ class DefaultRequestShapeTests(unittest.TestCase):
 
 
 class GreedyAndSamplingRequestShapeTests(unittest.TestCase):
+    def test_opt_in_omits_all_sampling_fields(self) -> None:
+        with mock.patch.object(transport_request, "DEFAULT_OMIT_SAMPLING", True):
+            payload = _capture_payload(
+                sampling={"temperature": 1.0, "top_p": 0.8, "reasoning_effort": "high"}
+            )
+        for key in ("temperature", "top_p", "reasoning_effort"):
+            self.assertNotIn(key, payload)
+        self.assertEqual(transport_request.effective_sampling(), {"temperature": 0, "top_p": 1})
+
+    def test_omit_sampling_env_flag(self) -> None:
+        self.addCleanup(importlib.reload, transport_request)
+        with mock.patch.dict(os.environ, {"DEFAULT_HARNESS_OMIT_SAMPLING": "true"}):
+            reloaded = importlib.reload(transport_request)
+            try:
+                self.assertTrue(reloaded.DEFAULT_OMIT_SAMPLING)
+                self.assertEqual(reloaded.effective_sampling(), {})
+            finally:
+                importlib.reload(transport_request)
+
     def test_effective_sampling_matches_greedy_wire_policy(self) -> None:
         self.assertEqual(
             transport_request.effective_sampling(),

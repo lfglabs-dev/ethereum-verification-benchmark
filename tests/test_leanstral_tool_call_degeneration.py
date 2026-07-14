@@ -21,6 +21,7 @@ from pathlib import Path
 from unittest import mock
 
 from harness import transport_request
+from harness import transport_preflight
 from harness.classification import classify_run, classify_target
 from harness.runners import lean_tools
 
@@ -138,6 +139,63 @@ theorem sample : True := by
 
 
 class ToolProtocolSelectionTests(unittest.TestCase):
+    def test_preflight_validates_json_text_fallback_from_actual_response(self) -> None:
+        responses = [
+            non_streaming_response("ok"),
+            non_streaming_response("<|im_first|>False<|tool_call_end|>"),
+            non_streaming_response(
+                '{"tool":"preflight_echo","arguments":{"value":"ok"}}<|im_end|>'
+            ),
+        ]
+        with mock.patch.object(transport_preflight, "chat_completion", side_effect=responses):
+            result = transport_preflight.generic_preflight(
+                base_url="http://provider.test/v1", model="leanstral-test"
+            )
+
+        self.assertEqual(result["status"], "passed")
+        self.assertFalse(result["checks"]["tool_calls"])
+        self.assertTrue(result["checks"]["json_text_fallback"])
+        self.assertTrue(result["checks"]["json_text_fallback_probed"])
+        self.assertEqual(result["checks"]["json_text_fallback_attempts"], 1)
+        self.assertEqual(result["usage"]["requests"], 3)
+
+    def test_preflight_rejects_unvalidated_json_text_fallback(self) -> None:
+        responses = [
+            non_streaming_response("ok"),
+            non_streaming_response("<|im_first|>False<|tool_call_end|>"),
+            non_streaming_response("False"),
+            non_streaming_response("False"),
+            non_streaming_response("False"),
+        ]
+        with mock.patch.object(transport_preflight, "chat_completion", side_effect=responses):
+            result = transport_preflight.generic_preflight(
+                base_url="http://provider.test/v1", model="leanstral-test"
+            )
+
+        self.assertEqual(result["status"], "failed")
+        self.assertFalse(result["checks"]["tool_calls"])
+        self.assertFalse(result["checks"]["json_text_fallback"])
+        self.assertEqual(result["checks"]["json_text_fallback_attempts"], 3)
+        self.assertEqual(result["usage"]["requests"], 5)
+        self.assertIn("neither native tool calls", result["error"])
+
+    def test_preflight_retries_stochastic_json_text_negotiation(self) -> None:
+        responses = [
+            non_streaming_response("ok"),
+            non_streaming_response("False"),
+            non_streaming_response("False"),
+            non_streaming_response('{"tool":"preflight_echo","arguments":{"value":"ok"}}'),
+        ]
+        with mock.patch.object(transport_preflight, "chat_completion", side_effect=responses):
+            result = transport_preflight.generic_preflight(
+                base_url="http://provider.test/v1", model="leanstral-test"
+            )
+
+        self.assertEqual(result["status"], "passed")
+        self.assertTrue(result["checks"]["json_text_fallback"])
+        self.assertEqual(result["checks"]["json_text_fallback_attempts"], 2)
+        self.assertEqual(result["usage"]["requests"], 4)
+
     def test_preflight_downgrades_to_json_when_native_tools_are_missing(self) -> None:
         preflight = {
             "checks": {

@@ -167,6 +167,11 @@ DEFAULT_CONTEXT_TOKENS = os.environ.get("DEFAULT_HARNESS_CONTEXT_TOKENS", os.env
 DEFAULT_MAX_RESPONSE_TOKENS = int(os.environ.get("DEFAULT_HARNESS_MAX_RESPONSE_TOKENS", "8192"))
 DEFAULT_TEMPERATURE = float(os.environ.get("DEFAULT_HARNESS_TEMPERATURE", "0") or 0)
 DEFAULT_REASONING_EFFORT = (os.environ.get("DEFAULT_HARNESS_REASONING_EFFORT", "") or "").strip()
+DEFAULT_OMIT_SAMPLING = os.environ.get("DEFAULT_HARNESS_OMIT_SAMPLING", "0").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+}
 # Some strict OpenAI-compatible providers reject any request that carries a
 # token-limit field and answer with a generic 400 (observed with Virtuals'
 # openai-gpt-56-sol-pro, which 400s on max_tokens / max_completion_tokens /
@@ -215,6 +220,8 @@ def effective_sampling(sampling: dict[str, Any] | None = None) -> dict[str, Any]
     writers persist the same effective policy, including implicit greedy
     ``top_p=1`` and compatibility-mode removal of ``reasoning_effort``.
     """
+    if DEFAULT_OMIT_SAMPLING:
+        return {}
     effective: dict[str, Any] = {"temperature": DEFAULT_TEMPERATURE}
     if DEFAULT_REASONING_EFFORT:
         effective["reasoning_effort"] = DEFAULT_REASONING_EFFORT

@@ -19,8 +19,8 @@ selected_functions:
   - swapExactIn
 failure_reason:
 source_language: solidity
-verity_version: 1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e
-lean_toolchain: leanprover/lean4:v4.22.0
+verity_version: 506bae406185497d5c2cb2a143f2d063ef31e04d
+lean_toolchain: leanprover/lean4:v4.24.0
 abstraction_level: protocol_slice
 abstraction_tags:
   - amm_invariant

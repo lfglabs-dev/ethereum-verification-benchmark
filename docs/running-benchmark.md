@@ -87,6 +87,12 @@ parameter from the outgoing request entirely. The switch is generic and
 provider-neutral — it does no provider-name special casing — and is off by
 default, so the request shape is unchanged for every other provider.
 
+Set `DEFAULT_HARNESS_OMIT_SAMPLING=1` when a comparison contract requires the
+provider's own sampling defaults. It removes `temperature`, `top_p`, and
+`reasoning_effort` from builtin requests and at the metering-proxy boundary for
+shell harnesses, so a CLI profile cannot silently reintroduce those fields. The
+effective policy is persisted in run artifacts.
+
 Budget profiles:
 
 - `quick`: CI-sized smoke budget.

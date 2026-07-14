@@ -111,9 +111,14 @@ Default harness API env:
 - `DEFAULT_HARNESS_STREAM_IDLE_TIMEOUT_SECONDS` controls the allowed idle gap
   between SSE chunks when streaming is enabled
 - `DEFAULT_HARNESS_REQUEST_RETRIES`
+- `DEFAULT_HARNESS_PROTOCOL_PROBE_ATTEMPTS` (`3` default; bounded semantic
+  attempts for JSON-text tool protocol negotiation)
 - `DEFAULT_HARNESS_REQUEST_RETRY_BACKOFF_SECONDS`
 - `DEFAULT_HARNESS_MAX_TOOL_CALLS`
 - `DEFAULT_HARNESS_MAX_RESPONSE_TOKENS`
+- `DEFAULT_HARNESS_OMIT_SAMPLING` (`0` default; set `1` to omit
+  `temperature`, `top_p`, and `reasoning_effort` for builtin and proxied shell
+  harnesses)
 - `DEFAULT_HARNESS_NATIVE_TOOLS`
 - `DEFAULT_HARNESS_TOOL_RESULT_CHARS`
 - `DEFAULT_HARNESS_TASK_SUMMARY_CHARS`

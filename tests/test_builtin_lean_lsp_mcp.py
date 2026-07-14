@@ -326,6 +326,10 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         ), mock.patch.object(lean_tools, "_api_key", return_value="test-key"), mock.patch.object(
             lean_tools, "warm_public_dependencies", return_value=[]
         ), mock.patch.object(lean_tools, "_warm_target_modules", return_value=[]), mock.patch.object(
+            LeanLspMcpSession,
+            "start",
+            side_effect=LeanLspMcpCompatibilityError("incompatible test toolchain"),
+        ), mock.patch.object(
             lean_tools, "_role_provider_preflight"
         ) as provider_preflight:
             code, run_dir = lean_tools.run_group(
