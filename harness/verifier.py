@@ -258,3 +258,51 @@ def verify_group(
     if not keep_verifier_workspace:
         shutil.rmtree(verifier_repo.parent, ignore_errors=True)
     return result
+
+
+def setup_failure_verifier_result(
+    group: Group,
+    submitted_workspace: Path,
+    *,
+    failure_class: str,
+    artifact_dir: Path | None = None,
+) -> dict[str, object]:
+    """Produce a complete verifier-shaped artifact without spawning Lean.
+
+    Setup already proved the Lean executable/dependency layer unusable, so a
+    second verifier subprocess can only repeat the same infrastructure error
+    and may prevent the run artifact from being written at all.
+    """
+    targets = [
+        TargetResult(
+            task.task_ref,
+            task.theorem_name,
+            task.points,
+            "verifier_infra_error",
+            f"verification skipped after {failure_class}",
+        )
+        for task in group.tasks
+    ]
+    result = {
+        "schema_version": 1,
+        "completed_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "group": group_to_json(group),
+        "submitted_workspace": str(submitted_workspace),
+        "verifier_workspace": None,
+        "submitted_files": [],
+        "score": {
+            "points_earned": 0,
+            "points_possible": sum(item.points for item in targets),
+            "passed_targets": 0,
+            "total_targets": len(targets),
+        },
+        "targets": [item.__dict__ for item in targets],
+        "duration_seconds": 0.0,
+        "setup_failure_class": failure_class,
+    }
+    if artifact_dir:
+        artifact_dir.mkdir(parents=True, exist_ok=True)
+        (artifact_dir / "verifier.json").write_text(
+            json.dumps(result, indent=2) + "\n", encoding="utf-8"
+        )
+    return result

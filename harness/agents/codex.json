@@ -2,6 +2,7 @@
   "schema_version": 1,
   "agent_id": "codex",
   "adapter": "shell",
+  "uses_proxy": false,
   "track": "group/shell",
   "command": [
     "codex",

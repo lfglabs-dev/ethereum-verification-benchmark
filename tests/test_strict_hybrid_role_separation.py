@@ -34,6 +34,8 @@ def _strict_env(stack: ExitStack, *, repair_attempts: int = 2, decl_index: int =
     stack.enter_context(mock.patch.object(lean_tools, "STRICT_ROLE_SEPARATION", True))
     stack.enter_context(mock.patch.object(lean_tools, "DEFAULT_DRIVER_MODEL", "driver-model"))
     stack.enter_context(mock.patch.object(lean_tools, "DEFAULT_PROVER_MODEL", "prover-model"))
+    stack.enter_context(mock.patch.object(lean_tools, "DEFAULT_PROVER_BASE_URL", ""))
+    stack.enter_context(mock.patch.object(lean_tools, "DEFAULT_PROVER_API_KEY", ""))
     stack.enter_context(mock.patch.object(lean_tools, "DEFAULT_PROVER_MODE", "draft_proof"))
     stack.enter_context(mock.patch.object(lean_tools, "PROVER_REPAIR_ATTEMPTS", repair_attempts))
     stack.enter_context(mock.patch.object(lean_tools, "DRAFT_PROOF_DECL_INDEX_LIMIT", decl_index))
@@ -108,6 +110,38 @@ class RoleConfigTests(unittest.TestCase):
         self.assertTrue(config["ensemble"])
         self.assertTrue(config["driver_writes_proofs"])
         self.assertIn("driver_may_repair", config["role_label"])
+
+
+class RolePreflightTests(unittest.TestCase):
+    def test_hybrid_preflight_fails_when_prover_model_is_unavailable(self) -> None:
+        def preflight(
+            base_url: str,
+            model: str,
+            *,
+            api_key_override: str | None = None,
+        ) -> dict[str, object]:
+            del api_key_override
+            return {
+                "status": "passed" if model == "driver-model" else "failed",
+                "base_url": base_url,
+                "model": model,
+                "checks": {"tool_calls": model == "driver-model", "json_text_fallback": True},
+                "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2, "requests": 1},
+                **({} if model == "driver-model" else {"error": "model_not_found"}),
+            }
+
+        with ExitStack() as stack:
+            _strict_env(stack)
+            generic = stack.enter_context(
+                mock.patch.object(lean_tools, "generic_preflight", side_effect=preflight)
+            )
+            result = lean_tools._role_provider_preflight("https://provider.test/v1")
+
+        self.assertEqual(result["status"], "failed")
+        self.assertIn("prover: model_not_found", str(result["error"]))
+        self.assertEqual(set(result["roles"]), {"driver", "prover"})
+        self.assertEqual(result["usage"]["requests"], 2)
+        self.assertEqual(generic.call_count, 2)
 
 
 class PromptFormattingTests(unittest.TestCase):

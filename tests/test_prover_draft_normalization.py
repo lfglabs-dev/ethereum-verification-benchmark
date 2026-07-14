@@ -75,6 +75,14 @@ class NormalizeProverDraftTests(unittest.TestCase):
         self.assertEqual(result["provenance"], "bare")
         self.assertEqual(result["raw"], "simp [transfer_spec]")
 
+    def test_leaked_closing_chatml_sentinel_is_removed(self) -> None:
+        raw = "simp [transfer_spec]\n</|im_end|>"
+        result = lean_tools._normalize_prover_draft(raw)
+        self.assertIsNone(result["reject_reason"])
+        self.assertEqual(result["body"], "simp [transfer_spec]")
+        self.assertEqual(result["provenance"], "stripped_template_sentinel+bare")
+        self.assertEqual(result["raw"], raw)
+
     def test_single_markdown_fence_is_unwrapped(self) -> None:
         result = lean_tools._normalize_prover_draft("```lean\nsimp [transfer_spec]\n```")
         self.assertIsNone(result["reject_reason"])

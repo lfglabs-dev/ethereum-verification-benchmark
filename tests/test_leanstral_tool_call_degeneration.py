@@ -15,6 +15,7 @@ conversation. Two harness defects turned that into scored model failures:
 from __future__ import annotations
 
 import json
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -41,7 +42,14 @@ class StopSequenceTests(unittest.TestCase):
         transport_request.reset_transport_fallback()
 
     def test_default_stop_sequences_cover_chatml_and_tool_sentinels(self) -> None:
-        for sentinel in ("<|im_end|>", "<|im_start|>", "<|tool_call_begin|>", "<|tool_call_end|>"):
+        for sentinel in (
+            "<|im_end|>",
+            "</|im_end|>",
+            "<|im_start|>",
+            "</|im_start|>",
+            "<|tool_call_begin|>",
+            "<|tool_call_end|>",
+        ):
             self.assertIn(sentinel, transport_request.DEFAULT_STOP_SEQUENCES)
 
     def test_chat_completion_sends_stop_sequences(self) -> None:
@@ -92,6 +100,15 @@ class SentinelParsingTests(unittest.TestCase):
         calls = lean_tools._tool_calls_from_text('{"tool":"show_task","arguments":{}}<|im_end|>')
         self.assertEqual([c["function"]["name"] for c in calls], ["show_task"])
 
+    def test_literal_newlines_in_proof_argument_are_salvaged(self) -> None:
+        text = '''{"tool":"check_proof","arguments":{"proof":"
+theorem sample : True := by
+  exact True.intro"}}'''
+        calls = lean_tools._tool_calls_from_text(text)
+
+        self.assertEqual([call["function"]["name"] for call in calls], ["check_proof"])
+        self.assertIn("exact True.intro", calls[0]["function"]["arguments"]["proof"])
+
     def test_degeneration_recovers_first_valid_call(self) -> None:
         for record in self._fixture_records():
             with self.subTest(request_index=record.get("request_index")):
@@ -118,6 +135,188 @@ class SentinelParsingTests(unittest.TestCase):
             if "expected_tool" in record:
                 records.append(record)
         return records
+
+
+class ToolProtocolSelectionTests(unittest.TestCase):
+    def test_preflight_downgrades_to_json_when_native_tools_are_missing(self) -> None:
+        preflight = {
+            "checks": {
+                "tool_calls": False,
+                "json_text_fallback": True,
+            }
+        }
+        with mock.patch.object(lean_tools, "DEFAULT_NATIVE_TOOLS", True):
+            self.assertFalse(lean_tools._native_tools_for_preflight(preflight))
+
+    def test_preflight_keeps_native_tools_when_supported(self) -> None:
+        preflight = {
+            "checks": {
+                "tool_calls": True,
+                "json_text_fallback": True,
+            }
+        }
+        with mock.patch.object(lean_tools, "DEFAULT_NATIVE_TOOLS", True):
+            self.assertTrue(lean_tools._native_tools_for_preflight(preflight))
+
+    def test_empty_completions_are_retried_and_keep_role_metrics(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            editable = "Benchmark/Generated/Test.lean"
+            proof_path = tmp / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem test : True := by\n  sorry\n", encoding="utf-8")
+            task = {
+                "task_ref": "test/group/task",
+                "task_id": "task",
+                "theorem_name": "test",
+                "editable_files": [editable],
+                "target_module": "Benchmark.Generated.Test",
+            }
+            empty = non_streaming_response("")
+            with mock.patch.object(lean_tools, "chat_completion", return_value=empty) as completion:
+                result = lean_tools._attempt_task_fair(
+                    task,
+                    tmp,
+                    base_url="http://provider.test/v1",
+                    max_attempts=1,
+                    max_tool_calls=1,
+                    attempts_dir=tmp / "attempts",
+                    tool_log_path=tmp / "tools.jsonl",
+                    conversation_log_path=tmp / "conversation.jsonl",
+                    native_tools=False,
+                )
+            self.assertEqual(completion.call_count, 3)
+            self.assertEqual(result["status"], "failed_no_tool_calls")
+            self.assertEqual(result["no_tool_responses"], 3)
+            self.assertIn("role_metrics", result)
+
+    def test_repetition_termination_keeps_role_metrics(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            editable = "Benchmark/Generated/Test.lean"
+            proof_path = tmp / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem test : True := by\n  sorry\n", encoding="utf-8")
+            task = {
+                "task_ref": "test/group/task",
+                "task_id": "task",
+                "theorem_name": "test",
+                "editable_files": [editable],
+                "target_module": "Benchmark.Generated.Test",
+            }
+            response = non_streaming_response("not a tool call")
+            with mock.patch.object(lean_tools, "chat_completion", return_value=response):
+                result = lean_tools._attempt_task_fair(
+                    task,
+                    tmp,
+                    base_url="http://provider.test/v1",
+                    max_attempts=1,
+                    max_tool_calls=1,
+                    attempts_dir=tmp / "attempts",
+                    tool_log_path=tmp / "tools.jsonl",
+                    conversation_log_path=tmp / "conversation.jsonl",
+                    native_tools=False,
+                )
+            self.assertEqual(result["status"], "repetition_loop")
+            self.assertIn("role_metrics", result)
+
+    def test_json_compaction_preserves_repetition_correction(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            editable = "Benchmark/Generated/Test.lean"
+            proof_path = tmp / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem test : True := by\n  exact True.intro\n", encoding="utf-8")
+            task = {
+                "task_ref": "test/group/task",
+                "task_id": "task",
+                "theorem_name": "test",
+                "editable_files": [editable],
+                "target_module": "Benchmark.Generated.Test",
+            }
+            responses = [
+                '{"tool":"show_task","arguments":{}}',
+                f'{{"tool":"read_file","arguments":{{"path":"{editable}"}}}}',
+                f'{{"tool":"read_file","arguments":{{"path":"{editable}"}}}}',
+                '{"tool":"check_proof","arguments":{"proof":"exact True.intro"}}',
+            ]
+            request_index = 0
+
+            def completion(messages: list[dict[str, object]], **_: object) -> dict[str, object]:
+                nonlocal request_index
+                if request_index == 3:
+                    latest = str(messages[-1].get("content") or "")
+                    self.assertIn("repeated the same unproductive action", latest)
+                    self.assertIn("Tool result for read_file", latest)
+                response = non_streaming_response(responses[request_index])
+                request_index += 1
+                return response
+
+            def execute(name: str, *_: object, **__: object) -> dict[str, object]:
+                if name == "check_proof":
+                    return {"ok": True, "passed": True}
+                return {"ok": True}
+
+            with (
+                mock.patch.object(lean_tools, "chat_completion", side_effect=completion),
+                mock.patch.object(lean_tools, "_execute_fair_tool", side_effect=execute),
+            ):
+                result = lean_tools._attempt_task_fair(
+                    task,
+                    tmp,
+                    base_url="http://provider.test/v1",
+                    max_attempts=1,
+                    max_tool_calls=4,
+                    attempts_dir=tmp / "attempts",
+                    tool_log_path=tmp / "tools.jsonl",
+                    conversation_log_path=tmp / "conversation.jsonl",
+                    native_tools=False,
+                )
+
+            self.assertEqual(result["status"], "lean_passed")
+            self.assertEqual(request_index, 4)
+
+    def test_json_tool_results_do_not_reissue_first_call_instruction(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_tmp:
+            tmp = Path(raw_tmp)
+            editable = "Benchmark/Generated/Test.lean"
+            proof_path = tmp / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem test : True := by\n  sorry\n", encoding="utf-8")
+            task = {
+                "task_ref": "test/group/task",
+                "task_id": "task",
+                "theorem_name": "test",
+                "editable_files": [editable],
+                "target_module": "Benchmark.Generated.Test",
+            }
+            request_count = 0
+
+            def completion(messages: list[dict[str, object]], **_: object) -> dict[str, object]:
+                nonlocal request_count
+                request_count += 1
+                if request_count == 1:
+                    return non_streaming_response('{"tool":"show_task","arguments":{}}')
+                if request_count == 2:
+                    latest = str(messages[-1].get("content") or "")
+                    self.assertIn("show_task was already called", latest)
+                    self.assertNotIn("First call show_task", latest)
+                return non_streaming_response("")
+
+            with mock.patch.object(lean_tools, "chat_completion", side_effect=completion):
+                result = lean_tools._attempt_task_fair(
+                    task,
+                    tmp,
+                    base_url="http://provider.test/v1",
+                    max_attempts=1,
+                    max_tool_calls=2,
+                    attempts_dir=tmp / "attempts",
+                    tool_log_path=tmp / "tools.jsonl",
+                    conversation_log_path=tmp / "conversation.jsonl",
+                    native_tools=False,
+                )
+            self.assertEqual(result["tool_calls_executed"], 1)
+            self.assertEqual(result["status"], "failed_no_tool_calls")
 
 
 class DegenerationClassificationTests(unittest.TestCase):

@@ -187,7 +187,9 @@ DEFAULT_STREAMING_ENABLED = os.environ.get("DEFAULT_HARNESS_STREAMING", "1").str
 # boundary regardless of server-side template/EOG configuration.
 _DEFAULT_STOP_SEQUENCES = (
     "<|im_end|>",
+    "</|im_end|>",
     "<|im_start|>",
+    "</|im_start|>",
     "<|tool_call_begin|>",
     "<|tool_call_end|>",
 )

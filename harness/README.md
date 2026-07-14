@@ -4,6 +4,9 @@ The benchmark has two kinds of harness, both running in isolated generated
 workspaces and verified by the same independent verifier:
 
 - `default`: the built-in fair Lean-tools harness (OpenAI-compatible tool loop).
+- `builtin-lean-lsp`: the same built-in fair loop, budgets, metering, and
+  verifier, with its Lean IDE surface supplied by a pinned `lean-lsp-mcp`
+  subprocess.
 - shell agent profiles from `harness/agents/*.json` (`grok-build`, `opencode`, `codex`, ...): off-the-shelf coding-agent CLIs metered through a local proxy.
 
 Task contract:
@@ -16,6 +19,7 @@ Main entrypoints:
 - `python3 -m harness.cli list --suite active --unit group`
 - `python3 -m harness.cli run-task <project/case/task> --harness default`
 - `python3 -m harness.cli run-group <project/case> --harness default`
+- `python3 -m harness.cli run-group <project/case> --harness builtin-lean-lsp`
 - `python3 -m harness.cli run-suite --suite active --harness default`
 - `python3 -m harness.cli run-group <project/case> --harness grok-build` (any profile id works)
 - `python3 -m harness.cli compare --runs results/runs/*`
@@ -28,6 +32,8 @@ Core files:
 - `harness/verifier.py`: independent policy and Lean verifier
 - `harness/cli.py`: group list/run-task/run-group/run-suite/compare CLI
 - `harness/runners/lean_tools.py`: default fair harness (tool loop + run orchestration)
+- `harness/runners/lean_tools_mcp.py` + `harness/lean_lsp_mcp_client.py`:
+  builtin fair-loop entrypoint and pinned MCP stdio bridge
 - `harness/transport.py`, `harness/lean_check.py`, `harness/proof_patch.py`, `harness/symbols.py`: chat transport, Lean checking/diagnostics, proof patching, public-symbol parsing
 - `harness/runners/shell_agent.py` + `harness/agents/*.json`: shell coding-agent adapter and profiles
 
@@ -41,6 +47,32 @@ path. Assistant messages land in `conversations/*.jsonl`, tool calls in
 in `harness-response.json`. Missing remote API credentials produce a
 `missing_credentials` artifact instead of accidentally comparing against a
 non-agent path.
+
+`builtin-lean-lsp` is the controlled middle point between `default` and
+`vibe-lean-lsp`: it retains the default harness's chat loop, provider preflight,
+completion-token accounting, attempt/tool budgets, artifact format, editable-file
+guards, and independent verifier, but replaces the bespoke Lean inspection tools
+with the native schemas and implementations returned by `lean-lsp-mcp`.
+Model-visible MCP tools are `lean_goal`, `lean_term_goal`,
+`lean_diagnostic_messages`, `lean_code_actions`, `lean_hover_info`,
+`lean_completions`, `lean_file_outline`, `lean_declaration_file`,
+`lean_references`, `lean_local_search`, and `lean_multi_attempt`. The benchmark
+keeps `show_task`, `read_file`, and `check_proof` for briefing, public source
+access, and metered final submissions. Network search, arbitrary Lean snippets,
+builds, widgets, profiling, and verifier-like MCP tools are disabled. Every MCP
+file argument is checked against the isolated public workspace before dispatch.
+
+The builtin profile targets `lean-lsp-mcp==0.28.0`, whose client requires Lean
+4.24 or newer. The runner checks the workspace `lean-toolchain` before starting
+MCP and records both required and observed versions. Until the separately
+audited benchmark/Verity Lean 4.24 migration lands, the current Lean 4.22 checkout
+is expected to fail this preflight and must not produce comparison results.
+Comparisons must record the resolved package and Lean versions from
+`run.json`/`harness-response.json`.
+MCP lifecycle metadata also records initialization count, effective tool-call
+count and names, aggregate MCP-call duration, and whether subprocess shutdown
+completed. Provider preflight runs only after MCP preflight succeeds, so an
+incompatible or broken MCP installation cannot consume a billed model request.
 
 Task briefing:
 - Every task/group workspace contains `harness/TASK_SUMMARY.md`.
@@ -86,6 +118,8 @@ Default harness API env:
 - `DEFAULT_HARNESS_TOOL_RESULT_CHARS`
 - `DEFAULT_HARNESS_TASK_SUMMARY_CHARS`
 - `DEFAULT_HARNESS_MAX_NON_PROOF_TOOL_CALLS`
+- `DEFAULT_HARNESS_LEAN_MCP_STARTUP_TIMEOUT_SECONDS` (default 180)
+- `DEFAULT_HARNESS_LEAN_MCP_TOOL_TIMEOUT_SECONDS` (default 600)
 - `DEFAULT_HARNESS_CONTEXT_TOKENS` if the provider supports an `n_ctx` request hint
 - `DEFAULT_HARNESS_TOKEN_BUDGET` to stop a task after N completion tokens (0 = unlimited);
   per-task and aggregate `usage` is reported in `harness-response.json` and `run.json`
@@ -154,6 +188,9 @@ Useful commands:
 ```bash
 python3 -m harness.cli list --suite active --unit group
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --keep-workspace
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness builtin-lean-lsp --max-attempts 2 --max-tool-calls 24 --keep-workspace
+# On a Lean 4.24 checkout: initialize, tools/list, and one real lean_local_search call.
+python3 scripts/smoke_builtin_lean_lsp_mcp.py
 DEFAULT_HARNESS_DRIVER_MODEL=minimax/minimax-m3 DEFAULT_HARNESS_PROVER_MODEL=mistralai/Leanstral-2603 DEFAULT_HARNESS_PROVER_MODE=draft_proof python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --max-tool-calls 12 --keep-workspace
 # Cross-provider hybrid: MiniMax driver controls tools on the default endpoint,
 # Leanstral prover drafts proof bodies on a separate provider endpoint.

@@ -15,6 +15,7 @@ REQUIRED_FILES = [
     "verifier/verifier.json",
     "report.md",
 ]
+BUILTIN_FAIR_HARNESSES = {"default", "builtin-lean-lsp"}
 
 
 def _load_json(path: Path, errors: list[str]) -> object | None:
@@ -67,9 +68,9 @@ def check_run(run_dir: Path) -> list[str]:
     if "operational_budget" not in request:
         errors.append(f"{run_dir}: harness-request.json missing operational_budget")
     classification = run.get("classification")
-    if run.get("harness_id") == "default":
+    if run.get("harness_id") in BUILTIN_FAIR_HARNESSES:
         if not isinstance(classification, dict):
-            errors.append(f"{run_dir}: default run missing publication-safe classification")
+            errors.append(f"{run_dir}: builtin fair run missing publication-safe classification")
         else:
             if "run_class" not in classification:
                 errors.append(f"{run_dir}: classification missing run_class")
@@ -93,21 +94,45 @@ def check_run(run_dir: Path) -> list[str]:
                         errors.append(f"{run_dir}: missing submitted artifact {item['path']}")
     if not isinstance(manifest.get("files"), list) or not manifest["files"]:
         errors.append(f"{run_dir}: workspace manifest has no file entries")
-    if run.get("harness_id") == "default" and run.get("mode") == "fair" and run.get("run_mode") in {"task", "group"}:
+    if run.get("harness_id") in BUILTIN_FAIR_HARNESSES and run.get("mode") == "fair" and run.get("run_mode") in {"task", "group"}:
         tool_policy = manifest.get("tool_policy")
         if not isinstance(tool_policy, dict) or tool_policy.get("generic_grindset_only") is not True:
-            errors.append(f"{run_dir}: fair default run must record generic_grindset_only=true")
+            errors.append(f"{run_dir}: builtin fair run must record generic_grindset_only=true")
         if "max_tool_calls" not in request:
-            errors.append(f"{run_dir}: fair default request missing max_tool_calls")
+            errors.append(f"{run_dir}: builtin fair request missing max_tool_calls")
         response = _load_json(run_dir / "harness-response.json", errors)
         if isinstance(response, dict) and response.get("status") == "completed":
             if "failure_counts" not in response:
-                errors.append(f"{run_dir}: fair default response missing failure_counts")
+                errors.append(f"{run_dir}: builtin fair response missing failure_counts")
             tasks = response.get("tasks")
             if isinstance(tasks, list):
                 for task in tasks:
                     if isinstance(task, dict) and "validity" not in task:
-                        errors.append(f"{run_dir}: fair default task missing validity metadata")
+                        errors.append(f"{run_dir}: builtin fair task missing validity metadata")
+    if (
+        run.get("harness_id") == "builtin-lean-lsp"
+        and run.get("run_mode") in {"task", "group"}
+        and run.get("harness_status") != "dry_run"
+        and isinstance(run.get("mcp_preflight"), dict)
+    ):
+        metadata = run.get("lean_lsp_mcp")
+        if not isinstance(metadata, dict):
+            errors.append(f"{run_dir}: builtin-lean-lsp run missing MCP lifecycle metadata")
+        else:
+            for key in (
+                "package_version",
+                "minimum_lean_version",
+                "workspace_lean_version",
+                "initialization_count",
+                "tool_call_count",
+                "tool_call_counts",
+                "tool_call_duration_seconds",
+                "clean_shutdown",
+            ):
+                if key not in metadata:
+                    errors.append(f"{run_dir}: MCP lifecycle metadata missing {key}")
+        if not isinstance(run.get("mcp_preflight"), dict):
+            errors.append(f"{run_dir}: builtin-lean-lsp run missing MCP preflight result")
     if run.get("harness_id") == "grok-build" and run.get("run_mode") in {"task", "group"}:
         for key in ("max_turns", "auth_mode", "timeout_seconds"):
             if key not in request:
@@ -136,7 +161,7 @@ def check_run(run_dir: Path) -> list[str]:
                 artifact = child.get("artifact")
                 if not isinstance(artifact, str) or not (Path(artifact) / "run.json").is_file():
                     errors.append(f"{run_dir}: missing child run artifact {artifact!r}")
-                if run.get("harness_id") == "default" and child.get("mode") != run.get("mode"):
+                if run.get("harness_id") in BUILTIN_FAIR_HARNESSES and child.get("mode") != run.get("mode"):
                     errors.append(f"{run_dir}: child run mode {child.get('mode')!r} does not match suite mode {run.get('mode')!r}")
                 child_score = child.get("score")
                 if not isinstance(child_score, dict):

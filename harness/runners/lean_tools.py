@@ -19,19 +19,41 @@ from typing import Any
 try:
     from .. import transport
     from ..classification import classify_run
-    from ..manifests import filter_group_to_task, load_group
+    from ..lean_lsp_mcp_client import (
+        LeanLspMcpError,
+        LeanLspMcpSession,
+        LeanLspMcpTransportError,
+    )
+    from ..manifests import Group, filter_group_to_task, load_group
     from ..paths import RESULTS_DIR, ROOT
     from ..reports import write_run_report
-    from ..verifier import verify_group
-    from ..workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
+    from ..verifier import setup_failure_verifier_result, verify_group
+    from ..workspace_builder import (
+        agent_group_to_json,
+        assert_workspace_isolated,
+        build_group_workspace,
+        warm_public_dependencies,
+        warm_result_failed,
+    )
 except ImportError:
     import transport
     from classification import classify_run
-    from manifests import filter_group_to_task, load_group
+    from lean_lsp_mcp_client import (
+        LeanLspMcpError,
+        LeanLspMcpSession,
+        LeanLspMcpTransportError,
+    )
+    from manifests import Group, filter_group_to_task, load_group
     from paths import RESULTS_DIR, ROOT
     from reports import write_run_report
-    from verifier import verify_group
-    from workspace_builder import agent_group_to_json, assert_workspace_isolated, build_group_workspace
+    from verifier import setup_failure_verifier_result, verify_group
+    from workspace_builder import (
+        agent_group_to_json,
+        assert_workspace_isolated,
+        build_group_workspace,
+        warm_public_dependencies,
+        warm_result_failed,
+    )
 
 try:
     from ..transport import (
@@ -40,7 +62,7 @@ try:
         _response_text, _append_jsonl, _effective_sampling, _streaming_fallback_reason, _transport_mode,
         chat_completion, endpoint_smoke, generic_preflight,
     )
-    from ..budgets import operational_budget
+    from ..budgets import dependency_warm_timeout_seconds, operational_budget
     from ..lean_check import (
         FAILURE_HINTS, LEAN_CHECK_MODE, LEAN_CHECK_TIMEOUT_SECONDS, _classify_lean_failure,
         _compact_lean_output, _constants_from_text, _extract_goal_blocks, _first_meaningful_lean_error,
@@ -49,7 +71,7 @@ try:
     )
     from ..proof_patch import (
         FORBIDDEN_PROOF_RE, _candidate_from_response, _contains_forbidden_proof_token, _decl_basename,
-        _extract_lean_file, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
+        _extract_lean_file, _full_file_context_preserved, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
         _strip_thinking, _theorem_statement,
     )
     from ..result_validity import failure_counts_from_tasks, failure_taxonomy, row_validity
@@ -61,7 +83,7 @@ except ImportError:
         _response_text, _append_jsonl, _effective_sampling, _streaming_fallback_reason, _transport_mode,
         chat_completion, endpoint_smoke, generic_preflight,
     )
-    from budgets import operational_budget
+    from budgets import dependency_warm_timeout_seconds, operational_budget
     from lean_check import (
         FAILURE_HINTS, LEAN_CHECK_MODE, LEAN_CHECK_TIMEOUT_SECONDS, _classify_lean_failure,
         _compact_lean_output, _constants_from_text, _extract_goal_blocks, _first_meaningful_lean_error,
@@ -70,7 +92,7 @@ except ImportError:
     )
     from proof_patch import (
         FORBIDDEN_PROOF_RE, _candidate_from_response, _contains_forbidden_proof_token, _decl_basename,
-        _extract_lean_file, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
+        _extract_lean_file, _full_file_context_preserved, _indent_proof_body, _looks_like_full_file, _patch_proof_body,
         _strip_thinking, _theorem_statement,
     )
     from result_validity import failure_counts_from_tasks, failure_taxonomy, row_validity
@@ -221,6 +243,70 @@ def _role_config() -> dict[str, object]:
     }
 
 
+def _provider_setup_task_rows(
+    group: Group,
+    benchmark_budget: dict[str, object],
+    error: str,
+) -> list[dict[str, object]]:
+    return [
+        {
+            "task_ref": task.task_ref,
+            "status": "preflight_failed",
+            "failure_class": "provider_setup_error",
+            "provider_setup_error": True,
+            "error": {"kind": "provider_setup_error", "message": error},
+            "attempts": [],
+            "benchmark_budget": benchmark_budget,
+            "usage": {
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "total_tokens": 0,
+                "requests": 0,
+            },
+        }
+        for task in group.tasks
+    ]
+
+
+def _warm_target_modules(
+    *,
+    workspace: Path,
+    run_dir: Path,
+    tasks: list[object],
+    timeout_seconds: int,
+) -> list[dict[str, object]]:
+    """Warm target modules, stopping once the setup is known invalid."""
+    results: list[dict[str, object]] = []
+    for task in tasks:
+        module = task.get("target_module") if isinstance(task, dict) else None
+        if not isinstance(module, str) or not module:
+            continue
+        warm_start = time.time()
+        print(f"[target-warm] module={module} state=starting", flush=True)
+        warm_code, warm_output = _run_lean_module(
+            workspace, module, timeout_seconds=timeout_seconds
+        )
+        with (run_dir / "target-warm.log").open("a", encoding="utf-8") as handle:
+            handle.write(f"\n$ lake build {module}\n{warm_output}\n")
+        duration = round(time.time() - warm_start, 3)
+        print(
+            f"[target-warm] module={module} state=finished exit_code={warm_code} "
+            f"duration_seconds={duration}",
+            flush=True,
+        )
+        results.append(
+            {
+                "task_ref": task.get("task_ref"),
+                "module": module,
+                "exit_code": warm_code,
+                "duration_seconds": duration,
+            }
+        )
+        if warm_code == 124:
+            break
+    return results
+
+
 ROLE_METRIC_COUNTERS = (
     "prover_writer_calls",
     "prover_repair_calls",
@@ -312,6 +398,99 @@ def _aggregate_role_metrics(task_results: list[dict[str, object]]) -> dict[str, 
                 totals[key] += int(value)
     totals["role_config"] = _role_config()
     return totals
+
+
+def _native_tools_for_preflight(preflight: dict[str, object]) -> bool:
+    """Select the tool protocol from observed provider capabilities."""
+    if not DEFAULT_NATIVE_TOOLS:
+        return False
+    checks = preflight.get("checks")
+    if not isinstance(checks, dict):
+        return True
+    if checks.get("tool_calls") is False and checks.get("json_text_fallback") is True:
+        return False
+    return True
+
+
+def _role_provider_preflight(base_url: str) -> dict[str, object]:
+    """Preflight every model endpoint required by the configured role graph."""
+
+    def run_role(
+        role: str,
+        role_base_url: str,
+        model: str,
+        api_key_override: str | None = None,
+    ) -> dict[str, object]:
+        try:
+            result = generic_preflight(
+                role_base_url,
+                model,
+                api_key_override=api_key_override,
+            )
+        except Exception as exc:  # noqa: BLE001 - normalize setup failures into artifacts
+            result = {
+                "status": "failed",
+                "base_url": role_base_url,
+                "model": model,
+                "error": str(exc),
+                "usage": {
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0,
+                    "total_tokens": 0,
+                    "requests": 0,
+                },
+            }
+        result["role"] = role
+        return result
+
+    driver = run_role("driver", base_url, DEFAULT_DRIVER_MODEL)
+    combined = dict(driver)
+    roles: dict[str, dict[str, object]] = {"driver": driver}
+
+    if DRAFT_PROOF_ENABLED and DEFAULT_PROVER_MODEL:
+        prover_base_url = DEFAULT_PROVER_BASE_URL or base_url
+        if DEFAULT_PROVER_API_KEY:
+            prover_api_key_override: str | None = DEFAULT_PROVER_API_KEY
+        elif prover_base_url.rstrip("/") == base_url.rstrip("/"):
+            prover_api_key_override = None
+        else:
+            prover_api_key_override = ""
+        roles["prover"] = run_role(
+            "prover",
+            prover_base_url,
+            DEFAULT_PROVER_MODEL,
+            prover_api_key_override,
+        )
+
+    combined["roles"] = roles
+    combined["status"] = (
+        "passed"
+        if all(result.get("status") == "passed" for result in roles.values())
+        else "failed"
+    )
+    if combined["status"] != "passed":
+        failures = [
+            f"{role}: {result.get('error') or result}"
+            for role, result in roles.items()
+            if result.get("status") != "passed"
+        ]
+        combined["error"] = "; ".join(failures)
+    aggregate_usage = {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0,
+        "requests": 0,
+    }
+    for result in roles.values():
+        usage = result.get("usage")
+        if not isinstance(usage, dict):
+            continue
+        for key in aggregate_usage:
+            value = usage.get(key)
+            if isinstance(value, (int, float)):
+                aggregate_usage[key] += int(value)
+    combined["usage"] = aggregate_usage
+    return combined
 
 
 def _read_workspace_file(workspace: Path, rel: str) -> str:
@@ -718,10 +897,38 @@ DRAFT_PROOF_TOOL: dict[str, Any] = {
 }
 
 
-def _fair_tools() -> list[dict[str, Any]]:
-    if not DRAFT_PROOF_ENABLED:
+MCP_BENCHMARK_TOOLS = [
+    tool
+    for tool in FAIR_TOOLS
+    if tool.get("function", {}).get("name") in {"show_task", "read_file", "check_proof"}
+]
+
+
+def _fair_tools(mcp_tools: list[dict[str, object]] | None = None) -> list[dict[str, Any]]:
+    if mcp_tools is None and not DRAFT_PROOF_ENABLED:
         return FAIR_TOOLS
-    return [*FAIR_TOOLS, DRAFT_PROOF_TOOL]
+    tools: list[dict[str, Any]] = (
+        [*MCP_BENCHMARK_TOOLS, *mcp_tools] if mcp_tools is not None else list(FAIR_TOOLS)
+    )
+    if DRAFT_PROOF_ENABLED:
+        tools.append(DRAFT_PROOF_TOOL)
+    return tools
+
+
+def _compact_tool_schemas(tools: list[dict[str, object]]) -> str:
+    schemas: list[dict[str, object]] = []
+    for tool in tools:
+        function = tool.get("function")
+        if not isinstance(function, dict) or not isinstance(function.get("name"), str):
+            continue
+        parameters = function.get("parameters")
+        schemas.append(
+            {
+                "name": function["name"],
+                "parameters": parameters if isinstance(parameters, dict) else {},
+            }
+        )
+    return json.dumps(schemas, separators=(",", ":"), sort_keys=True)
 
 
 def _safe_workspace_path(workspace: Path, rel: str) -> Path:
@@ -1204,8 +1411,8 @@ def _normalize_prover_draft(raw: str) -> dict[str, object]:
     statements, leftover JSON) stays in :func:`_reject_draft_reason`, applied by
     the caller to the extracted body. ``raw`` is always returned unmodified so the
     caller can persist it for audit."""
-    text = raw.strip()
-    provenance: list[str] = []
+    text = _strip_template_sentinels(raw).strip()
+    provenance: list[str] = ["stripped_template_sentinel"] if text != raw.strip() else []
     if not text:
         return {"body": None, "provenance": "empty", "reject_reason": "empty_prover_output", "raw": raw}
 
@@ -1817,21 +2024,29 @@ def _execute_fair_tool(
         for label, proof in proofs:
             candidate = _candidate_from_response(original, proof, task.get("theorem_name"))
             candidate_statement = " ".join(_theorem_statement(candidate, task.get("theorem_name")).split())
+            submitted_full_file = _looks_like_full_file(_extract_lean_file(proof))
+            context_guard_failed = submitted_full_file and not _full_file_context_preserved(
+                original, candidate
+            )
             # Fail closed when the skeleton statement cannot be extracted:
             # proof-body patches keep the statement byte-identical by
-            # construction, so only whole-file submissions can change it.
+            # construction. Whole-file submissions may add helper declarations
+            # but cannot alter imports, namespace/open/end context, or target.
             statement_guard_failed = (
                 candidate_statement != original_statement
                 if original_statement
-                else _looks_like_full_file(_extract_lean_file(proof))
+                else submitted_full_file
             )
-            if statement_guard_failed:
+            if statement_guard_failed or context_guard_failed:
                 attempt = {
                     "attempt": f"tool:{name}",
                     "status": "rejected_statement_mismatch",
                     "exit_code": None,
                     "candidate_path": None,
-                    "output": "the submitted file changes or drops the target theorem statement; keep the theorem signature byte-identical and only change the proof after := by",
+                    "output": (
+                        "the submitted file changes imports, namespace/open/end context, or the target theorem statement; "
+                        "keep the benchmark context and theorem signature byte-identical; file-level helper declarations are allowed"
+                    ),
                     "failure_kind": "statement_mismatch",
                     "diagnostics": {
                         "changed_goal": False,
@@ -1952,7 +2167,9 @@ def _execute_fair_tool(
 # is still recovered instead of being counted as a no-tool response.
 _TEMPLATE_SENTINELS = (
     "<|im_end|>",
+    "</|im_end|>",
     "<|im_start|>",
+    "</|im_start|>",
     "<|tool_call_begin|>",
     "<|tool_call_end|>",
     "<|tool_calls_begin|>",
@@ -1994,7 +2211,7 @@ def _first_json_value(text: str) -> object | None:
                 depth -= 1
                 if depth == 0:
                     try:
-                        return json.loads(text[start : index + 1])
+                        return json.loads(text[start : index + 1], strict=False)
                     except json.JSONDecodeError:
                         break
     return None
@@ -2007,7 +2224,7 @@ def _json_payload_from_text(text: str) -> object | None:
         stripped = fenced.group(1).strip()
     stripped = _strip_template_sentinels(stripped).strip()
     try:
-        return json.loads(stripped)
+        return json.loads(stripped, strict=False)
     except json.JSONDecodeError:
         return _first_json_value(stripped)
 
@@ -2065,6 +2282,8 @@ def _attempt_task_fair(
     tool_log_path: Path,
     conversation_log_path: Path,
     draft_log_path: Path | None = None,
+    native_tools: bool | None = None,
+    mcp_session: LeanLspMcpSession | None = None,
 ) -> dict[str, object]:
     editable_files = task.get("editable_files")
     target_module = task.get("target_module")
@@ -2074,8 +2293,48 @@ def _attempt_task_fair(
     proof_path = workspace / editable
     original = proof_path.read_text(encoding="utf-8")
     attempts: list[dict[str, object]] = []
+    native_tools = DEFAULT_NATIVE_TOOLS if native_tools is None else native_tools
 
-    if DEFAULT_NATIVE_TOOLS:
+    mcp_tools = mcp_session.tools if mcp_session is not None else None
+    if mcp_session is not None:
+        mcp_names = ", ".join(
+            str(tool.get("function", {}).get("name"))
+            for tool in mcp_tools or []
+            if isinstance(tool.get("function"), dict)
+        )
+        system_prompt = (
+            "You are an agent solving one public Lean benchmark task in an isolated Lean project. "
+            "This is the builtin benchmark loop, but its Lean IDE tools come directly from lean-lsp-mcp, "
+            "matching the tool names and schemas used by MCP coding agents. "
+            "Call show_task first; it returns the shared TASK_SUMMARY.md and a proof_patterns guide with the Verity-specific "
+            "simp/unfold recipe (contract function + storage field names + getStorage/setStorage/Verity.require/Verity.bind/Bind.bind/"
+            "Verity.pure/Pure.pure/Contract.run/ContractResult.snd) that closes most goals; follow it before inventing your own approach. "
+            "Then use "
+            "read_file for source text and the lean_* tools for goals, diagnostics, navigation, completion, "
+            "local declaration search, code actions, and non-mutating tactic experiments. "
+            "lean-lsp-mcp does not edit files: submit a complete proof body with check_proof when ready; "
+            "check_proof accepts either a tactic body to place under `:= by`, or a complete Lean file "
+            "(with imports, namespace, helper lemmas, and the target theorem); the theorem statement must stay byte-identical. "
+            "It patches only the benchmark theorem, runs Lean, and counts against max_attempts. "
+            f"Available MCP tools: {mcp_names}. "
+            "Use lean_local_search before guessing declaration names and lean_multi_attempt to compare small "
+            "tactic snippets at a proof position. Iterate: submit, read the Lean error, fix, resubmit. "
+            "Do not use sorry, "
+            "admit, axiom, hidden imports, Benchmark.GeneratedPreview, or reference Proofs modules. "
+            "Do not assume a hardcoded solution from the task name."
+        )
+        if not native_tools:
+            compact_schemas = _compact_tool_schemas(_fair_tools(mcp_tools))
+            system_prompt += (
+                " Native tool calling is unavailable, so reply only with one JSON tool call shaped like "
+                '{"tool":"show_task","arguments":{}}. '
+                f"Allowed JSON tool schemas (name + parameters): {compact_schemas}"
+            )
+        user_prompt = (
+            f"Solve the Lean task in editable file {editable}. Call show_task first, inspect the goal through "
+            "lean-lsp-mcp, then submit proof bodies with check_proof until Lean passes."
+        )
+    elif native_tools:
         draft_tool_instruction = (
             " When enabled, draft_proof asks a separate prover model for a proof-body candidate only; "
             "you must inspect its output and submit it with check_proof or try_tactics before it counts as an attempt."
@@ -2118,6 +2377,10 @@ def _attempt_task_fair(
             "Reply only as JSON, e.g. {\"tool\":\"show_task\",\"arguments\":{}}."
         )
         user_prompt = f"Task file: {editable}. First call show_task."
+    continuation_prompt = (
+        f"Task file: {editable}. show_task was already called. Continue from the tool result below; "
+        "do not restart task discovery or repeat an unchanged tool call."
+    )
 
     if STRICT_ROLE_SEPARATION:
         system_prompt += (
@@ -2135,12 +2398,27 @@ def _attempt_task_fair(
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt},
     ]
+    pending_repetition_warning: str | None = None
 
     def set_compact_user_context(content: str) -> None:
+        nonlocal pending_repetition_warning
+        if pending_repetition_warning:
+            content = f"{content}\n\n{pending_repetition_warning}"
+            pending_repetition_warning = None
         messages[:] = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"{user_prompt}\n{content}\nReply with the next JSON tool call."},
+            {
+                "role": "user",
+                "content": f"{continuation_prompt}\n{content}\nReply with the next JSON tool call.",
+            },
         ]
+
+    def flush_pending_repetition_warning() -> None:
+        nonlocal pending_repetition_warning
+        if pending_repetition_warning:
+            messages.append({"role": "user", "content": pending_repetition_warning})
+            pending_repetition_warning = None
+
     no_tool_response_limit = max(3, min(20, max_tool_calls))
     request_limit = max_tool_calls + max_attempts + no_tool_response_limit
     tool_calls_executed = 0
@@ -2216,17 +2494,16 @@ def _attempt_task_fair(
             "non_proof_tool_limit": non_proof_tool_limit,
             "tool_log": str(tool_log_path),
             "conversation_log": str(conversation_log_path),
+            "role_metrics": role_metrics,
         }
 
     def repetition_failure(signature: str) -> dict[str, object] | None:
+        nonlocal pending_repetition_warning
         count = repeated_signatures.get(signature, 0) + 1
         repeated_signatures[signature] = count
         if count == 2:
-            messages.append(
-                {
-                    "role": "user",
-                    "content": "You repeated the same unproductive action. Change strategy: inspect a different goal/file or submit a materially different proof attempt.",
-                }
+            pending_repetition_warning = (
+                "You repeated the same unproductive action. Change strategy: inspect a different goal/file or submit a materially different proof attempt."
             )
             return None
         if count >= 3:
@@ -2243,6 +2520,7 @@ def _attempt_task_fair(
                 "tool_log": str(tool_log_path),
                 "conversation_log": str(conversation_log_path),
                 "loop_signature": signature,
+                "role_metrics": role_metrics,
             }
         return None
 
@@ -2277,8 +2555,8 @@ def _attempt_task_fair(
                 messages,
                 base_url=base_url,
                 model=DEFAULT_DRIVER_MODEL,
-                tools=_fair_tools() if DEFAULT_NATIVE_TOOLS else None,
-                tool_choice="auto" if DEFAULT_NATIVE_TOOLS else None,
+                tools=_fair_tools(mcp_tools) if native_tools else None,
+                tool_choice="auto" if native_tools else None,
                 request_log_path=conversation_log_path,
                 request_index=request_index,
             )
@@ -2306,6 +2584,7 @@ def _attempt_task_fair(
                 "tool_log": str(tool_log_path),
                 "conversation_log": str(conversation_log_path),
                 "failure_class": _failure_taxonomy(status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
+                "role_metrics": role_metrics,
             }
         _accumulate_usage(response)
         usage = response.get("usage") if isinstance(response, dict) else None
@@ -2357,31 +2636,31 @@ def _attempt_task_fair(
         text_protocol = bool(tool_calls and all(isinstance(call, dict) and call.get("text_protocol") is True for call in tool_calls))
         if not isinstance(tool_calls, list) or not tool_calls:
             text = _response_text(response)
+            no_tool_responses += 1
             if text.strip():
-                no_tool_responses += 1
                 repeated = repetition_failure("no-tool:" + re.sub(r"\s+", " ", text.strip())[:300])
                 if repeated is not None:
                     return repeated
-                if no_tool_responses >= no_tool_response_limit:
-                    _append_jsonl(
-                        conversation_log_path,
-                        {
-                            "task_ref": task.get("task_ref"),
-                            "request_index": request_index,
-                            "status": "no_tool_response_limit_exceeded",
-                            "no_tool_responses": no_tool_responses,
-                        },
-                    )
-                    break
-                messages.append(
+            if no_tool_responses >= no_tool_response_limit:
+                _append_jsonl(
+                    conversation_log_path,
                     {
-                        "role": "user",
-                        "content": "Tool call required. Reply only with compact JSON for one allowed tool.",
-                    }
+                        "task_ref": task.get("task_ref"),
+                        "request_index": request_index,
+                        "status": "no_tool_response_limit_exceeded",
+                        "no_tool_responses": no_tool_responses,
+                        "empty_content": not bool(text.strip()),
+                    },
                 )
-                _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
-                continue
-            break
+                break
+            messages.append(
+                {
+                    "role": "user",
+                    "content": "Tool call required. Reply only with compact JSON for one allowed tool.",
+                }
+            )
+            _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+            continue
         for tool_call in tool_calls:
             if not isinstance(tool_call, dict):
                 failure = protocol_failure("invalid_tool_call", request_index, {"error": "tool call is not an object", "raw_type": type(tool_call).__name__})
@@ -2450,7 +2729,7 @@ def _attempt_task_fair(
                 )
                 if text_protocol:
                     content = f"Tool result for {name}: {_tool_result_content(result)}"
-                    if DEFAULT_NATIVE_TOOLS:
+                    if native_tools:
                         messages.append({"role": "user", "content": content})
                     else:
                         set_compact_user_context(content)
@@ -2463,6 +2742,7 @@ def _attempt_task_fair(
                             "content": _tool_result_content(result),
                         }
                     )
+                flush_pending_repetition_warning()
                 continue
             if name in {"check_proof", "try_tactics"} and _proof_attempt_count(attempts) >= max_attempts:
                 result = {"ok": False, "error": "max_attempts_exceeded"}
@@ -2479,7 +2759,7 @@ def _attempt_task_fair(
                 )
                 if text_protocol:
                     content = f"Tool result for {name}: {_tool_result_content(result)}"
-                    if DEFAULT_NATIVE_TOOLS:
+                    if native_tools:
                         messages.append({"role": "user", "content": content})
                     else:
                         set_compact_user_context(content)
@@ -2492,6 +2772,7 @@ def _attempt_task_fair(
                             "content": _tool_result_content(result),
                         }
                     )
+                flush_pending_repetition_warning()
                 continue
             if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"} and non_proof_tool_calls >= non_proof_tool_limit:
                 result = {
@@ -2515,7 +2796,7 @@ def _attempt_task_fair(
                 )
                 if text_protocol:
                     content = f"Tool result for {name}: {_tool_result_content(result)}"
-                    if DEFAULT_NATIVE_TOOLS:
+                    if native_tools:
                         messages.append({"role": "user", "content": content})
                     else:
                         set_compact_user_context(content)
@@ -2528,6 +2809,7 @@ def _attempt_task_fair(
                             "content": _tool_result_content(result),
                         }
                     )
+                flush_pending_repetition_warning()
                 continue
             if name == "try_tactics":
                 remaining = max(0, max_attempts - _proof_attempt_count(attempts))
@@ -2535,22 +2817,44 @@ def _attempt_task_fair(
                 if isinstance(raw_tactics, list):
                     args["tactics"] = raw_tactics[:remaining]
             tool_start = time.time()
-            result = _execute_fair_tool(
-                name,
-                args,
-                task=task,
-                workspace=workspace,
-                original=original,
-                proof_path=proof_path,
-                target_module=target_module,
-                attempts_dir=attempts_dir,
-                attempts=attempts,
-                sandbox_state=sandbox_state,
-                base_url=base_url,
-                draft_log_path=draft_log_path,
-                prover_state=prover_state,
-                role_metrics=role_metrics,
-            )
+            if mcp_session is not None and name.startswith("lean_"):
+                try:
+                    result = mcp_session.call_tool(name, args)
+                except LeanLspMcpTransportError as exc:
+                    result = {
+                        "ok": False,
+                        "error": str(exc),
+                        "failure_kind": "lean_lsp_mcp_transport_error",
+                        "terminal_transport_error": True,
+                    }
+                except LeanLspMcpError as exc:
+                    result = {
+                        "ok": False,
+                        "error": str(exc),
+                        "failure_kind": "lean_lsp_mcp_error",
+                    }
+            else:
+                result = _execute_fair_tool(
+                    name,
+                    args,
+                    task=task,
+                    workspace=workspace,
+                    original=original,
+                    proof_path=proof_path,
+                    target_module=target_module,
+                    attempts_dir=attempts_dir,
+                    attempts=attempts,
+                    sandbox_state=sandbox_state,
+                    base_url=base_url,
+                    draft_log_path=draft_log_path,
+                    prover_state=prover_state,
+                    role_metrics=role_metrics,
+                )
+                if (
+                    mcp_session is not None
+                    and name in {"check_proof", "try_tactics"}
+                ):
+                    mcp_session.mark_workspace_files_changed()
             _accumulate_usage(result)
             tool_calls_executed += 1
             if name not in {"check_proof", "try_tactics", "tactic_sandbox", "show_goal"}:
@@ -2568,7 +2872,7 @@ def _attempt_task_fair(
             )
             if text_protocol:
                 content = f"Tool result for {name}: {_tool_result_content(result)}"
-                if DEFAULT_NATIVE_TOOLS:
+                if native_tools:
                     messages.append({"role": "user", "content": content})
                 else:
                     set_compact_user_context(content)
@@ -2581,6 +2885,23 @@ def _attempt_task_fair(
                         "content": _tool_result_content(result),
                     }
                 )
+            flush_pending_repetition_warning()
+            if result.get("terminal_transport_error") is True:
+                return {
+                    "task_ref": task.get("task_ref"),
+                    "status": "request_failed",
+                    "failure_class": "transport_error",
+                    "error": {"kind": "transport_error", "message": result.get("error")},
+                    "usage": usage_totals,
+                    "attempts": attempts,
+                    "tool_calls_executed": tool_calls_executed,
+                    "non_proof_tool_calls": non_proof_tool_calls,
+                    "non_proof_tool_limit": non_proof_tool_limit,
+                    "tactic_sandbox_calls": sandbox_state["count"],
+                    "role_metrics": role_metrics,
+                    "tool_log": str(tool_log_path),
+                    "conversation_log": str(conversation_log_path),
+                }
             if result.get("passed") is True:
                 return {
                     "task_ref": task.get("task_ref"),
@@ -2603,7 +2924,11 @@ def _attempt_task_fair(
                 failed_attempt = _last_failed_proof_attempt(result)
                 if failed_attempt is not None and int(prover_state["repair_count"]) < int(prover_state["repair_limit"]):
                     messages.append({"role": "user", "content": STRICT_DRIVER_REPAIR_NUDGE})
-                    _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+                    _compact_fair_messages(
+                        messages,
+                        system_prompt=system_prompt,
+                        user_prompt=continuation_prompt,
+                    )
                     repaired = True
             elif DIAGNOSTIC_RETRY_ENABLED and name in {"check_proof", "try_tactics"}:
                 failed_attempt = _last_failed_proof_attempt(result)
@@ -2629,7 +2954,11 @@ def _attempt_task_fair(
                     )
                     repaired = True
             if not repaired:
-                _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+                _compact_fair_messages(
+                    messages,
+                    system_prompt=system_prompt,
+                    user_prompt=continuation_prompt,
+                )
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
     if context_budget_exhausted:
@@ -2670,6 +2999,10 @@ def run_group(
     max_attempts: int = 1,
     max_tool_calls: int = DEFAULT_MAX_TOOL_CALLS,
     task_ref: str | None = None,
+    harness_id: str = HARNESS_ID,
+    run_slug: str = RUN_SLUG,
+    track: str = "group/lean_tools",
+    tool_backend: str = "builtin",
 ) -> tuple[int, Path]:
     if max_attempts < 0:
         raise ValueError("max_attempts must be non-negative")
@@ -2678,16 +3011,24 @@ def run_group(
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     run_subject = task_ref or group_id
     model_slug = "".join(ch if ch.isalnum() else "-" for ch in DEFAULT_DRIVER_MODEL).strip("-").lower()
-    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{RUN_SLUG}-fair-{model_slug}-{run_subject.replace('/', '__')}"
+    run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{run_slug}-fair-{model_slug}-{run_subject.replace('/', '__')}"
     run_dir = RESULTS_DIR / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     start = time.time()
     group = load_group(group_id, suite)
     if task_ref:
         group = filter_group_to_task(group, task_ref)
+    base_url = DEFAULT_BASE_URL
+    credentials_available = bool(_api_key()) or _local_no_auth_endpoint(base_url)
+    dependency_warm_builds: list[dict[str, object]] = []
+    if not dry_run and credentials_available:
+        dependency_warm_builds = warm_public_dependencies(
+            group,
+            timeout_seconds=dependency_warm_timeout_seconds(),
+            log_path=run_dir / "dependency-warm.log",
+        )
     built = build_group_workspace(group, run_id=run_id)
     assert_workspace_isolated(built.path)
-    base_url = DEFAULT_BASE_URL
     response: dict[str, object]
     role_config = _role_config()
     benchmark_budget = {
@@ -2696,6 +3037,8 @@ def run_group(
         "max_turns": None,
         "completion_token_budget": DEFAULT_TOKEN_BUDGET,
     }
+    if tool_backend not in {"builtin", "lean-lsp-mcp"}:
+        raise ValueError(f"unknown builtin tool backend: {tool_backend}")
     op_budget = operational_budget()
     budgets = {
         "benchmark_budget": benchmark_budget,
@@ -2707,6 +3050,31 @@ def run_group(
             "warm_build_timeout_seconds": op_budget.warm_build_timeout_seconds,
         },
     }
+    target_warm_builds: list[dict[str, object]] = []
+    if (
+        not dry_run
+        and credentials_available
+        and not any(warm_result_failed(item) for item in dependency_warm_builds)
+    ):
+        tasks_payload = json.loads(
+            (built.path / "harness" / "TASKS.json").read_text(encoding="utf-8")
+        )
+        warm_timeout = int(os.environ.get("DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS", "1800"))
+        target_warm_builds = _warm_target_modules(
+            workspace=built.path,
+            run_dir=run_dir,
+            tasks=tasks_payload.get("tasks", []),
+            timeout_seconds=warm_timeout,
+        )
+    dependency_warm_failed = any(warm_result_failed(item) for item in dependency_warm_builds)
+    target_warm_timed_out = any(item.get("exit_code") == 124 for item in target_warm_builds)
+    setup_failure_class = (
+        "infra_dependency_warm_failed"
+        if dependency_warm_failed
+        else "infra_target_warm_timeout"
+        if target_warm_timed_out
+        else None
+    )
     if dry_run:
         response = {
             "status": "dry_run",
@@ -2722,6 +3090,7 @@ def run_group(
             "role_config": role_config,
             "transport_mode": _transport_mode(),
             "mode": "fair",
+            "tool_backend": tool_backend,
             "max_attempts": max_attempts,
             "max_tool_calls": max_tool_calls,
             **budgets,
@@ -2738,38 +3107,79 @@ def run_group(
             "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
             "transport_mode": _transport_mode(),
             "mode": "fair",
+            "tool_backend": tool_backend,
             "error": f"fair mode requires DEFAULT_HARNESS_API_KEY{provider_key_hint}, GAZELLA_API_KEY, OPENAI_API_KEY, or a localhost-compatible no-auth endpoint",
             "tasks": [],
             "provider_setup_error": True,
             "failure_class": "provider_setup_error",
             **budgets,
         }
+    elif setup_failure_class is not None:
+        warm_failure_tasks = [
+            {
+                "task_ref": task.task_ref,
+                "status": "request_failed",
+                "failure_class": setup_failure_class,
+                "error": {
+                    "kind": "transport_error",
+                    "message": "Lean setup failed before provider preflight",
+                },
+                "attempts": [],
+                "benchmark_budget": benchmark_budget,
+                "usage": {
+                    "prompt_tokens": 0,
+                    "completion_tokens": 0,
+                    "total_tokens": 0,
+                    "requests": 0,
+                },
+            }
+            for task in group.tasks
+        ]
+        response = {
+            "status": "completed_with_failures",
+            "error": "Lean setup failed; no model request attempted",
+            "provider": _active_provider(),
+            "base_url": base_url,
+            "model": DEFAULT_DRIVER_MODEL,
+            "driver_model": DEFAULT_DRIVER_MODEL,
+            "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
+            "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
+            "strict_role_separation": STRICT_ROLE_SEPARATION,
+            "role_config": role_config,
+            "transport_mode": _transport_mode(),
+            "mode": "fair",
+            "tool_backend": tool_backend,
+            "provider_setup_error": False,
+            "failure_class": setup_failure_class,
+            "dependency_warm_builds": dependency_warm_builds,
+            "warm_builds": target_warm_builds,
+            "tasks": warm_failure_tasks,
+            "failure_counts": {setup_failure_class: len(group.tasks)},
+            **budgets,
+        }
     else:
         task_results: list[dict[str, object]] = []
-        warm_builds: list[dict[str, object]] = []
+        warm_builds = target_warm_builds
         preflight_passed = False
+        preflight: dict[str, object] | None = None
+        mcp_session: LeanLspMcpSession | None = None
+        mcp_metadata: dict[str, object] | None = None
+        mcp_preflight_passed = tool_backend != "lean-lsp-mcp"
         try:
-            preflight = generic_preflight(base_url, DEFAULT_DRIVER_MODEL)
+            if tool_backend == "lean-lsp-mcp":
+                mcp_session = LeanLspMcpSession(built.path)
+                mcp_session.start()
+                mcp_metadata = mcp_session.metadata()
+                mcp_preflight_passed = True
+            preflight = _role_provider_preflight(base_url)
             if preflight.get("status") != "passed":
                 raise RuntimeError(f"provider preflight failed: {preflight.get('error') or preflight}")
             preflight_passed = True
-            tasks_payload = json.loads((built.path / "harness" / "TASKS.json").read_text(encoding="utf-8"))
-            # Warm the Lean dependency graph once per target module so agent-visible
-            # check timeouts measure proof elaboration, not cold dependency builds.
-            warm_timeout = int(os.environ.get("DEFAULT_HARNESS_WARM_BUILD_TIMEOUT_SECONDS", "1800"))
-            for task in tasks_payload.get("tasks", []):
-                module = task.get("target_module") if isinstance(task, dict) else None
-                if isinstance(module, str) and module:
-                    warm_start = time.time()
-                    warm_code, _warm_output = _run_lean_module(built.path, module, timeout_seconds=warm_timeout)
-                    warm_builds.append(
-                        {
-                            "task_ref": task.get("task_ref"),
-                            "module": module,
-                            "exit_code": warm_code,
-                            "duration_seconds": round(time.time() - warm_start, 3),
-                        }
-                    )
+            native_tools = _native_tools_for_preflight(preflight)
+            preflight["selected_tool_protocol"] = "native" if native_tools else "json_text_fallback"
+            tasks_payload = json.loads(
+                (built.path / "harness" / "TASKS.json").read_text(encoding="utf-8")
+            )
             for task in tasks_payload.get("tasks", []):
                 if isinstance(task, dict):
                     task_results.append(
@@ -2783,6 +3193,8 @@ def run_group(
                             tool_log_path=run_dir / "tool-calls" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                             conversation_log_path=run_dir / "conversations" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
                             draft_log_path=run_dir / "draft-proofs" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
+                            native_tools=native_tools,
+                            mcp_session=mcp_session,
                         )
                     )
                     task_results[-1]["benchmark_budget"] = benchmark_budget
@@ -2809,17 +3221,56 @@ def run_group(
                 "role_config": role_config,
                 "role_metrics_totals": aggregate_role_metrics,
                 "transport_mode": _transport_mode(),
+                "tool_protocol": "native" if native_tools else "json_text_fallback",
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
+                "tool_backend": tool_backend,
+                "lean_lsp_mcp": mcp_metadata,
+                "mcp_setup_error": False,
+                "mcp_preflight": {"status": "passed"}
+                if tool_backend == "lean-lsp-mcp"
+                else None,
                 "usage": aggregate_usage,
                 "preflight": preflight,
+                "dependency_warm_builds": dependency_warm_builds,
                 "warm_builds": warm_builds,
                 "tasks": task_results,
                 "failure_counts": failure_counts_from_tasks(task_results),
                 **budgets,
             }
         except Exception as exc:
-            status = "harness_error" if preflight_passed else "preflight_failed"
+            mcp_setup_error = (
+                isinstance(exc, LeanLspMcpError)
+                and tool_backend == "lean-lsp-mcp"
+                and not mcp_preflight_passed
+            )
+            status = (
+                # Keep the setup failure details in mcp_preflight and failure_class,
+                # but persist an aggregatable terminal status for group runs.
+                "completed_with_failures"
+                if mcp_setup_error
+                else "harness_error"
+                if preflight_passed
+                else "preflight_failed"
+            )
+            if mcp_setup_error:
+                task_results = [
+                    {
+                        "task_ref": task.task_ref,
+                        "status": "request_failed",
+                        "failure_class": "mcp_setup_error",
+                        "error": {"kind": "mcp_setup_error", "message": str(exc)},
+                        "attempts": [],
+                        "usage": {
+                            "prompt_tokens": 0,
+                            "completion_tokens": 0,
+                            "total_tokens": 0,
+                            "requests": 0,
+                        },
+                        "benchmark_budget": benchmark_budget,
+                    }
+                    for task in group.tasks
+                ]
             response = {
                 "status": status,
                 "error": str(exc),
@@ -2834,13 +3285,42 @@ def run_group(
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
+                "tool_backend": tool_backend,
+                "lean_lsp_mcp": mcp_metadata,
                 "provider_setup_error": status == "preflight_failed",
-                "failure_class": "provider_setup_error" if status == "preflight_failed" else None,
+                "failure_class": (
+                    "mcp_setup_error"
+                    if mcp_setup_error
+                    else "provider_setup_error"
+                    if status == "preflight_failed"
+                    else None
+                ),
+                "mcp_setup_error": mcp_setup_error,
+                "mcp_preflight": {
+                    "status": "failed" if mcp_setup_error else "passed",
+                    "error": str(exc) if mcp_setup_error else None,
+                }
+                if tool_backend == "lean-lsp-mcp"
+                else None,
+                "setup_failure_class": "infra_agent_preflight_failed" if mcp_setup_error else None,
+                "preflight": preflight,
+                "dependency_warm_builds": dependency_warm_builds,
                 "warm_builds": warm_builds,
                 "tasks": task_results,
                 "failure_counts": failure_counts_from_tasks(task_results),
                 **budgets,
             }
+        finally:
+            if mcp_session is not None:
+                mcp_session.close()
+                mcp_metadata = mcp_session.metadata()
+        if mcp_metadata is not None:
+            response["lean_lsp_mcp"] = mcp_metadata
+
+    if response.get("provider_setup_error") and not response.get("tasks"):
+        provider_error = str(response.get("error") or "provider setup failed before model execution")
+        response["tasks"] = _provider_setup_task_rows(group, benchmark_budget, provider_error)
+        response["failure_counts"] = {"provider_setup_error": len(group.tasks)}
 
     (run_dir / "workspace-manifest.json").write_text((built.path / "workspace-manifest.json").read_text(encoding="utf-8"), encoding="utf-8")
     shutil.copy2(built.path / "harness" / "TASK_SUMMARY.md", run_dir / "TASK_SUMMARY.md")
@@ -2857,9 +3337,11 @@ def run_group(
                 "strict_role_separation": STRICT_ROLE_SEPARATION,
                 "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
                 "role_config": role_config,
+                "dependency_warm_builds": dependency_warm_builds,
                 "transport_mode": _transport_mode(),
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
+                "tool_backend": tool_backend,
                 "max_attempts": max_attempts,
                 "max_tool_calls": max_tool_calls,
                 **budgets,
@@ -2880,12 +3362,26 @@ def run_group(
                 dst = submitted_dir / rel
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src, dst)
-    verifier_result = verify_group(group, built.path, artifact_dir=run_dir / "verifier")
+    artifact_setup_failure_class = setup_failure_class
+    if isinstance(response.get("setup_failure_class"), str):
+        artifact_setup_failure_class = str(response["setup_failure_class"])
+    if response.get("provider_setup_error"):
+        artifact_setup_failure_class = "provider_setup_error"
+    verifier_result = (
+        setup_failure_verifier_result(
+            group,
+            built.path,
+            failure_class=artifact_setup_failure_class,
+            artifact_dir=run_dir / "verifier",
+        )
+        if artifact_setup_failure_class is not None
+        else verify_group(group, built.path, artifact_dir=run_dir / "verifier")
+    )
     classification = classify_run(verifier_result, response.get("tasks") if isinstance(response.get("tasks"), list) else [])
     run = {
         "schema_version": 1,
         "run_id": run_id,
-        "harness_id": HARNESS_ID,
+        "harness_id": harness_id,
         "provider": _active_provider(),
         "model": DEFAULT_DRIVER_MODEL,
         "driver_model": DEFAULT_DRIVER_MODEL,
@@ -2896,8 +3392,11 @@ def run_group(
         "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
         "role_config": role_config,
         "role_metrics_totals": response.get("role_metrics_totals"),
-        "track": "group/lean_tools",
+        "dependency_warm_builds": response.get("dependency_warm_builds", dependency_warm_builds),
+        "track": track,
         "mode": "fair",
+        "tool_backend": tool_backend,
+        "lean_lsp_mcp": response.get("lean_lsp_mcp"),
         "run_mode": "task" if task_ref else "group",
         "group_id": group_id,
         "task_ref": task_ref,
@@ -2909,6 +3408,11 @@ def run_group(
         "auth_mode": "env" if _api_key() else "none",
         "duration_seconds": round(time.time() - start, 3),
         "harness_status": response["status"],
+        "failure_class": response.get("failure_class"),
+        "provider_setup_error": bool(response.get("provider_setup_error")),
+        "mcp_setup_error": bool(response.get("mcp_setup_error")),
+        "mcp_preflight": response.get("mcp_preflight"),
+        "provider_preflight": response.get("preflight"),
         "usage": response.get("usage"),
         "benchmark_budget": benchmark_budget,
         "operational_budget": budgets["operational_budget"],
