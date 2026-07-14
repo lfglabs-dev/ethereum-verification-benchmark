@@ -138,6 +138,18 @@ class ShellAgentProfileTests(unittest.TestCase):
         self.assertEqual(run.call_count, 2)
         self.assertIn("broken", actual[-1]["output_tail"])
 
+    def test_version_command_is_the_default_preflight(self) -> None:
+        profile = {"version_command": ["agent", "--version"]}
+        completed = subprocess.CompletedProcess([], 0, stdout="1.0", stderr="")
+        with tempfile.TemporaryDirectory() as raw_dir, mock.patch(
+            "harness.runners.shell_agent._run_setup_process_group", return_value=completed
+        ) as run:
+            actual = _run_profile_preflights(profile, cwd=Path(raw_dir))
+
+        self.assertEqual(actual[0]["command"], ["agent", "--version"])
+        self.assertEqual(actual[0]["status"], "passed")
+        run.assert_called_once()
+
     def test_invalid_preflight_shape_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "non-empty string list"):
             _run_profile_preflights({"preflight_commands": ["vibe --version"]}, cwd=ROOT)

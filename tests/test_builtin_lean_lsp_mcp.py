@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+import harness.lean_lsp_mcp_client as lean_lsp_mcp_client
 from harness.lean_lsp_mcp_client import (
     ALLOWED_TOOLS,
     LeanLspMcpCompatibilityError,
@@ -114,6 +115,27 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
                     {"file_path": "../outside.lean", "line": 1},
                     workspace=workspace,
                 )
+
+    def test_argument_policy_allows_resolved_public_package_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp) / "workspace"
+            workspace.mkdir()
+            root = Path(tmp) / "root"
+            dependency = root / ".lake" / "packages" / "mathlib" / "Public.lean"
+            dependency.parent.mkdir(parents=True)
+            dependency.write_text("theorem public_ok : True := by trivial\n", encoding="utf-8")
+            lake = workspace / ".lake"
+            lake.mkdir()
+            (lake / "packages").symlink_to(dependency.parent.parent)
+
+            with mock.patch.object(lean_lsp_mcp_client, "ROOT", root):
+                normalized = normalize_tool_arguments(
+                    "lean_goal",
+                    {"file_path": ".lake/packages/mathlib/Public.lean", "line": 1},
+                    workspace=workspace,
+                )
+
+        self.assertEqual(normalized["file_path"], str(dependency.resolve()))
 
     def test_local_search_root_and_multi_attempt_are_bounded(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -11,6 +11,11 @@ import time
 from collections import deque
 from pathlib import Path
 
+try:
+    from .paths import ROOT
+except ImportError:
+    from paths import ROOT
+
 
 LEAN_LSP_MCP_VERSION = "0.28.0"
 MINIMUM_LEAN_VERSION = (4, 24, 0)
@@ -125,6 +130,9 @@ def _public_path(workspace: Path, raw_path: str) -> str:
     try:
         if lake.exists():
             roots.append(lake.resolve())
+        root_packages = ROOT / ".lake" / "packages"
+        if root_packages.exists():
+            roots.append(root_packages.resolve())
     except OSError:
         pass
     if not any(resolved == root or root in resolved.parents for root in roots):

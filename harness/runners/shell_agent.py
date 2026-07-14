@@ -112,7 +112,10 @@ def _run_profile_preflights(
     than failing after the metering proxy and provider path are live.
     """
     results: list[dict[str, object]] = []
-    raw_commands = profile.get("preflight_commands") or []
+    raw_commands = profile.get("preflight_commands")
+    if raw_commands is None:
+        version_command = profile.get("version_command")
+        raw_commands = [version_command] if version_command is not None else []
     if not isinstance(raw_commands, list):
         raise ValueError("preflight_commands must be a list")
     for raw in raw_commands:
