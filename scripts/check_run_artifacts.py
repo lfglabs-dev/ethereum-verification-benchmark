@@ -113,6 +113,7 @@ def check_run(run_dir: Path) -> list[str]:
         run.get("harness_id") == "builtin-lean-lsp"
         and run.get("run_mode") in {"task", "group"}
         and run.get("harness_status") != "dry_run"
+        and isinstance(run.get("mcp_preflight"), dict)
     ):
         metadata = run.get("lean_lsp_mcp")
         if not isinstance(metadata, dict):
