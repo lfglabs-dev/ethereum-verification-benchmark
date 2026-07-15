@@ -356,6 +356,24 @@ def warm_public_dependencies(
             log.flush()
             timed_out = False
             with verify_lease(label="dependency_warm") as lease_reason:
+                # Cache hydration shares this lease. Validate again after acquiring
+                # it so another warmer cannot leave a partial checkout between the
+                # earlier health check and this required build.
+                checkout_result = _wait_for_package_checkouts(log_path)
+                results.append(checkout_result)
+                if warm_result_failed(checkout_result):
+                    log.write(
+                        "invalid package checkouts: "
+                        + ", ".join(checkout_result["invalid_packages"])
+                        + "\n"
+                    )
+                    log.flush()
+                    print(
+                        "[dependency-warm] package_checkout state=failed invalid="
+                        + ",".join(checkout_result["invalid_packages"]),
+                        flush=True,
+                    )
+                    return results
                 started = time.monotonic()
                 lease_wait_seconds = round(started - queued_at, 3)
                 print(

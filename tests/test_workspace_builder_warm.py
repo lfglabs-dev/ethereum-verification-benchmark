@@ -278,6 +278,10 @@ class PublicDependencyWarmTests(unittest.TestCase):
             yield "acquired"
             events.append("lease_exit")
 
+        def fake_checkout(log_path: Path):
+            events.append("health")
+            return VALID_CHECKOUTS
+
         class FinishedProcess:
             returncode = 0
             pid = 123
@@ -302,18 +306,38 @@ class PublicDependencyWarmTests(unittest.TestCase):
             return_value=VALID_TOOLCHAIN,
         ), patch(
             "harness.workspace_builder._wait_for_package_checkouts",
-            return_value=VALID_CHECKOUTS,
-        ), patch("harness.workspace_builder.subprocess.Popen", FinishedProcess):
+            side_effect=fake_checkout,
+        ), patch(
+            "harness.workspace_builder.subprocess.Popen", side_effect=FinishedProcess
+        ) as popen:
             results = warm_public_dependencies(
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
             )
 
-        self.assertEqual(results[3]["exit_code"], 0)
+        self.assertEqual(results[4]["exit_code"], 0)
+        self.assertEqual(
+            popen.call_args.args[0],
+            [
+                "elan",
+                "run",
+                "leanprover/lean4:v4.24.0",
+                "lake",
+                "build",
+                "Benchmark.Cases.ERC20.State.Impl",
+            ],
+        )
         self.assertEqual(
             events,
-            ["lease_enter", "process_start", "process_poll", "lease_exit"],
+            [
+                "health",
+                "lease_enter",
+                "health",
+                "process_start",
+                "process_poll",
+                "lease_exit",
+            ],
         )
 
     def test_lease_wait_does_not_consume_build_timeout_or_duration(self) -> None:
@@ -365,7 +389,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[3]
+            )[4]
 
         self.assertEqual(result["exit_code"], 0)
         self.assertEqual(result["lease_wait_seconds"], 50.0)
@@ -410,7 +434,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[3]
+            )[4]
 
         self.assertEqual(result["status"], "failed")
         self.assertEqual(result["exit_code"], 127)
