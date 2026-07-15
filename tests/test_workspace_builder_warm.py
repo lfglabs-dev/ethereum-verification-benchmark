@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import unittest
 from contextlib import contextmanager
 from pathlib import Path
@@ -127,6 +128,19 @@ class PublicDependencyWarmTests(unittest.TestCase):
             ["elan", "run", "leanprover/lean4:v4.24.0", "lean", "--version"],
         )
 
+    def test_conflicting_elan_toolchain_override_fails_preflight(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            with patch("harness.workspace_builder.ROOT", root), patch.dict(
+                os.environ, {"ELAN_TOOLCHAIN": "leanprover/lean4:v4.22.0"}
+            ), patch("harness.workspace_builder.subprocess.run") as run:
+                result = _validate_effective_toolchain(root / "warm.log")
+
+        self.assertEqual(result["status"], "failed")
+        self.assertIn("conflicts with repository pin", result["effective_version"])
+        run.assert_not_called()
+
     def test_transient_package_checkout_race_is_waited_out(self) -> None:
         with TemporaryDirectory() as tmp, patch(
             "harness.workspace_builder._invalid_package_checkouts",
@@ -150,6 +164,48 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 }
             )
         )
+
+    def test_package_health_is_checked_after_cache_prefetch(self) -> None:
+        group = Group(group_id="erc20/state", suite="active", tasks=())
+        events: list[str] = []
+
+        @contextmanager
+        def fake_lease(*, label: str):
+            self.assertEqual(label, "dependency_checkout_health")
+            yield "acquired"
+
+        def fake_prefetch(**kwargs):
+            events.append("cache")
+            return SKIPPED_CACHE_PREFETCH
+
+        def fake_checkout(log_path: Path):
+            events.append("health")
+            return {
+                **VALID_CHECKOUTS,
+                "status": "failed",
+                "exit_code": 1,
+                "invalid_packages": ["mathlib"],
+            }
+
+        with TemporaryDirectory() as tmp, patch(
+            "harness.workspace_builder.verify_lease", fake_lease
+        ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._prefetch_mathlib_cache",
+            side_effect=fake_prefetch,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            side_effect=fake_checkout,
+        ), patch("harness.workspace_builder.subprocess.Popen") as popen:
+            results = warm_public_dependencies(
+                group, timeout_seconds=30, log_path=Path(tmp) / "warm.log"
+            )
+
+        self.assertEqual(events, ["cache", "health"])
+        self.assertEqual(results[-1]["status"], "failed")
+        popen.assert_not_called()
 
     def test_modules_are_public_deduplicated_and_sorted(self) -> None:
         group = Group(

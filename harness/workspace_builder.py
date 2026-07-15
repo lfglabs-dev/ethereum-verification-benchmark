@@ -58,7 +58,12 @@ def toolchain_command(program: str, *args: str) -> list[str]:
 def toolchain_environment() -> dict[str, str]:
     env = os.environ.copy()
     # A workspace-level override must not silently beat the repository pin.
-    env.pop("ELAN_TOOLCHAIN", None)
+    override = env.pop("ELAN_TOOLCHAIN", None)
+    declared = declared_lean_toolchain()
+    if override is not None and override != declared:
+        raise RuntimeError(
+            f"ELAN_TOOLCHAIN={override!r} conflicts with repository pin {declared!r}"
+        )
     return env
 
 
@@ -78,7 +83,7 @@ def _validate_effective_toolchain(log_path: Path) -> dict[str, object]:
         )
         output = (completed.stdout + completed.stderr).strip()
         exit_code = completed.returncode
-    except (OSError, subprocess.TimeoutExpired) as exc:
+    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         output = str(exc)
         exit_code = 127
     matched = exit_code == 0 and f"version {expected}" in output
@@ -316,6 +321,18 @@ def warm_public_dependencies(
                 flush=True,
             )
             return results
+        cache_timeout = min(
+            timeout_seconds,
+            int(os.environ.get("VERITY_CACHE_GET_TIMEOUT_SECONDS", "1800")),
+        )
+        results.append(
+            _prefetch_mathlib_cache(
+                timeout_seconds=cache_timeout,
+                log=log,
+                log_path=log_path,
+                heartbeat_seconds=heartbeat_seconds,
+            )
+        )
         with verify_lease(label="dependency_checkout_health"):
             checkout_result = _wait_for_package_checkouts(log_path)
         results.append(checkout_result)
@@ -332,18 +349,6 @@ def warm_public_dependencies(
                 flush=True,
             )
             return results
-        cache_timeout = min(
-            timeout_seconds,
-            int(os.environ.get("VERITY_CACHE_GET_TIMEOUT_SECONDS", "1800")),
-        )
-        results.append(
-            _prefetch_mathlib_cache(
-                timeout_seconds=cache_timeout,
-                log=log,
-                log_path=log_path,
-                heartbeat_seconds=heartbeat_seconds,
-            )
-        )
         for module in public_dependency_modules(group):
             queued_at = time.monotonic()
             print(f"[dependency-warm] module={module} state=waiting_for_lease", flush=True)
