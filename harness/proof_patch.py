@@ -23,11 +23,27 @@ def _looks_like_full_file(body: str) -> bool:
         re.search(r"(?m)^\s*(?:theorem|lemma)\s+\S", body)
     )
 
+def _file_context_signature(text: str) -> tuple[str, ...]:
+    """Context lines a full-file proof submission is never allowed to alter."""
+    return tuple(
+        line.strip()
+        for line in text.splitlines()
+        if re.match(r"^\s*(?:import|namespace|open|end)\s+\S", line)
+    )
+
+def _full_file_context_preserved(original: str, candidate: str) -> bool:
+    return _file_context_signature(candidate) == _file_context_signature(original)
+
 def _indent_proof_body(text: str) -> str:
     body = _extract_lean_file(text)
     theorem_body = re.search(r"(?s)\b(?:theorem|lemma)\s+[A-Za-z0-9_'.]+.*?:=\s*by[ \t]*(?:\n)?", body)
     if theorem_body:
         body = body[theorem_body.end() :]
+    else:
+        # The tool contract asks for the body that belongs after `:= by`, but
+        # models commonly return the natural standalone spelling `by\n  ...`.
+        # Accept that wrapper without turning it into the invalid `:= by\n  by`.
+        body = re.sub(r"\A\s*(?::=\s*)?by\b[ \t]*(?:\n)?", "", body, count=1)
     body = re.sub(r"(?m)^end\s+[A-Za-z0-9_'.]+\s*$.*", "", body, flags=re.DOTALL)
     lines: list[str] = []
     in_preamble = True
@@ -57,6 +73,9 @@ def _indent_proof_body(text: str) -> str:
 def _patch_proof_body(original: str, proof_body: str) -> str:
     extracted = _extract_lean_file(proof_body)
     if _looks_like_full_file(extracted):
+        # Whole-file mode preserves file-level helper declarations. The caller
+        # separately rejects changed imports/namespaces/opens/end markers and
+        # a changed target statement before invoking Lean.
         return extracted
     replacement = ":= by\n" + _indent_proof_body(proof_body)
     pattern = re.compile(

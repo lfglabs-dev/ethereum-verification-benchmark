@@ -1,0 +1,48 @@
+manifest_kind: case
+project: 1inch
+case_id: xycswap_curve_safety
+schema_version: 1
+split: active
+family_id: 1inch
+implementation_id: aqua_xycswap
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/1inch/aqua
+upstream_commit: 81c26e4619ce21556ab02b3284ee2685de21fb18
+original_contract_path: examples/apps/XYCSwap.sol
+source_ref: https://github.com/1inch/aqua@81c26e4619ce21556ab02b3284ee2685de21fb18:examples/apps/XYCSwap.sol
+lean_target: Benchmark.Cases.OneInch.XYCSwapCurveSafety.Compile
+selected_functions:
+  - _quoteExactIn
+  - swapExactIn
+failure_reason:
+source_language: solidity
+verity_version: 506bae406185497d5c2cb2a143f2d063ef31e04d
+lean_toolchain: leanprover/lean4:v4.24.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - amm_invariant
+  - fee_adjusted_curve
+  - constant_product
+  - output_bound
+  - external_calls_elided
+  - storage_elided
+abstraction_notes: >
+  The slice isolates the pure arithmetic of _quoteExactIn, which computes the
+  output amount for a swap using the fee-adjusted constant-product formula.
+  External calls (AQUA.pull, xycSwapCallback, _safeCheckAquaPush) are elided
+  because the output amount is a pure function of the formula inputs. The
+  Strategy struct is flattened: feeBps is a direct parameter. The zeroForOne
+  direction selector is abstracted. _quoteExactOut is not modeled.
+unsupported_feature_codes: []
+spec_target: Benchmark.Cases.OneInch.XYCSwapCurveSafety.Specs
+proof_target: Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs
+notes: >
+  Benchmark case proving the fee-adjusted constant-product curve safety
+  invariant for 1inch Aqua XYCSwap. The theorem states that the output amount
+  computed by _quoteExactIn satisfies the integer-division rounding bound:
+  output * denominator <= feeAdjustedInput * balanceOut. This is the direct
+  analog of the Uniswap V2 K invariant, adapted to XYCSwap's basis-points fee
+  structure.

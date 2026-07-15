@@ -56,6 +56,43 @@ python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count 
 VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget deep
 ```
 
+### Parallel multi-provider runs and the verification lease
+
+Running several providers at once is safe for the model-API portion of each
+attempt, but the Lean verification/build step is memory-heavy: a single `lean`
+can peak at tens of GB, and overlapping several of them across independent
+runner processes has OOM-killed the host kernel mid-verification (which
+corrupts comparison artifacts and reads as a spurious proof failure).
+
+To make overlap safe, the harness holds an advisory cross-process lease
+(`harness/verify_lease.py`) around every memory-heavy Lean invocation in both
+the interactive check path (`harness/lean_check.py`) and the grader
+(`harness/verifier.py`). At most `DEFAULT_HARNESS_VERIFY_CONCURRENCY`
+verifications run concurrently across every runner process on the host (default
+`1`); the cheap model-API work stays fully parallel. The lease is advisory and
+fail-open — if it cannot be acquired within
+`DEFAULT_HARNESS_VERIFY_LEASE_TIMEOUT_SECONDS` it proceeds anyway rather than
+deadlock a run — and provider-neutral (slots are anonymous, first-come). Set
+`DEFAULT_HARNESS_VERIFY_CONCURRENCY=0` to disable it (e.g. on a host with
+memory headroom to spare). See `.env.example` for all lease knobs.
+
+### Strict provider request-shape compatibility
+
+Some strict OpenAI-compatible providers reject any chat-completions request that
+carries a token-limit field and answer with a generic `400` (observed with
+Virtuals' `openai-gpt-56-sol-pro`, which `400`s when `max_tokens`,
+`max_completion_tokens`, or `reasoning_effort` is present but returns `201` with
+none of them). Set `DEFAULT_HARNESS_OMIT_MAX_TOKENS=1` to drop every token-limit
+parameter from the outgoing request entirely. The switch is generic and
+provider-neutral — it does no provider-name special casing — and is off by
+default, so the request shape is unchanged for every other provider.
+
+Set `DEFAULT_HARNESS_OMIT_SAMPLING=1` when a comparison contract requires the
+provider's own sampling defaults. It removes `temperature`, `top_p`, and
+`reasoning_effort` from builtin requests and at the metering-proxy boundary for
+shell harnesses, so a CLI profile cannot silently reintroduce those fields. The
+effective policy is persisted in run artifacts.
+
 Budget profiles:
 
 - `quick`: CI-sized smoke budget.

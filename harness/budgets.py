@@ -36,6 +36,16 @@ def operational_budget() -> OperationalBudget:
     )
 
 
+def dependency_warm_timeout_seconds() -> int:
+    """Allow cold public dependency builds the same time as target warming."""
+    return int(
+        os.environ.get(
+            "DEFAULT_HARNESS_DEPENDENCY_WARM_TIMEOUT_SECONDS",
+            str(operational_budget().warm_build_timeout_seconds),
+        )
+    )
+
+
 def budget_artifact(profile: BudgetProfile, *, token_budget: int = 0) -> dict[str, object]:
     return {
         "benchmark_budget": {

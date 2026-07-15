@@ -1,0 +1,37 @@
+manifest_kind: task
+schema_version: 1
+task_id: deposit_preserves_escrow_lower_bound
+case_id: starkware/starkgate_escrow
+split: active
+family_id: starkware
+implementation_id: starkgate_bridge
+source_ref: https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Starkware.StarkgateEscrow.deposit_preserves_escrow_lower_bound
+proof_family: protocol_transition_correctness
+property_class: escrow_lower_bound
+difficulty: medium
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/starkware/starkgate_escrow/verity/Contract.lean
+  - Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean
+specification_files:
+  - cases/starkware/starkgate_escrow/verity/Specs.lean
+  - Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean
+editable_files:
+  - Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/DepositPreservesEscrowLowerBound.lean
+reference_solution_module: Benchmark.Cases.Starkware.StarkgateEscrow.Proofs
+reference_solution_declaration: Benchmark.Cases.Starkware.StarkgateEscrow.deposit_preserves_escrow_lower_bound
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Deposit transition proof for the StarkGate escrow lower-bound invariant.
+  Shows that increasing both the ghost balance and cumulative deposits by the
+  same amount preserves balance >= deposits - withdrawals.
+unsupported_feature_codes:
+  - external_erc20_balance_ghosted
+  - cross_domain_messaging_elided
+  - fee_logic_donation_equivalent

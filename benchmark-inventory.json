@@ -10,35 +10,35 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 34,
-    "implementation_count": 35,
-    "active_case_count": 34,
+    "family_count": 36,
+    "implementation_count": 37,
+    "active_case_count": 36,
     "backlog_case_count": 1,
-    "active_task_count": 214,
+    "active_task_count": 218,
     "backlog_task_count": 0,
-    "buildable_case_count": 34,
-    "runnable_task_count": 214,
+    "buildable_case_count": 36,
+    "runnable_task_count": 218,
     "case_stage_counts": {
       "build_green": 29,
       "candidate": 1,
-      "proof_complete": 5
+      "proof_complete": 7
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 34
+      "translated": 36
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 27,
+      "complete": 29,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 214
+      "proof-only": 218
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
-      "accounting_bound": 17,
+      "accounting_bound": 18,
       "accounting_conservation": 15,
       "accounting_effect": 2,
       "accounting_invariant": 3,
@@ -67,6 +67,7 @@
       "counting_invariant": 1,
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
+      "escrow_lower_bound": 3,
       "exploit_trace": 1,
       "failure_propagation": 2,
       "fee_accounting_bounds": 2,
@@ -127,17 +128,34 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 26,
-      "functional_correctness": 56,
-      "protocol_transition_correctness": 32,
+      "functional_correctness": 57,
+      "protocol_transition_correctness": 35,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 58
     },
     "family_split_counts": {
-      "active": 33,
+      "active": 35,
       "mixed": 1
     }
   },
   "families": [
+    {
+      "family_id": "1inch",
+      "display_name": "1inch Aqua",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for 1inch Aqua shared liquidity layer, starting with the XYCSwap constant-product AMM curve safety invariant.",
+      "implementation_ids": [
+        "aqua_xycswap"
+      ],
+      "case_ids": [
+        "1inch/xycswap_curve_safety"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/1inch/family.yaml"
+    },
     {
       "family_id": "alchemix",
       "display_name": "Alchemix",
@@ -564,6 +582,23 @@
       "manifest_path": "families/safe/family.yaml"
     },
     {
+      "family_id": "starkware",
+      "display_name": "StarkWare / StarkGate",
+      "split": "active",
+      "status": "active",
+      "description": "StarkGate bridge L1 accounting verification cases.",
+      "implementation_ids": [
+        "starkgate_bridge"
+      ],
+      "case_ids": [
+        "starkware/starkgate_escrow"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/starkware/family.yaml"
+    },
+    {
       "family_id": "t3tris",
       "display_name": "T3tris Finance",
       "split": "active",
@@ -720,6 +755,22 @@
     }
   ],
   "implementations": [
+    {
+      "family_id": "1inch",
+      "implementation_id": "aqua_xycswap",
+      "display_name": "1inch Aqua XYCSwap",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/1inch/aqua",
+      "upstream_commit": "81c26e4619ce21556ab02b3284ee2685de21fb18",
+      "source_language": "solidity",
+      "source_artifact_path": "examples/apps/XYCSwap.sol",
+      "case_ids": [
+        "1inch/xycswap_curve_safety"
+      ],
+      "notes": "Implementation entry for the 1inch Aqua XYCSwap constant-product AMM app, scoped to the curve safety invariant over _quoteExactIn.",
+      "manifest_path": "families/1inch/implementations/aqua_xycswap/implementation.yaml"
+    },
     {
       "family_id": "alchemix",
       "implementation_id": "v3",
@@ -1121,6 +1172,22 @@
       "manifest_path": "families/safe/implementations/smart_account/implementation.yaml"
     },
     {
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "display_name": "StarkGate Token Bridge",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/starknet-io/starkgate-contracts",
+      "upstream_commit": "07e11c39119a10d5742735be5b1d51894ebf5311",
+      "source_language": "solidity",
+      "source_artifact_path": "src/solidity/StarknetTokenBridge.sol",
+      "case_ids": [
+        "starkware/starkgate_escrow"
+      ],
+      "notes": "Verity model of the StarkGate L1 bridge accounting, focused on the escrow lower-bound invariant: the L1 escrow balance covers cumulative deposits minus cumulative withdrawals.",
+      "manifest_path": "families/starkware/implementations/starkgate_bridge/implementation.yaml"
+    },
+    {
       "family_id": "t3tris",
       "implementation_id": "t3tris_vault",
       "display_name": "T3tris Vault",
@@ -1283,6 +1350,50 @@
   ],
   "cases": [
     {
+      "case_id": "1inch/xycswap_curve_safety",
+      "project": "1inch",
+      "case_name": "xycswap_curve_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/1inch/xycswap_curve_safety/case.yaml",
+      "split": "active",
+      "family_id": "1inch",
+      "implementation_id": "aqua_xycswap",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/1inch/aqua",
+      "upstream_commit": "81c26e4619ce21556ab02b3284ee2685de21fb18",
+      "original_contract_path": "examples/apps/XYCSwap.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/1inch/aqua@81c26e4619ce21556ab02b3284ee2685de21fb18:examples/apps/XYCSwap.sol",
+      "selected_functions": [
+        "_quoteExactIn",
+        "swapExactIn"
+      ],
+      "lean_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Compile",
+      "failure_reason": null,
+      "notes": "Benchmark case proving the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The theorem states that the output amount computed by _quoteExactIn satisfies the integer-division rounding bound: output * denominator <= feeAdjustedInput * balanceOut. This is the direct analog of the Uniswap V2 K invariant, adapted to XYCSwap's basis-points fee structure.",
+      "buildable": true,
+      "verity_commit": "506bae406185497d5c2cb2a143f2d063ef31e04d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "amm_invariant",
+        "fee_adjusted_curve",
+        "constant_product",
+        "output_bound",
+        "external_calls_elided",
+        "storage_elided"
+      ],
+      "abstraction_notes": "The slice isolates the pure arithmetic of _quoteExactIn, which computes the output amount for a swap using the fee-adjusted constant-product formula. External calls (AQUA.pull, xycSwapCallback, _safeCheckAquaPush) are elided because the output amount is a pure function of the formula inputs. The Strategy struct is flattened: feeBps is a direct parameter. The zeroForOne direction selector is abstracted. _quoteExactOut is not modeled.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Specs",
+      "proof_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs"
+    },
+    {
       "case_id": "alchemix/earmark_conservation",
       "project": "alchemix",
       "case_name": "earmark_conservation",
@@ -1315,7 +1426,7 @@
       "notes": "Earmark conservation invariant for Alchemix V3 lazy-accrual debt accounting. The literal \"sum of stored account.earmarked equals cumulativeEarmarked\" is provably false on the deployed code (see AlchemistV3.sol:1014 comment \"Global can lag local by rounding\") because per-account earmarked is updated lazily inside _sync(tokenId). The lazy-projected version proven here is the property the design actually maintains and that downstream consumers (redemption math, collateral debit) rely on.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "q128_idealized",
@@ -1364,7 +1475,7 @@
       "notes": "Certora I-01 identified that an intermediate floor division can undermine an intended rounding-up path. This case isolates the ReClamm arithmetic surface where that class of issue matters: exact-in swaps must not overpay output, and exact-out swaps must not undercharge input.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "two_token_memory_array_scalarized",
@@ -1413,7 +1524,7 @@
       "notes": "Cork Phoenix pool solvency slice targeting the Certora P-02 gap. Based on the Certora formal verification report (September-December 2025). P-02 was verified for all functions except unwindExerciseOther (timeout).",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "oracle_elided",
@@ -1457,7 +1568,7 @@
       "notes": "Compact Side Entrance benchmark focused on the broken coherence between pool assets and withdrawable credit when flash-loan repayment is routed through the deposit path.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "callback_elided",
@@ -1501,7 +1612,7 @@
       "notes": "ERC-4337 EntryPoint control-flow invariant slice: the operation execution path is reached if and only if validation passed. This is not a full proof of arbitrary account/paymaster EVM behavior or `innerHandleOp` calldata effects; it proves the selected two-loop model for all possible validation outcomes.",
       "buildable": true,
       "verity_commit": "a287329d5fb8b3966c8eb62f03173639c7e66307",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "abi_backed_batch_model",
@@ -1552,7 +1663,7 @@
       "notes": "Counter-oriented slice of the deposit path. Merkle tree, SSZ hashing, and log emission are omitted so the benchmark can focus on threshold-driven state updates.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "merkle_elided",
@@ -1599,7 +1710,7 @@
       "notes": "Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "guarded_depreciation_invariant",
@@ -1647,7 +1758,7 @@
       "notes": "This case is intentionally scoped to the safety property that remains true after the failed split-fairness target: a successful modeled redeem cannot decrease virtualized conversion PPS. It should be described as no decrease in the modeled ERC4626 redeemable-value ratio, not as a proof that fee-splitting is impossible or that the whole vault is bug-free.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "arithmetic_slice",
       "abstraction_tags": [
         "erc4626_virtual_offset",
@@ -1694,7 +1805,7 @@
       "notes": "Sortition-tree slice focused on additive parent invariants, root conservation, interval-based draws, and ID/index correspondence.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "fixed_arity_slice",
@@ -1735,7 +1846,7 @@
       "notes": "Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution. Reading the guard as an effective-price floor additionally assumes `spentAmount <= amount`, which the helper does not enforce and the theorem does not assume.",
       "buildable": true,
       "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "helper_level_guard",
@@ -1776,7 +1887,7 @@
       "notes": "Proves that Lagoon guardrail compliance accepts exactly the annualized PPS variations admitted by the configured 1e18-scaled upper and signed lower bounds under the encoded successfulSolidityArithmeticScope.",
       "buildable": true,
       "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "pure_function_slice",
@@ -1817,7 +1928,7 @@
       "notes": "Locked-amount arithmetic slice of Lido VaultHub (V3 vaults branch). Based on the Certora formal verification report (December 2025). F-01 could not be proven by Certora and is the primary benchmark task. P-VH-03 and P-VH-04 were proven by Certora and serve as supporting lemmas.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "oracle_elided",
@@ -1864,7 +1975,7 @@
       "notes": "This is an atomicity benchmark, not a price-quality or route-optimality benchmark. It proves that the modeled LI.FI route cannot commit a public final transfer unless every modeled public-route gate succeeds, every modeled route step succeeds, and the output amount meets the minimum.",
       "buildable": true,
       "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "decoded_swap_steps",
@@ -1910,7 +2021,7 @@
       "notes": "Price-band slice of Nexus Mutual RAMM. The Verity model keeps the buffered book-value computation behind buy and sell spot prices and omits unrelated state evolution machinery.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "reserve_dynamics_elided",
@@ -1958,7 +2069,7 @@
       "notes": "This is a caller-identity benchmark, not an accounting benchmark. It proves that every modeled ERC20 and Permit2 fund-pull path uses the outer deltaCompose caller rather than an intermediate callback contract, the composer itself, or an embedded calldata address. The scope is transfer-command pulls plus the V3 callback direct-pull shortcut, not every transferFrom in the full composer source tree.",
       "buildable": true,
       "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "packed_calldata_decoded_commands",
@@ -2002,7 +2113,7 @@
       "notes": "Active ERC-4626 benchmark slice derived from OpenZeppelin's virtual-offset design and inflation-attack analysis. The committed proof module validates the four original arithmetic and state-transition theorems plus the two harder rounding tasks (deposit/redeem round-trip bound and share-price monotonicity under donation), so every task is runnable in the reference-solution benchmark path.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "erc4626",
@@ -2048,7 +2159,7 @@
       "notes": "Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "merkle_elided",
@@ -2088,7 +2199,7 @@
       "notes": "Reference proof is complete for the modeled successful depositFunds path under the source reserve require (`hReserveGuard`) and checked-arithmetic side conditions: the resulting state satisfies the closed-epoch reserve guard.",
       "buildable": true,
       "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "redemption_queue",
@@ -2142,7 +2253,7 @@
       "notes": "Proves that successful mintPY and successful pre-expiry redeemPY preserve the equality of PT and YT total supplies when that pairing held before the call. Post-expiry redeem is intentionally excluded from the preservation theorem because Pendle burns PT but not YT after maturity.",
       "buildable": true,
       "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "external_transfer_elided",
@@ -2191,7 +2302,7 @@
       "notes": "Fund-conservation benchmark for Piku's oracle-priced queued redemption flow: distributed backing + queued redemption backing + remaining backing + protocol treasury fees + project treasury fees equals initial backing. Queue execution functions are source context; the modeled settlement transition is the successful `amountPaid` callback.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "ghost_accounting_slots",
@@ -2244,7 +2355,7 @@
       "notes": "Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same predicate for floorSupply/floorBalance. This case records the corresponding state-transition preservation property over the bonding curve accounting slice as Lean theorems with no custom axioms and no sorry/admit. The broad helper-output and raw-pow witness boundaries have been removed from the theorem statements: the proof now computes the helper's multiply and `(left + DECIMAL_PRECISION - 1) / B_PLUS_1` path around a linked external `curvePow` boundary. This benchmark still does not bit-prove PRB/ABDK pow. The generated task files remain open challenge entrypoints for agents; they do not contradict the reference proof.",
       "buildable": true,
       "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "fixed_point_pow_linked_external_boundary",
@@ -2298,7 +2409,7 @@
       "notes": "The public claim theorems show successful claims validate the leaf and consume the source-network/leaf-index bitmap entry. A private reachability lemma feeds the shared helper theorem that proves successful nullifier-helper execution flips the expected bitmap bit.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "merkle_proof_summary",
@@ -2340,7 +2451,7 @@
       "notes": "Auction price band slice of Reserve DTF Protocol's RebalancingLib._price. The Verity model keeps the start/end branching plus the interior exponential decay; storage I/O and external view calls (auction + rebalance state) are folded into pure parameters.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "auction_price_band",
@@ -2384,7 +2495,7 @@
       "notes": "This case focuses on quote lifecycle conservation and single settlement for Rootstock Flyover / LBC peg-outs. The property proved here is not a Bitcoin proof verifier; it is the Rootstock-side accounting guarantee for the amount already registered by depositPegOut.",
       "buildable": true,
       "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "quote_hash_address_keyed",
@@ -2440,7 +2551,7 @@
       "notes": "Linked list reachability invariant preservation and functional correctness for the Safe OwnerManager. Based on the Certora OwnerReach.spec which defines the inListReachable and reachableInList invariants. All 15 proof tasks are complete (0 sorry) covering acyclicity, inListReachable, ownerListInvariant preservation, and isOwner functional correctness for all four operations. The unprovable stronglyAcyclic axiom was replaced with the provable uniquePredecessor property. Functional correctness proofs verify that each operation changes exactly the intended owners and leaves all others unchanged.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "threshold_elided",
@@ -2450,6 +2561,54 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Safe.OwnerManagerReach.Specs",
       "proof_target": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs"
+    },
+    {
+      "case_id": "starkware/starkgate_escrow",
+      "project": "starkware",
+      "case_name": "starkgate_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/starkware/starkgate_escrow/case.yaml",
+      "split": "active",
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/starknet-io/starkgate-contracts",
+      "upstream_commit": "07e11c39119a10d5742735be5b1d51894ebf5311",
+      "original_contract_path": "src/solidity/StarknetTokenBridge.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol",
+      "selected_functions": [
+        "deposit",
+        "withdraw",
+        "depositReclaim"
+      ],
+      "lean_target": "Benchmark.Cases.Starkware.StarkgateEscrow.Compile",
+      "failure_reason": null,
+      "notes": "Reference proofs are complete for the escrow lower-bound invariant across the three modeled transitions (deposit, withdraw, depositReclaim). Arithmetic hypotheses expose Solidity checked-arithmetic obligations (no-overflow on additions, sufficient-balance on subtractions).",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "ghost_erc20_balance",
+        "ghost_cumulative_counters",
+        "messaging_gate_elided",
+        "fee_donation_equivalent",
+        "single_token_slice"
+      ],
+      "abstraction_notes": "Focused StarkGate L1 accounting slice for the escrow lower-bound invariant. The ghost `assetBalance` represents `IERC20.balanceOf(address(this))` (or `address(this).balance` for the ETH bridge). The ghost counters `cumulativeDeposits` and `cumulativeWithdrawals` track total accepted deposits and total outflows (withdrawals plus reclaims). Cross-domain messaging (sendMessageToL2, consumeMessageFromL2, cancelL1ToL2Message) is abstracted as gates that succeed on the modeled path. The max-balance cap is modeled as a hypothesis, not an internal constraint.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "cross_domain_messaging_elided",
+        "fee_logic_donation_equivalent"
+      ],
+      "spec_target": "Benchmark.Cases.Starkware.StarkgateEscrow.Specs",
+      "proof_target": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs"
     },
     {
       "case_id": "t3tris/hwm_performance_fee",
@@ -2481,7 +2640,7 @@
       "notes": "This case targets the coverage gap not present in Cyfrin's T3tris suite: structural HWM facts are already proved, but the multi-step economic property that recovery up to the fee-accounted HWM charges no second performance fee is not.",
       "buildable": true,
       "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "arithmetic_slice",
       "abstraction_tags": [
         "hwm_performance_fee",
@@ -2531,7 +2690,7 @@
       "notes": "Clearing assignment correctness for the weekly sealed-bid uniform-price double auction: positive bid assignments respect the clearing rate floor, positive offer assignments respect the clearing rate ceiling, and assigned purchase-token principal balances exactly across both sides.",
       "buildable": true,
       "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "clearing_offset_zero",
@@ -2581,7 +2740,7 @@
       "notes": "TermMax range-order AMM slice for pricing-state transition correctness. The proof target is the highest-signal easy theorem in this family: on the successful single-segment `debtToken -> XT` exact-input path, the stored `virtualXtReserve` decreases by exactly the XT amount implied by the curve.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "exact_in_xt_only",
@@ -2632,7 +2791,7 @@
       "notes": "Active AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. Promoted from the backlog with complete hidden reference proofs, plus harder multi-swap monotonicity and sandwich output-bound tasks layered on the same slice.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "amm_invariant",
@@ -2678,7 +2837,7 @@
       "notes": "Usual USD0 DaoCollateral conservation case. It verifies that no direct swap/redeem transition can create unaccounted ghost USD0 supply or debit more ghost collateral than the contract's modeled accounting permits, modulo configured redeem fee, oracle price, CBR coefficient, token decimals, and floor rounding.",
       "buildable": true,
       "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "oracle_price_explicit",
@@ -2733,7 +2892,7 @@
       "notes": "Wildcat V2 borrow safety slice proving that a successful positive borrow cannot pull market assets below the liquidity requirement computed from the updated state used by the borrow guard. The required liquidity includes the reserve-ratio-backed portion of non-pending supply, 100% of pending withdrawals, 100% of normalized unclaimed withdrawals, and updated accrued protocol fees.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "borrow_liquidity_slice",
@@ -2840,7 +2999,7 @@
       "notes": "ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance \u2192 silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "fhe_homomorphic_plaintext_equivalence",
@@ -2891,7 +3050,7 @@
       "notes": "This case targets the v3 decoder/callee mismatch class that required custom verifiers in Zodiac Roles v2. The theorem scope covers static values, dynamic bytes/string, tuples, dynamic arrays, nested AbiEncoded, and transparent logical wrappers. Operator.Custom, Zip, Slice, Pluck, MultiSendUnwrapper, comparison consumption, and external calls are intentionally out of scope.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "lazy_abi_decoder",
@@ -2936,7 +3095,7 @@
       "notes": "Pending private repository access and target selection.",
       "buildable": false,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "inaccessible_upstream",
       "abstraction_tags": [
         "intake_placeholder",
@@ -2951,6 +3110,51 @@
     }
   ],
   "tasks": [
+    {
+      "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+      "task_id": "quote_exact_in_curve_safety",
+      "case_id": "1inch/xycswap_curve_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/1inch/xycswap_curve_safety/tasks/quote_exact_in_curve_safety.yaml",
+      "split": "active",
+      "family_id": "1inch",
+      "implementation_id": "aqua_xycswap",
+      "source_ref": "https://github.com/1inch/aqua@81c26e4619ce21556ab02b3284ee2685de21fb18:examples/apps/XYCSwap.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.quoteExactIn_curve_safety",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/1inch/xycswap_curve_safety/verity/Contract.lean",
+        "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/1inch/xycswap_curve_safety/verity/Specs.lean",
+        "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneInch/XYCSwapCurveSafety/Tasks/QuoteExactInCurveSafety.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task captures the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The output of _quoteExactIn satisfies the integer division rounding bound that prevents over-extraction of maker reserves.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
     {
       "task_ref": "alchemix/earmark_conservation/earmark_preserves_invariant",
       "task_id": "earmark_preserves_invariant",
@@ -10386,6 +10590,153 @@
       }
     },
     {
+      "task_ref": "starkware/starkgate_escrow/deposit_preserves_escrow_lower_bound",
+      "task_id": "deposit_preserves_escrow_lower_bound",
+      "case_id": "starkware/starkgate_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/starkware/starkgate_escrow/tasks/deposit_preserves_escrow_lower_bound.yaml",
+      "split": "active",
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "source_ref": "https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "escrow_lower_bound",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Starkware.StarkgateEscrow.deposit_preserves_escrow_lower_bound",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/starkware/starkgate_escrow/verity/Contract.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/starkware/starkgate_escrow/verity/Specs.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/DepositPreservesEscrowLowerBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Deposit transition proof for the StarkGate escrow lower-bound invariant. Shows that increasing both the ghost balance and cumulative deposits by the same amount preserves balance >= deposits - withdrawals.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "cross_domain_messaging_elided",
+        "fee_logic_donation_equivalent"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "starkware/starkgate_escrow/deposit_reclaim_preserves_escrow_lower_bound",
+      "task_id": "deposit_reclaim_preserves_escrow_lower_bound",
+      "case_id": "starkware/starkgate_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/starkware/starkgate_escrow/tasks/deposit_reclaim_preserves_escrow_lower_bound.yaml",
+      "split": "active",
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "source_ref": "https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "escrow_lower_bound",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Starkware.StarkgateEscrow.depositReclaim_preserves_escrow_lower_bound",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/starkware/starkgate_escrow/verity/Contract.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/starkware/starkgate_escrow/verity/Specs.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/DepositReclaimPreservesEscrowLowerBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Deposit reclaim transition proof for the StarkGate escrow lower-bound invariant. Reclaims return previously-deposited funds; they decrease the ghost balance and increase cumulative withdrawals, preserving the lower bound given the contract requires amount <= balance.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "cross_domain_messaging_elided",
+        "fee_logic_donation_equivalent"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "starkware/starkgate_escrow/withdraw_preserves_escrow_lower_bound",
+      "task_id": "withdraw_preserves_escrow_lower_bound",
+      "case_id": "starkware/starkgate_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/starkware/starkgate_escrow/tasks/withdraw_preserves_escrow_lower_bound.yaml",
+      "split": "active",
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "source_ref": "https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "escrow_lower_bound",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Starkware.StarkgateEscrow.withdraw_preserves_escrow_lower_bound",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/starkware/starkgate_escrow/verity/Contract.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/starkware/starkgate_escrow/verity/Specs.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/WithdrawPreservesEscrowLowerBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Withdrawal transition proof for the StarkGate escrow lower-bound invariant. Shows that decreasing the ghost balance and increasing cumulative withdrawals by the same amount preserves balance >= deposits - withdrawals, given the contract requires amount <= balance.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "cross_domain_messaging_elided",
+        "fee_logic_donation_equivalent"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply",
       "task_id": "fee_claim_preserves_unclaimed_le_supply",
       "case_id": "t3tris/hwm_performance_fee",
@@ -12768,5 +13119,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-15T16:14:08.779976+00:00"
+  "generated_at": "2026-07-15T19:08:12.590687+00:00"
 }
