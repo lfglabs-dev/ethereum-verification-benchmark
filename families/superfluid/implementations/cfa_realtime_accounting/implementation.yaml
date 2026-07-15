@@ -1,0 +1,18 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: superfluid
+implementation_id: cfa_realtime_accounting
+display_name: Superfluid Constant Flow Agreement V1 realtime accounting
+split: active
+status: translated
+upstream_repo: https://github.com/superfluid-finance/protocol-monorepo
+upstream_commit: 414109689d9041a8b6900b67b947f3f203c1da5d
+source_language: solidity
+source_artifact_path: packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol
+case_ids:
+  - superfluid/realtime_balance_conservation
+notes: >
+  CFA endpoint settlement and opposite-rate updates in a hand-translated decoded
+  model, including an explicitly assumed one-level receiver-SuperApp same-flow
+  self-delete callback schedule. Source key and Host execution fidelity are audited
+  translation assumptions, not kernel-proved Solidity semantics.

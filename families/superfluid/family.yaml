@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: superfluid
+display_name: Superfluid
+split: active
+status: active
+description: >
+  Hand-translated Superfluid agreement-accounting benchmarks over realtime token
+  balances, continuous flows, and explicitly scoped callback schedules.
+implementation_ids:
+  - cfa_realtime_accounting
+case_ids:
+  - superfluid/realtime_balance_conservation
+source_languages:
+  - solidity
