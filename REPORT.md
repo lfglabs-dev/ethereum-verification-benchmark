@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 33
-- Implementations: 34
-- Active cases: 33
-- Buildable active cases: 33
-- Active tasks: 200
+- Families: 34
+- Implementations: 35
+- Active cases: 34
+- Buildable active cases: 34
+- Active tasks: 214
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -322,6 +322,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `borrow`, `_getUpdatedState`, `liquidityRequired`, `borrowableAssets`
 - Upstream source artifact: `src/market/WildcatMarket.sol`
 - Notes: Wildcat V2 borrow safety slice proving that a successful positive borrow cannot pull market assets below the liquidity requirement computed from the updated state used by the borrow guard. The required liquidity includes the reserve-ratio-backed portion of non-pending supply, 100% of pending withdrawals, 100% of normalized unclaimed withdrawals, and updated accrued protocol fees.
+
+### `yo_protocol/async_redemption_escrow`
+- Family / implementation: `yo_protocol` / `core_v2`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Compile`
+- Source ref: `https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol`
+- Selected functions: `YoVault.requestRedeem`, `YoVault.redeem`, `YoVault.fulfillRedeem`, `YoVault.cancelRedeem`, `YoVault.updateWithdrawFee`, `YoVault.updateFeeRecipient`, `YoVault._withdraw`, `YoVault._getAvailableBalance`, `AuthUpgradeable.isAuthorized`
+- Upstream source artifact: `src/YoVault.sol`
+- Notes: The reviewed case has 14 generated theorem interfaces, all version 2, with matching proof-complete reference declarations. Independent Phase 2 and Phase 3 review gates passed. The deployment context is Base yoUSD at block 48,628,300 as recorded in Phase 1; this case proves the pinned source lifecycle, not the snapshot's current configuration.
 
 ### `zama/erc7984_confidential_token`
 - Family / implementation: `zama` / `confidential_contracts`
@@ -2198,6 +2208,146 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/wildcat/borrow_liquidity_safety/verity/Specs.lean`, `Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Wildcat/BorrowLiquiditySafety/Tasks/PositiveBorrowPreservesRequiredLiquidity.lean`
 - Hidden reference solution: `Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs`
+
+### `yo_protocol/async_redemption_escrow/cancel_redeem_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.cancel_redeem_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/CancelRedeemExactAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/candidate_g_source_reachability`
+- Track / property class / proof family: `proof-only` / `source_reachable_counterexample_coverage` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.candidate_g_source_reachability`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/CandidateGSourceReachability.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/fee_aliasing`
+- Track / property class / proof family: `proof-only` / `fee_rounding_and_aliasing` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fee_aliasing`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FeeAliasingUsesCurrentFee.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/fulfill_redeem_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_invariant` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fulfill_redeem_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FulfillRedeemExactAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/full_clear_requeue_replay`
+- Track / property class / proof family: `proof-only` / `replay_lifecycle` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.full_clear_requeue_replay`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FullClearRequeueReplay.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/lifecycle_bounds_and_isolation`
+- Track / property class / proof family: `proof-only` / `per_receiver_isolation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_bounds_and_isolation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/LifecycleBoundsAndIsolation.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/lifecycle_rollback`
+- Track / property class / proof family: `proof-only` / `revert_atomicity` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_rollback`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/LifecycleFailureRollsBack.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/malformed_pair_lifecycle`
+- Track / property class / proof family: `proof-only` / `malformed_record_behavior` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.malformed_pair_lifecycle`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/MalformedPairDormancyAndRevival.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/owner_fallback_authorization`
+- Track / property class / proof family: `proof-only` / `owner_fallback_and_authority_order` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.owner_fallback_authorization`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/OwnerFallbackAuthorization.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/queued_request_aggregation`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.queued_request_aggregation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/QueuedRequestAggregatesReceiver.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/redeem_wrapper`
+- Track / property class / proof family: `proof-only` / `wrapper_delegation_and_pause` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.redeem_wrapper`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/RedeemWrapperDelegates.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/request_redeem_branching`
+- Track / property class / proof family: `proof-only` / `branch_correctness` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.request_redeem_branching`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/RequestRedeemPreservesBranches.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/two_owner_queue_aggregation`
+- Track / property class / proof family: `proof-only` / `receiver_aggregation` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.two_owner_queue_aggregation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/TwoOwnerQueueAggregatesReceiver.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/zero_component_lifecycle`
+- Track / property class / proof family: `proof-only` / `source_permitted_noop` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.zero_component_lifecycle`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/ZeroComponentLifecycleNoop.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
 
 ### `zama/erc7984_confidential_token/burn_decreases_supply`
 - Track / property class / proof family: `proof-only` / `supply_update` / `functional_correctness`

@@ -1,0 +1,68 @@
+manifest_kind: case
+project: yo_protocol
+case_id: async_redemption_escrow
+schema_version: 1
+split: active
+family_id: yo_protocol
+implementation_id: core_v2
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/yoprotocol/core-v2
+upstream_commit: 7b023145cc99bc424e57ffa554584c609a1ecb30
+audit_target_commit: 7b023145cc99bc424e57ffa554584c609a1ecb30
+original_contract_path: src/YoVault.sol
+source_ref: https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol
+lean_target: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Compile
+spec_target: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Specs
+proof_target: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs
+selected_functions:
+  - YoVault.requestRedeem
+  - YoVault.redeem
+  - YoVault.fulfillRedeem
+  - YoVault.cancelRedeem
+  - YoVault.updateWithdrawFee
+  - YoVault.updateFeeRecipient
+  - YoVault._withdraw
+  - YoVault._getAvailableBalance
+  - AuthUpgradeable.isAuthorized
+source_language: solidity
+verity_version: 1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - receiver_keyed_pending_struct_split
+  - oracle_preview_explicit_input
+  - oracle_preview_success_outcome
+  - external_balance_snapshot_input
+  - external_balance_read_success_outcome
+  - authority_outcome_explicit_input
+  - trusted_external_outcome_revert_abstraction
+  - no_callback_modeled_state_mutation
+  - pinned_underlying_not_vault
+  - erc20_well_formed_unchecked_update
+  - current_fee_on_total_rounding
+  - lifecycle_only_no_manage_or_upgrade
+abstraction_notes: >
+  Source-close model for requestRedeem, public redeem, fulfillRedeem,
+  cancelRedeem, _withdraw, _getAvailableBalance, fee configuration, and
+  AuthUpgradeable.isAuthorized. Successful oracle preview and balance-read
+  outcomes, selector authority outcomes, and SafeERC20 outcomes are explicit
+  trusted boundary abstractions; they are not executable token semantics. During
+  any authority, preview/read, or token boundary, no callback may mutate any
+  modeled vault state. Pending assets are gross units; fulfillment uses the
+  current fee-on-total configuration. The pinned underlying is constrained
+  distinct from the vault where relevant. Events, unrelated ERC-4626 behavior,
+  manage calls between lifecycle transitions, and later proxy upgrades remain
+  excluded.
+unsupported_feature_codes:
+  - external_authority_contract_state_not_modeled
+  - external_erc20_balance_state_not_modeled
+  - oracle_price_correctness_not_modeled
+notes: >
+  The reviewed case has 14 generated theorem interfaces, all version 2, with
+  matching proof-complete reference declarations. Independent Phase 2 and
+  Phase 3 review gates passed. The deployment context is Base yoUSD at block
+  48,628,300 as recorded in Phase 1; this case proves the pinned source
+  lifecycle, not the snapshot's current configuration.
