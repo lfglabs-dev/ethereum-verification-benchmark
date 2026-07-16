@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 35,
-    "implementation_count": 36,
-    "active_case_count": 35,
+    "family_count": 36,
+    "implementation_count": 37,
+    "active_case_count": 36,
     "backlog_case_count": 1,
-    "active_task_count": 204,
+    "active_task_count": 218,
     "backlog_task_count": 0,
-    "buildable_case_count": 35,
-    "runnable_task_count": 204,
+    "buildable_case_count": 36,
+    "runnable_task_count": 218,
     "case_stage_counts": {
-      "build_green": 28,
+      "build_green": 29,
       "candidate": 1,
       "proof_complete": 7
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 35
+      "translated": 36
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 28,
+      "complete": 29,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 204
+      "proof-only": 218
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -41,9 +41,9 @@
       "accounting_bound": 18,
       "accounting_conservation": 15,
       "accounting_effect": 2,
-      "accounting_invariant": 2,
+      "accounting_invariant": 3,
       "accounting_invariant_break": 1,
-      "accounting_update": 8,
+      "accounting_update": 10,
       "additivity": 1,
       "all_or_nothing": 3,
       "arithmetic_rounding": 6,
@@ -57,6 +57,7 @@
       "batch_completeness": 2,
       "biconditional_invariant": 3,
       "bounds_invariant": 1,
+      "branch_correctness": 1,
       "calldata_decoder_bounds": 1,
       "calldata_decoder_faithfulness": 1,
       "calldata_decoder_metadata": 1,
@@ -73,6 +74,7 @@
       "fee_base_correctness": 2,
       "fee_conservation": 5,
       "fee_payout_bound": 1,
+      "fee_rounding_and_aliasing": 1,
       "fee_trigger": 1,
       "frame_property": 2,
       "functional_property": 1,
@@ -84,6 +86,7 @@
       "linked_list_acyclicity": 4,
       "linked_list_invariant": 8,
       "liveness_invariant": 1,
+      "malformed_record_behavior": 1,
       "mapping_consistency": 1,
       "minimum_output_gate": 1,
       "monotonic_counter": 2,
@@ -93,17 +96,24 @@
       "noninterference": 1,
       "output_range": 2,
       "overflow_safety": 1,
+      "owner_fallback_and_authority_order": 1,
+      "per_receiver_isolation": 1,
       "pps_nondecrease": 1,
       "price_band": 2,
       "price_computation": 5,
       "price_floor": 1,
+      "receiver_aggregation": 1,
       "redemption_reserve_guard": 1,
+      "replay_lifecycle": 1,
       "replay_protection": 2,
       "reserve_state_transition": 5,
+      "revert_atomicity": 1,
       "revert_safety": 1,
       "safety_invariant": 2,
       "scope_invariant": 1,
       "silent_failure": 2,
+      "source_permitted_noop": 1,
+      "source_reachable_counterexample_coverage": 1,
       "storage_update": 3,
       "storage_write": 6,
       "subtree_partition": 1,
@@ -113,17 +123,18 @@
       "threshold_partition": 1,
       "total_conservation": 1,
       "tree_conservation": 1,
-      "weighted_selection": 1
+      "weighted_selection": 1,
+      "wrapper_delegation_and_pause": 1
     },
     "task_proof_family_counts": {
-      "authorization_enablement": 25,
+      "authorization_enablement": 26,
       "functional_correctness": 57,
-      "protocol_transition_correctness": 26,
+      "protocol_transition_correctness": 35,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 54
+      "state_preservation_local_effects": 58
     },
     "family_split_counts": {
-      "active": 34,
+      "active": 35,
       "mixed": 1
     }
   },
@@ -690,6 +701,23 @@
         "solidity"
       ],
       "manifest_path": "families/wildcat/family.yaml"
+    },
+    {
+      "family_id": "yo_protocol",
+      "display_name": "YO Protocol",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for YO Protocol vault accounting, beginning with the receiver-keyed asynchronous redemption escrow lifecycle.",
+      "implementation_ids": [
+        "core_v2"
+      ],
+      "case_ids": [
+        "yo_protocol/async_redemption_escrow"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/yo_protocol/family.yaml"
     },
     {
       "family_id": "zama",
@@ -1270,6 +1298,22 @@
       ],
       "notes": "Implementation entry for Wildcat V2. This benchmark case isolates the borrow path and proves the positive-borrow liquidity preservation property against the tagged `v2.0.0` market logic.",
       "manifest_path": "families/wildcat/implementations/v2_protocol/implementation.yaml"
+    },
+    {
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "display_name": "YO Protocol Core V2",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/yoprotocol/core-v2",
+      "upstream_commit": "7b023145cc99bc424e57ffa554584c609a1ecb30",
+      "source_language": "solidity",
+      "source_artifact_path": "src/YoVault.sol",
+      "case_ids": [
+        "yo_protocol/async_redemption_escrow"
+      ],
+      "notes": "Pinned Core V2 implementation whose YoVault redemption lifecycle is inherited unchanged by the reviewed Base yoUSD proxy implementation.",
+      "manifest_path": "families/yo_protocol/implementations/core_v2/implementation.yaml"
     },
     {
       "family_id": "zama",
@@ -2860,6 +2904,67 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Specs",
       "proof_target": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs"
+    },
+    {
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "project": "yo_protocol",
+      "case_name": "async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/case.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/yoprotocol/core-v2",
+      "upstream_commit": "7b023145cc99bc424e57ffa554584c609a1ecb30",
+      "original_contract_path": "src/YoVault.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "selected_functions": [
+        "YoVault.requestRedeem",
+        "YoVault.redeem",
+        "YoVault.fulfillRedeem",
+        "YoVault.cancelRedeem",
+        "YoVault.updateWithdrawFee",
+        "YoVault.updateFeeRecipient",
+        "YoVault._withdraw",
+        "YoVault._getAvailableBalance",
+        "AuthUpgradeable.isAuthorized"
+      ],
+      "lean_target": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Compile",
+      "failure_reason": null,
+      "notes": "The reviewed case has 14 generated theorem interfaces, all version 2, with matching proof-complete reference declarations. Independent Phase 2 and Phase 3 review gates passed. The deployment context is Base yoUSD at block 48,628,300 as recorded in Phase 1; this case proves the pinned source lifecycle, not the snapshot's current configuration.",
+      "buildable": true,
+      "verity_commit": "1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "receiver_keyed_pending_struct_split",
+        "oracle_preview_explicit_input",
+        "oracle_preview_success_outcome",
+        "external_balance_snapshot_input",
+        "external_balance_read_success_outcome",
+        "authority_outcome_explicit_input",
+        "trusted_external_outcome_revert_abstraction",
+        "no_callback_modeled_state_mutation",
+        "pinned_underlying_not_vault",
+        "erc20_well_formed_unchecked_update",
+        "current_fee_on_total_rounding",
+        "lifecycle_only_no_manage_or_upgrade"
+      ],
+      "abstraction_notes": "Source-close model for requestRedeem, public redeem, fulfillRedeem, cancelRedeem, _withdraw, _getAvailableBalance, fee configuration, and AuthUpgradeable.isAuthorized. Successful oracle preview and balance-read outcomes, selector authority outcomes, and SafeERC20 outcomes are explicit trusted boundary abstractions; they are not executable token semantics. During any authority, preview/read, or token boundary, no callback may mutate any modeled vault state. Pending assets are gross units; fulfillment uses the current fee-on-total configuration. The pinned underlying is constrained distinct from the vault where relevant. Events, unrelated ERC-4626 behavior, manage calls between lifecycle transitions, and later proxy upgrades remain excluded.",
+      "unsupported_feature_codes": [
+        "external_authority_contract_state_not_modeled",
+        "external_erc20_balance_state_not_modeled",
+        "oracle_price_correctness_not_modeled"
+      ],
+      "spec_target": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Specs",
+      "proof_target": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs"
     },
     {
       "case_id": "zama/erc7984_confidential_token",
@@ -11677,6 +11782,660 @@
       }
     },
     {
+      "task_ref": "yo_protocol/async_redemption_escrow/cancel_redeem_accounting",
+      "task_id": "cancel_redeem_accounting",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/cancel_redeem_accounting.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.cancel_redeem_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/CancelRedeemExactAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Explicitly proves a successful ContractResult for independent cancellation decrements and transfer to receiver, including receiver-vault aliasing without an invalid net-balance claim.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/candidate_g_source_reachability",
+      "task_id": "candidate_g_source_reachability",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/candidate_g_source_reachability.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "source_reachable_counterexample_coverage",
+      "category": "malformed-pending-pairs",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.candidate_g_source_reachability",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/CandidateGSourceReachability.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Builds the positive (100 shares, 200 gross assets) pair through requestRedeem, then covers every source-permitted zero-component fulfillment/cancellation shape and the positive non-proportional (1,199) fulfillment.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/fee_aliasing",
+      "task_id": "fee_aliasing",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/fee_aliasing.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_rounding_and_aliasing",
+      "category": "redemption-lifecycle",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fee_aliasing",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FeeAliasingUsesCurrentFee.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Queues a pair, changes the source fee through owner-authorized configuration, then covers zero/nonzero fee-recipient branches, receiver-fee-recipient alias, and conditional second-transfer rollback without asserting token balances.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/fulfill_redeem_accounting",
+      "task_id": "fulfill_redeem_accounting",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/fulfill_redeem_accounting.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_invariant",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fulfill_redeem_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FulfillRedeemExactAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves a successful ContractResult for the accepted narrow per-receiver accounting invariant, pooled share burn, supply burn, and current fee split.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/full_clear_requeue_replay",
+      "task_id": "full_clear_requeue_replay",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/full_clear_requeue_replay.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "replay_lifecycle",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.full_clear_requeue_replay",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FullClearRequeueReplay.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Replay prevention is intentionally immediate only. The interface supplies a distinct funded request owner and enough initial supply for both burns.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/lifecycle_bounds_and_isolation",
+      "task_id": "lifecycle_bounds_and_isolation",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/lifecycle_bounds_and_isolation.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "per_receiver_isolation",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_bounds_and_isolation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/LifecycleBoundsAndIsolation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Direct-write isolation is scoped to the explicit environment in which no authority/token callback mutates any modeled vault state during the call.",
+      "unsupported_feature_codes": [
+        "stateful_external_reentry_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/lifecycle_rollback",
+      "task_id": "lifecycle_rollback",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/lifecycle_rollback.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "revert_atomicity",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_rollback",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/LifecycleFailureRollsBack.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Verifies observable rollback after reaching authority, pause, receiver-transfer, and conditional nonzero-fee-transfer failure boundaries.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/malformed_pair_lifecycle",
+      "task_id": "malformed_pair_lifecycle",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/malformed_pair_lifecycle.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "malformed_record_behavior",
+      "category": "malformed-pending-pairs",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.malformed_pair_lifecycle",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/MalformedPairDormancyAndRevival.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Constructs one-sided records through queued source transitions and permitted settlements, then proves both dormant guards and positive-gross repair queues.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/owner_fallback_authorization",
+      "task_id": "owner_fallback_authorization",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/owner_fallback_authorization.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "owner_fallback_and_authority_order",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.owner_fallback_authorization",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/OwnerFallbackAuthorization.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A nonzero authority successfully returning false falls back to the stored owner. A reverted authority call still blocks that owner because source evaluation invokes canCall before the owner comparison.",
+      "unsupported_feature_codes": [
+        "external_authority_contract_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/queued_request_aggregation",
+      "task_id": "queued_request_aggregation",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/queued_request_aggregation.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "redemption-lifecycle",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.queued_request_aggregation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/QueuedRequestAggregatesReceiver.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Requires successful preview/balance-read outcomes and checked pending adds for receiver-keyed aggregation and pooled vault-share movement.",
+      "unsupported_feature_codes": [
+        "oracle_price_correctness_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/redeem_wrapper",
+      "task_id": "redeem_wrapper",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/redeem_wrapper.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "wrapper_delegation_and_pause",
+      "category": "redemption-lifecycle",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.redeem_wrapper",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/RedeemWrapperDelegates.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Models the selected public ERC-4626 redeem wrapper, including its own pause guard before requestRedeem delegation and explicit successful preview/balance read outcomes.",
+      "unsupported_feature_codes": [
+        "oracle_price_correctness_not_modeled",
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/request_redeem_branching",
+      "task_id": "request_redeem_branching",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/request_redeem_branching.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "branch_correctness",
+      "category": "redemption-lifecycle",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.request_redeem_branching",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/RequestRedeemPreservesBranches.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The successful gross preview and external balance read are explicit outcome assumptions; the task proves a successful instant or queued branch result.",
+      "unsupported_feature_codes": [
+        "oracle_price_correctness_not_modeled",
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/two_owner_queue_aggregation",
+      "task_id": "two_owner_queue_aggregation",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/two_owner_queue_aggregation.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "receiver_aggregation",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.two_owner_queue_aggregation",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/TwoOwnerQueueAggregatesReceiver.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Positive-gross sequential distinct-owner requests use separate sender contexts, checked pending and pooled-vault sequential capacity, and aggregate without owner provenance.",
+      "unsupported_feature_codes": [
+        "oracle_price_correctness_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/zero_component_lifecycle",
+      "task_id": "zero_component_lifecycle",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/zero_component_lifecycle.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "source_permitted_noop",
+      "category": "malformed-pending-pairs",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.zero_component_lifecycle",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/ZeroComponentLifecycleNoop.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Guards intentionally retain no source-absent positivity check. Success and EVM-observable storage/mapping equality exclude Verity known-address metadata.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "zama/erc7984_confidential_token/burn_decreases_supply",
       "task_id": "burn_decreases_supply",
       "case_id": "zama/erc7984_confidential_token",
@@ -12360,5 +13119,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-13T07:13:55.173042+00:00"
+  "generated_at": "2026-07-15T19:08:12.590687+00:00"
 }

@@ -50,6 +50,7 @@ active_cases = [
   "uniswap_v2/pair_fee_adjusted_swap",
   "usual/dao_collateral",
   "wildcat/borrow_liquidity_safety",
+  "yo_protocol/async_redemption_escrow",
   "zodiac/roles_decoder_faithfulness",
   "zama/erc7984_confidential_token",
 ]
