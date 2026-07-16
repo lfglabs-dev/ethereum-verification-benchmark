@@ -104,9 +104,15 @@ def _invalid_package_checkouts() -> list[str]:
     packages = ROOT / ".lake" / "packages"
     if not packages.is_dir():
         return []
+    manifest = json.loads((ROOT / "lake-manifest.json").read_text(encoding="utf-8"))
+    manifest_packages = {
+        package["name"]
+        for package in manifest.get("packages", [])
+        if isinstance(package, dict) and isinstance(package.get("name"), str)
+    }
     invalid = []
     for package in sorted(packages.iterdir()):
-        if not package.is_dir():
+        if not package.is_dir() or package.name not in manifest_packages:
             continue
         completed = subprocess.run(
             ["git", "-C", str(package), "rev-parse", "--verify", "HEAD"],

@@ -10,6 +10,7 @@ from unittest.mock import patch
 from harness.classification import classify_run
 from harness.manifests import Group, Task
 from harness.workspace_builder import (
+    _invalid_package_checkouts,
     _prefetch_mathlib_cache,
     _validate_effective_toolchain,
     _wait_for_package_checkouts,
@@ -152,6 +153,26 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "passed")
         self.assertEqual(sleep.call_count, 2)
+
+    def test_checkout_health_ignores_packages_outside_current_manifest(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            packages = root / ".lake" / "packages"
+            (packages / "mathlib").mkdir(parents=True)
+            (packages / "abandoned-checkout").mkdir()
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "mathlib"}]}', encoding="utf-8"
+            )
+            with patch("harness.workspace_builder.ROOT", root), patch(
+                "harness.workspace_builder.subprocess.run"
+            ) as run:
+                run.return_value.returncode = 0
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, [])
+        run.assert_called_once()
+        self.assertEqual(run.call_args.args[0][2], str(packages / "mathlib"))
 
     def test_failed_cache_prefetch_does_not_fail_required_warm(self) -> None:
         self.assertFalse(
