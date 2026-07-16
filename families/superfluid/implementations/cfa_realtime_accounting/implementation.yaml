@@ -13,6 +13,13 @@ case_ids:
   - superfluid/realtime_balance_conservation
 notes: >
   CFA endpoint settlement and opposite-rate updates in a hand-translated decoded
-  model, including an explicitly assumed one-level receiver-SuperApp same-flow
-  self-delete callback schedule. Source key and Host execution fidelity are audited
-  translation assumptions, not kernel-proved Solidity semantics.
+  model, with a fixed duplicate-free account-list modular projection and a factored
+  one-level receiver-SuperApp same-flow self-delete schedule. The behavioral hook
+  executes supplied Verity Contracts and rejects level 2, but deliberately is not
+  complete Host ABI/context semantics; the concrete instance retains actor, app,
+  token/context, registry, noop, jailed, and credit guards. Source key and Host
+  execution fidelity remain audited translation assumptions, not kernel-proved
+  Solidity semantics. The completed reference proof suite covers all 22 tasks,
+  including finite-list modular projection preservation at every later observation
+  time, typed one-level composition, nested-revert rollback, and the concrete
+  factored SelfDeleting callback instance.

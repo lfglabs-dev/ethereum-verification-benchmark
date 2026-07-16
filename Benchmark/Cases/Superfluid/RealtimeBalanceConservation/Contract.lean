@@ -433,7 +433,8 @@ verity_contract SuperfluidCFA where
     setMapping2 flowExists sender receiver 0
     _requireCfaOnlyAvailableNonnegative sender currentTimestamp
 
-  function createFlowToAppWithReceiverDeleteCallback
+  -- Source-pinned checks and CREATE_FLOW writes before the enabled after-created callback.
+  function internal _receiverDeleteCallbackOuterPrefix
       (sender : Address, receiver : Address, newFlowRate : Uint256, liquidationPeriod : Uint256,
        minimumDeposit : Uint256, currentTimestamp : Uint256) : Uint256 := do
     require (receiver != 0) "CFA_ZERO_ADDRESS_RECEIVER"
@@ -496,14 +497,22 @@ verity_contract SuperfluidCFA where
     -- Outer CREATE_FLOW before callback (the before-created hook is configured NOOP).
     _changeFlow sender receiver newFlowRate newDeposit currentTimestamp
     setMapping2 flowExists sender receiver 1
+    return newDeposit
 
-    -- SelfDeletingFlowTestApp.afterAgreementCreated calls deleteFlow through Host context.
+  -- Level-1 `SelfDeletingFlowTestApp.afterAgreementCreated` contextual delete.
+  -- The exact `(sender, receiver, timestamp)` parameters are supplied by the concrete runner.
+  function internal _receiverDeleteCallbackNestedDelete
+      (sender : Address, receiver : Address, currentTimestamp : Uint256) : Unit := do
+    -- This selected receiver-initiated same-flow branch requests `appToCallback = 0`
+    -- (CFA:551-564); that source fact is distinct from generic level-2 rejection.
     _requireCfaOnlyAvailableNonnegative sender currentTimestamp
     _requireExistingZeroOwedFlow sender receiver
     _changeFlow sender receiver 0 0 currentTimestamp
     setMapping2 flowExists sender receiver 0
 
-    -- Outer _changeFlowToApp reload plus appCreditDelta = 0 reconciliation.
+  -- Outer `_changeFlowToApp` reload and zero-credit reconciliation after nested success.
+  function internal _receiverDeleteCallbackOuterResume
+      (sender : Address, receiver : Address, currentTimestamp : Uint256) : Uint256 := do
     let reloadedFlowRate ← getMapping2 flowRates sender receiver
     let reloadedFlowOwed ← getMapping2 flowOwedDeposits sender receiver
     require (reloadedFlowOwed == 0) "CFA_RELOADED_OWED_DEPOSIT"
@@ -512,5 +521,58 @@ verity_contract SuperfluidCFA where
     _requireCfaOnlyAvailableNonnegative sender currentTimestamp
     _requireCfaOnlyAvailableNonnegative receiver currentTimestamp
     return reloadedFlowRate
+
+/-!
+The behavioral hook below abstracts only the selected callback stack discipline. It is
+not a complete Host ABI/context-validation model; the concrete outer prefix above keeps
+the actor/app/token/context, registry, noop, jailed, credit, and source guards.
+
+The sequencing intentionally uses Verity `bind`: `.lake/packages/verity/Verity/Core.lean`
+lines 291-295 skip a continuation after revert, while lines 296-301 make top-level
+`Contract.run` restore the original pre-call state. Thus a nested revert cannot reach
+`outerResume`, and the top-level result carries the pre-prefix state.
+-/
+
+/-- Execute the supplied callback program at the permitted level and reject every other
+level before its program can execute. Public properties expose the required `level ≥ 2`
+case; level zero is outside this pushed-callback abstraction. -/
+def behavioralOneLevelCallback {α : Type} (level : Nat) (nested : Contract α) : Contract α :=
+  if level = 1 then
+    nested
+  else
+    Verity.bind (Verity.require false "HOST_CALLBACK_LEVEL_EXCEEDED") (fun _ => nested)
+
+/-- Typed outer-prefix / level-1 nested call / outer-resume composition. -/
+def runOneLevelOuterNested {α β γ : Type}
+    (outerPrefix : Contract α)
+    (nested : α → Contract β)
+    (outerResume : α → β → Contract γ) : Contract γ := do
+  let prefixValue ← outerPrefix
+  let nestedValue ← behavioralOneLevelCallback 1 (nested prefixValue)
+  outerResume prefixValue nestedValue
+
+/-- Pinned create-only SelfDeletingFlowTestApp schedule, implemented through the
+factored behavioral runner while retaining its existing public name and type. -/
+def SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback
+    (sender receiver : Address) (newFlowRate liquidationPeriod minimumDeposit
+      currentTimestamp : Uint256) : Contract Uint256 :=
+  runOneLevelOuterNested
+    (SuperfluidCFA._receiverDeleteCallbackOuterPrefix sender receiver newFlowRate
+      liquidationPeriod minimumDeposit currentTimestamp)
+    (fun _ => SuperfluidCFA._receiverDeleteCallbackNestedDelete sender receiver currentTimestamp)
+    (fun _ _ => SuperfluidCFA._receiverDeleteCallbackOuterResume sender receiver currentTimestamp)
+
+/-- Executable regression: nested failure rolls the prefix write back and never exposes
+the resume poison write. -/
+def nestedFailureRollbackWitnessProgram : Contract Unit :=
+  runOneLevelOuterNested
+    (setStorage (⟨40⟩ : StorageSlot Uint256) 1)
+    (fun _ => Verity.require false "NESTED_FAIL")
+    (fun _ _ => setStorage (⟨40⟩ : StorageSlot Uint256) 2)
+
+theorem nestedFailureRollbackWitness :
+    nestedFailureRollbackWitnessProgram.run defaultState =
+      ContractResult.revert "NESTED_FAIL" defaultState := by
+  rfl
 
 end Benchmark.Cases.Superfluid.RealtimeBalanceConservation

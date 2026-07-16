@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 33
-- Implementations: 34
-- Active cases: 33
-- Buildable active cases: 33
-- Active tasks: 200
+- Families: 34
+- Implementations: 35
+- Active cases: 34
+- Buildable active cases: 34
+- Active tasks: 222
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -262,6 +262,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `addOwnerWithThreshold`, `removeOwner`, `swapOwner`, `setupOwners`
 - Upstream source artifact: `contracts/base/OwnerManager.sol`
 - Notes: Linked list reachability invariant preservation and functional correctness for the Safe OwnerManager. Based on the Certora OwnerReach.spec which defines the inListReachable and reachableInList invariants. All 15 proof tasks are complete (0 sorry) covering acyclicity, inListReachable, ownerListInvariant preservation, and isOwner functional correctness for all four operations. The unprovable stronglyAcyclic axiom was replaced with the provable uniquePredecessor property. Functional correctness proofs verify that each operation changes exactly the intended owners and leaves all others unchanged.
+
+### `superfluid/realtime_balance_conservation`
+- Family / implementation: `superfluid` / `cfa_realtime_accounting`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Compile`
+- Source ref: `https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol`
+- Selected functions: `SuperfluidToken.realtimeBalanceOf`, `ConstantFlowAgreementV1._createFlow`, `ConstantFlowAgreementV1._updateFlow`, `ConstantFlowAgreementV1._deleteFlow`, `ConstantFlowAgreementV1._changeFlowToNonApp`, `ConstantFlowAgreementV1._changeFlowToApp`, `ConstantFlowAgreementV1._changeFlow`, `ConstantFlowAgreementV1._updateAccountFlowState`, `SelfDeletingFlowTestApp.afterAgreementCreated`, `Superfluid.callAgreementWithContext`, `Superfluid._updateContext`
+- Upstream source artifact: `packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol`
+- Notes: This case does not prove SuperToken supply conservation and does not equate its modulo-2^256 CFA projection sum to native `realtimeBalanceOf` outside the stated relation. All 22 task declarations have kernel-checked reference proofs, including the nine finite-global, future-time, callback-composition, rollback, and concrete factored-instance strengthening tasks. Translation fidelity is an audited trust boundary, separate from the kernel-checked Lean proof of the model.
 
 ### `t3tris/hwm_performance_fee`
 - Family / implementation: `t3tris` / `t3tris_vault`
@@ -1978,6 +1988,226 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/safe/owner_manager_reach/verity/Specs.lean`, `Benchmark/Cases/Safe/OwnerManagerReach/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerOwnerListInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Safe.OwnerManagerReach.Proofs`
+
+### `superfluid/realtime_balance_conservation/callback_level_two_is_rejected`
+- Track / property class / proof family: `proof-only` / `failure_propagation` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.callbackLevelTwo_is_rejected`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CallbackLevelTwoIsRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/create_non_app_frames_unrelated_account`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_frames_unrelated_account`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppFramesUnrelatedAccount.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/create_non_app_preserves_cfa_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_cfa_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesCfaProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/create_non_app_preserves_future_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_future_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesFutureModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/create_non_app_preserves_pair_net_flow_rate`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_pair_net_flow_rate`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesPairNetFlowRate.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/delete_non_app_frames_unrelated_account`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_frames_unrelated_account`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppFramesUnrelatedAccount.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/delete_non_app_preserves_cfa_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_cfa_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesCfaProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/delete_non_app_preserves_future_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_future_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesFutureModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/delete_non_app_preserves_pair_net_flow_rate`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_pair_net_flow_rate`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesPairNetFlowRate.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/failed_nested_rolls_back_and_prevents_resume`
+- Track / property class / proof family: `proof-only` / `revert_safety` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.failedNested_rolls_back_and_prevents_resume`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/FailedNestedRollsBackAndPreventsResume.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/pair_and_frame_implies_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `composition_invariant` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.pairAndFrame_implies_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/PairAndFrameImpliesModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_frames_unrelated_account`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_frames_unrelated_account`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackFramesUnrelatedAccount.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_matches_factored_instance_behavior`
+- Track / property class / proof family: `proof-only` / `functional_property` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_matches_factored_instance_behavior`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackMatchesFactoredInstanceBehavior.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_cfa_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_cfa_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesCfaProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_future_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_future_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesFutureModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_pair_net_flow_rate`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_pair_net_flow_rate`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesPairNetFlowRate.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_reloads_final_zero`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_reloads_final_zero`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackReloadsFinalZero.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/successful_one_level_components_compose`
+- Track / property class / proof family: `proof-only` / `composition_invariant` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.successfulOneLevel_components_compose`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/SuccessfulOneLevelComponentsCompose.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/update_non_app_frames_unrelated_account`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_frames_unrelated_account`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppFramesUnrelatedAccount.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/update_non_app_preserves_cfa_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_cfa_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesCfaProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/update_non_app_preserves_future_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_future_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesFutureModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/update_non_app_preserves_pair_net_flow_rate`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_pair_net_flow_rate`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesPairNetFlowRate.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
 
 ### `t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply`
 - Track / property class / proof family: `proof-only` / `fee_accounting_bounds` / `state_preservation_local_effects`

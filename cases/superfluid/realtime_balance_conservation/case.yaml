@@ -26,6 +26,8 @@ selected_functions:
   - ConstantFlowAgreementV1._changeFlow
   - ConstantFlowAgreementV1._updateAccountFlowState
   - SelfDeletingFlowTestApp.afterAgreementCreated
+  - Superfluid.callAgreementWithContext
+  - Superfluid._updateContext
 source_language: solidity
 verity_version: 1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e
 lean_toolchain: leanprover/lean4:v4.22.0
@@ -39,11 +41,19 @@ abstraction_tags:
   - hand_translated_source_model
   - source_execution_relation_assumed
   - create_only_self_delete_callback
+  - fixed_duplicate_free_account_universe
+  - modular_cfa_global_projection
+  - future_observation_time
+  - behavioral_one_level_callback_hook
+  - nested_revert_rollback
   - liquidation_excluded
 abstraction_notes: >
-  Verifies the CFA projection `sharedSettled + dynamic CFA balance` at the
-  transaction update boundary, the pair net-rate sum, and unrelated-account
-  framing for separate create, update, and sender-noncritical delete entrypoints.
+  The completed reference proofs verify the CFA projection `sharedSettled + dynamic
+  CFA balance` at the transaction update boundary, the pair net-rate sum, and
+  unrelated-account framing for separate create, update, and sender-noncritical
+  delete entrypoints. The strengthened reference proofs lift pair cancellation
+  and framing to a duplicate-free fixed List Address modular CFA-only sum for
+  every tau at or after the operation timestamp.
   The case explicitly scopes the Host timestamp to the canonical uint32 chain-time
   range; this is not a Solidity revert guard. Decoded source state enforces
   sign-extended int96 rates, clipped deposits, existence guards, zero-address guards, outer direct-call
@@ -53,11 +63,17 @@ abstraction_notes: >
   are explicitly scoped below 2^96 to exclude source-accepted values whose unmasked
   high bits overlap the adjacent packed rate field,
   and CFA-only availability checks. Non-app paths require both endpoints to be
-  non-app. The callback theorem pins
+  non-app. The callback model pins
   contracts/mocks/CFAAppMocks.t.sol:190-243: an active non-jailed receiver app
   has before-created NOOP, executes after-created, calls Host context to delete
   the same newly created flow, causes no nested callback, uses zero app credit,
-  and lets the outer CFA code reload the zero flow. The source precondition pins a
+  and lets the outer CFA code reload the zero flow. That schedule is factored into
+  executable prefix, level-1 contextual delete, and resume/reload components. A
+  reusable behavioral hook executes an actual supplied Contract at level 1,
+  rejects level 2 before nested execution, and relies on Verity bind/run semantics
+  for no-resume rollback. The hook is not complete Host ABI/context semantics;
+  concrete actor/app/token/context, registry, noop, jailed, and credit guards remain
+  in the SelfDeleting prefix. The source precondition pins a
   non-jailed receiver and successful execution selects the no-damage final-availability
   path. IDA/GDA and pools,
   multi-agreement native available-balance aggregation, critical deletion and
@@ -71,6 +87,9 @@ unsupported_feature_codes:
   - signed_mapping_surface_syntax
 notes: >
   This case does not prove SuperToken supply conservation and does not equate
-  the CFA projection to native `realtimeBalanceOf` outside the stated relation.
+  its modulo-2^256 CFA projection sum to native `realtimeBalanceOf` outside the
+  stated relation. All 22 task declarations have kernel-checked reference proofs,
+  including the nine finite-global, future-time, callback-composition, rollback,
+  and concrete factored-instance strengthening tasks.
   Translation fidelity is an audited trust boundary, separate from the kernel-checked
   Lean proof of the model.

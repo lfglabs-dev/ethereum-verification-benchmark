@@ -20,6 +20,32 @@ def pairCfaProjectionAt
 def pairNetFlowRate (s : ContractState) (sender receiver : Address) : Uint256 :=
   add (s.storageMap 1 sender) (s.storageMap 1 receiver)
 
+/-- Fixed finite-universe CFA-only projection sum. Every addition and the dynamic
+`sub`/`mul` inside `cfaProjectionAt` is `Uint256` arithmetic modulo `2^256`.
+This is not an unbounded-`Int` sum, native multi-agreement realtime balance,
+SuperToken total supply, or a full-protocol conservation quantity. -/
+def modularCfaGlobalProjectionSumAt
+    (s : ContractState) (accounts : List Address) (timestamp : Uint256) : Uint256 :=
+  (accounts.map (fun account => cfaProjectionAt s account timestamp)).sum
+
+/-- A duplicate-free fixed universe that counts two distinct touched endpoints once. -/
+def CfaPairCoveredBy
+    (accounts : List Address) (sender receiver : Address) : Prop :=
+  accounts.Nodup ∧ sender ≠ receiver ∧ sender ∈ accounts ∧ receiver ∈ accounts
+
+/-- Reusable local-to-global statement: endpoint cancellation plus framing every
+other member of a duplicate-free universe implies preservation of its modular sum. -/
+def pairAndFrameImplyModularCfaGlobalProjection
+    (pre post : ContractState) (accounts : List Address)
+    (sender receiver : Address) (timestamp : Uint256) : Prop :=
+  CfaPairCoveredBy accounts sender receiver →
+  pairCfaProjectionAt post sender receiver timestamp =
+    pairCfaProjectionAt pre sender receiver timestamp →
+  (∀ account, account ∈ accounts → account ≠ sender → account ≠ receiver →
+    cfaProjectionAt post account timestamp = cfaProjectionAt pre account timestamp) →
+  modularCfaGlobalProjectionSumAt post accounts timestamp =
+    modularCfaGlobalProjectionSumAt pre accounts timestamp
+
 /-- Stored decoded pair flow rate. -/
 def storedFlowRate (s : ContractState) (sender receiver : Address) : Uint256 :=
   s.storageMap2 6 sender receiver
@@ -171,6 +197,85 @@ def pinnedSourcePathRelation
 also require `pinnedSourcePathRelation`; this predicate alone is only model success. -/
 def modelSucceeded {α : Type} (result : ContractResult α) : Prop :=
   result.isSuccess = true
+
+/-- Explicit source/Host bindings retained by the concrete SelfDeleting callback.
+The `hostNestedCallbackSuppressed` field records the selected CFA same-flow receiver
+delete's `appToCallback = 0` branch; generic level-2 rejection is a separate behavior.
+Token identity is represented by the decoded outer-zero-token and same-credit-token
+facts because this protocol slice does not carry a standalone token address parameter. -/
+def ConcreteSelfDeletingCallbackGuards
+    (source : PinnedSourceState) (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit : Uint256) : Prop :=
+  source.hostIsApp receiver = 1 ∧
+  source.hostIsApp sender = 0 ∧
+  source.hostIsJailed receiver = 0 ∧
+  source.hostBeforeCreatedNoop receiver = 1 ∧
+  source.hostAfterCreatedEnabled receiver = 1 ∧
+  source.hostCallbackCreditUsed receiver = 0 ∧
+  source.hostCallbackLevel receiver = 1 ∧
+  source.hostCallbackActor receiver = receiver ∧
+  source.hostCallbackAppAddress receiver = receiver ∧
+  source.hostIsAppCallbackContext receiver = 1 ∧
+  source.hostContextualDeleteEnabled receiver = 1 ∧
+  source.hostNestedCallbackSuppressed receiver = 1 ∧
+  source.hostAppCreditTokenMatches receiver = 1 ∧
+  source.hostIsSelfDeletingFlowApp receiver = 1 ∧
+  source.hostOuterIsDirectCallContext = 1 ∧
+  source.hostOuterAppCreditToken = 0 ∧
+  source.hostOuterActor = sender ∧
+  let appCreditBase := clipDepositRoundingUp (mul flowRate liquidationPeriod)
+  if appCreditBase = 0 then
+    source.hostAdditionalAppCredit receiver = 0 ∧
+    source.hostAppCreditGranted receiver = 0
+  else
+    source.hostAdditionalAppCredit receiver ≥ 4294967296 ∧
+    source.hostAdditionalAppCredit receiver ≥ minimumDeposit ∧
+    (source.hostAdditionalAppCredit receiver = 4294967296 ∨
+      source.hostAdditionalAppCredit receiver = minimumDeposit) ∧
+    source.hostAppCreditGranted receiver =
+      add appCreditBase (source.hostAdditionalAppCredit receiver)
+
+/-- A component preserves the fixed-universe modular CFA projection on every
+successful execution. Reverting executions are not reclassified as successes. -/
+def PreservesModularCfaGlobalProjection {α : Type}
+    (accounts : List Address) (timestamp : Uint256) (op : Contract α) : Prop :=
+  ∀ pre value post,
+    op.run pre = ContractResult.success value post →
+    modularCfaGlobalProjectionSumAt post accounts timestamp =
+      modularCfaGlobalProjectionSumAt pre accounts timestamp
+
+/-- Successful prefix, nested, and resume components compose through the executable
+level-1 hook. Component obligations range over their actual typed intermediate values. -/
+def successfulOneLevelComponentsCompose {α β γ : Type}
+    (outerPrefix : Contract α) (nested : α → Contract β)
+    (outerResume : α → β → Contract γ)
+    (accounts : List Address) (timestamp : Uint256) : Prop :=
+  PreservesModularCfaGlobalProjection accounts timestamp outerPrefix →
+  (∀ prefixValue,
+    PreservesModularCfaGlobalProjection accounts timestamp (nested prefixValue)) →
+  (∀ prefixValue nestedValue,
+    PreservesModularCfaGlobalProjection accounts timestamp
+      (outerResume prefixValue nestedValue)) →
+  PreservesModularCfaGlobalProjection accounts timestamp
+    (runOneLevelOuterNested outerPrefix nested outerResume)
+
+/-- The behavioral hook rejects callback level 2 before the supplied nested program.
+This models the pinned Host maximum-level discipline, not full Host ABI/context checks. -/
+def callbackLevelTwoRejected : Prop :=
+  ∀ (α : Type) (nested : Contract α) (pre : ContractState),
+    (behavioralOneLevelCallback 2 nested).run pre =
+      ContractResult.revert "HOST_CALLBACK_LEVEL_EXCEEDED" pre
+
+/-- When the actual nested execution reverts, bind skips the arbitrary resume and
+top-level `Contract.run` restores `pre` (`Verity/Core.lean:291-301`). -/
+def failedNestedRollsBackAndPreventsResume {α β γ : Type}
+    (outerPrefix : Contract α) (nested : α → Contract β)
+    (outerResume : α → β → Contract γ) : Prop :=
+  ∀ pre mid prefixValue msg,
+    outerPrefix.run pre = ContractResult.success prefixValue mid →
+    (nested prefixValue).run mid = ContractResult.revert msg mid →
+    (runOneLevelOuterNested outerPrefix nested outerResume).run pre =
+      ContractResult.revert msg pre
 
 /-- Public decoded CREATE_FLOW execution for a non-app receiver. -/
 def runCreateNonApp
@@ -355,5 +460,165 @@ def receiverDeleteCallbackFramesUnrelatedAccount
   result.snd.storageMap 2 unrelated = s.storageMap 2 unrelated ∧
   result.snd.storageMap 3 unrelated = s.storageMap 3 unrelated ∧
   result.snd.storageMap 4 unrelated = s.storageMap 4 unrelated
+
+/-! Small executable mutation witnesses for the finite-universe and callback hypotheses. -/
+
+def regressionSender : Address := 1
+def regressionReceiver : Address := 2
+def regressionUnrelated : Address := 3
+def regressionNegOne : Uint256 := sub 0 1
+
+def finiteProjectionRegressionPost (corruptUnrelated : Bool) : ContractState :=
+  { defaultState with storageMap := fun slotIndex account =>
+      if slotIndex == 0 && account == regressionSender then regressionNegOne
+      else if slotIndex == 0 && account == regressionReceiver then 1
+      else if corruptUnrelated && slotIndex == 0 && account == regressionUnrelated then 1
+      else 0 }
+
+/-- W1-W3: endpoint cancellation alone does not survive a missing sender, a corrupt
+unrelated member, or duplicate counting. -/
+theorem finiteUniverseHypothesesRegressionWitnesses :
+    pairCfaProjectionAt (finiteProjectionRegressionPost false)
+        regressionSender regressionReceiver 0 =
+      pairCfaProjectionAt defaultState regressionSender regressionReceiver 0 ∧
+    modularCfaGlobalProjectionSumAt (finiteProjectionRegressionPost false)
+        [regressionReceiver, regressionUnrelated] 0 ≠
+      modularCfaGlobalProjectionSumAt defaultState
+        [regressionReceiver, regressionUnrelated] 0 ∧
+    modularCfaGlobalProjectionSumAt (finiteProjectionRegressionPost true)
+        [regressionSender, regressionReceiver, regressionUnrelated] 0 ≠
+      modularCfaGlobalProjectionSumAt defaultState
+        [regressionSender, regressionReceiver, regressionUnrelated] 0 ∧
+    modularCfaGlobalProjectionSumAt (finiteProjectionRegressionPost false)
+        [regressionSender, regressionSender, regressionReceiver] 0 ≠
+      modularCfaGlobalProjectionSumAt defaultState
+        [regressionSender, regressionSender, regressionReceiver] 0 := by
+  decide
+
+def nestedCorruptionWitnessProgram : Contract Unit :=
+  runOneLevelOuterNested
+    (Verity.pure ())
+    (fun _ => setMapping SuperfluidCFA.sharedSettledBalances regressionUnrelated 1)
+    (fun _ _ => Verity.pure ())
+
+/-- W4: a successful level-1 nested Contract can corrupt an unrelated account, so its
+independent preservation/frame obligation is necessary for the composition theorem. -/
+theorem nestedCorruptionNeedsComponentObligation :
+    let result := nestedCorruptionWitnessProgram.run defaultState
+    result.isSuccess = true ∧
+    modularCfaGlobalProjectionSumAt result.snd
+      [regressionSender, regressionReceiver, regressionUnrelated] 0 = 1 := by
+  decide
+
+/-- The modeled operation-time scope includes both uint32 endpoints and excludes the
+first word past the boundary. -/
+theorem inclusiveUint32TimestampBoundaryWitness :
+    (0 : Uint256) ≤ UINT32_MAX_WORD ∧
+    UINT32_MAX_WORD ≤ UINT32_MAX_WORD ∧
+    ¬((4294967296 : Uint256) ≤ UINT32_MAX_WORD) := by
+  decide
+
+/-!
+The following four operation properties deliberately quantify every observation word
+`tau` with `operationTimestamp ≤ tau`. Their conclusions are equalities in EVM-word
+arithmetic modulo `2^256`; they do not assert unbounded integer balance, native
+multi-agreement `realtimeBalanceOf`, total supply, or full-protocol conservation.
+`operationTimestamp ≤ UINT32_MAX_WORD` is inclusive and exposes the model's source
+packing boundary, while `tau` need not itself be packed into CFA storage.
+-/
+
+/-- Successful non-app CREATE_FLOW preserves the fixed finite modular CFA sum at every
+observation time at or after its inclusive uint32-scoped operation timestamp. -/
+def createNonAppPreservesFutureModularCfaGlobalProjection
+    (source : PinnedSourceState) (s : ContractState) (accounts : List Address)
+    (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit operationTimestamp tau : Uint256) : Prop :=
+  CfaPairCoveredBy accounts sender receiver →
+  operationTimestamp ≤ UINT32_MAX_WORD →
+  operationTimestamp ≤ tau →
+  pinnedSourcePathRelation source s sender receiver operationTimestamp →
+  let result := runCreateNonApp s sender receiver flowRate liquidationPeriod
+    minimumDeposit operationTimestamp
+  modelSucceeded result →
+  sourcePostRelation source result.snd sender receiver ∧
+  modularCfaGlobalProjectionSumAt result.snd accounts tau =
+    modularCfaGlobalProjectionSumAt s accounts tau
+
+/-- Successful non-app UPDATE_FLOW preserves the fixed finite modular CFA sum at every
+observation time at or after its inclusive uint32-scoped operation timestamp. -/
+def updateNonAppPreservesFutureModularCfaGlobalProjection
+    (source : PinnedSourceState) (s : ContractState) (accounts : List Address)
+    (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit operationTimestamp tau : Uint256) : Prop :=
+  CfaPairCoveredBy accounts sender receiver →
+  operationTimestamp ≤ UINT32_MAX_WORD →
+  operationTimestamp ≤ tau →
+  pinnedSourcePathRelation source s sender receiver operationTimestamp →
+  let result := runUpdateNonApp s sender receiver flowRate liquidationPeriod
+    minimumDeposit operationTimestamp
+  modelSucceeded result →
+  sourcePostRelation source result.snd sender receiver ∧
+  modularCfaGlobalProjectionSumAt result.snd accounts tau =
+    modularCfaGlobalProjectionSumAt s accounts tau
+
+/-- Successful sender-initiated noncritical DELETE_FLOW preserves the fixed finite
+modular CFA sum at every observation time at or after the operation timestamp. -/
+def deleteNonAppPreservesFutureModularCfaGlobalProjection
+    (source : PinnedSourceState) (s : ContractState) (accounts : List Address)
+    (sender receiver : Address) (operationTimestamp tau : Uint256) : Prop :=
+  CfaPairCoveredBy accounts sender receiver →
+  operationTimestamp ≤ UINT32_MAX_WORD →
+  operationTimestamp ≤ tau →
+  pinnedSourcePathRelation source s sender receiver operationTimestamp →
+  let result := runDeleteNonApp s sender receiver operationTimestamp
+  modelSucceeded result →
+  sourcePostRelation source result.snd sender receiver ∧
+  modularCfaGlobalProjectionSumAt result.snd accounts tau =
+    modularCfaGlobalProjectionSumAt s accounts tau
+
+/-- The concrete source-pinned one-level receiver self-delete preserves the fixed finite
+modular CFA sum at every later observation time. Its actor/app/token/context, registry,
+noop, jailed, credit, and selected same-flow no-callback guards remain explicit here;
+the generic hook itself does not claim to validate the complete Host ABI/context. -/
+def receiverDeleteCallbackPreservesFutureModularCfaGlobalProjection
+    (source : PinnedSourceState) (s : ContractState) (accounts : List Address)
+    (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit operationTimestamp tau : Uint256) : Prop :=
+  CfaPairCoveredBy accounts sender receiver →
+  operationTimestamp ≤ UINT32_MAX_WORD →
+  operationTimestamp ≤ tau →
+  pinnedSourcePathRelation source s sender receiver operationTimestamp →
+  ConcreteSelfDeletingCallbackGuards source sender receiver flowRate liquidationPeriod
+    minimumDeposit →
+  let result := runReceiverDeleteCallback s sender receiver flowRate liquidationPeriod
+    minimumDeposit operationTimestamp
+  modelSucceeded result →
+  sourcePostRelation source result.snd sender receiver ∧
+  modularCfaGlobalProjectionSumAt result.snd accounts tau =
+    modularCfaGlobalProjectionSumAt s accounts tau
+
+/-- Concrete-instantiation behavior. Successful execution derives all retained source
+bindings and is exactly the factored runner whose nested component deletes the original
+`(sender, receiver)` pair at the original timestamp before the outer reload resumes. -/
+def receiverDeleteCallbackFactoredInstanceBehavior
+    (source : PinnedSourceState) (s : ContractState) (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit operationTimestamp : Uint256) : Prop :=
+  operationTimestamp ≤ UINT32_MAX_WORD →
+  pinnedSourcePathRelation source s sender receiver operationTimestamp →
+  let result := runReceiverDeleteCallback s sender receiver flowRate liquidationPeriod
+    minimumDeposit operationTimestamp
+  modelSucceeded result →
+  ConcreteSelfDeletingCallbackGuards source sender receiver flowRate liquidationPeriod
+      minimumDeposit ∧
+  sourcePostRelation source result.snd sender receiver ∧
+  result =
+    (runOneLevelOuterNested
+      (SuperfluidCFA._receiverDeleteCallbackOuterPrefix sender receiver flowRate
+        liquidationPeriod minimumDeposit operationTimestamp)
+      (fun _ => SuperfluidCFA._receiverDeleteCallbackNestedDelete sender receiver
+        operationTimestamp)
+      (fun _ _ => SuperfluidCFA._receiverDeleteCallbackOuterResume sender receiver
+        operationTimestamp)).run s ∧
+  result.getValue? = some (storedFlowRate result.snd sender receiver)
 
 end Benchmark.Cases.Superfluid.RealtimeBalanceConservation

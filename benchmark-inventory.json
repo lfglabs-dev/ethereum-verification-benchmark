@@ -10,36 +10,36 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 33,
-    "implementation_count": 34,
-    "active_case_count": 33,
+    "family_count": 34,
+    "implementation_count": 35,
+    "active_case_count": 34,
     "backlog_case_count": 1,
-    "active_task_count": 200,
+    "active_task_count": 222,
     "backlog_task_count": 0,
-    "buildable_case_count": 33,
-    "runnable_task_count": 200,
+    "buildable_case_count": 34,
+    "runnable_task_count": 222,
     "case_stage_counts": {
-      "build_green": 28,
+      "build_green": 29,
       "candidate": 1,
       "proof_complete": 5
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 33
+      "translated": 34
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 26,
+      "complete": 27,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 200
+      "proof-only": 222
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
       "accounting_bound": 17,
-      "accounting_conservation": 15,
+      "accounting_conservation": 32,
       "accounting_effect": 2,
       "accounting_invariant": 2,
       "accounting_invariant_break": 1,
@@ -61,20 +61,20 @@
       "calldata_decoder_faithfulness": 1,
       "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
-      "composition_invariant": 1,
+      "composition_invariant": 3,
       "configuration_safety": 2,
       "counting_invariant": 1,
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
       "exploit_trace": 1,
-      "failure_propagation": 2,
+      "failure_propagation": 3,
       "fee_accounting_bounds": 2,
       "fee_base_correctness": 2,
       "fee_conservation": 5,
       "fee_payout_bound": 1,
       "fee_trigger": 1,
       "frame_property": 2,
-      "functional_property": 1,
+      "functional_property": 2,
       "guarded_solvency": 7,
       "independence_invariant": 1,
       "isOwner_effect": 3,
@@ -99,7 +99,7 @@
       "redemption_reserve_guard": 1,
       "replay_protection": 2,
       "reserve_state_transition": 5,
-      "revert_safety": 1,
+      "revert_safety": 2,
       "safety_invariant": 2,
       "scope_invariant": 1,
       "silent_failure": 2,
@@ -117,12 +117,12 @@
     "task_proof_family_counts": {
       "authorization_enablement": 25,
       "functional_correctness": 56,
-      "protocol_transition_correctness": 23,
+      "protocol_transition_correctness": 27,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 54
+      "state_preservation_local_effects": 72
     },
     "family_split_counts": {
-      "active": 32,
+      "active": 33,
       "mixed": 1
     }
   },
@@ -551,6 +551,23 @@
         "solidity"
       ],
       "manifest_path": "families/safe/family.yaml"
+    },
+    {
+      "family_id": "superfluid",
+      "display_name": "Superfluid",
+      "split": "active",
+      "status": "active",
+      "description": "Hand-translated Superfluid agreement-accounting benchmarks over realtime token balances, continuous flows, and explicitly scoped callback schedules.",
+      "implementation_ids": [
+        "cfa_realtime_accounting"
+      ],
+      "case_ids": [
+        "superfluid/realtime_balance_conservation"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/superfluid/family.yaml"
     },
     {
       "family_id": "t3tris",
@@ -1091,6 +1108,22 @@
       ],
       "notes": "Implementation entry for the Safe smart account OwnerManager module, benchmarking linked list invariant preservation under addOwnerWithThreshold, removeOwner, swapOwner, and setupOwners.",
       "manifest_path": "families/safe/implementations/smart_account/implementation.yaml"
+    },
+    {
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "display_name": "Superfluid Constant Flow Agreement V1 realtime accounting",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/superfluid-finance/protocol-monorepo",
+      "upstream_commit": "414109689d9041a8b6900b67b947f3f203c1da5d",
+      "source_language": "solidity",
+      "source_artifact_path": "packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "case_ids": [
+        "superfluid/realtime_balance_conservation"
+      ],
+      "notes": "CFA endpoint settlement and opposite-rate updates in a hand-translated decoded model, with a fixed duplicate-free account-list modular projection and a factored one-level receiver-SuperApp same-flow self-delete schedule. The behavioral hook executes supplied Verity Contracts and rejects level 2, but deliberately is not complete Host ABI/context semantics; the concrete instance retains actor, app, token/context, registry, noop, jailed, and credit guards. Source key and Host execution fidelity remain audited translation assumptions, not kernel-proved Solidity semantics. The completed reference proof suite covers all 22 tasks, including finite-list modular projection preservation at every later observation time, typed one-level composition, nested-revert rollback, and the concrete factored SelfDeleting callback instance.",
+      "manifest_path": "families/superfluid/implementations/cfa_realtime_accounting/implementation.yaml"
     },
     {
       "family_id": "t3tris",
@@ -2406,6 +2439,69 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Safe.OwnerManagerReach.Specs",
       "proof_target": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs"
+    },
+    {
+      "case_id": "superfluid/realtime_balance_conservation",
+      "project": "superfluid",
+      "case_name": "realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/case.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/superfluid-finance/protocol-monorepo",
+      "upstream_commit": "414109689d9041a8b6900b67b947f3f203c1da5d",
+      "original_contract_path": "packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "selected_functions": [
+        "SuperfluidToken.realtimeBalanceOf",
+        "ConstantFlowAgreementV1._createFlow",
+        "ConstantFlowAgreementV1._updateFlow",
+        "ConstantFlowAgreementV1._deleteFlow",
+        "ConstantFlowAgreementV1._changeFlowToNonApp",
+        "ConstantFlowAgreementV1._changeFlowToApp",
+        "ConstantFlowAgreementV1._changeFlow",
+        "ConstantFlowAgreementV1._updateAccountFlowState",
+        "SelfDeletingFlowTestApp.afterAgreementCreated",
+        "Superfluid.callAgreementWithContext",
+        "Superfluid._updateContext"
+      ],
+      "lean_target": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Compile",
+      "failure_reason": null,
+      "notes": "This case does not prove SuperToken supply conservation and does not equate its modulo-2^256 CFA projection sum to native `realtimeBalanceOf` outside the stated relation. All 22 task declarations have kernel-checked reference proofs, including the nine finite-global, future-time, callback-composition, rollback, and concrete factored-instance strengthening tasks. Translation fidelity is an audited trust boundary, separate from the kernel-checked Lean proof of the model.",
+      "buildable": true,
+      "verity_commit": "1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "cfa_projection_only",
+        "decoded_packed_state_relation",
+        "checked_arithmetic_relation_explicit",
+        "source_deposit_calculation_modeled",
+        "host_registry_relation_explicit",
+        "hand_translated_source_model",
+        "source_execution_relation_assumed",
+        "create_only_self_delete_callback",
+        "fixed_duplicate_free_account_universe",
+        "modular_cfa_global_projection",
+        "future_observation_time",
+        "behavioral_one_level_callback_hook",
+        "nested_revert_rollback",
+        "liquidation_excluded"
+      ],
+      "abstraction_notes": "The completed reference proofs verify the CFA projection `sharedSettled + dynamic CFA balance` at the transaction update boundary, the pair net-rate sum, and unrelated-account framing for separate create, update, and sender-noncritical delete entrypoints. The strengthened reference proofs lift pair cancellation and framing to a duplicate-free fixed List Address modular CFA-only sum for every tau at or after the operation timestamp. The case explicitly scopes the Host timestamp to the canonical uint32 chain-time range; this is not a Solidity revert guard. Decoded source state enforces sign-extended int96 rates, clipped deposits, existence guards, zero-address guards, outer direct-call context with a zero app-credit token and actor equal to the flow sender, exact source deposit calculation with arbitrary governance minimum selection and source-faithful low-64-bit packed storage writes. Raw flow/account deposit writes are explicitly scoped below 2^96 to exclude source-accepted values whose unmasked high bits overlap the adjacent packed rate field, and CFA-only availability checks. Non-app paths require both endpoints to be non-app. The callback model pins contracts/mocks/CFAAppMocks.t.sol:190-243: an active non-jailed receiver app has before-created NOOP, executes after-created, calls Host context to delete the same newly created flow, causes no nested callback, uses zero app credit, and lets the outer CFA code reload the zero flow. That schedule is factored into executable prefix, level-1 contextual delete, and resume/reload components. A reusable behavioral hook executes an actual supplied Contract at level 1, rejects level 2 before nested execution, and relies on Verity bind/run semantics for no-resume rollback. The hook is not complete Host ABI/context semantics; concrete actor/app/token/context, registry, noop, jailed, and credit guards remain in the SelfDeleting prefix. The source precondition pins a non-jailed receiver and successful execution selects the no-damage final-availability path. IDA/GDA and pools, multi-agreement native available-balance aggregation, critical deletion and liquidation, arbitrary callbacks, update callbacks, mint/burn, and wrapping are not covered. Frame theorems cover account projection fields only. This is a proof of the hand-translated Verity model under explicit source-key, Host-context, and callback-schedule hypotheses. It is not a Solidity bytecode simulation theorem, and it does not independently derive Keccak flow keys or Host execution from source semantics.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "spec_target": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Specs",
+      "proof_target": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs"
     },
     {
       "case_id": "t3tris/hwm_performance_fee",
@@ -10281,6 +10377,1040 @@
       }
     },
     {
+      "task_ref": "superfluid/realtime_balance_conservation/callback_level_two_is_rejected",
+      "task_id": "callback_level_two_is_rejected",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/callback_level_two_is_rejected.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "failure_propagation",
+      "category": "control-flow",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.callbackLevelTwo_is_rejected",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CallbackLevelTwoIsRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The executable behavioral hook rejects callback level 2 before the supplied nested Contract executes, corresponding to the pinned Host maximum level.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_frames_unrelated_account",
+      "task_id": "create_non_app_frames_unrelated_account",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_frames_unrelated_account.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_frames_unrelated_account",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppFramesUnrelatedAccount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_cfa_projection",
+      "task_id": "create_non_app_preserves_cfa_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_cfa_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_cfa_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesCfaProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_future_modular_cfa_global_projection",
+      "task_id": "create_non_app_preserves_future_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_future_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_future_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesFutureModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful non-app create preserves a duplicate-free finite modular CFA-only projection sum for every tau at or after the inclusive uint32 operation time.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_pair_net_flow_rate",
+      "task_id": "create_non_app_preserves_pair_net_flow_rate",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_pair_net_flow_rate.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_pair_net_flow_rate",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesPairNetFlowRate.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_frames_unrelated_account",
+      "task_id": "delete_non_app_frames_unrelated_account",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_frames_unrelated_account.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_frames_unrelated_account",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppFramesUnrelatedAccount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_cfa_projection",
+      "task_id": "delete_non_app_preserves_cfa_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_cfa_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_cfa_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesCfaProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_future_modular_cfa_global_projection",
+      "task_id": "delete_non_app_preserves_future_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_future_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_future_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesFutureModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful sender noncritical delete preserves a duplicate-free finite modular CFA-only projection sum for every tau at or after the operation time.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_pair_net_flow_rate",
+      "task_id": "delete_non_app_preserves_pair_net_flow_rate",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_pair_net_flow_rate.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_pair_net_flow_rate",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesPairNetFlowRate.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/failed_nested_rolls_back_and_prevents_resume",
+      "task_id": "failed_nested_rolls_back_and_prevents_resume",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/failed_nested_rolls_back_and_prevents_resume.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "revert_safety",
+      "category": "revert",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.failedNested_rolls_back_and_prevents_resume",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/FailedNestedRollsBackAndPreventsResume.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Verity bind short-circuits the actual failed nested execution, skips arbitrary resume code, and top-level Contract.run restores the pre-prefix state.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/pair_and_frame_implies_modular_cfa_global_projection",
+      "task_id": "pair_and_frame_implies_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/pair_and_frame_implies_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "composition_invariant",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.pairAndFrame_implies_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/PairAndFrameImpliesModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Lifts pair cancellation and finite-universe framing to a duplicate-free List Address modular CFA-only projection sum. It is not native realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_frames_unrelated_account",
+      "task_id": "receiver_delete_callback_frames_unrelated_account",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_frames_unrelated_account.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_frames_unrelated_account",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackFramesUnrelatedAccount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_matches_factored_instance_behavior",
+      "task_id": "receiver_delete_callback_matches_factored_instance_behavior",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_matches_factored_instance_behavior.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "functional_property",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_matches_factored_instance_behavior",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackMatchesFactoredInstanceBehavior.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Exposes retained actor/app/token/context, registry, noop, jailed, and credit bindings and the exact same-pair contextual nested delete in the factored runner.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_cfa_projection",
+      "task_id": "receiver_delete_callback_preserves_cfa_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_cfa_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_cfa_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesCfaProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_future_modular_cfa_global_projection",
+      "task_id": "receiver_delete_callback_preserves_future_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_future_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_future_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesFutureModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The concrete guarded one-level SelfDeleting receiver callback preserves the finite modular CFA-only sum at all later tau; the generic hook is not full Host semantics.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_pair_net_flow_rate",
+      "task_id": "receiver_delete_callback_preserves_pair_net_flow_rate",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_pair_net_flow_rate.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_pair_net_flow_rate",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesPairNetFlowRate.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_reloads_final_zero",
+      "task_id": "receiver_delete_callback_reloads_final_zero",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_reloads_final_zero.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_reloads_final_zero",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackReloadsFinalZero.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/successful_one_level_components_compose",
+      "task_id": "successful_one_level_components_compose",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/successful_one_level_components_compose.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "composition_invariant",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.successfulOneLevel_components_compose",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/SuccessfulOneLevelComponentsCompose.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful typed prefix, nested, and resume Contract components compose through the selected behavioral level-1 hook; full Host ABI/context validation is outside it.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_frames_unrelated_account",
+      "task_id": "update_non_app_frames_unrelated_account",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_frames_unrelated_account.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_frames_unrelated_account",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppFramesUnrelatedAccount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_cfa_projection",
+      "task_id": "update_non_app_preserves_cfa_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_cfa_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_cfa_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesCfaProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_future_modular_cfa_global_projection",
+      "task_id": "update_non_app_preserves_future_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_future_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_future_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesFutureModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful non-app update preserves a duplicate-free finite modular CFA-only projection sum for every tau at or after the inclusive uint32 operation time.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_pair_net_flow_rate",
+      "task_id": "update_non_app_preserves_pair_net_flow_rate",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_pair_net_flow_rate.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_pair_net_flow_rate",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesPairNetFlowRate.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply",
       "task_id": "fee_claim_preserves_unclaimed_le_supply",
       "case_id": "t3tris/hwm_performance_fee",
@@ -12009,5 +13139,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-03T08:12:01.872326+00:00"
+  "generated_at": "2026-07-16T15:52:54.532745+00:00"
 }

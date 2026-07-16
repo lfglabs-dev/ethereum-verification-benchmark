@@ -3283,8 +3283,11 @@ private theorem receiverDeleteCallback_observations
     (h : (SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback sender receiver newRate
       liquidationPeriod minimumDeposit timestamp).run s = ContractResult.success result t) :
     CallbackObs s t sender receiver timestamp result := by
-  unfold SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback at h
-  simp only [Bind.bind] at h
+  unfold SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback runOneLevelOuterNested
+    behavioralOneLevelCallback SuperfluidCFA._receiverDeleteCallbackOuterPrefix
+    SuperfluidCFA._receiverDeleteCallbackNestedDelete
+    SuperfluidCFA._receiverDeleteCallbackOuterResume at h
+  simp only [Bind.bind, Contract.bind_assoc] at h
   rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
   rcases bind_success_elim _ _ _ _ _ h with ⟨_, distinctState, hdistinctReq, h⟩
   have hdistinctState : distinctState = s := by
@@ -3526,12 +3529,14 @@ private theorem receiverDeleteCallback_observations
     exact ⟨hprojection, hpairRate, hframe, hfinalRate, hfinalDeposit, hfinalOwed,
       hfinalExists, hresultZero, hfinalTimestamp, hfinalKey⟩
   split at h
-  · rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
+  · simp only [Contract.bind_assoc, if_true] at h
+    rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
     rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
     change (receiverDeleteCallbackTail sender receiver newRate newDeposit timestamp).run s =
       ContractResult.success result t at h
     exact callbackTail h
-  · rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
+  · simp only [Contract.bind_assoc, if_true] at h
+    rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
     rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
     rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
     rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
@@ -3558,7 +3563,11 @@ private theorem receiverDeleteCallback_storage_preserving
     (sender receiver : Address) (newRate liquidationPeriod minimumDeposit timestamp : Uint256) :
     StoragePreserving (SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback sender receiver newRate
       liquidationPeriod minimumDeposit timestamp) := by
-  unfold SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback
+  unfold SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback runOneLevelOuterNested
+    behavioralOneLevelCallback SuperfluidCFA._receiverDeleteCallbackOuterPrefix
+    SuperfluidCFA._receiverDeleteCallbackNestedDelete
+    SuperfluidCFA._receiverDeleteCallbackOuterResume
+  simp only [Bind.bind, Contract.bind_assoc]
   apply storage_preserving_bind
   · exact storage_preserving_require _ _
   intro _
@@ -3693,7 +3702,8 @@ private theorem receiverDeleteCallback_storage_preserving
   intro newDeposit
   dsimp
   split
-  · apply storage_preserving_bind
+  · simp only [Contract.bind_assoc]
+    apply storage_preserving_bind
     · exact storage_preserving_require _ _
     intro _
     apply storage_preserving_bind
@@ -3702,7 +3712,8 @@ private theorem receiverDeleteCallback_storage_preserving
     simpa [receiverDeleteCallbackTail] using
       receiverDeleteCallbackTail_storage_preserving sender receiver newRate newDeposit timestamp
 
-  · apply storage_preserving_bind
+  · simp only [Contract.bind_assoc]
+    apply storage_preserving_bind
     · exact storage_preserving_require _ _
     intro _
     apply storage_preserving_bind
@@ -3722,7 +3733,11 @@ private theorem receiverDeleteCallback_account_environment_preserving
     AccountEnvironmentPreserving
       (SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback sender receiver newRate
         liquidationPeriod minimumDeposit timestamp) := by
-  unfold SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback
+  unfold SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback runOneLevelOuterNested
+    behavioralOneLevelCallback SuperfluidCFA._receiverDeleteCallbackOuterPrefix
+    SuperfluidCFA._receiverDeleteCallbackNestedDelete
+    SuperfluidCFA._receiverDeleteCallbackOuterResume
+  simp only [Bind.bind, Contract.bind_assoc]
   apply account_environment_preserving_bind
   · exact account_environment_preserving_require _ _
   intro _
@@ -3857,7 +3872,8 @@ private theorem receiverDeleteCallback_account_environment_preserving
   intro newDeposit
   dsimp
   split
-  · apply account_environment_preserving_bind
+  · simp only [Contract.bind_assoc]
+    apply account_environment_preserving_bind
     · exact account_environment_preserving_require _ _
     intro _
     apply account_environment_preserving_bind
@@ -3865,7 +3881,8 @@ private theorem receiverDeleteCallback_account_environment_preserving
     intro _
     simpa [receiverDeleteCallbackTail] using
       receiverDeleteCallbackTail_account_environment_preserving sender receiver newRate newDeposit timestamp
-  · apply account_environment_preserving_bind
+  · simp only [Contract.bind_assoc]
+    apply account_environment_preserving_bind
     · exact account_environment_preserving_require _ _
     intro _
     apply account_environment_preserving_bind
@@ -3983,5 +4000,862 @@ theorem receiverDeleteCallback_frames_unrelated_account
   · exact hobs.2.2.1 2 unrelated hunrelatedSender hunrelatedReceiver
   · exact hobs.2.2.1 3 unrelated hunrelatedSender hunrelatedReceiver
   · exact hobs.2.2.1 4 unrelated hunrelatedSender hunrelatedReceiver
+
+/-! Phase 3 finite-universe, future-time, and callback-composition proofs. -/
+
+private theorem uint256_sub_triangle
+    (earlier middle later : Uint256) :
+    later - earlier = (middle - earlier) + (later - middle) := by
+  apply Verity.Core.Uint256.add_right_cancel (c := earlier)
+  rw [Verity.Core.Uint256.sub_add_cancel_left]
+  symm
+  calc
+    ((middle - earlier) + (later - middle)) + earlier =
+        ((middle - earlier) + earlier) + (later - middle) := by
+          simp only [Verity.Core.Uint256.add_assoc, Verity.Core.Uint256.add_comm]
+    _ = middle + (later - middle) := by
+          rw [Verity.Core.Uint256.sub_add_cancel_left]
+    _ = (later - middle) + middle := by
+          rw [Verity.Core.Uint256.add_comm]
+    _ = later := Verity.Core.Uint256.sub_add_cancel_left later middle
+
+private theorem cfaProjectionAt_shift
+    (state : ContractState) (account : Address) (fromTimestamp toTimestamp : Uint256) :
+    cfaProjectionAt state account toTimestamp =
+      cfaProjectionAt state account fromTimestamp +
+        (toTimestamp - fromTimestamp) * state.storageMap 1 account := by
+  unfold cfaProjectionAt
+  change state.storageMap 0 account +
+      ((toTimestamp - state.storageMap 2 account) * state.storageMap 1 account) =
+    (state.storageMap 0 account +
+      ((fromTimestamp - state.storageMap 2 account) * state.storageMap 1 account)) +
+      (toTimestamp - fromTimestamp) * state.storageMap 1 account
+  rw [uint256_sub_triangle (state.storageMap 2 account) fromTimestamp toTimestamp]
+  rw [Verity.Core.Uint256.add_mul]
+  simp only [Verity.Core.Uint256.add_assoc]
+
+private theorem pairCfaProjectionAt_shift
+    (state : ContractState) (sender receiver : Address)
+    (fromTimestamp toTimestamp : Uint256) :
+    pairCfaProjectionAt state sender receiver toTimestamp =
+      pairCfaProjectionAt state sender receiver fromTimestamp +
+        (toTimestamp - fromTimestamp) * pairNetFlowRate state sender receiver := by
+  unfold pairCfaProjectionAt pairNetFlowRate
+  rw [cfaProjectionAt_shift state sender fromTimestamp toTimestamp,
+    cfaProjectionAt_shift state receiver fromTimestamp toTimestamp]
+  have hfactor :
+      (toTimestamp - fromTimestamp) * state.storageMap 1 sender +
+          (toTimestamp - fromTimestamp) * state.storageMap 1 receiver =
+        (toTimestamp - fromTimestamp) *
+          (state.storageMap 1 sender + state.storageMap 1 receiver) := by
+    calc
+      (toTimestamp - fromTimestamp) * state.storageMap 1 sender +
+          (toTimestamp - fromTimestamp) * state.storageMap 1 receiver =
+        state.storageMap 1 sender * (toTimestamp - fromTimestamp) +
+          state.storageMap 1 receiver * (toTimestamp - fromTimestamp) := by
+            simp only [Verity.Core.Uint256.mul_comm]
+      _ = (state.storageMap 1 sender + state.storageMap 1 receiver) *
+          (toTimestamp - fromTimestamp) := by
+            rw [Verity.Core.Uint256.add_mul]
+      _ = (toTimestamp - fromTimestamp) *
+          (state.storageMap 1 sender + state.storageMap 1 receiver) := by
+            rw [Verity.Core.Uint256.mul_comm]
+  calc
+    (cfaProjectionAt state sender fromTimestamp +
+          (toTimestamp - fromTimestamp) * state.storageMap 1 sender) +
+        (cfaProjectionAt state receiver fromTimestamp +
+          (toTimestamp - fromTimestamp) * state.storageMap 1 receiver) =
+      (cfaProjectionAt state sender fromTimestamp +
+          cfaProjectionAt state receiver fromTimestamp) +
+        ((toTimestamp - fromTimestamp) * state.storageMap 1 sender +
+          (toTimestamp - fromTimestamp) * state.storageMap 1 receiver) := by
+            calc
+              (cfaProjectionAt state sender fromTimestamp +
+                    (toTimestamp - fromTimestamp) * state.storageMap 1 sender) +
+                  (cfaProjectionAt state receiver fromTimestamp +
+                    (toTimestamp - fromTimestamp) * state.storageMap 1 receiver) =
+                cfaProjectionAt state sender fromTimestamp +
+                  ((toTimestamp - fromTimestamp) * state.storageMap 1 sender +
+                    (cfaProjectionAt state receiver fromTimestamp +
+                      (toTimestamp - fromTimestamp) * state.storageMap 1 receiver)) := by
+                        rw [Verity.Core.Uint256.add_assoc]
+              _ = cfaProjectionAt state sender fromTimestamp +
+                  (((toTimestamp - fromTimestamp) * state.storageMap 1 sender +
+                    cfaProjectionAt state receiver fromTimestamp) +
+                      (toTimestamp - fromTimestamp) * state.storageMap 1 receiver) := by
+                        rw [Verity.Core.Uint256.add_assoc]
+              _ = cfaProjectionAt state sender fromTimestamp +
+                  ((cfaProjectionAt state receiver fromTimestamp +
+                    (toTimestamp - fromTimestamp) * state.storageMap 1 sender) +
+                      (toTimestamp - fromTimestamp) * state.storageMap 1 receiver) := by
+                        rw [Verity.Core.Uint256.add_comm
+                          ((toTimestamp - fromTimestamp) * state.storageMap 1 sender)
+                          (cfaProjectionAt state receiver fromTimestamp)]
+              _ = cfaProjectionAt state sender fromTimestamp +
+                  (cfaProjectionAt state receiver fromTimestamp +
+                    ((toTimestamp - fromTimestamp) * state.storageMap 1 sender +
+                      (toTimestamp - fromTimestamp) * state.storageMap 1 receiver)) := by
+                        rw [Verity.Core.Uint256.add_assoc]
+              _ = (cfaProjectionAt state sender fromTimestamp +
+                    cfaProjectionAt state receiver fromTimestamp) +
+                  ((toTimestamp - fromTimestamp) * state.storageMap 1 sender +
+                    (toTimestamp - fromTimestamp) * state.storageMap 1 receiver) := by
+                        rw [Verity.Core.Uint256.add_assoc]
+    _ = (cfaProjectionAt state sender fromTimestamp +
+          cfaProjectionAt state receiver fromTimestamp) +
+        (toTimestamp - fromTimestamp) *
+          (state.storageMap 1 sender + state.storageMap 1 receiver) := by rw [hfactor]
+
+private theorem pairCfaProjectionAt_future_of_operation_and_rate
+    (pre post : ContractState) (sender receiver : Address)
+    (operationTimestamp tau : Uint256)
+    (hprojection : pairCfaProjectionAt post sender receiver operationTimestamp =
+      pairCfaProjectionAt pre sender receiver operationTimestamp)
+    (hrate : pairNetFlowRate post sender receiver = pairNetFlowRate pre sender receiver) :
+    pairCfaProjectionAt post sender receiver tau =
+      pairCfaProjectionAt pre sender receiver tau := by
+  rw [pairCfaProjectionAt_shift post sender receiver operationTimestamp tau,
+    pairCfaProjectionAt_shift pre sender receiver operationTimestamp tau,
+    hprojection, hrate]
+
+private theorem uint256_map_sum_eq_of_perm
+    {α : Type} (f : α → Uint256) {left right : List α}
+    (hperm : left.Perm right) :
+    (left.map f).sum = (right.map f).sum := by
+  induction hperm with
+  | nil => rfl
+  | cons _ _ ih => simp [ih]
+  | swap first second rest =>
+      simp only [List.map, List.sum_cons]
+      calc
+        f second + (f first + (rest.map f).sum) =
+            (f second + f first) + (rest.map f).sum := by
+              rw [Verity.Core.Uint256.add_assoc]
+        _ = (f first + f second) + (rest.map f).sum := by
+              rw [Verity.Core.Uint256.add_comm (f second) (f first)]
+        _ = f first + (f second + (rest.map f).sum) := by
+              rw [Verity.Core.Uint256.add_assoc]
+  | trans _ _ ih₁ ih₂ => exact ih₁.trans ih₂
+
+private theorem framed_map_sum
+    (pre post : ContractState) (accounts : List Address)
+    (sender receiver : Address) (timestamp : Uint256)
+    (hframe : ∀ account, account ∈ accounts → account ≠ sender → account ≠ receiver →
+      cfaProjectionAt post account timestamp = cfaProjectionAt pre account timestamp) :
+    ∀ rest : List Address, sender ∉ rest → receiver ∉ rest →
+      (∀ account, account ∈ rest → account ∈ accounts) →
+      (rest.map (fun account => cfaProjectionAt post account timestamp)).sum =
+        (rest.map (fun account => cfaProjectionAt pre account timestamp)).sum := by
+  intro rest hsenderRest hreceiverRest hsubset
+  induction rest with
+  | nil => rfl
+  | cons account tail ih =>
+      have hmember : account ∈ accounts := hsubset account (by simp)
+      have hsender : account ≠ sender := by
+        intro heq
+        apply hsenderRest
+        simp [heq]
+      have hreceiver : account ≠ receiver := by
+        intro heq
+        apply hreceiverRest
+        simp [heq]
+      have hsenderTail : sender ∉ tail := by
+        intro hmember
+        exact hsenderRest (by simp [hmember])
+      have hreceiverTail : receiver ∉ tail := by
+        intro hmember
+        exact hreceiverRest (by simp [hmember])
+      have htail : ∀ query, query ∈ tail → query ∈ accounts := by
+        intro query hquery
+        exact hsubset query (by simp [hquery])
+      simp only [List.map, List.sum_cons]
+      rw [hframe account hmember hsender hreceiver,
+        ih hsenderTail hreceiverTail htail]
+
+theorem pairAndFrame_implies_modular_cfa_global_projection
+    (pre post : ContractState) (accounts : List Address) (sender receiver : Address)
+    (timestamp : Uint256) :
+    pairAndFrameImplyModularCfaGlobalProjection pre post accounts sender receiver timestamp := by
+  unfold pairAndFrameImplyModularCfaGlobalProjection CfaPairCoveredBy
+  rintro ⟨hnodup, hdistinct, hsenderMem, hreceiverMem⟩ hpair hframe
+  let withoutSender := accounts.erase sender
+  let rest := withoutSender.erase receiver
+  have hreceiverWithout : receiver ∈ withoutSender := by
+    simp [withoutSender, hreceiverMem, Ne.symm hdistinct]
+  have haccountsPerm : accounts.Perm (sender :: receiver :: rest) := by
+    exact (List.perm_cons_erase hsenderMem).trans
+      (List.Perm.cons sender (List.perm_cons_erase hreceiverWithout))
+  have hrestSubset : ∀ account, account ∈ rest → account ∈ accounts := by
+    intro account haccount
+    exact List.mem_of_mem_erase (List.mem_of_mem_erase haccount)
+  have hrestSender : sender ∉ rest := by
+    intro hmember
+    have hwithout : sender ∈ withoutSender := List.mem_of_mem_erase hmember
+    exact (List.Nodup.not_mem_erase hnodup) hwithout
+  have hrestReceiver : receiver ∉ rest := by
+    exact (hnodup.erase sender).not_mem_erase
+  have hrestSum := framed_map_sum pre post accounts sender receiver timestamp hframe rest
+    hrestSender hrestReceiver hrestSubset
+  unfold modularCfaGlobalProjectionSumAt
+  rw [uint256_map_sum_eq_of_perm (fun account => cfaProjectionAt post account timestamp)
+      haccountsPerm,
+    uint256_map_sum_eq_of_perm (fun account => cfaProjectionAt pre account timestamp)
+      haccountsPerm]
+  simp only [List.map, List.sum_cons]
+  have hpair' :
+      cfaProjectionAt post sender timestamp + cfaProjectionAt post receiver timestamp =
+        cfaProjectionAt pre sender timestamp + cfaProjectionAt pre receiver timestamp := by
+    simpa [pairCfaProjectionAt] using hpair
+  calc
+    cfaProjectionAt post sender timestamp +
+        (cfaProjectionAt post receiver timestamp +
+          (rest.map (fun account => cfaProjectionAt post account timestamp)).sum) =
+      (cfaProjectionAt post sender timestamp + cfaProjectionAt post receiver timestamp) +
+        (rest.map (fun account => cfaProjectionAt post account timestamp)).sum := by
+          rw [Verity.Core.Uint256.add_assoc]
+    _ = (cfaProjectionAt pre sender timestamp + cfaProjectionAt pre receiver timestamp) +
+        (rest.map (fun account => cfaProjectionAt post account timestamp)).sum := by rw [hpair']
+    _ = (cfaProjectionAt pre sender timestamp + cfaProjectionAt pre receiver timestamp) +
+        (rest.map (fun account => cfaProjectionAt pre account timestamp)).sum := by rw [hrestSum]
+    _ = cfaProjectionAt pre sender timestamp +
+        (cfaProjectionAt pre receiver timestamp +
+          (rest.map (fun account => cfaProjectionAt pre account timestamp)).sum) := by
+            rw [Verity.Core.Uint256.add_assoc]
+
+theorem createNonApp_preserves_future_modular_cfa_global_projection
+    (source : PinnedSourceState) (s : ContractState) (accounts : List Address)
+    (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit operationTimestamp tau : Uint256) :
+    createNonAppPreservesFutureModularCfaGlobalProjection source s accounts sender receiver
+      flowRate liquidationPeriod minimumDeposit operationTimestamp tau := by
+  unfold createNonAppPreservesFutureModularCfaGlobalProjection
+  intro hcovered _htimestamp _htau hsource
+  dsimp only
+  intro hsuccess
+  have hprojection := createNonApp_preserves_cfa_projection source s sender receiver flowRate
+    liquidationPeriod minimumDeposit operationTimestamp
+  unfold createNonAppPreservesCfaProjection at hprojection
+  have hprojection := hprojection hsource hsuccess
+  have hrate := createNonApp_preserves_pair_net_flow_rate source s sender receiver flowRate
+    liquidationPeriod minimumDeposit operationTimestamp
+  unfold createNonAppPreservesPairNetFlowRate at hrate
+  have hrate := hrate hsource hsuccess
+  refine ⟨hprojection.1, ?_⟩
+  apply pairAndFrame_implies_modular_cfa_global_projection
+  · exact hcovered
+  · exact pairCfaProjectionAt_future_of_operation_and_rate s
+      (runCreateNonApp s sender receiver flowRate liquidationPeriod minimumDeposit
+        operationTimestamp).snd sender receiver operationTimestamp tau hprojection.2 hrate.2
+  · intro account hmember hsender hreceiver
+    have hframe := createNonApp_frames_unrelated_account source s sender receiver account flowRate
+      liquidationPeriod minimumDeposit operationTimestamp
+    unfold createNonAppFramesUnrelatedAccount at hframe
+    rcases hframe hsource hsender hreceiver hsuccess with
+      ⟨_, hsettled, hnetRate, haccountTimestamp, _, _⟩
+    simp [cfaProjectionAt, hsettled, hnetRate, haccountTimestamp]
+
+theorem updateNonApp_preserves_future_modular_cfa_global_projection
+    (source : PinnedSourceState) (s : ContractState) (accounts : List Address)
+    (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit operationTimestamp tau : Uint256) :
+    updateNonAppPreservesFutureModularCfaGlobalProjection source s accounts sender receiver
+      flowRate liquidationPeriod minimumDeposit operationTimestamp tau := by
+  unfold updateNonAppPreservesFutureModularCfaGlobalProjection
+  intro hcovered _htimestamp _htau hsource
+  dsimp only
+  intro hsuccess
+  have hprojection := updateNonApp_preserves_cfa_projection source s sender receiver flowRate
+    liquidationPeriod minimumDeposit operationTimestamp
+  unfold updateNonAppPreservesCfaProjection at hprojection
+  have hprojection := hprojection hsource hsuccess
+  have hrate := updateNonApp_preserves_pair_net_flow_rate source s sender receiver flowRate
+    liquidationPeriod minimumDeposit operationTimestamp
+  unfold updateNonAppPreservesPairNetFlowRate at hrate
+  have hrate := hrate hsource hsuccess
+  refine ⟨hprojection.1, ?_⟩
+  apply pairAndFrame_implies_modular_cfa_global_projection
+  · exact hcovered
+  · exact pairCfaProjectionAt_future_of_operation_and_rate s
+      (runUpdateNonApp s sender receiver flowRate liquidationPeriod minimumDeposit
+        operationTimestamp).snd sender receiver operationTimestamp tau hprojection.2 hrate.2
+  · intro account hmember hsender hreceiver
+    have hframe := updateNonApp_frames_unrelated_account source s sender receiver account flowRate
+      liquidationPeriod minimumDeposit operationTimestamp
+    unfold updateNonAppFramesUnrelatedAccount at hframe
+    rcases hframe hsource hsender hreceiver hsuccess with
+      ⟨_, hsettled, hnetRate, haccountTimestamp, _, _⟩
+    simp [cfaProjectionAt, hsettled, hnetRate, haccountTimestamp]
+
+theorem deleteNonApp_preserves_future_modular_cfa_global_projection
+    (source : PinnedSourceState) (s : ContractState) (accounts : List Address)
+    (sender receiver : Address) (operationTimestamp tau : Uint256) :
+    deleteNonAppPreservesFutureModularCfaGlobalProjection source s accounts sender receiver
+      operationTimestamp tau := by
+  unfold deleteNonAppPreservesFutureModularCfaGlobalProjection
+  intro hcovered _htimestamp _htau hsource
+  dsimp only
+  intro hsuccess
+  have hprojection := deleteNonApp_preserves_cfa_projection source s sender receiver
+    operationTimestamp
+  unfold deleteNonAppPreservesCfaProjection at hprojection
+  have hprojection := hprojection hsource hsuccess
+  have hrate := deleteNonApp_preserves_pair_net_flow_rate source s sender receiver
+    operationTimestamp
+  unfold deleteNonAppPreservesPairNetFlowRate at hrate
+  have hrate := hrate hsource hsuccess
+  refine ⟨hprojection.1, ?_⟩
+  apply pairAndFrame_implies_modular_cfa_global_projection
+  · exact hcovered
+  · exact pairCfaProjectionAt_future_of_operation_and_rate s
+      (runDeleteNonApp s sender receiver operationTimestamp).snd sender receiver
+      operationTimestamp tau hprojection.2 hrate.2
+  · intro account hmember hsender hreceiver
+    have hframe := deleteNonApp_frames_unrelated_account source s sender receiver account
+      operationTimestamp
+    unfold deleteNonAppFramesUnrelatedAccount at hframe
+    rcases hframe hsource hsender hreceiver hsuccess with
+      ⟨_, hsettled, hnetRate, haccountTimestamp, _, _⟩
+    simp [cfaProjectionAt, hsettled, hnetRate, haccountTimestamp]
+
+theorem receiverDeleteCallback_preserves_future_modular_cfa_global_projection
+    (source : PinnedSourceState) (s : ContractState) (accounts : List Address)
+    (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit operationTimestamp tau : Uint256) :
+    receiverDeleteCallbackPreservesFutureModularCfaGlobalProjection source s accounts
+      sender receiver flowRate liquidationPeriod minimumDeposit operationTimestamp tau := by
+  unfold receiverDeleteCallbackPreservesFutureModularCfaGlobalProjection
+  intro hcovered _htimestamp _htau hsource _hguards
+  dsimp only
+  intro hsuccess
+  have hprojection := receiverDeleteCallback_preserves_cfa_projection source s sender receiver
+    flowRate liquidationPeriod minimumDeposit operationTimestamp
+  unfold receiverDeleteCallbackPreservesCfaProjection at hprojection
+  have hprojection := hprojection hsource hsuccess
+  have hrate := receiverDeleteCallback_preserves_pair_net_flow_rate source s sender receiver
+    flowRate liquidationPeriod minimumDeposit operationTimestamp
+  unfold receiverDeleteCallbackPreservesPairNetFlowRate at hrate
+  have hrate := hrate hsource hsuccess
+  refine ⟨hprojection.1, ?_⟩
+  apply pairAndFrame_implies_modular_cfa_global_projection
+  · exact hcovered
+  · exact pairCfaProjectionAt_future_of_operation_and_rate s
+      (runReceiverDeleteCallback s sender receiver flowRate liquidationPeriod minimumDeposit
+        operationTimestamp).snd sender receiver operationTimestamp tau hprojection.2 hrate.2
+  · intro account hmember hsender hreceiver
+    have hframe := receiverDeleteCallback_frames_unrelated_account source s sender receiver account
+      flowRate liquidationPeriod minimumDeposit operationTimestamp
+    unfold receiverDeleteCallbackFramesUnrelatedAccount at hframe
+    rcases hframe hsource hsender hreceiver hsuccess with
+      ⟨_, hsettled, hnetRate, haccountTimestamp, _, _⟩
+    simp [cfaProjectionAt, hsettled, hnetRate, haccountTimestamp]
+
+theorem successfulOneLevel_components_compose {α β γ : Type}
+    (outerPrefix : Contract α) (nested : α → Contract β)
+    (outerResume : α → β → Contract γ) (accounts : List Address) (timestamp : Uint256) :
+    successfulOneLevelComponentsCompose outerPrefix nested outerResume accounts timestamp := by
+  unfold successfulOneLevelComponentsCompose PreservesModularCfaGlobalProjection
+  intro hprefix hnested hresume pre value post hrun
+  unfold runOneLevelOuterNested behavioralOneLevelCallback at hrun
+  simp only [Bind.bind, if_true] at hrun
+  rcases bind_success_elim _ _ _ _ _ hrun with
+    ⟨prefixValue, prefixPost, hprefixRun, htail⟩
+  rcases bind_success_elim _ _ _ _ _ htail with
+    ⟨nestedValue, nestedPost, hnestedRun, hresumeRun⟩
+  exact (hresume prefixValue nestedValue nestedPost value post hresumeRun).trans
+    ((hnested prefixValue prefixPost nestedValue nestedPost hnestedRun).trans
+      (hprefix pre prefixValue prefixPost hprefixRun))
+
+theorem callbackLevelTwo_is_rejected : callbackLevelTwoRejected := by
+  unfold callbackLevelTwoRejected
+  intro α nested pre
+  simp [behavioralOneLevelCallback, Verity.bind, Verity.require, Contract.run]
+
+theorem failedNested_rolls_back_and_prevents_resume {α β γ : Type}
+    (outerPrefix : Contract α) (nested : α → Contract β)
+    (outerResume : α → β → Contract γ) :
+    failedNestedRollsBackAndPreventsResume outerPrefix nested outerResume := by
+  unfold failedNestedRollsBackAndPreventsResume
+  intro pre mid prefixValue msg hprefix hnested
+  have hprefixRaw := Contract.eq_of_run_success hprefix
+  unfold runOneLevelOuterNested behavioralOneLevelCallback
+  simp only [Bind.bind, if_true]
+  unfold Contract.run Verity.bind
+  rw [hprefixRaw]
+  cases hnestedRaw : nested prefixValue mid with
+  | success nestedValue nestedPost =>
+      simp [Contract.run, hnestedRaw] at hnested
+  | «revert» nestedMsg nestedState =>
+      simp [Contract.run, hnestedRaw] at hnested
+      subst nestedMsg
+      simp [hnestedRaw]
+
+private theorem require_success_observations
+    (cond : Bool) (msg : String) (s t : ContractState)
+    (h : (Verity.require cond msg).run s = ContractResult.success () t) :
+    cond = true ∧ t = s := by
+  constructor
+  · exact Verity.Proofs.Stdlib.Automation.require_success_implies_cond cond msg s
+      (by rw [h]; rfl)
+  · rw [success_state_eq _ _ _ _ h]
+    exact preserving_require cond msg s
+
+private theorem getStorage_value_of_success
+    (sl : StorageSlot Uint256) (s t : ContractState) (value : Uint256)
+    (h : (getStorage sl).run s = ContractResult.success value t) :
+    value = s.storage sl.slot := by
+  have hraw := Contract.eq_of_run_success h
+  change ContractResult.success (s.storage sl.slot) s =
+    ContractResult.success value t at hraw
+  injection hraw with hvalue _
+  exact hvalue.symm
+
+private theorem directOuterHostContext_observations
+    (s t : ContractState) (sender : Address)
+    (h : (SuperfluidCFA._requireDirectOuterHostContext sender).run s =
+      ContractResult.success () t) :
+    s.storage 29 = 1 ∧ s.storage 30 = 0 ∧ s.storage 31 = sender ∧ t = s := by
+  unfold SuperfluidCFA._requireDirectOuterHostContext at h
+  simp only [Bind.bind] at h
+  rcases bind_success_elim _ _ _ _ _ h with ⟨direct, s₁, hdirectGet, h⟩
+  have hs₁ : s₁ = s := success_state_eq _ _ _ _ hdirectGet
+  have hdirect : direct = s.storage 29 := by
+    simpa [SuperfluidCFA.hostOuterIsDirectCallContext] using
+      getStorage_value_of_success SuperfluidCFA.hostOuterIsDirectCallContext s s₁ direct hdirectGet
+  subst s₁
+  subst direct
+  rcases bind_success_elim _ _ _ _ _ h with ⟨token, s₂, htokenGet, h⟩
+  have hs₂ : s₂ = s := success_state_eq _ _ _ _ htokenGet
+  have htoken : token = s.storage 30 := by
+    simpa [SuperfluidCFA.hostOuterAppCreditToken] using
+      getStorage_value_of_success SuperfluidCFA.hostOuterAppCreditToken s s₂ token htokenGet
+  subst s₂
+  subst token
+  rcases bind_success_elim _ _ _ _ _ h with ⟨actor, s₃, hactorGet, h⟩
+  have hs₃ : s₃ = s := success_state_eq _ _ _ _ hactorGet
+  have hactor : actor = s.storage 31 := by
+    simpa [SuperfluidCFA.hostOuterActor] using
+      getStorage_value_of_success SuperfluidCFA.hostOuterActor s s₃ actor hactorGet
+  subst s₃
+  subst actor
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, s₄, hdirectReq, h⟩
+  have hdirectObs := require_success_observations _ _ s s₄ hdirectReq
+  have hs₄ := hdirectObs.2
+  subst s₄
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, s₅, htokenReq, h⟩
+  have htokenObs := require_success_observations _ _ s s₅ htokenReq
+  have hs₅ := htokenObs.2
+  subst s₅
+  have hactorObs := require_success_observations _ _ s t h
+  simpa using And.intro hdirectObs.1
+    (And.intro htokenObs.1 (And.intro hactorObs.1 hactorObs.2))
+
+set_option maxRecDepth 4096 in
+private theorem sourceAppCreditBase_value_of_success
+    (flowRate liquidationPeriod value : Uint256) (s t : ContractState)
+    (h : (SuperfluidCFA._calculateSourceAppCreditBase flowRate liquidationPeriod).run s =
+      ContractResult.success value t) :
+    value = clipDepositRoundingUp (mul flowRate liquidationPeriod) := by
+  unfold SuperfluidCFA._calculateSourceAppCreditBase at h
+  simp only [Bind.bind] at h
+  rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
+  by_cases hzero : flowRate = 0
+  · subst flowRate
+    simp [Verity.pure, Pure.pure, Contract.run] at h
+    have hmul : mul (0 : Uint256) liquidationPeriod = 0 :=
+      Verity.Core.Uint256.zero_mul liquidationPeriod
+    have hclip : clipDepositRoundingUp (mul (0 : Uint256) liquidationPeriod) = 0 := by
+      rw [hmul]
+      decide
+    exact h.1.symm.trans hclip.symm
+  · have hzeroBool : (flowRate == 0) = false := by simp [hzero]
+    simp only [hzeroBool] at h
+    by_cases hlow : mod (mul flowRate liquidationPeriod) 4294967296 > 0
+    · simp [hlow, Verity.pure, Pure.pure, Contract.run] at h
+      unfold clipDepositRoundingUp
+      rw [if_pos hlow]
+      dsimp only
+      exact h.1.symm
+    · simp [hlow, Verity.pure, Pure.pure, Contract.run] at h
+      unfold clipDepositRoundingUp
+      rw [if_neg hlow]
+      dsimp only
+      rw [show add (div (mul flowRate liquidationPeriod) 4294967296) 0 =
+        div (mul flowRate liquidationPeriod) 4294967296 by
+          exact Verity.Core.Uint256.add_zero _]
+      exact h.1.symm
+
+private theorem receiverDeleteCallback_prefix_guards_of_success
+    (source : PinnedSourceState) (s t : ContractState) (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit operationTimestamp newDeposit : Uint256)
+    (hsource : pinnedSourcePathRelation source s sender receiver operationTimestamp)
+    (h : (SuperfluidCFA._receiverDeleteCallbackOuterPrefix sender receiver flowRate
+      liquidationPeriod minimumDeposit operationTimestamp).run s =
+        ContractResult.success newDeposit t) :
+    ConcreteSelfDeletingCallbackGuards source sender receiver flowRate liquidationPeriod
+      minimumDeposit := by
+  unfold pinnedSourcePathRelation at hsource
+  rcases hsource with ⟨hmodel, _, _⟩
+  unfold sourceModelRelation at hmodel
+  rcases hmodel with
+    ⟨_, _, _, _, _, _, _, _, _, _, _, hsrcSenderApp, hsrcReceiverApp, hsrcJailed,
+      hsrcBefore, hsrcAfter, hsrcCreditUsed, hsrcLevel, hsrcActor, hsrcAppAddress,
+      hsrcContext, hsrcDelete, hsrcNested, hsrcTokenMatch, hsrcGranted, hsrcAdditional,
+      hsrcSelfDelete, hsrcOuterDirect, hsrcOuterToken, hsrcOuterActor⟩
+  unfold SuperfluidCFA._receiverDeleteCallbackOuterPrefix at h
+  simp only [Bind.bind] at h
+  rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _
+    (sourceEnvironment_preserving sender receiver liquidationPeriod minimumDeposit) h with ⟨_, h⟩
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, directState, hdirect, h⟩
+  have hdirectObs := directOuterHostContext_observations s directState sender hdirect
+  have hdirectState := hdirectObs.2.2.2
+  subst directState
+  rcases bind_success_elim _ _ _ _ _ h with ⟨receiverIsApp, state₁, hget₁, h⟩
+  have hstate₁ : state₁ = s := success_state_eq _ _ _ _ hget₁
+  have hvalue₁ : receiverIsApp = s.storageMap 10 receiver := by
+    simpa [SuperfluidCFA.hostIsApp] using
+      getMapping_value_of_success SuperfluidCFA.hostIsApp receiver s state₁ receiverIsApp hget₁
+  subst state₁
+  subst receiverIsApp
+  rcases bind_success_elim _ _ _ _ _ h with ⟨senderIsApp, state₂, hget₂, h⟩
+  have hstate₂ : state₂ = s := success_state_eq _ _ _ _ hget₂
+  have hvalue₂ : senderIsApp = s.storageMap 10 sender := by
+    simpa [SuperfluidCFA.hostIsApp] using
+      getMapping_value_of_success SuperfluidCFA.hostIsApp sender s state₂ senderIsApp hget₂
+  subst state₂
+  subst senderIsApp
+  rcases bind_success_elim _ _ _ _ _ h with ⟨receiverIsJailed, state₃, hget₃, h⟩
+  have hstate₃ : state₃ = s := success_state_eq _ _ _ _ hget₃
+  have hvalue₃ : receiverIsJailed = s.storageMap 11 receiver := by
+    simpa [SuperfluidCFA.hostIsJailed] using
+      getMapping_value_of_success SuperfluidCFA.hostIsJailed receiver s state₃ receiverIsJailed hget₃
+  subst state₃
+  subst receiverIsJailed
+  rcases bind_success_elim _ _ _ _ _ h with ⟨beforeCreatedNoop, state₄, hget₄, h⟩
+  have hstate₄ : state₄ = s := success_state_eq _ _ _ _ hget₄
+  have hvalue₄ : beforeCreatedNoop = s.storageMap 12 receiver := by
+    simpa [SuperfluidCFA.hostBeforeCreatedNoop] using
+      getMapping_value_of_success SuperfluidCFA.hostBeforeCreatedNoop receiver s state₄
+        beforeCreatedNoop hget₄
+  subst state₄
+  subst beforeCreatedNoop
+  rcases bind_success_elim _ _ _ _ _ h with ⟨afterCreatedEnabled, state₅, hget₅, h⟩
+  have hstate₅ : state₅ = s := success_state_eq _ _ _ _ hget₅
+  have hvalue₅ : afterCreatedEnabled = s.storageMap 13 receiver := by
+    simpa [SuperfluidCFA.hostAfterCreatedEnabled] using
+      getMapping_value_of_success SuperfluidCFA.hostAfterCreatedEnabled receiver s state₅
+        afterCreatedEnabled hget₅
+  subst state₅
+  subst afterCreatedEnabled
+  rcases bind_success_elim _ _ _ _ _ h with ⟨callbackCreditUsed, state₆, hget₆, h⟩
+  have hstate₆ : state₆ = s := success_state_eq _ _ _ _ hget₆
+  have hvalue₆ : callbackCreditUsed = s.storageMap 14 receiver := by
+    simpa [SuperfluidCFA.hostCallbackCreditUsed] using
+      getMapping_value_of_success SuperfluidCFA.hostCallbackCreditUsed receiver s state₆
+        callbackCreditUsed hget₆
+  subst state₆
+  subst callbackCreditUsed
+  rcases bind_success_elim _ _ _ _ _ h with ⟨callbackLevel, state₇, hget₇, h⟩
+  have hstate₇ : state₇ = s := success_state_eq _ _ _ _ hget₇
+  have hvalue₇ : callbackLevel = s.storageMap 15 receiver := by
+    simpa [SuperfluidCFA.hostCallbackLevel] using
+      getMapping_value_of_success SuperfluidCFA.hostCallbackLevel receiver s state₇ callbackLevel hget₇
+  subst state₇
+  subst callbackLevel
+  rcases bind_success_elim _ _ _ _ _ h with ⟨callbackActor, state₈, hget₈, h⟩
+  have hstate₈ : state₈ = s := success_state_eq _ _ _ _ hget₈
+  have hvalue₈ : callbackActor = s.storageMap 16 receiver := by
+    simpa [SuperfluidCFA.hostCallbackActor] using
+      getMapping_value_of_success SuperfluidCFA.hostCallbackActor receiver s state₈ callbackActor hget₈
+  subst state₈
+  subst callbackActor
+  rcases bind_success_elim _ _ _ _ _ h with ⟨callbackAppAddress, state₉, hget₉, h⟩
+  have hstate₉ : state₉ = s := success_state_eq _ _ _ _ hget₉
+  have hvalue₉ : callbackAppAddress = s.storageMap 17 receiver := by
+    simpa [SuperfluidCFA.hostCallbackAppAddress] using
+      getMapping_value_of_success SuperfluidCFA.hostCallbackAppAddress receiver s state₉
+        callbackAppAddress hget₉
+  subst state₉
+  subst callbackAppAddress
+  rcases bind_success_elim _ _ _ _ _ h with ⟨isAppCallbackContext, state₁₀, hget₁₀, h⟩
+  have hstate₁₀ : state₁₀ = s := success_state_eq _ _ _ _ hget₁₀
+  have hvalue₁₀ : isAppCallbackContext = s.storageMap 18 receiver := by
+    simpa [SuperfluidCFA.hostIsAppCallbackContext] using
+      getMapping_value_of_success SuperfluidCFA.hostIsAppCallbackContext receiver s state₁₀
+        isAppCallbackContext hget₁₀
+  subst state₁₀
+  subst isAppCallbackContext
+  rcases bind_success_elim _ _ _ _ _ h with ⟨contextualDeleteEnabled, state₁₁, hget₁₁, h⟩
+  have hstate₁₁ : state₁₁ = s := success_state_eq _ _ _ _ hget₁₁
+  have hvalue₁₁ : contextualDeleteEnabled = s.storageMap 19 receiver := by
+    simpa [SuperfluidCFA.hostContextualDeleteEnabled] using
+      getMapping_value_of_success SuperfluidCFA.hostContextualDeleteEnabled receiver s state₁₁
+        contextualDeleteEnabled hget₁₁
+  subst state₁₁
+  subst contextualDeleteEnabled
+  rcases bind_success_elim _ _ _ _ _ h with ⟨nestedCallbackSuppressed, state₁₂, hget₁₂, h⟩
+  have hstate₁₂ : state₁₂ = s := success_state_eq _ _ _ _ hget₁₂
+  have hvalue₁₂ : nestedCallbackSuppressed = s.storageMap 20 receiver := by
+    simpa [SuperfluidCFA.hostNestedCallbackSuppressed] using
+      getMapping_value_of_success SuperfluidCFA.hostNestedCallbackSuppressed receiver s state₁₂
+        nestedCallbackSuppressed hget₁₂
+  subst state₁₂
+  subst nestedCallbackSuppressed
+  rcases bind_success_elim _ _ _ _ _ h with ⟨appCreditTokenMatches, state₁₃, hget₁₃, h⟩
+  have hstate₁₃ : state₁₃ = s := success_state_eq _ _ _ _ hget₁₃
+  have hvalue₁₃ : appCreditTokenMatches = s.storageMap 21 receiver := by
+    simpa [SuperfluidCFA.hostAppCreditTokenMatches] using
+      getMapping_value_of_success SuperfluidCFA.hostAppCreditTokenMatches receiver s state₁₃
+        appCreditTokenMatches hget₁₃
+  subst state₁₃
+  subst appCreditTokenMatches
+  rcases bind_success_elim _ _ _ _ _ h with ⟨appCreditGranted, state₁₄, hget₁₄, h⟩
+  have hstate₁₄ : state₁₄ = s := success_state_eq _ _ _ _ hget₁₄
+  have hvalue₁₄ : appCreditGranted = s.storageMap 22 receiver := by
+    simpa [SuperfluidCFA.hostAppCreditGranted] using
+      getMapping_value_of_success SuperfluidCFA.hostAppCreditGranted receiver s state₁₄
+        appCreditGranted hget₁₄
+  subst state₁₄
+  subst appCreditGranted
+  rcases bind_success_elim _ _ _ _ _ h with ⟨additionalAppCredit, state₁₅, hget₁₅, h⟩
+  have hstate₁₅ : state₁₅ = s := success_state_eq _ _ _ _ hget₁₅
+  have hvalue₁₅ : additionalAppCredit = s.storageMap 23 receiver := by
+    simpa [SuperfluidCFA.hostAdditionalAppCredit] using
+      getMapping_value_of_success SuperfluidCFA.hostAdditionalAppCredit receiver s state₁₅
+        additionalAppCredit hget₁₅
+  subst state₁₅
+  subst additionalAppCredit
+  rcases bind_success_elim _ _ _ _ _ h with ⟨receiverIsSelfDeleting, state₁₆, hget₁₆, h⟩
+  have hstate₁₆ : state₁₆ = s := success_state_eq _ _ _ _ hget₁₆
+  have hvalue₁₆ : receiverIsSelfDeleting = s.storageMap 28 receiver := by
+    simpa [SuperfluidCFA.hostIsSelfDeletingFlowApp] using
+      getMapping_value_of_success SuperfluidCFA.hostIsSelfDeletingFlowApp receiver s state₁₆
+        receiverIsSelfDeleting hget₁₆
+  subst state₁₆
+  subst receiverIsSelfDeleting
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₁, hreq₁, h⟩
+  have hreqObs₁ := require_success_observations _ _ s reqState₁ hreq₁
+  have hreqState₁ := hreqObs₁.2
+  have hreceiverApp : s.storageMap 10 receiver = 1 := by simpa using hreqObs₁.1
+  subst reqState₁
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₂, hreq₂, h⟩
+  have hreqObs₂ := require_success_observations _ _ s reqState₂ hreq₂
+  have hreqState₂ := hreqObs₂.2
+  have hsenderApp : s.storageMap 10 sender = 0 := by simpa using hreqObs₂.1
+  subst reqState₂
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₃, hreq₃, h⟩
+  have hreqObs₃ := require_success_observations _ _ s reqState₃ hreq₃
+  have hreqState₃ := hreqObs₃.2
+  have hjailed : s.storageMap 11 receiver = 0 := by simpa using hreqObs₃.1
+  subst reqState₃
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₄, hreq₄, h⟩
+  have hreqObs₄ := require_success_observations _ _ s reqState₄ hreq₄
+  have hreqState₄ := hreqObs₄.2
+  have hbefore : s.storageMap 12 receiver = 1 := by simpa using hreqObs₄.1
+  subst reqState₄
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₅, hreq₅, h⟩
+  have hreqObs₅ := require_success_observations _ _ s reqState₅ hreq₅
+  have hreqState₅ := hreqObs₅.2
+  have hafter : s.storageMap 13 receiver = 1 := by simpa using hreqObs₅.1
+  subst reqState₅
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₆, hreq₆, h⟩
+  have hreqObs₆ := require_success_observations _ _ s reqState₆ hreq₆
+  have hreqState₆ := hreqObs₆.2
+  have hcreditUsed : s.storageMap 14 receiver = 0 := by simpa using hreqObs₆.1
+  subst reqState₆
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₇, hreq₇, h⟩
+  have hreqObs₇ := require_success_observations _ _ s reqState₇ hreq₇
+  have hreqState₇ := hreqObs₇.2
+  have hlevel : s.storageMap 15 receiver = 1 := by simpa using hreqObs₇.1
+  subst reqState₇
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₈, hreq₈, h⟩
+  have hreqObs₈ := require_success_observations _ _ s reqState₈ hreq₈
+  have hreqState₈ := hreqObs₈.2
+  have hactor : s.storageMap 16 receiver = receiver := by simpa using hreqObs₈.1
+  subst reqState₈
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₉, hreq₉, h⟩
+  have hreqObs₉ := require_success_observations _ _ s reqState₉ hreq₉
+  have hreqState₉ := hreqObs₉.2
+  have happAddress : s.storageMap 17 receiver = receiver := by simpa using hreqObs₉.1
+  subst reqState₉
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₁₀, hreq₁₀, h⟩
+  have hreqObs₁₀ := require_success_observations _ _ s reqState₁₀ hreq₁₀
+  have hreqState₁₀ := hreqObs₁₀.2
+  have hcontext : s.storageMap 18 receiver = 1 := by simpa using hreqObs₁₀.1
+  subst reqState₁₀
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₁₁, hreq₁₁, h⟩
+  have hreqObs₁₁ := require_success_observations _ _ s reqState₁₁ hreq₁₁
+  have hreqState₁₁ := hreqObs₁₁.2
+  have hdelete : s.storageMap 19 receiver = 1 := by simpa using hreqObs₁₁.1
+  subst reqState₁₁
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₁₂, hreq₁₂, h⟩
+  have hreqObs₁₂ := require_success_observations _ _ s reqState₁₂ hreq₁₂
+  have hreqState₁₂ := hreqObs₁₂.2
+  have hnested : s.storageMap 20 receiver = 1 := by simpa using hreqObs₁₂.1
+  subst reqState₁₂
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₁₃, hreq₁₃, h⟩
+  have hreqObs₁₃ := require_success_observations _ _ s reqState₁₃ hreq₁₃
+  have hreqState₁₃ := hreqObs₁₃.2
+  have htokenMatch : s.storageMap 21 receiver = 1 := by simpa using hreqObs₁₃.1
+  subst reqState₁₃
+  rcases bind_success_elim _ _ _ _ _ h with ⟨_, reqState₁₄, hreq₁₄, h⟩
+  have hreqObs₁₄ := require_success_observations _ _ s reqState₁₄ hreq₁₄
+  have hreqState₁₄ := hreqObs₁₄.2
+  have hselfDelete : s.storageMap 28 receiver = 1 := by simpa using hreqObs₁₄.1
+  subst reqState₁₄
+  rcases preserving_bind_tail _ _ _ _ _ (emptyFlow_preserving sender receiver) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _ (canonical_preserving sender) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _ (canonical_preserving receiver) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _ (preserving_getMapping _ _) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _ (preserving_getMapping _ _) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
+  rcases preserving_bind_tail _ _ _ _ _ (preserving_require _ _) h with ⟨_, h⟩
+  rcases bind_success_elim _ _ _ _ _ h with ⟨appCreditBase, creditState, hcreditBase, h⟩
+  have hcreditState : creditState = s := by
+    rw [success_state_eq _ _ _ _ hcreditBase]
+    exact sourceAppCreditBase_preserving flowRate liquidationPeriod s
+  have hcreditBaseValue := sourceAppCreditBase_value_of_success flowRate liquidationPeriod
+    appCreditBase s creditState hcreditBase
+  subst creditState
+  rcases preserving_bind_tail _ _ _ _ _
+    (sourceDeposit_preserving flowRate liquidationPeriod minimumDeposit) h with ⟨_, h⟩
+  have hfixed :
+      source.hostIsApp receiver = 1 ∧ source.hostIsApp sender = 0 ∧
+      source.hostIsJailed receiver = 0 ∧ source.hostBeforeCreatedNoop receiver = 1 ∧
+      source.hostAfterCreatedEnabled receiver = 1 ∧
+      source.hostCallbackCreditUsed receiver = 0 ∧ source.hostCallbackLevel receiver = 1 ∧
+      source.hostCallbackActor receiver = receiver ∧
+      source.hostCallbackAppAddress receiver = receiver ∧
+      source.hostIsAppCallbackContext receiver = 1 ∧
+      source.hostContextualDeleteEnabled receiver = 1 ∧
+      source.hostNestedCallbackSuppressed receiver = 1 ∧
+      source.hostAppCreditTokenMatches receiver = 1 ∧
+      source.hostIsSelfDeletingFlowApp receiver = 1 ∧
+      source.hostOuterIsDirectCallContext = 1 ∧ source.hostOuterAppCreditToken = 0 ∧
+      source.hostOuterActor = sender := by
+    exact ⟨hsrcReceiverApp.trans hreceiverApp, hsrcSenderApp.trans hsenderApp,
+      hsrcJailed.trans hjailed, hsrcBefore.trans hbefore, hsrcAfter.trans hafter,
+      hsrcCreditUsed.trans hcreditUsed, hsrcLevel.trans hlevel, hsrcActor.trans hactor,
+      hsrcAppAddress.trans happAddress, hsrcContext.trans hcontext, hsrcDelete.trans hdelete,
+      hsrcNested.trans hnested, hsrcTokenMatch.trans htokenMatch,
+      hsrcSelfDelete.trans hselfDelete, hsrcOuterDirect.trans hdirectObs.1,
+      hsrcOuterToken.trans hdirectObs.2.1, hsrcOuterActor.trans hdirectObs.2.2.1⟩
+  have hcreditGuards :
+      let creditBase := clipDepositRoundingUp (mul flowRate liquidationPeriod)
+      if creditBase = 0 then
+        source.hostAdditionalAppCredit receiver = 0 ∧
+        source.hostAppCreditGranted receiver = 0
+      else
+        source.hostAdditionalAppCredit receiver ≥ 4294967296 ∧
+        source.hostAdditionalAppCredit receiver ≥ minimumDeposit ∧
+        (source.hostAdditionalAppCredit receiver = 4294967296 ∨
+          source.hostAdditionalAppCredit receiver = minimumDeposit) ∧
+        source.hostAppCreditGranted receiver =
+          add creditBase (source.hostAdditionalAppCredit receiver) := by
+    dsimp only
+    split at h
+    · rename_i hzeroBranch
+      have hzero : appCreditBase = 0 := by simpa using hzeroBranch
+      rcases bind_success_elim _ _ _ _ _ h with ⟨_, creditReqState₁, hcreditReq₁, h⟩
+      have hcreditReqObs₁ := require_success_observations _ _ s creditReqState₁ hcreditReq₁
+      have hcreditReqState₁ := hcreditReqObs₁.2
+      have hadditionalZero : s.storageMap 23 receiver = 0 := by
+        simpa using hcreditReqObs₁.1
+      subst creditReqState₁
+      rcases bind_success_elim _ _ _ _ _ h with ⟨_, creditReqState₂, hcreditReq₂, _⟩
+      have hcreditReqObs₂ := require_success_observations _ _ s creditReqState₂ hcreditReq₂
+      have hgrantedZero : s.storageMap 22 receiver = 0 := by
+        simpa using hcreditReqObs₂.1
+      have hspecZero : clipDepositRoundingUp (mul flowRate liquidationPeriod) = 0 :=
+        hcreditBaseValue.symm.trans hzero
+      rw [if_pos hspecZero]
+      exact ⟨hsrcAdditional.trans hadditionalZero, hsrcGranted.trans hgrantedZero⟩
+    · rename_i hnonzeroBranch
+      have hnonzero : appCreditBase ≠ 0 := by simpa using hnonzeroBranch
+      rcases bind_success_elim _ _ _ _ _ h with ⟨_, creditReqState₁, hcreditReq₁, h⟩
+      have hcreditReqObs₁ := require_success_observations _ _ s creditReqState₁ hcreditReq₁
+      have hcreditReqState₁ := hcreditReqObs₁.2
+      have hadditionalDefault : s.storageMap 23 receiver ≥ 4294967296 := by
+        simpa using hcreditReqObs₁.1
+      subst creditReqState₁
+      rcases bind_success_elim _ _ _ _ _ h with ⟨_, creditReqState₂, hcreditReq₂, h⟩
+      have hcreditReqObs₂ := require_success_observations _ _ s creditReqState₂ hcreditReq₂
+      have hcreditReqState₂ := hcreditReqObs₂.2
+      have hadditionalMinimum : s.storageMap 23 receiver ≥ minimumDeposit := by
+        simpa using hcreditReqObs₂.1
+      subst creditReqState₂
+      rcases bind_success_elim _ _ _ _ _ h with ⟨_, creditReqState₃, hcreditReq₃, h⟩
+      have hcreditReqObs₃ := require_success_observations _ _ s creditReqState₃ hcreditReq₃
+      have hcreditReqState₃ := hcreditReqObs₃.2
+      have hadditionalMax : s.storageMap 23 receiver = 4294967296 ∨
+          s.storageMap 23 receiver = minimumDeposit := by
+        simpa using hcreditReqObs₃.1
+      subst creditReqState₃
+      rcases bind_success_elim _ _ _ _ _ h with ⟨_, creditReqState₄, hcreditReq₄, _⟩
+      have hcreditReqObs₄ := require_success_observations _ _ s creditReqState₄ hcreditReq₄
+      have hgranted : s.storageMap 22 receiver = add appCreditBase (s.storageMap 23 receiver) := by
+        simpa using hcreditReqObs₄.1
+      have hspecNonzero : clipDepositRoundingUp (mul flowRate liquidationPeriod) ≠ 0 := by
+        intro hspecZero
+        exact hnonzero (hcreditBaseValue.trans hspecZero)
+      rw [if_neg hspecNonzero]
+      refine ⟨?_, ?_, hadditionalMax.imp hsrcAdditional.trans hsrcAdditional.trans, ?_⟩
+      · rw [hsrcAdditional]
+        exact hadditionalDefault
+      · rw [hsrcAdditional]
+        exact hadditionalMinimum
+      · exact hsrcGranted.trans (hgranted.trans ((congrArg
+          (fun credit => add credit (s.storageMap 23 receiver)) hcreditBaseValue).trans
+            (congrArg (fun additional =>
+              add (clipDepositRoundingUp (mul flowRate liquidationPeriod)) additional)
+              hsrcAdditional.symm)))
+  rcases hfixed with
+    ⟨hreceiverAppSource, hsenderAppSource, hjailedSource, hbeforeSource, hafterSource,
+      hcreditUsedSource, hlevelSource, hactorSource, happAddressSource, hcontextSource,
+      hdeleteSource, hnestedSource, htokenMatchSource, hselfDeleteSource,
+      houterDirectSource, houterTokenSource, houterActorSource⟩
+  unfold ConcreteSelfDeletingCallbackGuards
+  exact ⟨hreceiverAppSource, hsenderAppSource, hjailedSource, hbeforeSource, hafterSource,
+    hcreditUsedSource, hlevelSource, hactorSource, happAddressSource, hcontextSource,
+    hdeleteSource, hnestedSource, htokenMatchSource, hselfDeleteSource,
+    houterDirectSource, houterTokenSource, houterActorSource, hcreditGuards⟩
+
+theorem receiverDeleteCallback_matches_factored_instance_behavior
+    (source : PinnedSourceState) (s : ContractState) (sender receiver : Address)
+    (flowRate liquidationPeriod minimumDeposit operationTimestamp : Uint256) :
+    receiverDeleteCallbackFactoredInstanceBehavior source s sender receiver flowRate
+      liquidationPeriod minimumDeposit operationTimestamp := by
+  unfold receiverDeleteCallbackFactoredInstanceBehavior
+  intro _htimestamp hsource
+  dsimp only
+  intro hsuccess
+  have hreload := receiverDeleteCallback_reloads_final_zero source s sender receiver flowRate
+    liquidationPeriod minimumDeposit operationTimestamp
+  unfold receiverDeleteCallbackReloadsFinalZero at hreload
+  have hreload := hreload hsource hsuccess
+  unfold modelSucceeded at hsuccess
+  rcases success_exists
+    (runReceiverDeleteCallback s sender receiver flowRate liquidationPeriod minimumDeposit
+      operationTimestamp) hsuccess with ⟨resultValue, post, hrun⟩
+  have hfull :
+      (SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback sender receiver flowRate
+        liquidationPeriod minimumDeposit operationTimestamp).run s =
+          ContractResult.success resultValue post := by
+    simpa [runReceiverDeleteCallback] using hrun
+  have hprefixExecution := hfull
+  unfold SuperfluidCFA.createFlowToAppWithReceiverDeleteCallback runOneLevelOuterNested
+    behavioralOneLevelCallback at hprefixExecution
+  simp only [Bind.bind, if_true] at hprefixExecution
+  rcases bind_success_elim _ _ _ _ _ hprefixExecution with
+    ⟨prefixDeposit, prefixPost, hprefix, _⟩
+  have hguards := receiverDeleteCallback_prefix_guards_of_success source s prefixPost sender receiver
+    flowRate liquidationPeriod minimumDeposit operationTimestamp prefixDeposit hsource hprefix
+  refine ⟨hguards, hreload.1, ?_, ?_⟩
+  · rfl
+  · rw [hreload.2.2.1]
+    exact hreload.2.1
 
 end Benchmark.Cases.Superfluid.RealtimeBalanceConservation
