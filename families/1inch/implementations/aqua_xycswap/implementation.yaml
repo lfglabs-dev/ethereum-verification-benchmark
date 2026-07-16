@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: 1inch
+implementation_id: aqua_xycswap
+display_name: 1inch Aqua XYCSwap
+split: active
+status: translated
+upstream_repo: https://github.com/1inch/aqua
+upstream_commit: 81c26e4619ce21556ab02b3284ee2685de21fb18
+source_language: solidity
+source_artifact_path: examples/apps/XYCSwap.sol
+case_ids:
+  - 1inch/xycswap_curve_safety
+notes: >
+  Implementation entry for the 1inch Aqua XYCSwap constant-product AMM app,
+  scoped to the curve safety invariant over _quoteExactIn.

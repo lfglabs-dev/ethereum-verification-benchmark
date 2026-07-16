@@ -27,7 +27,7 @@ selected_functions:
   - clSwapCallback
 source_language: solidity
 verity_version: d71bf23d908a7a952bf041ee5ebe41ba68b54426
-lean_toolchain: leanprover/lean4:v4.22.0
+lean_toolchain: leanprover/lean4:v4.24.0
 abstraction_level: protocol_slice
 abstraction_tags:
   - packed_calldata_decoded_commands

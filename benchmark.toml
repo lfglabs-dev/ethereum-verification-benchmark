@@ -17,6 +17,7 @@ backlog_glob = "backlog/*/*/case.yaml"
 backlog_task_glob = "backlog/*/*/tasks/*.yaml"
 result_schema = "schemas/run-result.schema.json"
 active_cases = [
+  "1inch/xycswap_curve_safety",
   "alchemix/earmark_conservation",
   "balancer/reclamm_swap_rounding",
   "cork/pool_solvency",
@@ -43,6 +44,7 @@ active_cases = [
   "reserve/auction_price_band",
   "rootstock/flyover_quote_lifecycle",
   "safe/owner_manager_reach",
+  "starkware/starkgate_escrow",
   "termmax/order_v2_buy_xt_single_segment",
   "term_finance/term_auction_clearing",
   "t3tris/hwm_performance_fee",

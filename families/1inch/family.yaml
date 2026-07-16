@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: 1inch
+display_name: 1inch Aqua
+split: active
+status: active
+description: >
+  Benchmark family for 1inch Aqua shared liquidity layer, starting with the
+  XYCSwap constant-product AMM curve safety invariant.
+implementation_ids:
+  - aqua_xycswap
+case_ids:
+  - 1inch/xycswap_curve_safety
+source_languages:
+  - solidity

@@ -21,7 +21,7 @@ jobs:
           python3 - <<'EOF'
           import sys
           sys.path.insert(0, "harness/runners"); sys.path.insert(0, "harness")
-          from lean_tools import _patch_proof_body, _looks_like_full_file
+          from lean_tools import _full_file_context_preserved, _patch_proof_body, _looks_like_full_file
 
           # Relative indentation must survive patching verbatim.
           proof = "constructor\n· simp [Foo.bar,\n    Foo.baz]\n· calc a = b := by rw [h]\n    _ = c := by\n      simp [x]\n"
@@ -29,10 +29,13 @@ jobs:
           assert "    Foo.baz]" in patched, patched
           assert "    _ = c := by" in patched, patched
 
-          # Full-file submissions pass through untouched.
+          # Full-file submissions retain helpers, but context drift is caught
+          # before Lean by the imports/namespaces/opens/end signature guard.
           full = "import A.B\nnamespace Foo\ntheorem t : True := by trivial\nend Foo\n"
           assert _looks_like_full_file(full)
-          assert _patch_proof_body("theorem t : True := by\n  sorry\n", full) == full
+          full_patched = _patch_proof_body("theorem t : True := by\n  sorry\n", full)
+          assert full_patched == full
+          assert not _full_file_context_preserved("theorem t : True := by\n  sorry\n", full_patched)
           print("patcher ok")
           EOF
       - name: Aggregator smoke

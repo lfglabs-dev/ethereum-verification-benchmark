@@ -20,7 +20,7 @@ selected_functions:
   - withdraw
 source_language: solidity
 verity_version: 4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a
-lean_toolchain: leanprover/lean4:v4.22.0
+lean_toolchain: leanprover/lean4:v4.24.0
 abstraction_level: protocol_slice
 abstraction_tags:
   - callback_elided

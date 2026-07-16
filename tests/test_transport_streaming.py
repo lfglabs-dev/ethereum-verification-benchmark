@@ -197,6 +197,15 @@ class TransportStreamingTests(unittest.TestCase):
                     {},
                     io.BytesIO(b"stream is not supported"),
                 )
+            if payload.get("tools"):
+                return FakeResponse(body=non_streaming_response())
+            messages = payload.get("messages")
+            if isinstance(messages, list) and messages and "preflight_echo now" in str(messages[-1].get("content")):
+                return FakeResponse(
+                    body=non_streaming_response(
+                        '{"tool":"preflight_echo","arguments":{"value":"ok"}}'
+                    )
+                )
             return FakeResponse(body=non_streaming_response())
 
         with mock.patch.object(transport_request.urllib.request, "urlopen", side_effect=fake_urlopen):
@@ -205,6 +214,9 @@ class TransportStreamingTests(unittest.TestCase):
         self.assertEqual(result["status"], "passed")
         self.assertEqual(result["transport_mode"], "fallback_non_streaming")
         self.assertIn("streaming_fallback_reason", result)
+        self.assertFalse(result["checks"]["tool_calls"])
+        self.assertTrue(result["checks"]["json_text_fallback"])
+        self.assertTrue(result["checks"]["json_text_fallback_probed"])
         self.assertTrue(payloads[0].get("stream"))
         self.assertTrue(all(not payload.get("stream") for payload in payloads[1:]))
 

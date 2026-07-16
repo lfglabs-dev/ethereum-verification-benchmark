@@ -4,13 +4,70 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
-from harness.budgets import BudgetProfile, budget_artifact
+from harness.budgets import BudgetProfile, budget_artifact, dependency_warm_timeout_seconds
+from harness.classification import classify_run
+from harness.manifests import load_group
 from harness.result_validity import failure_taxonomy, row_validity
+from harness.runners.lean_tools import _provider_setup_task_rows, _warm_target_modules
 from scripts import aggregate_runs
 
 
 class HarnessV02Tests(unittest.TestCase):
+    def test_target_warming_stops_after_first_timeout(self) -> None:
+        tasks = [
+            {"task_ref": "case/one", "target_module": "Target.One"},
+            {"task_ref": "case/two", "target_module": "Target.Two"},
+        ]
+        with tempfile.TemporaryDirectory() as tmp, patch(
+            "harness.runners.lean_tools._run_lean_module",
+            side_effect=[(124, "timed out"), (0, "must not run")],
+        ) as run:
+            root = Path(tmp)
+            results = _warm_target_modules(
+                workspace=root,
+                run_dir=root,
+                tasks=tasks,
+                timeout_seconds=10,
+            )
+
+        self.assertEqual(run.call_count, 1)
+        self.assertEqual([item["task_ref"] for item in results], ["case/one"])
+        self.assertEqual(results[0]["exit_code"], 124)
+
+    def test_provider_preflight_failure_emits_non_reusable_task_rows(self) -> None:
+        group = load_group("ethereum/deposit_contract_minimal", "active")
+        budget = {
+            "max_attempts": 4,
+            "max_tool_calls": 40,
+            "max_turns": None,
+            "completion_token_budget": 0,
+        }
+        rows = _provider_setup_task_rows(group, budget, "model not found")
+
+        self.assertEqual(len(rows), len(group.tasks))
+        self.assertTrue(all(row["status"] == "preflight_failed" for row in rows))
+        self.assertTrue(all(row["provider_setup_error"] for row in rows))
+        self.assertTrue(
+            all(not row_validity(row, expected_budget=budget)["valid"] for row in rows)
+        )
+
+        verifier = {
+            "score": {"passed_targets": 0, "total_targets": len(rows)},
+            "targets": [
+                {"task_ref": row["task_ref"], "status": "verifier_infra_error"}
+                for row in rows
+            ],
+        }
+        classification = classify_run(verifier, rows)
+        self.assertEqual(classification["run_class"], "INFRA_INVALID")
+        self.assertFalse(classification["reusable"])
+        self.assertEqual(
+            classification["final_class_counts"],
+            {"INFRA_INVALID": len(rows)},
+        )
+
     def test_failure_taxonomy_uses_release_buckets(self) -> None:
         self.assertEqual(failure_taxonomy("malformed_tool_call", []), "malformed_tool_call")
         self.assertEqual(failure_taxonomy("preflight_failed", []), "provider_setup_error")
@@ -64,6 +121,16 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(artifact["benchmark_budget"]["max_attempts"], 4)
         self.assertIn("request_timeout_seconds", artifact["operational_budget"])
         self.assertNotIn("request_timeout_seconds", artifact["benchmark_budget"])
+
+    def test_dependency_warm_timeout_follows_target_warm_default_and_override(self) -> None:
+        with patch.dict("os.environ", {}, clear=True):
+            self.assertEqual(dependency_warm_timeout_seconds(), 1800)
+        with patch.dict(
+            "os.environ",
+            {"DEFAULT_HARNESS_DEPENDENCY_WARM_TIMEOUT_SECONDS": "2400"},
+            clear=True,
+        ):
+            self.assertEqual(dependency_warm_timeout_seconds(), 2400)
 
     def test_aggregate_excludes_invalid_rows_from_pass_denominator(self) -> None:
         rows = [
@@ -122,6 +189,62 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertTrue(rows[0]["valid"])
         self.assertFalse(rows[0]["passed"])
+
+    def test_aggregate_keeps_warm_setup_failure_out_of_provider_setup_bucket(self) -> None:
+        benchmark_budget = {
+            "max_attempts": 1,
+            "max_tool_calls": 80,
+            "max_turns": None,
+            "completion_token_budget": 32768,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp) / "run"
+            run_dir.mkdir()
+            (run_dir / "run.json").write_text(
+                json.dumps(
+                    {
+                        "run_id": "warm-failure",
+                        "harness_id": "default",
+                        "model": "local",
+                        "task_ref": "case/task",
+                        "harness_status": "completed_with_failures",
+                        "benchmark_budget": benchmark_budget,
+                        "failure_counts": {"infra_dependency_warm_failed": 1},
+                        "classification": {
+                            "run_class": "INFRA_INVALID",
+                            "reusable": False,
+                        },
+                        "verifier": {
+                            "score": {"passed_targets": 0, "total_targets": 1}
+                        },
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (run_dir / "harness-response.json").write_text(
+                json.dumps(
+                    {
+                        "tasks": [
+                            {
+                                "task_ref": "case/task",
+                                "status": "request_failed",
+                                "failure_class": "infra_dependency_warm_failed",
+                                "attempts": [],
+                                "benchmark_budget": benchmark_budget,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            rows = aggregate_runs.collect_runs(Path(tmp))
+
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["final_class"], "INFRA_INVALID")
+        self.assertFalse(rows[0]["reusable"])
+        self.assertNotIn("provider setup error", rows[0]["validity_errors"])
+        self.assertNotIn("benchmark budget does not match manifest", rows[0]["validity_errors"])
 
     def test_aggregate_uses_all_child_task_validity(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

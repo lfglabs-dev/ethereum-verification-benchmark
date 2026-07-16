@@ -20,7 +20,7 @@ selected_functions:
   - _executeUserOp
 source_language: solidity
 verity_version: a287329d5fb8b3966c8eb62f03173639c7e66307
-lean_toolchain: leanprover/lean4:v4.22.0
+lean_toolchain: leanprover/lean4:v4.24.0
 abstraction_level: protocol_slice
 abstraction_tags:
   - abi_backed_batch_model
