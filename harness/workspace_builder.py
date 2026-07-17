@@ -9,7 +9,7 @@ import subprocess
 import tempfile
 import time
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 try:
     from .manifests import Group, group_to_json
@@ -39,6 +39,204 @@ PUBLIC_WORKSPACE_GRINDSET_MODULES = (
     "Benchmark.Grindset.Monad",
     "Benchmark.Grindset.Reach",
 )
+
+
+def declared_lean_toolchain() -> str:
+    """Return the exact repository toolchain used by every setup command."""
+    path = ROOT / "lean-toolchain"
+    value = path.read_text(encoding="utf-8").strip()
+    if not value or any(char.isspace() for char in value):
+        raise RuntimeError(f"invalid lean-toolchain declaration: {value!r}")
+    return value
+
+
+def toolchain_command(program: str, *args: str) -> list[str]:
+    """Run a Lean tool through the declared Elan toolchain, never host default."""
+    return ["elan", "run", "--install", declared_lean_toolchain(), program, *args]
+
+
+def toolchain_environment() -> dict[str, str]:
+    env = os.environ.copy()
+    # A workspace-level override must not silently beat the repository pin.
+    override = env.pop("ELAN_TOOLCHAIN", None)
+    declared = declared_lean_toolchain()
+    if override is not None and override != declared:
+        raise RuntimeError(
+            f"ELAN_TOOLCHAIN={override!r} conflicts with repository pin {declared!r}"
+        )
+    return env
+
+
+def _validate_effective_toolchain(
+    log_path: Path, *, timeout_seconds: int
+) -> dict[str, object]:
+    """Validate the pinned toolchain within the enclosing warm budget.
+
+    ``elan run --install`` may download a missing pinned toolchain, so this
+    required preflight must use the same bounded cold-install allowance as the
+    dependency warm phase rather than a separate short validation cap.
+    """
+    expected = declared_lean_toolchain().rsplit(":v", 1)[-1]
+    command = toolchain_command("lean", "--version")
+    started = time.monotonic()
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=toolchain_environment(),
+            capture_output=True,
+            text=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+        output = (completed.stdout + completed.stderr).strip()
+        exit_code = completed.returncode
+    except subprocess.TimeoutExpired:
+        output = (
+            f"toolchain validation timed out after {timeout_seconds} seconds "
+            f"while running {' '.join(command)}"
+        )
+        exit_code = 124
+    except (OSError, RuntimeError) as exc:
+        output = str(exc)
+        exit_code = 127
+    matched = exit_code == 0 and f"version {expected}" in output
+    status = "passed" if matched else "timeout" if exit_code == 124 else "failed"
+    return {
+        "kind": "lean_toolchain",
+        "required": True,
+        "status": status,
+        "exit_code": 0 if matched else exit_code or 1,
+        "duration_seconds": round(time.monotonic() - started, 3),
+        "declared_toolchain": declared_lean_toolchain(),
+        "effective_version": output.splitlines()[0] if output else "",
+        "command": command,
+        "log_path": str(log_path),
+    }
+
+
+def _invalid_package_checkouts() -> list[str]:
+    packages = ROOT / ".lake" / "packages"
+    try:
+        manifest = json.loads(
+            (ROOT / "lake-manifest.json").read_text(encoding="utf-8")
+        )
+        if not isinstance(manifest, dict):
+            raise ValueError("manifest is not an object")
+        manifest_entries = manifest.get("packages", [])
+        if not isinstance(manifest_entries, list):
+            raise ValueError("manifest packages is not a list")
+    except (OSError, ValueError, json.JSONDecodeError, TypeError):
+        return ["<invalid-lake-manifest>"]
+
+    invalid: list[str] = []
+    manifest_packages: set[str] = set()
+    for entry in manifest_entries:
+        if not isinstance(entry, dict) or entry.get("type") != "git":
+            continue
+        name = entry.get("name")
+        if not _safe_package_component(name):
+            invalid.append(_package_diagnostic(name))
+            continue
+        manifest_packages.add(name)
+
+    if not manifest_packages:
+        return sorted(set(invalid))
+    try:
+        root_location = ROOT.resolve(strict=True)
+        package_root = packages.resolve(strict=True)
+        valid_package_root = (
+            packages.is_dir()
+            and not packages.is_symlink()
+            and package_root.is_relative_to(root_location)
+        )
+    except (OSError, RuntimeError, ValueError):
+        valid_package_root = False
+        package_root = None
+    if not valid_package_root or package_root is None:
+        return sorted(set(invalid).union(manifest_packages))
+
+    for name in sorted(manifest_packages):
+        package = packages / name
+        try:
+            package_location = package.resolve(strict=True)
+            owns_location = (
+                not package.is_symlink()
+                and package.is_dir()
+                and package_location.parent == package_root
+            )
+            if not owns_location:
+                invalid.append(package.name)
+                continue
+            top_level = subprocess.run(
+                ["git", "-C", str(package), "rev-parse", "--show-toplevel"],
+                env=toolchain_environment(),
+                capture_output=True,
+                text=True,
+                timeout=10,
+                check=False,
+            )
+            head = subprocess.run(
+                ["git", "-C", str(package), "rev-parse", "--verify", "HEAD"],
+                env=toolchain_environment(),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=10,
+                check=False,
+            )
+            owns_worktree = (
+                top_level.returncode == 0
+                and bool(top_level.stdout.strip())
+                and Path(top_level.stdout.strip()).resolve(strict=True) == package_location
+            )
+        except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
+            owns_worktree = False
+            head = None
+        if not owns_worktree or head is None or head.returncode != 0:
+            invalid.append(name)
+    return sorted(set(invalid))
+
+
+def _safe_package_component(name: object) -> bool:
+    """Return whether a manifest package name can name one package child."""
+    if not isinstance(name, str) or not name or name in {".", ".."}:
+        return False
+    try:
+        return (
+            "/" not in name
+            and "\\" not in name
+            and not Path(name).is_absolute()
+            and not PureWindowsPath(name).is_absolute()
+            and not PureWindowsPath(name).drive
+        )
+    except ValueError:
+        return False
+
+
+def _package_diagnostic(name: object) -> str:
+    """Keep malformed manifest diagnostics safe and bounded for warm logs."""
+    if isinstance(name, str):
+        return name[:120] or "<invalid-package-name>"
+    return "<invalid-package-name>"
+
+
+def _wait_for_package_checkouts(log_path: Path) -> dict[str, object]:
+    """Wait out a concurrent Lake checkout instead of observing partial Git state."""
+    timeout = float(os.environ.get("VERITY_PACKAGE_CHECKOUT_TIMEOUT_SECONDS", "180"))
+    started = time.monotonic()
+    invalid = _invalid_package_checkouts()
+    while invalid and time.monotonic() - started < timeout:
+        time.sleep(1)
+        invalid = _invalid_package_checkouts()
+    return {
+        "kind": "package_checkout_health",
+        "required": True,
+        "status": "passed" if not invalid else "failed",
+        "exit_code": 0 if not invalid else 1,
+        "duration_seconds": round(time.monotonic() - started, 3),
+        "invalid_packages": invalid,
+        "log_path": str(log_path),
+    }
 
 
 def warm_result_failed(item: dict[str, object]) -> bool:
@@ -92,8 +290,9 @@ def _prefetch_mathlib_cache(
         log.flush()
         try:
             process = subprocess.Popen(
-                ["lake", "exe", "cache", "get"],
+                toolchain_command("lake", "exe", "cache", "get"),
                 cwd=ROOT,
+                env=toolchain_environment(),
                 stdout=log,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -207,6 +406,23 @@ def warm_public_dependencies(
     log_path.parent.mkdir(parents=True, exist_ok=True)
     results: list[dict[str, object]] = []
     with log_path.open("a", encoding="utf-8") as log:
+        toolchain_result = _validate_effective_toolchain(
+            log_path, timeout_seconds=timeout_seconds
+        )
+        results.append(toolchain_result)
+        log.write(
+            "$ " + " ".join(toolchain_result["command"]) + "\n"
+            + str(toolchain_result["effective_version"]) + "\n"
+        )
+        log.flush()
+        if warm_result_failed(toolchain_result):
+            print(
+                f"[dependency-warm] toolchain state={toolchain_result['status']} "
+                f"declared={toolchain_result['declared_toolchain']} "
+                f"exit_code={toolchain_result['exit_code']}",
+                flush=True,
+            )
+            return results
         cache_timeout = min(
             timeout_seconds,
             int(os.environ.get("VERITY_CACHE_GET_TIMEOUT_SECONDS", "1800")),
@@ -226,6 +442,24 @@ def warm_public_dependencies(
             log.flush()
             timed_out = False
             with verify_lease(label="dependency_warm") as lease_reason:
+                # Cache hydration shares this lease. Validate again after acquiring
+                # it so another warmer cannot leave a partial checkout between the
+                # earlier health check and this required build.
+                checkout_result = _wait_for_package_checkouts(log_path)
+                results.append(checkout_result)
+                if warm_result_failed(checkout_result):
+                    log.write(
+                        "invalid package checkouts: "
+                        + ", ".join(checkout_result["invalid_packages"])
+                        + "\n"
+                    )
+                    log.flush()
+                    print(
+                        "[dependency-warm] package_checkout state=failed invalid="
+                        + ",".join(checkout_result["invalid_packages"]),
+                        flush=True,
+                    )
+                    return results
                 started = time.monotonic()
                 lease_wait_seconds = round(started - queued_at, 3)
                 print(
@@ -235,8 +469,9 @@ def warm_public_dependencies(
                 )
                 try:
                     process = subprocess.Popen(
-                        ["lake", "build", module],
+                        toolchain_command("lake", "build", module),
                         cwd=ROOT,
+                        env=toolchain_environment(),
                         stdout=log,
                         stderr=subprocess.STDOUT,
                         text=True,

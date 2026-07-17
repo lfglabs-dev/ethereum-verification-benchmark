@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+import os
+import subprocess
 import unittest
 from contextlib import contextmanager
 from pathlib import Path
@@ -9,7 +12,10 @@ from unittest.mock import patch
 from harness.classification import classify_run
 from harness.manifests import Group, Task
 from harness.workspace_builder import (
+    _invalid_package_checkouts,
     _prefetch_mathlib_cache,
+    _validate_effective_toolchain,
+    _wait_for_package_checkouts,
     public_dependency_modules,
     setup_private_lake,
     warm_public_dependencies,
@@ -22,6 +28,30 @@ SKIPPED_CACHE_PREFETCH = {
     "required": False,
     "status": "cached",
     "exit_code": 0,
+}
+
+VALID_TOOLCHAIN = {
+    "kind": "lean_toolchain",
+    "required": True,
+    "status": "passed",
+    "exit_code": 0,
+    "declared_toolchain": "leanprover/lean4:v4.24.0",
+    "effective_version": "Lean (version 4.24.0)",
+    "command": [
+        "elan",
+        "run",
+        "--install",
+        "leanprover/lean4:v4.24.0",
+        "lean",
+        "--version",
+    ],
+}
+VALID_CHECKOUTS = {
+    "kind": "package_checkout_health",
+    "required": True,
+    "status": "passed",
+    "exit_code": 0,
+    "invalid_packages": [],
 }
 
 
@@ -58,7 +88,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             root = Path(tmp) / "repo"
             root.mkdir()
-            (root / "lean-toolchain").write_text("leanprover/lean4:v4.22.0\n")
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
             log_path = Path(tmp) / "warm.log"
             with log_path.open("a", encoding="utf-8") as log, patch(
                 "harness.workspace_builder.ROOT", root
@@ -85,7 +115,318 @@ class PublicDependencyWarmTests(unittest.TestCase):
         self.assertEqual(second["status"], "cached")
         self.assertFalse(warm_result_failed(first))
         popen.assert_called_once()
-        self.assertEqual(popen.call_args.args[0], ["lake", "exe", "cache", "get"])
+        self.assertEqual(
+            popen.call_args.args[0],
+            [
+                "elan",
+                "run",
+                "--install",
+                "leanprover/lean4:v4.24.0",
+                "lake",
+                "exe",
+                "cache",
+                "get",
+            ],
+        )
+
+    def test_effective_toolchain_install_uses_dependency_warm_timeout(self) -> None:
+        group = Group(group_id="erc20/state", suite="active", tasks=())
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            with patch("harness.workspace_builder.ROOT", root), patch(
+                "harness.workspace_builder.subprocess.run"
+            ) as run:
+                run.return_value.returncode = 0
+                run.return_value.stdout = "Lean (version 4.22.0)"
+                run.return_value.stderr = ""
+                result = warm_public_dependencies(
+                    group,
+                    timeout_seconds=2400,
+                    log_path=root / "warm.log",
+                )[0]
+
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(
+            run.call_args.args[0],
+            [
+                "elan",
+                "run",
+                "--install",
+                "leanprover/lean4:v4.24.0",
+                "lean",
+                "--version",
+            ],
+        )
+        self.assertEqual(run.call_args.kwargs["timeout"], 2400)
+
+    def test_effective_toolchain_timeout_is_reported_distinctly(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            with patch("harness.workspace_builder.ROOT", root), patch(
+                "harness.workspace_builder.subprocess.run",
+                side_effect=subprocess.TimeoutExpired(["elan", "run"], 1800),
+            ):
+                result = _validate_effective_toolchain(
+                    root / "warm.log", timeout_seconds=1800
+                )
+
+        self.assertEqual(result["status"], "timeout")
+        self.assertEqual(result["exit_code"], 124)
+        self.assertIn("timed out after 1800 seconds", result["effective_version"])
+        self.assertIn("elan run --install", result["effective_version"])
+
+    def test_effective_toolchain_missing_executable_remains_failed(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            with patch("harness.workspace_builder.ROOT", root), patch(
+                "harness.workspace_builder.subprocess.run",
+                side_effect=OSError("elan unavailable"),
+            ):
+                result = _validate_effective_toolchain(
+                    root / "warm.log", timeout_seconds=1800
+                )
+
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["exit_code"], 127)
+        self.assertEqual(result["effective_version"], "elan unavailable")
+
+    def test_conflicting_elan_toolchain_override_fails_preflight(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            with patch("harness.workspace_builder.ROOT", root), patch.dict(
+                os.environ, {"ELAN_TOOLCHAIN": "leanprover/lean4:v4.22.0"}
+            ), patch("harness.workspace_builder.subprocess.run") as run:
+                result = _validate_effective_toolchain(
+                    root / "warm.log", timeout_seconds=1800
+                )
+
+        self.assertEqual(result["status"], "failed")
+        self.assertIn("conflicts with repository pin", result["effective_version"])
+        run.assert_not_called()
+
+    def test_transient_package_checkout_race_is_waited_out(self) -> None:
+        with TemporaryDirectory() as tmp, patch(
+            "harness.workspace_builder._invalid_package_checkouts",
+            side_effect=[["mathlib"], ["mathlib"], []],
+        ), patch("harness.workspace_builder.time.sleep") as sleep, patch.dict(
+            "os.environ", {"VERITY_PACKAGE_CHECKOUT_TIMEOUT_SECONDS": "30"}
+        ):
+            result = _wait_for_package_checkouts(Path(tmp) / "warm.log")
+
+        self.assertEqual(result["status"], "passed")
+        self.assertEqual(sleep.call_count, 2)
+
+    def test_checkout_health_ignores_packages_outside_current_manifest(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            packages = root / ".lake" / "packages"
+            (packages / "mathlib").mkdir(parents=True)
+            (packages / "abandoned-checkout").mkdir()
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "mathlib", "type": "git"}]}', encoding="utf-8"
+            )
+            with patch("harness.workspace_builder.ROOT", root), patch(
+                "harness.workspace_builder.subprocess.run"
+            ) as run:
+                run.return_value.returncode = 0
+                run.return_value.stdout = str(packages / "mathlib")
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, [])
+        self.assertEqual(run.call_count, 2)
+        self.assertEqual(run.call_args.args[0][2], str(packages / "mathlib"))
+
+    def test_checkout_health_rejects_manifest_package_without_own_git_worktree(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            subprocess.run(["git", "init", "--quiet", str(root)], check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(root),
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "-c",
+                    "user.name=Test",
+                    "commit",
+                    "--allow-empty",
+                    "--quiet",
+                    "-m",
+                    "parent head",
+                ],
+                check=True,
+            )
+            (root / ".lake" / "packages" / "test-no-git-health").mkdir(parents=True)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "test-no-git-health", "type": "git"}]}',
+                encoding="utf-8",
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, ["test-no-git-health"])
+
+    def test_checkout_health_rejects_manifest_git_package_symlinked_outside_packages(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            external = Path(tmp) / "external-package"
+            root.mkdir()
+            subprocess.run(["git", "init", "--quiet", str(external)], check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(external),
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "-c",
+                    "user.name=Test",
+                    "commit",
+                    "--allow-empty",
+                    "--quiet",
+                    "-m",
+                    "external head",
+                ],
+                check=True,
+            )
+            packages = root / ".lake" / "packages"
+            packages.mkdir(parents=True)
+            (packages / "test-external-git").symlink_to(external, target_is_directory=True)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "test-external-git", "type": "git"}]}',
+                encoding="utf-8",
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, ["test-external-git"])
+
+    def test_checkout_health_rejects_packages_root_symlinked_outside_root(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            external = Path(tmp) / "external-packages"
+            root.mkdir()
+            package = external / "mathlib"
+            subprocess.run(["git", "init", "--quiet", str(package)], check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(package),
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "-c",
+                    "user.name=Test",
+                    "commit",
+                    "--allow-empty",
+                    "--quiet",
+                    "-m",
+                    "external head",
+                ],
+                check=True,
+            )
+            (root / ".lake").mkdir()
+            (root / ".lake" / "packages").symlink_to(external, target_is_directory=True)
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "mathlib", "type": "git"}]}',
+                encoding="utf-8",
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, ["mathlib"])
+
+    def test_checkout_health_rejects_unsafe_manifest_git_package_names(self) -> None:
+        unsafe_names = (
+            "",
+            ".",
+            "..",
+            "../escaped",
+            "nested/package",
+            "nested\\package",
+            "/tmp/package",
+            "C:\\package",
+        )
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".lake" / "packages").mkdir(parents=True)
+            for name in unsafe_names:
+                (root / "lake-manifest.json").write_text(
+                    json.dumps({"packages": [{"name": name, "type": "git"}]}),
+                    encoding="utf-8",
+                )
+                with self.subTest(name=name), patch("harness.workspace_builder.ROOT", root):
+                    self.assertEqual(
+                        _invalid_package_checkouts(), [name or "<invalid-package-name>"]
+                    )
+
+    def test_checkout_health_rejects_missing_manifest_git_package(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".lake" / "packages").mkdir(parents=True)
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "mathlib", "type": "git"}]}',
+                encoding="utf-8",
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, ["mathlib"])
+
+    def test_checkout_health_accepts_direct_child_linked_worktree(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            source = Path(tmp) / "source"
+            package = root / ".lake" / "packages" / "mathlib"
+            root.mkdir()
+            subprocess.run(["git", "init", "--quiet", str(source)], check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(source),
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "-c",
+                    "user.name=Test",
+                    "commit",
+                    "--allow-empty",
+                    "--quiet",
+                    "-m",
+                    "source head",
+                ],
+                check=True,
+            )
+            package.parent.mkdir(parents=True)
+            subprocess.run(
+                ["git", "-C", str(source), "worktree", "add", "--detach", str(package)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "mathlib", "type": "git"}]}',
+                encoding="utf-8",
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, [])
 
     def test_failed_cache_prefetch_does_not_fail_required_warm(self) -> None:
         self.assertFalse(
@@ -98,6 +439,48 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 }
             )
         )
+
+    def test_package_health_is_checked_after_cache_prefetch(self) -> None:
+        group = Group(group_id="erc20/state", suite="active", tasks=())
+        events: list[str] = []
+
+        @contextmanager
+        def fake_lease(*, label: str):
+            self.assertEqual(label, "dependency_warm")
+            yield "acquired"
+
+        def fake_prefetch(**kwargs):
+            events.append("cache")
+            return SKIPPED_CACHE_PREFETCH
+
+        def fake_checkout(log_path: Path):
+            events.append("health")
+            return {
+                **VALID_CHECKOUTS,
+                "status": "failed",
+                "exit_code": 1,
+                "invalid_packages": ["mathlib"],
+            }
+
+        with TemporaryDirectory() as tmp, patch(
+            "harness.workspace_builder.verify_lease", fake_lease
+        ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._prefetch_mathlib_cache",
+            side_effect=fake_prefetch,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            side_effect=fake_checkout,
+        ), patch("harness.workspace_builder.subprocess.Popen") as popen:
+            results = warm_public_dependencies(
+                group, timeout_seconds=30, log_path=Path(tmp) / "warm.log"
+            )
+
+        self.assertEqual(events, ["cache", "health"])
+        self.assertEqual(results[-1]["status"], "failed")
+        popen.assert_not_called()
 
     def test_modules_are_public_deduplicated_and_sorted(self) -> None:
         group = Group(
@@ -162,10 +545,17 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         @contextmanager
         def fake_lease(*, label: str):
+            if label == "dependency_checkout_health":
+                yield "acquired"
+                return
             self.assertEqual(label, "dependency_warm")
             events.append("lease_enter")
             yield "acquired"
             events.append("lease_exit")
+
+        def fake_checkout(log_path: Path):
+            events.append("health")
+            return VALID_CHECKOUTS
 
         class FinishedProcess:
             returncode = 0
@@ -186,18 +576,93 @@ class PublicDependencyWarmTests(unittest.TestCase):
         ), patch(
             "harness.workspace_builder._prefetch_mathlib_cache",
             return_value=SKIPPED_CACHE_PREFETCH,
-        ), patch("harness.workspace_builder.subprocess.Popen", FinishedProcess):
+        ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            side_effect=fake_checkout,
+        ), patch(
+            "harness.workspace_builder.subprocess.Popen", side_effect=FinishedProcess
+        ) as popen:
             results = warm_public_dependencies(
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
             )
 
-        self.assertEqual(results[1]["exit_code"], 0)
+        self.assertEqual(results[3]["exit_code"], 0)
+        self.assertEqual(
+            popen.call_args.args[0],
+            [
+                "elan",
+                "run",
+                "--install",
+                "leanprover/lean4:v4.24.0",
+                "lake",
+                "build",
+                "Benchmark.Cases.ERC20.State.Impl",
+            ],
+        )
         self.assertEqual(
             events,
-            ["lease_enter", "process_start", "process_poll", "lease_exit"],
+            [
+                "lease_enter",
+                "health",
+                "process_start",
+                "process_poll",
+                "lease_exit",
+            ],
         )
+
+    def test_checkout_health_and_required_build_share_a_verify_lease(self) -> None:
+        """A cache writer cannot invalidate checkout health before a build starts."""
+        group = Group(group_id="erc20/state", suite="active", tasks=())
+        events: list[str] = []
+
+        @contextmanager
+        def fake_lease(*, label: str):
+            self.assertEqual(label, "dependency_warm")
+            events.append("lease_enter")
+            yield "acquired"
+            events.append("lease_exit")
+
+        def fake_checkout(log_path: Path):
+            events.append("health")
+            return VALID_CHECKOUTS
+
+        class FinishedProcess:
+            returncode = 0
+            pid = 123
+
+            def __init__(self, *args, **kwargs):
+                events.append("process_start")
+
+            def poll(self):
+                return 0
+
+        with TemporaryDirectory() as tmp, patch(
+            "harness.workspace_builder.verify_lease", fake_lease
+        ), patch(
+            "harness.workspace_builder.public_dependency_modules",
+            return_value=["Benchmark.Cases.ERC20.State.Impl"],
+        ), patch(
+            "harness.workspace_builder._prefetch_mathlib_cache",
+            return_value=SKIPPED_CACHE_PREFETCH,
+        ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            side_effect=fake_checkout,
+        ), patch(
+            "harness.workspace_builder.subprocess.Popen", side_effect=FinishedProcess
+        ):
+            warm_public_dependencies(
+                group, timeout_seconds=30, log_path=Path(tmp) / "warm.log"
+            )
+
+        self.assertEqual(events, ["lease_enter", "health", "process_start", "lease_exit"])
 
     def test_lease_wait_does_not_consume_build_timeout_or_duration(self) -> None:
         group = Group(
@@ -213,6 +678,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         @contextmanager
         def delayed_lease(*, label: str):
+            if label == "dependency_checkout_health":
+                yield "acquired"
+                return
             self.assertEqual(label, "dependency_warm")
             yield "acquired"
 
@@ -232,6 +700,12 @@ class PublicDependencyWarmTests(unittest.TestCase):
         ), patch(
             "harness.workspace_builder._prefetch_mathlib_cache",
             return_value=SKIPPED_CACHE_PREFETCH,
+        ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            return_value=VALID_CHECKOUTS,
         ), patch("harness.workspace_builder.subprocess.Popen", return_value=FinishedProcess()), patch(
             "harness.workspace_builder.time.monotonic", side_effect=lambda: next(clock)
         ):
@@ -239,7 +713,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[1]
+            )[3]
 
         self.assertEqual(result["exit_code"], 0)
         self.assertEqual(result["lease_wait_seconds"], 50.0)
@@ -259,6 +733,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         @contextmanager
         def fake_lease(*, label: str):
+            if label == "dependency_checkout_health":
+                yield "acquired"
+                return
             self.assertEqual(label, "dependency_warm")
             yield "acquired"
 
@@ -268,6 +745,12 @@ class PublicDependencyWarmTests(unittest.TestCase):
             "harness.workspace_builder._prefetch_mathlib_cache",
             return_value=SKIPPED_CACHE_PREFETCH,
         ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            return_value=VALID_CHECKOUTS,
+        ), patch(
             "harness.workspace_builder.subprocess.Popen",
             side_effect=FileNotFoundError("lake not found"),
         ):
@@ -275,7 +758,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[1]
+            )[3]
 
         self.assertEqual(result["status"], "failed")
         self.assertEqual(result["exit_code"], 127)
