@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: candidate_g_source_reachability
+case_id: yo_protocol/async_redemption_escrow
+split: active
+family_id: yo_protocol
+implementation_id: core_v2
+source_ref: https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.candidate_g_source_reachability
+proof_family: protocol_transition_correctness
+property_class: source_reachable_counterexample_coverage
+difficulty: hard
+category: malformed-pending-pairs
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/yo_protocol/async_redemption_escrow/verity/Contract.lean
+  - Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean
+specification_files:
+  - cases/yo_protocol/async_redemption_escrow/verity/Specs.lean
+  - Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean
+editable_files:
+  - Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/CandidateGSourceReachability.lean
+reference_solution_module: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs
+reference_solution_declaration: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.candidate_g_source_reachability
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Builds the positive (100 shares, 200 gross assets) pair through requestRedeem,
+  then covers every source-permitted zero-component fulfillment/cancellation
+  shape and the positive non-proportional (1,199) fulfillment.
+unsupported_feature_codes:
+  - external_erc20_balance_state_not_modeled

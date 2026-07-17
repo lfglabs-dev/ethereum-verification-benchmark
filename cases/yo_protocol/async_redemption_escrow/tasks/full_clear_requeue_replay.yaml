@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: full_clear_requeue_replay
+case_id: yo_protocol/async_redemption_escrow
+split: active
+family_id: yo_protocol
+implementation_id: core_v2
+source_ref: https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.full_clear_requeue_replay
+proof_family: protocol_transition_correctness
+property_class: replay_lifecycle
+difficulty: hard
+category: redemption-lifecycle
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/yo_protocol/async_redemption_escrow/verity/Contract.lean
+  - Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean
+specification_files:
+  - cases/yo_protocol/async_redemption_escrow/verity/Specs.lean
+  - Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean
+editable_files:
+  - Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FullClearRequeueReplay.lean
+reference_solution_module: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs
+reference_solution_declaration: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.full_clear_requeue_replay
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Replay prevention is intentionally immediate only. The interface supplies a
+  distinct funded request owner and enough initial supply for both burns.
+unsupported_feature_codes: []

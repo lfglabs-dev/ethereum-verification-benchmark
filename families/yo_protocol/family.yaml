@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: yo_protocol
+display_name: YO Protocol
+split: active
+status: active
+description: >
+  Benchmark family for YO Protocol vault accounting, beginning with the
+  receiver-keyed asynchronous redemption escrow lifecycle.
+implementation_ids:
+  - core_v2
+case_ids:
+  - yo_protocol/async_redemption_escrow
+source_languages:
+  - solidity
