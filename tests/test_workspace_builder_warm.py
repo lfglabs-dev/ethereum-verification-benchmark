@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import unittest
@@ -310,6 +311,122 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 invalid = _invalid_package_checkouts()
 
         self.assertEqual(invalid, ["test-external-git"])
+
+    def test_checkout_health_rejects_packages_root_symlinked_outside_root(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            external = Path(tmp) / "external-packages"
+            root.mkdir()
+            package = external / "mathlib"
+            subprocess.run(["git", "init", "--quiet", str(package)], check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(package),
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "-c",
+                    "user.name=Test",
+                    "commit",
+                    "--allow-empty",
+                    "--quiet",
+                    "-m",
+                    "external head",
+                ],
+                check=True,
+            )
+            (root / ".lake").mkdir()
+            (root / ".lake" / "packages").symlink_to(external, target_is_directory=True)
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "mathlib", "type": "git"}]}',
+                encoding="utf-8",
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, ["mathlib"])
+
+    def test_checkout_health_rejects_unsafe_manifest_git_package_names(self) -> None:
+        unsafe_names = (
+            "",
+            ".",
+            "..",
+            "../escaped",
+            "nested/package",
+            "nested\\package",
+            "/tmp/package",
+            "C:\\package",
+        )
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".lake" / "packages").mkdir(parents=True)
+            for name in unsafe_names:
+                (root / "lake-manifest.json").write_text(
+                    json.dumps({"packages": [{"name": name, "type": "git"}]}),
+                    encoding="utf-8",
+                )
+                with self.subTest(name=name), patch("harness.workspace_builder.ROOT", root):
+                    self.assertEqual(
+                        _invalid_package_checkouts(), [name or "<invalid-package-name>"]
+                    )
+
+    def test_checkout_health_rejects_missing_manifest_git_package(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".lake" / "packages").mkdir(parents=True)
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "mathlib", "type": "git"}]}',
+                encoding="utf-8",
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, ["mathlib"])
+
+    def test_checkout_health_accepts_direct_child_linked_worktree(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            source = Path(tmp) / "source"
+            package = root / ".lake" / "packages" / "mathlib"
+            root.mkdir()
+            subprocess.run(["git", "init", "--quiet", str(source)], check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(source),
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "-c",
+                    "user.name=Test",
+                    "commit",
+                    "--allow-empty",
+                    "--quiet",
+                    "-m",
+                    "source head",
+                ],
+                check=True,
+            )
+            package.parent.mkdir(parents=True)
+            subprocess.run(
+                ["git", "-C", str(source), "worktree", "add", "--detach", str(package)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "mathlib", "type": "git"}]}',
+                encoding="utf-8",
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, [])
 
     def test_failed_cache_prefetch_does_not_fail_required_warm(self) -> None:
         self.assertFalse(

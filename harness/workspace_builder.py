@@ -9,7 +9,7 @@ import subprocess
 import tempfile
 import time
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 try:
     from .manifests import Group, group_to_json
@@ -117,24 +117,48 @@ def _validate_effective_toolchain(
 
 def _invalid_package_checkouts() -> list[str]:
     packages = ROOT / ".lake" / "packages"
-    if not packages.is_dir():
-        return []
-    manifest = json.loads((ROOT / "lake-manifest.json").read_text(encoding="utf-8"))
-    manifest_packages = {
-        package["name"]
-        for package in manifest.get("packages", [])
-        if (
-            isinstance(package, dict)
-            and package.get("type") == "git"
-            and isinstance(package.get("name"), str)
+    try:
+        manifest = json.loads(
+            (ROOT / "lake-manifest.json").read_text(encoding="utf-8")
         )
-    }
-    invalid = []
-    for package in sorted(packages.iterdir()):
-        if package.name not in manifest_packages:
+        if not isinstance(manifest, dict):
+            raise ValueError("manifest is not an object")
+        manifest_entries = manifest.get("packages", [])
+        if not isinstance(manifest_entries, list):
+            raise ValueError("manifest packages is not a list")
+    except (OSError, ValueError, json.JSONDecodeError, TypeError):
+        return ["<invalid-lake-manifest>"]
+
+    invalid: list[str] = []
+    manifest_packages: set[str] = set()
+    for entry in manifest_entries:
+        if not isinstance(entry, dict) or entry.get("type") != "git":
             continue
+        name = entry.get("name")
+        if not _safe_package_component(name):
+            invalid.append(_package_diagnostic(name))
+            continue
+        manifest_packages.add(name)
+
+    if not manifest_packages:
+        return sorted(set(invalid))
+    try:
+        root_location = ROOT.resolve(strict=True)
+        package_root = packages.resolve(strict=True)
+        valid_package_root = (
+            packages.is_dir()
+            and not packages.is_symlink()
+            and package_root.is_relative_to(root_location)
+        )
+    except (OSError, RuntimeError, ValueError):
+        valid_package_root = False
+        package_root = None
+    if not valid_package_root or package_root is None:
+        return sorted(set(invalid).union(manifest_packages))
+
+    for name in sorted(manifest_packages):
+        package = packages / name
         try:
-            package_root = packages.resolve(strict=True)
             package_location = package.resolve(strict=True)
             owns_location = (
                 not package.is_symlink()
@@ -169,8 +193,31 @@ def _invalid_package_checkouts() -> list[str]:
             owns_worktree = False
             head = None
         if not owns_worktree or head is None or head.returncode != 0:
-            invalid.append(package.name)
-    return invalid
+            invalid.append(name)
+    return sorted(set(invalid))
+
+
+def _safe_package_component(name: object) -> bool:
+    """Return whether a manifest package name can name one package child."""
+    if not isinstance(name, str) or not name or name in {".", ".."}:
+        return False
+    try:
+        return (
+            "/" not in name
+            and "\\" not in name
+            and not Path(name).is_absolute()
+            and not PureWindowsPath(name).is_absolute()
+            and not PureWindowsPath(name).drive
+        )
+    except ValueError:
+        return False
+
+
+def _package_diagnostic(name: object) -> str:
+    """Keep malformed manifest diagnostics safe and bounded for warm logs."""
+    if isinstance(name, str):
+        return name[:120] or "<invalid-package-name>"
+    return "<invalid-package-name>"
 
 
 def _wait_for_package_checkouts(log_path: Path) -> dict[str, object]:
