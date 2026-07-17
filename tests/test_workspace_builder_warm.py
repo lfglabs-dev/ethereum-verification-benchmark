@@ -127,7 +127,8 @@ class PublicDependencyWarmTests(unittest.TestCase):
             ],
         )
 
-    def test_effective_toolchain_installs_pinned_toolchain_on_cache_miss(self) -> None:
+    def test_effective_toolchain_install_uses_dependency_warm_timeout(self) -> None:
+        group = Group(group_id="erc20/state", suite="active", tasks=())
         with TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
@@ -137,7 +138,11 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 run.return_value.returncode = 0
                 run.return_value.stdout = "Lean (version 4.22.0)"
                 run.return_value.stderr = ""
-                result = _validate_effective_toolchain(root / "warm.log")
+                result = warm_public_dependencies(
+                    group,
+                    timeout_seconds=2400,
+                    log_path=root / "warm.log",
+                )[0]
 
         self.assertEqual(result["status"], "failed")
         self.assertEqual(
@@ -151,6 +156,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 "--version",
             ],
         )
+        self.assertEqual(run.call_args.kwargs["timeout"], 2400)
 
     def test_conflicting_elan_toolchain_override_fails_preflight(self) -> None:
         with TemporaryDirectory() as tmp:
@@ -159,7 +165,9 @@ class PublicDependencyWarmTests(unittest.TestCase):
             with patch("harness.workspace_builder.ROOT", root), patch.dict(
                 os.environ, {"ELAN_TOOLCHAIN": "leanprover/lean4:v4.22.0"}
             ), patch("harness.workspace_builder.subprocess.run") as run:
-                result = _validate_effective_toolchain(root / "warm.log")
+                result = _validate_effective_toolchain(
+                    root / "warm.log", timeout_seconds=1800
+                )
 
         self.assertEqual(result["status"], "failed")
         self.assertIn("conflicts with repository pin", result["effective_version"])

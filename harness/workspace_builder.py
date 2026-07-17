@@ -67,7 +67,15 @@ def toolchain_environment() -> dict[str, str]:
     return env
 
 
-def _validate_effective_toolchain(log_path: Path) -> dict[str, object]:
+def _validate_effective_toolchain(
+    log_path: Path, *, timeout_seconds: int
+) -> dict[str, object]:
+    """Validate the pinned toolchain within the enclosing warm budget.
+
+    ``elan run --install`` may download a missing pinned toolchain, so this
+    required preflight must use the same bounded cold-install allowance as the
+    dependency warm phase rather than a separate short validation cap.
+    """
     expected = declared_lean_toolchain().rsplit(":v", 1)[-1]
     command = toolchain_command("lean", "--version")
     started = time.monotonic()
@@ -78,7 +86,7 @@ def _validate_effective_toolchain(log_path: Path) -> dict[str, object]:
             env=toolchain_environment(),
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=timeout_seconds,
             check=False,
         )
         output = (completed.stdout + completed.stderr).strip()
@@ -313,7 +321,9 @@ def warm_public_dependencies(
     log_path.parent.mkdir(parents=True, exist_ok=True)
     results: list[dict[str, object]] = []
     with log_path.open("a", encoding="utf-8") as log:
-        toolchain_result = _validate_effective_toolchain(log_path)
+        toolchain_result = _validate_effective_toolchain(
+            log_path, timeout_seconds=timeout_seconds
+        )
         results.append(toolchain_result)
         log.write(
             "$ " + " ".join(toolchain_result["command"]) + "\n"
