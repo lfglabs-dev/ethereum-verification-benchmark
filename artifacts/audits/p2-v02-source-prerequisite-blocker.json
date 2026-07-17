@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "p2_v02_source_prerequisite_blocker",
+  "status": "blocked",
+  "pinned_source_commit": "c5a2344b121040445ccd745a3f839548ca8f9158",
+  "reason": "The pinned source tree has no production v0.2 selector or v0.2 version/reference contract to freeze. Creating a manifest from the generic v0.1 all-suite selector would invent the required v0.2 source prerequisite.",
+  "observed_selector": {
+    "entrypoint": "scripts/run_all.sh",
+    "command": "python3 harness/task_runner.py list --suite all",
+    "implementation": "harness/task_runner.py::discover_task_refs",
+    "runnable_filter": false,
+    "ordering": "lexicographic task-manifest path order under cases then backlog"
+  },
+  "source_probes": {
+    "benchmark_toml": {
+      "path": "benchmark.toml",
+      "sha256": "0b6b8b85bf7bf3bfb9a7cb79d3eb84ca4f30c94f7f650cc565a41fdf57f43847",
+      "declared_version": "0.1.0"
+    },
+    "run_all": {
+      "path": "scripts/run_all.sh",
+      "sha256": "53ffd5894f4e36beed583402e8d17d5d628032326fb74a4fe171477640bb8720"
+    },
+    "task_runner": {
+      "path": "harness/task_runner.py",
+      "sha256": "0c19fc19dc4acd4dcc7b6e64504889b96e6340497291d51cf1774ac29e89858f"
+    },
+    "version_contracts_present": ["benchmark-versions/v0.1.json"],
+    "v02_production_selector_present": false,
+    "v02_version_contract_present": false
+  },
+  "required_unblock": "Add and identify the production v0.2 selector and its source-owned reference mapping/version contract. Then freeze that selector's exact ordered output and validate its references through the private verifier."
+}
