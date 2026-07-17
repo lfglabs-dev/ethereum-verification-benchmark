@@ -52,7 +52,7 @@ def declared_lean_toolchain() -> str:
 
 def toolchain_command(program: str, *args: str) -> list[str]:
     """Run a Lean tool through the declared Elan toolchain, never host default."""
-    return ["elan", "run", declared_lean_toolchain(), program, *args]
+    return ["elan", "run", "--install", declared_lean_toolchain(), program, *args]
 
 
 def toolchain_environment() -> dict[str, str]:

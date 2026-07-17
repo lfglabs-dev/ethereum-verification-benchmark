@@ -35,7 +35,14 @@ VALID_TOOLCHAIN = {
     "exit_code": 0,
     "declared_toolchain": "leanprover/lean4:v4.24.0",
     "effective_version": "Lean (version 4.24.0)",
-    "command": ["elan", "run", "leanprover/lean4:v4.24.0", "lean", "--version"],
+    "command": [
+        "elan",
+        "run",
+        "--install",
+        "leanprover/lean4:v4.24.0",
+        "lean",
+        "--version",
+    ],
 }
 VALID_CHECKOUTS = {
     "kind": "package_checkout_health",
@@ -108,10 +115,19 @@ class PublicDependencyWarmTests(unittest.TestCase):
         popen.assert_called_once()
         self.assertEqual(
             popen.call_args.args[0],
-            ["elan", "run", "leanprover/lean4:v4.24.0", "lake", "exe", "cache", "get"],
+            [
+                "elan",
+                "run",
+                "--install",
+                "leanprover/lean4:v4.24.0",
+                "lake",
+                "exe",
+                "cache",
+                "get",
+            ],
         )
 
-    def test_effective_toolchain_must_match_repository_pin(self) -> None:
+    def test_effective_toolchain_installs_pinned_toolchain_on_cache_miss(self) -> None:
         with TemporaryDirectory() as tmp:
             root = Path(tmp)
             (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
@@ -126,7 +142,14 @@ class PublicDependencyWarmTests(unittest.TestCase):
         self.assertEqual(result["status"], "failed")
         self.assertEqual(
             run.call_args.args[0],
-            ["elan", "run", "leanprover/lean4:v4.24.0", "lean", "--version"],
+            [
+                "elan",
+                "run",
+                "--install",
+                "leanprover/lean4:v4.24.0",
+                "lean",
+                "--version",
+            ],
         )
 
     def test_conflicting_elan_toolchain_override_fails_preflight(self) -> None:
@@ -343,6 +366,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
             [
                 "elan",
                 "run",
+                "--install",
                 "leanprover/lean4:v4.24.0",
                 "lake",
                 "build",
