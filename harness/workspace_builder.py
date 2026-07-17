@@ -91,14 +91,21 @@ def _validate_effective_toolchain(
         )
         output = (completed.stdout + completed.stderr).strip()
         exit_code = completed.returncode
-    except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
+    except subprocess.TimeoutExpired:
+        output = (
+            f"toolchain validation timed out after {timeout_seconds} seconds "
+            f"while running {' '.join(command)}"
+        )
+        exit_code = 124
+    except (OSError, RuntimeError) as exc:
         output = str(exc)
         exit_code = 127
     matched = exit_code == 0 and f"version {expected}" in output
+    status = "passed" if matched else "timeout" if exit_code == 124 else "failed"
     return {
         "kind": "lean_toolchain",
         "required": True,
-        "status": "passed" if matched else "failed",
+        "status": status,
         "exit_code": 0 if matched else exit_code or 1,
         "duration_seconds": round(time.monotonic() - started, 3),
         "declared_toolchain": declared_lean_toolchain(),
@@ -348,8 +355,9 @@ def warm_public_dependencies(
         log.flush()
         if warm_result_failed(toolchain_result):
             print(
-                "[dependency-warm] toolchain state=failed "
-                f"declared={toolchain_result['declared_toolchain']}",
+                f"[dependency-warm] toolchain state={toolchain_result['status']} "
+                f"declared={toolchain_result['declared_toolchain']} "
+                f"exit_code={toolchain_result['exit_code']}",
                 flush=True,
             )
             return results

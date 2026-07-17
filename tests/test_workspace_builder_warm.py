@@ -159,6 +159,39 @@ class PublicDependencyWarmTests(unittest.TestCase):
         )
         self.assertEqual(run.call_args.kwargs["timeout"], 2400)
 
+    def test_effective_toolchain_timeout_is_reported_distinctly(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            with patch("harness.workspace_builder.ROOT", root), patch(
+                "harness.workspace_builder.subprocess.run",
+                side_effect=subprocess.TimeoutExpired(["elan", "run"], 1800),
+            ):
+                result = _validate_effective_toolchain(
+                    root / "warm.log", timeout_seconds=1800
+                )
+
+        self.assertEqual(result["status"], "timeout")
+        self.assertEqual(result["exit_code"], 124)
+        self.assertIn("timed out after 1800 seconds", result["effective_version"])
+        self.assertIn("elan run --install", result["effective_version"])
+
+    def test_effective_toolchain_missing_executable_remains_failed(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            with patch("harness.workspace_builder.ROOT", root), patch(
+                "harness.workspace_builder.subprocess.run",
+                side_effect=OSError("elan unavailable"),
+            ):
+                result = _validate_effective_toolchain(
+                    root / "warm.log", timeout_seconds=1800
+                )
+
+        self.assertEqual(result["status"], "failed")
+        self.assertEqual(result["exit_code"], 127)
+        self.assertEqual(result["effective_version"], "elan unavailable")
+
     def test_conflicting_elan_toolchain_override_fails_preflight(self) -> None:
         with TemporaryDirectory() as tmp:
             root = Path(tmp)
