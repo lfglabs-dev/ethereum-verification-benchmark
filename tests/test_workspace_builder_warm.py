@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import subprocess
 import unittest
 from contextlib import contextmanager
 from pathlib import Path
@@ -199,11 +200,45 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 "harness.workspace_builder.subprocess.run"
             ) as run:
                 run.return_value.returncode = 0
+                run.return_value.stdout = str(packages / "mathlib")
                 invalid = _invalid_package_checkouts()
 
         self.assertEqual(invalid, [])
-        run.assert_called_once()
+        self.assertEqual(run.call_count, 2)
         self.assertEqual(run.call_args.args[0][2], str(packages / "mathlib"))
+
+    def test_checkout_health_rejects_manifest_package_without_own_git_worktree(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            subprocess.run(["git", "init", "--quiet", str(root)], check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(root),
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "-c",
+                    "user.name=Test",
+                    "commit",
+                    "--allow-empty",
+                    "--quiet",
+                    "-m",
+                    "parent head",
+                ],
+                check=True,
+            )
+            (root / ".lake" / "packages" / "test-no-git-health").mkdir(parents=True)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "test-no-git-health"}]}', encoding="utf-8"
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, ["test-no-git-health"])
 
     def test_failed_cache_prefetch_does_not_fail_required_warm(self) -> None:
         self.assertFalse(

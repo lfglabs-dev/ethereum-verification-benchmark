@@ -122,15 +122,31 @@ def _invalid_package_checkouts() -> list[str]:
     for package in sorted(packages.iterdir()):
         if not package.is_dir() or package.name not in manifest_packages:
             continue
-        completed = subprocess.run(
-            ["git", "-C", str(package), "rev-parse", "--verify", "HEAD"],
-            env=toolchain_environment(),
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            timeout=10,
-            check=False,
-        )
-        if completed.returncode != 0:
+        try:
+            top_level = subprocess.run(
+                ["git", "-C", str(package), "rev-parse", "--show-toplevel"],
+                env=toolchain_environment(),
+                capture_output=True,
+                text=True,
+                timeout=10,
+                check=False,
+            )
+            head = subprocess.run(
+                ["git", "-C", str(package), "rev-parse", "--verify", "HEAD"],
+                env=toolchain_environment(),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=10,
+                check=False,
+            )
+            owns_worktree = (
+                top_level.returncode == 0
+                and Path(top_level.stdout.strip()).resolve() == package.resolve()
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            owns_worktree = False
+            head = None
+        if not owns_worktree or head is None or head.returncode != 0:
             invalid.append(package.name)
     return invalid
 
