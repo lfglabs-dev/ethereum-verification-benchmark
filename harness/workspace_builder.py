@@ -339,22 +339,6 @@ def warm_public_dependencies(
                 heartbeat_seconds=heartbeat_seconds,
             )
         )
-        with verify_lease(label="dependency_checkout_health"):
-            checkout_result = _wait_for_package_checkouts(log_path)
-        results.append(checkout_result)
-        if warm_result_failed(checkout_result):
-            log.write(
-                "invalid package checkouts: "
-                + ", ".join(checkout_result["invalid_packages"])
-                + "\n"
-            )
-            log.flush()
-            print(
-                "[dependency-warm] package_checkout state=failed invalid="
-                + ",".join(checkout_result["invalid_packages"]),
-                flush=True,
-            )
-            return results
         for module in public_dependency_modules(group):
             queued_at = time.monotonic()
             print(f"[dependency-warm] module={module} state=waiting_for_lease", flush=True)

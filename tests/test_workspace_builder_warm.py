@@ -192,7 +192,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
 
         @contextmanager
         def fake_lease(*, label: str):
-            self.assertEqual(label, "dependency_checkout_health")
+            self.assertEqual(label, "dependency_warm")
             yield "acquired"
 
         def fake_prefetch(**kwargs):
@@ -337,7 +337,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 log_path=Path(tmp) / "warm.log",
             )
 
-        self.assertEqual(results[4]["exit_code"], 0)
+        self.assertEqual(results[3]["exit_code"], 0)
         self.assertEqual(
             popen.call_args.args[0],
             [
@@ -352,7 +352,6 @@ class PublicDependencyWarmTests(unittest.TestCase):
         self.assertEqual(
             events,
             [
-                "health",
                 "lease_enter",
                 "health",
                 "process_start",
@@ -360,6 +359,55 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 "lease_exit",
             ],
         )
+
+    def test_checkout_health_and_required_build_share_a_verify_lease(self) -> None:
+        """A cache writer cannot invalidate checkout health before a build starts."""
+        group = Group(group_id="erc20/state", suite="active", tasks=())
+        events: list[str] = []
+
+        @contextmanager
+        def fake_lease(*, label: str):
+            self.assertEqual(label, "dependency_warm")
+            events.append("lease_enter")
+            yield "acquired"
+            events.append("lease_exit")
+
+        def fake_checkout(log_path: Path):
+            events.append("health")
+            return VALID_CHECKOUTS
+
+        class FinishedProcess:
+            returncode = 0
+            pid = 123
+
+            def __init__(self, *args, **kwargs):
+                events.append("process_start")
+
+            def poll(self):
+                return 0
+
+        with TemporaryDirectory() as tmp, patch(
+            "harness.workspace_builder.verify_lease", fake_lease
+        ), patch(
+            "harness.workspace_builder.public_dependency_modules",
+            return_value=["Benchmark.Cases.ERC20.State.Impl"],
+        ), patch(
+            "harness.workspace_builder._prefetch_mathlib_cache",
+            return_value=SKIPPED_CACHE_PREFETCH,
+        ), patch(
+            "harness.workspace_builder._validate_effective_toolchain",
+            return_value=VALID_TOOLCHAIN,
+        ), patch(
+            "harness.workspace_builder._wait_for_package_checkouts",
+            side_effect=fake_checkout,
+        ), patch(
+            "harness.workspace_builder.subprocess.Popen", side_effect=FinishedProcess
+        ):
+            warm_public_dependencies(
+                group, timeout_seconds=30, log_path=Path(tmp) / "warm.log"
+            )
+
+        self.assertEqual(events, ["lease_enter", "health", "process_start", "lease_exit"])
 
     def test_lease_wait_does_not_consume_build_timeout_or_duration(self) -> None:
         group = Group(
@@ -410,7 +458,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[4]
+            )[3]
 
         self.assertEqual(result["exit_code"], 0)
         self.assertEqual(result["lease_wait_seconds"], 50.0)
@@ -455,7 +503,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 group,
                 timeout_seconds=30,
                 log_path=Path(tmp) / "warm.log",
-            )[4]
+            )[3]
 
         self.assertEqual(result["status"], "failed")
         self.assertEqual(result["exit_code"], 127)
