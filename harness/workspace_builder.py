@@ -123,13 +123,27 @@ def _invalid_package_checkouts() -> list[str]:
     manifest_packages = {
         package["name"]
         for package in manifest.get("packages", [])
-        if isinstance(package, dict) and isinstance(package.get("name"), str)
+        if (
+            isinstance(package, dict)
+            and package.get("type") == "git"
+            and isinstance(package.get("name"), str)
+        )
     }
     invalid = []
     for package in sorted(packages.iterdir()):
-        if not package.is_dir() or package.name not in manifest_packages:
+        if package.name not in manifest_packages:
             continue
         try:
+            package_root = packages.resolve(strict=True)
+            package_location = package.resolve(strict=True)
+            owns_location = (
+                not package.is_symlink()
+                and package.is_dir()
+                and package_location.parent == package_root
+            )
+            if not owns_location:
+                invalid.append(package.name)
+                continue
             top_level = subprocess.run(
                 ["git", "-C", str(package), "rev-parse", "--show-toplevel"],
                 env=toolchain_environment(),
@@ -148,9 +162,10 @@ def _invalid_package_checkouts() -> list[str]:
             )
             owns_worktree = (
                 top_level.returncode == 0
-                and Path(top_level.stdout.strip()).resolve() == package.resolve()
+                and bool(top_level.stdout.strip())
+                and Path(top_level.stdout.strip()).resolve(strict=True) == package_location
             )
-        except (OSError, subprocess.TimeoutExpired):
+        except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
             owns_worktree = False
             head = None
         if not owns_worktree or head is None or head.returncode != 0:

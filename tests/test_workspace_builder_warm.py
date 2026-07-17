@@ -227,7 +227,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
             (packages / "abandoned-checkout").mkdir()
             (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
             (root / "lake-manifest.json").write_text(
-                '{"packages": [{"name": "mathlib"}]}', encoding="utf-8"
+                '{"packages": [{"name": "mathlib", "type": "git"}]}', encoding="utf-8"
             )
             with patch("harness.workspace_builder.ROOT", root), patch(
                 "harness.workspace_builder.subprocess.run"
@@ -265,13 +265,51 @@ class PublicDependencyWarmTests(unittest.TestCase):
             (root / ".lake" / "packages" / "test-no-git-health").mkdir(parents=True)
             (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
             (root / "lake-manifest.json").write_text(
-                '{"packages": [{"name": "test-no-git-health"}]}', encoding="utf-8"
+                '{"packages": [{"name": "test-no-git-health", "type": "git"}]}',
+                encoding="utf-8",
             )
 
             with patch("harness.workspace_builder.ROOT", root):
                 invalid = _invalid_package_checkouts()
 
         self.assertEqual(invalid, ["test-no-git-health"])
+
+    def test_checkout_health_rejects_manifest_git_package_symlinked_outside_packages(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            external = Path(tmp) / "external-package"
+            root.mkdir()
+            subprocess.run(["git", "init", "--quiet", str(external)], check=True)
+            subprocess.run(
+                [
+                    "git",
+                    "-C",
+                    str(external),
+                    "-c",
+                    "user.email=test@example.invalid",
+                    "-c",
+                    "user.name=Test",
+                    "commit",
+                    "--allow-empty",
+                    "--quiet",
+                    "-m",
+                    "external head",
+                ],
+                check=True,
+            )
+            packages = root / ".lake" / "packages"
+            packages.mkdir(parents=True)
+            (packages / "test-external-git").symlink_to(external, target_is_directory=True)
+            (root / "lean-toolchain").write_text("leanprover/lean4:v4.24.0\n")
+            (root / "lake-manifest.json").write_text(
+                '{"packages": [{"name": "test-external-git", "type": "git"}]}',
+                encoding="utf-8",
+            )
+
+            with patch("harness.workspace_builder.ROOT", root):
+                invalid = _invalid_package_checkouts()
+
+        self.assertEqual(invalid, ["test-external-git"])
 
     def test_failed_cache_prefetch_does_not_fail_required_warm(self) -> None:
         self.assertFalse(
