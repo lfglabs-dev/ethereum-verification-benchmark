@@ -452,6 +452,34 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertIn("MCP-backed fair run missing MCP lifecycle metadata", "\n".join(artifact_errors))
         self.assertIn("MCP-backed fair run missing MCP preflight result", "\n".join(artifact_errors))
 
+    def test_missing_credentials_artifact_does_not_require_unstarted_mcp_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(
+            lean_tools, "RESULTS_DIR", Path(tmp) / "results"
+        ), mock.patch.object(lean_tools, "_api_key", return_value=None), mock.patch.object(
+            lean_tools, "_local_no_auth_endpoint", return_value=False
+        ), mock.patch.object(lean_tools, "LeanLspMcpSession") as mcp_session:
+            code, run_dir = lean_tools.run_group(
+                "ethereum/deposit_contract_minimal",
+                task_ref="ethereum/deposit_contract_minimal/deposit_count",
+                max_attempts=1,
+                max_tool_calls=4,
+                harness_id="builtin-lean-lsp",
+                run_slug="builtin-lean-lsp-test",
+                track="group/lean_tools_mcp",
+                tool_backend="lean-lsp-mcp",
+            )
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            artifact_errors = check_run(run_dir)
+
+        self.assertEqual(code, 1)
+        mcp_session.assert_not_called()
+        self.assertEqual(run["harness_status"], "missing_credentials")
+        self.assertEqual(run["tool_backend"], "lean-lsp-mcp")
+        self.assertEqual(run["failure_class"], "provider_setup_error")
+        self.assertIsNone(run["lean_lsp_mcp"])
+        self.assertIsNone(run["mcp_preflight"])
+        self.assertEqual(artifact_errors, [])
+
     def test_aggregate_accepts_multi_task_mcp_preflight_failure(self) -> None:
         budget = {
             "max_attempts": 1,

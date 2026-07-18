@@ -116,7 +116,11 @@ def check_run(run_dir: Path) -> list[str]:
     if (
         is_mcp_backed
         and run.get("run_mode") in {"task", "group"}
-        and run.get("harness_status") != "dry_run"
+        # A missing-credentials run terminates at the provider gate before an
+        # MCP session can be started.  Do not require lifecycle evidence for
+        # an MCP backend that did not execute, while retaining the configured
+        # backend and provider-setup classification in the artifact.
+        and run.get("harness_status") not in {"dry_run", "missing_credentials"}
     ):
         metadata = run.get("lean_lsp_mcp")
         if not isinstance(metadata, dict):
