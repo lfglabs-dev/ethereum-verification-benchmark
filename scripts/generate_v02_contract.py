@@ -6,13 +6,13 @@ import hashlib
 import json
 import subprocess
 import sys
+import tempfile
+from contextlib import contextmanager
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
-
-from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
 
 BASELINE = "c5a2344b121040445ccd745a3f839548ca8f9158"
 MANIFEST = ROOT / "benchmark-versions" / "v0.2.json"
@@ -27,9 +27,57 @@ def digest_file(path: Path) -> str:
     return digest_bytes(path.read_bytes())
 
 
-def git_file_sha(revision: str, path: str) -> str:
-    raw = subprocess.check_output(["git", "show", f"{revision}:{path}"], cwd=ROOT)
-    return digest_bytes(raw)
+@contextmanager
+def baseline_worktree() -> Path:
+    """Expose the pinned source tree without ever consulting the caller's checkout."""
+    with tempfile.TemporaryDirectory(prefix="v02-contract-baseline-") as directory:
+        path = Path(directory) / "source"
+        subprocess.run(
+            ["git", "worktree", "add", "--detach", str(path), BASELINE],
+            cwd=ROOT,
+            check=True,
+        )
+        try:
+            yield path
+        finally:
+            subprocess.run(["git", "worktree", "remove", "--force", str(path)], cwd=ROOT, check=False)
+
+
+def read_baseline_contract_inputs(worktree: Path) -> dict[str, object]:
+    """Load selector, manifests and reference declarations from the pinned tree."""
+    program = """
+import hashlib, json
+from pathlib import Path
+from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
+root = Path.cwd()
+refs = discover_task_refs('all')
+entries = []
+for ref in refs:
+    task_path = resolve_task_manifest(ref)
+    task = load_task_record(task_path)
+    reference = task['reference_solution']
+    module = reference['module']
+    declaration = reference['declaration']
+    if not isinstance(module, str) or not isinstance(declaration, str):
+        raise SystemExit(f'{ref}: source task has no reference module/declaration')
+    module_path = root.joinpath(*module.split('.')).with_suffix('.lean')
+    if not module_path.is_file():
+        raise SystemExit(f'{ref}: reference module does not exist: {module}')
+    entries.append({
+        'task_ref': ref,
+        'task_manifest_path': str(task_path.relative_to(root)),
+        'task_manifest_sha256': hashlib.sha256(task_path.read_bytes()).hexdigest(),
+        'reference_module': module,
+        'reference_declaration': declaration,
+        'reference_module_path': str(module_path.relative_to(root)),
+        'reference_module_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
+    })
+print(json.dumps({'refs': refs, 'entries': entries}))
+"""
+    completed = subprocess.run(
+        [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=True
+    )
+    return json.loads(completed.stdout)
 
 
 def dump(path: Path, data: object) -> None:
@@ -37,43 +85,30 @@ def dump(path: Path, data: object) -> None:
 
 
 def main() -> int:
-    # This is deliberately the real production selector, not a fixture.
-    refs = discover_task_refs("all")
+    # The release contract is deliberately derived from the real production all
+    # selector in the pinned source revision, never from a potentially changed
+    # generator checkout.
+    with baseline_worktree() as worktree:
+        baseline = read_baseline_contract_inputs(worktree)
+        refs = baseline["refs"]
+        reference_entries = baseline["entries"]
+        selector_files_sha256 = {
+            path: digest_file(worktree / path)
+            for path in ("harness/task_runner.py", "scripts/run_all.sh")
+        }
+    if not isinstance(refs, list) or not all(isinstance(ref, str) for ref in refs):
+        raise SystemExit("baseline all-suite selector returned malformed task refs")
+    if not isinstance(reference_entries, list) or not all(isinstance(entry, dict) for entry in reference_entries):
+        raise SystemExit("baseline all-suite selector returned malformed reference entries")
     if len(refs) != len(set(refs)):
         raise SystemExit("baseline all-suite selector returned duplicate task refs")
     source = {
         "commit": BASELINE,
         "entrypoint": "scripts/run_all.sh",
         "selector_command": "python3 harness/task_runner.py list --suite all",
-        "selector_files_sha256": {
-            "harness/task_runner.py": git_file_sha(BASELINE, "harness/task_runner.py"),
-            "scripts/run_all.sh": git_file_sha(BASELINE, "scripts/run_all.sh"),
-        },
+        "selector_files_sha256": selector_files_sha256,
     }
-    task_hashes: dict[str, str] = {}
-    reference_entries: list[dict[str, str]] = []
-    for ref in refs:
-        task_path = resolve_task_manifest(ref)
-        task = load_task_record(task_path)
-        reference = task["reference_solution"]
-        module = reference["module"]
-        declaration = reference["declaration"]
-        if not isinstance(module, str) or not isinstance(declaration, str):
-            raise SystemExit(f"{ref}: source task has no reference module/declaration")
-        module_path = ROOT.joinpath(*module.split(".")).with_suffix(".lean")
-        if not module_path.is_file():
-            raise SystemExit(f"{ref}: reference module does not exist: {module}")
-        rel_task = str(task_path.relative_to(ROOT))
-        task_hashes[ref] = digest_file(task_path)
-        reference_entries.append({
-            "task_ref": ref,
-            "task_manifest_path": rel_task,
-            "task_manifest_sha256": task_hashes[ref],
-            "reference_module": module,
-            "reference_declaration": declaration,
-            "reference_module_path": str(module_path.relative_to(ROOT)),
-            "reference_module_sha256": digest_file(module_path),
-        })
+    task_hashes = {entry["task_ref"]: entry["task_manifest_sha256"] for entry in reference_entries}
     task_set_hash = digest_bytes(("\n".join(refs) + "\n").encode())
     manifest = {
         "benchmark": "ethereum-verification-benchmark",

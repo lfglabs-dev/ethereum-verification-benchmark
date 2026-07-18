@@ -399,7 +399,9 @@ def aggregate_results(task_refs: list[str], suite: str) -> dict[str, Any]:
 
     case_rows = []
     all_case_records = load_case_records_for_suite(suite)
-    if explicit_task_refs:
+    # v0.2 is a frozen task contract.  Its secondary case report must be
+    # derived from that contract too, even when callers omit task refs.
+    if explicit_task_refs or suite == "v0.2":
         case_records = [record for record in all_case_records if record["case_id"] in selected_case_ids]
     else:
         case_records = all_case_records

@@ -49,6 +49,7 @@ python3 scripts/check_reference_solutions.py
 python3 scripts/check_axiom_ledger.py
 python3 scripts/check_verity_pin_staleness.py --warn-only
 python3 scripts/validate_manifests.py
+python3 scripts/validate_v02_reference_contract.py --no-lean
 python3 scripts/generate_metadata.py
 if [[ "${VERITY_RUN_FULL_TASK_SWEEP:-0}" == "1" ]]; then
   if ! ./scripts/run_all.sh; then

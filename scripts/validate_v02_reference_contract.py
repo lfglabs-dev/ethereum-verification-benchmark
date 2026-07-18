@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
-from harness.task_runner import load_task_record, resolve_task_manifest
+from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
 
 MANIFEST = ROOT / "benchmark-versions" / "v0.2.json"
 REFERENCES = ROOT / "benchmark-versions" / "v0.2-references.json"
@@ -92,6 +92,8 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail("manifest task list malformed")
         if len(refs) != len(set(refs)) or manifest.get("task_count") != len(refs):
             fail("manifest task list duplicate/count drift")
+        if discover_task_refs("all") != refs:
+            fail("production all-suite selector drift")
         expected_task_hash = hashlib.sha256(("\n".join(refs) + "\n").encode()).hexdigest()
         if manifest.get("task_set_sha256") != expected_task_hash:
             fail("manifest task ordering/hash drift")

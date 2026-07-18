@@ -28,6 +28,9 @@ jobs:
       DOTENV_PRIVATE_KEY: ${{ secrets.DOTENV_PRIVATE_KEY }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The v0.2 contract validates hashes against its pinned base commit.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:

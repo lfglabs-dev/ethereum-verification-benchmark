@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
 
-from harness.task_runner import discover_task_refs
+from harness.task_runner import aggregate_results, discover_task_refs
+from scripts import generate_v02_contract as generator
 from scripts import validate_v02_reference_contract as validator
 
 
@@ -22,9 +24,18 @@ class V02ContractTests(unittest.TestCase):
     def _validate(self, mutate=None, *, lean=False, escape=False) -> tuple[int, dict]:
         manifest = json.loads(json.dumps(self.manifest))
         references = json.loads(json.dumps(self.references))
+        # Unit fixtures are deliberately independent of CI's checkout depth.
+        # The production validator still requires the recorded baseline object.
+        manifest["source"]["commit"] = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+        ).strip()
+        manifest["source"]["selector_files_sha256"] = {
+            path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+            for path in manifest["source"]["selector_files_sha256"]
+        }
         if mutate:
             mutate(manifest, references)
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             directory = Path(directory)
             manifest_path = directory / "v0.2.json"
             reference_path = directory / "v0.2-references.json"
@@ -34,6 +45,10 @@ class V02ContractTests(unittest.TestCase):
             reference_path.write_text(json.dumps(references), encoding="utf-8")
             with mock.patch.object(validator, "MANIFEST", manifest_path), mock.patch.object(
                 validator, "REFERENCES", reference_path
+            ), mock.patch.object(
+                validator,
+                "baseline_file_sha",
+                side_effect=lambda _commit, path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
             ), mock.patch.object(validator, "ESCAPE") as matcher:
                 matcher.search.return_value = object() if escape else None
                 if lean:
@@ -47,6 +62,29 @@ class V02ContractTests(unittest.TestCase):
     def test_selector_is_frozen_and_operational(self) -> None:
         self.assertEqual(discover_task_refs("v0.2"), self.manifest["tasks"])
         self.assertEqual(self.manifest["task_count"], 240)
+
+    def test_implicit_v02_aggregate_has_only_canonical_cases(self) -> None:
+        summary = aggregate_results([], "v0.2")["case_summary"]
+        canonical_case_ids = {
+            "/".join(task_ref.split("/")[:2]) for task_ref in self.manifest["tasks"]
+        }
+        self.assertEqual(summary["total_cases"], 37)
+        self.assertEqual({row["case_id"] for row in summary["cases"]}, canonical_case_ids)
+
+    def test_generator_rebuilds_the_pinned_baseline_contract(self) -> None:
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            directory = Path(directory)
+            manifest_path = directory / "v0.2.json"
+            references_path = directory / "v0.2-references.json"
+            with mock.patch.object(generator, "MANIFEST", manifest_path), mock.patch.object(
+                generator, "REFERENCES", references_path
+            ):
+                self.assertEqual(generator.main(), 0)
+            self.assertEqual(json.loads(manifest_path.read_text()), self.manifest)
+            expected_references = json.loads(json.dumps(self.references))
+            expected_references["canonical_manifest_path"] = str(manifest_path.relative_to(ROOT))
+            expected_references["canonical_manifest_sha256"] = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+            self.assertEqual(json.loads(references_path.read_text()), expected_references)
 
     def test_duplicate_mapping_is_rejected(self) -> None:
         def mutate(manifest, _references):
