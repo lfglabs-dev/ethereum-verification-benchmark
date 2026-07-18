@@ -68,6 +68,45 @@ def baseline_file_sha(commit: str, path: str) -> str:
     return hashlib.sha256(result.stdout).hexdigest()
 
 
+def baseline_task_metadata(commit: str) -> dict[str, tuple[str, str]]:
+    """Rebuild task identities in the pinned source tree, not this checkout."""
+    program = """
+import json
+from scripts.compute_fingerprints import ordered_tasks
+tasks = ordered_tasks('all')
+print(json.dumps({task['task_ref']: [task['task_fingerprint'], task['task_interface_id']] for task in tasks}, sort_keys=True))
+"""
+    with tempfile.TemporaryDirectory(prefix="v02-baseline-metadata-") as directory:
+        worktree = Path(directory) / "source"
+        added = subprocess.run(
+            ["git", "worktree", "add", "--detach", str(worktree), commit],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if added.returncode:
+            fail(f"baseline source unavailable: {commit}")
+        try:
+            result = subprocess.run(
+                [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=False
+            )
+            if result.returncode:
+                fail(f"baseline task metadata unavailable: {commit}")
+            data = json.loads(result.stdout)
+        finally:
+            subprocess.run(["git", "worktree", "remove", "--force", str(worktree)], cwd=ROOT, check=False)
+    if not isinstance(data, dict) or not all(
+        isinstance(ref, str)
+        and isinstance(value, list)
+        and len(value) == 2
+        and all(isinstance(item, str) for item in value)
+        for ref, value in data.items()
+    ):
+        fail("baseline task metadata malformed")
+    return {ref: (value[0], value[1]) for ref, value in data.items()}
+
+
 def validate(*, verify_lean: bool, audit_path: Path) -> int:
     started = time.monotonic()
     manifest = load_json(MANIFEST)
@@ -86,6 +125,7 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
         for path, expected in selector_hashes.items():
             if not isinstance(path, str) or not isinstance(expected, str) or baseline_file_sha(source["commit"], path) != expected:
                 fail(f"baseline selector source hash drift: {path}")
+        baseline_metadata = baseline_task_metadata(source["commit"])
         task_objects = manifest.get("tasks")
         mappings = manifest.get("task_manifest_sha256")
         if not isinstance(task_objects, list) or not all(isinstance(task, dict) for task in task_objects):
@@ -100,6 +140,12 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
                 fail(f"{task.get('task_ref')}: version task metadata malformed")
         if len(refs) != len(set(refs)) or manifest.get("task_count") != len(refs):
             fail("manifest task list duplicate/count drift")
+        if set(baseline_metadata) != set(refs):
+            fail("pinned baseline task set drift")
+        for task in task_objects:
+            ref = task["task_ref"]
+            if baseline_metadata[ref] != (task["task_fingerprint"], task["task_interface_id"]):
+                fail(f"{ref}: pinned baseline task metadata drift")
         if discover_task_refs("v0.2") != refs:
             fail("frozen v0.2-suite selector drift")
         expected_task_hash = hashlib.sha256(("\n".join(refs) + "\n").encode()).hexdigest()

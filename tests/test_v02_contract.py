@@ -50,6 +50,13 @@ class V02ContractTests(unittest.TestCase):
                 validator,
                 "baseline_file_sha",
                 side_effect=lambda _commit, path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
+            ), mock.patch.object(
+                validator,
+                "baseline_task_metadata",
+                return_value={
+                    task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
+                    for task in self.manifest["tasks"]
+                },
             ), mock.patch.object(validator, "ESCAPE") as matcher:
                 matcher.search.return_value = object() if escape else None
                 if lean:
@@ -122,7 +129,17 @@ class V02ContractTests(unittest.TestCase):
 
                 code, audit = self._validate(mutate)
                 self.assertEqual(code, 1)
-                self.assertIn("pinned task metadata drift", audit["errors"][0])
+                self.assertIn("pinned baseline task metadata drift", audit["errors"][0])
+
+    def test_coordinated_mutable_task_metadata_drift_is_rejected_against_baseline(self) -> None:
+        def mutate(manifest, references):
+            for field in ("task_fingerprint", "task_interface_id"):
+                manifest["tasks"][0][field] = "sha256:" + "0" * 64
+                references["tasks"][0][field] = "sha256:" + "0" * 64
+
+        code, audit = self._validate(mutate)
+        self.assertEqual(code, 1)
+        self.assertIn("pinned baseline task metadata drift", audit["errors"][0])
 
     def test_future_all_suite_task_does_not_invalidate_frozen_v02(self) -> None:
         frozen_refs = [task["task_ref"] for task in self.manifest["tasks"]]
