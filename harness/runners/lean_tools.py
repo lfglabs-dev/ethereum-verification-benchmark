@@ -3403,7 +3403,10 @@ def run_group(
     )
     classification = classify_run(verifier_result, response.get("tasks") if isinstance(response.get("tasks"), list) else [])
     run = {
-        "schema_version": 1,
+        # v2 identifies the canonical default as an MCP execution contract.
+        # v1 default/builtin records remain readable as historical artifacts.
+        "schema_version": 2,
+        "execution_contract": "default-mcp-v1",
         "run_id": run_id,
         "harness_id": harness_id,
         "provider": _active_provider(),

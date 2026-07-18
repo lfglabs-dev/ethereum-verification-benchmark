@@ -479,6 +479,8 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertEqual(code, 1)
         mcp_session.assert_not_called()
         self.assertEqual(run["harness_status"], "missing_credentials")
+        self.assertEqual(run["schema_version"], 2)
+        self.assertEqual(run["execution_contract"], "default-mcp-v1")
         self.assertEqual(run["tool_backend"], "lean-lsp-mcp")
         self.assertEqual(run["failure_class"], "provider_setup_error")
         self.assertEqual(
@@ -575,6 +577,51 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
 
         self.assertIn("canonical MCP run used non-MCP backend 'bespoke-lean-tools'", "\n".join(errors))
 
+    def test_validator_accepts_complete_historical_bespoke_default_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._historical_bespoke_default_artifact(Path(tmp))
+            self.assertEqual(check_run(run_dir), [])
+
+    def test_validator_rejects_default_with_only_legacy_harness_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["track"] = None
+            run["tool_backend"] = None
+            run.pop("execution_contract")
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        joined = "\n".join(errors)
+        self.assertIn("current default MCP artifact missing execution_contract", joined)
+        self.assertIn("canonical MCP run used non-MCP backend None", joined)
+
+    def test_validator_rejects_incomplete_or_contradictory_legacy_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._historical_bespoke_default_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run.pop("tool_backend")
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            missing_errors = check_run(run_dir)
+            run["tool_backend"] = "lean-lsp-mcp"
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            contradictory_errors = check_run(run_dir)
+
+        self.assertIn("no recognized recorded execution identity", "\n".join(missing_errors))
+        self.assertIn("missing MCP lifecycle state", "\n".join(contradictory_errors))
+
+    def test_validator_rejects_current_schema_claiming_legacy_default(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._historical_bespoke_default_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["schema_version"] = 2
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        joined = "\n".join(errors)
+        self.assertIn("current default MCP artifact missing execution_contract", joined)
+        self.assertIn("missing MCP lifecycle state", joined)
+
     def _missing_credentials_artifact(self, root: Path) -> Path:
         with mock.patch.object(lean_tools, "RESULTS_DIR", root / "results"), mock.patch.object(
             lean_tools, "_api_key", return_value=None
@@ -584,6 +631,19 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
                 task_ref="ethereum/deposit_contract_minimal/deposit_count",
                 harness_id="default",
             )
+        return run_dir
+
+    def _historical_bespoke_default_artifact(self, root: Path) -> Path:
+        run_dir = self._missing_credentials_artifact(root)
+        run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+        run["schema_version"] = 1
+        run["track"] = "group/lean_tools"
+        run["tool_backend"] = "builtin"
+        run.pop("execution_contract")
+        run.pop("mcp_lifecycle")
+        run.pop("lean_lsp_mcp")
+        run.pop("mcp_preflight")
+        (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
         return run_dir
 
     def test_aggregate_accepts_multi_task_mcp_preflight_failure(self) -> None:

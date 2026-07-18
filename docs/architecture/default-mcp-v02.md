@@ -29,6 +29,14 @@ lifecycle together with session metadata and MCP preflight. `impossible` and
 `fallback` are explicit non-canonical states: the artifact validator rejects
 them, fallback backends, and unproven pre-launch claims.
 
+New default artifacts also record `schema_version: 2` and
+`execution_contract: "default-mcp-v1"`. The validator recognizes historical
+bespoke default artifacts only when their complete recorded v1 identity is
+`track: "group/lean_tools"` plus `tool_backend: "builtin"`; it does not infer
+legacy status from `harness_id` alone. A current schema/contract, incomplete
+identity, or contradictory identity is therefore validated as MCP (and fails
+closed without the MCP lifecycle evidence).
+
 ## Intended file scope
 
 * Canonical dispatch/profile and MCP identifiers: ``harness/cli.py``,
