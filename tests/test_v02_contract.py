@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest import mock
 
 from harness.task_runner import aggregate_results, discover_task_refs
-from harness import canonical_contract
+from harness import canonical_contract, task_runner
 from scripts import generate_v02_contract as generator
 from scripts import validate_v02_reference_contract as validator
 from scripts import compute_fingerprints
@@ -138,6 +138,31 @@ class V02ContractTests(unittest.TestCase):
         self.assertEqual(self.manifest["manifest_schema_version"], 1)
         self.assertTrue(all(task["task_fingerprint"].startswith("sha256:") for task in self.manifest["tasks"]))
         self.assertTrue(all(task["task_interface_id"].startswith("sha256:") for task in self.manifest["tasks"]))
+
+    def test_mutable_full_selector_includes_later_task_while_v02_stays_240(self) -> None:
+        """A post-release task belongs to ``all``, never to frozen v0.2."""
+        frozen_refs = [task["task_ref"] for task in self.manifest["tasks"]]
+        future_ref = "future/case/later_task"
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for task_ref in [*frozen_refs, future_ref]:
+                project, case, task = task_ref.split("/")
+                task_path = root / ("backlog" if task_ref == future_ref else "cases") / project / case / "tasks" / f"{task}.yaml"
+                task_path.parent.mkdir(parents=True, exist_ok=True)
+                task_path.write_text("task_id: placeholder\n", encoding="utf-8")
+
+            with mock.patch.object(task_runner, "ROOT", root), mock.patch.object(
+                task_runner, "load_v02_task_refs", return_value=frozen_refs
+            ), mock.patch.object(task_runner, "load_task_record", return_value={}):
+                self.assertIn(future_ref, task_runner.discover_task_refs("all"))
+                self.assertEqual(task_runner.discover_task_refs("v0.2"), frozen_refs)
+                self.assertEqual(len(task_runner.discover_task_refs("v0.2")), 240)
+
+    def test_run_all_defaults_to_mutable_selector_and_exposes_v02_flag(self) -> None:
+        runner = (ROOT / "scripts/run_all.sh").read_text(encoding="utf-8")
+        self.assertIn('suite="all"', runner)
+        self.assertIn('"--suite" && "$2" == "v0.2"', runner)
+        self.assertIn('list --suite "$suite"', runner)
 
     def test_source_archive_can_list_v02_without_git_history(self) -> None:
         """The frozen selector is usable by shallow checkouts/source archives."""

@@ -17,8 +17,11 @@ The suite is strongest today on accounting, local state preservation, storage ef
 # All tasks in one case
 ./scripts/run_case.sh ethereum/deposit_contract_minimal
 
-# Full active suite
+# Current mutable full suite (includes later runnable tasks)
 ./scripts/run_all.sh
+
+# Frozen v0.2 release validation (the canonical 240-task selector)
+./scripts/run_all.sh --suite v0.2
 ```
 
 ## Harness Runs
