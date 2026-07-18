@@ -474,8 +474,29 @@ class V02ContractTests(unittest.TestCase):
     def test_coordinated_task_and_reference_manifest_regeneration_cannot_retarget_source(self) -> None:
         """Regenerating both candidate contracts cannot select another reachable commit."""
         original = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
-        alternate = subprocess.check_output(["git", "rev-parse", f"{original}^"], cwd=ROOT, text=True).strip()
+        helper_path = self.manifest["source"]["closure_helper"]["path"]
+        reachable = subprocess.check_output(["git", "rev-list", original], cwd=ROOT, text=True).splitlines()
+        alternate = next(
+            (
+                commit
+                for commit in reachable
+                if commit != original
+                and subprocess.run(
+                    ["git", "cat-file", "-e", f"{commit}:{helper_path}"], cwd=ROOT, check=False
+                ).returncode
+                == 0
+            ),
+            None,
+        )
+        self.assertIsNotNone(alternate, "expected a reachable commit containing the closure helper")
+        assert alternate is not None
         self.assertNotEqual(alternate, original)
+        self.assertEqual(
+            subprocess.run(
+                ["git", "cat-file", "-e", f"{alternate}:{helper_path}"], cwd=ROOT, check=False
+            ).returncode,
+            0,
+        )
 
         def mutate(manifest, references):
             manifest["source"]["commit"] = alternate
@@ -485,7 +506,6 @@ class V02ContractTests(unittest.TestCase):
                 ).hexdigest()
                 for path in manifest["source"]["selector_files_sha256"]
             }
-            helper_path = manifest["source"]["closure_helper"]["path"]
             manifest["source"]["closure_helper"] = {
                 "blob": subprocess.check_output(
                     ["git", "rev-parse", f"{alternate}:{helper_path}"], cwd=ROOT, text=True
@@ -618,6 +638,49 @@ class V02ContractTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("pinned source unavailable (infra)", audit["errors"][0])
         self.assertEqual(audit["classification"], "infra_unavailable")
+
+    def test_invalid_candidate_json_always_records_audit_and_fails_preflight(self) -> None:
+        cases = (
+            ("missing manifest", "manifest", None),
+            ("missing reference contract", "references", None),
+            ("malformed manifest", "manifest", "{"),
+            ("malformed reference contract", "references", "{"),
+        )
+        for label, target, contents in cases:
+            with self.subTest(label=label), tempfile.TemporaryDirectory(dir=ROOT) as directory:
+                directory = Path(directory)
+                manifest = directory / "v0.2.json"
+                references = directory / "v0.2-references.json"
+                audit = directory / "audit.json"
+                if target != "manifest":
+                    manifest.write_text(json.dumps(self.manifest), encoding="utf-8")
+                elif contents is not None:
+                    manifest.write_text(contents, encoding="utf-8")
+                if target != "references":
+                    references.write_text(json.dumps(self.references), encoding="utf-8")
+                elif contents is not None:
+                    references.write_text(contents, encoding="utf-8")
+                with mock.patch.object(validator, "MANIFEST", manifest), mock.patch.object(
+                    validator, "REFERENCES", references
+                ), mock.patch.object(validator, "run_lean") as run_lean:
+                    self.assertEqual(validator.validate(verify_lean=False, audit_path=audit), 1)
+                    recorded = json.loads(audit.read_text(encoding="utf-8"))
+                    self.assertTrue(recorded["errors"])
+                    if contents is None:
+                        self.assertIsNone(
+                            recorded["manifest_sha256" if target == "manifest" else "reference_contract_sha256"]
+                        )
+                    with self.assertRaisesRegex(ValueError, "v0.2 reference preflight failed"):
+                        validator.ensure_structural_contract()
+                run_lean.assert_not_called()
+
+    def test_unwritable_audit_path_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            audit_parent = Path(directory) / "not-a-directory"
+            audit_parent.write_text("block audit directory", encoding="utf-8")
+            with mock.patch.object(validator, "run_lean") as run_lean:
+                self.assertEqual(validator.validate(verify_lean=False, audit_path=audit_parent / "audit.json"), 1)
+            run_lean.assert_not_called()
 
     def test_unverifiable_reference_is_rejected_by_lean_result(self) -> None:
         code, audit = self._validate(lean=True)

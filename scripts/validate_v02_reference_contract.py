@@ -71,6 +71,28 @@ def load_json(path: Path) -> dict:
     return data
 
 
+def optional_sha(path: Path) -> str | None:
+    """Return a candidate file digest without masking the primary validation error."""
+    try:
+        return sha(path)
+    except OSError:
+        return None
+
+
+def write_audit_atomically(audit_path: Path, audit: dict) -> None:
+    """Publish only complete, valid audit JSON."""
+    audit_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = audit_path.with_name(f".{audit_path.name}.tmp")
+    try:
+        temporary.write_text(json.dumps(audit, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        temporary.replace(audit_path)
+    finally:
+        try:
+            temporary.unlink()
+        except FileNotFoundError:
+            pass
+
+
 def lean_code(text: str) -> str:
     """Remove Lean comments before looking for proof escape declarations."""
     result: list[str] = []
@@ -120,12 +142,22 @@ def baseline_file_sha(commit: str, path: str) -> str:
 
 def validate(*, verify_lean: bool, audit_path: Path) -> int:
     started = time.monotonic()
-    manifest = load_json(MANIFEST)
-    contract = load_json(REFERENCES)
+    # Candidate files are untrusted input.  Keep safe defaults until their
+    # reads and parses have been recorded in the validation audit below.
+    manifest: dict = {}
+    contract: dict = {}
     errors: list[str] = []
     statuses: list[dict[str, str]] = []
+    source_commit: str | None = None
+    task_count: object | None = None
+    task_set_sha256: object | None = None
     try:
+        manifest = load_json(MANIFEST)
+        contract = load_json(REFERENCES)
         source = manifest.get("source")
+        source_commit = source.get("commit") if isinstance(source, dict) else None
+        task_count = manifest.get("task_count")
+        task_set_sha256 = manifest.get("task_set_sha256")
         if not isinstance(source, dict) or not isinstance(source.get("commit"), str):
             fail("manifest source provenance malformed")
         if set(manifest) != MANIFEST_FIELDS:
@@ -291,20 +323,23 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
         "schema_version": 1,
         "kind": "p2_v02_reference_validation",
         "classification": "infra_unavailable" if any("(infra)" in error for error in errors) else "no_provider",
-        "source_commit": manifest.get("source", {}).get("commit") if isinstance(manifest.get("source"), dict) else None,
+        "source_commit": source_commit,
         "manifest_path": display_path(MANIFEST),
-        "manifest_sha256": sha(MANIFEST),
+        "manifest_sha256": optional_sha(MANIFEST),
         "reference_contract_path": display_path(REFERENCES),
-        "reference_contract_sha256": sha(REFERENCES),
-        "task_count": manifest.get("task_count"),
-        "task_set_sha256": manifest.get("task_set_sha256"),
+        "reference_contract_sha256": optional_sha(REFERENCES),
+        "task_count": task_count,
+        "task_set_sha256": task_set_sha256,
         "per_task_verifier_status": statuses,
         "totals": counts,
         "errors": errors,
         "duration_seconds": round(time.monotonic() - started, 3),
     }
-    audit_path.parent.mkdir(parents=True, exist_ok=True)
-    audit_path.write_text(json.dumps(audit, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    try:
+        write_audit_atomically(audit_path, audit)
+    except OSError as exc:
+        errors.append(f"audit write failed: {exc}")
+        return 1
     print(display_path(audit_path))
     return 0 if not errors and (not verify_lean or counts["verifier_valid"] == manifest.get("task_count")) else 1
 
@@ -327,7 +362,10 @@ def ensure_structural_contract() -> None:
     with tempfile.TemporaryDirectory(prefix="v02-reference-preflight-") as directory:
         audit = Path(directory) / "audit.json"
         if validate(verify_lean=False, audit_path=audit) != 0:
-            errors = json.loads(audit.read_text(encoding="utf-8")).get("errors", [])
+            try:
+                errors = json.loads(audit.read_text(encoding="utf-8")).get("errors", [])
+            except (OSError, json.JSONDecodeError):
+                errors = []
             raise ValueError("v0.2 reference preflight failed: " + (str(errors[0]) if errors else "unknown error"))
 
 
