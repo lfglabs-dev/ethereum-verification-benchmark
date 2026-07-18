@@ -622,6 +622,51 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertIn("current default MCP artifact missing execution_contract", joined)
         self.assertIn("missing MCP lifecycle state", joined)
 
+    def test_validator_accepts_default_suite_aggregate_without_task_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["run_mode"] = "suite"
+            run["group_id"] = None
+            run["task_ref"] = None
+            run.pop("execution_contract")
+            run.pop("mcp_lifecycle")
+            run.pop("lean_lsp_mcp")
+            run.pop("mcp_preflight")
+            run["child_runs"] = [{
+                "artifact": str(run_dir),
+                "mode": run["mode"],
+                "score": run["verifier"]["score"],
+            }]
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+
+            self.assertEqual(check_run(run_dir), [])
+
+    def test_validator_accepts_complete_legacy_builtin_mcp_identity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["harness_id"] = "builtin-lean-lsp"
+            run["schema_version"] = 1
+            run.pop("execution_contract")
+            run.pop("mcp_lifecycle")
+            run.pop("lean_lsp_mcp")
+            run.pop("mcp_preflight")
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+
+            self.assertEqual(check_run(run_dir), [])
+
+    def test_validator_rejects_current_builtin_mcp_without_lifecycle(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["harness_id"] = "builtin-lean-lsp"
+            run.pop("mcp_lifecycle")
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        self.assertIn("missing MCP lifecycle state", "\n".join(errors))
+
     def _missing_credentials_artifact(self, root: Path) -> Path:
         with mock.patch.object(lean_tools, "RESULTS_DIR", root / "results"), mock.patch.object(
             lean_tools, "_api_key", return_value=None

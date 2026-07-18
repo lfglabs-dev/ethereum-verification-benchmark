@@ -18,6 +18,7 @@ REQUIRED_FILES = [
 BUILTIN_FAIR_HARNESSES = {"default", "builtin-lean-lsp"}  # legacy artifacts remain readable
 DEFAULT_MCP_EXECUTION_CONTRACT = "default-mcp-v1"
 LEGACY_DEFAULT_IDENTITY = (1, "group/lean_tools", "builtin")
+LEGACY_BUILTIN_MCP_IDENTITY = (1, "group/lean_tools_mcp", "lean-lsp-mcp")
 PRE_MCP_REASONS = frozenset(
     {"dry_run", "missing_credentials", "dependency_warm_failed", "target_warm_failed"}
 )
@@ -70,6 +71,21 @@ def _default_execution_identity(run: dict[str, object]) -> str:
     ):
         return "mcp"
     return "ambiguous"
+
+
+def _is_legacy_pre_mcp_builtin_artifact(run: dict[str, object]) -> bool:
+    """Recognize only the complete recorded identity of pre-lifecycle runs.
+
+    This narrow historical form predates the canonical default execution
+    contract.  It is intentionally unavailable to default artifacts and to
+    records with a current schema/contract or any partial identity.
+    """
+    return (
+        run.get("harness_id") == "builtin-lean-lsp"
+        and (run.get("schema_version"), run.get("track"), run.get("tool_backend"))
+        == LEGACY_BUILTIN_MCP_IDENTITY
+        and "execution_contract" not in run
+    )
 
 
 def check_run(run_dir: Path) -> list[str]:
@@ -160,14 +176,22 @@ def check_run(run_dir: Path) -> list[str]:
     default_identity = _default_execution_identity(run)
     if default_identity == "ambiguous":
         errors.append(f"{run_dir}: default artifact has no recognized recorded execution identity")
-    if default_identity == "mcp" and run.get("execution_contract") != DEFAULT_MCP_EXECUTION_CONTRACT:
+    if (
+        default_identity == "mcp"
+        and run.get("run_mode") in {"task", "group"}
+        and run.get("execution_contract") != DEFAULT_MCP_EXECUTION_CONTRACT
+    ):
         errors.append(f"{run_dir}: current default MCP artifact missing execution_contract {DEFAULT_MCP_EXECUTION_CONTRACT!r}")
     is_mcp_backed = (
         run.get("track") == "group/lean_tools_mcp"
         or run.get("tool_backend") == "lean-lsp-mcp"
         or default_identity in {"mcp", "ambiguous"}
     )
-    if is_mcp_backed and run.get("run_mode") in {"task", "group"}:
+    if (
+        is_mcp_backed
+        and run.get("run_mode") in {"task", "group"}
+        and not _is_legacy_pre_mcp_builtin_artifact(run)
+    ):
         if run.get("tool_backend") != "lean-lsp-mcp":
             errors.append(f"{run_dir}: canonical MCP run used non-MCP backend {run.get('tool_backend')!r}")
         lifecycle = run.get("mcp_lifecycle")
