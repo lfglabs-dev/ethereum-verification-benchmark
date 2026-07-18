@@ -448,9 +448,14 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertEqual(code, 1)
         mcp_session.assert_not_called()
         self.assertEqual(run["harness_status"], "completed_with_failures")
+        self.assertEqual(run["classification"]["run_class"], "INFRA_INVALID")
+        self.assertFalse(run["classification"]["reusable"])
+        self.assertEqual(
+            run["mcp_lifecycle"],
+            {"status": "not_attempted", "reason": "dependency_warm_failed"},
+        )
         self.assertIsNone(run["mcp_preflight"])
-        self.assertIn("MCP-backed fair run missing MCP lifecycle metadata", "\n".join(artifact_errors))
-        self.assertIn("MCP-backed fair run missing MCP preflight result", "\n".join(artifact_errors))
+        self.assertEqual(artifact_errors, [])
 
     def test_missing_credentials_artifact_does_not_require_unstarted_mcp_metadata(self) -> None:
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(
@@ -476,9 +481,110 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertEqual(run["harness_status"], "missing_credentials")
         self.assertEqual(run["tool_backend"], "lean-lsp-mcp")
         self.assertEqual(run["failure_class"], "provider_setup_error")
+        self.assertEqual(
+            run["mcp_lifecycle"],
+            {"status": "not_attempted", "reason": "missing_credentials"},
+        )
         self.assertIsNone(run["lean_lsp_mcp"])
         self.assertIsNone(run["mcp_preflight"])
         self.assertEqual(artifact_errors, [])
+
+    def test_dry_run_artifact_records_pre_mcp_lifecycle(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(
+            lean_tools, "RESULTS_DIR", Path(tmp) / "results"
+        ), mock.patch.object(lean_tools, "LeanLspMcpSession") as mcp_session:
+            code, run_dir = lean_tools.run_group(
+                "ethereum/deposit_contract_minimal",
+                task_ref="ethereum/deposit_contract_minimal/deposit_count",
+                dry_run=True,
+                harness_id="default",
+            )
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            artifact_errors = check_run(run_dir)
+
+        self.assertEqual(code, 1)
+        mcp_session.assert_not_called()
+        self.assertEqual(run["mcp_lifecycle"], {"status": "not_attempted", "reason": "dry_run"})
+        self.assertEqual(artifact_errors, [])
+
+    def test_target_warm_failure_records_pre_mcp_lifecycle(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(
+            lean_tools, "RESULTS_DIR", Path(tmp) / "results"
+        ), mock.patch.object(lean_tools, "_api_key", return_value="test-key"), mock.patch.object(
+            lean_tools, "warm_public_dependencies", return_value=[]
+        ), mock.patch.object(
+            lean_tools, "_warm_target_modules", return_value=[{"exit_code": 124, "module": "Target"}]
+        ), mock.patch.object(lean_tools, "LeanLspMcpSession") as mcp_session:
+            code, run_dir = lean_tools.run_group(
+                "ethereum/deposit_contract_minimal",
+                task_ref="ethereum/deposit_contract_minimal/deposit_count",
+                harness_id="default",
+            )
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            artifact_errors = check_run(run_dir)
+
+        self.assertEqual(code, 1)
+        mcp_session.assert_not_called()
+        self.assertEqual(run["classification"]["run_class"], "INFRA_INVALID")
+        self.assertEqual(run["mcp_lifecycle"], {"status": "not_attempted", "reason": "target_warm_failed"})
+        self.assertEqual(artifact_errors, [])
+
+    def test_validator_rejects_malformed_pre_mcp_reason(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["mcp_lifecycle"]["reason"] = "legacy_skip"
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        self.assertIn("invalid pre-MCP reason 'legacy_skip'", "\n".join(errors))
+
+    def test_validator_rejects_false_pre_mcp_claim_after_activity(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["usage"] = {"requests": 1}
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        joined = "\n".join(errors)
+        self.assertIn("pre-MCP lifecycle claim has model or tool activity", joined)
+        self.assertIn("missing MCP lifecycle metadata", joined)
+
+    def test_validator_rejects_attempted_mcp_without_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["mcp_lifecycle"] = {"status": "started"}
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        joined = "\n".join(errors)
+        self.assertIn("missing MCP lifecycle metadata", joined)
+        self.assertIn("missing MCP preflight result", joined)
+
+    def test_validator_rejects_default_non_mcp_fallback(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["harness_id"] = "default"
+            run["tool_backend"] = "bespoke-lean-tools"
+            run["mcp_lifecycle"] = {"status": "fallback"}
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        self.assertIn("canonical MCP run used non-MCP backend 'bespoke-lean-tools'", "\n".join(errors))
+
+    def _missing_credentials_artifact(self, root: Path) -> Path:
+        with mock.patch.object(lean_tools, "RESULTS_DIR", root / "results"), mock.patch.object(
+            lean_tools, "_api_key", return_value=None
+        ), mock.patch.object(lean_tools, "_local_no_auth_endpoint", return_value=False):
+            _code, run_dir = lean_tools.run_group(
+                "ethereum/deposit_contract_minimal",
+                task_ref="ethereum/deposit_contract_minimal/deposit_count",
+                harness_id="default",
+            )
+        return run_dir
 
     def test_aggregate_accepts_multi_task_mcp_preflight_failure(self) -> None:
         budget = {

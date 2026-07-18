@@ -19,6 +19,16 @@ runnable canonical architecture.  Historical result rows and frozen v0.2
 task/source/reference/environment fingerprints are data, not migration input,
 and remain unchanged.
 
+## Artifact lifecycle
+
+Canonical MCP artifacts record `mcp_lifecycle`. A run that ends before launch
+uses `{"status":"not_attempted","reason":...}` with exactly one of
+`dry_run`, `missing_credentials`, `dependency_warm_failed`, or
+`target_warm_failed`. All other runs must record an attempted/finished MCP
+lifecycle together with session metadata and MCP preflight. `impossible` and
+`fallback` are explicit non-canonical states: the artifact validator rejects
+them, fallback backends, and unproven pre-launch claims.
+
 ## Intended file scope
 
 * Canonical dispatch/profile and MCP identifiers: ``harness/cli.py``,

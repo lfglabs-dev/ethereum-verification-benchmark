@@ -3075,6 +3075,24 @@ def run_group(
         if target_warm_timed_out
         else None
     )
+    pre_mcp_reason = (
+        "dry_run"
+        if dry_run
+        else "missing_credentials"
+        if not credentials_available
+        else "dependency_warm_failed"
+        if dependency_warm_failed
+        else "target_warm_failed"
+        if target_warm_timed_out
+        else None
+    )
+    # This is an execution contract, rather than an inference from terminal
+    # status: only these four paths may finish before an MCP launch is tried.
+    mcp_lifecycle: dict[str, object] = (
+        {"status": "not_attempted", "reason": pre_mcp_reason}
+        if pre_mcp_reason is not None
+        else {"status": "started"}
+    )
     if dry_run:
         response = {
             "status": "dry_run",
@@ -3164,11 +3182,13 @@ def run_group(
         preflight: dict[str, object] | None = None
         mcp_session: LeanLspMcpSession | None = None
         mcp_metadata: dict[str, object] | None = None
+        mcp_started = False
         mcp_preflight_passed = tool_backend != "lean-lsp-mcp"
         try:
             if tool_backend == "lean-lsp-mcp":
                 mcp_session = LeanLspMcpSession(built.path)
                 mcp_session.start()
+                mcp_started = True
                 mcp_metadata = mcp_session.metadata()
                 mcp_preflight_passed = True
             preflight = _role_provider_preflight(base_url)
@@ -3314,8 +3334,12 @@ def run_group(
             if mcp_session is not None:
                 mcp_session.close()
                 mcp_metadata = mcp_session.metadata()
+            if mcp_started:
+                mcp_lifecycle["status"] = "completed"
         if mcp_metadata is not None:
             response["lean_lsp_mcp"] = mcp_metadata
+
+    response["mcp_lifecycle"] = mcp_lifecycle
 
     if response.get("provider_setup_error") and not response.get("tasks"):
         provider_error = str(response.get("error") or "provider setup failed before model execution")
@@ -3396,6 +3420,7 @@ def run_group(
         "track": track,
         "mode": "fair",
         "tool_backend": tool_backend,
+        "mcp_lifecycle": response.get("mcp_lifecycle"),
         "lean_lsp_mcp": response.get("lean_lsp_mcp"),
         "run_mode": "task" if task_ref else "group",
         "group_id": group_id,
