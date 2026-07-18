@@ -49,6 +49,9 @@ python3 scripts/check_reference_solutions.py
 python3 scripts/check_axiom_ledger.py
 python3 scripts/check_verity_pin_staleness.py --warn-only
 python3 scripts/validate_manifests.py
+v02_audit="$(mktemp -t verity-v02-reference-validation.XXXXXX.json)"
+trap 'rm -f "$v02_audit"' EXIT
+python3 scripts/validate_v02_reference_contract.py --audit "$v02_audit"
 python3 scripts/generate_metadata.py
 if [[ "${VERITY_RUN_FULL_TASK_SWEEP:-0}" == "1" ]]; then
   if ! ./scripts/run_all.sh; then

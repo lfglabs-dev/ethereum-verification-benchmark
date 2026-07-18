@@ -11,10 +11,61 @@ from harness.classification import classify_run
 from harness.manifests import load_group
 from harness.result_validity import failure_taxonomy, row_validity
 from harness.runners.lean_tools import _provider_setup_task_rows, _warm_target_modules
+from harness import cli
 from scripts import aggregate_runs
+from scripts import validate_v02_reference_contract as validator
 
 
 class HarnessV02Tests(unittest.TestCase):
+    def test_frozen_run_preflight_blocks_before_runner_or_provider(self) -> None:
+        """Reference/proof drift must stop a v0.2 run before task execution."""
+        with patch(
+            "scripts.validate_v02_reference_contract.ensure_structural_contract",
+            side_effect=ValueError("reference proof hash drift"),
+        ), patch("harness.cli.run_lean_tools_group") as runner:
+            with self.assertRaisesRegex(ValueError, "reference proof hash drift"):
+                cli.run_group(
+                    "ethereum/deposit_contract_minimal", "default", "v0.2",
+                    False, True, 1, 1, 1, 1,
+                )
+        runner.assert_not_called()
+
+    def test_invalid_v02_contract_files_block_before_runner_or_provider(self) -> None:
+        cases = (
+            ("missing manifest", "manifest", None),
+            ("missing reference contract", "references", None),
+            ("malformed manifest", "manifest", "{"),
+            ("malformed reference contract", "references", "{"),
+        )
+        root = Path(__file__).resolve().parent.parent
+        good_manifest = (root / "benchmark-versions/v0.2.json").read_text(encoding="utf-8")
+        good_references = (root / "benchmark-versions/v0.2-references.json").read_text(encoding="utf-8")
+        for label, target, contents in cases:
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as directory:
+                directory = Path(directory)
+                manifest = directory / "v0.2.json"
+                references = directory / "v0.2-references.json"
+                if target != "manifest":
+                    manifest.write_text(good_manifest, encoding="utf-8")
+                elif contents is not None:
+                    manifest.write_text(contents, encoding="utf-8")
+                if target != "references":
+                    references.write_text(good_references, encoding="utf-8")
+                elif contents is not None:
+                    references.write_text(contents, encoding="utf-8")
+                with patch.object(validator, "MANIFEST", manifest), patch.object(
+                    validator, "REFERENCES", references
+                ), patch("harness.cli.run_lean_tools_group") as runner, patch.object(
+                    validator, "run_lean"
+                ) as verifier:
+                    with self.assertRaisesRegex(ValueError, "v0.2 reference preflight failed"):
+                        cli.run_group(
+                            "ethereum/deposit_contract_minimal", "default", "v0.2",
+                            False, True, 1, 1, 1, 1,
+                        )
+                runner.assert_not_called()
+                verifier.assert_not_called()
+
     def test_target_warming_stops_after_first_timeout(self) -> None:
         tasks = [
             {"task_ref": "case/one", "target_module": "Target.One"},
