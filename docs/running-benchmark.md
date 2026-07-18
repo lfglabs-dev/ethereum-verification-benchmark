@@ -24,6 +24,14 @@ The suite is strongest today on accounting, local state preservation, storage ef
 ./scripts/run_all.sh --suite v0.2
 ```
 
+The frozen v0.2 source contract remains pinned to its recorded main-source
+content. Its reference-closure validator was introduced after that source
+revision, so the reviewed validator/helper blob in the release tree is also
+part of the release TCB. The contract pins both that final-tree Git blob OID
+and its SHA-256; validation materializes only those verified bytes outside the
+candidate checkout. This deliberately does not depend on an intermediate PR
+commit, so squash merges and shallow clones remain reproducible.
+
 ## Harness Runs
 
 Two harness families are supported:
