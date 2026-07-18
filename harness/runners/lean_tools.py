@@ -2116,6 +2116,7 @@ def _execute_fair_tool(
                 "diagnostics": diagnostics,
                 "duration_seconds": round(time.time() - lean_start, 3),
                 "response_usage": None,
+                "prover_derived": prover_derived,
             }
             if code != 0:
                 hint = _hint_for_failure(failure_kind, output)
@@ -2284,6 +2285,7 @@ def _attempt_task_fair(
     draft_log_path: Path | None = None,
     native_tools: bool | None = None,
     mcp_session: LeanLspMcpSession | None = None,
+    max_turns: int = 20,
 ) -> dict[str, object]:
     editable_files = task.get("editable_files")
     target_module = task.get("target_module")
@@ -2426,7 +2428,9 @@ def _attempt_task_fair(
             pending_repetition_warning = None
 
     no_tool_response_limit = max(3, min(20, max_tool_calls))
-    request_limit = max_tool_calls + max_attempts + no_tool_response_limit
+    # A turn is one driver interaction/request. Keep the existing safety bound
+    # as a secondary guard, but the declared benchmark cap is authoritative.
+    request_limit = min(max_turns, max_tool_calls + max_attempts + no_tool_response_limit)
     tool_calls_executed = 0
     non_proof_tool_calls = 0
     non_proof_tool_limit = min(
@@ -2557,6 +2561,7 @@ def _attempt_task_fair(
 
     token_budget_exhausted = False
     context_budget_exhausted = False
+    requests_consumed = 0
     for request_index in range(1, request_limit + 1):
         if _proof_attempt_count(attempts) >= max_attempts:
             break
@@ -2566,6 +2571,7 @@ def _attempt_task_fair(
             token_budget_exhausted = True
             break
         try:
+            requests_consumed = request_index
             response = chat_completion(
                 messages,
                 base_url=base_url,
@@ -2997,6 +3003,8 @@ def _attempt_task_fair(
         final_status = "context_budget_exhausted"
     elif tool_calls_executed >= max_tool_calls:
         final_status = "max_tool_calls_exceeded"
+    elif requests_consumed >= max_turns:
+        final_status = "max_turns_exceeded"
     elif _proof_attempt_count(attempts) >= max_attempts:
         final_status = "max_attempts_exceeded"
     elif no_tool_responses >= no_tool_response_limit:
@@ -3029,6 +3037,7 @@ def run_group(
     keep_workspace: bool = False,
     dry_run: bool = False,
     max_attempts: int = 1,
+    max_turns: int = 20,
     max_tool_calls: int = DEFAULT_MAX_TOOL_CALLS,
     task_ref: str | None = None,
     harness_id: str = HARNESS_ID,
@@ -3066,7 +3075,7 @@ def run_group(
     benchmark_budget = {
         "max_attempts": max_attempts,
         "max_tool_calls": max_tool_calls,
-        "max_turns": None,
+        "max_turns": max_turns,
         "completion_token_budget": DEFAULT_TOKEN_BUDGET,
     }
     if tool_backend not in {"lean-lsp-mcp"}:
@@ -3240,6 +3249,7 @@ def run_group(
                             built.path,
                             base_url=base_url,
                             max_attempts=max_attempts,
+                            max_turns=max_turns,
                             max_tool_calls=max_tool_calls,
                             attempts_dir=run_dir / "attempts",
                             tool_log_path=run_dir / "tool-calls" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
@@ -3399,6 +3409,7 @@ def run_group(
                 "mode": "fair",
                 "tool_backend": tool_backend,
                 "max_attempts": max_attempts,
+                "max_turns": max_turns,
                 "max_tool_calls": max_tool_calls,
                 **budgets,
             },

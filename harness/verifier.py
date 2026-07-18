@@ -37,7 +37,12 @@ class TargetResult:
 
 def _run(command: list[str], cwd: Path, timeout: int, *, lease: bool = True) -> tuple[int, str]:
     if lease:
-        with verify_lease(label="verifier_build"):
+        with verify_lease(label="verifier_build") as lease_reason:
+            # Scored verification is the concurrency correctness boundary. A
+            # failed advisory acquisition must never widen the cap and run a
+            # second verifier concurrently.
+            if lease_reason not in {"acquired", "reentrant"}:
+                return 125, f"verifier lease unavailable: {lease_reason}"
             return _run(command, cwd, timeout, lease=False)
     try:
         completed = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=timeout, check=False)
@@ -211,7 +216,7 @@ def verify_group(
             _run(["lake", "exe", "cache", "get"], verifier_repo, 600, lease=False)
             code, output = _run(["lake", "build", module], verifier_repo, timeout_seconds)
         if code != 0:
-            if "not up-to-date" in output:
+            if code == 125 or "not up-to-date" in output:
                 status = "verifier_infra_error"
             else:
                 status = "timeout" if code == 124 else "lean_check_failed"
@@ -224,7 +229,14 @@ def verify_group(
             code, check_output = _run(["lake", "env", "lean", str(check_path)], verifier_repo, timeout_seconds)
             check_path.unlink(missing_ok=True)
             if code != 0:
-                targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, "theorem_missing", _compact_output(check_output)))
+                status = (
+                    "verifier_infra_error"
+                    if code == 125
+                    else "timeout"
+                    if code == 124
+                    else "theorem_missing"
+                )
+                targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, status, _compact_output(check_output)))
                 continue
         targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, "passed", _compact_output(output)))
 

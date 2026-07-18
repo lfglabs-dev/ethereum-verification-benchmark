@@ -72,6 +72,8 @@ SUPPORT_MODULE_FAILURE_STATUSES = {
     "timeout",
 }
 
+VERIFIER_INFRA_STATUSES = {"timeout", "verifier_infra_error"}
+
 # Prefixes of Lean modules that are shipped read-only to every workspace. When
 # the verifier build dies inside one of these, no submitted proof was ever
 # elaborated, so the target is not model evidence regardless of any attempts.
@@ -301,6 +303,16 @@ def classify_target(
             "raw_verifier_status": raw_status,
             "submission_state": state,
             "verifier_outcome": "not_run_tool_protocol_breakdown",
+        }
+
+    if raw_status in VERIFIER_INFRA_STATUSES:
+        return {
+            "final_class": "INFRA_INVALID",
+            "final_reason": f"verifier_infra_failure:{raw_status}",
+            "reusable": False,
+            "raw_verifier_status": raw_status,
+            "submission_state": state,
+            "verifier_outcome": "verifier_infra_failure",
         }
 
     support_module = _support_module_build_failure(verifier_target)

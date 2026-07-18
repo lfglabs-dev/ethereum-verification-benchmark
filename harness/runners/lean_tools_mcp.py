@@ -21,6 +21,7 @@ def run_group(
     keep_workspace: bool = False,
     dry_run: bool = False,
     max_attempts: int = 1,
+    max_turns: int = 20,
     max_tool_calls: int = lean_tools.DEFAULT_MAX_TOOL_CALLS,
     task_ref: str | None = None,
 ) -> tuple[int, Path]:
@@ -31,6 +32,7 @@ def run_group(
         keep_workspace=keep_workspace,
         dry_run=dry_run,
         max_attempts=max_attempts,
+        max_turns=max_turns,
         max_tool_calls=max_tool_calls,
         task_ref=task_ref,
         harness_id=HARNESS_ID,
@@ -51,6 +53,7 @@ def main() -> int:
     run.add_argument("--keep-workspace", action="store_true")
     run.add_argument("--dry-run", action="store_true")
     run.add_argument("--max-attempts", type=int, default=1)
+    run.add_argument("--max-turns", type=int, default=20)
     run.add_argument("--max-tool-calls", type=int, default=lean_tools.DEFAULT_MAX_TOOL_CALLS)
     run.add_argument("--task-ref")
     args = parser.parse_args()
@@ -60,6 +63,7 @@ def main() -> int:
         keep_workspace=args.keep_workspace,
         dry_run=args.dry_run,
         max_attempts=args.max_attempts,
+        max_turns=args.max_turns,
         max_tool_calls=args.max_tool_calls,
         task_ref=args.task_ref,
     )
