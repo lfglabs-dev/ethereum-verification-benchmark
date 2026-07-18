@@ -332,6 +332,13 @@ class V02ContractTests(unittest.TestCase):
             expected_references["canonical_manifest_sha256"] = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
             self.assertEqual(json.loads(references_path.read_text()), expected_references)
 
+    def test_checked_in_reference_contract_hashes_the_frozen_manifest(self) -> None:
+        """The checked-in contract must track its immutable manifest, not a stale regeneration."""
+        self.assertEqual(
+            self.references["canonical_manifest_sha256"],
+            hashlib.sha256((ROOT / "benchmark-versions/v0.2.json").read_bytes()).hexdigest(),
+        )
+
     def test_duplicate_mapping_is_rejected(self) -> None:
         def mutate(manifest, _references):
             manifest["tasks"][1]["task_ref"] = manifest["tasks"][0]["task_ref"]
