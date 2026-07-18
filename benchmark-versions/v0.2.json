@@ -12,7 +12,7 @@
   "schema_version": 2,
   "source": {
     "closure_helper": {
-      "commit": "14ec558d0afb9adcf97efd2706eb5b0827fb961d",
+      "blob": "c6f1a35009258bbe209a4c2ee6ae01148127e858",
       "path": "scripts/v02_reference_closure.py",
       "sha256": "ec090173fd2555e2557e33fb88920ea9f1d83bf2aa1fa0bb971aa30c6c3937b2"
     },

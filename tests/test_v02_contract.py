@@ -257,11 +257,44 @@ class V02ContractTests(unittest.TestCase):
         finally:
             helper.write_bytes(original)
 
-    def test_baseline_recomputation_fails_closed_for_shallow_trusted_helper(self) -> None:
-        missing_commit = "0" * 40
-        with mock.patch.object(compute_fingerprints, "TRUSTED_CLOSURE_HELPER_COMMIT", missing_commit):
-            with self.assertRaisesRegex(ValueError, "trusted closure helper unavailable"):
+    def test_baseline_recomputation_fails_closed_for_missing_trusted_helper_blob(self) -> None:
+        missing_blob = "0" * 40
+        with mock.patch.object(compute_fingerprints, "TRUSTED_CLOSURE_HELPER_BLOB", missing_blob):
+            with self.assertRaisesRegex(ValueError, "trusted closure helper blob is not reachable"):
                 compute_fingerprints.trusted_closure_helper_source()
+
+    def test_trusted_helper_survives_squash_equivalent_bare_shallow_clone(self) -> None:
+        """Only final-tree blobs, never an intermediate PR commit, are required."""
+        with tempfile.TemporaryDirectory() as directory:
+            directory = Path(directory)
+            source = directory / "squash-source"
+            bare = directory / "final-tree.git"
+            shallow = directory / "shallow"
+            source.mkdir()
+            with (directory / "tree.tar").open("wb") as archive:
+                subprocess.run(["git", "archive", "--format=tar", "HEAD"], cwd=ROOT, check=True, stdout=archive)
+            # The archive has no history; committing it once models a squash
+            # merge whose bare remote is then fetched at depth one.
+            subprocess.run(["tar", "-xf", str(directory / "tree.tar"), "-C", str(source)], check=True)
+            subprocess.run(["git", "init"], cwd=source, check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.email", "tests@example.invalid"], cwd=source, check=True)
+            subprocess.run(["git", "config", "user.name", "tests"], cwd=source, check=True)
+            subprocess.run(["git", "add", "."], cwd=source, check=True)
+            subprocess.run(["git", "commit", "-m", "squash equivalent"], cwd=source, check=True, capture_output=True)
+            subprocess.run(["git", "clone", "--bare", str(source), str(bare)], check=True, capture_output=True)
+            subprocess.run(["git", "clone", "--depth", "1", "--no-local", bare.as_uri(), str(shallow)], check=True, capture_output=True)
+            self.assertNotEqual(
+                subprocess.run(["git", "cat-file", "-e", "14ec558d0afb9adcf97efd2706eb5b0827fb961d^{commit}"], cwd=shallow, capture_output=True).returncode,
+                0,
+            )
+            completed = subprocess.run(
+                [sys.executable, "-c", "from scripts.compute_fingerprints import trusted_closure_helper_source; print(len(trusted_closure_helper_source()))"],
+                cwd=shallow,
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+            self.assertGreater(int(completed.stdout), 0)
 
     def test_transitive_helper_mutation_and_axiom_are_rejected(self) -> None:
         wildcat = next(entry for entry in self.references["tasks"] if entry["task_ref"] == "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity")

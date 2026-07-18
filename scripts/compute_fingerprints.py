@@ -25,10 +25,13 @@ from manifests import list_groups  # noqa: E402
 from manifest_utils import load_manifest_data  # noqa: E402
 
 HASH_PREFIX = "sha256:"
-# v0.2's closure helper did not exist in the release source commit.  Its exact
+# v0.2's closure helper did not exist in the frozen source commit.  Its exact
 # bytes are therefore a separately pinned part of the frozen verifier TCB.
-# Never substitute a candidate-checkout copy into a pinned worktree.
-TRUSTED_CLOSURE_HELPER_COMMIT = "14ec558d0afb9adcf97efd2706eb5b0827fb961d"
+# This is a blob OID in this reviewed tree, rather than a PR commit OID: a
+# squash merge and a shallow checkout retain the tree's blobs but need not
+# retain intermediate PR commits.  Never substitute candidate-checkout bytes
+# into a pinned baseline worktree.
+TRUSTED_CLOSURE_HELPER_BLOB = "c6f1a35009258bbe209a4c2ee6ae01148127e858"
 TRUSTED_CLOSURE_HELPER_PATH = "scripts/v02_reference_closure.py"
 TRUSTED_CLOSURE_HELPER_SHA256 = "ec090173fd2555e2557e33fb88920ea9f1d83bf2aa1fa0bb971aa30c6c3937b2"
 TASK_METADATA_FIELDS = (
@@ -82,9 +85,10 @@ def digest_json(value: Any) -> str:
 def trusted_closure_helper_source() -> bytes:
     """Return the independently pinned closure helper after fail-closed checks.
 
-    The git object is read as data, checked against a literal digest, and is
-    later materialized outside the candidate checkout.  This avoids executing
-    a mutable helper while recomputing a baseline that predates the helper.
+    The blob is read as data, checked against literal OID and digest pins, and
+    later materialized outside the candidate checkout.  The OID must be the
+    helper path's blob in the checked-out final tree.  This avoids executing a
+    mutable helper while recomputing a baseline that predates the helper.
     """
     candidate = ROOT / TRUSTED_CLOSURE_HELPER_PATH
     if not candidate.is_file():
@@ -92,14 +96,24 @@ def trusted_closure_helper_source() -> bytes:
     candidate_bytes = candidate.read_bytes()
     if hashlib.sha256(candidate_bytes).hexdigest() != TRUSTED_CLOSURE_HELPER_SHA256:
         raise ValueError("trusted closure helper digest drift in candidate checkout")
+    tree_entry = subprocess.run(
+        ["git", "ls-tree", "-r", "--full-tree", "HEAD", "--", TRUSTED_CLOSURE_HELPER_PATH],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    expected_entry = f"100644 blob {TRUSTED_CLOSURE_HELPER_BLOB}\t{TRUSTED_CLOSURE_HELPER_PATH}"
+    if tree_entry.returncode or tree_entry.stdout.strip() != expected_entry:
+        raise ValueError("trusted closure helper blob is not reachable from the final tree")
     source = subprocess.run(
-        ["git", "show", f"{TRUSTED_CLOSURE_HELPER_COMMIT}:{TRUSTED_CLOSURE_HELPER_PATH}"],
+        ["git", "cat-file", "blob", TRUSTED_CLOSURE_HELPER_BLOB],
         cwd=ROOT,
         capture_output=True,
         check=False,
     )
     if source.returncode:
-        raise ValueError("trusted closure helper unavailable (infra): pinned object not materialized")
+        raise ValueError("trusted closure helper unavailable (infra): pinned blob not materialized")
     if hashlib.sha256(source.stdout).hexdigest() != TRUSTED_CLOSURE_HELPER_SHA256:
         raise ValueError("trusted closure helper digest drift in pinned source")
     return source.stdout
@@ -118,7 +132,7 @@ def trusted_closure_helper_directory():
 def trusted_closure_helper_metadata() -> dict[str, str]:
     """Provenance recorded in the v0.2 source metadata."""
     return {
-        "commit": TRUSTED_CLOSURE_HELPER_COMMIT,
+        "blob": TRUSTED_CLOSURE_HELPER_BLOB,
         "path": TRUSTED_CLOSURE_HELPER_PATH,
         "sha256": TRUSTED_CLOSURE_HELPER_SHA256,
     }
