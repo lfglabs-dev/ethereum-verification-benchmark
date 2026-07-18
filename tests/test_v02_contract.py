@@ -24,7 +24,7 @@ class V02ContractTests(unittest.TestCase):
         self.manifest = json.loads((ROOT / "benchmark-versions/v0.2.json").read_text())
         self.references = json.loads((ROOT / "benchmark-versions/v0.2-references.json").read_text())
 
-    def _validate(self, mutate=None, *, lean=False, escape=False) -> tuple[int, dict]:
+    def _validate(self, mutate=None, *, lean=False, escape=False, baseline=None, current=None) -> tuple[int, dict]:
         manifest = json.loads(json.dumps(self.manifest))
         references = json.loads(json.dumps(self.references))
         # Unit fixtures are deliberately independent of CI's checkout depth.
@@ -55,14 +55,14 @@ class V02ContractTests(unittest.TestCase):
             ), mock.patch.object(
                 compute_fingerprints,
                 "baseline_task_metadata",
-                return_value={
+                return_value=baseline if baseline is not None else {
                     task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
                     for task in self.manifest["tasks"]
                 },
             ), mock.patch.object(
                 compute_fingerprints,
                 "task_metadata",
-                return_value={
+                return_value=current if current is not None else {
                     task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
                     for task in self.manifest["tasks"]
                 },
@@ -204,14 +204,30 @@ class V02ContractTests(unittest.TestCase):
 
     def test_future_all_suite_task_does_not_invalidate_frozen_v02(self) -> None:
         frozen_refs = [task["task_ref"] for task in self.manifest["tasks"]]
+        metadata = {
+            task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
+            for task in self.manifest["tasks"]
+        }
+        metadata["future/case/task"] = ("sha256:" + "f" * 64, "sha256:" + "e" * 64)
 
-        def select(suite: str) -> list[str]:
-            return frozen_refs + ["future/case/task"] if suite == "all" else frozen_refs
-
-        with mock.patch.object(validator, "discover_task_refs", side_effect=select):
-            code, audit = self._validate()
+        code, audit = self._validate(current=metadata)
         self.assertEqual(code, 0)
         self.assertEqual(audit["errors"], [])
+
+        self.assertEqual(self._load_refs(current=metadata), frozen_refs)
+
+    def test_missing_frozen_current_task_fails_closed(self) -> None:
+        metadata = {
+            task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
+            for task in self.manifest["tasks"]
+        }
+        metadata.pop(self.manifest["tasks"][0]["task_ref"])
+
+        code, audit = self._validate(current=metadata)
+        self.assertEqual(code, 1)
+        self.assertIn("current frozen task missing", audit["errors"][0])
+        with self.assertRaisesRegex(ValueError, "current frozen task missing"):
+            self._load_refs(current=metadata)
 
     def test_baseline_selector_hash_drift_is_rejected(self) -> None:
         def mutate(manifest, _references):

@@ -57,8 +57,8 @@ def load_v02_task_refs() -> list[str]:
     current_metadata = task_metadata("all")
     if set(baseline_metadata) != set(tasks):
         raise ValueError("canonical v0.2 contract pinned baseline task set drift")
-    if set(current_metadata) != set(tasks):
-        raise ValueError("canonical v0.2 contract current task set drift")
+    if not set(tasks).issubset(current_metadata):
+        raise ValueError("canonical v0.2 contract current frozen task missing")
     for task_object, task_ref in zip(task_objects, tasks, strict=True):
         parts = task_ref.split("/")
         if len(parts) != 3:

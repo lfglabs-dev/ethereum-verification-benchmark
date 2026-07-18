@@ -106,8 +106,8 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail("manifest task list duplicate/count drift")
         if set(baseline_metadata) != set(refs):
             fail("pinned baseline task set drift")
-        if set(current_metadata) != set(refs):
-            fail("current task set drift")
+        if not set(refs).issubset(current_metadata):
+            fail("current frozen task missing")
         for task in task_objects:
             ref = task["task_ref"]
             if baseline_metadata[ref] != (task["task_fingerprint"], task["task_interface_id"]):
