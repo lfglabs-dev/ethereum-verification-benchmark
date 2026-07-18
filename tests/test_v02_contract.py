@@ -34,6 +34,27 @@ class V02ContractTests(unittest.TestCase):
             for entry in self.references["tasks"]
         }
 
+    def _baseline_version_metadata(self) -> dict[str, object]:
+        """The immutable pinned-source result used by the structural fixtures."""
+        return {
+            key: value
+            for key, value in self.manifest.items()
+            if key
+            in {
+                "benchmark",
+                "benchmark_version",
+                "created_at",
+                "git_sha",
+                "manifest_schema_version",
+                "task_count",
+                "task_set_id",
+                "harness_id",
+                "environment_id",
+                "mode",
+                "budget",
+            }
+        }
+
     def _validate(self, mutate=None, *, lean=False, escape=False, baseline=None, current=None, baseline_error=None) -> tuple[int, dict]:
         manifest = json.loads(json.dumps(self.manifest))
         references = json.loads(json.dumps(self.references))
@@ -46,6 +67,8 @@ class V02ContractTests(unittest.TestCase):
             path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
             for path in manifest["source"]["selector_files_sha256"]
         }
+        pinned_commit = manifest["source"]["commit"]
+        references["source_commit"] = pinned_commit
         if mutate:
             mutate(manifest, references)
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
@@ -54,8 +77,8 @@ class V02ContractTests(unittest.TestCase):
             reference_path = directory / "v0.2-references.json"
             audit_path = directory / "audit.json"
             manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+            references["canonical_manifest_path"] = str(manifest_path.relative_to(ROOT))
             references["canonical_manifest_sha256"] = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
-            references["source_commit"] = manifest["source"]["commit"]
             reference_path.write_text(json.dumps(references), encoding="utf-8")
             with mock.patch.object(validator, "MANIFEST", manifest_path), mock.patch.object(
                 validator, "REFERENCES", reference_path
@@ -75,6 +98,14 @@ class V02ContractTests(unittest.TestCase):
                 compute_fingerprints,
                 "task_entries",
                 return_value=current if current is not None else {task["task_ref"]: task for task in self.manifest["tasks"]},
+            ), mock.patch.object(
+                validator,
+                "baseline_version_metadata",
+                return_value=self._baseline_version_metadata(),
+            ), mock.patch.object(
+                validator,
+                "BASELINE",
+                pinned_commit,
             ), mock.patch.object(validator, "ESCAPE") as matcher:
                 matcher.search.return_value = object() if escape else None
                 if lean:
@@ -222,6 +253,60 @@ class V02ContractTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("pinned baseline canonical task entry drift", audit["errors"][0])
 
+    def test_coordinated_version_metadata_drift_is_rejected_against_baseline(self) -> None:
+        # Regenerating the mutable reference hash must not make a changed release
+        # identity self-authenticating.  Every build_version_manifest field is
+        # pinned to the source revision used to freeze v0.2.
+        for field, value in self._baseline_version_metadata().items():
+            with self.subTest(field=field):
+                def mutate(manifest, _references, field=field, value=value):
+                    manifest[field] = "tampered" if isinstance(value, str) else value + 1
+
+                code, audit = self._validate(mutate)
+                self.assertEqual(code, 1)
+                self.assertIn("pinned baseline version metadata drift", audit["errors"][0])
+
+    def test_coordinated_source_provenance_drift_is_rejected_against_baseline(self) -> None:
+        for field in ("commit", "entrypoint", "selector_command", "selector_files_sha256"):
+            with self.subTest(field=field):
+                def mutate(manifest, _references, field=field):
+                    if field == "selector_files_sha256":
+                        manifest["source"][field] = {"tampered": "0" * 64}
+                    else:
+                        manifest["source"][field] = "tampered"
+
+                code, audit = self._validate(mutate)
+                self.assertEqual(code, 1)
+                self.assertIn("pinned baseline source provenance drift", audit["errors"][0])
+
+    def test_coordinated_reference_metadata_drift_is_rejected_against_baseline(self) -> None:
+        fields = (
+            "benchmark",
+            "benchmark_version",
+            "contract_kind",
+            "schema_version",
+            "source_commit",
+            "task_count",
+            "task_set_sha256",
+        )
+        for field in fields:
+            with self.subTest(field=field):
+                def mutate(_manifest, references, field=field):
+                    value = references[field]
+                    references[field] = "tampered" if isinstance(value, str) else value + 1
+
+                code, audit = self._validate(mutate)
+                self.assertEqual(code, 1)
+                self.assertIn("pinned baseline reference metadata drift", audit["errors"][0])
+
+    def test_environment_identity_is_frozen_for_v02_but_recomputed_for_new_versions(self) -> None:
+        # A dependency update changes a newly generated version's environment ID;
+        # it must not rewrite the frozen v0.2 release identity.
+        with mock.patch.object(compute_fingerprints, "environment_id", return_value="sha256:" + "e" * 64):
+            newer = compute_fingerprints.build_version_manifest("0.3", suite="all")
+        self.assertEqual(newer["environment_id"], "sha256:" + "e" * 64)
+        self.assertNotEqual(newer["environment_id"], self.manifest["environment_id"])
+
     def test_future_all_suite_task_does_not_invalidate_frozen_v02(self) -> None:
         frozen_refs = [task["task_ref"] for task in self.manifest["tasks"]]
         metadata = {task["task_ref"]: task for task in self.manifest["tasks"]}
@@ -249,7 +334,7 @@ class V02ContractTests(unittest.TestCase):
 
         code, audit = self._validate(mutate)
         self.assertEqual(code, 1)
-        self.assertIn("baseline selector source hash drift", audit["errors"][0])
+        self.assertIn("pinned baseline source provenance drift", audit["errors"][0])
 
     def test_malformed_reference_is_rejected(self) -> None:
         def mutate(_manifest, references):

@@ -15,6 +15,10 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 
 BASELINE = "c5a2344b121040445ccd745a3f839548ca8f9158"
+CREATED_AT = "2026-07-18"
+SOURCE_ENTRYPOINT = "scripts/run_all.sh"
+SOURCE_SELECTOR_COMMAND = "python3 harness/task_runner.py list --suite all"
+SOURCE_SELECTOR_FILES = ("harness/task_runner.py", "scripts/run_all.sh")
 MANIFEST = ROOT / "benchmark-versions" / "v0.2.json"
 REFERENCES = ROOT / "benchmark-versions" / "v0.2-references.json"
 
@@ -52,7 +56,7 @@ from scripts.compute_fingerprints import build_version_manifest
 from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
 root = Path.cwd()
 refs = discover_task_refs('all')
-version_manifest = build_version_manifest('0.2', created_at='2026-07-18', suite='all')
+version_manifest = build_version_manifest('0.2', created_at=__CREATED_AT__, suite='all')
 if [task['task_ref'] for task in version_manifest['tasks']] != refs:
     raise SystemExit('version-manifest all-suite task order differs from production selector')
 entries = []
@@ -82,6 +86,7 @@ print(json.dumps({'refs': refs, 'tasks': version_manifest['tasks'], 'version_met
     key: value for key, value in version_manifest.items() if key != 'tasks'
 }, 'entries': entries}))
 """
+    program = program.replace("__CREATED_AT__", repr(CREATED_AT))
     completed = subprocess.run(
         [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=True
     )
@@ -104,7 +109,7 @@ def main() -> int:
         reference_entries = baseline["entries"]
         selector_files_sha256 = {
             path: digest_file(worktree / path)
-            for path in ("harness/task_runner.py", "scripts/run_all.sh")
+            for path in SOURCE_SELECTOR_FILES
         }
     if not isinstance(refs, list) or not all(isinstance(ref, str) for ref in refs):
         raise SystemExit("baseline all-suite selector returned malformed task refs")
@@ -120,8 +125,8 @@ def main() -> int:
         raise SystemExit("baseline all-suite selector returned duplicate task refs")
     source = {
         "commit": BASELINE,
-        "entrypoint": "scripts/run_all.sh",
-        "selector_command": "python3 harness/task_runner.py list --suite all",
+        "entrypoint": SOURCE_ENTRYPOINT,
+        "selector_command": SOURCE_SELECTOR_COMMAND,
         "selector_files_sha256": selector_files_sha256,
     }
     task_hashes = {entry["task_ref"]: entry["task_manifest_sha256"] for entry in reference_entries}

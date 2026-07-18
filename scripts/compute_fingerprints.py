@@ -252,6 +252,53 @@ print(json.dumps({'tasks': tasks, 'references': references}, sort_keys=True))
     return entries, references
 
 
+def baseline_version_metadata(
+    commit: str,
+    *,
+    version: str,
+    created_at: str,
+    suite: str = "all",
+    mode: str = "fair",
+    budget: str = "normal",
+) -> dict[str, object]:
+    """Derive version-level metadata in the immutable pinned source tree.
+
+    This deliberately calls the same ``build_version_manifest`` implementation
+    used for ordinary releases, rather than reimplementing its identity hashes.
+    """
+    program = f"""
+import json
+from scripts.compute_fingerprints import build_version_manifest
+manifest = build_version_manifest(
+    {version!r}, created_at={created_at!r}, suite={suite!r}, mode={mode!r}, budget={budget!r}
+)
+print(json.dumps({{key: value for key, value in manifest.items() if key != 'tasks'}}, sort_keys=True))
+"""
+    with tempfile.TemporaryDirectory(prefix="benchmark-baseline-version-") as directory:
+        worktree = Path(directory) / "source"
+        added = subprocess.run(
+            ["git", "worktree", "add", "--detach", str(worktree), commit],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if added.returncode:
+            raise ValueError(f"pinned source unavailable (infra): {commit}")
+        try:
+            result = subprocess.run(
+                [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=False
+            )
+            if result.returncode:
+                raise ValueError(f"pinned source version metadata recomputation unavailable (infra): {commit}")
+            metadata = json.loads(result.stdout)
+        finally:
+            subprocess.run(["git", "worktree", "remove", "--force", str(worktree)], cwd=ROOT, check=False)
+    if not isinstance(metadata, dict) or not all(isinstance(key, str) for key in metadata):
+        raise ValueError("pinned source version metadata malformed")
+    return metadata
+
+
 def baseline_task_entries(commit: str) -> dict[str, dict[str, object]]:
     """Return full canonical entries from the pinned source revision."""
     return baseline_contract_entries(commit)[0]

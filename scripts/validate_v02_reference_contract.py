@@ -17,12 +17,39 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
 from harness.verify_lease import verify_lease
+from scripts.compute_fingerprints import baseline_version_metadata
+from scripts.generate_v02_contract import (
+    BASELINE,
+    CREATED_AT,
+    SOURCE_ENTRYPOINT,
+    SOURCE_SELECTOR_COMMAND,
+    SOURCE_SELECTOR_FILES,
+)
 
 MANIFEST = ROOT / "benchmark-versions" / "v0.2.json"
 REFERENCES = ROOT / "benchmark-versions" / "v0.2-references.json"
 DEFAULT_AUDIT = ROOT / "artifacts" / "audits" / "p2-v02-reference-validation.json"
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_']*(?:\.[A-Za-z_][A-Za-z0-9_']*)*$")
 ESCAPE = re.compile(r"\b(?:sorry|admit|axiom)\b")
+
+# ``environment_id`` is release metadata, not an ambient validation value: v0.2
+# pins its baseline environment (including the Verity dependency revision).  A
+# later dependency update receives a new ID only when generating a new version.
+VERSION_METADATA_FIELDS = (
+    "benchmark",
+    "benchmark_version",
+    "created_at",
+    "git_sha",
+    "manifest_schema_version",
+    "task_count",
+    "task_set_id",
+    "harness_id",
+    "environment_id",
+    "mode",
+    "budget",
+)
+MANIFEST_FIELDS = frozenset((*VERSION_METADATA_FIELDS, "contract_kind", "schema_version", "source", "task_set_sha256", "tasks", "task_manifest_sha256"))
+REFERENCE_FIELDS = frozenset(("benchmark", "benchmark_version", "contract_kind", "schema_version", "source_commit", "canonical_manifest_path", "canonical_manifest_sha256", "task_count", "task_set_sha256", "tasks"))
 
 
 def sha(path: Path) -> str:
@@ -77,11 +104,31 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
     errors: list[str] = []
     statuses: list[dict[str, str]] = []
     try:
-        if manifest.get("schema_version") != 2 or manifest.get("benchmark_version") != "0.2":
-            fail("manifest schema/version mismatch")
         source = manifest.get("source")
         if not isinstance(source, dict) or not isinstance(source.get("commit"), str):
             fail("manifest source provenance malformed")
+        if set(manifest) != MANIFEST_FIELDS:
+            fail("manifest canonical field set drift")
+        if set(contract) != REFERENCE_FIELDS:
+            fail("reference contract canonical field set drift")
+        try:
+            baseline_metadata = baseline_version_metadata(BASELINE, version="0.2", created_at=CREATED_AT)
+        except ValueError as exc:
+            fail(f"pinned source unavailable (infra): {exc}")
+        if {field: manifest.get(field) for field in VERSION_METADATA_FIELDS} != baseline_metadata:
+            fail("pinned baseline version metadata drift")
+        expected_source = {
+            "commit": BASELINE,
+            "entrypoint": SOURCE_ENTRYPOINT,
+            "selector_command": SOURCE_SELECTOR_COMMAND,
+            "selector_files_sha256": {
+                path: baseline_file_sha(BASELINE, path) for path in SOURCE_SELECTOR_FILES
+            },
+        }
+        if source != expected_source:
+            fail("pinned baseline source provenance drift")
+        if manifest.get("schema_version") != 2 or manifest.get("benchmark_version") != "0.2":
+            fail("manifest schema/version mismatch")
         selector_hashes = source.get("selector_files_sha256")
         if not isinstance(selector_hashes, dict) or not selector_hashes:
             fail("manifest selector source hashes missing")
@@ -128,8 +175,19 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail("manifest task mapping missing/duplicate drift")
         if contract.get("canonical_manifest_sha256") != sha(MANIFEST):
             fail("reference contract manifest hash drift")
-        if contract.get("source_commit") != source["commit"]:
-            fail("reference contract pinned source commit drift")
+        expected_reference_metadata = {
+            "benchmark": "ethereum-verification-benchmark",
+            "benchmark_version": "0.2",
+            "contract_kind": "canonical_reference_declarations",
+            "schema_version": 1,
+            "source_commit": BASELINE,
+            "canonical_manifest_path": str(MANIFEST.relative_to(ROOT)),
+            "canonical_manifest_sha256": sha(MANIFEST),
+            "task_count": manifest["task_count"],
+            "task_set_sha256": manifest["task_set_sha256"],
+        }
+        if {field: contract.get(field) for field in expected_reference_metadata} != expected_reference_metadata:
+            fail("pinned baseline reference metadata drift")
         entries = contract.get("tasks")
         if not isinstance(entries, list) or len(entries) != len(refs):
             fail("reference contract task count drift")
