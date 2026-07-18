@@ -22,6 +22,9 @@ LEGACY_BUILTIN_MCP_IDENTITY = (1, "group/lean_tools_mcp", "lean-lsp-mcp")
 PRE_MCP_REASONS = frozenset(
     {"dry_run", "missing_credentials", "dependency_warm_failed", "target_warm_failed"}
 )
+LEGACY_WARM_SETUP_FAILURE_CLASSES = frozenset(
+    {"infra_dependency_warm_failed", "infra_target_warm_failed", "infra_target_warm_timeout"}
+)
 MCP_LIFECYCLE_STATUSES = frozenset({"not_attempted", "started", "completed", "impossible", "fallback"})
 
 
@@ -113,10 +116,18 @@ def _has_valid_legacy_pre_mcp_exit(run: dict[str, object], response: dict[str, o
     setup metadata or preflight record must still be complete and valid.
     """
     status = run.get("harness_status")
+    legacy_warm_setup_failure = (
+        status == "completed_with_failures"
+        and response.get("status") == status
+        and (
+            run.get("failure_class") in LEGACY_WARM_SETUP_FAILURE_CLASSES
+            or response.get("failure_class") in LEGACY_WARM_SETUP_FAILURE_CLASSES
+        )
+    )
     return (
         _is_legacy_pre_mcp_builtin_artifact(run)
-        and status in {"dry_run", "missing_credentials"}
-        and response.get("status") == status
+        and (status in {"dry_run", "missing_credentials"} or legacy_warm_setup_failure)
+        and (legacy_warm_setup_failure or response.get("status") == status)
         and run.get("mcp_lifecycle") is None
         and response.get("mcp_lifecycle") is None
         and run.get("lean_lsp_mcp") is None

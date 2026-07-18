@@ -826,6 +826,41 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
 
                 self.assertEqual(check_run(run_dir), [])
 
+    def test_validator_preserves_legacy_warm_setup_failure_without_mcp_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            response = json.loads((run_dir / "harness-response.json").read_text(encoding="utf-8"))
+            run.update({
+                "harness_id": "builtin-lean-lsp",
+                "schema_version": 1,
+                "harness_status": "completed_with_failures",
+                "failure_class": "infra_dependency_warm_failed",
+            })
+            response.update({
+                "status": "completed_with_failures",
+                "failure_class": "infra_dependency_warm_failed",
+            })
+            for record in (run, response):
+                for key in (
+                    "execution_contract",
+                    "mcp_lifecycle",
+                    "lean_lsp_mcp",
+                    "mcp_preflight",
+                    "provider_preflight",
+                ):
+                    record.pop(key, None)
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            (run_dir / "harness-response.json").write_text(json.dumps(response), encoding="utf-8")
+
+            self.assertEqual(check_run(run_dir), [])
+
+            run["schema_version"] = 2
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        self.assertIn("missing MCP lifecycle metadata", "\n".join(errors))
+
     def test_validator_rejects_non_object_legacy_pre_mcp_response(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_dir = self._missing_credentials_artifact(Path(tmp))
