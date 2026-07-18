@@ -8,6 +8,7 @@ from pathlib import Path
 from unittest import mock
 
 from harness import transport_request
+from harness.classification import classify_target
 from harness.runners import lean_tools
 
 
@@ -27,7 +28,13 @@ end Benchmark.Spec
 """
 
 
-def _strict_env(stack: ExitStack, *, repair_attempts: int = 2, decl_index: int = 40) -> None:
+def _strict_env(
+    stack: ExitStack,
+    *,
+    repair_attempts: int = 2,
+    writer_attempts: int = 1,
+    decl_index: int = 40,
+) -> None:
     """Patch module constants so strict hybrid mode is active with a distinct
     driver and prover model, without touching the real environment."""
     stack.enter_context(mock.patch.object(lean_tools, "DRAFT_PROOF_ENABLED", True))
@@ -38,6 +45,7 @@ def _strict_env(stack: ExitStack, *, repair_attempts: int = 2, decl_index: int =
     stack.enter_context(mock.patch.object(lean_tools, "DEFAULT_PROVER_API_KEY", ""))
     stack.enter_context(mock.patch.object(lean_tools, "DEFAULT_PROVER_MODE", "draft_proof"))
     stack.enter_context(mock.patch.object(lean_tools, "PROVER_REPAIR_ATTEMPTS", repair_attempts))
+    stack.enter_context(mock.patch.object(lean_tools, "PROVER_WRITER_ATTEMPTS", writer_attempts))
     stack.enter_context(mock.patch.object(lean_tools, "DRAFT_PROOF_DECL_INDEX_LIMIT", decl_index))
 
 
@@ -86,6 +94,7 @@ class RoleConfigTests(unittest.TestCase):
         self.assertTrue(config["strict_role_separation"])
         self.assertTrue(config["ensemble"])
         self.assertFalse(config["driver_writes_proofs"])
+        self.assertEqual(config["prover_writer_attempts"], 1)
         self.assertEqual(config["prover_repair_attempts"], 2)
         self.assertEqual(config["stages"][lean_tools.STAGE_WRITER], "prover-model")
         self.assertEqual(config["stages"][lean_tools.STAGE_REPAIRER], "prover-model")
@@ -403,6 +412,62 @@ class StrictLoopTests(unittest.TestCase):
         self.assertEqual(metrics["strict_submission_blocked"], 0)
         self.assertIn("strict_auto_writer_failed", log)
         self.assertIn("prover_output_contains_forbidden_placeholder", log)
+
+    def test_persistent_auto_writer_failure_exhausts_once_across_checks(self) -> None:
+        # Distinct driver check calls must not turn a persistent writer failure
+        # into one paid writer request per tool call. The second check observes
+        # the explicit per-task writer cap and terminates as infra-invalid.
+        driver_calls = {"n": 0}
+        writer_calls = {"n": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                writer_calls["n"] += 1
+                return {
+                    "choices": [{"message": {"role": "assistant", "content": "sorry"}}],
+                    "usage": {"prompt_tokens": 3, "completion_tokens": 2, "total_tokens": 5},
+                }
+            driver_calls["n"] += 1
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {
+                                    "id": f"c{driver_calls['n']}",
+                                    "function": {
+                                        "name": "check_proof",
+                                        "arguments": json.dumps({"proof": f"exact driver_proof_{driver_calls['n']}"}),
+                                    },
+                                }
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), max_tool_calls=6)
+            log = Path(result["tool_log"]).read_text(encoding="utf-8")
+
+        self.assertEqual(result["status"], "strict_writer_exhausted")
+        self.assertEqual(result["failure_class"], "provider_or_context_failure")
+        self.assertEqual(result["error"]["kind"], "prover_writer_budget_exceeded")
+        classified = classify_target({"status": "lean_check_failed"}, result)
+        self.assertEqual(classified["final_class"], "INFRA_INVALID")
+        self.assertEqual(classified["submission_state"], "no_submission")
+        self.assertEqual(writer_calls["n"], 1)
+        self.assertEqual(driver_calls["n"], 2)
+        self.assertEqual(result["usage"]["total_tokens"], 5)
+        metrics = result["role_metrics"]
+        self.assertEqual(metrics["prover_writer_calls"], 1)
+        self.assertEqual(metrics["strict_auto_writer_failures"], 1)
+        self.assertEqual(metrics["prover_writer_exhausted"], 1)
+        self.assertEqual(metrics["draft_submitted_count"], 0)
+        self.assertIn("strict_auto_writer_failed", log)
+        self.assertIn("strict_writer_exhausted", log)
 
     def test_stale_prover_draft_is_blocked_in_strict_mode(self) -> None:
         # Only the LATEST prover draft is submittable: resubmitting an earlier

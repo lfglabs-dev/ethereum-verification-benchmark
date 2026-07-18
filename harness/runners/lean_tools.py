@@ -140,6 +140,12 @@ STRICT_ROLE_SEPARATION = (
 # Maximum number of proof_repairer (prover repair-mode) calls per task. 0 disables
 # prover repairs and leaves only the initial prover_writer draft.
 PROVER_REPAIR_ATTEMPTS = max(0, int(os.environ.get("DEFAULT_HARNESS_PROVER_REPAIR_ATTEMPTS", "2")))
+# Maximum number of automatic initial prover_writer calls per strict-hybrid task.
+# This is deliberately independent of the driver tool-call budget: an
+# unavailable or invalid writer must not be retried expensively for every driver
+# check_proof. Explicit draft_proof calls retain their existing workflow.
+# The default permits the required initial writer route exactly once.
+PROVER_WRITER_ATTEMPTS = max(1, int(os.environ.get("DEFAULT_HARNESS_PROVER_WRITER_ATTEMPTS", "1")))
 # Bounded, content-free public declaration index injected into prover prompts to
 # curb invented theorem names. Public declarations only (never hidden Proofs/
 # GeneratedPreview). 0 disables the index.
@@ -226,6 +232,7 @@ def _role_config() -> dict[str, object]:
         "driver_model": driver,
         "prover_model": prover,
         "prover_mode": DEFAULT_PROVER_MODE or None,
+        "prover_writer_attempts": PROVER_WRITER_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
         "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
         "sampling": {
             "driver": _effective_sampling(),
@@ -309,6 +316,8 @@ def _warm_target_modules(
 
 ROLE_METRIC_COUNTERS = (
     "prover_writer_calls",
+    "prover_writer_exhausted",
+    "strict_auto_writer_failures",
     "prover_repair_calls",
     "draft_valid_syntax_count",
     "draft_rejected_count",
@@ -1887,8 +1896,6 @@ def _execute_fair_tool(
                 elif role_metrics is not None:
                     # A rejected repair draft never reaches Lean = no submission.
                     role_metrics["repair_no_submission"] = int(role_metrics.get("repair_no_submission", 0)) + 1
-            else:
-                prover_state["write_count"] = int(prover_state.get("write_count", 0)) + 1
         return result
     if name in {"check_proof", "try_tactics"}:
         baseline_code, baseline_output = _run_lean_module_with_proof_content(
@@ -1929,6 +1936,27 @@ def _execute_fair_tool(
                     if latest_draft is None and DRAFT_PROOF_ENABLED:
                         if base_url is None:
                             return {"ok": False, "error": "base_url is required for strict auto writer"}
+                        writer_used = int(prover_state.get("auto_writer_count", 0))
+                        writer_limit = int(prover_state.get("auto_writer_limit", PROVER_WRITER_ATTEMPTS))
+                        if writer_used >= writer_limit:
+                            if role_metrics is not None:
+                                role_metrics["prover_writer_exhausted"] = int(role_metrics.get("prover_writer_exhausted", 0)) + 1
+                            return {
+                                "ok": False,
+                                "error": "strict_writer_exhausted",
+                                "failure_kind": "prover_writer_budget_exceeded",
+                                "stage": STAGE_WRITER,
+                                "prompt_kind": "write",
+                                "writer_calls_used": writer_used,
+                                "writer_calls_max": writer_limit,
+                                "message": (
+                                    "STRICT ROLE SEPARATION: the prover writer call cap is exhausted after no usable "
+                                    "prover draft was obtained; driver proof text was not submitted."
+                                ),
+                            }
+                        # Count before the request so a failed provider response
+                        # cannot leave the liveness bridge unbounded.
+                        prover_state["auto_writer_count"] = writer_used + 1
                         auto_result = _draft_proof_with_prover(
                             {"mode": "write", "task_context": _strict_auto_writer_context(task=task, workspace=workspace, original=original)},
                             task=task,
@@ -1951,15 +1979,18 @@ def _execute_fair_tool(
                             auto_writer_usage = auto_result.get("usage")
                             latest_draft = _normalize_proof_body(auto_proof)
                             prover_state["latest_draft"] = latest_draft
-                            prover_state["write_count"] = int(prover_state.get("write_count", 0)) + 1
                             proofs = [("auto_draft_proof", auto_proof)]
                             break
+                        if role_metrics is not None:
+                            role_metrics["strict_auto_writer_failures"] = int(role_metrics.get("strict_auto_writer_failures", 0)) + 1
                         return {
                             "ok": False,
                             "error": "strict_auto_writer_failed",
                             "stage": STAGE_WRITER,
                             "prompt_kind": "write",
                             "writer_error": auto_result.get("error"),
+                            "writer_calls_used": int(prover_state.get("auto_writer_count", 0)),
+                            "writer_calls_max": writer_limit,
                             "message": (
                                 "STRICT ROLE SEPARATION: the driver attempted to submit before any prover draft. "
                                 "The harness ignored the driver proof and routed to the prover writer, but the writer "
@@ -2440,7 +2471,8 @@ def _attempt_task_fair(
     no_tool_responses = 0
     sandbox_state = {"count": 0, "limit": min(DEFAULT_MAX_SANDBOX_CALLS, max(1, max_tool_calls // 4))}
     prover_state: dict[str, object] = {
-        "write_count": 0,
+        "auto_writer_count": 0,
+        "auto_writer_limit": PROVER_WRITER_ATTEMPTS,
         "repair_count": 0,
         "repair_limit": PROVER_REPAIR_ATTEMPTS,
         "pending_repair": False,
@@ -2449,6 +2481,8 @@ def _attempt_task_fair(
     role_metrics: dict[str, object] = {
         "role_config": _role_config(),
         "prover_writer_calls": 0,
+        "prover_writer_exhausted": 0,
+        "strict_auto_writer_failures": 0,
         "prover_repair_calls": 0,
         "draft_valid_syntax_count": 0,
         "draft_rejected_count": 0,
@@ -2930,6 +2964,29 @@ def _attempt_task_fair(
                     "status": "request_failed",
                     "failure_class": "transport_error",
                     "error": {"kind": "transport_error", "message": result.get("error")},
+                    "usage": usage_totals,
+                    "attempts": attempts,
+                    "tool_calls_executed": tool_calls_executed,
+                    "non_proof_tool_calls": non_proof_tool_calls,
+                    "non_proof_tool_limit": non_proof_tool_limit,
+                    "tactic_sandbox_calls": sandbox_state["count"],
+                    "role_metrics": role_metrics,
+                    "tool_log": str(tool_log_path),
+                    "conversation_log": str(conversation_log_path),
+                }
+            if result.get("error") == "strict_writer_exhausted":
+                # The liveness bridge made at least one bounded writer attempt,
+                # but could not obtain a prover-owned proof to submit. This is a
+                # provider/writer-path failure, never a zero-writer model score.
+                return {
+                    "task_ref": task.get("task_ref"),
+                    "status": "strict_writer_exhausted",
+                    "failure_class": "provider_or_context_failure",
+                    "error": {
+                        "kind": "prover_writer_budget_exceeded",
+                        "writer_calls_used": result.get("writer_calls_used"),
+                        "writer_calls_max": result.get("writer_calls_max"),
+                    },
                     "usage": usage_totals,
                     "attempts": attempts,
                     "tool_calls_executed": tool_calls_executed,
