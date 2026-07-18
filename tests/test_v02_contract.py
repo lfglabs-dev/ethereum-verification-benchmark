@@ -62,7 +62,17 @@ class V02ContractTests(unittest.TestCase):
             }
         }
 
-    def _validate(self, mutate=None, *, lean=False, escape: bool | None = None, baseline=None, current=None, baseline_error=None) -> tuple[int, dict]:
+    def _validate(
+        self,
+        mutate=None,
+        *,
+        lean=False,
+        escape: bool | None = None,
+        baseline=None,
+        current=None,
+        baseline_error=None,
+        forbid_baseline_or_task_work: bool = False,
+    ) -> tuple[int, dict]:
         manifest = json.loads(json.dumps(self.manifest))
         references = json.loads(json.dumps(self.references))
         # Fixtures use a synthetic reviewed root matching this checkout; Git
@@ -79,6 +89,9 @@ class V02ContractTests(unittest.TestCase):
         fixture_source = json.loads(json.dumps(manifest["source"]))
         if mutate:
             mutate(manifest, references)
+        def forbidden_work(*_args, **_kwargs):
+            raise AssertionError("candidate source drift reached baseline or task work")
+
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             directory = Path(directory)
             manifest_path = directory / "v0.2.json"
@@ -95,23 +108,33 @@ class V02ContractTests(unittest.TestCase):
             ), mock.patch.object(
                 validator,
                 "baseline_file_sha",
-                side_effect=lambda _commit, path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
+                side_effect=(
+                    forbidden_work
+                    if forbid_baseline_or_task_work
+                    else lambda _commit, path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+                ),
             ), mock.patch.object(
                 compute_fingerprints,
                 "baseline_contract_entries",
-                side_effect=baseline_error,
-                return_value=(
+                side_effect=forbidden_work if forbid_baseline_or_task_work else baseline_error,
+                return_value=None
+                if forbid_baseline_or_task_work or baseline_error is not None
+                else (
                     baseline if baseline is not None else {task["task_ref"]: task for task in self.manifest["tasks"]},
                     self._baseline_references(),
                 ),
             ), mock.patch.object(
                 compute_fingerprints,
                 "task_entries",
-                return_value=current if current is not None else {task["task_ref"]: task for task in self.manifest["tasks"]},
+                side_effect=forbidden_work if forbid_baseline_or_task_work else None,
+                return_value=None
+                if forbid_baseline_or_task_work
+                else current if current is not None else {task["task_ref"]: task for task in self.manifest["tasks"]},
             ), mock.patch.object(
                 validator,
                 "baseline_version_metadata",
-                return_value=self._baseline_version_metadata(),
+                side_effect=forbidden_work if forbid_baseline_or_task_work else None,
+                return_value=None if forbid_baseline_or_task_work else self._baseline_version_metadata(),
             ), (mock.patch.object(validator, "ESCAPE") if escape is not None else nullcontext()) as matcher:
                 if matcher is not None:
                     matcher.search.return_value = object() if escape else None
@@ -450,17 +473,34 @@ class V02ContractTests(unittest.TestCase):
 
     def test_coordinated_task_and_reference_manifest_regeneration_cannot_retarget_source(self) -> None:
         """Regenerating both candidate contracts cannot select another reachable commit."""
-        alternate = self.manifest["source"]["commit"]
+        original = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+        alternate = subprocess.check_output(["git", "rev-parse", f"{original}^"], cwd=ROOT, text=True).strip()
+        self.assertNotEqual(alternate, original)
 
         def mutate(manifest, references):
             manifest["source"]["commit"] = alternate
+            manifest["source"]["selector_files_sha256"] = {
+                path: hashlib.sha256(
+                    subprocess.check_output(["git", "show", f"{alternate}:{path}"], cwd=ROOT)
+                ).hexdigest()
+                for path in manifest["source"]["selector_files_sha256"]
+            }
+            helper_path = manifest["source"]["closure_helper"]["path"]
+            manifest["source"]["closure_helper"] = {
+                "blob": subprocess.check_output(
+                    ["git", "rev-parse", f"{alternate}:{helper_path}"], cwd=ROOT, text=True
+                ).strip(),
+                "path": helper_path,
+                "sha256": hashlib.sha256(
+                    subprocess.check_output(["git", "show", f"{alternate}:{helper_path}"], cwd=ROOT)
+                ).hexdigest(),
+            }
             references["source_commit"] = alternate
-            # These model a coordinated regeneration; task inputs themselves
-            # remain unchanged, so source selection is the only difference.
-            references["task_count"] = manifest["task_count"]
-            references["task_set_sha256"] = manifest["task_set_sha256"]
+            # ``_validate`` recomputes the reference manifest hash after this
+            # mutation.  Task inputs remain unchanged: the only attempted
+            # change is selecting a different reachable baseline.
 
-        code, audit = self._validate(mutate)
+        code, audit = self._validate(mutate, forbid_baseline_or_task_work=True)
         self.assertEqual(code, 1)
         self.assertIn("release trust-root source provenance drift", audit["errors"][0])
 
