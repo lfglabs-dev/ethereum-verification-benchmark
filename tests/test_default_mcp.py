@@ -457,7 +457,7 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertIsNone(run["mcp_preflight"])
         self.assertEqual(artifact_errors, [])
 
-    def test_missing_credentials_artifact_does_not_require_unstarted_mcp_metadata(self) -> None:
+    def test_default_missing_credentials_artifact_records_unstarted_mcp(self) -> None:
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(
             lean_tools, "RESULTS_DIR", Path(tmp) / "results"
         ), mock.patch.object(lean_tools, "_api_key", return_value=None), mock.patch.object(
@@ -468,10 +468,7 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
                 task_ref="ethereum/deposit_contract_minimal/deposit_count",
                 max_attempts=1,
                 max_tool_calls=4,
-                harness_id="builtin-lean-lsp",
-                run_slug="builtin-lean-lsp-test",
-                track="group/lean_tools_mcp",
-                tool_backend="lean-lsp-mcp",
+                harness_id="default",
             )
             run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
             artifact_errors = check_run(run_dir)
@@ -673,6 +670,18 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
             run_dir = self._missing_credentials_artifact(Path(tmp))
             run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
             run["harness_id"] = "builtin-lean-lsp"
+            run.pop("mcp_lifecycle")
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        self.assertIn("missing MCP lifecycle state", "\n".join(errors))
+
+    def test_validator_requires_lifecycle_for_v1_builtin_with_default_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run["harness_id"] = "builtin-lean-lsp"
+            run["schema_version"] = 1
             run.pop("mcp_lifecycle")
             (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
             errors = check_run(run_dir)
