@@ -199,10 +199,12 @@ def baseline_contract_entries(
 ) -> tuple[dict[str, dict[str, object]], dict[str, dict[str, str]]]:
     """Recompute canonical task and reference entries in ``commit`` only."""
     program = """
-import hashlib, json
+import hashlib, json, sys
 from pathlib import Path
 from scripts.compute_fingerprints import ordered_tasks
 from harness.task_runner import load_task_record, resolve_task_manifest
+sys.path.insert(0, __CLOSURE_SCRIPT_PATH__)
+from v02_reference_closure import collect_reference_closure
 tasks = ordered_tasks('all')
 references = {}
 for task in tasks:
@@ -215,6 +217,7 @@ for task in tasks:
         'reference_declaration': reference['declaration'],
         'reference_module_path': str(module_path.relative_to(Path.cwd())),
         'reference_module_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
+        'reference_import_closure': collect_reference_closure(Path.cwd(), module),
     }
 print(json.dumps({'tasks': tasks, 'references': references}, sort_keys=True))
 """
@@ -230,6 +233,7 @@ print(json.dumps({'tasks': tasks, 'references': references}, sort_keys=True))
         if added.returncode:
             raise ValueError(f"pinned source unavailable (infra): {commit}")
         try:
+            program = program.replace("__CLOSURE_SCRIPT_PATH__", repr(str(ROOT / "scripts")))
             result = subprocess.run(
                 [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=False
             )

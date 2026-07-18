@@ -4,13 +4,20 @@
   "canonical_manifest_path": "benchmark-versions/v0.2.json",
   "canonical_manifest_sha256": "b8f858aef1ae9c2e54f14800ec1b9cf2f6fceef54b8af92aeced133602dbabf5",
   "contract_kind": "canonical_reference_declarations",
-  "schema_version": 1,
+  "schema_version": 2,
   "source_commit": "c5a2344b121040445ccd745a3f839548ca8f9158",
   "task_count": 240,
   "task_set_sha256": "fa9557c344e362a13444fb7efa48a39abd0649a85421a3914c9b20345989bdff",
   "tasks": [
     {
       "reference_declaration": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.quoteExactIn_curve_safety",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs",
+          "path": "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Proofs.lean",
+          "sha256": "22d1f492ad3f24b6181ab1a3e017e332411c0dc3964949a047ceeab7b4c7de35"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs",
       "reference_module_path": "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Proofs.lean",
       "reference_module_sha256": "22d1f492ad3f24b6181ab1a3e017e332411c0dc3964949a047ceeab7b4c7de35",
@@ -22,6 +29,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation._earmark_preserves_invariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+          "path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+          "sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
@@ -33,6 +47,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation.redeem_preserves_invariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+          "path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+          "sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
@@ -44,6 +65,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation._subDebt_preserves_invariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+          "path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+          "sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
@@ -55,6 +83,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation._subEarmarkedDebt_preserves_invariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+          "path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+          "sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
@@ -66,6 +101,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation._sync_preserves_invariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+          "path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+          "sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
@@ -77,6 +119,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Balancer.ReClammSwapRounding.onSwap_fixed_virtual_balances_product_non_decreasing",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Balancer.ReClammSwapRounding.Proofs",
+          "path": "Benchmark/Cases/Balancer/ReClammSwapRounding/Proofs.lean",
+          "sha256": "64ed1d10b2803540fbc3aa4153f723c0a588b8cfe15a1224bd9f031f5528894e"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Balancer.ReClammSwapRounding.Proofs",
       "reference_module_path": "Benchmark/Cases/Balancer/ReClammSwapRounding/Proofs.lean",
       "reference_module_sha256": "64ed1d10b2803540fbc3aa4153f723c0a588b8cfe15a1224bd9f031f5528894e",
@@ -88,6 +137,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Cork.PoolSolvency.solvency_preserved",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Cork.PoolSolvency.Proofs",
+          "path": "Benchmark/Cases/Cork/PoolSolvency/Proofs.lean",
+          "sha256": "7f090cb255d1c689ce0aa33904b5d9acf567ad7fb4aa2ffb461b629c95e4a83c"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Cork.PoolSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/Cork/PoolSolvency/Proofs.lean",
       "reference_module_sha256": "7f090cb255d1c689ce0aa33904b5d9acf567ad7fb4aa2ffb461b629c95e4a83c",
@@ -99,6 +155,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.deposit_sets_pool_balance",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+          "path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+          "sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
@@ -110,6 +173,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.deposit_sets_sender_credit",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+          "path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+          "sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
@@ -121,6 +191,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.exploit_trace_drains_pool",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+          "path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+          "sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
@@ -132,6 +209,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_preserves_pool_balance",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+          "path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+          "sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
@@ -143,6 +227,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_sets_sender_credit",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+          "path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+          "sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
@@ -154,6 +245,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.account_rejection_reverts",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -165,6 +263,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.all_executed_on_success",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -176,6 +281,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.all_validated_on_success",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -187,6 +299,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.beneficiary_eq_total_prefund",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -198,6 +317,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.count_executed_eq_validated",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -209,6 +335,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.executed_index_in_bounds",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -220,6 +353,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_iff_validation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -231,6 +371,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_implies_validation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -242,6 +389,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_independent_of_inner_revert",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -253,6 +407,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_length_eq_validation_length",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -264,6 +425,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.executionR_iff_in_bounds",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -275,6 +443,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.fees_collected_eq_ops_length",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -286,6 +461,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.fees_concat_additive",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -297,6 +479,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.full_success_implies_all_account_approved",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -308,6 +497,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.handleOps_deterministic",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -319,6 +515,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.handleOps_empty",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -330,6 +533,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.no_beneficiary_payout_on_revert",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -341,6 +551,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.no_execution_on_revert",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -352,6 +569,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.no_fees_on_revert",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -363,6 +587,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_advances_by_batch_size",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -374,6 +605,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_mismatch_reverts",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -385,6 +623,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_strictly_increases",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -396,6 +641,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.paymaster_irrelevant_when_absent",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -407,6 +659,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.paymaster_rejection_reverts_when_present",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -418,6 +677,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.sender_call_iff_validated_and_calldata",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -429,6 +695,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.single_failure_reverts",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -440,6 +713,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_execution_on_validation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -451,6 +731,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_fee_collected",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -462,6 +749,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.total_prefund_concat",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -473,6 +767,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -484,6 +785,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat_fail_left",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -495,6 +803,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat_fail_right",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -506,6 +821,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_implies_execution",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+          "path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+          "sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
@@ -517,6 +839,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_starts_chain_at_threshold",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+          "path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+          "sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
@@ -528,6 +857,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.deposit_increments_deposit_count",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+          "path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+          "sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
@@ -539,6 +875,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_increments_full_count",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+          "path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+          "sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
@@ -550,6 +893,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_preserves_partial_gap",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+          "path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+          "sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
@@ -561,6 +911,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.small_deposit_preserves_full_count",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+          "path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+          "sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
@@ -572,6 +929,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.claimRedeem_preserves_global_solvency",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+          "path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+          "sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
@@ -583,6 +947,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.deposit_preserves_global_solvency",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+          "path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+          "sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
@@ -594,6 +965,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.handle_preserves_global_solvency",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+          "path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+          "sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
@@ -605,6 +983,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.redeemTokenGatewayDepreciated_preserves_global_solvency",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+          "path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+          "sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
@@ -616,6 +1001,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.report_preserves_global_solvency",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+          "path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+          "sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
@@ -627,6 +1019,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.requestRedeem_preserves_global_solvency",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+          "path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+          "sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
@@ -638,6 +1037,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.transferRemote_preserves_global_solvency",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+          "path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+          "sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16"
+        }
+      ],
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
@@ -649,6 +1055,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
+          "path": "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Proofs.lean",
+          "sha256": "ffb2bd98f30569f4a5ba7608091f94d2e82a0bcfa1c826dd9bf6b571ebe4047a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
       "reference_module_path": "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Proofs.lean",
       "reference_module_sha256": "ffb2bd98f30569f4a5ba7608091f94d2e82a0bcfa1c826dd9bf6b571ebe4047a",
@@ -660,6 +1073,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
+          "path": "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Proofs.lean",
+          "sha256": "ffb2bd98f30569f4a5ba7608091f94d2e82a0bcfa1c826dd9bf6b571ebe4047a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
       "reference_module_path": "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Proofs.lean",
       "reference_module_sha256": "ffb2bd98f30569f4a5ba7608091f94d2e82a0bcfa1c826dd9bf6b571ebe4047a",
@@ -671,6 +1091,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.draw_interval_matches_weights",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+          "path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+          "sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
@@ -682,6 +1109,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.draw_selects_valid_leaf",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+          "path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+          "sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
@@ -693,6 +1127,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.node_id_bijection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+          "path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+          "sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
@@ -704,6 +1145,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.parent_equals_sum_of_children",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+          "path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+          "sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
@@ -715,6 +1163,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.root_equals_sum_of_leaves",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+          "path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+          "sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
@@ -726,6 +1181,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.root_minus_left_equals_right_subtree",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+          "path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+          "sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
@@ -737,6 +1199,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.checkReturnAmount_partial_fill_price_floor",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs",
+          "path": "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Proofs.lean",
+          "sha256": "79591ee63c801d105ddaf8620778467e625ce152fbe207e2cb1c170eaaf6ad77"
+        }
+      ],
       "reference_module": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs",
       "reference_module_path": "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Proofs.lean",
       "reference_module_sha256": "79591ee63c801d105ddaf8620778467e625ce152fbe207e2cb1c170eaaf6ad77",
@@ -748,6 +1217,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+          "path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
+          "sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
       "reference_module_path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
       "reference_module_sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc",
@@ -759,6 +1235,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+          "path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
+          "sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
       "reference_module_path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
       "reference_module_sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc",
@@ -770,6 +1253,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Lagoon.Guardrails.guardrails_positive_bounded",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+          "path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
+          "sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
       "reference_module_path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
       "reference_module_sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc",
@@ -781,6 +1271,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.ceildiv_sandwich",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+          "path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+          "sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
@@ -792,6 +1289,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.locked_funds_solvency",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+          "path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+          "sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
@@ -803,6 +1307,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.max_liability_shares_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+          "path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+          "sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
@@ -814,6 +1325,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.reserve_ratio_bounds",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+          "path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+          "sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
@@ -825,6 +1343,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.shares_conversion_monotone",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+          "path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+          "sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
@@ -836,6 +1361,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.committed_route_executes_every_step",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+          "path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+          "sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97"
+        }
+      ],
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
@@ -847,6 +1379,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.failed_step_reverts",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+          "path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+          "sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97"
+        }
+      ],
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
@@ -858,6 +1397,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.final_transfer_implies_all_steps_succeeded",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+          "path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+          "sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97"
+        }
+      ],
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
@@ -869,6 +1415,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.min_output_required_for_commit",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+          "path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+          "sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97"
+        }
+      ],
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
@@ -880,6 +1433,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.no_final_transfer_on_failed_step",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+          "path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+          "sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97"
+        }
+      ],
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
@@ -891,6 +1451,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.route_gate_failure_prevents_commit",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+          "path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+          "sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97"
+        }
+      ],
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
@@ -902,6 +1469,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_book_value",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
+          "path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
+          "sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691"
+        }
+      ],
       "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
       "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
@@ -913,6 +1487,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_buy_price",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
+          "path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
+          "sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691"
+        }
+      ],
       "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
       "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
@@ -924,6 +1505,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_capital",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
+          "path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
+          "sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691"
+        }
+      ],
       "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
       "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
@@ -935,6 +1523,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_sell_price",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
+          "path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
+          "sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691"
+        }
+      ],
       "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
       "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
@@ -946,6 +1541,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_erc20_transferFrom_uses_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -957,6 +1559,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_permit2_transferFrom_uses_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -968,6 +1577,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_erc20_transferFrom_uses_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -979,6 +1595,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_permit2_transferFrom_uses_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -990,6 +1613,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.flash_callback_erc20_transferFrom_uses_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -1001,6 +1631,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.nested_flash_and_swap_callbacks_keep_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -1012,6 +1649,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.swap_callback_permit2_transferFrom_uses_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -1023,6 +1667,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_erc20_transferFrom_uses_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -1034,6 +1685,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_permit2_transferFrom_uses_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -1045,6 +1703,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.v3_callback_direct_transferFrom_uses_outer_caller",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+          "path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+          "sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
@@ -1056,6 +1721,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_redeem_round_trip_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+          "path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+          "sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
@@ -1067,6 +1739,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalAssets",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+          "path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+          "sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
@@ -1078,6 +1757,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalShares",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+          "path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+          "sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
@@ -1089,6 +1775,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.positive_deposit_mints_positive_shares_under_rate_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+          "path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+          "sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
@@ -1100,6 +1793,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.previewDeposit_rounds_down",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+          "path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+          "sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
@@ -1111,6 +1811,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.share_price_monotone_under_donation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+          "path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+          "sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570"
+        }
+      ],
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
@@ -1122,6 +1829,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_marks_both_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1133,6 +1847,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_round_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1144,6 +1865,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_total_allocated",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1155,6 +1883,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_claimed_plus_allocated_conserved",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1166,6 +1901,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_matches_independent_claims",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1177,6 +1919,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_preserves_round_bounds",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1188,6 +1937,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_exceeds_total",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1199,6 +1955,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_already_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1210,6 +1973,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_exceeds_total",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1221,6 +1991,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_already_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1232,6 +2009,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_exceeds_total",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1243,6 +2027,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_marks_user_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1254,6 +2045,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_round_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1265,6 +2063,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_total_allocated",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1276,6 +2081,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_claimed_plus_allocated_conserved",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1287,6 +2099,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_already_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1298,6 +2117,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_round_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1309,6 +2135,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_weth_state",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1320,6 +2153,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_exceeds_total",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1331,6 +2171,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_marks_user_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1342,6 +2189,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_round_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1353,6 +2207,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_total_allocated",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1364,6 +2225,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_claimed_plus_allocated_conserved",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1375,6 +2243,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_already_claimed",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1386,6 +2261,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_round_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1397,6 +2279,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_usdc_state",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+          "path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+          "sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660"
+        }
+      ],
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
@@ -1408,6 +2297,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Pareto.RedemptionBacking.depositFunds_preserves_closed_epoch_reserve_guard",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Pareto.RedemptionBacking.Proofs",
+          "path": "Benchmark/Cases/Pareto/RedemptionBacking/Proofs.lean",
+          "sha256": "076bceaec8ed81b677d41947de352e8d305ce3be09c35874fa2bc808f520d127"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Pareto.RedemptionBacking.Proofs",
       "reference_module_path": "Benchmark/Cases/Pareto/RedemptionBacking/Proofs.lean",
       "reference_module_sha256": "076bceaec8ed81b677d41947de352e8d305ce3be09c35874fa2bc808f520d127",
@@ -1419,6 +2315,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Pendle.PySupplyPairing.mint_py_mints_equal_amount",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+          "path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
+          "sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
       "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
       "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
@@ -1430,6 +2333,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Pendle.PySupplyPairing.mint_py_preserves_supply_pairing",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+          "path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
+          "sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
       "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
       "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
@@ -1441,6 +2351,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_burns_equal_amount",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+          "path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
+          "sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
       "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
       "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
@@ -1452,6 +2369,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_preserves_supply_pairing",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+          "path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
+          "sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
       "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
       "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
@@ -1463,6 +2387,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Piku.FundConservation.amountPaid_preserves_fund_conservation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+          "path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
+          "sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
       "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
@@ -1474,6 +2405,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Piku.FundConservation.amountPaid_records_distribution",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+          "path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
+          "sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
       "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
@@ -1485,6 +2423,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Piku.FundConservation._sellOrder_preserves_fund_conservation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+          "path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
+          "sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
       "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
@@ -1496,6 +2441,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Piku.FundConservation._sellOrder_records_redemption_buckets",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+          "path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
+          "sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
       "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
@@ -1507,6 +2459,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+          "path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
+          "sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
       "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
@@ -1518,6 +2477,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Polaris.BondingCurve.floorSellAndBurn_preserves_reserve_ratio_zero",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+          "path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
+          "sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
       "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
@@ -1529,6 +2495,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Polaris.BondingCurve.init_reserve_ratio_zero",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+          "path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
+          "sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
       "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
@@ -1540,6 +2513,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Polaris.BondingCurve.sell_preserves_reserve_ratio_zero",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+          "path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
+          "sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
       "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
@@ -1551,6 +2531,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Polygon.AgglayerBridge.claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+          "path": "Benchmark/Cases/Polygon/AgglayerBridge/Proofs.lean",
+          "sha256": "b538b547f87ed98bddcc8d2c57acea9bc606e9d45241c09c272bc1716913c122"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
       "reference_module_path": "Benchmark/Cases/Polygon/AgglayerBridge/Proofs.lean",
       "reference_module_sha256": "b538b547f87ed98bddcc8d2c57acea9bc606e9d45241c09c272bc1716913c122",
@@ -1562,6 +2549,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+          "path": "Benchmark/Cases/Polygon/AgglayerBridge/Proofs.lean",
+          "sha256": "b538b547f87ed98bddcc8d2c57acea9bc606e9d45241c09c272bc1716913c122"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
       "reference_module_path": "Benchmark/Cases/Polygon/AgglayerBridge/Proofs.lean",
       "reference_module_sha256": "b538b547f87ed98bddcc8d2c57acea9bc606e9d45241c09c272bc1716913c122",
@@ -1573,6 +2567,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Reserve.AuctionPriceBand.price_at_end_time",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+          "path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
+          "sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
       "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
@@ -1584,6 +2585,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Reserve.AuctionPriceBand.price_at_start_time",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+          "path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
+          "sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
       "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
@@ -1595,6 +2603,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Reserve.AuctionPriceBand.price_lower_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+          "path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
+          "sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
       "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
@@ -1606,6 +2621,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Reserve.AuctionPriceBand.price_upper_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+          "path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
+          "sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
       "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
@@ -1617,6 +2639,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.depositPegOut_registers_required_amount",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
+          "path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
+          "sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
       "reference_module_path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
       "reference_module_sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2",
@@ -1628,6 +2657,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.refundPegOut_conserves_quote_amount",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
+          "path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
+          "sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
       "reference_module_path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
       "reference_module_sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2",
@@ -1639,6 +2675,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.refundUserPegOut_conserves_quote_amount",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
+          "path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
+          "sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
       "reference_module_path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
       "reference_module_sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2",
@@ -1650,6 +2693,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.addOwner_acyclicity",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1661,6 +2711,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.addOwner_isOwnerCorrectness",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1672,6 +2729,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.addOwner_ownerListInvariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1683,6 +2747,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.in_list_reachable",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1694,6 +2765,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_acyclicity",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1705,6 +2783,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_inListReachable",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1716,6 +2801,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_isOwnerCorrectness",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1727,6 +2819,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_ownerListInvariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1738,6 +2837,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_acyclicity",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1749,6 +2855,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_inListReachable",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1760,6 +2873,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_ownerListInvariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1771,6 +2891,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_acyclicity",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1782,6 +2909,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_inListReachable",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1793,6 +2927,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_isOwnerCorrectness",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1804,6 +2945,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_ownerListInvariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+          "path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+          "sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
@@ -1815,6 +2963,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Starkware.StarkgateEscrow.deposit_preserves_escrow_lower_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+          "path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
+          "sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
       "reference_module_sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f",
@@ -1826,6 +2981,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Starkware.StarkgateEscrow.depositReclaim_preserves_escrow_lower_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+          "path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
+          "sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
       "reference_module_sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f",
@@ -1837,6 +2999,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Starkware.StarkgateEscrow.withdraw_preserves_escrow_lower_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+          "path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
+          "sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
       "reference_module_sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f",
@@ -1848,6 +3017,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.callbackLevelTwo_is_rejected",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1859,6 +3035,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_frames_unrelated_account",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1870,6 +3053,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_cfa_projection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1881,6 +3071,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_future_modular_cfa_global_projection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1892,6 +3089,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_pair_net_flow_rate",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1903,6 +3107,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_frames_unrelated_account",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1914,6 +3125,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_cfa_projection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1925,6 +3143,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_future_modular_cfa_global_projection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1936,6 +3161,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_pair_net_flow_rate",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1947,6 +3179,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.failedNested_rolls_back_and_prevents_resume",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1958,6 +3197,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.pairAndFrame_implies_modular_cfa_global_projection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1969,6 +3215,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_frames_unrelated_account",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1980,6 +3233,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_matches_factored_instance_behavior",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -1991,6 +3251,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_cfa_projection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -2002,6 +3269,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_future_modular_cfa_global_projection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -2013,6 +3287,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_pair_net_flow_rate",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -2024,6 +3305,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_reloads_final_zero",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -2035,6 +3323,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.successfulOneLevel_components_compose",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -2046,6 +3341,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_frames_unrelated_account",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -2057,6 +3359,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_cfa_projection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -2068,6 +3377,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_future_modular_cfa_global_projection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -2079,6 +3395,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_pair_net_flow_rate",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+          "path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+          "sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
@@ -2090,6 +3413,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.fee_claim_preserves_unclaimed_le_supply",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+          "path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+          "sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
@@ -2101,6 +3431,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.gain_loss_recovery_no_double_charge",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+          "path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+          "sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
@@ -2112,6 +3449,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.no_performance_fee_when_pre_pps_le_hwm",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+          "path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+          "sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
@@ -2123,6 +3467,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.period_fee_accounting_preserves_structural_assumptions",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+          "path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+          "sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
@@ -2134,6 +3485,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.profit_pnl_uses_cached_hwm",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+          "path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+          "sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
@@ -2145,6 +3503,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.recovery_then_new_high_uses_stored_hwm",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+          "path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+          "sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
@@ -2156,6 +3521,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.validated_initial_state_satisfies_successful_assumptions",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+          "path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+          "sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
@@ -2167,6 +3539,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.validated_performance_fee_update_preserves_cap",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+          "path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+          "sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a"
+        }
+      ],
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
@@ -2178,6 +3557,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.TermFinance.TermAuctionClearing.Proofs",
+          "path": "Benchmark/Cases/TermFinance/TermAuctionClearing/Proofs.lean",
+          "sha256": "c48567d170e79d060df5a21153ed8ae94988872851bcce3b316cb6189cdd29c6"
+        }
+      ],
       "reference_module": "Benchmark.Cases.TermFinance.TermAuctionClearing.Proofs",
       "reference_module_path": "Benchmark/Cases/TermFinance/TermAuctionClearing/Proofs.lean",
       "reference_module_sha256": "c48567d170e79d060df5a21153ed8ae94988872851bcce3b316cb6189cdd29c6",
@@ -2189,6 +3575,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.swapDebtTokenToXt_updates_virtual_xt_reserve",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs",
+          "path": "Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Proofs.lean",
+          "sha256": "dfb816ab397398b72a26797b10bc29387f59c3a8079f28e809509ba19e89d2ca"
+        }
+      ],
       "reference_module": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs",
       "reference_module_path": "Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Proofs.lean",
       "reference_module_sha256": "dfb816ab397398b72a26797b10bc29387f59c3a8079f28e809509ba19e89d2ca",
@@ -2200,6 +3593,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_enforces_fee_adjusted_invariant",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+          "path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+          "sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da"
+        }
+      ],
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
@@ -2211,6 +3611,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_swap_sandwich_output_bound",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+          "path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+          "sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da"
+        }
+      ],
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
@@ -2222,6 +3629,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve0",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+          "path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+          "sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da"
+        }
+      ],
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
@@ -2233,6 +3647,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve1",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+          "path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+          "sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da"
+        }
+      ],
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
@@ -2244,6 +3665,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve_product",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+          "path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+          "sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da"
+        }
+      ],
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
@@ -2255,6 +3683,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_two_swap_k_monotone",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+          "path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+          "sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da"
+        }
+      ],
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
@@ -2266,6 +3701,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.redeem_conservation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+          "path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+          "sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
@@ -2277,6 +3719,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.redeem_fee_formula",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+          "path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+          "sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
@@ -2288,6 +3737,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.redeem_return_formula",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+          "path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+          "sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
@@ -2299,6 +3755,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.swap_conservation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+          "path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+          "sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
@@ -2310,6 +3773,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.swap_value_conservation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+          "path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+          "sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
@@ -2321,6 +3791,18 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.positive_borrow_preserves_required_liquidity",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs",
+          "path": "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Proofs.lean",
+          "sha256": "a6a3a145a4709ce5a4e15b3a1d8ff7b80ab5b8b2698ae00abbe4d6d3987eb922"
+        },
+        {
+          "module": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Slot0Proof",
+          "path": "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Slot0Proof.lean",
+          "sha256": "146186bd814f7b0879921ccaa0a5839f1e9c4eec798760032a2642378ea0fe1b"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs",
       "reference_module_path": "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Proofs.lean",
       "reference_module_sha256": "a6a3a145a4709ce5a4e15b3a1d8ff7b80ab5b8b2698ae00abbe4d6d3987eb922",
@@ -2332,6 +3814,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.cancel_redeem_accounting",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2343,6 +3832,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.candidate_g_source_reachability",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2354,6 +3850,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fee_aliasing",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2365,6 +3868,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fulfill_redeem_accounting",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2376,6 +3886,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.full_clear_requeue_replay",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2387,6 +3904,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_bounds_and_isolation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2398,6 +3922,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_rollback",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2409,6 +3940,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.malformed_pair_lifecycle",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2420,6 +3958,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.owner_fallback_authorization",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2431,6 +3976,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.queued_request_aggregation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2442,6 +3994,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.redeem_wrapper",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2453,6 +4012,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.request_redeem_branching",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2464,6 +4030,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.two_owner_queue_aggregation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2475,6 +4048,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.zero_component_lifecycle",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+          "path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+          "sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45"
+        }
+      ],
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
@@ -2486,6 +4066,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_decreases_supply",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2497,6 +4084,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_insufficient",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2508,6 +4102,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_ctokens_match_deposit",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2519,6 +4120,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_increases_supply",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2530,6 +4138,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_overflow_protection",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2541,6 +4156,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.setOperator_updates",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2552,6 +4174,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transferFrom_conservation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2563,6 +4192,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_conservation",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2574,6 +4210,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_insufficient",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2585,6 +4228,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_no_balance_revert",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2596,6 +4246,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_preserves_supply",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2607,6 +4264,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_sufficient",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+          "path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+          "sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
@@ -2618,6 +4282,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.metadata_bridge",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
+          "path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
+          "sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
       "reference_module_path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
       "reference_module_sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386",
@@ -2629,6 +4300,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_bounds_safe",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
+          "path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
+          "sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
       "reference_module_path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
       "reference_module_sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386",
@@ -2640,6 +4318,13 @@
     },
     {
       "reference_declaration": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_faithful",
+      "reference_import_closure": [
+        {
+          "module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
+          "path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
+          "sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386"
+        }
+      ],
       "reference_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
       "reference_module_path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
       "reference_module_sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386",

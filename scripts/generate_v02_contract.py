@@ -50,10 +50,12 @@ def baseline_worktree() -> Path:
 def read_baseline_contract_inputs(worktree: Path) -> dict[str, object]:
     """Load selector, version-manifest metadata and references from the pinned tree."""
     program = """
-import hashlib, json
+import hashlib, json, sys
 from pathlib import Path
 from scripts.compute_fingerprints import build_version_manifest
 from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
+sys.path.insert(0, __CLOSURE_SCRIPT_PATH__)
+from v02_reference_closure import collect_reference_closure
 root = Path.cwd()
 refs = discover_task_refs('all')
 version_manifest = build_version_manifest('0.2', created_at=__CREATED_AT__, suite='all')
@@ -81,12 +83,15 @@ for ref in refs:
         'reference_declaration': declaration,
         'reference_module_path': str(module_path.relative_to(root)),
         'reference_module_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
+        'reference_import_closure': collect_reference_closure(root, module),
     })
 print(json.dumps({'refs': refs, 'tasks': version_manifest['tasks'], 'version_metadata': {
     key: value for key, value in version_manifest.items() if key != 'tasks'
 }, 'entries': entries}))
 """
-    program = program.replace("__CREATED_AT__", repr(CREATED_AT))
+    program = program.replace("__CREATED_AT__", repr(CREATED_AT)).replace(
+        "__CLOSURE_SCRIPT_PATH__", repr(str(ROOT / "scripts"))
+    )
     completed = subprocess.run(
         [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=True
     )
@@ -148,7 +153,7 @@ def main() -> int:
         "benchmark": "ethereum-verification-benchmark",
         "benchmark_version": "0.2",
         "contract_kind": "canonical_reference_declarations",
-        "schema_version": 1,
+        "schema_version": 2,
         "source_commit": BASELINE,
         "canonical_manifest_path": str(MANIFEST.relative_to(ROOT)),
         "canonical_manifest_sha256": digest_file(MANIFEST),

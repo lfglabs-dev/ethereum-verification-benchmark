@@ -18,13 +18,11 @@ def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def load_v02_task_refs(*, require_pinned_source: bool = False) -> list[str]:
+def load_v02_task_refs(*, require_pinned_source: bool = True) -> list[str]:
     """Return the frozen v0.2 sequence, rejecting malformed or local drift.
 
-    Enumeration must work from a source archive, where Git history is not
-    present.  Callers performing a P2 integrity validation set
-    ``require_pinned_source`` so canonical metadata is also recomputed from the
-    immutable source commit; failure to access that commit remains fail-closed.
+    Frozen/scored consumers validate against the immutable source revision by
+    default.  Failure to access that revision remains fail-closed.
     """
     try:
         data = json.loads(CANONICAL_V02_PATH.read_text(encoding="utf-8"))
@@ -95,3 +93,12 @@ def load_v02_task_refs(*, require_pinned_source: bool = False) -> list[str]:
         elif current_entries[task_ref] != task_object:
             raise ValueError(f"canonical v0.2 contract task source canonical entry drift: {task_ref}")
     return tasks
+
+
+def load_v02_task_refs_for_contract_generation() -> list[str]:
+    """Development-only escape for deriving a new contract from local inputs.
+
+    This function is intentionally not used by CLI selectors, run_all, or
+    publication validation gates.
+    """
+    return load_v02_task_refs(require_pinned_source=False)

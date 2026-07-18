@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from contextlib import nullcontext
 from pathlib import Path
 from unittest import mock
 
@@ -15,6 +16,7 @@ from harness import canonical_contract, task_runner
 from scripts import generate_v02_contract as generator
 from scripts import validate_v02_reference_contract as validator
 from scripts import compute_fingerprints
+from scripts.v02_reference_closure import collect_reference_closure, module_path
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -29,7 +31,7 @@ class V02ContractTests(unittest.TestCase):
         return {
             entry["task_ref"]: {
                 field: entry[field]
-                for field in ("reference_module", "reference_declaration", "reference_module_path", "reference_module_sha256")
+                for field in ("reference_module", "reference_declaration", "reference_module_path", "reference_module_sha256", "reference_import_closure")
             }
             for entry in self.references["tasks"]
         }
@@ -55,7 +57,7 @@ class V02ContractTests(unittest.TestCase):
             }
         }
 
-    def _validate(self, mutate=None, *, lean=False, escape=False, baseline=None, current=None, baseline_error=None) -> tuple[int, dict]:
+    def _validate(self, mutate=None, *, lean=False, escape: bool | None = None, baseline=None, current=None, baseline_error=None) -> tuple[int, dict]:
         manifest = json.loads(json.dumps(self.manifest))
         references = json.loads(json.dumps(self.references))
         # Unit fixtures are deliberately independent of CI's checkout depth.
@@ -106,8 +108,9 @@ class V02ContractTests(unittest.TestCase):
                 validator,
                 "BASELINE",
                 pinned_commit,
-            ), mock.patch.object(validator, "ESCAPE") as matcher:
-                matcher.search.return_value = object() if escape else None
+            ), (mock.patch.object(validator, "ESCAPE") if escape is not None else nullcontext()) as matcher:
+                if matcher is not None:
+                    matcher.search.return_value = object() if escape else None
                 if lean:
                     context = mock.patch.object(validator, "run_lean", return_value=(False, "declaration_check_failed"))
                 else:
@@ -164,8 +167,8 @@ class V02ContractTests(unittest.TestCase):
         self.assertIn('"--suite" && "$2" == "v0.2"', runner)
         self.assertIn('list --suite "$suite"', runner)
 
-    def test_source_archive_can_list_v02_without_git_history(self) -> None:
-        """The frozen selector is usable by shallow checkouts/source archives."""
+    def test_source_archive_v02_list_fails_closed_without_pinned_source(self) -> None:
+        """Scored frozen selection never falls back to mutable self-validation."""
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "source"
             shutil.copytree(
@@ -179,9 +182,50 @@ class V02ContractTests(unittest.TestCase):
                 cwd=source,
                 text=True,
                 capture_output=True,
-                check=True,
             )
-        self.assertEqual(listed.stdout.splitlines(), [task["task_ref"] for task in self.manifest["tasks"]])
+        self.assertNotEqual(listed.returncode, 0)
+        self.assertIn("pinned source unavailable", listed.stderr)
+
+    def test_reference_closure_is_case_local_cycle_safe_and_path_contained(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            case = root / "Benchmark/Cases/Example/Case"
+            case.mkdir(parents=True)
+            (case / "Proofs.lean").write_text("import Benchmark.Cases.Example.Case.HelperProof\n", encoding="utf-8")
+            (case / "HelperProof.lean").write_text("import Benchmark.Cases.Example.Case.Proofs\n", encoding="utf-8")
+            closure = collect_reference_closure(root, "Benchmark.Cases.Example.Case.Proofs")
+            self.assertEqual([member["path"] for member in closure], [
+                "Benchmark/Cases/Example/Case/HelperProof.lean",
+                "Benchmark/Cases/Example/Case/Proofs.lean",
+            ])
+            (case / "Proofs.lean").write_text("import ../outside\n", encoding="utf-8")
+            self.assertEqual(collect_reference_closure(root, "Benchmark.Cases.Example.Case.Proofs"), [
+                {"module": "Benchmark.Cases.Example.Case.Proofs", "path": "Benchmark/Cases/Example/Case/Proofs.lean", "sha256": hashlib.sha256((case / "Proofs.lean").read_bytes()).hexdigest()},
+            ])
+
+    def test_reference_closure_rejects_missing_helper_and_path_escape(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            case = root / "Benchmark/Cases/Example/Case"
+            case.mkdir(parents=True)
+            (case / "Proofs.lean").write_text("import Benchmark.Cases.Example.Case.HelperProof\n", encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "helper missing"):
+                collect_reference_closure(root, "Benchmark.Cases.Example.Case.Proofs")
+            with self.assertRaisesRegex(ValueError, "malformed Lean import"):
+                module_path(root, "Benchmark.Cases.Example.Case...outside")
+
+    def test_transitive_helper_mutation_and_axiom_are_rejected(self) -> None:
+        wildcat = next(entry for entry in self.references["tasks"] if entry["task_ref"] == "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity")
+        helper = ROOT / "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Slot0Proof.lean"
+        self.assertIn(str(helper.relative_to(ROOT)), [member["path"] for member in wildcat["reference_import_closure"]])
+        original = helper.read_text(encoding="utf-8")
+        try:
+            helper.write_text(original + "\naxiom injected_helper_escape : True\n", encoding="utf-8")
+            code, audit = self._validate()
+        finally:
+            helper.write_text(original, encoding="utf-8")
+        self.assertEqual(code, 1)
+        self.assertIn("forbidden reference escape hatch", audit["errors"][0])
 
     def test_implicit_v02_aggregate_has_only_canonical_cases(self) -> None:
         summary = aggregate_results([], "v0.2")["case_summary"]

@@ -25,6 +25,7 @@ from scripts.generate_v02_contract import (
     SOURCE_SELECTOR_COMMAND,
     SOURCE_SELECTOR_FILES,
 )
+from scripts.v02_reference_closure import collect_reference_closure
 
 MANIFEST = ROOT / "benchmark-versions" / "v0.2.json"
 REFERENCES = ROOT / "benchmark-versions" / "v0.2-references.json"
@@ -72,6 +73,30 @@ def load_json(path: Path) -> dict:
     if not isinstance(data, dict):
         fail(f"{path}: expected object")
     return data
+
+
+def lean_code(text: str) -> str:
+    """Remove Lean comments before looking for proof escape declarations."""
+    result: list[str] = []
+    index = 0
+    depth = 0
+    while index < len(text):
+        if text.startswith("/-", index):
+            depth += 1
+            index += 2
+        elif depth and text.startswith("-/", index):
+            depth -= 1
+            index += 2
+        elif depth:
+            index += 1
+        elif text.startswith("--", index):
+            newline = text.find("\n", index)
+            index = len(text) if newline == -1 else newline + 1
+            result.append("\n")
+        else:
+            result.append(text[index])
+            index += 1
+    return "".join(result)
 
 
 def run_lean(module: str, declaration: str) -> tuple[bool, str]:
@@ -179,7 +204,7 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             "benchmark": "ethereum-verification-benchmark",
             "benchmark_version": "0.2",
             "contract_kind": "canonical_reference_declarations",
-            "schema_version": 1,
+            "schema_version": 2,
             "source_commit": BASELINE,
             "canonical_manifest_path": str(MANIFEST.relative_to(ROOT)),
             "canonical_manifest_sha256": sha(MANIFEST),
@@ -212,6 +237,7 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
                 "reference_declaration",
                 "reference_module_path",
                 "reference_module_sha256",
+                "reference_import_closure",
             ):
                 if entry.get(field) != pinned_reference.get(field):
                     fail(f"{ref}: pinned reference {field} drift")
@@ -234,8 +260,21 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
                 fail(f"{ref}: reference module missing/path drift")
             if entry.get("reference_module_sha256") != sha(module_path):
                 fail(f"{ref}: reference module hash drift")
-            if ESCAPE.search(module_path.read_text(encoding="utf-8")):
-                fail(f"{ref}: forbidden reference escape hatch")
+            closure = entry.get("reference_import_closure")
+            if not isinstance(closure, list) or not closure:
+                fail(f"{ref}: malformed reference import closure")
+            for member in closure:
+                if not isinstance(member, dict) or set(member) != {"module", "path", "sha256"}:
+                    fail(f"{ref}: malformed reference import closure")
+                path = ROOT / member["path"] if isinstance(member.get("path"), str) else None
+                if path is None or not path.is_file():
+                    fail(f"{ref}: reference helper missing/hash drift")
+                if ESCAPE.search(lean_code(path.read_text(encoding="utf-8"))):
+                    fail(f"{ref}: forbidden reference escape hatch")
+                if member.get("sha256") != sha(path):
+                    fail(f"{ref}: reference helper missing/hash drift")
+            if closure != collect_reference_closure(ROOT, module):
+                fail(f"{ref}: reference import closure drift")
             if verify_lean and (index == 1 or index % 10 == 0 or index == len(refs)):
                 print(f"[v0.2-reference-validation] checking={index}/{len(refs)}", flush=True)
             valid, status = run_lean(module, declaration) if verify_lean else (True, "structural_valid")
