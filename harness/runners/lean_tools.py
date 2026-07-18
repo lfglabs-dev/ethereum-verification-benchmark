@@ -2724,6 +2724,7 @@ def _attempt_task_fair(
                     {
                         "error": "unadvertised_mcp_tool",
                         "tool": name,
+                        "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
                         "allowed_tools": sorted(mcp_allowed_tool_names),
                     },
                 )

@@ -696,6 +696,21 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
 
             self.assertEqual(check_run(run_dir), [])
 
+    def test_validator_rejects_legacy_builtin_mcp_without_preflight(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run.update({"harness_id": "builtin-lean-lsp", "schema_version": 1})
+            run.pop("execution_contract")
+            run.pop("mcp_lifecycle")
+            run["lean_lsp_mcp"] = {"package_version": "0.27.0"}
+            run["mcp_preflight"] = None
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            errors = check_run(run_dir)
+
+        self.assertIn("MCP lifecycle metadata missing minimum_lean_version", "\n".join(errors))
+        self.assertIn("missing MCP preflight result", "\n".join(errors))
+
     def test_validator_rejects_current_builtin_mcp_without_lifecycle(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_dir = self._missing_credentials_artifact(Path(tmp))

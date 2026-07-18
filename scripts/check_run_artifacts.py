@@ -190,33 +190,34 @@ def check_run(run_dir: Path) -> list[str]:
     if (
         is_mcp_backed
         and run.get("run_mode") in {"task", "group"}
-        and not _is_legacy_pre_mcp_builtin_artifact(run)
     ):
+        legacy_pre_mcp_builtin = _is_legacy_pre_mcp_builtin_artifact(run)
         if run.get("tool_backend") != "lean-lsp-mcp":
             errors.append(f"{run_dir}: canonical MCP run used non-MCP backend {run.get('tool_backend')!r}")
-        lifecycle = run.get("mcp_lifecycle")
         valid_pre_mcp_exit = False
-        if not isinstance(lifecycle, dict):
-            errors.append(f"{run_dir}: MCP-backed fair run missing MCP lifecycle state")
-        else:
-            lifecycle_status = lifecycle.get("status")
-            if lifecycle_status not in MCP_LIFECYCLE_STATUSES:
-                errors.append(f"{run_dir}: invalid MCP lifecycle status {lifecycle_status!r}")
-            elif lifecycle_status == "not_attempted":
-                reason = lifecycle.get("reason")
-                if reason not in PRE_MCP_REASONS:
-                    errors.append(f"{run_dir}: invalid pre-MCP reason {reason!r}")
-                elif (
-                    run.get("lean_lsp_mcp") is not None
-                    or run.get("mcp_preflight") is not None
-                    or run.get("provider_preflight") is not None
-                    or _has_model_or_tool_activity([run, response])
-                ):
-                    errors.append(f"{run_dir}: pre-MCP lifecycle claim has model or tool activity")
-                else:
-                    valid_pre_mcp_exit = True
-            elif lifecycle_status in {"impossible", "fallback"}:
-                errors.append(f"{run_dir}: MCP {lifecycle_status} lifecycle state is not valid for canonical runs")
+        if not legacy_pre_mcp_builtin:
+            lifecycle = run.get("mcp_lifecycle")
+            if not isinstance(lifecycle, dict):
+                errors.append(f"{run_dir}: MCP-backed fair run missing MCP lifecycle state")
+            else:
+                lifecycle_status = lifecycle.get("status")
+                if lifecycle_status not in MCP_LIFECYCLE_STATUSES:
+                    errors.append(f"{run_dir}: invalid MCP lifecycle status {lifecycle_status!r}")
+                elif lifecycle_status == "not_attempted":
+                    reason = lifecycle.get("reason")
+                    if reason not in PRE_MCP_REASONS:
+                        errors.append(f"{run_dir}: invalid pre-MCP reason {reason!r}")
+                    elif (
+                        run.get("lean_lsp_mcp") is not None
+                        or run.get("mcp_preflight") is not None
+                        or run.get("provider_preflight") is not None
+                        or _has_model_or_tool_activity([run, response])
+                    ):
+                        errors.append(f"{run_dir}: pre-MCP lifecycle claim has model or tool activity")
+                    else:
+                        valid_pre_mcp_exit = True
+                elif lifecycle_status in {"impossible", "fallback"}:
+                    errors.append(f"{run_dir}: MCP {lifecycle_status} lifecycle state is not valid for canonical runs")
         if not valid_pre_mcp_exit:
             # An MCP launch was attempted (or the artifact cannot prove a
             # legitimate pre-launch exit), so require full lifecycle evidence.
