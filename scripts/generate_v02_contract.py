@@ -14,8 +14,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 
-from scripts.compute_fingerprints import trusted_closure_helper_metadata, trusted_closure_helper_source
-from harness.v02_release import BASELINE_COMMIT, RELEASE_SOURCE
+from scripts.compute_fingerprints import environment_id, trusted_closure_helper_metadata, trusted_closure_helper_source
+from harness.v02_release import BASELINE_COMMIT, RELEASE_ENVIRONMENT, RELEASE_SOURCE
 
 BASELINE = BASELINE_COMMIT
 CREATED_AT = "2026-07-18"
@@ -146,6 +146,11 @@ def main() -> int:
     task_set_hash = digest_bytes(("\n".join(refs) + "\n").encode())
     manifest = {
         **version_metadata,
+        # v0.2's selector/task source is frozen at BASELINE, while its final
+        # pre-results execution environment is intentionally the current,
+        # reviewed Lake lockfile environment.
+        "environment_id": environment_id(),
+        "environment": RELEASE_ENVIRONMENT,
         "benchmark": "ethereum-verification-benchmark",
         "benchmark_version": "0.2",
         "contract_kind": "canonical_full_suite_selection",

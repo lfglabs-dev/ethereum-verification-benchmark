@@ -17,9 +17,10 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
 from harness.verify_lease import verify_lease
-from harness.v02_release import BASELINE_COMMIT, RELEASE_METADATA, RELEASE_SOURCE
+from harness.v02_release import BASELINE_COMMIT, RELEASE_ENVIRONMENT, RELEASE_METADATA, RELEASE_SOURCE
 from scripts.compute_fingerprints import (
     baseline_version_metadata,
+    environment_id,
     trusted_closure_helper_namespace,
 )
 
@@ -29,9 +30,9 @@ DEFAULT_AUDIT = ROOT / "artifacts" / "audits" / "p2-v02-reference-validation.jso
 IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_']*(?:\.[A-Za-z_][A-Za-z0-9_']*)*$")
 ESCAPE = re.compile(r"\b(?:sorry|admit|axiom)\b")
 
-# ``environment_id`` is release metadata, not an ambient validation value: v0.2
-# pins its baseline environment (including the Verity dependency revision).  A
-# later dependency update receives a new ID only when generating a new version.
+# v0.2 intentionally migrated its execution environment once before results.
+# The source/task contract remains rooted at BASELINE_COMMIT, but a frozen run
+# must fail closed if its live Lake environment no longer matches this release.
 VERSION_METADATA_FIELDS = (
     "benchmark",
     "benchmark_version",
@@ -45,7 +46,7 @@ VERSION_METADATA_FIELDS = (
     "mode",
     "budget",
 )
-MANIFEST_FIELDS = frozenset((*VERSION_METADATA_FIELDS, "contract_kind", "schema_version", "source", "task_set_sha256", "tasks", "task_manifest_sha256"))
+MANIFEST_FIELDS = frozenset((*VERSION_METADATA_FIELDS, "environment", "contract_kind", "schema_version", "source", "task_set_sha256", "tasks", "task_manifest_sha256"))
 REFERENCE_FIELDS = frozenset(("benchmark", "benchmark_version", "contract_kind", "schema_version", "source_commit", "canonical_manifest_path", "canonical_manifest_sha256", "task_count", "task_set_sha256", "tasks"))
 
 
@@ -170,11 +171,19 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail("release trust-root source provenance drift")
         if {field: manifest.get(field) for field in VERSION_METADATA_FIELDS} != RELEASE_METADATA:
             fail("release trust-root version metadata drift")
+        if manifest.get("environment") != RELEASE_ENVIRONMENT:
+            fail("release trust-root environment provenance drift")
+        if environment_id() != manifest["environment_id"]:
+            fail("runtime environment identity drift")
         try:
             baseline_metadata = baseline_version_metadata(BASELINE_COMMIT, version="0.2", created_at=RELEASE_METADATA["created_at"])
         except ValueError as exc:
             fail(f"pinned source unavailable (infra): {exc}")
-        if {field: manifest.get(field) for field in VERSION_METADATA_FIELDS} != baseline_metadata:
+        # The source commit predates the final, explicitly reviewed v0.2
+        # environment migration; every other version identity field must still
+        # agree with the source-derived frozen contract.
+        baseline_fields = tuple(field for field in VERSION_METADATA_FIELDS if field != "environment_id")
+        if {field: manifest.get(field) for field in baseline_fields} != {field: baseline_metadata.get(field) for field in baseline_fields}:
             fail("pinned baseline version metadata drift")
         # Verify before executing its closure algorithm; it is never imported
         # from the mutable candidate checkout.
