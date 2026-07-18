@@ -2296,6 +2296,12 @@ def _attempt_task_fair(
     native_tools = DEFAULT_NATIVE_TOOLS if native_tools is None else native_tools
 
     mcp_tools = mcp_session.tools if mcp_session is not None else None
+    mcp_allowed_tool_names = {
+        str(function["name"])
+        for tool in _fair_tools(mcp_tools)
+        if isinstance((function := tool.get("function")), dict)
+        and isinstance(function.get("name"), str)
+    }
     if mcp_session is not None:
         mcp_names = ", ".join(
             str(tool.get("function", {}).get("name"))
@@ -2477,7 +2483,16 @@ def _attempt_task_fair(
             )
             tool_call_id = detail.get("tool_call_id")
             tool_name = detail.get("tool")
-            if isinstance(tool_call_id, str) and isinstance(tool_name, str):
+            # A native assistant tool call must be answered by the matching
+            # tool result.  JSON-text fallback calls have synthetic ids, not
+            # an OpenAI tool-call lifecycle, so keep their correction as a
+            # user message instead.
+            if (
+                native_tools
+                and detail.get("text_protocol") is not True
+                and isinstance(tool_call_id, str)
+                and isinstance(tool_name, str)
+            ):
                 messages.append({"role": "tool", "tool_call_id": tool_call_id, "name": tool_name, "content": corrective})
             else:
                 messages.append({"role": "user", "content": corrective})
@@ -2685,6 +2700,7 @@ def _attempt_task_fair(
                         "error": "malformed_tool_arguments",
                         "tool": name if isinstance(name, str) else None,
                         "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "text_protocol": tool_call.get("text_protocol") is True,
                         "message": str(exc),
                         "arguments_preview": str(raw_args)[:500],
                     },
@@ -2700,6 +2716,7 @@ def _attempt_task_fair(
                         "error": "malformed_tool_arguments",
                         "tool": name if isinstance(name, str) else None,
                         "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "text_protocol": tool_call.get("text_protocol") is True,
                         "message": "tool arguments must decode to an object",
                     },
                 )
@@ -2708,6 +2725,21 @@ def _attempt_task_fair(
                 continue
             if not isinstance(name, str):
                 failure = protocol_failure("invalid_tool_call", request_index, {"error": "tool call missing function name", "tool_call": _shrink_strings(tool_call, 300)})
+                if failure is not None:
+                    return failure
+                continue
+            if mcp_session is not None and name not in mcp_allowed_tool_names:
+                failure = protocol_failure(
+                    "invalid_tool_call",
+                    request_index,
+                    {
+                        "error": "unadvertised_mcp_tool",
+                        "tool": name,
+                        "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "text_protocol": tool_call.get("text_protocol") is True,
+                        "allowed_tools": sorted(mcp_allowed_tool_names),
+                    },
+                )
                 if failure is not None:
                     return failure
                 continue
@@ -3001,8 +3033,8 @@ def run_group(
     task_ref: str | None = None,
     harness_id: str = HARNESS_ID,
     run_slug: str = RUN_SLUG,
-    track: str = "group/lean_tools",
-    tool_backend: str = "builtin",
+    track: str = "group/lean_tools_mcp",
+    tool_backend: str = "lean-lsp-mcp",
 ) -> tuple[int, Path]:
     if max_attempts < 0:
         raise ValueError("max_attempts must be non-negative")
@@ -3037,8 +3069,8 @@ def run_group(
         "max_turns": None,
         "completion_token_budget": DEFAULT_TOKEN_BUDGET,
     }
-    if tool_backend not in {"builtin", "lean-lsp-mcp"}:
-        raise ValueError(f"unknown builtin tool backend: {tool_backend}")
+    if tool_backend not in {"lean-lsp-mcp"}:
+        raise ValueError(f"unsupported non-MCP tool backend: {tool_backend}")
     op_budget = operational_budget()
     budgets = {
         "benchmark_budget": benchmark_budget,
@@ -3074,6 +3106,24 @@ def run_group(
         else "infra_target_warm_timeout"
         if target_warm_timed_out
         else None
+    )
+    pre_mcp_reason = (
+        "dry_run"
+        if dry_run
+        else "missing_credentials"
+        if not credentials_available
+        else "dependency_warm_failed"
+        if dependency_warm_failed
+        else "target_warm_failed"
+        if target_warm_timed_out
+        else None
+    )
+    # This is an execution contract, rather than an inference from terminal
+    # status: only these four paths may finish before an MCP launch is tried.
+    mcp_lifecycle: dict[str, object] = (
+        {"status": "not_attempted", "reason": pre_mcp_reason}
+        if pre_mcp_reason is not None
+        else {"status": "started"}
     )
     if dry_run:
         response = {
@@ -3164,11 +3214,13 @@ def run_group(
         preflight: dict[str, object] | None = None
         mcp_session: LeanLspMcpSession | None = None
         mcp_metadata: dict[str, object] | None = None
+        mcp_started = False
         mcp_preflight_passed = tool_backend != "lean-lsp-mcp"
         try:
             if tool_backend == "lean-lsp-mcp":
                 mcp_session = LeanLspMcpSession(built.path)
                 mcp_session.start()
+                mcp_started = True
                 mcp_metadata = mcp_session.metadata()
                 mcp_preflight_passed = True
             preflight = _role_provider_preflight(base_url)
@@ -3314,8 +3366,12 @@ def run_group(
             if mcp_session is not None:
                 mcp_session.close()
                 mcp_metadata = mcp_session.metadata()
+            if mcp_started:
+                mcp_lifecycle["status"] = "completed"
         if mcp_metadata is not None:
             response["lean_lsp_mcp"] = mcp_metadata
+
+    response["mcp_lifecycle"] = mcp_lifecycle
 
     if response.get("provider_setup_error") and not response.get("tasks"):
         provider_error = str(response.get("error") or "provider setup failed before model execution")
@@ -3379,7 +3435,10 @@ def run_group(
     )
     classification = classify_run(verifier_result, response.get("tasks") if isinstance(response.get("tasks"), list) else [])
     run = {
-        "schema_version": 1,
+        # v2 identifies the canonical default as an MCP execution contract.
+        # v1 default/builtin records remain readable as historical artifacts.
+        "schema_version": 2,
+        "execution_contract": "default-mcp-v1",
         "run_id": run_id,
         "harness_id": harness_id,
         "provider": _active_provider(),
@@ -3396,6 +3455,7 @@ def run_group(
         "track": track,
         "mode": "fair",
         "tool_backend": tool_backend,
+        "mcp_lifecycle": response.get("mcp_lifecycle"),
         "lean_lsp_mcp": response.get("lean_lsp_mcp"),
         "run_mode": "task" if task_ref else "group",
         "group_id": group_id,

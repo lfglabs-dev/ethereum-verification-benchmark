@@ -22,7 +22,7 @@ class HarnessV02Tests(unittest.TestCase):
         with patch(
             "scripts.validate_v02_reference_contract.ensure_structural_contract",
             side_effect=ValueError("reference proof hash drift"),
-        ), patch("harness.cli.run_lean_tools_group") as runner:
+        ), patch("harness.cli.run_lean_tools_mcp_group") as runner:
             with self.assertRaisesRegex(ValueError, "reference proof hash drift"):
                 cli.run_group(
                     "ethereum/deposit_contract_minimal", "default", "v0.2",
@@ -55,7 +55,7 @@ class HarnessV02Tests(unittest.TestCase):
                     references.write_text(contents, encoding="utf-8")
                 with patch.object(validator, "MANIFEST", manifest), patch.object(
                     validator, "REFERENCES", references
-                ), patch("harness.cli.run_lean_tools_group") as runner, patch.object(
+                ), patch("harness.cli.run_lean_tools_mcp_group") as runner, patch.object(
                     validator, "run_lean"
                 ) as verifier:
                     with self.assertRaisesRegex(ValueError, "v0.2 reference preflight failed"):
@@ -65,6 +65,29 @@ class HarnessV02Tests(unittest.TestCase):
                         )
                 runner.assert_not_called()
                 verifier.assert_not_called()
+
+    def test_default_dispatches_only_to_mcp_runner_without_provider_setup(self) -> None:
+        """The canonical default must not select the bespoke Lean loop or shell agents."""
+        with patch("harness.cli.run_lean_tools_mcp_group", return_value=(0, Path("/tmp/mcp"))) as mcp:
+            code, run_dir = cli.run_group(
+                "ethereum/deposit_contract_minimal", "default", "active",
+                False, True, 1, 1, 1, 4,
+            )
+
+        self.assertEqual((code, run_dir), (0, Path("/tmp/mcp")))
+        mcp.assert_called_once()
+        self.assertNotIn("run_lean_tools_group", cli.__dict__)
+        self.assertNotIn("run_shell_group", cli.__dict__)
+
+    def test_default_profile_is_the_only_runnable_mcp_profile(self) -> None:
+        root = Path(__file__).resolve().parent.parent
+        profile = json.loads((root / "harness/agents/default.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(profile["command"][:3], ["python3", "-m", "harness.runners.lean_tools_mcp"])
+        self.assertEqual(profile["track"], "group/lean_tools_mcp")
+        self.assertEqual(profile["lean_lsp_mcp_version"], "0.28.0")
+        for obsolete in ("builtin-lean-lsp.json", "grok-build.json", "vibe-lean-lsp.json", "opencode.json"):
+            self.assertFalse((root / "harness/agents" / obsolete).exists())
 
     def test_target_warming_stops_after_first_timeout(self) -> None:
         tasks = [

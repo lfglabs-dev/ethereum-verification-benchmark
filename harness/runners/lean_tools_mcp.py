@@ -1,19 +1,16 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 
 try:
     from . import lean_tools
-    from ..transport import DEFAULT_BASE_URL, endpoint_smoke
 except ImportError:
     import lean_tools
-    from transport import DEFAULT_BASE_URL, endpoint_smoke
 
 
-HARNESS_ID = "builtin-lean-lsp"
-RUN_SLUG = "builtin-lean-lsp"
+HARNESS_ID = "default"
+RUN_SLUG = "default"
 TRACK = "group/lean_tools_mcp"
 
 
@@ -27,7 +24,7 @@ def run_group(
     max_tool_calls: int = lean_tools.DEFAULT_MAX_TOOL_CALLS,
     task_ref: str | None = None,
 ) -> tuple[int, Path]:
-    """Run the builtin fair loop with lean-lsp-mcp as its Lean IDE backend."""
+    """Run the canonical fair loop with lean-lsp-mcp as its Lean IDE backend."""
     return lean_tools.run_group(
         group_id,
         suite=suite,
@@ -45,10 +42,9 @@ def run_group(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Builtin fair harness backed by lean-lsp-mcp"
+        description="Canonical fair harness backed by lean-lsp-mcp"
     )
     sub = parser.add_subparsers(dest="command", required=True)
-    sub.add_parser("smoke")
     run = sub.add_parser("run-group")
     run.add_argument("group_id")
     run.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
@@ -58,9 +54,6 @@ def main() -> int:
     run.add_argument("--max-tool-calls", type=int, default=lean_tools.DEFAULT_MAX_TOOL_CALLS)
     run.add_argument("--task-ref")
     args = parser.parse_args()
-    if args.command == "smoke":
-        print(json.dumps(endpoint_smoke(DEFAULT_BASE_URL, lean_tools.DEFAULT_DRIVER_MODEL), indent=2))
-        return 0
     code, run_dir = run_group(
         args.group_id,
         suite=args.suite,

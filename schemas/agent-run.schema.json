@@ -43,6 +43,25 @@
       "type": "number",
       "minimum": 0
     },
+    "mcp_lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": ["not_attempted", "started", "completed", "impossible", "fallback"]
+        },
+        "reason": {
+          "enum": ["dry_run", "missing_credentials", "dependency_warm_failed", "target_warm_failed"]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "not_attempted"}}},
+          "then": {"required": ["reason"]}
+        }
+      ]
+    },
     "status": {
       "enum": ["dry_run", "passed", "failed"]
     },
