@@ -26,10 +26,19 @@ def load_v02_task_refs() -> list[str]:
         raise ValueError(f"cannot load canonical v0.2 contract: {exc}") from exc
     if data.get("schema_version") != 2 or data.get("benchmark_version") != "0.2":
         raise ValueError("canonical v0.2 contract has incompatible schema/version")
-    tasks = data.get("tasks")
+    task_objects = data.get("tasks")
     hashes = data.get("task_manifest_sha256")
-    if not isinstance(tasks, list) or not all(isinstance(item, str) and item for item in tasks):
+    if not isinstance(task_objects, list) or not all(isinstance(item, dict) for item in task_objects):
         raise ValueError("canonical v0.2 contract has malformed tasks")
+    tasks = [item.get("task_ref") for item in task_objects]
+    if not all(isinstance(item, str) and item for item in tasks):
+        raise ValueError("canonical v0.2 contract has malformed task refs")
+    if data.get("manifest_schema_version") != 1 or any(
+        not isinstance(item.get("task_fingerprint"), str)
+        or not isinstance(item.get("task_interface_id"), str)
+        for item in task_objects
+    ):
+        raise ValueError("canonical v0.2 contract has malformed version task metadata")
     if not isinstance(hashes, dict) or set(hashes) != set(tasks):
         raise ValueError("canonical v0.2 contract has missing or duplicate task mappings")
     if len(tasks) != len(set(tasks)) or data.get("task_count") != len(tasks):

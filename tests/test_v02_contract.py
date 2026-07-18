@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -60,13 +61,16 @@ class V02ContractTests(unittest.TestCase):
             return code, json.loads(audit_path.read_text())
 
     def test_selector_is_frozen_and_operational(self) -> None:
-        self.assertEqual(discover_task_refs("v0.2"), self.manifest["tasks"])
+        self.assertEqual(discover_task_refs("v0.2"), [task["task_ref"] for task in self.manifest["tasks"]])
         self.assertEqual(self.manifest["task_count"], 240)
+        self.assertEqual(self.manifest["manifest_schema_version"], 1)
+        self.assertTrue(all(task["task_fingerprint"].startswith("sha256:") for task in self.manifest["tasks"]))
+        self.assertTrue(all(task["task_interface_id"].startswith("sha256:") for task in self.manifest["tasks"]))
 
     def test_implicit_v02_aggregate_has_only_canonical_cases(self) -> None:
         summary = aggregate_results([], "v0.2")["case_summary"]
         canonical_case_ids = {
-            "/".join(task_ref.split("/")[:2]) for task_ref in self.manifest["tasks"]
+            "/".join(task["task_ref"].split("/")[:2]) for task in self.manifest["tasks"]
         }
         self.assertEqual(summary["total_cases"], 37)
         self.assertEqual({row["case_id"] for row in summary["cases"]}, canonical_case_ids)
@@ -88,7 +92,7 @@ class V02ContractTests(unittest.TestCase):
 
     def test_duplicate_mapping_is_rejected(self) -> None:
         def mutate(manifest, _references):
-            manifest["tasks"][1] = manifest["tasks"][0]
+            manifest["tasks"][1]["task_ref"] = manifest["tasks"][0]["task_ref"]
 
         code, audit = self._validate(mutate)
         self.assertEqual(code, 1)
@@ -96,11 +100,19 @@ class V02ContractTests(unittest.TestCase):
 
     def test_task_manifest_hash_drift_is_rejected(self) -> None:
         def mutate(manifest, _references):
-            manifest["task_manifest_sha256"][manifest["tasks"][0]] = "0" * 64
+            manifest["task_manifest_sha256"][manifest["tasks"][0]["task_ref"]] = "0" * 64
 
         code, audit = self._validate(mutate)
         self.assertEqual(code, 1)
         self.assertIn("task manifest hash drift", audit["errors"][0])
+
+    def test_task_object_metadata_drift_is_rejected(self) -> None:
+        def mutate(manifest, _references):
+            manifest["tasks"][0].pop("task_fingerprint")
+
+        code, audit = self._validate(mutate)
+        self.assertEqual(code, 1)
+        self.assertIn("version task metadata malformed", audit["errors"][0])
 
     def test_baseline_selector_hash_drift_is_rejected(self) -> None:
         def mutate(manifest, _references):
@@ -127,3 +139,42 @@ class V02ContractTests(unittest.TestCase):
         code, audit = self._validate(escape=True)
         self.assertEqual(code, 1)
         self.assertIn("forbidden reference escape hatch", audit["errors"][0])
+
+    def test_version_manifest_consumers_accept_canonical_task_objects(self) -> None:
+        """Exercise the published consumers' real CLI parse/use paths for v0.2."""
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            directory = Path(directory)
+            results = directory / "results.json"
+            results.write_text(json.dumps({"models": []}), encoding="utf-8")
+            plan = subprocess.run(
+                [
+                    sys.executable,
+                    "scripts/plan_rerun.py",
+                    "--from", "benchmark-versions/v0.2.json",
+                    "--to", "benchmark-versions/v0.2.json",
+                    "--model", "compatibility-fixture",
+                    "--results-manifest", str(results),
+                    "--format", "json",
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+            self.assertEqual(json.loads(plan.stdout)["rerun_count"], 240)
+            out = directory / "aggregate"
+            aggregate = subprocess.run(
+                [
+                    sys.executable,
+                    "scripts/aggregate_version.py",
+                    "--version", "benchmark-versions/v0.2.json",
+                    "--results-manifest", str(results),
+                    "--out-dir", str(out),
+                ],
+                cwd=ROOT,
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+            self.assertIn("aggregated benchmark v0.2: 0 model row(s)", aggregate.stdout)
+            self.assertEqual(json.loads((out / "results.json").read_text())["task_count"], 240)

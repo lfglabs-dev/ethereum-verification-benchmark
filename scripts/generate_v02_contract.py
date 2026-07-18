@@ -44,13 +44,17 @@ def baseline_worktree() -> Path:
 
 
 def read_baseline_contract_inputs(worktree: Path) -> dict[str, object]:
-    """Load selector, manifests and reference declarations from the pinned tree."""
+    """Load selector, version-manifest metadata and references from the pinned tree."""
     program = """
 import hashlib, json
 from pathlib import Path
+from scripts.compute_fingerprints import build_version_manifest
 from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
 root = Path.cwd()
 refs = discover_task_refs('all')
+version_manifest = build_version_manifest('0.2', created_at='2026-07-18', suite='all')
+if [task['task_ref'] for task in version_manifest['tasks']] != refs:
+    raise SystemExit('version-manifest all-suite task order differs from production selector')
 entries = []
 for ref in refs:
     task_path = resolve_task_manifest(ref)
@@ -72,7 +76,9 @@ for ref in refs:
         'reference_module_path': str(module_path.relative_to(root)),
         'reference_module_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
     })
-print(json.dumps({'refs': refs, 'entries': entries}))
+print(json.dumps({'refs': refs, 'tasks': version_manifest['tasks'], 'version_metadata': {
+    key: value for key, value in version_manifest.items() if key != 'tasks'
+}, 'entries': entries}))
 """
     completed = subprocess.run(
         [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=True
@@ -91,6 +97,8 @@ def main() -> int:
     with baseline_worktree() as worktree:
         baseline = read_baseline_contract_inputs(worktree)
         refs = baseline["refs"]
+        tasks = baseline["tasks"]
+        version_metadata = baseline["version_metadata"]
         reference_entries = baseline["entries"]
         selector_files_sha256 = {
             path: digest_file(worktree / path)
@@ -98,6 +106,12 @@ def main() -> int:
         }
     if not isinstance(refs, list) or not all(isinstance(ref, str) for ref in refs):
         raise SystemExit("baseline all-suite selector returned malformed task refs")
+    if not isinstance(tasks, list) or not all(isinstance(task, dict) for task in tasks):
+        raise SystemExit("baseline version manifest returned malformed task objects")
+    if [task.get("task_ref") for task in tasks] != refs:
+        raise SystemExit("baseline version manifest task objects differ from all-suite selector")
+    if not isinstance(version_metadata, dict):
+        raise SystemExit("baseline version manifest returned malformed metadata")
     if not isinstance(reference_entries, list) or not all(isinstance(entry, dict) for entry in reference_entries):
         raise SystemExit("baseline all-suite selector returned malformed reference entries")
     if len(refs) != len(set(refs)):
@@ -111,14 +125,15 @@ def main() -> int:
     task_hashes = {entry["task_ref"]: entry["task_manifest_sha256"] for entry in reference_entries}
     task_set_hash = digest_bytes(("\n".join(refs) + "\n").encode())
     manifest = {
+        **version_metadata,
         "benchmark": "ethereum-verification-benchmark",
         "benchmark_version": "0.2",
         "contract_kind": "canonical_full_suite_selection",
         "schema_version": 2,
         "source": source,
-        "task_count": len(refs),
+        "task_count": len(tasks),
         "task_set_sha256": task_set_hash,
-        "tasks": refs,
+        "tasks": tasks,
         "task_manifest_sha256": task_hashes,
     }
     dump(MANIFEST, manifest)

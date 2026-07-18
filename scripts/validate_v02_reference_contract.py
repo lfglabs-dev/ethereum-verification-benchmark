@@ -86,10 +86,18 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
         for path, expected in selector_hashes.items():
             if not isinstance(path, str) or not isinstance(expected, str) or baseline_file_sha(source["commit"], path) != expected:
                 fail(f"baseline selector source hash drift: {path}")
-        refs = manifest.get("tasks")
+        task_objects = manifest.get("tasks")
         mappings = manifest.get("task_manifest_sha256")
-        if not isinstance(refs, list) or not all(isinstance(ref, str) for ref in refs):
+        if not isinstance(task_objects, list) or not all(isinstance(task, dict) for task in task_objects):
             fail("manifest task list malformed")
+        refs = [task.get("task_ref") for task in task_objects]
+        if not all(isinstance(ref, str) for ref in refs):
+            fail("manifest task list malformed")
+        if manifest.get("manifest_schema_version") != 1:
+            fail("version manifest schema drift")
+        for task in task_objects:
+            if not isinstance(task.get("task_fingerprint"), str) or not isinstance(task.get("task_interface_id"), str):
+                fail(f"{task.get('task_ref')}: version task metadata malformed")
         if len(refs) != len(set(refs)) or manifest.get("task_count") != len(refs):
             fail("manifest task list duplicate/count drift")
         if discover_task_refs("all") != refs:

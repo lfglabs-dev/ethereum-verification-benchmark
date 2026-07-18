@@ -2,7 +2,7 @@
   "benchmark": "ethereum-verification-benchmark",
   "benchmark_version": "0.2",
   "canonical_manifest_path": "benchmark-versions/v0.2.json",
-  "canonical_manifest_sha256": "4dad326bd570664eb28a10cec98cd8c265c49fdd3d156e756a90ba0723b2d7a5",
+  "canonical_manifest_sha256": "b8f858aef1ae9c2e54f14800ec1b9cf2f6fceef54b8af92aeced133602dbabf5",
   "contract_kind": "canonical_reference_declarations",
   "schema_version": 1,
   "source_commit": "c5a2344b121040445ccd745a3f839548ca8f9158",
