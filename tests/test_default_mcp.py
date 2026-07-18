@@ -392,7 +392,13 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
                 {"choices": [{"message": {"role": "assistant", "content": '{"tool":"check_proof","arguments":{"proof":"trivial"}}'}}], "usage": {}},
             ]
 
-            with mock.patch.object(lean_tools, "chat_completion", side_effect=responses), mock.patch.object(
+            observed_messages: list[list[dict[str, object]]] = []
+
+            def fake_chat(messages: list[dict[str, object]], **_kwargs: object) -> dict[str, object]:
+                observed_messages.append(list(messages))
+                return responses.pop(0)
+
+            with mock.patch.object(lean_tools, "chat_completion", side_effect=fake_chat), mock.patch.object(
                 lean_tools, "_run_lean_module", return_value=(0, "")
             ):
                 result = lean_tools._attempt_task_fair(
@@ -409,6 +415,43 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertEqual(result["tool_calls_executed"], 1)
         self.assertNotIn("try_tactics", [name for name, _args in session.calls])
         self.assertIn("unadvertised_mcp_tool", conversation)
+        self.assertEqual(observed_messages[1][-1]["role"], "user")
+
+    def test_native_unadvertised_mcp_tool_gets_matching_tool_response(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            editable = "Benchmark/Generated/Sample.lean"
+            proof_path = workspace / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem sample : True := by\n  exact ?_\n", encoding="utf-8")
+            session = _FakeMcpSession()
+            responses = [
+                {"choices": [{"message": {"role": "assistant", "content": None, "tool_calls": [{"id": "forbidden-1", "type": "function", "function": {"name": "try_tactics", "arguments": '{"tactics":["trivial"]}'}}]}}], "usage": {}},
+                {"choices": [{"message": {"role": "assistant", "content": None, "tool_calls": [{"id": "proof-1", "type": "function", "function": {"name": "check_proof", "arguments": '{"proof":"trivial"}'}}]}}], "usage": {}},
+            ]
+            observed_messages: list[list[dict[str, object]]] = []
+
+            def fake_chat(messages: list[dict[str, object]], **_kwargs: object) -> dict[str, object]:
+                observed_messages.append(list(messages))
+                return responses.pop(0)
+
+            with mock.patch.object(lean_tools, "chat_completion", side_effect=fake_chat), mock.patch.object(
+                lean_tools, "_run_lean_module", return_value=(0, "")
+            ):
+                result = lean_tools._attempt_task_fair(
+                    {"task_ref": "sample/group/task", "task_id": "task", "editable_files": [editable], "target_module": "Benchmark.Generated.Sample", "theorem_name": "sample"},
+                    workspace, base_url="http://localhost:8000/v1", max_attempts=1,
+                    max_tool_calls=4, attempts_dir=workspace / "attempts",
+                    tool_log_path=workspace / "tools.jsonl", conversation_log_path=workspace / "conversation.jsonl",
+                    native_tools=True, mcp_session=session,
+                )
+
+        self.assertEqual(result["status"], "lean_passed")
+        self.assertNotIn("try_tactics", [name for name, _args in session.calls])
+        corrective = observed_messages[1][-1]
+        self.assertEqual(corrective["role"], "tool")
+        self.assertEqual(corrective["tool_call_id"], "forbidden-1")
+        self.assertEqual(corrective["name"], "try_tactics")
 
     def test_mcp_setup_precedes_and_short_circuits_provider_preflight(self) -> None:
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(
@@ -710,6 +753,22 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
 
         self.assertIn("MCP lifecycle metadata missing minimum_lean_version", "\n".join(errors))
         self.assertIn("missing MCP preflight result", "\n".join(errors))
+
+    def test_validator_accepts_legacy_builtin_pre_mcp_exits(self) -> None:
+        for status in ("dry_run", "missing_credentials"):
+            with self.subTest(status=status), tempfile.TemporaryDirectory() as tmp:
+                run_dir = self._missing_credentials_artifact(Path(tmp))
+                run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+                response = json.loads((run_dir / "harness-response.json").read_text(encoding="utf-8"))
+                run.update({"harness_id": "builtin-lean-lsp", "schema_version": 1, "harness_status": status})
+                response["status"] = status
+                for record in (run, response):
+                    record.pop("execution_contract", None)
+                    record.pop("mcp_lifecycle", None)
+                (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+                (run_dir / "harness-response.json").write_text(json.dumps(response), encoding="utf-8")
+
+                self.assertEqual(check_run(run_dir), [])
 
     def test_validator_rejects_current_builtin_mcp_without_lifecycle(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

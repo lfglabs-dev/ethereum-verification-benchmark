@@ -2483,7 +2483,11 @@ def _attempt_task_fair(
             )
             tool_call_id = detail.get("tool_call_id")
             tool_name = detail.get("tool")
-            if isinstance(tool_call_id, str) and isinstance(tool_name, str):
+            # A native assistant tool call must be answered by the matching
+            # tool result.  JSON-text fallback calls have synthetic ids, not
+            # an OpenAI tool-call lifecycle, so keep their correction as a
+            # user message instead.
+            if native_tools and isinstance(tool_call_id, str) and isinstance(tool_name, str):
                 messages.append({"role": "tool", "tool_call_id": tool_call_id, "name": tool_name, "content": corrective})
             else:
                 messages.append({"role": "user", "content": corrective})

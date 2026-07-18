@@ -88,6 +88,28 @@ def _is_legacy_pre_mcp_builtin_artifact(run: dict[str, object]) -> bool:
     )
 
 
+def _has_valid_legacy_pre_mcp_exit(run: dict[str, object], response: dict[str, object]) -> bool:
+    """Recognize the only historical lifecycle which predates MCP fields.
+
+    Old builtin artifacts that deliberately stopped before MCP startup recorded
+    the terminal run/response status, but not the later lifecycle fields.  Do
+    not extend this exception to records which claim to have started MCP: any
+    setup metadata or preflight record must still be complete and valid.
+    """
+    status = run.get("harness_status")
+    return (
+        _is_legacy_pre_mcp_builtin_artifact(run)
+        and status in {"dry_run", "missing_credentials"}
+        and response.get("status") == status
+        and run.get("mcp_lifecycle") is None
+        and response.get("mcp_lifecycle") is None
+        and run.get("lean_lsp_mcp") is None
+        and run.get("mcp_preflight") is None
+        and run.get("provider_preflight") is None
+        and not _has_model_or_tool_activity([run, response])
+    )
+
+
 def check_run(run_dir: Path) -> list[str]:
     errors: list[str] = []
     if run_dir.is_file() and run_dir.name == "run.json":
@@ -195,7 +217,9 @@ def check_run(run_dir: Path) -> list[str]:
         if run.get("tool_backend") != "lean-lsp-mcp":
             errors.append(f"{run_dir}: canonical MCP run used non-MCP backend {run.get('tool_backend')!r}")
         valid_pre_mcp_exit = False
-        if not legacy_pre_mcp_builtin:
+        if legacy_pre_mcp_builtin:
+            valid_pre_mcp_exit = _has_valid_legacy_pre_mcp_exit(run, response)
+        else:
             lifecycle = run.get("mcp_lifecycle")
             if not isinstance(lifecycle, dict):
                 errors.append(f"{run_dir}: MCP-backed fair run missing MCP lifecycle state")
