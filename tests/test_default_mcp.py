@@ -453,6 +453,40 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertEqual(corrective["tool_call_id"], "forbidden-1")
         self.assertEqual(corrective["name"], "try_tactics")
 
+    def test_native_text_fallback_unadvertised_tool_gets_user_correction(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            editable = "Benchmark/Generated/Sample.lean"
+            proof_path = workspace / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem sample : True := by\n  exact ?_\n", encoding="utf-8")
+            session = _FakeMcpSession()
+            responses = [
+                {"choices": [{"message": {"role": "assistant", "content": '{"tool":"try_tactics","arguments":{"tactics":["trivial"]}}'}}], "usage": {}},
+                {"choices": [{"message": {"role": "assistant", "content": '{"tool":"check_proof","arguments":{"proof":"trivial"}}'}}], "usage": {}},
+            ]
+            observed_messages: list[list[dict[str, object]]] = []
+
+            def fake_chat(messages: list[dict[str, object]], **_kwargs: object) -> dict[str, object]:
+                observed_messages.append(list(messages))
+                return responses.pop(0)
+
+            with mock.patch.object(lean_tools, "chat_completion", side_effect=fake_chat), mock.patch.object(
+                lean_tools, "_run_lean_module", return_value=(0, "")
+            ):
+                result = lean_tools._attempt_task_fair(
+                    {"task_ref": "sample/group/task", "task_id": "task", "editable_files": [editable], "target_module": "Benchmark.Generated.Sample", "theorem_name": "sample"},
+                    workspace, base_url="http://localhost:8000/v1", max_attempts=1,
+                    max_tool_calls=4, attempts_dir=workspace / "attempts",
+                    tool_log_path=workspace / "tools.jsonl", conversation_log_path=workspace / "conversation.jsonl",
+                    native_tools=True, mcp_session=session,
+                )
+
+        self.assertEqual(result["status"], "lean_passed")
+        corrective = observed_messages[1][-1]
+        self.assertEqual(corrective["role"], "user")
+        self.assertNotIn("tool_call_id", corrective)
+
     def test_mcp_setup_precedes_and_short_circuits_provider_preflight(self) -> None:
         with tempfile.TemporaryDirectory() as tmp, mock.patch.object(
             lean_tools, "RESULTS_DIR", Path(tmp) / "results"

@@ -2487,7 +2487,12 @@ def _attempt_task_fair(
             # tool result.  JSON-text fallback calls have synthetic ids, not
             # an OpenAI tool-call lifecycle, so keep their correction as a
             # user message instead.
-            if native_tools and isinstance(tool_call_id, str) and isinstance(tool_name, str):
+            if (
+                native_tools
+                and detail.get("text_protocol") is not True
+                and isinstance(tool_call_id, str)
+                and isinstance(tool_name, str)
+            ):
                 messages.append({"role": "tool", "tool_call_id": tool_call_id, "name": tool_name, "content": corrective})
             else:
                 messages.append({"role": "user", "content": corrective})
@@ -2695,6 +2700,7 @@ def _attempt_task_fair(
                         "error": "malformed_tool_arguments",
                         "tool": name if isinstance(name, str) else None,
                         "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "text_protocol": tool_call.get("text_protocol") is True,
                         "message": str(exc),
                         "arguments_preview": str(raw_args)[:500],
                     },
@@ -2710,6 +2716,7 @@ def _attempt_task_fair(
                         "error": "malformed_tool_arguments",
                         "tool": name if isinstance(name, str) else None,
                         "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "text_protocol": tool_call.get("text_protocol") is True,
                         "message": "tool arguments must decode to an object",
                     },
                 )
@@ -2729,6 +2736,7 @@ def _attempt_task_fair(
                         "error": "unadvertised_mcp_tool",
                         "tool": name,
                         "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "text_protocol": tool_call.get("text_protocol") is True,
                         "allowed_tools": sorted(mcp_allowed_tool_names),
                     },
                 )
