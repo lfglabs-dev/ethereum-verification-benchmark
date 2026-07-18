@@ -17,7 +17,11 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
 from harness.verify_lease import verify_lease
-from scripts.compute_fingerprints import baseline_version_metadata
+from scripts.compute_fingerprints import (
+    baseline_version_metadata,
+    trusted_closure_helper_metadata,
+    trusted_closure_helper_source,
+)
 from scripts.generate_v02_contract import (
     BASELINE,
     CREATED_AT,
@@ -142,6 +146,10 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail(f"pinned source unavailable (infra): {exc}")
         if {field: manifest.get(field) for field in VERSION_METADATA_FIELDS} != baseline_metadata:
             fail("pinned baseline version metadata drift")
+        # Verify the checked-out helper before importing its closure algorithm.
+        # Its bytes are independently pinned because v0.2's source commit
+        # predates this helper.
+        trusted_closure_helper_source()
         expected_source = {
             "commit": BASELINE,
             "entrypoint": SOURCE_ENTRYPOINT,
@@ -149,6 +157,7 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             "selector_files_sha256": {
                 path: baseline_file_sha(BASELINE, path) for path in SOURCE_SELECTOR_FILES
             },
+            "closure_helper": trusted_closure_helper_metadata(),
         }
         if source != expected_source:
             fail("pinned baseline source provenance drift")

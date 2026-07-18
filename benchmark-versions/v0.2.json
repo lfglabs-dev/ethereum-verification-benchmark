@@ -11,6 +11,11 @@
   "mode": "fair",
   "schema_version": 2,
   "source": {
+    "closure_helper": {
+      "commit": "14ec558d0afb9adcf97efd2706eb5b0827fb961d",
+      "path": "scripts/v02_reference_closure.py",
+      "sha256": "ec090173fd2555e2557e33fb88920ea9f1d83bf2aa1fa0bb971aa30c6c3937b2"
+    },
     "commit": "c5a2344b121040445ccd745a3f839548ca8f9158",
     "entrypoint": "scripts/run_all.sh",
     "selector_command": "python3 harness/task_runner.py list --suite all",

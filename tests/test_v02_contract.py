@@ -141,6 +141,9 @@ class V02ContractTests(unittest.TestCase):
         self.assertEqual(self.manifest["manifest_schema_version"], 1)
         self.assertTrue(all(task["task_fingerprint"].startswith("sha256:") for task in self.manifest["tasks"]))
         self.assertTrue(all(task["task_interface_id"].startswith("sha256:") for task in self.manifest["tasks"]))
+        closure_records = [member for task in self.references["tasks"] for member in task["reference_import_closure"]]
+        self.assertEqual(len(closure_records), 241)
+        self.assertEqual(len({member["module"] for member in closure_records}), 38)
 
     def test_mutable_full_selector_includes_later_task_while_v02_stays_240(self) -> None:
         """A post-release task belongs to ``all``, never to frozen v0.2."""
@@ -213,6 +216,52 @@ class V02ContractTests(unittest.TestCase):
                 collect_reference_closure(root, "Benchmark.Cases.Example.Case.Proofs")
             with self.assertRaisesRegex(ValueError, "malformed Lean import"):
                 module_path(root, "Benchmark.Cases.Example.Case...outside")
+
+    def test_baseline_recomputation_rejects_mutable_closure_helper(self) -> None:
+        """A regenerated contract cannot redefine the closure boundary."""
+        helper = ROOT / "scripts/v02_reference_closure.py"
+        original = helper.read_bytes()
+        try:
+            helper.write_bytes(original + b"\n# coordinated candidate tampering\n")
+            with self.assertRaisesRegex(ValueError, "trusted closure helper.*drift"):
+                compute_fingerprints.trusted_closure_helper_source()
+        finally:
+            helper.write_bytes(original)
+
+    def test_coordinated_helper_and_contract_regeneration_is_rejected(self) -> None:
+        """Changing both the helper and its advertised manifest data cannot pass."""
+        helper = ROOT / "scripts/v02_reference_closure.py"
+        original = helper.read_bytes()
+        try:
+            helper.write_bytes(original + b"\n# coordinated candidate tampering\n")
+            with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+                directory = Path(directory)
+                with mock.patch.object(generator, "MANIFEST", directory / "v0.2.json"), mock.patch.object(
+                    generator, "REFERENCES", directory / "v0.2-references.json"
+                ):
+                    with self.assertRaisesRegex(ValueError, "trusted closure helper.*drift"):
+                        generator.main()
+            code, audit = self._validate()
+        finally:
+            helper.write_bytes(original)
+        self.assertEqual(code, 1)
+        self.assertIn("trusted closure helper digest drift", audit["errors"][0])
+
+    def test_baseline_recomputation_rejects_missing_closure_helper(self) -> None:
+        helper = ROOT / "scripts/v02_reference_closure.py"
+        original = helper.read_bytes()
+        try:
+            helper.unlink()
+            with self.assertRaisesRegex(ValueError, "trusted closure helper.*missing"):
+                compute_fingerprints.trusted_closure_helper_source()
+        finally:
+            helper.write_bytes(original)
+
+    def test_baseline_recomputation_fails_closed_for_shallow_trusted_helper(self) -> None:
+        missing_commit = "0" * 40
+        with mock.patch.object(compute_fingerprints, "TRUSTED_CLOSURE_HELPER_COMMIT", missing_commit):
+            with self.assertRaisesRegex(ValueError, "trusted closure helper unavailable"):
+                compute_fingerprints.trusted_closure_helper_source()
 
     def test_transitive_helper_mutation_and_axiom_are_rejected(self) -> None:
         wildcat = next(entry for entry in self.references["tasks"] if entry["task_ref"] == "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity")
@@ -336,10 +385,10 @@ class V02ContractTests(unittest.TestCase):
                 self.assertIn("pinned baseline version metadata drift", audit["errors"][0])
 
     def test_coordinated_source_provenance_drift_is_rejected_against_baseline(self) -> None:
-        for field in ("commit", "entrypoint", "selector_command", "selector_files_sha256"):
+        for field in ("commit", "entrypoint", "selector_command", "selector_files_sha256", "closure_helper"):
             with self.subTest(field=field):
                 def mutate(manifest, _references, field=field):
-                    if field == "selector_files_sha256":
+                    if field in ("selector_files_sha256", "closure_helper"):
                         manifest["source"][field] = {"tampered": "0" * 64}
                     else:
                         manifest["source"][field] = "tampered"

@@ -14,6 +14,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 
+from scripts.compute_fingerprints import trusted_closure_helper_directory, trusted_closure_helper_metadata
+
 BASELINE = "c5a2344b121040445ccd745a3f839548ca8f9158"
 CREATED_AT = "2026-07-18"
 SOURCE_ENTRYPOINT = "scripts/run_all.sh"
@@ -89,12 +91,15 @@ print(json.dumps({'refs': refs, 'tasks': version_manifest['tasks'], 'version_met
     key: value for key, value in version_manifest.items() if key != 'tasks'
 }, 'entries': entries}))
 """
-    program = program.replace("__CREATED_AT__", repr(CREATED_AT)).replace(
-        "__CLOSURE_SCRIPT_PATH__", repr(str(ROOT / "scripts"))
-    )
-    completed = subprocess.run(
-        [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=True
-    )
+    program = program.replace("__CREATED_AT__", repr(CREATED_AT))
+    with trusted_closure_helper_directory() as helper_directory:
+        completed = subprocess.run(
+            [sys.executable, "-c", program.replace("__CLOSURE_SCRIPT_PATH__", repr(str(helper_directory)))],
+            cwd=worktree,
+            text=True,
+            capture_output=True,
+            check=True,
+        )
     return json.loads(completed.stdout)
 
 
@@ -133,6 +138,7 @@ def main() -> int:
         "entrypoint": SOURCE_ENTRYPOINT,
         "selector_command": SOURCE_SELECTOR_COMMAND,
         "selector_files_sha256": selector_files_sha256,
+        "closure_helper": trusted_closure_helper_metadata(),
     }
     task_hashes = {entry["task_ref"]: entry["task_manifest_sha256"] for entry in reference_entries}
     task_set_hash = digest_bytes(("\n".join(refs) + "\n").encode())

@@ -7,6 +7,7 @@ import hashlib
 import json
 import subprocess
 import tempfile
+from contextlib import contextmanager
 from datetime import date
 from pathlib import Path
 
@@ -24,6 +25,12 @@ from manifests import list_groups  # noqa: E402
 from manifest_utils import load_manifest_data  # noqa: E402
 
 HASH_PREFIX = "sha256:"
+# v0.2's closure helper did not exist in the release source commit.  Its exact
+# bytes are therefore a separately pinned part of the frozen verifier TCB.
+# Never substitute a candidate-checkout copy into a pinned worktree.
+TRUSTED_CLOSURE_HELPER_COMMIT = "14ec558d0afb9adcf97efd2706eb5b0827fb961d"
+TRUSTED_CLOSURE_HELPER_PATH = "scripts/v02_reference_closure.py"
+TRUSTED_CLOSURE_HELPER_SHA256 = "ec090173fd2555e2557e33fb88920ea9f1d83bf2aa1fa0bb971aa30c6c3937b2"
 TASK_METADATA_FIELDS = (
     "proof_family",
     "property_class",
@@ -70,6 +77,51 @@ def digest_bytes(value: bytes) -> str:
 
 def digest_json(value: Any) -> str:
     return digest_bytes(canonical_json(value))
+
+
+def trusted_closure_helper_source() -> bytes:
+    """Return the independently pinned closure helper after fail-closed checks.
+
+    The git object is read as data, checked against a literal digest, and is
+    later materialized outside the candidate checkout.  This avoids executing
+    a mutable helper while recomputing a baseline that predates the helper.
+    """
+    candidate = ROOT / TRUSTED_CLOSURE_HELPER_PATH
+    if not candidate.is_file():
+        raise ValueError("trusted closure helper missing from candidate checkout")
+    candidate_bytes = candidate.read_bytes()
+    if hashlib.sha256(candidate_bytes).hexdigest() != TRUSTED_CLOSURE_HELPER_SHA256:
+        raise ValueError("trusted closure helper digest drift in candidate checkout")
+    source = subprocess.run(
+        ["git", "show", f"{TRUSTED_CLOSURE_HELPER_COMMIT}:{TRUSTED_CLOSURE_HELPER_PATH}"],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if source.returncode:
+        raise ValueError("trusted closure helper unavailable (infra): pinned object not materialized")
+    if hashlib.sha256(source.stdout).hexdigest() != TRUSTED_CLOSURE_HELPER_SHA256:
+        raise ValueError("trusted closure helper digest drift in pinned source")
+    return source.stdout
+
+
+@contextmanager
+def trusted_closure_helper_directory():
+    """Materialize only verified helper bytes outside any checked-out source."""
+    source = trusted_closure_helper_source()
+    with tempfile.TemporaryDirectory(prefix="v02-trusted-closure-helper-") as directory:
+        helper = Path(directory) / "v02_reference_closure.py"
+        helper.write_bytes(source)
+        yield helper.parent
+
+
+def trusted_closure_helper_metadata() -> dict[str, str]:
+    """Provenance recorded in the v0.2 source metadata."""
+    return {
+        "commit": TRUSTED_CLOSURE_HELPER_COMMIT,
+        "path": TRUSTED_CLOSURE_HELPER_PATH,
+        "sha256": TRUSTED_CLOSURE_HELPER_SHA256,
+    }
 
 
 def read_file_entry(path: Path) -> dict[str, object]:
@@ -233,10 +285,11 @@ print(json.dumps({'tasks': tasks, 'references': references}, sort_keys=True))
         if added.returncode:
             raise ValueError(f"pinned source unavailable (infra): {commit}")
         try:
-            program = program.replace("__CLOSURE_SCRIPT_PATH__", repr(str(ROOT / "scripts")))
-            result = subprocess.run(
-                [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=False
-            )
+            with trusted_closure_helper_directory() as helper_directory:
+                program = program.replace("__CLOSURE_SCRIPT_PATH__", repr(str(helper_directory)))
+                result = subprocess.run(
+                    [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=False
+                )
             if result.returncode:
                 raise ValueError(f"pinned source canonical recomputation unavailable (infra): {commit}")
             data = json.loads(result.stdout)
