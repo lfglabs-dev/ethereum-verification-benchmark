@@ -73,6 +73,22 @@ def _default_execution_identity(run: dict[str, object]) -> str:
     return "ambiguous"
 
 
+def _is_legacy_default_suite_aggregate(run: dict[str, object]) -> bool:
+    """Recognize historical default suite summaries without a child backend.
+
+    Legacy suite aggregates predate per-run backend recording: their suite
+    identity is the recorded legacy schema/track prefix, while child runs carry
+    the complete backend identity.  Keep this exception strictly suite-only.
+    """
+    return (
+        run.get("run_mode") == "suite"
+        and run.get("harness_id") == "default"
+        and (run.get("schema_version"), run.get("track")) == LEGACY_DEFAULT_IDENTITY[:2]
+        and "tool_backend" not in run
+        and "execution_contract" not in run
+    )
+
+
 def _is_legacy_pre_mcp_builtin_artifact(run: dict[str, object]) -> bool:
     """Recognize only the complete recorded identity of pre-lifecycle runs.
 
@@ -195,7 +211,7 @@ def check_run(run_dir: Path) -> list[str]:
                     if isinstance(task, dict) and "validity" not in task:
                         errors.append(f"{run_dir}: builtin fair task missing validity metadata")
     default_identity = _default_execution_identity(run)
-    if default_identity == "ambiguous":
+    if default_identity == "ambiguous" and not _is_legacy_default_suite_aggregate(run):
         errors.append(f"{run_dir}: default artifact has no recognized recorded execution identity")
     if (
         default_identity == "mcp"

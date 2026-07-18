@@ -747,6 +747,28 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
 
             self.assertEqual(check_run(run_dir), [])
 
+    def test_validator_distinguishes_legacy_default_suite_from_ambiguous_task(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            suite_dir = self._historical_bespoke_default_artifact(root / "suite")
+            suite = json.loads((suite_dir / "run.json").read_text(encoding="utf-8"))
+            suite.update({"run_mode": "suite", "group_id": None, "task_ref": None})
+            suite.pop("tool_backend")
+            suite["child_runs"] = [{
+                "artifact": str(suite_dir),
+                "mode": suite["mode"],
+                "score": suite["verifier"]["score"],
+            }]
+            (suite_dir / "run.json").write_text(json.dumps(suite), encoding="utf-8")
+
+            task_dir = self._historical_bespoke_default_artifact(root / "task")
+            task = json.loads((task_dir / "run.json").read_text(encoding="utf-8"))
+            task.pop("tool_backend")
+            (task_dir / "run.json").write_text(json.dumps(task), encoding="utf-8")
+
+            self.assertEqual(check_run(suite_dir), [])
+            self.assertIn("no recognized recorded execution identity", "\n".join(check_run(task_dir)))
+
     def test_validator_accepts_complete_legacy_builtin_mcp_identity(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_dir = self._missing_credentials_artifact(Path(tmp))
