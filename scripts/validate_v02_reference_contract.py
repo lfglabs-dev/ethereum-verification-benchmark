@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
+from harness.verify_lease import verify_lease
 
 MANIFEST = ROOT / "benchmark-versions" / "v0.2.json"
 REFERENCES = ROOT / "benchmark-versions" / "v0.2-references.json"
@@ -49,13 +50,14 @@ def load_json(path: Path) -> dict:
 def run_lean(module: str, declaration: str) -> tuple[bool, str]:
     # Compilation plus #check verifies the actual Lean declaration; source scanning is only
     # an additional escape-hatch guard and never the verifier decision.
-    build = subprocess.run(["lake", "build", module], cwd=ROOT, text=True, capture_output=True, check=False)
-    if build.returncode:
-        return False, "module_compile_failed"
-    with tempfile.TemporaryDirectory(prefix="v02-reference-check-") as directory:
-        check = Path(directory) / "Check.lean"
-        check.write_text(f"import {module}\n#check {declaration}\n", encoding="utf-8")
-        result = subprocess.run(["lake", "env", "lean", str(check)], cwd=ROOT, text=True, capture_output=True, check=False)
+    with verify_lease(label="v02_reference_validation"):
+        build = subprocess.run(["lake", "build", module], cwd=ROOT, text=True, capture_output=True, check=False)
+        if build.returncode:
+            return False, "module_compile_failed"
+        with tempfile.TemporaryDirectory(prefix="v02-reference-check-") as directory:
+            check = Path(directory) / "Check.lean"
+            check.write_text(f"import {module}\n#check {declaration}\n", encoding="utf-8")
+            result = subprocess.run(["lake", "env", "lean", str(check)], cwd=ROOT, text=True, capture_output=True, check=False)
     return (result.returncode == 0, "verifier_valid" if result.returncode == 0 else "declaration_check_failed")
 
 

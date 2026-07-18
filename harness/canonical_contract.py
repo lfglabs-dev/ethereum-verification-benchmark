@@ -18,8 +18,14 @@ def sha256_file(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def load_v02_task_refs() -> list[str]:
-    """Return the frozen v0.2 sequence, rejecting any malformed or drifted input."""
+def load_v02_task_refs(*, require_pinned_source: bool = False) -> list[str]:
+    """Return the frozen v0.2 sequence, rejecting malformed or local drift.
+
+    Enumeration must work from a source archive, where Git history is not
+    present.  Callers performing a P2 integrity validation set
+    ``require_pinned_source`` so canonical metadata is also recomputed from the
+    immutable source commit; failure to access that commit remains fail-closed.
+    """
     try:
         data = json.loads(CANONICAL_V02_PATH.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
@@ -49,19 +55,23 @@ def load_v02_task_refs() -> list[str]:
     task_set_hash = hashlib.sha256(("\n".join(tasks) + "\n").encode()).hexdigest()
     if data.get("task_set_sha256") != task_set_hash:
         raise ValueError("canonical v0.2 contract task ordering/hash drift")
-    # This must be derived from the immutable source named by the contract.
-    # Comparing to the working tree permits a coordinated source/manifest edit.
-    from scripts.compute_fingerprints import baseline_task_entries, task_entries
+    from scripts.compute_fingerprints import task_entries
 
-    try:
-        baseline_entries = baseline_task_entries(source["commit"])
-    except ValueError as exc:
-        raise ValueError(f"canonical v0.2 contract pinned source unavailable (infra): {exc}") from exc
     current_entries = task_entries("all")
-    if set(baseline_entries) != set(tasks):
-        raise ValueError("canonical v0.2 contract pinned baseline task set drift")
     if not set(tasks).issubset(current_entries):
         raise ValueError("canonical v0.2 contract current frozen task missing")
+    baseline_entries: dict[str, dict[str, object]] | None = None
+    if require_pinned_source:
+        # This must be derived from the immutable source named by the contract.
+        # Comparing only to the working tree permits a coordinated edit.
+        from scripts.compute_fingerprints import baseline_task_entries
+
+        try:
+            baseline_entries = baseline_task_entries(source["commit"])
+        except ValueError as exc:
+            raise ValueError(f"canonical v0.2 contract pinned source unavailable (infra): {exc}") from exc
+        if set(baseline_entries) != set(tasks):
+            raise ValueError("canonical v0.2 contract pinned baseline task set drift")
     for task_object, task_ref in zip(task_objects, tasks, strict=True):
         parts = task_ref.split("/")
         if len(parts) != 3:
@@ -76,8 +86,12 @@ def load_v02_task_refs() -> list[str]:
         # Compare the complete canonical entry, not merely the YAML hash or the
         # two displayed digest strings.  ``task_entries`` is also what generates
         # version manifests, so there is one fingerprint implementation.
-        if baseline_entries[task_ref] != task_object:
-            raise ValueError(f"canonical v0.2 contract pinned canonical task entry drift: {task_ref}")
-        if current_entries[task_ref] != baseline_entries[task_ref]:
+        if require_pinned_source:
+            assert baseline_entries is not None
+            if baseline_entries[task_ref] != task_object:
+                raise ValueError(f"canonical v0.2 contract pinned canonical task entry drift: {task_ref}")
+            if current_entries[task_ref] != baseline_entries[task_ref]:
+                raise ValueError(f"canonical v0.2 contract task source canonical entry drift: {task_ref}")
+        elif current_entries[task_ref] != task_object:
             raise ValueError(f"canonical v0.2 contract task source canonical entry drift: {task_ref}")
     return tasks

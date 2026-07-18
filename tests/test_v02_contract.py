@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -98,7 +99,7 @@ class V02ContractTests(unittest.TestCase):
             ), mock.patch(
                 "scripts.compute_fingerprints.task_entries", return_value=current_metadata
             ):
-                return canonical_contract.load_v02_task_refs()
+                return canonical_contract.load_v02_task_refs(require_pinned_source=True)
 
     def test_selector_is_frozen_and_operational(self) -> None:
         self.assertEqual(discover_task_refs("v0.2"), [task["task_ref"] for task in self.manifest["tasks"]])
@@ -106,6 +107,25 @@ class V02ContractTests(unittest.TestCase):
         self.assertEqual(self.manifest["manifest_schema_version"], 1)
         self.assertTrue(all(task["task_fingerprint"].startswith("sha256:") for task in self.manifest["tasks"]))
         self.assertTrue(all(task["task_interface_id"].startswith("sha256:") for task in self.manifest["tasks"]))
+
+    def test_source_archive_can_list_v02_without_git_history(self) -> None:
+        """The frozen selector is usable by shallow checkouts/source archives."""
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "source"
+            shutil.copytree(
+                ROOT,
+                source,
+                ignore=shutil.ignore_patterns(".git", ".lake", "__pycache__", "artifacts", "tmp*"),
+            )
+            self.assertFalse((source / ".git").exists())
+            listed = subprocess.run(
+                [sys.executable, "harness/task_runner.py", "list", "--suite", "v0.2"],
+                cwd=source,
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+        self.assertEqual(listed.stdout.splitlines(), [task["task_ref"] for task in self.manifest["tasks"]])
 
     def test_implicit_v02_aggregate_has_only_canonical_cases(self) -> None:
         summary = aggregate_results([], "v0.2")["case_summary"]
