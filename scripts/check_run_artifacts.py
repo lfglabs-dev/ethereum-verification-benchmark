@@ -109,11 +109,14 @@ def check_run(run_dir: Path) -> list[str]:
                 for task in tasks:
                     if isinstance(task, dict) and "validity" not in task:
                         errors.append(f"{run_dir}: builtin fair task missing validity metadata")
+    is_mcp_backed = (
+        run.get("track") == "group/lean_tools_mcp"
+        or run.get("tool_backend") == "lean-lsp-mcp"
+    )
     if (
-        run.get("harness_id") in {"default", "builtin-lean-lsp"}
+        is_mcp_backed
         and run.get("run_mode") in {"task", "group"}
         and run.get("harness_status") != "dry_run"
-        and isinstance(run.get("mcp_preflight"), dict)
     ):
         metadata = run.get("lean_lsp_mcp")
         if not isinstance(metadata, dict):

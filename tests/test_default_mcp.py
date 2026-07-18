@@ -449,7 +449,8 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         mcp_session.assert_not_called()
         self.assertEqual(run["harness_status"], "completed_with_failures")
         self.assertIsNone(run["mcp_preflight"])
-        self.assertEqual(artifact_errors, [])
+        self.assertIn("MCP-backed fair run missing MCP lifecycle metadata", "\n".join(artifact_errors))
+        self.assertIn("MCP-backed fair run missing MCP preflight result", "\n".join(artifact_errors))
 
     def test_aggregate_accepts_multi_task_mcp_preflight_failure(self) -> None:
         budget = {
