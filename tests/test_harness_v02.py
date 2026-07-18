@@ -11,10 +11,24 @@ from harness.classification import classify_run
 from harness.manifests import load_group
 from harness.result_validity import failure_taxonomy, row_validity
 from harness.runners.lean_tools import _provider_setup_task_rows, _warm_target_modules
+from harness import cli
 from scripts import aggregate_runs
 
 
 class HarnessV02Tests(unittest.TestCase):
+    def test_frozen_run_preflight_blocks_before_runner_or_provider(self) -> None:
+        """Reference/proof drift must stop a v0.2 run before task execution."""
+        with patch(
+            "scripts.validate_v02_reference_contract.ensure_structural_contract",
+            side_effect=ValueError("reference proof hash drift"),
+        ), patch("harness.cli.run_lean_tools_group") as runner:
+            with self.assertRaisesRegex(ValueError, "reference proof hash drift"):
+                cli.run_group(
+                    "ethereum/deposit_contract_minimal", "default", "v0.2",
+                    False, True, 1, 1, 1, 1,
+                )
+        runner.assert_not_called()
+
     def test_target_warming_stops_after_first_timeout(self) -> None:
         tasks = [
             {"task_ref": "case/one", "target_module": "Target.One"},

@@ -15,6 +15,11 @@ fi
 
 mkdir -p results
 
+if [[ "$suite" == "v0.2" ]]; then
+  # Shared Python API; structural only, before selecting/running any task.
+  python3 -c 'from scripts.validate_v02_reference_contract import ensure_structural_contract; ensure_structural_contract()'
+fi
+
 mapfile -t task_refs < <(python3 harness/task_runner.py list --suite "$suite")
 
 overall_status=0

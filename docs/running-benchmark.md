@@ -24,12 +24,15 @@ The suite is strongest today on accounting, local state preservation, storage ef
 ./scripts/run_all.sh --suite v0.2
 ```
 
-The frozen v0.2 source contract remains pinned to its recorded main-source
-content. Its reference-closure validator was introduced after that source
-revision, so the reviewed validator/helper blob in the release tree is also
-part of the release TCB. The contract pins both that final-tree Git blob OID
-and its SHA-256; validation materializes only those verified bytes outside the
-candidate checkout. This deliberately does not depend on an intermediate PR
+The frozen v0.2 source contract is first compared with the reviewed literals
+in `harness/v02_release.py`; candidate JSON never chooses the baseline commit.
+Its reference-closure validator was introduced after that source revision, so
+the reviewed trust-root, validator, and helper blob are the release TCB. The
+contract pins both that final-tree Git blob OID and its SHA-256; validation
+materializes only those verified bytes outside the candidate checkout. Every
+v0.2 harness run performs the structural reference/closure/hash preflight
+before any task execution or provider call (without re-running Lean proof
+validation per task). This deliberately does not depend on an intermediate PR
 commit, so squash merges and shallow clones remain reproducible.
 
 ## Harness Runs

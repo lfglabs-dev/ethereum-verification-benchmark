@@ -15,12 +15,13 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 
 from scripts.compute_fingerprints import trusted_closure_helper_metadata, trusted_closure_helper_source
+from harness.v02_release import BASELINE_COMMIT, RELEASE_SOURCE
 
-BASELINE = "c5a2344b121040445ccd745a3f839548ca8f9158"
+BASELINE = BASELINE_COMMIT
 CREATED_AT = "2026-07-18"
-SOURCE_ENTRYPOINT = "scripts/run_all.sh"
-SOURCE_SELECTOR_COMMAND = "python3 harness/task_runner.py list --suite all"
-SOURCE_SELECTOR_FILES = ("harness/task_runner.py", "scripts/run_all.sh")
+SOURCE_ENTRYPOINT = RELEASE_SOURCE["entrypoint"]
+SOURCE_SELECTOR_COMMAND = RELEASE_SOURCE["selector_command"]
+SOURCE_SELECTOR_FILES = tuple(RELEASE_SOURCE["selector_files_sha256"])
 MANIFEST = ROOT / "benchmark-versions" / "v0.2.json"
 REFERENCES = ROOT / "benchmark-versions" / "v0.2-references.json"
 

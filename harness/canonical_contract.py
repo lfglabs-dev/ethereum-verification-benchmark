@@ -7,8 +7,10 @@ from pathlib import Path
 
 try:
     from .paths import ROOT
+    from .v02_release import RELEASE_SOURCE
 except ImportError:
     from paths import ROOT
+    from v02_release import RELEASE_SOURCE
 
 
 CANONICAL_V02_PATH = ROOT / "benchmark-versions" / "v0.2.json"
@@ -33,6 +35,10 @@ def load_v02_task_refs(*, require_pinned_source: bool = True) -> list[str]:
     source = data.get("source")
     if not isinstance(source, dict) or not isinstance(source.get("commit"), str):
         raise ValueError("canonical v0.2 contract has malformed source provenance")
+    # Do this before ``source[\"commit\"]`` is ever passed to Git.  The
+    # candidate manifest is input, never authority to select a baseline.
+    if source != RELEASE_SOURCE:
+        raise ValueError("canonical v0.2 contract release trust-root source drift")
     task_objects = data.get("tasks")
     hashes = data.get("task_manifest_sha256")
     if not isinstance(task_objects, list) or not all(isinstance(item, dict) for item in task_objects):
@@ -65,7 +71,7 @@ def load_v02_task_refs(*, require_pinned_source: bool = True) -> list[str]:
         from scripts.compute_fingerprints import baseline_task_entries
 
         try:
-            baseline_entries = baseline_task_entries(source["commit"])
+            baseline_entries = baseline_task_entries(RELEASE_SOURCE["commit"])
         except ValueError as exc:
             raise ValueError(f"canonical v0.2 contract pinned source unavailable (infra): {exc}") from exc
         if set(baseline_entries) != set(tasks):

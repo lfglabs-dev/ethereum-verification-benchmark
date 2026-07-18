@@ -17,17 +17,10 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
 from harness.verify_lease import verify_lease
+from harness.v02_release import BASELINE_COMMIT, RELEASE_METADATA, RELEASE_SOURCE
 from scripts.compute_fingerprints import (
     baseline_version_metadata,
-    trusted_closure_helper_metadata,
     trusted_closure_helper_namespace,
-)
-from scripts.generate_v02_contract import (
-    BASELINE,
-    CREATED_AT,
-    SOURCE_ENTRYPOINT,
-    SOURCE_SELECTOR_COMMAND,
-    SOURCE_SELECTOR_FILES,
 )
 
 MANIFEST = ROOT / "benchmark-versions" / "v0.2.json"
@@ -139,8 +132,14 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail("manifest canonical field set drift")
         if set(contract) != REFERENCE_FIELDS:
             fail("reference contract canonical field set drift")
+        # Check the reviewed literals before any candidate-provided source
+        # identity is used to read Git objects or execute the closure helper.
+        if source != RELEASE_SOURCE:
+            fail("release trust-root source provenance drift")
+        if {field: manifest.get(field) for field in VERSION_METADATA_FIELDS} != RELEASE_METADATA:
+            fail("release trust-root version metadata drift")
         try:
-            baseline_metadata = baseline_version_metadata(BASELINE, version="0.2", created_at=CREATED_AT)
+            baseline_metadata = baseline_version_metadata(BASELINE_COMMIT, version="0.2", created_at=RELEASE_METADATA["created_at"])
         except ValueError as exc:
             fail(f"pinned source unavailable (infra): {exc}")
         if {field: manifest.get(field) for field in VERSION_METADATA_FIELDS} != baseline_metadata:
@@ -151,15 +150,7 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
         collect_reference_closure = closure_namespace.get("collect_reference_closure")
         if not callable(collect_reference_closure):
             fail("trusted closure helper missing collect_reference_closure")
-        expected_source = {
-            "commit": BASELINE,
-            "entrypoint": SOURCE_ENTRYPOINT,
-            "selector_command": SOURCE_SELECTOR_COMMAND,
-            "selector_files_sha256": {
-                path: baseline_file_sha(BASELINE, path) for path in SOURCE_SELECTOR_FILES
-            },
-            "closure_helper": trusted_closure_helper_metadata(),
-        }
+        expected_source = RELEASE_SOURCE
         if source != expected_source:
             fail("pinned baseline source provenance drift")
         if manifest.get("schema_version") != 2 or manifest.get("benchmark_version") != "0.2":
@@ -173,7 +164,7 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
         from scripts.compute_fingerprints import baseline_contract_entries, task_entries
 
         try:
-            baseline_entries, baseline_references = baseline_contract_entries(source["commit"])
+            baseline_entries, baseline_references = baseline_contract_entries(BASELINE_COMMIT)
         except ValueError as exc:
             fail(f"pinned source unavailable (infra): {exc}")
         current_entries = task_entries("all")
@@ -215,7 +206,7 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             "benchmark_version": "0.2",
             "contract_kind": "canonical_reference_declarations",
             "schema_version": 2,
-            "source_commit": BASELINE,
+            "source_commit": BASELINE_COMMIT,
             "canonical_manifest_path": str(MANIFEST.relative_to(ROOT)),
             "canonical_manifest_sha256": sha(MANIFEST),
             "task_count": manifest["task_count"],
@@ -324,6 +315,20 @@ def main() -> int:
     parser.add_argument("--audit", type=Path, default=DEFAULT_AUDIT)
     args = parser.parse_args()
     return validate(verify_lean=not args.no_lean, audit_path=args.audit)
+
+
+def ensure_structural_contract() -> None:
+    """Fail closed before a frozen run can execute a task or contact a provider.
+
+    This deliberately performs only the structural/hash/closure checks.  Full
+    Lean proof validation remains the release-validation job, not per-task
+    harness startup work.
+    """
+    with tempfile.TemporaryDirectory(prefix="v02-reference-preflight-") as directory:
+        audit = Path(directory) / "audit.json"
+        if validate(verify_lean=False, audit_path=audit) != 0:
+            errors = json.loads(audit.read_text(encoding="utf-8")).get("errors", [])
+            raise ValueError("v0.2 reference preflight failed: " + (str(errors[0]) if errors else "unknown error"))
 
 
 if __name__ == "__main__":

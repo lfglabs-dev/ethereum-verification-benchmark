@@ -65,8 +65,8 @@ class V02ContractTests(unittest.TestCase):
     def _validate(self, mutate=None, *, lean=False, escape: bool | None = None, baseline=None, current=None, baseline_error=None) -> tuple[int, dict]:
         manifest = json.loads(json.dumps(self.manifest))
         references = json.loads(json.dumps(self.references))
-        # Unit fixtures are deliberately independent of CI's checkout depth.
-        # The production validator still requires the recorded baseline object.
+        # Fixtures use a synthetic reviewed root matching this checkout; Git
+        # reads below are mocked so they remain independent of checkout depth.
         manifest["source"]["commit"] = subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip()
@@ -76,6 +76,7 @@ class V02ContractTests(unittest.TestCase):
         }
         pinned_commit = manifest["source"]["commit"]
         references["source_commit"] = pinned_commit
+        fixture_source = json.loads(json.dumps(manifest["source"]))
         if mutate:
             mutate(manifest, references)
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
@@ -89,6 +90,8 @@ class V02ContractTests(unittest.TestCase):
             reference_path.write_text(json.dumps(references), encoding="utf-8")
             with mock.patch.object(validator, "MANIFEST", manifest_path), mock.patch.object(
                 validator, "REFERENCES", reference_path
+            ), mock.patch.object(validator, "RELEASE_SOURCE", fixture_source), mock.patch.object(
+                validator, "BASELINE_COMMIT", pinned_commit
             ), mock.patch.object(
                 validator,
                 "baseline_file_sha",
@@ -109,10 +112,6 @@ class V02ContractTests(unittest.TestCase):
                 validator,
                 "baseline_version_metadata",
                 return_value=self._baseline_version_metadata(),
-            ), mock.patch.object(
-                validator,
-                "BASELINE",
-                pinned_commit,
             ), (mock.patch.object(validator, "ESCAPE") if escape is not None else nullcontext()) as matcher:
                 if matcher is not None:
                     matcher.search.return_value = object() if escape else None
@@ -439,6 +438,32 @@ class V02ContractTests(unittest.TestCase):
             mutable[self.manifest["tasks"][0]["task_ref"]]["task_interface_id"] = "sha256:" + "2" * 64
             self._load_refs(mutate, current=mutable)
 
+    def test_canonical_selector_rejects_coordinated_source_commit_regeneration(self) -> None:
+        """Candidate JSON cannot redirect the frozen baseline to a reachable commit."""
+        def mutate(manifest):
+            manifest["source"]["commit"] = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
+            ).strip()
+
+        with self.assertRaisesRegex(ValueError, "release trust-root source drift"):
+            self._load_refs(mutate)
+
+    def test_coordinated_task_and_reference_manifest_regeneration_cannot_retarget_source(self) -> None:
+        """Regenerating both candidate contracts cannot select another reachable commit."""
+        alternate = self.manifest["source"]["commit"]
+
+        def mutate(manifest, references):
+            manifest["source"]["commit"] = alternate
+            references["source_commit"] = alternate
+            # These model a coordinated regeneration; task inputs themselves
+            # remain unchanged, so source selection is the only difference.
+            references["task_count"] = manifest["task_count"]
+            references["task_set_sha256"] = manifest["task_set_sha256"]
+
+        code, audit = self._validate(mutate)
+        self.assertEqual(code, 1)
+        self.assertIn("release trust-root source provenance drift", audit["errors"][0])
+
     def test_coordinated_mutable_task_metadata_drift_is_rejected_against_baseline(self) -> None:
         def mutate(manifest, references):
             for field in ("task_fingerprint", "task_interface_id"):
@@ -460,7 +485,7 @@ class V02ContractTests(unittest.TestCase):
 
                 code, audit = self._validate(mutate)
                 self.assertEqual(code, 1)
-                self.assertIn("pinned baseline version metadata drift", audit["errors"][0])
+                self.assertIn("release trust-root version metadata drift", audit["errors"][0])
 
     def test_coordinated_source_provenance_drift_is_rejected_against_baseline(self) -> None:
         for field in ("commit", "entrypoint", "selector_command", "selector_files_sha256", "closure_helper"):
@@ -473,7 +498,7 @@ class V02ContractTests(unittest.TestCase):
 
                 code, audit = self._validate(mutate)
                 self.assertEqual(code, 1)
-                self.assertIn("pinned baseline source provenance drift", audit["errors"][0])
+                self.assertIn("release trust-root source provenance drift", audit["errors"][0])
 
     def test_coordinated_reference_metadata_drift_is_rejected_against_baseline(self) -> None:
         fields = (
@@ -530,7 +555,7 @@ class V02ContractTests(unittest.TestCase):
 
         code, audit = self._validate(mutate)
         self.assertEqual(code, 1)
-        self.assertIn("pinned baseline source provenance drift", audit["errors"][0])
+        self.assertIn("release trust-root source provenance drift", audit["errors"][0])
 
     def test_malformed_reference_is_rejected(self) -> None:
         def mutate(_manifest, references):
