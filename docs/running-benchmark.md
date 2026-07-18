@@ -74,7 +74,7 @@ python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count 
 # Full suite
 ./scripts/run_default_harness_suite.sh --suite active --max-attempts 1
 
-# Shell agent profile
+# Another default-harness task
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --budget deep
 ```
 
