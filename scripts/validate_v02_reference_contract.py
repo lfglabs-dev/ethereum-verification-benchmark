@@ -64,7 +64,7 @@ def baseline_file_sha(commit: str, path: str) -> str:
         ["git", "show", f"{commit}:{path}"], cwd=ROOT, capture_output=True, check=False
     )
     if result.returncode:
-        fail(f"baseline source unavailable: {commit}:{path}")
+        fail(f"pinned source unavailable (infra): {commit}:{path}")
     return hashlib.sha256(result.stdout).hexdigest()
 
 
@@ -86,10 +86,13 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
         for path, expected in selector_hashes.items():
             if not isinstance(path, str) or not isinstance(expected, str) or baseline_file_sha(source["commit"], path) != expected:
                 fail(f"baseline selector source hash drift: {path}")
-        from scripts.compute_fingerprints import baseline_task_metadata, task_metadata
+        from scripts.compute_fingerprints import baseline_contract_entries, task_entries
 
-        baseline_metadata = baseline_task_metadata(source["commit"])
-        current_metadata = task_metadata("all")
+        try:
+            baseline_entries, baseline_references = baseline_contract_entries(source["commit"])
+        except ValueError as exc:
+            fail(f"pinned source unavailable (infra): {exc}")
+        current_entries = task_entries("all")
         task_objects = manifest.get("tasks")
         mappings = manifest.get("task_manifest_sha256")
         if not isinstance(task_objects, list) or not all(isinstance(task, dict) for task in task_objects):
@@ -104,16 +107,16 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
                 fail(f"{task.get('task_ref')}: version task metadata malformed")
         if len(refs) != len(set(refs)) or manifest.get("task_count") != len(refs):
             fail("manifest task list duplicate/count drift")
-        if set(baseline_metadata) != set(refs):
+        if set(baseline_entries) != set(refs):
             fail("pinned baseline task set drift")
-        if not set(refs).issubset(current_metadata):
+        if not set(refs).issubset(current_entries):
             fail("current frozen task missing")
         for task in task_objects:
             ref = task["task_ref"]
-            if baseline_metadata[ref] != (task["task_fingerprint"], task["task_interface_id"]):
-                fail(f"{ref}: pinned baseline task metadata drift")
-            if current_metadata[ref] != baseline_metadata[ref]:
-                fail(f"{ref}: current task source fingerprint drift")
+            if baseline_entries[ref] != task:
+                fail(f"{ref}: pinned baseline canonical task entry drift")
+            if current_entries[ref] != baseline_entries[ref]:
+                fail(f"{ref}: current task source canonical entry drift")
         if discover_task_refs("v0.2") != refs:
             fail("frozen v0.2-suite selector drift")
         expected_task_hash = hashlib.sha256(("\n".join(refs) + "\n").encode()).hexdigest()
@@ -123,6 +126,8 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail("manifest task mapping missing/duplicate drift")
         if contract.get("canonical_manifest_sha256") != sha(MANIFEST):
             fail("reference contract manifest hash drift")
+        if contract.get("source_commit") != source["commit"]:
+            fail("reference contract pinned source commit drift")
         entries = contract.get("tasks")
         if not isinstance(entries, list) or len(entries) != len(refs):
             fail("reference contract task count drift")
@@ -139,6 +144,17 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
                 or entry.get("task_interface_id") != task_objects[index - 1].get("task_interface_id")
             ):
                 fail(f"{ref}: pinned task metadata drift")
+            pinned_reference = baseline_references.get(ref)
+            if not isinstance(pinned_reference, dict):
+                fail(f"{ref}: pinned reference entry missing")
+            for field in (
+                "reference_module",
+                "reference_declaration",
+                "reference_module_path",
+                "reference_module_sha256",
+            ):
+                if entry.get(field) != pinned_reference.get(field):
+                    fail(f"{ref}: pinned reference {field} drift")
             task_path = resolve_task_manifest(ref)
             task = load_task_record(task_path)
             module = entry.get("reference_module")
@@ -174,7 +190,7 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
     audit = {
         "schema_version": 1,
         "kind": "p2_v02_reference_validation",
-        "classification": "no_provider",
+        "classification": "infra_unavailable" if any("(infra)" in error for error in errors) else "no_provider",
         "source_commit": manifest.get("source", {}).get("commit") if isinstance(manifest.get("source"), dict) else None,
         "manifest_path": display_path(MANIFEST),
         "manifest_sha256": sha(MANIFEST),

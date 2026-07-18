@@ -167,6 +167,15 @@ def ordered_tasks(suite: str = "active") -> list[dict[str, object]]:
     return [task_entry(task) for task in sorted(tasks, key=lambda item: item.task_ref)]
 
 
+def task_entries(suite: str = "all") -> dict[str, dict[str, object]]:
+    """Return canonical task entries keyed by ref from the production derivation."""
+    entries = ordered_tasks(suite)
+    result = {str(entry["task_ref"]): entry for entry in entries}
+    if len(result) != len(entries):
+        raise ValueError("cannot recompute task entries with duplicate refs")
+    return result
+
+
 def task_metadata(suite: str = "all") -> dict[str, tuple[str, str]]:
     """Return production fingerprints keyed by task reference.
 
@@ -175,7 +184,7 @@ def task_metadata(suite: str = "all") -> dict[str, tuple[str, str]]:
     implementation.
     """
     metadata: dict[str, tuple[str, str]] = {}
-    for task in ordered_tasks(suite):
+    for task in task_entries(suite).values():
         ref = task.get("task_ref")
         fingerprint = task.get("task_fingerprint")
         interface_id = task.get("task_interface_id")
@@ -185,12 +194,29 @@ def task_metadata(suite: str = "all") -> dict[str, tuple[str, str]]:
     return metadata
 
 
-def baseline_task_metadata(commit: str) -> dict[str, tuple[str, str]]:
-    """Recompute production task metadata in ``commit``, never this checkout."""
+def baseline_contract_entries(
+    commit: str,
+) -> tuple[dict[str, dict[str, object]], dict[str, dict[str, str]]]:
+    """Recompute canonical task and reference entries in ``commit`` only."""
     program = """
-import json
+import hashlib, json
+from pathlib import Path
 from scripts.compute_fingerprints import ordered_tasks
-print(json.dumps({task['task_ref']: [task['task_fingerprint'], task['task_interface_id']] for task in ordered_tasks('all')}, sort_keys=True))
+from harness.task_runner import load_task_record, resolve_task_manifest
+tasks = ordered_tasks('all')
+references = {}
+for task in tasks:
+    task_path = resolve_task_manifest(task['task_ref'])
+    reference = load_task_record(task_path)['reference_solution']
+    module = reference['module']
+    module_path = Path.cwd().joinpath(*module.split('.')).with_suffix('.lean')
+    references[task['task_ref']] = {
+        'reference_module': module,
+        'reference_declaration': reference['declaration'],
+        'reference_module_path': str(module_path.relative_to(Path.cwd())),
+        'reference_module_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
+    }
+print(json.dumps({'tasks': tasks, 'references': references}, sort_keys=True))
 """
     with tempfile.TemporaryDirectory(prefix="benchmark-baseline-metadata-") as directory:
         worktree = Path(directory) / "source"
@@ -202,25 +228,46 @@ print(json.dumps({task['task_ref']: [task['task_fingerprint'], task['task_interf
             check=False,
         )
         if added.returncode:
-            raise ValueError(f"baseline source unavailable: {commit}")
+            raise ValueError(f"pinned source unavailable (infra): {commit}")
         try:
             result = subprocess.run(
                 [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=False
             )
             if result.returncode:
-                raise ValueError(f"baseline task metadata unavailable: {commit}")
+                raise ValueError(f"pinned source canonical recomputation unavailable (infra): {commit}")
             data = json.loads(result.stdout)
         finally:
             subprocess.run(["git", "worktree", "remove", "--force", str(worktree)], cwd=ROOT, check=False)
-    if not isinstance(data, dict) or not all(
-        isinstance(ref, str)
-        and isinstance(value, list)
-        and len(value) == 2
-        and all(isinstance(item, str) for item in value)
-        for ref, value in data.items()
+    tasks = data.get("tasks") if isinstance(data, dict) else None
+    references = data.get("references") if isinstance(data, dict) else None
+    if not isinstance(tasks, list) or not isinstance(references, dict):
+        raise ValueError("pinned source canonical entries malformed")
+    entries = {entry.get("task_ref"): entry for entry in tasks if isinstance(entry, dict)}
+    if len(entries) != len(tasks) or not all(isinstance(ref, str) for ref in entries):
+        raise ValueError("pinned source canonical task entries malformed")
+    if set(references) != set(entries) or not all(
+        isinstance(ref, str) and isinstance(entry, dict) for ref, entry in references.items()
     ):
-        raise ValueError("baseline task metadata malformed")
-    return {ref: (value[0], value[1]) for ref, value in data.items()}
+        raise ValueError("pinned source reference entries malformed")
+    return entries, references
+
+
+def baseline_task_entries(commit: str) -> dict[str, dict[str, object]]:
+    """Return full canonical entries from the pinned source revision."""
+    return baseline_contract_entries(commit)[0]
+
+
+def baseline_reference_entries(commit: str) -> dict[str, dict[str, str]]:
+    """Return reference declarations and module hashes from the pinned revision."""
+    return baseline_contract_entries(commit)[1]
+
+
+def baseline_task_metadata(commit: str) -> dict[str, tuple[str, str]]:
+    """Compatibility view of the pinned canonical task entries."""
+    return {
+        ref: (str(entry["task_fingerprint"]), str(entry["task_interface_id"]))
+        for ref, entry in baseline_task_entries(commit).items()
+    }
 
 
 def task_set_id(tasks: list[dict[str, object]]) -> str:

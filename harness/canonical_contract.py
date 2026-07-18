@@ -51,13 +51,16 @@ def load_v02_task_refs() -> list[str]:
         raise ValueError("canonical v0.2 contract task ordering/hash drift")
     # This must be derived from the immutable source named by the contract.
     # Comparing to the working tree permits a coordinated source/manifest edit.
-    from scripts.compute_fingerprints import baseline_task_metadata, task_metadata
+    from scripts.compute_fingerprints import baseline_task_entries, task_entries
 
-    baseline_metadata = baseline_task_metadata(source["commit"])
-    current_metadata = task_metadata("all")
-    if set(baseline_metadata) != set(tasks):
+    try:
+        baseline_entries = baseline_task_entries(source["commit"])
+    except ValueError as exc:
+        raise ValueError(f"canonical v0.2 contract pinned source unavailable (infra): {exc}") from exc
+    current_entries = task_entries("all")
+    if set(baseline_entries) != set(tasks):
         raise ValueError("canonical v0.2 contract pinned baseline task set drift")
-    if not set(tasks).issubset(current_metadata):
+    if not set(tasks).issubset(current_entries):
         raise ValueError("canonical v0.2 contract current frozen task missing")
     for task_object, task_ref in zip(task_objects, tasks, strict=True):
         parts = task_ref.split("/")
@@ -70,11 +73,11 @@ def load_v02_task_refs() -> list[str]:
         paths = [path for path in candidates if path.is_file()]
         if len(paths) != 1 or not isinstance(hashes[task_ref], str) or sha256_file(paths[0]) != hashes[task_ref]:
             raise ValueError(f"canonical v0.2 contract task source drift: {task_ref}")
-        if baseline_metadata.get(task_ref) != (
-            task_object["task_fingerprint"],
-            task_object["task_interface_id"],
-        ):
-            raise ValueError(f"canonical v0.2 contract task fingerprint drift: {task_ref}")
-        if current_metadata.get(task_ref) != baseline_metadata[task_ref]:
-            raise ValueError(f"canonical v0.2 contract task source fingerprint drift: {task_ref}")
+        # Compare the complete canonical entry, not merely the YAML hash or the
+        # two displayed digest strings.  ``task_entries`` is also what generates
+        # version manifests, so there is one fingerprint implementation.
+        if baseline_entries[task_ref] != task_object:
+            raise ValueError(f"canonical v0.2 contract pinned canonical task entry drift: {task_ref}")
+        if current_entries[task_ref] != baseline_entries[task_ref]:
+            raise ValueError(f"canonical v0.2 contract task source canonical entry drift: {task_ref}")
     return tasks

@@ -24,7 +24,16 @@ class V02ContractTests(unittest.TestCase):
         self.manifest = json.loads((ROOT / "benchmark-versions/v0.2.json").read_text())
         self.references = json.loads((ROOT / "benchmark-versions/v0.2-references.json").read_text())
 
-    def _validate(self, mutate=None, *, lean=False, escape=False, baseline=None, current=None) -> tuple[int, dict]:
+    def _baseline_references(self) -> dict[str, dict[str, str]]:
+        return {
+            entry["task_ref"]: {
+                field: entry[field]
+                for field in ("reference_module", "reference_declaration", "reference_module_path", "reference_module_sha256")
+            }
+            for entry in self.references["tasks"]
+        }
+
+    def _validate(self, mutate=None, *, lean=False, escape=False, baseline=None, current=None, baseline_error=None) -> tuple[int, dict]:
         manifest = json.loads(json.dumps(self.manifest))
         references = json.loads(json.dumps(self.references))
         # Unit fixtures are deliberately independent of CI's checkout depth.
@@ -45,6 +54,7 @@ class V02ContractTests(unittest.TestCase):
             audit_path = directory / "audit.json"
             manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
             references["canonical_manifest_sha256"] = hashlib.sha256(manifest_path.read_bytes()).hexdigest()
+            references["source_commit"] = manifest["source"]["commit"]
             reference_path.write_text(json.dumps(references), encoding="utf-8")
             with mock.patch.object(validator, "MANIFEST", manifest_path), mock.patch.object(
                 validator, "REFERENCES", reference_path
@@ -54,18 +64,16 @@ class V02ContractTests(unittest.TestCase):
                 side_effect=lambda _commit, path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
             ), mock.patch.object(
                 compute_fingerprints,
-                "baseline_task_metadata",
-                return_value=baseline if baseline is not None else {
-                    task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
-                    for task in self.manifest["tasks"]
-                },
+                "baseline_contract_entries",
+                side_effect=baseline_error,
+                return_value=(
+                    baseline if baseline is not None else {task["task_ref"]: task for task in self.manifest["tasks"]},
+                    self._baseline_references(),
+                ),
             ), mock.patch.object(
                 compute_fingerprints,
-                "task_metadata",
-                return_value=current if current is not None else {
-                    task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
-                    for task in self.manifest["tasks"]
-                },
+                "task_entries",
+                return_value=current if current is not None else {task["task_ref"]: task for task in self.manifest["tasks"]},
             ), mock.patch.object(validator, "ESCAPE") as matcher:
                 matcher.search.return_value = object() if escape else None
                 if lean:
@@ -83,15 +91,12 @@ class V02ContractTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             path = Path(directory) / "v0.2.json"
             path.write_text(json.dumps(manifest), encoding="utf-8")
-            metadata = baseline or {
-                task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
-                for task in self.manifest["tasks"]
-            }
+            metadata = baseline or {task["task_ref"]: task for task in self.manifest["tasks"]}
             current_metadata = current or metadata
             with mock.patch.object(canonical_contract, "CANONICAL_V02_PATH", path), mock.patch(
-                "scripts.compute_fingerprints.baseline_task_metadata", return_value=metadata
+                "scripts.compute_fingerprints.baseline_task_entries", return_value=metadata
             ), mock.patch(
-                "scripts.compute_fingerprints.task_metadata", return_value=current_metadata
+                "scripts.compute_fingerprints.task_entries", return_value=current_metadata
             ):
                 return canonical_contract.load_v02_task_refs()
 
@@ -157,24 +162,21 @@ class V02ContractTests(unittest.TestCase):
 
                 code, audit = self._validate(mutate)
                 self.assertEqual(code, 1)
-                self.assertIn("pinned baseline task metadata drift", audit["errors"][0])
+                self.assertIn("pinned baseline canonical task entry drift", audit["errors"][0])
 
     def test_canonical_selector_rejects_tampered_fingerprint_string(self) -> None:
         def mutate(manifest):
             manifest["tasks"][0]["task_fingerprint"] = "sha256:" + "0" * 64
 
-        with self.assertRaisesRegex(ValueError, "task fingerprint drift"):
+        with self.assertRaisesRegex(ValueError, "canonical task entry drift"):
             self._load_refs(mutate)
 
     def test_canonical_selector_detects_source_drift_with_unchanged_yaml(self) -> None:
-        current = {
-            task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
-            for task in self.manifest["tasks"]
-        }
+        current = {task["task_ref"]: json.loads(json.dumps(task)) for task in self.manifest["tasks"]}
         ref = self.manifest["tasks"][0]["task_ref"]
         # Model a Lean/source input changing while its task YAML mapping remains intact.
-        current[ref] = ("sha256:" + "1" * 64, current[ref][1])
-        with self.assertRaisesRegex(ValueError, "task source fingerprint drift"):
+        current[ref]["task_fingerprint"] = "sha256:" + "1" * 64
+        with self.assertRaisesRegex(ValueError, "source canonical entry drift"):
             self._load_refs(current=current)
 
     def test_canonical_selector_rejects_coordinated_mutable_self_comparison(self) -> None:
@@ -184,12 +186,10 @@ class V02ContractTests(unittest.TestCase):
 
         # The immutable baseline metadata remains original, so a matching mutable
         # checkout cannot make this coordinated update pass.
-        with self.assertRaisesRegex(ValueError, "task fingerprint drift"):
-            mutable = {
-                task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
-                for task in self.manifest["tasks"]
-            }
-            mutable[self.manifest["tasks"][0]["task_ref"]] = ("sha256:" + "2" * 64, "sha256:" + "2" * 64)
+        with self.assertRaisesRegex(ValueError, "canonical task entry drift"):
+            mutable = {task["task_ref"]: json.loads(json.dumps(task)) for task in self.manifest["tasks"]}
+            mutable[self.manifest["tasks"][0]["task_ref"]]["task_fingerprint"] = "sha256:" + "2" * 64
+            mutable[self.manifest["tasks"][0]["task_ref"]]["task_interface_id"] = "sha256:" + "2" * 64
             self._load_refs(mutate, current=mutable)
 
     def test_coordinated_mutable_task_metadata_drift_is_rejected_against_baseline(self) -> None:
@@ -200,15 +200,12 @@ class V02ContractTests(unittest.TestCase):
 
         code, audit = self._validate(mutate)
         self.assertEqual(code, 1)
-        self.assertIn("pinned baseline task metadata drift", audit["errors"][0])
+        self.assertIn("pinned baseline canonical task entry drift", audit["errors"][0])
 
     def test_future_all_suite_task_does_not_invalidate_frozen_v02(self) -> None:
         frozen_refs = [task["task_ref"] for task in self.manifest["tasks"]]
-        metadata = {
-            task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
-            for task in self.manifest["tasks"]
-        }
-        metadata["future/case/task"] = ("sha256:" + "f" * 64, "sha256:" + "e" * 64)
+        metadata = {task["task_ref"]: task for task in self.manifest["tasks"]}
+        metadata["future/case/task"] = {"task_ref": "future/case/task"}
 
         code, audit = self._validate(current=metadata)
         self.assertEqual(code, 0)
@@ -217,10 +214,7 @@ class V02ContractTests(unittest.TestCase):
         self.assertEqual(self._load_refs(current=metadata), frozen_refs)
 
     def test_missing_frozen_current_task_fails_closed(self) -> None:
-        metadata = {
-            task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
-            for task in self.manifest["tasks"]
-        }
+        metadata = {task["task_ref"]: task for task in self.manifest["tasks"]}
         metadata.pop(self.manifest["tasks"][0]["task_ref"])
 
         code, audit = self._validate(current=metadata)
@@ -243,7 +237,21 @@ class V02ContractTests(unittest.TestCase):
 
         code, audit = self._validate(mutate)
         self.assertEqual(code, 1)
-        self.assertIn("malformed reference", audit["errors"][0])
+        self.assertIn("pinned reference reference_module drift", audit["errors"][0])
+
+    def test_regenerated_reference_hash_cannot_mask_changed_proof(self) -> None:
+        def mutate(_manifest, references):
+            references["tasks"][0]["reference_module_sha256"] = "0" * 64
+
+        code, audit = self._validate(mutate)
+        self.assertEqual(code, 1)
+        self.assertIn("pinned reference reference_module_sha256 drift", audit["errors"][0])
+
+    def test_unavailable_pinned_source_is_infra_failure(self) -> None:
+        code, audit = self._validate(baseline_error=ValueError("pinned source unavailable (infra): missing"))
+        self.assertEqual(code, 1)
+        self.assertIn("pinned source unavailable (infra)", audit["errors"][0])
+        self.assertEqual(audit["classification"], "infra_unavailable")
 
     def test_unverifiable_reference_is_rejected_by_lean_result(self) -> None:
         code, audit = self._validate(lean=True)
