@@ -45,10 +45,10 @@ before canaries.
 
 ## Harness Runs
 
-Two harness families are supported:
-
-- `default`: the built-in fair harness. It exposes Lean-native tools through an OpenAI-compatible loop and logs every tool call and conversation turn.
-- shell agent profiles: off-the-shelf coding agents from `harness/agents/*.json`, run in isolated workspaces behind a metering proxy.
+The canonical runnable harness is `default`: the built-in fair harness. It
+exposes Lean-native tools through an OpenAI-compatible loop and logs every tool
+call and conversation turn. The named profiles in `harness/agents/*.json` are
+legacy configuration files, not supported `--harness` values.
 
 All harnesses get the same public files, generated `harness/TASK_SUMMARY.md`, and `./harness/check.sh`. Hidden reference proofs and private build artifacts are removed from the agent workspace. The verifier rebuilds submissions in a private copy and rejects hidden imports, placeholders, added assumptions, and theorem-statement changes.
 
