@@ -1,0 +1,2173 @@
+{
+  "benchmark": "ethereum-verification-benchmark",
+  "benchmark_version": "0.2",
+  "canonical_manifest_path": "benchmark-versions/v0.2.json",
+  "canonical_manifest_sha256": "4dad326bd570664eb28a10cec98cd8c265c49fdd3d156e756a90ba0723b2d7a5",
+  "contract_kind": "canonical_reference_declarations",
+  "schema_version": 1,
+  "source_commit": "c5a2344b121040445ccd745a3f839548ca8f9158",
+  "task_count": 240,
+  "task_set_sha256": "fa9557c344e362a13444fb7efa48a39abd0649a85421a3914c9b20345989bdff",
+  "tasks": [
+    {
+      "reference_declaration": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.quoteExactIn_curve_safety",
+      "reference_module": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Proofs.lean",
+      "reference_module_sha256": "22d1f492ad3f24b6181ab1a3e017e332411c0dc3964949a047ceeab7b4c7de35",
+      "task_manifest_path": "cases/1inch/xycswap_curve_safety/tasks/quote_exact_in_curve_safety.yaml",
+      "task_manifest_sha256": "2ec365815da6c23b6d39462e7aeee04d5736a2c0c6e26282bf147ce30944744a",
+      "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation._earmark_preserves_invariant",
+      "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+      "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/earmark_preserves_invariant.yaml",
+      "task_manifest_sha256": "2158925604b167125e02b075226d34c9a1998f8ccc4ebc2ea9af26b4fbc5e3d6",
+      "task_ref": "alchemix/earmark_conservation/earmark_preserves_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation.redeem_preserves_invariant",
+      "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+      "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/redeem_preserves_invariant.yaml",
+      "task_manifest_sha256": "5fbb0817cf2c50812c872fab3f430b7d7ab7459de67cf57dab173cc5538e1cea",
+      "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation._subDebt_preserves_invariant",
+      "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+      "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/sub_debt_preserves_invariant.yaml",
+      "task_manifest_sha256": "33703638d5aff4e794e7dbbe05be750ed310a321b415f66b17024f12850eff9c",
+      "task_ref": "alchemix/earmark_conservation/sub_debt_preserves_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation._subEarmarkedDebt_preserves_invariant",
+      "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+      "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/sub_earmarked_debt_preserves_invariant.yaml",
+      "task_manifest_sha256": "b253973d3e4a01bbd0901f8a5bb0abb3f749a603e06860b035221408bff01d1c",
+      "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Alchemix.EarmarkConservation._sync_preserves_invariant",
+      "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
+      "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/sync_account_preserves_invariant.yaml",
+      "task_manifest_sha256": "be20c81ce48ddda267437a7770735437dfec0791a6fc6c3e8419b280a17e810e",
+      "task_ref": "alchemix/earmark_conservation/sync_account_preserves_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Balancer.ReClammSwapRounding.onSwap_fixed_virtual_balances_product_non_decreasing",
+      "reference_module": "Benchmark.Cases.Balancer.ReClammSwapRounding.Proofs",
+      "reference_module_path": "Benchmark/Cases/Balancer/ReClammSwapRounding/Proofs.lean",
+      "reference_module_sha256": "64ed1d10b2803540fbc3aa4153f723c0a588b8cfe15a1224bd9f031f5528894e",
+      "task_manifest_path": "cases/balancer/reclamm_swap_rounding/tasks/on_swap_fixed_virtual_balances_product_non_decreasing.yaml",
+      "task_manifest_sha256": "12a94a00e9730acec9103f6aa62de2ff103500d7ae500a68a86c0aa9735edaca",
+      "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Cork.PoolSolvency.solvency_preserved",
+      "reference_module": "Benchmark.Cases.Cork.PoolSolvency.Proofs",
+      "reference_module_path": "Benchmark/Cases/Cork/PoolSolvency/Proofs.lean",
+      "reference_module_sha256": "7f090cb255d1c689ce0aa33904b5d9acf567ad7fb4aa2ffb461b629c95e4a83c",
+      "task_manifest_path": "cases/cork/pool_solvency/tasks/solvency_preserved.yaml",
+      "task_manifest_sha256": "f73c7f4289aeaa6813438f6f72aa0e179d4088b998da3693422608e98397055e",
+      "task_ref": "cork/pool_solvency/solvency_preserved"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.deposit_sets_pool_balance",
+      "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+      "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/deposit_sets_pool_balance.yaml",
+      "task_manifest_sha256": "dbe8ae5ce0f2a82c46ff6aec6e1fc384635c37179381f43820db39e4c1b696fb",
+      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.deposit_sets_sender_credit",
+      "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+      "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/deposit_sets_sender_credit.yaml",
+      "task_manifest_sha256": "025e570ff535c56af87dbf72806eb239e97bfee51860c02228cde9684a5bee36",
+      "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.exploit_trace_drains_pool",
+      "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+      "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/exploit_trace_drains_pool.yaml",
+      "task_manifest_sha256": "3cfc2d0e9e802d97eb103c8e40d47aa52ad0d4ef7690106d071dbe0920ed8072",
+      "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_preserves_pool_balance",
+      "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+      "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/flash_loan_via_deposit_preserves_pool_balance.yaml",
+      "task_manifest_sha256": "e624a771d9dadc33c77cc6bcf67a8d001e02c0a6b3c6ab5475714a56102511cf",
+      "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.flashLoanViaDeposit_sets_sender_credit",
+      "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
+      "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/flash_loan_via_deposit_sets_sender_credit.yaml",
+      "task_manifest_sha256": "eccd148cc14f597752053c9e7d4fe76695688f88549a5e92e7b14ad201f8656c",
+      "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.account_rejection_reverts",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/account_rejection_reverts.yaml",
+      "task_manifest_sha256": "00015922e62691ea498aacb173ab976a595787622a2a7f3383b5040f931b378a",
+      "task_ref": "erc4337/entry_point_invariant/account_rejection_reverts"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.all_executed_on_success",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/all_executed_on_success.yaml",
+      "task_manifest_sha256": "86842f82183c01740f68964c09de4f3ee305b92d380da9d8445100f7a9d3cf44",
+      "task_ref": "erc4337/entry_point_invariant/all_executed_on_success"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.all_validated_on_success",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/all_validated_on_success.yaml",
+      "task_manifest_sha256": "c0010a242ac55bbc53682bf685c3540ee81931091dd014d64ff8cc678eb614d4",
+      "task_ref": "erc4337/entry_point_invariant/all_validated_on_success"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.beneficiary_eq_total_prefund",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/beneficiary_eq_total_prefund.yaml",
+      "task_manifest_sha256": "d6ed528a3b38dbe91a04341c78c7e8e182734519ca540bf88b08f790b96b844e",
+      "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.count_executed_eq_validated",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/count_executed_eq_validated.yaml",
+      "task_manifest_sha256": "9201cbf3b8cc0876b80ed3bb75318742eed8920637b735b93f33bfdaeb1f8517",
+      "task_ref": "erc4337/entry_point_invariant/count_executed_eq_validated"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.executed_index_in_bounds",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/executed_index_in_bounds.yaml",
+      "task_manifest_sha256": "38c84f69be75374c790cb9881f2c2b2062ef45ff26091fe7f8dee3ec8da5ed8c",
+      "task_ref": "erc4337/entry_point_invariant/executed_index_in_bounds"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_iff_validation",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_iff_validation.yaml",
+      "task_manifest_sha256": "2284652efa74bb2a11e0af965607521c620e01f32a19fff423ff78d17fc5d269",
+      "task_ref": "erc4337/entry_point_invariant/execution_iff_validation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_implies_validation",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_implies_validation.yaml",
+      "task_manifest_sha256": "470cc05973fdf3e27dc87a26c3ca8cce9ecb8a356bc91fea795d8971c3d37426",
+      "task_ref": "erc4337/entry_point_invariant/execution_implies_validation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_independent_of_inner_revert",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_independent_of_inner_revert.yaml",
+      "task_manifest_sha256": "fa2679c894b20561bd71cb90b9c9a84de4727fbee7f89325c325495d81924d2d",
+      "task_ref": "erc4337/entry_point_invariant/execution_independent_of_inner_revert"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.execution_length_eq_validation_length",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_length_eq_validation_length.yaml",
+      "task_manifest_sha256": "c734beb780e98b7347ffb6c91839a38d8914964bdfcdd04275fbd3ab9755ce21",
+      "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.executionR_iff_in_bounds",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_r_iff_in_bounds.yaml",
+      "task_manifest_sha256": "361b40a342b5d6f2f40ac8525aa25bde628063381c4803c6409e1777d2a32fd7",
+      "task_ref": "erc4337/entry_point_invariant/execution_r_iff_in_bounds"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.fees_collected_eq_ops_length",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/fees_collected_eq_ops_length.yaml",
+      "task_manifest_sha256": "878552e4445716dc257ffc31803385b7cad75d41ae2b20a80af18d7ebac6c335",
+      "task_ref": "erc4337/entry_point_invariant/fees_collected_eq_ops_length"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.fees_concat_additive",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/fees_concat_additive.yaml",
+      "task_manifest_sha256": "7f02201b9a8a15d6a84d4b1cd100f67375f5eac3ae9d4bb3fda656acaadd1e62",
+      "task_ref": "erc4337/entry_point_invariant/fees_concat_additive"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.full_success_implies_all_account_approved",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/full_success_implies_all_account_approved.yaml",
+      "task_manifest_sha256": "d09c482818b161738095d0900c951a1144f07b5fa42846b5507c7ef9ca7d9fc9",
+      "task_ref": "erc4337/entry_point_invariant/full_success_implies_all_account_approved"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.handleOps_deterministic",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/handle_ops_deterministic.yaml",
+      "task_manifest_sha256": "103a325a9a28f54d372e059cd11989414fb347efd24d2977fca407193605c641",
+      "task_ref": "erc4337/entry_point_invariant/handle_ops_deterministic"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.handleOps_empty",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/handle_ops_empty.yaml",
+      "task_manifest_sha256": "ba728a396225769ee20bb711331804b3acceb85ddd78a2272f99bc891f652e44",
+      "task_ref": "erc4337/entry_point_invariant/handle_ops_empty"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.no_beneficiary_payout_on_revert",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/no_beneficiary_payout_on_revert.yaml",
+      "task_manifest_sha256": "9f1593e8bc9ba08ef1e0202c76ff9b07eabc903f178651ec09a14f737e331147",
+      "task_ref": "erc4337/entry_point_invariant/no_beneficiary_payout_on_revert"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.no_execution_on_revert",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/no_execution_on_revert.yaml",
+      "task_manifest_sha256": "2ca657f56571127fdeefca323ecc99f13ec981d7a669c19abd51f9c2ac6ada79",
+      "task_ref": "erc4337/entry_point_invariant/no_execution_on_revert"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.no_fees_on_revert",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/no_fees_on_revert.yaml",
+      "task_manifest_sha256": "7cf285c0104176e3a7f02d6007195bd3222664cb978ff7879302b44a785a5fe5",
+      "task_ref": "erc4337/entry_point_invariant/no_fees_on_revert"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_advances_by_batch_size",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/nonce_advances_by_batch_size.yaml",
+      "task_manifest_sha256": "0412965119be36daa2281db0813076c671938d5229cbbb7919e89f82487cbafb",
+      "task_ref": "erc4337/entry_point_invariant/nonce_advances_by_batch_size"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_mismatch_reverts",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/nonce_mismatch_reverts.yaml",
+      "task_manifest_sha256": "f1f10babc4784e11e1dca9f18b0a5c1cf98bce75250979c5401f1fbac7456b89",
+      "task_ref": "erc4337/entry_point_invariant/nonce_mismatch_reverts"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.nonce_strictly_increases",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/nonce_strictly_increases.yaml",
+      "task_manifest_sha256": "a8878295f19b9b40291eed2bff9d3877fdb1bbdeff8652b5063e52144f258e62",
+      "task_ref": "erc4337/entry_point_invariant/nonce_strictly_increases"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.paymaster_irrelevant_when_absent",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/paymaster_irrelevant_when_absent.yaml",
+      "task_manifest_sha256": "b6d35aa0b196a7bed87dd6ed920c6639c8cdd3122887e0706572b1c068d68938",
+      "task_ref": "erc4337/entry_point_invariant/paymaster_irrelevant_when_absent"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.paymaster_rejection_reverts_when_present",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/paymaster_rejection_reverts_when_present.yaml",
+      "task_manifest_sha256": "4838366c3af6a45a3656aaefc940ed5f1eca82fc47d8763f6df193c33755ea4c",
+      "task_ref": "erc4337/entry_point_invariant/paymaster_rejection_reverts_when_present"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.sender_call_iff_validated_and_calldata",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/sender_call_iff_validated_and_calldata.yaml",
+      "task_manifest_sha256": "2789dba2c03c157d5476309671a6fa81e563d80e668c54cdb49f62f815d901a3",
+      "task_ref": "erc4337/entry_point_invariant/sender_call_iff_validated_and_calldata"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.single_failure_reverts",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/single_failure_reverts.yaml",
+      "task_manifest_sha256": "b7d87089ed344da90a15a3a530d5a87bc6a4f95f36a9ec8b4d350884aca3e41d",
+      "task_ref": "erc4337/entry_point_invariant/single_failure_reverts"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_execution_on_validation",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/single_op_execution_on_validation.yaml",
+      "task_manifest_sha256": "e93eff3c2cc125fb1d9fec517281f2fe4a53507c6adb49ce85f0649e906cbb58",
+      "task_ref": "erc4337/entry_point_invariant/single_op_execution_on_validation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.single_op_fee_collected",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/single_op_fee_collected.yaml",
+      "task_manifest_sha256": "96c5f1d09cc9f5ace751ae97df00a19a8db8af75c681106cfa9e496b3cc2bce6",
+      "task_ref": "erc4337/entry_point_invariant/single_op_fee_collected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.total_prefund_concat",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/total_prefund_concat.yaml",
+      "task_manifest_sha256": "7ce3a66bade75bcdc8dc3ae48191833a1972655ac159ad12fbccced07aab7b3d",
+      "task_ref": "erc4337/entry_point_invariant/total_prefund_concat"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_concat.yaml",
+      "task_manifest_sha256": "30c1af04db9eb0c44a77ce258625ed7958a67ae1f1960dbeae6464935968b50d",
+      "task_ref": "erc4337/entry_point_invariant/validation_concat"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat_fail_left",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_concat_fail_left.yaml",
+      "task_manifest_sha256": "1ed0f3e445ff845e3e8e3b5599b16f22b0396c953b2a9be49eee4aaa4111196f",
+      "task_ref": "erc4337/entry_point_invariant/validation_concat_fail_left"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_concat_fail_right",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_concat_fail_right.yaml",
+      "task_manifest_sha256": "97a839902dd74cd542a220b262281e6e57fb74bfcda4f3718208d3efa3a26c68",
+      "task_ref": "erc4337/entry_point_invariant/validation_concat_fail_right"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ERC4337.EntryPointInvariant.validation_implies_execution",
+      "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
+      "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
+      "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_implies_execution.yaml",
+      "task_manifest_sha256": "b8a26bbe7b6d13e5abe6c23fe0545e83620f02b9a073c1e03ab74e5035ddd439",
+      "task_ref": "erc4337/entry_point_invariant/validation_implies_execution"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_starts_chain_at_threshold",
+      "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+      "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+      "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/chain_start_threshold.yaml",
+      "task_manifest_sha256": "c42d436c1d61cb18842307b1bb626866e829f2d3a0f74c0fdf86c12a53ac6c5b",
+      "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.deposit_increments_deposit_count",
+      "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+      "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+      "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/deposit_count.yaml",
+      "task_manifest_sha256": "d2f311b6b38cdac7b5a77dd2d783152eff5b41cee1227195f5e11d140a7efc40",
+      "task_ref": "ethereum/deposit_contract_minimal/deposit_count"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_increments_full_count",
+      "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+      "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+      "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/full_deposit_increments_full_count.yaml",
+      "task_manifest_sha256": "3e498c10ceecf44a2c212f2a148a855cd425675ba54fde7566a5d785a4f41762",
+      "task_ref": "ethereum/deposit_contract_minimal/full_deposit_increments_full_count"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.full_deposit_preserves_partial_gap",
+      "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+      "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+      "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/full_deposit_preserves_partial_gap.yaml",
+      "task_manifest_sha256": "fff03e8112dc0a1f7f75d84ef4cb636581d1f5c3ad77f0362a435418f1a679c0",
+      "task_ref": "ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Ethereum.DepositContractMinimal.small_deposit_preserves_full_count",
+      "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
+      "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
+      "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/small_deposit_preserves_full_count.yaml",
+      "task_manifest_sha256": "c87f031151ce44c1990c0b2c24248dd1a1e498b3ac1eb22aedcf251fda37e7e5",
+      "task_ref": "ethereum/deposit_contract_minimal/small_deposit_preserves_full_count"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.claimRedeem_preserves_global_solvency",
+      "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+      "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_manifest_path": "cases/forgeyields/global_solvency/tasks/claim_redeem_preserves_global_solvency.yaml",
+      "task_manifest_sha256": "66e263b32d8ca7dd81f4066d2d5856eaa3313333794dbf69b2bffefad8551561",
+      "task_ref": "forgeyields/global_solvency/claim_redeem_preserves_global_solvency"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.deposit_preserves_global_solvency",
+      "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+      "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_manifest_path": "cases/forgeyields/global_solvency/tasks/deposit_preserves_global_solvency.yaml",
+      "task_manifest_sha256": "38319d00d0efd742bccd0057af50cb47caacf7b9225a3373edf725685c09e386",
+      "task_ref": "forgeyields/global_solvency/deposit_preserves_global_solvency"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.handle_preserves_global_solvency",
+      "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+      "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_manifest_path": "cases/forgeyields/global_solvency/tasks/handle_preserves_global_solvency.yaml",
+      "task_manifest_sha256": "35f2c7393ce696972fc4a3c5e8153b382c331260242789fd569c6ced67a471fc",
+      "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.redeemTokenGatewayDepreciated_preserves_global_solvency",
+      "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+      "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_manifest_path": "cases/forgeyields/global_solvency/tasks/redeem_token_gateway_depreciated_preserves_global_solvency.yaml",
+      "task_manifest_sha256": "f66c8865a69ec4a00941e7d02d55c47a4e23c189910e3b632dbcfe327239c239",
+      "task_ref": "forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.report_preserves_global_solvency",
+      "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+      "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_manifest_path": "cases/forgeyields/global_solvency/tasks/report_preserves_global_solvency.yaml",
+      "task_manifest_sha256": "6632dd29dd59ff67ee42821d010c754d5ccaa6316ffbd05396ac1661b20ac878",
+      "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.requestRedeem_preserves_global_solvency",
+      "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+      "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_manifest_path": "cases/forgeyields/global_solvency/tasks/request_redeem_preserves_global_solvency.yaml",
+      "task_manifest_sha256": "47a569e04316212062393d9e124b4b335bb4187904f58010eb05e04eb426b7d8",
+      "task_ref": "forgeyields/global_solvency/request_redeem_preserves_global_solvency"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.ForgeYields.GlobalSolvency.transferRemote_preserves_global_solvency",
+      "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
+      "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_manifest_path": "cases/forgeyields/global_solvency/tasks/transfer_remote_preserves_global_solvency.yaml",
+      "task_manifest_sha256": "8c3ae5d206823c4fb753ea423eddbb4087900b8e748d8d06ee646d475ba70937",
+      "task_ref": "forgeyields/global_solvency/transfer_remote_preserves_global_solvency"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.fee_payout_bounded_by_fee_free",
+      "reference_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
+      "reference_module_path": "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Proofs.lean",
+      "reference_module_sha256": "ffb2bd98f30569f4a5ba7608091f94d2e82a0bcfa1c826dd9bf6b571ebe4047a",
+      "task_manifest_path": "cases/ipor/plasma_vault_redeem_split/tasks/fee_payout_bounded_by_fee_free.yaml",
+      "task_manifest_sha256": "ed4e1278be77362d9e7089aa9d5e6dbc1c170b98e407ee6e5e00a7785256daf1",
+      "task_ref": "ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.redeem_preserves_pps",
+      "reference_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
+      "reference_module_path": "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Proofs.lean",
+      "reference_module_sha256": "ffb2bd98f30569f4a5ba7608091f94d2e82a0bcfa1c826dd9bf6b571ebe4047a",
+      "task_manifest_path": "cases/ipor/plasma_vault_redeem_split/tasks/redeem_preserves_pps.yaml",
+      "task_manifest_sha256": "58c0d98e49eb65aa35429e4c5eb9acaca2923cbcf94214f3a1aae17f03ee5921",
+      "task_ref": "ipor/plasma_vault_redeem_split/redeem_preserves_pps"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.draw_interval_matches_weights",
+      "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+      "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+      "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_manifest_path": "cases/kleros/sortition_trees/tasks/draw_interval_matches_weights.yaml",
+      "task_manifest_sha256": "583d3086fb47d9bb896ebb69e265e460e62b12f689a9552ceab509f95bea2e32",
+      "task_ref": "kleros/sortition_trees/draw_interval_matches_weights"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.draw_selects_valid_leaf",
+      "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+      "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+      "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_manifest_path": "cases/kleros/sortition_trees/tasks/draw_selects_valid_leaf.yaml",
+      "task_manifest_sha256": "52f845e8233293f1517909f3eade2307326a17030e94cb41774c1f3a9162c000",
+      "task_ref": "kleros/sortition_trees/draw_selects_valid_leaf"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.node_id_bijection",
+      "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+      "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+      "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_manifest_path": "cases/kleros/sortition_trees/tasks/node_id_bijection.yaml",
+      "task_manifest_sha256": "ed927bc7afc310da1eadbb9245d4d518516ea075e84a7a6fc97881ec2afaae3b",
+      "task_ref": "kleros/sortition_trees/node_id_bijection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.parent_equals_sum_of_children",
+      "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+      "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+      "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_manifest_path": "cases/kleros/sortition_trees/tasks/parent_equals_sum_of_children.yaml",
+      "task_manifest_sha256": "e5784ef5a57936ab3fd6c4858714f2d7e65e3257c596511449f57ea5c9469c5c",
+      "task_ref": "kleros/sortition_trees/parent_equals_sum_of_children"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.root_equals_sum_of_leaves",
+      "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+      "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+      "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_manifest_path": "cases/kleros/sortition_trees/tasks/root_equals_sum_of_leaves.yaml",
+      "task_manifest_sha256": "c69b84e09a472dd44890a40b86dca65aa3289bfd3202b3c639653ffed9395e82",
+      "task_ref": "kleros/sortition_trees/root_equals_sum_of_leaves"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Kleros.SortitionTrees.root_minus_left_equals_right_subtree",
+      "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
+      "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
+      "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_manifest_path": "cases/kleros/sortition_trees/tasks/root_minus_left_equals_right_subtree.yaml",
+      "task_manifest_sha256": "d18147e54464c80e19d9d3c747a2969e38f42e12ff044d669a58bde0661342be",
+      "task_ref": "kleros/sortition_trees/root_minus_left_equals_right_subtree"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.checkReturnAmount_partial_fill_price_floor",
+      "reference_module": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs",
+      "reference_module_path": "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Proofs.lean",
+      "reference_module_sha256": "79591ee63c801d105ddaf8620778467e625ce152fbe207e2cb1c170eaaf6ad77",
+      "task_manifest_path": "cases/kyberswap/partial_fill_price_floor/tasks/check_return_amount_partial_fill_price_floor.yaml",
+      "task_manifest_sha256": "40837141cf6077a555e2876f84cff390c64b5ecb0e4ce49687e7ed6ecf3c04d2",
+      "task_ref": "kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Lagoon.Guardrails.guardrails_exact_compliance",
+      "reference_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "reference_module_path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
+      "reference_module_sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc",
+      "task_manifest_path": "cases/lagoon/guardrails/tasks/exact_compliance.yaml",
+      "task_manifest_sha256": "ab2a7e71123ef8fb69b97f1dbcfa51ef0ce62b92ddd349239161a6039d9c93da",
+      "task_ref": "lagoon/guardrails/exact_compliance"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Lagoon.Guardrails.guardrails_negative_bounded",
+      "reference_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "reference_module_path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
+      "reference_module_sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc",
+      "task_manifest_path": "cases/lagoon/guardrails/tasks/negative_variation_bounded.yaml",
+      "task_manifest_sha256": "80a1f09b567e2d99d5c204cb96828fab9a428c5338de0170669c59f8ae9ae5a6",
+      "task_ref": "lagoon/guardrails/negative_variation_bounded"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Lagoon.Guardrails.guardrails_positive_bounded",
+      "reference_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
+      "reference_module_path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
+      "reference_module_sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc",
+      "task_manifest_path": "cases/lagoon/guardrails/tasks/positive_variation_bounded.yaml",
+      "task_manifest_sha256": "2326d1e3a9ed36523d2add050cb51789977706ecda2c071e63aeb88a58952bfa",
+      "task_ref": "lagoon/guardrails/positive_variation_bounded"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.ceildiv_sandwich",
+      "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+      "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+      "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_manifest_path": "cases/lido/vaulthub_locked/tasks/ceildiv_sandwich.yaml",
+      "task_manifest_sha256": "0e395e63fc7973ebc44e673b5817fb1e400975507eaefc0e2d0bcde54fcf181e",
+      "task_ref": "lido/vaulthub_locked/ceildiv_sandwich"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.locked_funds_solvency",
+      "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+      "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+      "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_manifest_path": "cases/lido/vaulthub_locked/tasks/locked_funds_solvency.yaml",
+      "task_manifest_sha256": "1a89a433f7b4591d617bb7946a12b87191c4faa239d31407febfd24b89f82967",
+      "task_ref": "lido/vaulthub_locked/locked_funds_solvency"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.max_liability_shares_bound",
+      "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+      "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+      "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_manifest_path": "cases/lido/vaulthub_locked/tasks/max_liability_shares_bound.yaml",
+      "task_manifest_sha256": "0fd7877d28f8f0fdf4ab6bcd41d0917a875a5985edf4bfa72a13847b984fb584",
+      "task_ref": "lido/vaulthub_locked/max_liability_shares_bound"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.reserve_ratio_bounds",
+      "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+      "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+      "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_manifest_path": "cases/lido/vaulthub_locked/tasks/reserve_ratio_bounds.yaml",
+      "task_manifest_sha256": "f9bfdd20bc0b6f4aab390308ab5076a321f59fca06d2e0446d64dd0b9b6beced",
+      "task_ref": "lido/vaulthub_locked/reserve_ratio_bounds"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Lido.VaulthubLocked.shares_conversion_monotone",
+      "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
+      "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
+      "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_manifest_path": "cases/lido/vaulthub_locked/tasks/shares_conversion_monotone.yaml",
+      "task_manifest_sha256": "4a8346f1fe43303aff2354b1a19460a16a115e62c3a97642222a370b39a5ded0",
+      "task_ref": "lido/vaulthub_locked/shares_conversion_monotone"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.committed_route_executes_every_step",
+      "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+      "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_manifest_path": "cases/lifi/swap_atomicity/tasks/committed_route_executes_every_step.yaml",
+      "task_manifest_sha256": "e6b39addb3f66b41c0d4197f6a271028c923fdfcd7cfe6376b99e50f95b26e27",
+      "task_ref": "lifi/swap_atomicity/committed_route_executes_every_step"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.failed_step_reverts",
+      "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+      "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_manifest_path": "cases/lifi/swap_atomicity/tasks/failed_step_reverts.yaml",
+      "task_manifest_sha256": "2936c492f95b0d8dee073c06fa1adbffd1dd866356873014593f82903f6de31d",
+      "task_ref": "lifi/swap_atomicity/failed_step_reverts"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.final_transfer_implies_all_steps_succeeded",
+      "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+      "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_manifest_path": "cases/lifi/swap_atomicity/tasks/final_transfer_implies_all_steps_succeeded.yaml",
+      "task_manifest_sha256": "f78f43088771cd4bde78481170da1bcdf06e8dfd3faa8af1891114aadbaa3bbf",
+      "task_ref": "lifi/swap_atomicity/final_transfer_implies_all_steps_succeeded"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.min_output_required_for_commit",
+      "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+      "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_manifest_path": "cases/lifi/swap_atomicity/tasks/min_output_required_for_commit.yaml",
+      "task_manifest_sha256": "e1cd4891626b58abccc10c2201d5baf9a01aa8f40aa9c4ff684e0b9a190c328a",
+      "task_ref": "lifi/swap_atomicity/min_output_required_for_commit"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.no_final_transfer_on_failed_step",
+      "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+      "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_manifest_path": "cases/lifi/swap_atomicity/tasks/no_final_transfer_on_failed_step.yaml",
+      "task_manifest_sha256": "74be5433eea78ab90d43f05b364b0f7ad76a6dec89b4a0391571a3d9310f94f3",
+      "task_ref": "lifi/swap_atomicity/no_final_transfer_on_failed_step"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.LiFi.SwapAtomicity.route_gate_failure_prevents_commit",
+      "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
+      "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
+      "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_manifest_path": "cases/lifi/swap_atomicity/tasks/route_gate_failure_prevents_commit.yaml",
+      "task_manifest_sha256": "871d8da49143429447e489938e534bfdb433a216044409fdbf86f05e6a3a033d",
+      "task_ref": "lifi/swap_atomicity/route_gate_failure_prevents_commit"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_book_value",
+      "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
+      "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
+      "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
+      "task_manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_book_value.yaml",
+      "task_manifest_sha256": "42a485ba364b042eb62d576cb9545916500b61e47fde24cf1d44c8ab728517a9",
+      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_buy_price",
+      "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
+      "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
+      "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
+      "task_manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_buy_price.yaml",
+      "task_manifest_sha256": "41923573dc4ecae022e8e339b74e4bc177bc06e3fad43da2e89585c707b5bc90",
+      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_buy_price"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_capital",
+      "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
+      "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
+      "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
+      "task_manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_capital.yaml",
+      "task_manifest_sha256": "ee1431fd4b2485e0e1945d6afab8bad44c50eca52f5525ebc472fb934848a224",
+      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_capital"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.NexusMutual.RammPriceBand.syncPriceBand_sets_sell_price",
+      "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
+      "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
+      "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
+      "task_manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_sell_price.yaml",
+      "task_manifest_sha256": "20daa71080d0d8b6e7b7979c62cba0afcbefece0c03afb4cb291988ebc7dbc59",
+      "task_ref": "nexus_mutual/ramm_price_band/sync_sets_sell_price"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_erc20_transferFrom_uses_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_erc20_transfer_from_uses_outer_caller.yaml",
+      "task_manifest_sha256": "4c92d5a461a291d59ccd48c251227fb21715e7d7b1b37f1b16e9fb65a9f871bb",
+      "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.delta_compose_internal_permit2_transferFrom_uses_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_permit2_transfer_from_uses_outer_caller.yaml",
+      "task_manifest_sha256": "35699ad07a08edd83cc875a86c7418f32df119958f9c9c7e4909e75d39b1eb7f",
+      "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_erc20_transferFrom_uses_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_erc20_transfer_from_uses_outer_caller.yaml",
+      "task_manifest_sha256": "3605d2fc53a48a563ba0a7c2bd32ade48f7acc92b1063cffded30d9551134217",
+      "task_ref": "onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.direct_permit2_transferFrom_uses_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_permit2_transfer_from_uses_outer_caller.yaml",
+      "task_manifest_sha256": "962c947773fb5dc362ec34b2fa9a4a7a147a035f3877333101e451b2fa28c87e",
+      "task_ref": "onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.flash_callback_erc20_transferFrom_uses_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/flash_callback_erc20_transfer_from_uses_outer_caller.yaml",
+      "task_manifest_sha256": "4ab980a7d70647a36f772ec8f6899327393bac8eea865c17ee09d25c27ee0073",
+      "task_ref": "onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.nested_flash_and_swap_callbacks_keep_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/nested_flash_and_swap_callbacks_keep_outer_caller.yaml",
+      "task_manifest_sha256": "0094091227883aa479fab2d051853acc5a5449ed9ec08a38d313bb1b390ac631",
+      "task_ref": "onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.swap_callback_permit2_transferFrom_uses_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/swap_callback_permit2_transfer_from_uses_outer_caller.yaml",
+      "task_manifest_sha256": "988cbdee8d72f3dd15b63df48c46d21599f694582490bef143373d1ea92e9371",
+      "task_ref": "onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_erc20_transferFrom_uses_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_erc20_transfer_from_uses_outer_caller.yaml",
+      "task_manifest_sha256": "4c801a7d719bc645f401c9bf7485d75c48984584e83418f30ac4bc6c1fe75eeb",
+      "task_ref": "onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.transfers_permit2_transferFrom_uses_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_permit2_transfer_from_uses_outer_caller.yaml",
+      "task_manifest_sha256": "242fc342b411ab5844a0220084af8e2a224165bf4f51e02ceebef39b73ce5f83",
+      "task_ref": "onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.v3_callback_direct_transferFrom_uses_outer_caller",
+      "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
+      "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
+      "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/v3_callback_direct_transfer_from_uses_outer_caller.yaml",
+      "task_manifest_sha256": "c2c6818153b0cc3f12e456761a51c06a91a6aac2c4ce0b71158c5dbb29491e24",
+      "task_ref": "onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_redeem_round_trip_bound",
+      "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+      "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_redeem_round_trip_bound.yaml",
+      "task_manifest_sha256": "73c27645e8f963876051b26f2956c2dcade4811069f641d190c9d6060f7a3505",
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_redeem_round_trip_bound"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalAssets",
+      "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+      "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_sets_total_assets.yaml",
+      "task_manifest_sha256": "fd0f6594d4de77a7913c6cd11b082fbdfba40a2aee71903f47f20dfbf2a37b6a",
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_assets"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.deposit_sets_totalShares",
+      "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+      "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_sets_total_shares.yaml",
+      "task_manifest_sha256": "56bcd1b044a6d1559559a61ed7631152bfba5ab4117a28030774143213fcb993",
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_shares"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.positive_deposit_mints_positive_shares_under_rate_bound",
+      "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+      "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/positive_deposit_mints_positive_shares_under_rate_bound.yaml",
+      "task_manifest_sha256": "16bfbd46e002bcf902dce6736512f998b456b1a110b750e2ea4f8cca6c426545",
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/positive_deposit_mints_positive_shares_under_rate_bound"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.previewDeposit_rounds_down",
+      "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+      "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/preview_deposit_rounds_down.yaml",
+      "task_manifest_sha256": "c3915e8dc58d96ca7a63cd1585213f9eeff0bb73d195c3f9fdd0579d7e52361c",
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/preview_deposit_rounds_down"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.share_price_monotone_under_donation",
+      "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
+      "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
+      "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/share_price_monotone_under_donation.yaml",
+      "task_manifest_sha256": "ddfd926a9aadbf9cd4f45d197910403560667d5de45d2f5950b0fcb142b70603",
+      "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/share_price_monotone_under_donation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_marks_both_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_marks_both_claimed.yaml",
+      "task_manifest_sha256": "2bbe1ca6435b238176d8cd806b0b19dcdc8ce3cc49631752636b732bea3953de",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_round_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_updates_round_claimed.yaml",
+      "task_manifest_sha256": "7f87fb855aa4f0b06c60f3281ba978bded78426df4c9dbf54d233d97c130fe2b",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_updates_total_allocated",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_updates_total_allocated.yaml",
+      "task_manifest_sha256": "babd791600e4b60dcc4515de62caa12bb7f101d22f80fa29475941af92527e33",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_claimed_plus_allocated_conserved",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claimed_plus_allocated_conserved.yaml",
+      "task_manifest_sha256": "50f446e7ecf98bdeadd4f05dd2498d7c434f0a2c64814ec28cc8c61600a6fad9",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_matches_independent_claims",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_matches_independent_claims.yaml",
+      "task_manifest_sha256": "7593dee451701a767ca90edb7267fd4300b0d63c2fc530991972594732dbf03c",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_preserves_round_bounds",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_no_overclaim.yaml",
+      "task_manifest_sha256": "5cb5f75ab8e52287f7a5b91b1902a865ef88d33f58c8543a1bc149f67f83bfa8",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_no_overclaim"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_exceeds_total",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_usdc_bound_violation_rejected.yaml",
+      "task_manifest_sha256": "8ea235611d9b2ca74d2db7659d73f9550e6841c0bf28d776d75190bb5a7eb86f",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_usdc_already_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_usdc_double_claim_rejected.yaml",
+      "task_manifest_sha256": "f9aa4b1905075a0654bc6a88d5a86bb86ffdb6bf2c58e2b8e8de8636dcec9a54",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_exceeds_total",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_weth_bound_violation_rejected.yaml",
+      "task_manifest_sha256": "cfb398a25f3699b80de726126caaadf3f1d440d3072947092a4b284a57dada53",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimBoth_reverts_if_weth_already_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_weth_double_claim_rejected.yaml",
+      "task_manifest_sha256": "2fc6dfc7e919ce429de1b4b5e82025e49bb44b0df051dc89be1d6b324180ddb0",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_exceeds_total",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/bound_violation_rejected.yaml",
+      "task_manifest_sha256": "f4c67ed7f6a02efa8780e25be1c701adb244f2e971cf3a00e5f9902273055e70",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_marks_user_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claim_marks_user.yaml",
+      "task_manifest_sha256": "9b70485ef234205323545761cda287a0f863c6b2de32da26b6b1387723a2a7d9",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_round_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claim_updates_round_claimed.yaml",
+      "task_manifest_sha256": "f8e4405f74148da394c9483a8cdeb2d3cdb0b932c31a9cae690f65da4a567fe0",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_updates_total_allocated",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claim_updates_total_allocated.yaml",
+      "task_manifest_sha256": "deba706cf716b65ea59e639261904b0480bd8674e53dd8a4ce3acac5ddad8c20",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_claimed_plus_allocated_conserved",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claimed_plus_allocated_conserved.yaml",
+      "task_manifest_sha256": "bf3849a7f1a3df30fe49d08a8ba401ee6c0152c752553945322a9ed51867c1a9",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_reverts_if_already_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/double_claim_rejected.yaml",
+      "task_manifest_sha256": "82a64b5fdfef1b3b4b1c1cdac0e61d131d446ec501c7e7bb351d2a8a91699428",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/double_claim_rejected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_round_bound",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/no_overclaim.yaml",
+      "task_manifest_sha256": "d05283dce53c12772f6600c4b130efcf46aff8eb77f89e1625b5e3f7dc606037",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/no_overclaim"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimUsdc_preserves_weth_state",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/usdc_preserves_weth_state.yaml",
+      "task_manifest_sha256": "a85c46950f6e6992419c67471b008a58af1243a7e5c833b3780e837de7074852",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_exceeds_total",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_bound_violation_rejected.yaml",
+      "task_manifest_sha256": "1c7a643982e73e822bb3f34333e860dcee6d26dde3a5b7819bec5e149575d7bb",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_marks_user_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_marks_user.yaml",
+      "task_manifest_sha256": "fd6c5da5f73cba2addb64161ff95d1a48fac82e248936268b900a8f43f403dd1",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_round_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_updates_round_claimed.yaml",
+      "task_manifest_sha256": "59cbd15a69adc259f0fee222e2e186a310bd08b30d806ad890b4b01881368b09",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_updates_total_allocated",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_updates_total_allocated.yaml",
+      "task_manifest_sha256": "34f5c4ffe4d77b9505c2de53c68eea41b3706e362dd56d96684a959fa5b234f9",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_claimed_plus_allocated_conserved",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claimed_plus_allocated_conserved.yaml",
+      "task_manifest_sha256": "24e51d3fc1e6e7b66174ebc3ff2f1382ab97ef5ef43328f6eeadb07ac75249b4",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_reverts_if_already_claimed",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_double_claim_rejected.yaml",
+      "task_manifest_sha256": "42832206f53758fb876269952c7b5944ee08e5e2a7404496e35a181bc12b685f",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_round_bound",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_no_overclaim.yaml",
+      "task_manifest_sha256": "beec747846ab1edbbaddc6b0a1587719326c09feab4d116f8db1b7f9828ef47b",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.claimWeth_preserves_usdc_state",
+      "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
+      "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_preserves_usdc_state.yaml",
+      "task_manifest_sha256": "6546e22c483fe013322014e78921a7453de813ca49c7b10b9315bc10e7fa1eb4",
+      "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Pareto.RedemptionBacking.depositFunds_preserves_closed_epoch_reserve_guard",
+      "reference_module": "Benchmark.Cases.Pareto.RedemptionBacking.Proofs",
+      "reference_module_path": "Benchmark/Cases/Pareto/RedemptionBacking/Proofs.lean",
+      "reference_module_sha256": "076bceaec8ed81b677d41947de352e8d305ce3be09c35874fa2bc808f520d127",
+      "task_manifest_path": "cases/pareto/redemption_backing/tasks/deposit_funds_preserves_closed_epoch_reserve_guard.yaml",
+      "task_manifest_sha256": "4bb52144fbb1c6f0bdcc15397165ba8061c623dbea3d17862e5f8f2ffea0f24e",
+      "task_ref": "pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Pendle.PySupplyPairing.mint_py_mints_equal_amount",
+      "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
+      "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
+      "task_manifest_path": "cases/pendle/py_supply_pairing/tasks/mint_py_mints_equal_amount.yaml",
+      "task_manifest_sha256": "cb20d0601fc067123138acf05a245d433048739397722fd893a4970bb1c084a0",
+      "task_ref": "pendle/py_supply_pairing/mint_py_mints_equal_amount"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Pendle.PySupplyPairing.mint_py_preserves_supply_pairing",
+      "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
+      "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
+      "task_manifest_path": "cases/pendle/py_supply_pairing/tasks/mint_py_preserves_supply_pairing.yaml",
+      "task_manifest_sha256": "6fe520c8806d70f814ac43a5befd68bc6d90f25d96512ed7fd9b113af1cab125",
+      "task_ref": "pendle/py_supply_pairing/mint_py_preserves_supply_pairing"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_burns_equal_amount",
+      "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
+      "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
+      "task_manifest_path": "cases/pendle/py_supply_pairing/tasks/redeem_py_pre_expiry_burns_equal_amount.yaml",
+      "task_manifest_sha256": "52958913fbf52f1150a722510281c5224328b66c350937c8bc0090b08df3af4e",
+      "task_ref": "pendle/py_supply_pairing/redeem_py_pre_expiry_burns_equal_amount"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Pendle.PySupplyPairing.redeem_py_pre_expiry_preserves_supply_pairing",
+      "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
+      "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
+      "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
+      "task_manifest_path": "cases/pendle/py_supply_pairing/tasks/redeem_py_pre_expiry_preserves_supply_pairing.yaml",
+      "task_manifest_sha256": "2aef8811a0d04af9c2d95b6463f935342db298d0bf09847aaedf0348eb7a20b6",
+      "task_ref": "pendle/py_supply_pairing/redeem_py_pre_expiry_preserves_supply_pairing"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Piku.FundConservation.amountPaid_preserves_fund_conservation",
+      "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
+      "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
+      "task_manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_preserves_fund_conservation.yaml",
+      "task_manifest_sha256": "e7aa71e86e406bf43b347116b99c7a03ca2750778ab77f6b6c592e5beb7322bb",
+      "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Piku.FundConservation.amountPaid_records_distribution",
+      "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
+      "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
+      "task_manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_records_distribution.yaml",
+      "task_manifest_sha256": "daa848160d144262acabee09ce780fb9970b4a8f69c638e008a3e1951f24baf8",
+      "task_ref": "piku/fund_conservation/amount_paid_records_distribution"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Piku.FundConservation._sellOrder_preserves_fund_conservation",
+      "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
+      "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
+      "task_manifest_path": "cases/piku/fund_conservation/tasks/sell_order_preserves_fund_conservation.yaml",
+      "task_manifest_sha256": "d13fb743e04cf2a2fd89f847a3d9c15e5a5da42940cb9ae5410f516c94ee91b2",
+      "task_ref": "piku/fund_conservation/sell_order_preserves_fund_conservation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Piku.FundConservation._sellOrder_records_redemption_buckets",
+      "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
+      "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
+      "task_manifest_path": "cases/piku/fund_conservation/tasks/sell_order_records_redemption_buckets.yaml",
+      "task_manifest_sha256": "7f5b466a31f823a70f1b23419c5611c3eac437e36e7fc1308c6b118281da3fd3",
+      "task_ref": "piku/fund_conservation/sell_order_records_redemption_buckets"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Polaris.BondingCurve.buy_preserves_reserve_ratio_zero",
+      "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+      "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
+      "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
+      "task_manifest_path": "cases/polaris/bonding_curve/tasks/buy_preserves_reserve_ratio_zero.yaml",
+      "task_manifest_sha256": "212d20b447c3bdbe5b02a3f9013e35387f2f31fe57ba45351bf7af247309ee62",
+      "task_ref": "polaris/bonding_curve/buy_preserves_reserve_ratio_zero"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Polaris.BondingCurve.floorSellAndBurn_preserves_reserve_ratio_zero",
+      "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+      "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
+      "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
+      "task_manifest_path": "cases/polaris/bonding_curve/tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.yaml",
+      "task_manifest_sha256": "3e7b323ed86cb2e8f69ff7035eb37b96d01b37ab9f3bbef653ab659c68118a95",
+      "task_ref": "polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Polaris.BondingCurve.init_reserve_ratio_zero",
+      "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+      "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
+      "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
+      "task_manifest_path": "cases/polaris/bonding_curve/tasks/init_reserve_ratio_zero.yaml",
+      "task_manifest_sha256": "05dba46bc07fa7152df61ce6d12e2360807aeff5a2082f957faa3136b923413b",
+      "task_ref": "polaris/bonding_curve/init_reserve_ratio_zero"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Polaris.BondingCurve.sell_preserves_reserve_ratio_zero",
+      "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
+      "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
+      "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
+      "task_manifest_path": "cases/polaris/bonding_curve/tasks/sell_preserves_reserve_ratio_zero.yaml",
+      "task_manifest_sha256": "b1714fa40467d2f196f872798911491308b9bc12641bb0ec8d1477f3372bf1e5",
+      "task_ref": "polaris/bonding_curve/sell_preserves_reserve_ratio_zero"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Polygon.AgglayerBridge.claimAsset_valid_leaf_and_consumes_unique_nullifier",
+      "reference_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+      "reference_module_path": "Benchmark/Cases/Polygon/AgglayerBridge/Proofs.lean",
+      "reference_module_sha256": "b538b547f87ed98bddcc8d2c57acea9bc606e9d45241c09c272bc1716913c122",
+      "task_manifest_path": "cases/polygon/agglayer_bridge/tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "task_manifest_sha256": "0da27168e6ccdabf2ae0e8645e6e976971a8a3261665797e8df502bf7b377cfd",
+      "task_ref": "polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Polygon.AgglayerBridge.claimMessage_valid_leaf_and_consumes_unique_nullifier",
+      "reference_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+      "reference_module_path": "Benchmark/Cases/Polygon/AgglayerBridge/Proofs.lean",
+      "reference_module_sha256": "b538b547f87ed98bddcc8d2c57acea9bc606e9d45241c09c272bc1716913c122",
+      "task_manifest_path": "cases/polygon/agglayer_bridge/tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.yaml",
+      "task_manifest_sha256": "c73869075eed0f2c83523145cb59cf28ab25bd8319b220f37072e6f1f2dcbb83",
+      "task_ref": "polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Reserve.AuctionPriceBand.price_at_end_time",
+      "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+      "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
+      "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
+      "task_manifest_path": "cases/reserve/auction_price_band/tasks/price_at_end_time.yaml",
+      "task_manifest_sha256": "dac8155bf82766f67c0e3fb2483ad3454ddaaa8fdeaafc508800cd9ad248935d",
+      "task_ref": "reserve/auction_price_band/price_at_end_time"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Reserve.AuctionPriceBand.price_at_start_time",
+      "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+      "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
+      "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
+      "task_manifest_path": "cases/reserve/auction_price_band/tasks/price_at_start_time.yaml",
+      "task_manifest_sha256": "5559a5092456c35c553a380f9e4fa854d3d768a9f142e2a84816d3d6aa80c58a",
+      "task_ref": "reserve/auction_price_band/price_at_start_time"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Reserve.AuctionPriceBand.price_lower_bound",
+      "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+      "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
+      "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
+      "task_manifest_path": "cases/reserve/auction_price_band/tasks/price_lower_bound.yaml",
+      "task_manifest_sha256": "be352b8c2c35e0e1ead71f8bab093af5b0351c5f02458239d08ccfae9c3f91f5",
+      "task_ref": "reserve/auction_price_band/price_lower_bound"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Reserve.AuctionPriceBand.price_upper_bound",
+      "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
+      "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
+      "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
+      "task_manifest_path": "cases/reserve/auction_price_band/tasks/price_upper_bound.yaml",
+      "task_manifest_sha256": "ded5fd031cff55988167dad12319855fd3c96c10667673987660d1904e301736",
+      "task_ref": "reserve/auction_price_band/price_upper_bound"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.depositPegOut_registers_required_amount",
+      "reference_module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
+      "reference_module_path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
+      "reference_module_sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2",
+      "task_manifest_path": "cases/rootstock/flyover_quote_lifecycle/tasks/deposit_peg_out_registers_required_amount.yaml",
+      "task_manifest_sha256": "18233b899d2fa0a361a34508548ad869e7d106d5010ee446cb1a2733254edf3b",
+      "task_ref": "rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.refundPegOut_conserves_quote_amount",
+      "reference_module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
+      "reference_module_path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
+      "reference_module_sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2",
+      "task_manifest_path": "cases/rootstock/flyover_quote_lifecycle/tasks/refund_peg_out_conserves_quote_amount.yaml",
+      "task_manifest_sha256": "230111819507efcca946abbc4242df6aa605ff50ea7798dde445bb80a3ad0d53",
+      "task_ref": "rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.refundUserPegOut_conserves_quote_amount",
+      "reference_module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
+      "reference_module_path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
+      "reference_module_sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2",
+      "task_manifest_path": "cases/rootstock/flyover_quote_lifecycle/tasks/refund_user_peg_out_conserves_quote_amount.yaml",
+      "task_manifest_sha256": "bda6c5abb7e0ef25a61b111d65b0c0c0ea22e75e269fe1a1b338458a4a171021",
+      "task_ref": "rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.addOwner_acyclicity",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/add_owner_acyclicity.yaml",
+      "task_manifest_sha256": "7020e66c7aa91fbd0dfbca346e35a31aa2aee29f51023abcdb7e0f4f4b519057",
+      "task_ref": "safe/owner_manager_reach/add_owner_acyclicity"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.addOwner_isOwnerCorrectness",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/add_owner_is_owner_correctness.yaml",
+      "task_manifest_sha256": "6a1edd349c768143afb7d9cd86fe7e8da4e01d25c9bf090c4d3c341c9a41a075",
+      "task_ref": "safe/owner_manager_reach/add_owner_is_owner_correctness"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.addOwner_ownerListInvariant",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/add_owner_owner_list_invariant.yaml",
+      "task_manifest_sha256": "6b801be7c8f9f165735b1b07ec84736c40362bc8fd22c49c48f73bac2654b2ad",
+      "task_ref": "safe/owner_manager_reach/add_owner_owner_list_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.in_list_reachable",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/in_list_reachable.yaml",
+      "task_manifest_sha256": "49be94fca5758bcb631c3dd7b1964c10395eb907bbf1d6ea6f2cadc46d58cb74",
+      "task_ref": "safe/owner_manager_reach/in_list_reachable"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_acyclicity",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_acyclicity.yaml",
+      "task_manifest_sha256": "dae1edce325712e608bc78ef89b98e0e57f1031bcc2419b32d5f60bc8465c476",
+      "task_ref": "safe/owner_manager_reach/remove_owner_acyclicity"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_inListReachable",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_in_list_reachable.yaml",
+      "task_manifest_sha256": "b675032e4b3be1253331c58961d19e751c025e1cfd8f25f342df434ae1ab1d6d",
+      "task_ref": "safe/owner_manager_reach/remove_owner_in_list_reachable"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_isOwnerCorrectness",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_is_owner_correctness.yaml",
+      "task_manifest_sha256": "cd47926d53b9abe66c3b7dfa56202c281ed74f9ea066e0e9b83303c9895cfbc1",
+      "task_ref": "safe/owner_manager_reach/remove_owner_is_owner_correctness"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.removeOwner_ownerListInvariant",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_owner_list_invariant.yaml",
+      "task_manifest_sha256": "efd7f216142b75f41b3b5788551127ba5d9163074a838a5101d74b29074dc94b",
+      "task_ref": "safe/owner_manager_reach/remove_owner_owner_list_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_acyclicity",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/setup_owners_acyclicity.yaml",
+      "task_manifest_sha256": "eeda98bfff3b5841d13283e020059b1aa58a63d746e3f37c406657015e6e24ef",
+      "task_ref": "safe/owner_manager_reach/setup_owners_acyclicity"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_inListReachable",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/setup_owners_in_list_reachable.yaml",
+      "task_manifest_sha256": "789771507edbd13a88aa9dd25c41233f87216f15c38421fe673aadcf4721a781",
+      "task_ref": "safe/owner_manager_reach/setup_owners_in_list_reachable"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.setupOwners_ownerListInvariant",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/setup_owners_owner_list_invariant.yaml",
+      "task_manifest_sha256": "3a92e00c8d8152acd629359ce6ac22cdedab2169b86c8ef9a86ed733ac36f112",
+      "task_ref": "safe/owner_manager_reach/setup_owners_owner_list_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_acyclicity",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_acyclicity.yaml",
+      "task_manifest_sha256": "51f34ebd72c2996cae716b5207bffdf8631f7b928487655bb8818ca22126553b",
+      "task_ref": "safe/owner_manager_reach/swap_owner_acyclicity"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_inListReachable",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_in_list_reachable.yaml",
+      "task_manifest_sha256": "737ed62c09c46ad7d15b30b8453313077dd8d7362c675ce57a0d7c5ed7ffdbc2",
+      "task_ref": "safe/owner_manager_reach/swap_owner_in_list_reachable"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_isOwnerCorrectness",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_is_owner_correctness.yaml",
+      "task_manifest_sha256": "10879abcbac8795f1c20796c87463b4132d952691fa695e38d0aa5d4bbf0bfd2",
+      "task_ref": "safe/owner_manager_reach/swap_owner_is_owner_correctness"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Safe.OwnerManagerReach.swapOwner_ownerListInvariant",
+      "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
+      "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
+      "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_owner_list_invariant.yaml",
+      "task_manifest_sha256": "8f4e44e8012298dd92e61492dc16210ac51369465760c12518053ea02c996ebf",
+      "task_ref": "safe/owner_manager_reach/swap_owner_owner_list_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Starkware.StarkgateEscrow.deposit_preserves_escrow_lower_bound",
+      "reference_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
+      "reference_module_sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f",
+      "task_manifest_path": "cases/starkware/starkgate_escrow/tasks/deposit_preserves_escrow_lower_bound.yaml",
+      "task_manifest_sha256": "8e9bcd02ff7490776af69e4905b17eed8b8c1fb37d3e1a7b65a2d1934275a2ca",
+      "task_ref": "starkware/starkgate_escrow/deposit_preserves_escrow_lower_bound"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Starkware.StarkgateEscrow.depositReclaim_preserves_escrow_lower_bound",
+      "reference_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
+      "reference_module_sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f",
+      "task_manifest_path": "cases/starkware/starkgate_escrow/tasks/deposit_reclaim_preserves_escrow_lower_bound.yaml",
+      "task_manifest_sha256": "8f52e86f80f3186a683cd73d4ecc1fa59859839eed8330d890af6aa9d3510af4",
+      "task_ref": "starkware/starkgate_escrow/deposit_reclaim_preserves_escrow_lower_bound"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Starkware.StarkgateEscrow.withdraw_preserves_escrow_lower_bound",
+      "reference_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
+      "reference_module_sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f",
+      "task_manifest_path": "cases/starkware/starkgate_escrow/tasks/withdraw_preserves_escrow_lower_bound.yaml",
+      "task_manifest_sha256": "382bd969e0b7fac8abba0ec97cfb37d46c17b73faaa15b9972e2e283b17a1448",
+      "task_ref": "starkware/starkgate_escrow/withdraw_preserves_escrow_lower_bound"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.callbackLevelTwo_is_rejected",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/callback_level_two_is_rejected.yaml",
+      "task_manifest_sha256": "47a5dd5036fef5ee107f8fd24d4f3d6fb01219080209428462e4c525ae58e66f",
+      "task_ref": "superfluid/realtime_balance_conservation/callback_level_two_is_rejected"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_frames_unrelated_account",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_frames_unrelated_account.yaml",
+      "task_manifest_sha256": "223277a659b76d614cadcde4e0b117e6b9f85f6e7fc6e5476e9c8b0e6ca359c1",
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_frames_unrelated_account"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_cfa_projection",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_cfa_projection.yaml",
+      "task_manifest_sha256": "55fdb7ddab435cbb6d03a14b94d86f288b89553e1793b0a6253b9f496d5e44c9",
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_cfa_projection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_future_modular_cfa_global_projection",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_future_modular_cfa_global_projection.yaml",
+      "task_manifest_sha256": "2b12d25a076f01fbaf2bac93253bcbff1278ff8799c1e69d8c8b67325bf9b356",
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_future_modular_cfa_global_projection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_pair_net_flow_rate",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_pair_net_flow_rate.yaml",
+      "task_manifest_sha256": "c83a1a9b86474c9c18e60496224108ea7c51dd2a5644db796aa193efb21cbb34",
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_pair_net_flow_rate"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_frames_unrelated_account",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_frames_unrelated_account.yaml",
+      "task_manifest_sha256": "5f8e8af6290cfbeb25f3dbe8ce4a8834e2aa03fea596676e03c3d6ab431c375d",
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_frames_unrelated_account"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_cfa_projection",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_cfa_projection.yaml",
+      "task_manifest_sha256": "8266ac87355289b64e54057adfd46ed2ef22879c288ef82161473bb0d3ef33f7",
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_cfa_projection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_future_modular_cfa_global_projection",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_future_modular_cfa_global_projection.yaml",
+      "task_manifest_sha256": "6407d4c9c0a2b7fb9dc2988d98724826f5a45c5ab82e637189b7cb2d4d2da20f",
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_future_modular_cfa_global_projection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_pair_net_flow_rate",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_pair_net_flow_rate.yaml",
+      "task_manifest_sha256": "103152d5aff602ae5bb67cc714381f1d9dab03bc0cf271d9bf2ff95ce2c264ab",
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_pair_net_flow_rate"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.failedNested_rolls_back_and_prevents_resume",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/failed_nested_rolls_back_and_prevents_resume.yaml",
+      "task_manifest_sha256": "ae550b07abf61d1a6a41f006b4aa1985013549372fde42c8c958bf11bcd3d3c0",
+      "task_ref": "superfluid/realtime_balance_conservation/failed_nested_rolls_back_and_prevents_resume"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.pairAndFrame_implies_modular_cfa_global_projection",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/pair_and_frame_implies_modular_cfa_global_projection.yaml",
+      "task_manifest_sha256": "ec9b54c1f515084066712c0a00ca798ac3ebc4c35f9be5d8df171b702e9b6780",
+      "task_ref": "superfluid/realtime_balance_conservation/pair_and_frame_implies_modular_cfa_global_projection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_frames_unrelated_account",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_frames_unrelated_account.yaml",
+      "task_manifest_sha256": "3a8de27be53d75ba313765607aa061646fafbc381be14c35d5433c91e4458d43",
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_frames_unrelated_account"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_matches_factored_instance_behavior",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_matches_factored_instance_behavior.yaml",
+      "task_manifest_sha256": "5c4321389a605e8e2aeda0bd2a55a21d2ae5777d5ddc72385fb99d4044737392",
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_matches_factored_instance_behavior"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_cfa_projection",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_cfa_projection.yaml",
+      "task_manifest_sha256": "a853087dcdab491dd6d381ca7c18a579a5389404523262cb902c1ccb76f0995d",
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_cfa_projection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_future_modular_cfa_global_projection",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_future_modular_cfa_global_projection.yaml",
+      "task_manifest_sha256": "108543bc4cf266f7f82d6486feab379a9b1bc069ebd2cb24fc72119a1135b127",
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_future_modular_cfa_global_projection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_pair_net_flow_rate",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_pair_net_flow_rate.yaml",
+      "task_manifest_sha256": "d2be52781b2662149b329a05e538c1d3cb08cf3d4360906af20d05c9fa58d46d",
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_pair_net_flow_rate"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_reloads_final_zero",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_reloads_final_zero.yaml",
+      "task_manifest_sha256": "0e2ca4ebdea85f669d59e9a97160d21ccb02fca66baf3bb82dd5b1da0c7e029e",
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_reloads_final_zero"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.successfulOneLevel_components_compose",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/successful_one_level_components_compose.yaml",
+      "task_manifest_sha256": "9d1f6aa8557fa50a2f11e4e5c4800ae529337a4b9287e557114012f878f002c5",
+      "task_ref": "superfluid/realtime_balance_conservation/successful_one_level_components_compose"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_frames_unrelated_account",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_frames_unrelated_account.yaml",
+      "task_manifest_sha256": "d0b1a7dccabb72593d91a59efa0ffdc722bc56bc1037f324a57c65dcf1337cb9",
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_frames_unrelated_account"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_cfa_projection",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_cfa_projection.yaml",
+      "task_manifest_sha256": "522fa8c13365b119ff40bc46e7fa6459a76e869b5dd87ef8aa831484205de08d",
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_cfa_projection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_future_modular_cfa_global_projection",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_future_modular_cfa_global_projection.yaml",
+      "task_manifest_sha256": "afd2f97a58977c7e79a35b43e90db45ff79a47ef5e09a5403d26307582ee8585",
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_future_modular_cfa_global_projection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_pair_net_flow_rate",
+      "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
+      "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_pair_net_flow_rate.yaml",
+      "task_manifest_sha256": "90a1363a71a281cd87c921b72b22c21c8b136342c30a933b83a50705b81c0803",
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_pair_net_flow_rate"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.fee_claim_preserves_unclaimed_le_supply",
+      "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+      "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/fee_claim_preserves_unclaimed_le_supply.yaml",
+      "task_manifest_sha256": "c349f41f5a9a5334652fd17cc29d50cd6f038342a7e22d8bcb8d0f701e9a02e5",
+      "task_ref": "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.gain_loss_recovery_no_double_charge",
+      "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+      "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/gain_loss_recovery_no_double_charge.yaml",
+      "task_manifest_sha256": "f990160dacbbac130a3d706fc9e4dc94d8203fa6b7c5e6b0982502b3af060092",
+      "task_ref": "t3tris/hwm_performance_fee/gain_loss_recovery_no_double_charge"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.no_performance_fee_when_pre_pps_le_hwm",
+      "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+      "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/no_performance_fee_when_pre_pps_le_hwm.yaml",
+      "task_manifest_sha256": "c4b85c72cd126851d4babe273227cf6be9538ef3c90808d72efe4c5174789483",
+      "task_ref": "t3tris/hwm_performance_fee/no_performance_fee_when_pre_pps_le_hwm"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.period_fee_accounting_preserves_structural_assumptions",
+      "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+      "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/period_fee_accounting_preserves_structural_assumptions.yaml",
+      "task_manifest_sha256": "65cadbb381d3d6572bc5534e99d39d373354fad0a53ab814575518c1c730bd94",
+      "task_ref": "t3tris/hwm_performance_fee/period_fee_accounting_preserves_structural_assumptions"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.profit_pnl_uses_cached_hwm",
+      "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+      "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/profit_pnl_uses_cached_hwm.yaml",
+      "task_manifest_sha256": "0309b73f47516af59497820325a84c5be378565599e3f06bead0cd893fd005f0",
+      "task_ref": "t3tris/hwm_performance_fee/profit_pnl_uses_cached_hwm"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.recovery_then_new_high_uses_stored_hwm",
+      "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+      "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/recovery_then_new_high_uses_stored_hwm.yaml",
+      "task_manifest_sha256": "8038c4e3d19a256bc430831ed6a96c7adfa27879bbe0abb75372c4599b793ed4",
+      "task_ref": "t3tris/hwm_performance_fee/recovery_then_new_high_uses_stored_hwm"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.validated_initial_state_satisfies_successful_assumptions",
+      "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+      "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/validated_initial_state_satisfies_successful_assumptions.yaml",
+      "task_manifest_sha256": "3d663310166ed569a2a8a95462a6c36d3e5be47fea3f81b8b07fe65b931bd6db",
+      "task_ref": "t3tris/hwm_performance_fee/validated_initial_state_satisfies_successful_assumptions"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.T3tris.HwmPerformanceFee.validated_performance_fee_update_preserves_cap",
+      "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
+      "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
+      "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/validated_performance_fee_update_preserves_cap.yaml",
+      "task_manifest_sha256": "9039a23620c4ce973a87e0a465e9fdceaa84703766ece51ad43779fc04d13dcc",
+      "task_ref": "t3tris/hwm_performance_fee/validated_performance_fee_update_preserves_cap"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.TermFinance.TermAuctionClearing.clearing_assignment_correct",
+      "reference_module": "Benchmark.Cases.TermFinance.TermAuctionClearing.Proofs",
+      "reference_module_path": "Benchmark/Cases/TermFinance/TermAuctionClearing/Proofs.lean",
+      "reference_module_sha256": "c48567d170e79d060df5a21153ed8ae94988872851bcce3b316cb6189cdd29c6",
+      "task_manifest_path": "cases/term_finance/term_auction_clearing/tasks/clearing_assignment_correct.yaml",
+      "task_manifest_sha256": "96cb63c6fa35fc83a4352d32baa39da116f1aa925eacd417ec5ad2d8279c8655",
+      "task_ref": "term_finance/term_auction_clearing/clearing_assignment_correct"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.swapDebtTokenToXt_updates_virtual_xt_reserve",
+      "reference_module": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs",
+      "reference_module_path": "Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Proofs.lean",
+      "reference_module_sha256": "dfb816ab397398b72a26797b10bc29387f59c3a8079f28e809509ba19e89d2ca",
+      "task_manifest_path": "cases/termmax/order_v2_buy_xt_single_segment/tasks/swap_debt_token_to_xt_updates_virtual_xt_reserve.yaml",
+      "task_manifest_sha256": "239e6e1818fbf2888ff9e3cba5a32430a562784781cd08d8f936c5c6961fe760",
+      "task_ref": "termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_enforces_fee_adjusted_invariant",
+      "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+      "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_enforces_fee_adjusted_invariant.yaml",
+      "task_manifest_sha256": "2b3d842911fd03773f2c1bc395a103f905ba4d56629477d6d88b40ef32560c2d",
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_enforces_fee_adjusted_invariant"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_swap_sandwich_output_bound",
+      "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+      "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sandwich_output_bound.yaml",
+      "task_manifest_sha256": "0bc66129315b98f54a8d7b7bfc7a876622e17d00b7cc822d1b01ef169fdf898e",
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sandwich_output_bound"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve0",
+      "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+      "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve0.yaml",
+      "task_manifest_sha256": "a5f912adcacfebf73a143799d606f5e3861f3708d898566696753ef7f95df5fe",
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve0"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve1",
+      "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+      "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve1.yaml",
+      "task_manifest_sha256": "f9be2d13d2ec9b8303c4ea0f9eeb13d7aaff91c37bb226fd47c83fcc511fff32",
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_sets_reserve_product",
+      "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+      "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve_product.yaml",
+      "task_manifest_sha256": "6f4d355ec132a18d61deb2e04c8faf5dd96f356fa5b0498fcd3b63c0f512b983",
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve_product"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.applySwap_two_swap_k_monotone",
+      "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
+      "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
+      "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/two_swap_k_monotone.yaml",
+      "task_manifest_sha256": "a305c33adb43641d4484bb3872e870a3ee00389d74df4eb51efba2a13fb13aac",
+      "task_ref": "uniswap_v2/pair_fee_adjusted_swap/two_swap_k_monotone"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.redeem_conservation",
+      "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+      "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_manifest_path": "cases/usual/dao_collateral/tasks/redeem_conservation.yaml",
+      "task_manifest_sha256": "f65e57131a9541ce3450eb13db2350662905722858f911163a00b9eac9e00bc1",
+      "task_ref": "usual/dao_collateral/redeem_conservation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.redeem_fee_formula",
+      "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+      "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_manifest_path": "cases/usual/dao_collateral/tasks/redeem_fee_formula.yaml",
+      "task_manifest_sha256": "3a308f1a3f6f57f3ec9dc86cf3cd34800de35a04bdb8fccf6c64f973b97c8595",
+      "task_ref": "usual/dao_collateral/redeem_fee_formula"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.redeem_return_formula",
+      "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+      "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_manifest_path": "cases/usual/dao_collateral/tasks/redeem_return_formula.yaml",
+      "task_manifest_sha256": "cc10c95175f079997c2195a2c62737a2f8c381dfb3ecf3ab6b5aca5456f5ecf3",
+      "task_ref": "usual/dao_collateral/redeem_return_formula"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.swap_conservation",
+      "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+      "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_manifest_path": "cases/usual/dao_collateral/tasks/swap_conservation.yaml",
+      "task_manifest_sha256": "76366d8a1e035a65bdcf88b18647a1bc176e7b42eb8f2984b191a9633a9594cb",
+      "task_ref": "usual/dao_collateral/swap_conservation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Usual.DaoCollateral.swap_value_conservation",
+      "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
+      "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
+      "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_manifest_path": "cases/usual/dao_collateral/tasks/swap_value_conservation.yaml",
+      "task_manifest_sha256": "36d11f294c6b791e65e07e3f581253948dacc252ce5137009f23a9cf1972ddbb",
+      "task_ref": "usual/dao_collateral/swap_value_conservation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.positive_borrow_preserves_required_liquidity",
+      "reference_module": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs",
+      "reference_module_path": "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Proofs.lean",
+      "reference_module_sha256": "a6a3a145a4709ce5a4e15b3a1d8ff7b80ab5b8b2698ae00abbe4d6d3987eb922",
+      "task_manifest_path": "cases/wildcat/borrow_liquidity_safety/tasks/positive_borrow_preserves_required_liquidity.yaml",
+      "task_manifest_sha256": "d96bd94d4f0151b618cc2e07df1aef0f8b9ff0fa055dfc49515200d498def69e",
+      "task_ref": "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.cancel_redeem_accounting",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/cancel_redeem_accounting.yaml",
+      "task_manifest_sha256": "edd71cba47f8263e0dc1b35d830939b07364a40755e0fe65fac322de44059496",
+      "task_ref": "yo_protocol/async_redemption_escrow/cancel_redeem_accounting"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.candidate_g_source_reachability",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/candidate_g_source_reachability.yaml",
+      "task_manifest_sha256": "001eb7e19448003b30a1b2c69ed70c33a9cd9ed26a36f48af461ec727f0c496d",
+      "task_ref": "yo_protocol/async_redemption_escrow/candidate_g_source_reachability"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fee_aliasing",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/fee_aliasing.yaml",
+      "task_manifest_sha256": "62154c126982640e981296ba4e85b7c25aa5648da7b98b374517d06af17eec34",
+      "task_ref": "yo_protocol/async_redemption_escrow/fee_aliasing"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fulfill_redeem_accounting",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/fulfill_redeem_accounting.yaml",
+      "task_manifest_sha256": "bcf425580f7d86e78534878e8e3dba78033bd448051bd73e956e4f0fc97aa643",
+      "task_ref": "yo_protocol/async_redemption_escrow/fulfill_redeem_accounting"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.full_clear_requeue_replay",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/full_clear_requeue_replay.yaml",
+      "task_manifest_sha256": "ded60ed1b797a608cd727053bf3ba6664f5bcef41d417cd0c38e94b59463f5a7",
+      "task_ref": "yo_protocol/async_redemption_escrow/full_clear_requeue_replay"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_bounds_and_isolation",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/lifecycle_bounds_and_isolation.yaml",
+      "task_manifest_sha256": "0f742340895e6a3093c6e3f24a405da15d6bb69e5cc0eac0238b36db545a40ce",
+      "task_ref": "yo_protocol/async_redemption_escrow/lifecycle_bounds_and_isolation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_rollback",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/lifecycle_rollback.yaml",
+      "task_manifest_sha256": "347a2b98d75feed73255d46c55533868bf7963af106faf6d42616b8a307c4a55",
+      "task_ref": "yo_protocol/async_redemption_escrow/lifecycle_rollback"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.malformed_pair_lifecycle",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/malformed_pair_lifecycle.yaml",
+      "task_manifest_sha256": "df1f4c32d3d951a437ac6f0390e54bd7cf0fcd60c23f8f7286f0f2252e0c117e",
+      "task_ref": "yo_protocol/async_redemption_escrow/malformed_pair_lifecycle"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.owner_fallback_authorization",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/owner_fallback_authorization.yaml",
+      "task_manifest_sha256": "94d775937c2634f2ca3a81bf9097a01c7df2ee53c68802b15922afc875eeefc4",
+      "task_ref": "yo_protocol/async_redemption_escrow/owner_fallback_authorization"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.queued_request_aggregation",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/queued_request_aggregation.yaml",
+      "task_manifest_sha256": "62ab7d2ccb3d8b14d62b22615e17c9bfa216532525ac9faf5a399b8b82ed06d3",
+      "task_ref": "yo_protocol/async_redemption_escrow/queued_request_aggregation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.redeem_wrapper",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/redeem_wrapper.yaml",
+      "task_manifest_sha256": "7205c33889bbd3a361258b0044ae750654856a05fc2a2b874db5891d55afc58d",
+      "task_ref": "yo_protocol/async_redemption_escrow/redeem_wrapper"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.request_redeem_branching",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/request_redeem_branching.yaml",
+      "task_manifest_sha256": "c61c7c8440511d0cd9a155f80cdc1c85bbe831d2d28475be5e09680303b1b14d",
+      "task_ref": "yo_protocol/async_redemption_escrow/request_redeem_branching"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.two_owner_queue_aggregation",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/two_owner_queue_aggregation.yaml",
+      "task_manifest_sha256": "c5d426199aecd6458492d807a947ece7b0682aa9278401055eae5f2057d8f87b",
+      "task_ref": "yo_protocol/async_redemption_escrow/two_owner_queue_aggregation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.zero_component_lifecycle",
+      "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
+      "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/zero_component_lifecycle.yaml",
+      "task_manifest_sha256": "e4bfbb5aadd99c26ac55b46d00783480e5338c5ddf4866e4d253d96f5af7fafd",
+      "task_ref": "yo_protocol/async_redemption_escrow/zero_component_lifecycle"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_decreases_supply",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/burn_decreases_supply.yaml",
+      "task_manifest_sha256": "5aa4d9d7faee2784e789b2ec9f1beebdb0a41ab17c669c57271b5112cf038751",
+      "task_ref": "zama/erc7984_confidential_token/burn_decreases_supply"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.burn_insufficient",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/burn_insufficient.yaml",
+      "task_manifest_sha256": "5c7ff3a184501f49f69e70aa126f28c03ba1f4f03e28e2cccb1838baaec71169",
+      "task_ref": "zama/erc7984_confidential_token/burn_insufficient"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_ctokens_match_deposit",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_ctokens_match_deposit.yaml",
+      "task_manifest_sha256": "8e593249b9415b0fef9a6b59f9b9018529eab786dcc86b5816f4c563e393f591",
+      "task_ref": "zama/erc7984_confidential_token/mint_ctokens_match_deposit"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_increases_supply",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_increases_supply.yaml",
+      "task_manifest_sha256": "77d617791ce3675d2324964dd3b593f2a6f1b44adf99d28713e15d234f16b29f",
+      "task_ref": "zama/erc7984_confidential_token/mint_increases_supply"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.mint_overflow_protection",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_overflow_protection.yaml",
+      "task_manifest_sha256": "20e040cd2e7d66f536f710de2a11f2c1dc87a1c53cebaf231d31106fe0b85409",
+      "task_ref": "zama/erc7984_confidential_token/mint_overflow_protection"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.setOperator_updates",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/setOperator_updates.yaml",
+      "task_manifest_sha256": "3c88dfcebba2c956237a72061df41cd62d8e737528bd18c00420bef4942aefc0",
+      "task_ref": "zama/erc7984_confidential_token/setOperator_updates"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transferFrom_conservation",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transferFrom_conservation.yaml",
+      "task_manifest_sha256": "23f08d96f358572d7c605122ec28547a8c66e15a45cf1f5574f41b6dd93aec8d",
+      "task_ref": "zama/erc7984_confidential_token/transferFrom_conservation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_conservation",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_conservation.yaml",
+      "task_manifest_sha256": "cda374589f1ec77fed526cfdbe4fc567b2820441a7b5879f953cabfeb6efa98d",
+      "task_ref": "zama/erc7984_confidential_token/transfer_conservation"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_insufficient",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_insufficient.yaml",
+      "task_manifest_sha256": "d9fd5a947d885b661b08111d012fd4fb4cd4b03d7db5966b52b134c6195b2e10",
+      "task_ref": "zama/erc7984_confidential_token/transfer_insufficient"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_no_balance_revert",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_no_balance_revert.yaml",
+      "task_manifest_sha256": "e9f724b06f5ddbe591074b42b3b3954a4b97f370fb3cbfe5428027b6f282ba3d",
+      "task_ref": "zama/erc7984_confidential_token/transfer_no_balance_revert"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_preserves_supply",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_preserves_supply.yaml",
+      "task_manifest_sha256": "29fd1c0034a645db2cf68e3ccad69f5d5db2ecc712a3926a1ebd8f6a47fdf6d3",
+      "task_ref": "zama/erc7984_confidential_token/transfer_preserves_supply"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.transfer_sufficient",
+      "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
+      "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_sufficient.yaml",
+      "task_manifest_sha256": "b20d00f89760bf3c9181603a4b7bd4026c254265a85159ad53cd19acd877c9e7",
+      "task_ref": "zama/erc7984_confidential_token/transfer_sufficient"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.metadata_bridge",
+      "reference_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
+      "reference_module_sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386",
+      "task_manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/metadata_bridge.yaml",
+      "task_manifest_sha256": "95f62a413bf6d20e253670b823e2fedd8677520a159396fd7221652a3029edf5",
+      "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_bounds_safe",
+      "reference_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
+      "reference_module_sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386",
+      "task_manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/roles_decoder_bounds_safe.yaml",
+      "task_manifest_sha256": "b2e1521e4aac7f8b42f9f067a845f6f7e9bf358a2ec73275fbac6a0e409c50b5",
+      "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe"
+    },
+    {
+      "reference_declaration": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.roles_decoder_faithful",
+      "reference_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
+      "reference_module_path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
+      "reference_module_sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386",
+      "task_manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/roles_decoder_faithful.yaml",
+      "task_manifest_sha256": "9dd66d82f99bec0ca4ba4d416550468a2f66cc8ad873d0bdb6b2dbb74c3e0745",
+      "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_faithful"
+    }
+  ]
+}

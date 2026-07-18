@@ -1,0 +1,51 @@
+"""Loading and fail-closed validation for frozen benchmark task contracts."""
+from __future__ import annotations
+
+import hashlib
+import json
+from pathlib import Path
+
+try:
+    from .paths import ROOT
+except ImportError:
+    from paths import ROOT
+
+
+CANONICAL_V02_PATH = ROOT / "benchmark-versions" / "v0.2.json"
+
+
+def sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def load_v02_task_refs() -> list[str]:
+    """Return the frozen v0.2 sequence, rejecting any malformed or drifted input."""
+    try:
+        data = json.loads(CANONICAL_V02_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot load canonical v0.2 contract: {exc}") from exc
+    if data.get("schema_version") != 2 or data.get("benchmark_version") != "0.2":
+        raise ValueError("canonical v0.2 contract has incompatible schema/version")
+    tasks = data.get("tasks")
+    hashes = data.get("task_manifest_sha256")
+    if not isinstance(tasks, list) or not all(isinstance(item, str) and item for item in tasks):
+        raise ValueError("canonical v0.2 contract has malformed tasks")
+    if not isinstance(hashes, dict) or set(hashes) != set(tasks):
+        raise ValueError("canonical v0.2 contract has missing or duplicate task mappings")
+    if len(tasks) != len(set(tasks)) or data.get("task_count") != len(tasks):
+        raise ValueError("canonical v0.2 contract has duplicate task refs or incorrect count")
+    task_set_hash = hashlib.sha256(("\n".join(tasks) + "\n").encode()).hexdigest()
+    if data.get("task_set_sha256") != task_set_hash:
+        raise ValueError("canonical v0.2 contract task ordering/hash drift")
+    for task_ref in tasks:
+        parts = task_ref.split("/")
+        if len(parts) != 3:
+            raise ValueError(f"canonical v0.2 contract has malformed task ref: {task_ref}")
+        candidates = [
+            ROOT / "cases" / parts[0] / parts[1] / "tasks" / f"{parts[2]}.yaml",
+            ROOT / "backlog" / parts[0] / parts[1] / "tasks" / f"{parts[2]}.yaml",
+        ]
+        paths = [path for path in candidates if path.is_file()]
+        if len(paths) != 1 or not isinstance(hashes[task_ref], str) or sha256_file(paths[0]) != hashes[task_ref]:
+            raise ValueError(f"canonical v0.2 contract task source drift: {task_ref}")
+    return tasks

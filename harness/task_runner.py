@@ -23,6 +23,10 @@ if str(ROOT) not in sys.path:
 
 from manifest_utils import load_manifest_data
 from release_config import BENCHMARK_ID
+try:
+    from .canonical_contract import load_v02_task_refs
+except ImportError:
+    from canonical_contract import load_v02_task_refs
 
 RUNNABLE_STAGES = {"build_green", "proof_partial", "proof_complete"}
 RUNNABLE_TRANSLATION_STATUSES = {"generated", "translated"}
@@ -109,6 +113,14 @@ def task_is_runnable(task: dict[str, Any]) -> bool:
 
 
 def discover_task_refs(suite_filter: str = "active", *, runnable_only: bool = False) -> list[str]:
+    if suite_filter == "v0.2":
+        refs = load_v02_task_refs()
+        for task_ref in refs:
+            task_manifest = resolve_task_manifest(task_ref)
+            task = load_task_record(task_manifest)
+            if runnable_only and not task_is_runnable(task):
+                raise SystemExit(f"canonical v0.2 task is no longer runnable: {task_ref}")
+        return refs
     refs: list[str] = []
     seen_paths: dict[str, Path] = {}
     if suite_filter == "all":
@@ -336,9 +348,9 @@ def execute_reference_solution_task(task_ref: str) -> tuple[int, Path]:
 
 def load_case_records_for_suite(suite: str) -> list[dict[str, Any]]:
     roots = []
-    if suite in {"active", "all"}:
+    if suite in {"active", "all", "v0.2"}:
         roots.append(ROOT / "cases")
-    if suite in {"backlog", "all"}:
+    if suite in {"backlog", "all", "v0.2"}:
         roots.append(ROOT / "backlog")
 
     records = []
@@ -456,7 +468,7 @@ def main() -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     list_parser = subparsers.add_parser("list", help="List task refs")
-    list_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
+    list_parser.add_argument("--suite", choices=["active", "backlog", "all", "v0.2"], default="active")
     list_parser.add_argument(
         "--all-tasks",
         action="store_true",
@@ -467,7 +479,7 @@ def main() -> int:
     run_parser.add_argument("task_ref")
 
     aggregate_parser = subparsers.add_parser("aggregate", help="Aggregate existing task results")
-    aggregate_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
+    aggregate_parser.add_argument("--suite", choices=["active", "backlog", "all", "v0.2"], default="active")
     aggregate_parser.add_argument("task_refs", nargs="*")
 
     args = parser.parse_args()
