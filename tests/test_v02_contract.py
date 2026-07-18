@@ -114,6 +114,27 @@ class V02ContractTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("version task metadata malformed", audit["errors"][0])
 
+    def test_task_object_metadata_value_drift_is_rejected(self) -> None:
+        for field in ("task_fingerprint", "task_interface_id"):
+            with self.subTest(field=field):
+                def mutate(manifest, _references, field=field):
+                    manifest["tasks"][0][field] = "sha256:" + "0" * 64
+
+                code, audit = self._validate(mutate)
+                self.assertEqual(code, 1)
+                self.assertIn("pinned task metadata drift", audit["errors"][0])
+
+    def test_future_all_suite_task_does_not_invalidate_frozen_v02(self) -> None:
+        frozen_refs = [task["task_ref"] for task in self.manifest["tasks"]]
+
+        def select(suite: str) -> list[str]:
+            return frozen_refs + ["future/case/task"] if suite == "all" else frozen_refs
+
+        with mock.patch.object(validator, "discover_task_refs", side_effect=select):
+            code, audit = self._validate()
+        self.assertEqual(code, 0)
+        self.assertEqual(audit["errors"], [])
+
     def test_baseline_selector_hash_drift_is_rejected(self) -> None:
         def mutate(manifest, _references):
             manifest["source"]["selector_files_sha256"]["scripts/run_all.sh"] = "0" * 64

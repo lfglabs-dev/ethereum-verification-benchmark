@@ -14,6 +14,8 @@
       "reference_module": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs",
       "reference_module_path": "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Proofs.lean",
       "reference_module_sha256": "22d1f492ad3f24b6181ab1a3e017e332411c0dc3964949a047ceeab7b4c7de35",
+      "task_fingerprint": "sha256:d56f501bc3d74020dae30e196954bdd922ff0ae1dab4fdb24647d9c0f32a9b30",
+      "task_interface_id": "sha256:d3fd8dcbc8935b74dbccfd9a52050819819dafb4f5d678a0f0270f313702cbfb",
       "task_manifest_path": "cases/1inch/xycswap_curve_safety/tasks/quote_exact_in_curve_safety.yaml",
       "task_manifest_sha256": "2ec365815da6c23b6d39462e7aeee04d5736a2c0c6e26282bf147ce30944744a",
       "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety"
@@ -23,6 +25,8 @@
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_fingerprint": "sha256:e759790951d9041e45d66e8f318e7cc9d4dc7dd8157232b3923c92369a32f6af",
+      "task_interface_id": "sha256:426a13e92a10bae2350fb254ffc22a9aa3102001ccb24cc375ed7c3bf5676c09",
       "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/earmark_preserves_invariant.yaml",
       "task_manifest_sha256": "2158925604b167125e02b075226d34c9a1998f8ccc4ebc2ea9af26b4fbc5e3d6",
       "task_ref": "alchemix/earmark_conservation/earmark_preserves_invariant"
@@ -32,6 +36,8 @@
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_fingerprint": "sha256:4c549464addabce75054d10c449fdad6a812e5309dd03660e35877dfadd3fba5",
+      "task_interface_id": "sha256:840387ae2d1ff5b9ac6db8ffc1af7814627f104842e8a0757a8a789d427fd65a",
       "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/redeem_preserves_invariant.yaml",
       "task_manifest_sha256": "5fbb0817cf2c50812c872fab3f430b7d7ab7459de67cf57dab173cc5538e1cea",
       "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant"
@@ -41,6 +47,8 @@
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_fingerprint": "sha256:d42ef024e7fcd09e7342f04bd14e4aaa98a16ed82b0deb4d4b0f29ed873019b5",
+      "task_interface_id": "sha256:ab6fd2127098720795ebc9ce9369e4d4ec1a03a2d54a4503e849c87bc9933c8e",
       "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/sub_debt_preserves_invariant.yaml",
       "task_manifest_sha256": "33703638d5aff4e794e7dbbe05be750ed310a321b415f66b17024f12850eff9c",
       "task_ref": "alchemix/earmark_conservation/sub_debt_preserves_invariant"
@@ -50,6 +58,8 @@
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_fingerprint": "sha256:67e1d3159d4d738c38a5fec0bed789032f60aa62e3dfcc62ab4cb3e6bb13820c",
+      "task_interface_id": "sha256:e850ae4f7bed851bddce532c500b3f66d6ed8f58bc0c43170c9c3569d4ce631a",
       "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/sub_earmarked_debt_preserves_invariant.yaml",
       "task_manifest_sha256": "b253973d3e4a01bbd0901f8a5bb0abb3f749a603e06860b035221408bff01d1c",
       "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant"
@@ -59,6 +69,8 @@
       "reference_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Alchemix/EarmarkConservation/Proofs.lean",
       "reference_module_sha256": "d832b78657325cf70b89bee286ac3b9a817e4c3145437073d5c512eba27a7957",
+      "task_fingerprint": "sha256:b9bbf41000e373372166e849950c7099f461c625994cbb7aac1030bdebeae902",
+      "task_interface_id": "sha256:21d0e3ba8600783b18b13de8dcaa70b7344256ea69850eed55af0b4e49f88bb2",
       "task_manifest_path": "cases/alchemix/earmark_conservation/tasks/sync_account_preserves_invariant.yaml",
       "task_manifest_sha256": "be20c81ce48ddda267437a7770735437dfec0791a6fc6c3e8419b280a17e810e",
       "task_ref": "alchemix/earmark_conservation/sync_account_preserves_invariant"
@@ -68,6 +80,8 @@
       "reference_module": "Benchmark.Cases.Balancer.ReClammSwapRounding.Proofs",
       "reference_module_path": "Benchmark/Cases/Balancer/ReClammSwapRounding/Proofs.lean",
       "reference_module_sha256": "64ed1d10b2803540fbc3aa4153f723c0a588b8cfe15a1224bd9f031f5528894e",
+      "task_fingerprint": "sha256:8bccdcedf061df9ebd3c56699b1301e59dab2bf4dba52e595531b18a55a99abe",
+      "task_interface_id": "sha256:41a96e08b0df98d79b988f82afdf74b76417b074bf93c770febad2acb14959e2",
       "task_manifest_path": "cases/balancer/reclamm_swap_rounding/tasks/on_swap_fixed_virtual_balances_product_non_decreasing.yaml",
       "task_manifest_sha256": "12a94a00e9730acec9103f6aa62de2ff103500d7ae500a68a86c0aa9735edaca",
       "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing"
@@ -77,6 +91,8 @@
       "reference_module": "Benchmark.Cases.Cork.PoolSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/Cork/PoolSolvency/Proofs.lean",
       "reference_module_sha256": "7f090cb255d1c689ce0aa33904b5d9acf567ad7fb4aa2ffb461b629c95e4a83c",
+      "task_fingerprint": "sha256:747d787769965a0a9dbeab3bc5129458482f61a7165ccde19a5cb803fdaef22d",
+      "task_interface_id": "sha256:40b45dfe486949f2d6c924509f7f0048b025db38b5b0a1b71225ee101fe7f0bd",
       "task_manifest_path": "cases/cork/pool_solvency/tasks/solvency_preserved.yaml",
       "task_manifest_sha256": "f73c7f4289aeaa6813438f6f72aa0e179d4088b998da3693422608e98397055e",
       "task_ref": "cork/pool_solvency/solvency_preserved"
@@ -86,6 +102,8 @@
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_fingerprint": "sha256:f5ac5e21c1a2f0b2d8ac0a6d85a035bb56e830dbbfd550b21a247f0f47d05d5c",
+      "task_interface_id": "sha256:c6940bfc183462b7c39c9f22c2858c47cc2ad76294c2c191fc2b09f0219707a0",
       "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/deposit_sets_pool_balance.yaml",
       "task_manifest_sha256": "dbe8ae5ce0f2a82c46ff6aec6e1fc384635c37179381f43820db39e4c1b696fb",
       "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_pool_balance"
@@ -95,6 +113,8 @@
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_fingerprint": "sha256:ccc2e4acc0d1df6c17590501099a15ae46e6e32169e02745a7098c8fd02f25b4",
+      "task_interface_id": "sha256:b260faf626cf0c32f3893eb52455b12012e33249806790d7bc1ecb1474b3a9fa",
       "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/deposit_sets_sender_credit.yaml",
       "task_manifest_sha256": "025e570ff535c56af87dbf72806eb239e97bfee51860c02228cde9684a5bee36",
       "task_ref": "damn_vulnerable_defi/side_entrance/deposit_sets_sender_credit"
@@ -104,6 +124,8 @@
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_fingerprint": "sha256:a1baa3eae1f626c29cf70fd9001fcd8762621368c466a3cbeb91647019c51241",
+      "task_interface_id": "sha256:0d215f952b4eeb5b47e702c866fe6328d944454ab9653cee8f2b2a6c670bb0d9",
       "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/exploit_trace_drains_pool.yaml",
       "task_manifest_sha256": "3cfc2d0e9e802d97eb103c8e40d47aa52ad0d4ef7690106d071dbe0920ed8072",
       "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool"
@@ -113,6 +135,8 @@
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_fingerprint": "sha256:896828d35a83c75c4482b4509dea3ace2e43a0053501b49e107a8a939900ab52",
+      "task_interface_id": "sha256:dc2db4266ae7f0c0209a27741dd68ce9736c37f1eed40237c156979b5fed9eba",
       "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/flash_loan_via_deposit_preserves_pool_balance.yaml",
       "task_manifest_sha256": "e624a771d9dadc33c77cc6bcf67a8d001e02c0a6b3c6ab5475714a56102511cf",
       "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance"
@@ -122,6 +146,8 @@
       "reference_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
       "reference_module_path": "Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Proofs.lean",
       "reference_module_sha256": "f23b8c16ae837edd33d6f36309a36dccb10539cc8eaa1282049418935eaf4cc6",
+      "task_fingerprint": "sha256:a03f17706eea23b37bc339ae8c953c3d2b24c9b882a4f6ea3e598d1a60265f6d",
+      "task_interface_id": "sha256:5ac2867d01dcd0386a223c23fa5db0ef6aa59cba040716b9253bb9d57844329a",
       "task_manifest_path": "cases/damn_vulnerable_defi/side_entrance/tasks/flash_loan_via_deposit_sets_sender_credit.yaml",
       "task_manifest_sha256": "eccd148cc14f597752053c9e7d4fe76695688f88549a5e92e7b14ad201f8656c",
       "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit"
@@ -131,6 +157,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:a18795c2de47f5cbc8c3998dbec57db48ba0dc391728558ff82188d720c31e0d",
+      "task_interface_id": "sha256:c4103e318968a76f38eda94a27095668b5817de9703f03f1a36a92084437126a",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/account_rejection_reverts.yaml",
       "task_manifest_sha256": "00015922e62691ea498aacb173ab976a595787622a2a7f3383b5040f931b378a",
       "task_ref": "erc4337/entry_point_invariant/account_rejection_reverts"
@@ -140,6 +168,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:cf4340cd356a5f1beb9bcc4c9caca3d2555e7c8319b71b4bea46722bf0663a3e",
+      "task_interface_id": "sha256:e2498fb65ecec2e0f56108de55dc503c1853500e33598d428038890a437f8029",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/all_executed_on_success.yaml",
       "task_manifest_sha256": "86842f82183c01740f68964c09de4f3ee305b92d380da9d8445100f7a9d3cf44",
       "task_ref": "erc4337/entry_point_invariant/all_executed_on_success"
@@ -149,6 +179,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:83e7684ab773ab5211d15e90e5d8b32deef3a5e4bfb99bd89d196664394707dd",
+      "task_interface_id": "sha256:28ee6c74716bb55a80ba7cbf69b4949366c9723daff431a9586ef5889ac0ca0c",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/all_validated_on_success.yaml",
       "task_manifest_sha256": "c0010a242ac55bbc53682bf685c3540ee81931091dd014d64ff8cc678eb614d4",
       "task_ref": "erc4337/entry_point_invariant/all_validated_on_success"
@@ -158,6 +190,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:95210c4759254b99821e61daf2a85f8155ab38ac2a74b10b800d4dd334c114a3",
+      "task_interface_id": "sha256:12da01d4c8314f88b4ee137634b46bba41d57f00256e9aee6918c67febaced90",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/beneficiary_eq_total_prefund.yaml",
       "task_manifest_sha256": "d6ed528a3b38dbe91a04341c78c7e8e182734519ca540bf88b08f790b96b844e",
       "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund"
@@ -167,6 +201,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:3c5f3328d2124da8e054f0b7164ea6b51d3cff70f16f5624f01b49cfa93586aa",
+      "task_interface_id": "sha256:fe203418286bd4abfe5b5b4d2b4c64c2f22ea57229733f0e1686ec2f049cb044",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/count_executed_eq_validated.yaml",
       "task_manifest_sha256": "9201cbf3b8cc0876b80ed3bb75318742eed8920637b735b93f33bfdaeb1f8517",
       "task_ref": "erc4337/entry_point_invariant/count_executed_eq_validated"
@@ -176,6 +212,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:c6b703971c515bfd5235df69e49d77ba285f8350408f93a13bd78bc0f7b17184",
+      "task_interface_id": "sha256:d32f041a4199fa191f0ec67e704d87a9ca7a59d3c4451224872f458a39ff32a2",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/executed_index_in_bounds.yaml",
       "task_manifest_sha256": "38c84f69be75374c790cb9881f2c2b2062ef45ff26091fe7f8dee3ec8da5ed8c",
       "task_ref": "erc4337/entry_point_invariant/executed_index_in_bounds"
@@ -185,6 +223,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:dbef1c4832bbae1f4dbdc1160fcb181b079b6e71fa493cf886ac3de8a376382a",
+      "task_interface_id": "sha256:fe80ca0ae7440a0c87433c4591fefa642def18c6d069beba2fdf114cb17efeec",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_iff_validation.yaml",
       "task_manifest_sha256": "2284652efa74bb2a11e0af965607521c620e01f32a19fff423ff78d17fc5d269",
       "task_ref": "erc4337/entry_point_invariant/execution_iff_validation"
@@ -194,6 +234,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:a4c6947941ec9fe4da6d72375b6a816da93300e31d6216a621b97f0e483159ad",
+      "task_interface_id": "sha256:bce0ef53f728f9d5026faeeb036a773966ad259e54e52902b6d25692c0a73d2a",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_implies_validation.yaml",
       "task_manifest_sha256": "470cc05973fdf3e27dc87a26c3ca8cce9ecb8a356bc91fea795d8971c3d37426",
       "task_ref": "erc4337/entry_point_invariant/execution_implies_validation"
@@ -203,6 +245,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:b592424f68c9cddbcfe11653ce142ea1c584dd7886f1ea9d0c9363deee839aad",
+      "task_interface_id": "sha256:08296f3e559f3dcebfcac2fa4949c86a7db9427599951355aa802fcaefa5737c",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_independent_of_inner_revert.yaml",
       "task_manifest_sha256": "fa2679c894b20561bd71cb90b9c9a84de4727fbee7f89325c325495d81924d2d",
       "task_ref": "erc4337/entry_point_invariant/execution_independent_of_inner_revert"
@@ -212,6 +256,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:dd5ff1029765dc0b4c34b96afeb9707c3899213a578bc7492fb25ed63aff517c",
+      "task_interface_id": "sha256:f01d087499dec53de6c1561ce61e55a1228df9dc436ad1042c17f9ac364efd0f",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_length_eq_validation_length.yaml",
       "task_manifest_sha256": "c734beb780e98b7347ffb6c91839a38d8914964bdfcdd04275fbd3ab9755ce21",
       "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length"
@@ -221,6 +267,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:48d52ccdcf25cd5d5bad93b499fe0af31d87e762d5446ffa375ffa7b12ffbee1",
+      "task_interface_id": "sha256:7011f403ae29925032ff536567e02bcefd39c71912dd3920c2ed0dbac9f0ab05",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/execution_r_iff_in_bounds.yaml",
       "task_manifest_sha256": "361b40a342b5d6f2f40ac8525aa25bde628063381c4803c6409e1777d2a32fd7",
       "task_ref": "erc4337/entry_point_invariant/execution_r_iff_in_bounds"
@@ -230,6 +278,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:114428f52685e40e05163405350ad2038238f668c3cda780f06217703c161335",
+      "task_interface_id": "sha256:64f6d297c5109fe0befe9020e2aee4625b23739bdb2e97e9e73c5d98bb6f7c1d",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/fees_collected_eq_ops_length.yaml",
       "task_manifest_sha256": "878552e4445716dc257ffc31803385b7cad75d41ae2b20a80af18d7ebac6c335",
       "task_ref": "erc4337/entry_point_invariant/fees_collected_eq_ops_length"
@@ -239,6 +289,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:d499d03b13e14228a056c04c959923e4e33a7f4668f6a2fe55aeb82a74dac82f",
+      "task_interface_id": "sha256:0762799e8f8562e67393205801a8dc06e2791177319113e48e47f6e54ddf6f74",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/fees_concat_additive.yaml",
       "task_manifest_sha256": "7f02201b9a8a15d6a84d4b1cd100f67375f5eac3ae9d4bb3fda656acaadd1e62",
       "task_ref": "erc4337/entry_point_invariant/fees_concat_additive"
@@ -248,6 +300,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:9e2690199428246b8a8001597580a2dc05210997ce3b04f4c2af527ec6bb8857",
+      "task_interface_id": "sha256:21ca91841cf97dbd403de0914035da838b35475c7ee5e38aa158d7f2d37fe167",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/full_success_implies_all_account_approved.yaml",
       "task_manifest_sha256": "d09c482818b161738095d0900c951a1144f07b5fa42846b5507c7ef9ca7d9fc9",
       "task_ref": "erc4337/entry_point_invariant/full_success_implies_all_account_approved"
@@ -257,6 +311,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:4965ec34d951e0d4733dff47808287dfec7713a860b1a8f1564cfd34ebf78ba7",
+      "task_interface_id": "sha256:91a5fdcf11c4cc318bec72caa671ab74fa7130a01e71c9d3a92cdf52c4883195",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/handle_ops_deterministic.yaml",
       "task_manifest_sha256": "103a325a9a28f54d372e059cd11989414fb347efd24d2977fca407193605c641",
       "task_ref": "erc4337/entry_point_invariant/handle_ops_deterministic"
@@ -266,6 +322,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:fe8455b014bea81edfb98f96677a29fbd4181369660eea3c22190d4640cea03d",
+      "task_interface_id": "sha256:25fff45c6163c70aba88b29a3b173c09c6c419aaf97fbdadb3e977dce147d0bb",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/handle_ops_empty.yaml",
       "task_manifest_sha256": "ba728a396225769ee20bb711331804b3acceb85ddd78a2272f99bc891f652e44",
       "task_ref": "erc4337/entry_point_invariant/handle_ops_empty"
@@ -275,6 +333,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:176394d858f2945b01f81bd89a507cc1f33c803af209a2e9097d633bfa3e6129",
+      "task_interface_id": "sha256:693d10fb4126902599d7b6bab8cc06455b12acfd3bc36f3677a7331ae6c45e69",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/no_beneficiary_payout_on_revert.yaml",
       "task_manifest_sha256": "9f1593e8bc9ba08ef1e0202c76ff9b07eabc903f178651ec09a14f737e331147",
       "task_ref": "erc4337/entry_point_invariant/no_beneficiary_payout_on_revert"
@@ -284,6 +344,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:3aa7cd473cfee703bdf99ebd886d675ef425725a643ae47a9c8833cae4d66608",
+      "task_interface_id": "sha256:b5691f84e39c311b6513c9470d5e583f59582043b59d19e817433bcd527ae7ef",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/no_execution_on_revert.yaml",
       "task_manifest_sha256": "2ca657f56571127fdeefca323ecc99f13ec981d7a669c19abd51f9c2ac6ada79",
       "task_ref": "erc4337/entry_point_invariant/no_execution_on_revert"
@@ -293,6 +355,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:8a29696603c54fbb0eb5d419ff858d0752c7f40d077c37bb9a309a8705822bc9",
+      "task_interface_id": "sha256:7a1c25090e1f138fe9a1ae7efd859c907d725d274f2729ae383ed48e5bb1102a",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/no_fees_on_revert.yaml",
       "task_manifest_sha256": "7cf285c0104176e3a7f02d6007195bd3222664cb978ff7879302b44a785a5fe5",
       "task_ref": "erc4337/entry_point_invariant/no_fees_on_revert"
@@ -302,6 +366,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:c0613aceeac587a5c9f6168cd01472e715d418fa104228005987121617309a08",
+      "task_interface_id": "sha256:c8359bb3425f1514f2b8cde4d5f6be14d581ad1f2d3230a7907b254452b38265",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/nonce_advances_by_batch_size.yaml",
       "task_manifest_sha256": "0412965119be36daa2281db0813076c671938d5229cbbb7919e89f82487cbafb",
       "task_ref": "erc4337/entry_point_invariant/nonce_advances_by_batch_size"
@@ -311,6 +377,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:a5dc0241b5bd220f5962ad0f16bb257228f9e82468db3d0cf5c8367bf8f2260e",
+      "task_interface_id": "sha256:a53aa317cb65ecc337a526db7cabe4bdf0788e4f5a4b847ac6eda984a44fd7ff",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/nonce_mismatch_reverts.yaml",
       "task_manifest_sha256": "f1f10babc4784e11e1dca9f18b0a5c1cf98bce75250979c5401f1fbac7456b89",
       "task_ref": "erc4337/entry_point_invariant/nonce_mismatch_reverts"
@@ -320,6 +388,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:8488b27f01f91f10028cd7715ad801b902a1d3661b4b04270599ffac1c94aea9",
+      "task_interface_id": "sha256:c56c9c8f5da0c5f140170b6a0368c286ceede8a0e2467ea8e240de42795855ca",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/nonce_strictly_increases.yaml",
       "task_manifest_sha256": "a8878295f19b9b40291eed2bff9d3877fdb1bbdeff8652b5063e52144f258e62",
       "task_ref": "erc4337/entry_point_invariant/nonce_strictly_increases"
@@ -329,6 +399,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:30704bc62f213a32817507b9d27dfecf6089f952c1205e78653b821298b6c7ee",
+      "task_interface_id": "sha256:fbb492150b4e1c8cb555921fd2033848380918ba53728d9335e578b2191c828f",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/paymaster_irrelevant_when_absent.yaml",
       "task_manifest_sha256": "b6d35aa0b196a7bed87dd6ed920c6639c8cdd3122887e0706572b1c068d68938",
       "task_ref": "erc4337/entry_point_invariant/paymaster_irrelevant_when_absent"
@@ -338,6 +410,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:e6465f7c9f055408b82e68c6b097e7dcd020ba670a2f095199e16c6681cf1d24",
+      "task_interface_id": "sha256:d6bce8cafedb8e0c0d044f7c0549f04bed038590295fa6b0a3c1518c66e7957b",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/paymaster_rejection_reverts_when_present.yaml",
       "task_manifest_sha256": "4838366c3af6a45a3656aaefc940ed5f1eca82fc47d8763f6df193c33755ea4c",
       "task_ref": "erc4337/entry_point_invariant/paymaster_rejection_reverts_when_present"
@@ -347,6 +421,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:025014f5d364e25ce5df3f7a5a461f56e452fcf1883a4d2d7cb4559404aa6134",
+      "task_interface_id": "sha256:280accf95860cba206c267e6b25eeff92ecf8bf4d047cbe0f56c8f997930989b",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/sender_call_iff_validated_and_calldata.yaml",
       "task_manifest_sha256": "2789dba2c03c157d5476309671a6fa81e563d80e668c54cdb49f62f815d901a3",
       "task_ref": "erc4337/entry_point_invariant/sender_call_iff_validated_and_calldata"
@@ -356,6 +432,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:4af6a8217d7aca3b10393aa4a0b91c151867faf078dc986c105842d35007d4cc",
+      "task_interface_id": "sha256:cb701bb3bfaa49328c75f3016acd09bc6edd65931373fc8edcb6655b907bcb9d",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/single_failure_reverts.yaml",
       "task_manifest_sha256": "b7d87089ed344da90a15a3a530d5a87bc6a4f95f36a9ec8b4d350884aca3e41d",
       "task_ref": "erc4337/entry_point_invariant/single_failure_reverts"
@@ -365,6 +443,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:a99dc705a0d12163f07dbb7056105e3d6cbc15991da573c44ab26bfdf3fd77cc",
+      "task_interface_id": "sha256:f10cfabe0c5047c7cece3d13fd6b9e7a187299426e0653a709ce5156cea91919",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/single_op_execution_on_validation.yaml",
       "task_manifest_sha256": "e93eff3c2cc125fb1d9fec517281f2fe4a53507c6adb49ce85f0649e906cbb58",
       "task_ref": "erc4337/entry_point_invariant/single_op_execution_on_validation"
@@ -374,6 +454,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:a4d27c1441c30a67f471cee21e1920236fe516bc2ada4c02edce731729a2a3bc",
+      "task_interface_id": "sha256:33a21034c0db0a06d0a665be34c12b9a0a37f8feadce0d5e7c76693b13c102e0",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/single_op_fee_collected.yaml",
       "task_manifest_sha256": "96c5f1d09cc9f5ace751ae97df00a19a8db8af75c681106cfa9e496b3cc2bce6",
       "task_ref": "erc4337/entry_point_invariant/single_op_fee_collected"
@@ -383,6 +465,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:2017386f20e6ff9658ae1fe8290a9effe0156ad4914544058f4af70899398a86",
+      "task_interface_id": "sha256:d3aa3422e71f6f7a3fb4a0167b1c14ba44142db9e1de974d423c2c625bae7a64",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/total_prefund_concat.yaml",
       "task_manifest_sha256": "7ce3a66bade75bcdc8dc3ae48191833a1972655ac159ad12fbccced07aab7b3d",
       "task_ref": "erc4337/entry_point_invariant/total_prefund_concat"
@@ -392,6 +476,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:84b664b99f90f83974c677661a51f1313af8371600dc4538735be718868dede1",
+      "task_interface_id": "sha256:9641e07b3fc1704c91267a701a0f877b067724cae12e5a195e245ce9bb796cfa",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_concat.yaml",
       "task_manifest_sha256": "30c1af04db9eb0c44a77ce258625ed7958a67ae1f1960dbeae6464935968b50d",
       "task_ref": "erc4337/entry_point_invariant/validation_concat"
@@ -401,6 +487,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:f869bdc1d160ca89453ad42bc3b2af11bb81948b2ede05ac038bdacd2000e47c",
+      "task_interface_id": "sha256:0cdf46880a9863159d45c8d4659cf1f828da1e033c7008b03e9cbf36f5215a08",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_concat_fail_left.yaml",
       "task_manifest_sha256": "1ed0f3e445ff845e3e8e3b5599b16f22b0396c953b2a9be49eee4aaa4111196f",
       "task_ref": "erc4337/entry_point_invariant/validation_concat_fail_left"
@@ -410,6 +498,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:2f721dc962455561181d9dfc1066793ea0d5e2ec15c2e7d5b00d89367a9a4c79",
+      "task_interface_id": "sha256:58938ea1625f93c4371a93c1ff6b99cd80a22a1d5afb1b42237704e8f6a53f69",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_concat_fail_right.yaml",
       "task_manifest_sha256": "97a839902dd74cd542a220b262281e6e57fb74bfcda4f3718208d3efa3a26c68",
       "task_ref": "erc4337/entry_point_invariant/validation_concat_fail_right"
@@ -419,6 +509,8 @@
       "reference_module": "Benchmark.Cases.ERC4337.EntryPointInvariant.Proofs",
       "reference_module_path": "Benchmark/Cases/ERC4337/EntryPointInvariant/Proofs.lean",
       "reference_module_sha256": "e750f0d4819e2497b32d22155a7a42fdf3508d26fe9918a063db77cd9f425ba6",
+      "task_fingerprint": "sha256:802eec627076e3dd52937b7c53e712be3ef8c88f3b56546a458efdf927004b1c",
+      "task_interface_id": "sha256:9aa623db1f14a5c12afb60935e97b324a0c43932b4654ce26fdd517c3d65f19d",
       "task_manifest_path": "cases/erc4337/entry_point_invariant/tasks/validation_implies_execution.yaml",
       "task_manifest_sha256": "b8a26bbe7b6d13e5abe6c23fe0545e83620f02b9a073c1e03ab74e5035ddd439",
       "task_ref": "erc4337/entry_point_invariant/validation_implies_execution"
@@ -428,6 +520,8 @@
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_fingerprint": "sha256:792870bf351987d27aae4dba92731299b0607d7a59966231cbb615d1127ea9ad",
+      "task_interface_id": "sha256:34f26d604101386df171af29ea5dced2f32c6f68c16cfb83a4e7b5c5b3360edb",
       "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/chain_start_threshold.yaml",
       "task_manifest_sha256": "c42d436c1d61cb18842307b1bb626866e829f2d3a0f74c0fdf86c12a53ac6c5b",
       "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold"
@@ -437,6 +531,8 @@
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_fingerprint": "sha256:68ba47bc1782f459b3584ab998356644524817cc19ddd4adbb25806da9fcfe99",
+      "task_interface_id": "sha256:98dc9db9254ff496efa91e9e9efd5e6e2ec03522b44844c4ea6732cd0c5f29a8",
       "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/deposit_count.yaml",
       "task_manifest_sha256": "d2f311b6b38cdac7b5a77dd2d783152eff5b41cee1227195f5e11d140a7efc40",
       "task_ref": "ethereum/deposit_contract_minimal/deposit_count"
@@ -446,6 +542,8 @@
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_fingerprint": "sha256:421b799b938c192275de778dbabe54c7eb123355b6b48626b573472e5293187c",
+      "task_interface_id": "sha256:02187b95281fa1329a3a455e3f9062e1a3c112f5247ad02e7b2ba3ee07c32ec4",
       "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/full_deposit_increments_full_count.yaml",
       "task_manifest_sha256": "3e498c10ceecf44a2c212f2a148a855cd425675ba54fde7566a5d785a4f41762",
       "task_ref": "ethereum/deposit_contract_minimal/full_deposit_increments_full_count"
@@ -455,6 +553,8 @@
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_fingerprint": "sha256:a4f1a875211c8ef92ab3ea9efdae87283a23d6ffd55b98c45eb3451787e3068b",
+      "task_interface_id": "sha256:b12544995d85e3d95c9cfe0c8743a1b2a4b2bbd356872f5201b0f68ec8eebd23",
       "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/full_deposit_preserves_partial_gap.yaml",
       "task_manifest_sha256": "fff03e8112dc0a1f7f75d84ef4cb636581d1f5c3ad77f0362a435418f1a679c0",
       "task_ref": "ethereum/deposit_contract_minimal/full_deposit_preserves_partial_gap"
@@ -464,6 +564,8 @@
       "reference_module": "Benchmark.Cases.Ethereum.DepositContractMinimal.Proofs",
       "reference_module_path": "Benchmark/Cases/Ethereum/DepositContractMinimal/Proofs.lean",
       "reference_module_sha256": "f8273ffcea694bd7fe7a76e02fc3b982da7b3c0123891ca86ddc4e88c8fe1f60",
+      "task_fingerprint": "sha256:44ca7402fee01d90c1a0835d7050ccd41d4f887475f1682b681abb41522059d2",
+      "task_interface_id": "sha256:543cbed4584b0b43fe9f7234112cfabe7ab4870baccbd6e56e700084162854e5",
       "task_manifest_path": "cases/ethereum/deposit_contract_minimal/tasks/small_deposit_preserves_full_count.yaml",
       "task_manifest_sha256": "c87f031151ce44c1990c0b2c24248dd1a1e498b3ac1eb22aedcf251fda37e7e5",
       "task_ref": "ethereum/deposit_contract_minimal/small_deposit_preserves_full_count"
@@ -473,6 +575,8 @@
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_fingerprint": "sha256:f412aecb5cd19e45adb7f7b70432039dbd80b741c5d1fe391c96a9471fd9f6f4",
+      "task_interface_id": "sha256:053545f9045250cf2ba44e114555822fed1344947003bea7bf7d0feb9bb03ad0",
       "task_manifest_path": "cases/forgeyields/global_solvency/tasks/claim_redeem_preserves_global_solvency.yaml",
       "task_manifest_sha256": "66e263b32d8ca7dd81f4066d2d5856eaa3313333794dbf69b2bffefad8551561",
       "task_ref": "forgeyields/global_solvency/claim_redeem_preserves_global_solvency"
@@ -482,6 +586,8 @@
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_fingerprint": "sha256:ce18a9284e0fab5ebce646fa0fb64185da821054c425779fa5497aa19946827f",
+      "task_interface_id": "sha256:9e4fe8bb1ac0bdfb7a359b48e993125e0112ff476bf498d65460a4eaa0e2b1ea",
       "task_manifest_path": "cases/forgeyields/global_solvency/tasks/deposit_preserves_global_solvency.yaml",
       "task_manifest_sha256": "38319d00d0efd742bccd0057af50cb47caacf7b9225a3373edf725685c09e386",
       "task_ref": "forgeyields/global_solvency/deposit_preserves_global_solvency"
@@ -491,6 +597,8 @@
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_fingerprint": "sha256:8430018d0d603aa93fdd725bd0729f5275e7d6bbddf6f95e88acbda062619827",
+      "task_interface_id": "sha256:8bd3d3ef7e64853802c692c490f8b4c6211f3c87955bb703b1e085549dab8f57",
       "task_manifest_path": "cases/forgeyields/global_solvency/tasks/handle_preserves_global_solvency.yaml",
       "task_manifest_sha256": "35f2c7393ce696972fc4a3c5e8153b382c331260242789fd569c6ced67a471fc",
       "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency"
@@ -500,6 +608,8 @@
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_fingerprint": "sha256:d8f1e4a7954d66b09960abafe7b9e76d318e19b2602b9a74d0749d2619738d84",
+      "task_interface_id": "sha256:3aefdb1b1bc5619aaa19a2e3378dc96c36466433099d3d392d050d5c3e298cbb",
       "task_manifest_path": "cases/forgeyields/global_solvency/tasks/redeem_token_gateway_depreciated_preserves_global_solvency.yaml",
       "task_manifest_sha256": "f66c8865a69ec4a00941e7d02d55c47a4e23c189910e3b632dbcfe327239c239",
       "task_ref": "forgeyields/global_solvency/redeem_token_gateway_depreciated_preserves_global_solvency"
@@ -509,6 +619,8 @@
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_fingerprint": "sha256:cf6079419ee6d7d2ac6a606416f7921019e66577bca54b6385b2e37ba459c1dc",
+      "task_interface_id": "sha256:6b12af357259a2b5672ce225a6d12d7c62beaa59f3fe5c35f3b1827651d1fe10",
       "task_manifest_path": "cases/forgeyields/global_solvency/tasks/report_preserves_global_solvency.yaml",
       "task_manifest_sha256": "6632dd29dd59ff67ee42821d010c754d5ccaa6316ffbd05396ac1661b20ac878",
       "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency"
@@ -518,6 +630,8 @@
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_fingerprint": "sha256:d4c198b938c60647edc95f8f22db209da491a00930336a907ce14fd1c7aa4ede",
+      "task_interface_id": "sha256:8dd8c21cd5d58f3ecaa7aa7b84e150fe172271b64466cc53a13360a960b95656",
       "task_manifest_path": "cases/forgeyields/global_solvency/tasks/request_redeem_preserves_global_solvency.yaml",
       "task_manifest_sha256": "47a569e04316212062393d9e124b4b335bb4187904f58010eb05e04eb426b7d8",
       "task_ref": "forgeyields/global_solvency/request_redeem_preserves_global_solvency"
@@ -527,6 +641,8 @@
       "reference_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
       "reference_module_path": "Benchmark/Cases/ForgeYields/GlobalSolvency/Proofs.lean",
       "reference_module_sha256": "f35ccf923eb1e8d8e0bc03c83f47cbaca57fa6f05b0023ccf2bd8433dde24b16",
+      "task_fingerprint": "sha256:f247bea589f47221716fd8926ff85c2959378c51c84ebcee975c9f3d8bd82535",
+      "task_interface_id": "sha256:1c7d2be69abe02950ed861a9caf15d5c8d58d11ec343ef682c76347fc7b66d33",
       "task_manifest_path": "cases/forgeyields/global_solvency/tasks/transfer_remote_preserves_global_solvency.yaml",
       "task_manifest_sha256": "8c3ae5d206823c4fb753ea423eddbb4087900b8e748d8d06ee646d475ba70937",
       "task_ref": "forgeyields/global_solvency/transfer_remote_preserves_global_solvency"
@@ -536,6 +652,8 @@
       "reference_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
       "reference_module_path": "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Proofs.lean",
       "reference_module_sha256": "ffb2bd98f30569f4a5ba7608091f94d2e82a0bcfa1c826dd9bf6b571ebe4047a",
+      "task_fingerprint": "sha256:d4b8ee89bab56f400f1047d2147cf4f85c211cd7b73411f6e36ae9ec0587f4ff",
+      "task_interface_id": "sha256:ab2a0acf171a90545926913562cdde367140fddeca269083a2660ab47c73476f",
       "task_manifest_path": "cases/ipor/plasma_vault_redeem_split/tasks/fee_payout_bounded_by_fee_free.yaml",
       "task_manifest_sha256": "ed4e1278be77362d9e7089aa9d5e6dbc1c170b98e407ee6e5e00a7785256daf1",
       "task_ref": "ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free"
@@ -545,6 +663,8 @@
       "reference_module": "Benchmark.Cases.IPOR.PlasmaVaultRedeemSplit.Proofs",
       "reference_module_path": "Benchmark/Cases/IPOR/PlasmaVaultRedeemSplit/Proofs.lean",
       "reference_module_sha256": "ffb2bd98f30569f4a5ba7608091f94d2e82a0bcfa1c826dd9bf6b571ebe4047a",
+      "task_fingerprint": "sha256:a70c0e2ec596191b5f52938e2dc9eb255fca21c0dc90f9ba312b2f203d1628c7",
+      "task_interface_id": "sha256:7e65419efaab91ec2518bbf239eb554d8ab327581756d4af6645550b2c4c8d08",
       "task_manifest_path": "cases/ipor/plasma_vault_redeem_split/tasks/redeem_preserves_pps.yaml",
       "task_manifest_sha256": "58c0d98e49eb65aa35429e4c5eb9acaca2923cbcf94214f3a1aae17f03ee5921",
       "task_ref": "ipor/plasma_vault_redeem_split/redeem_preserves_pps"
@@ -554,6 +674,8 @@
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_fingerprint": "sha256:7cf4c0de9a757662d6795d146a1d2e65d2cb3229841478de736d81bdee0b8d45",
+      "task_interface_id": "sha256:996ac228fedf4281254b7f00ef9652885f860df06248a63fc53ab115fcce4ec1",
       "task_manifest_path": "cases/kleros/sortition_trees/tasks/draw_interval_matches_weights.yaml",
       "task_manifest_sha256": "583d3086fb47d9bb896ebb69e265e460e62b12f689a9552ceab509f95bea2e32",
       "task_ref": "kleros/sortition_trees/draw_interval_matches_weights"
@@ -563,6 +685,8 @@
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_fingerprint": "sha256:6ab89954f3e45f18d00d81147ce9bdae9f0d12c4aebe55017fac9125dedc3f56",
+      "task_interface_id": "sha256:25ddcef48bec4cbd43401a18e157815bb209abced3bf8408d226cbc15e890570",
       "task_manifest_path": "cases/kleros/sortition_trees/tasks/draw_selects_valid_leaf.yaml",
       "task_manifest_sha256": "52f845e8233293f1517909f3eade2307326a17030e94cb41774c1f3a9162c000",
       "task_ref": "kleros/sortition_trees/draw_selects_valid_leaf"
@@ -572,6 +696,8 @@
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_fingerprint": "sha256:3e382537e110a716d80ce594ea3a3f878f8deca70374049822c7215fb9ce5be5",
+      "task_interface_id": "sha256:8cce0b072bee102889e2cc8749df86c56e8a6212282a1600f5cf06a355f99623",
       "task_manifest_path": "cases/kleros/sortition_trees/tasks/node_id_bijection.yaml",
       "task_manifest_sha256": "ed927bc7afc310da1eadbb9245d4d518516ea075e84a7a6fc97881ec2afaae3b",
       "task_ref": "kleros/sortition_trees/node_id_bijection"
@@ -581,6 +707,8 @@
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_fingerprint": "sha256:7935da78cfa1d41a1304000c5b81a967951a88699ae21ef4422a36274425c70e",
+      "task_interface_id": "sha256:9c8040526486c55112b718b7aeee1c7dbbea67f27da2c444db21a9e0b0dcf4c1",
       "task_manifest_path": "cases/kleros/sortition_trees/tasks/parent_equals_sum_of_children.yaml",
       "task_manifest_sha256": "e5784ef5a57936ab3fd6c4858714f2d7e65e3257c596511449f57ea5c9469c5c",
       "task_ref": "kleros/sortition_trees/parent_equals_sum_of_children"
@@ -590,6 +718,8 @@
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_fingerprint": "sha256:a7fcd3f3e0ebf756b1d7e550343a7b6eb8ec2d7a351601eefac0017dea4d3b30",
+      "task_interface_id": "sha256:76d1da685f493e716719b15970d02af6fb6554e278ee6a73f2a6439d42a15c71",
       "task_manifest_path": "cases/kleros/sortition_trees/tasks/root_equals_sum_of_leaves.yaml",
       "task_manifest_sha256": "c69b84e09a472dd44890a40b86dca65aa3289bfd3202b3c639653ffed9395e82",
       "task_ref": "kleros/sortition_trees/root_equals_sum_of_leaves"
@@ -599,6 +729,8 @@
       "reference_module": "Benchmark.Cases.Kleros.SortitionTrees.Proofs",
       "reference_module_path": "Benchmark/Cases/Kleros/SortitionTrees/Proofs.lean",
       "reference_module_sha256": "cb2ebfd5fadb3d884bdacb255e87060d9d4d954e292f4781ff372701e6150cf1",
+      "task_fingerprint": "sha256:d45d2e44b74a0ad37c6e5e57fcbeabf95f099aed77ffcf03220458e9896ef172",
+      "task_interface_id": "sha256:b85a73cd9f098ed6cba91768085cf336655017cd5a6c2b91511f1018fbecbebd",
       "task_manifest_path": "cases/kleros/sortition_trees/tasks/root_minus_left_equals_right_subtree.yaml",
       "task_manifest_sha256": "d18147e54464c80e19d9d3c747a2969e38f42e12ff044d669a58bde0661342be",
       "task_ref": "kleros/sortition_trees/root_minus_left_equals_right_subtree"
@@ -608,6 +740,8 @@
       "reference_module": "Benchmark.Cases.KyberSwap.PartialFillPriceFloor.Proofs",
       "reference_module_path": "Benchmark/Cases/KyberSwap/PartialFillPriceFloor/Proofs.lean",
       "reference_module_sha256": "79591ee63c801d105ddaf8620778467e625ce152fbe207e2cb1c170eaaf6ad77",
+      "task_fingerprint": "sha256:6afce3f7f1e3f32f3c3234fcba03f3ea198677b146f3c28045f162fe4958394e",
+      "task_interface_id": "sha256:c8611d733f52eebdb744e298d131df02271b7ab366a0cdcc0ea69e0bd2c2b901",
       "task_manifest_path": "cases/kyberswap/partial_fill_price_floor/tasks/check_return_amount_partial_fill_price_floor.yaml",
       "task_manifest_sha256": "40837141cf6077a555e2876f84cff390c64b5ecb0e4ce49687e7ed6ecf3c04d2",
       "task_ref": "kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor"
@@ -617,6 +751,8 @@
       "reference_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
       "reference_module_path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
       "reference_module_sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc",
+      "task_fingerprint": "sha256:674e0dad3b7f5ce1cac5f1db4f3c753670bb2e320cea5977e0bc5c491b22d409",
+      "task_interface_id": "sha256:d374b2409366ce218f4b87f439ad64e1ef5369355fbd0d79be06e4024dc2b427",
       "task_manifest_path": "cases/lagoon/guardrails/tasks/exact_compliance.yaml",
       "task_manifest_sha256": "ab2a7e71123ef8fb69b97f1dbcfa51ef0ce62b92ddd349239161a6039d9c93da",
       "task_ref": "lagoon/guardrails/exact_compliance"
@@ -626,6 +762,8 @@
       "reference_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
       "reference_module_path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
       "reference_module_sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc",
+      "task_fingerprint": "sha256:4dcea78b6aa229a7ee693d5cb64cb61f020f7412517bde67ed592c40eb94bdbb",
+      "task_interface_id": "sha256:becf1e46fd6729c017b901327adfa39ad69bd485ba7dba071f26d1ba7120913c",
       "task_manifest_path": "cases/lagoon/guardrails/tasks/negative_variation_bounded.yaml",
       "task_manifest_sha256": "80a1f09b567e2d99d5c204cb96828fab9a428c5338de0170669c59f8ae9ae5a6",
       "task_ref": "lagoon/guardrails/negative_variation_bounded"
@@ -635,6 +773,8 @@
       "reference_module": "Benchmark.Cases.Lagoon.Guardrails.Proofs",
       "reference_module_path": "Benchmark/Cases/Lagoon/Guardrails/Proofs.lean",
       "reference_module_sha256": "a6a9fed24a9b7457746ae29968d2fbfc3a230ae88b907e0ff75d9c1676aee7dc",
+      "task_fingerprint": "sha256:f1ef04f8b3f4fccff27698d96603336ee78fad9f4b15d7a89aaebc42c4ade14c",
+      "task_interface_id": "sha256:69184aa62371d68552e8688c61141fa84805bb69ec1f9da50791c619d71b3c20",
       "task_manifest_path": "cases/lagoon/guardrails/tasks/positive_variation_bounded.yaml",
       "task_manifest_sha256": "2326d1e3a9ed36523d2add050cb51789977706ecda2c071e63aeb88a58952bfa",
       "task_ref": "lagoon/guardrails/positive_variation_bounded"
@@ -644,6 +784,8 @@
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_fingerprint": "sha256:353a0bd1de7e265c2dfa22d7dcb6babfd9db96add8da2f47ad9962dbea4c3d28",
+      "task_interface_id": "sha256:8428f0adcf959c1fdd89bd499957ebcc4b265cca76388321cd0704fb607956d5",
       "task_manifest_path": "cases/lido/vaulthub_locked/tasks/ceildiv_sandwich.yaml",
       "task_manifest_sha256": "0e395e63fc7973ebc44e673b5817fb1e400975507eaefc0e2d0bcde54fcf181e",
       "task_ref": "lido/vaulthub_locked/ceildiv_sandwich"
@@ -653,6 +795,8 @@
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_fingerprint": "sha256:c689be6f46ba9aa3abbb984d22baf5266b052915bbafa8850fb6d8b45814764f",
+      "task_interface_id": "sha256:ff3d615db2e5c4834c24ab3ef794a7ee072d0b1903403f03b380745ac395a9c0",
       "task_manifest_path": "cases/lido/vaulthub_locked/tasks/locked_funds_solvency.yaml",
       "task_manifest_sha256": "1a89a433f7b4591d617bb7946a12b87191c4faa239d31407febfd24b89f82967",
       "task_ref": "lido/vaulthub_locked/locked_funds_solvency"
@@ -662,6 +806,8 @@
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_fingerprint": "sha256:024964f72556639948b6a75225425b00f3a9829c91a7c7abed9edb33f78c7177",
+      "task_interface_id": "sha256:60707649591488705ae2c0656724dd507fc1d40a867daa0ef45e2cebb26f0bf9",
       "task_manifest_path": "cases/lido/vaulthub_locked/tasks/max_liability_shares_bound.yaml",
       "task_manifest_sha256": "0fd7877d28f8f0fdf4ab6bcd41d0917a875a5985edf4bfa72a13847b984fb584",
       "task_ref": "lido/vaulthub_locked/max_liability_shares_bound"
@@ -671,6 +817,8 @@
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_fingerprint": "sha256:8df4645580e02187832bef524406ed57a8fdbd6351c9cee2acc432c162d8f04f",
+      "task_interface_id": "sha256:1c49ce823c18d656a3b19f9979a41eafb452a0f9845fd5aeeabf879247c5849b",
       "task_manifest_path": "cases/lido/vaulthub_locked/tasks/reserve_ratio_bounds.yaml",
       "task_manifest_sha256": "f9bfdd20bc0b6f4aab390308ab5076a321f59fca06d2e0446d64dd0b9b6beced",
       "task_ref": "lido/vaulthub_locked/reserve_ratio_bounds"
@@ -680,6 +828,8 @@
       "reference_module": "Benchmark.Cases.Lido.VaulthubLocked.Proofs",
       "reference_module_path": "Benchmark/Cases/Lido/VaulthubLocked/Proofs.lean",
       "reference_module_sha256": "27df0bb56697f70e4d7453c5c335995360dc4311cf1480cc36124e0ddc29a492",
+      "task_fingerprint": "sha256:17f21fe664a8cf6d006c3d0c03191807eaf0289d5d0218b0f37be6b68e460910",
+      "task_interface_id": "sha256:f3c9b6a9c24e974aeb696e133dea809094fa3a4c3a2c3d76d6e931c9557f8977",
       "task_manifest_path": "cases/lido/vaulthub_locked/tasks/shares_conversion_monotone.yaml",
       "task_manifest_sha256": "4a8346f1fe43303aff2354b1a19460a16a115e62c3a97642222a370b39a5ded0",
       "task_ref": "lido/vaulthub_locked/shares_conversion_monotone"
@@ -689,6 +839,8 @@
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_fingerprint": "sha256:bdfc092ee01094cd245f33b10b0c86f5c8ab920786f3c9e79a9b7ea62ac783b1",
+      "task_interface_id": "sha256:cb138ebbcca9e724118708866c1534b2906dcb79762460d199a8005b031e6a60",
       "task_manifest_path": "cases/lifi/swap_atomicity/tasks/committed_route_executes_every_step.yaml",
       "task_manifest_sha256": "e6b39addb3f66b41c0d4197f6a271028c923fdfcd7cfe6376b99e50f95b26e27",
       "task_ref": "lifi/swap_atomicity/committed_route_executes_every_step"
@@ -698,6 +850,8 @@
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_fingerprint": "sha256:c881ffad7f3e32454320ad1fd16041e305930c3e91170b8d7ddd3d54e31420de",
+      "task_interface_id": "sha256:3fc1de060ac3f4039467f354aa4d27f45591418965e6c850ee30fdc65fc82a9a",
       "task_manifest_path": "cases/lifi/swap_atomicity/tasks/failed_step_reverts.yaml",
       "task_manifest_sha256": "2936c492f95b0d8dee073c06fa1adbffd1dd866356873014593f82903f6de31d",
       "task_ref": "lifi/swap_atomicity/failed_step_reverts"
@@ -707,6 +861,8 @@
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_fingerprint": "sha256:2c6fb6b9659e7f1e41f2df7e5e6df6bbffbe910871c61c2934d422cafe30b42e",
+      "task_interface_id": "sha256:9fea1e850b027880a3a7738f797d99fbb14f1f393484918441a125e317018263",
       "task_manifest_path": "cases/lifi/swap_atomicity/tasks/final_transfer_implies_all_steps_succeeded.yaml",
       "task_manifest_sha256": "f78f43088771cd4bde78481170da1bcdf06e8dfd3faa8af1891114aadbaa3bbf",
       "task_ref": "lifi/swap_atomicity/final_transfer_implies_all_steps_succeeded"
@@ -716,6 +872,8 @@
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_fingerprint": "sha256:af89218df7caa888f9cc5982f18e255832dcb98b3a37f9d5b330c5f6238d18c0",
+      "task_interface_id": "sha256:fb6d3a37b6cd10a353aa48e8e875f708cdf33c9fc3d1bf4e1e6f85fb9026c191",
       "task_manifest_path": "cases/lifi/swap_atomicity/tasks/min_output_required_for_commit.yaml",
       "task_manifest_sha256": "e1cd4891626b58abccc10c2201d5baf9a01aa8f40aa9c4ff684e0b9a190c328a",
       "task_ref": "lifi/swap_atomicity/min_output_required_for_commit"
@@ -725,6 +883,8 @@
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_fingerprint": "sha256:a775aa6174743367b97be405447ac0a4b01df9bd470fb15c4a404857193ad481",
+      "task_interface_id": "sha256:4d1daa0587bb946c156776d0ec20834f30aa2e798c2a1e44bb3b6e609ae9e033",
       "task_manifest_path": "cases/lifi/swap_atomicity/tasks/no_final_transfer_on_failed_step.yaml",
       "task_manifest_sha256": "74be5433eea78ab90d43f05b364b0f7ad76a6dec89b4a0391571a3d9310f94f3",
       "task_ref": "lifi/swap_atomicity/no_final_transfer_on_failed_step"
@@ -734,6 +894,8 @@
       "reference_module": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs",
       "reference_module_path": "Benchmark/Cases/LiFi/SwapAtomicity/Proofs.lean",
       "reference_module_sha256": "50fb8664a191eccc2408f015bbe7a8e6828285718fe121daf84913658e05dc97",
+      "task_fingerprint": "sha256:6aed4f75fccb87d5c5dfce64b0d92bf157b06059f6d6aec3c534e2a0feb9eb66",
+      "task_interface_id": "sha256:396ebc7bc607ae31df1319345285187e4bdb854611d51477446f28faa5ad1298",
       "task_manifest_path": "cases/lifi/swap_atomicity/tasks/route_gate_failure_prevents_commit.yaml",
       "task_manifest_sha256": "871d8da49143429447e489938e534bfdb433a216044409fdbf86f05e6a3a033d",
       "task_ref": "lifi/swap_atomicity/route_gate_failure_prevents_commit"
@@ -743,6 +905,8 @@
       "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
       "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
+      "task_fingerprint": "sha256:bc49feb87204278cbc6f4cebf256b967a3e6af87a22c1441def1f4758a427884",
+      "task_interface_id": "sha256:f681bb5733843f8865c5ef94bde84bf18280fb53d9b557c76761655f9be6d436",
       "task_manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_book_value.yaml",
       "task_manifest_sha256": "42a485ba364b042eb62d576cb9545916500b61e47fde24cf1d44c8ab728517a9",
       "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value"
@@ -752,6 +916,8 @@
       "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
       "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
+      "task_fingerprint": "sha256:80d131b6b0817b55d5b8935a05d5f77e32c76f1051c41a32fedcbc465cfe9cfa",
+      "task_interface_id": "sha256:b9b8b6a5ba42657c7bfe620a0ceaf18c355b71878e93a8c9c12b03a7c0911247",
       "task_manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_buy_price.yaml",
       "task_manifest_sha256": "41923573dc4ecae022e8e339b74e4bc177bc06e3fad43da2e89585c707b5bc90",
       "task_ref": "nexus_mutual/ramm_price_band/sync_sets_buy_price"
@@ -761,6 +927,8 @@
       "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
       "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
+      "task_fingerprint": "sha256:e31e02bb01d48315ef23139f9a9a4177890bf3baf5bbaa0d38fcf70012fad03e",
+      "task_interface_id": "sha256:097ec728b6ca968810df46d79a950674c74a40db7a759ece903c787feb97c97d",
       "task_manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_capital.yaml",
       "task_manifest_sha256": "ee1431fd4b2485e0e1945d6afab8bad44c50eca52f5525ebc472fb934848a224",
       "task_ref": "nexus_mutual/ramm_price_band/sync_sets_capital"
@@ -770,6 +938,8 @@
       "reference_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/NexusMutual/RammPriceBand/Proofs.lean",
       "reference_module_sha256": "3a7af079fbba9d2a6723a0e96428aa8a19313d6b6fed030af7b508fbb923b691",
+      "task_fingerprint": "sha256:48c434748969d8a97351afb595ce41c3958c294be7718a7b1391c452f27d25da",
+      "task_interface_id": "sha256:baeb370b0ad03baadb2b90c2c870340fc0882b380df8f3d2d1f471638d1f8c9c",
       "task_manifest_path": "cases/nexus_mutual/ramm_price_band/tasks/sync_sets_sell_price.yaml",
       "task_manifest_sha256": "20daa71080d0d8b6e7b7979c62cba0afcbefece0c03afb4cb291988ebc7dbc59",
       "task_ref": "nexus_mutual/ramm_price_band/sync_sets_sell_price"
@@ -779,6 +949,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:c20ae35d69d024a67b84c68b2030a399d8aac3e1d5a9a69b7bdac8d120ced9aa",
+      "task_interface_id": "sha256:a5c847fc76459388bd5ec6392edac4fe9aa8cbc2cdd0490c07723a6aa7280e48",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_erc20_transfer_from_uses_outer_caller.yaml",
       "task_manifest_sha256": "4c92d5a461a291d59ccd48c251227fb21715e7d7b1b37f1b16e9fb65a9f871bb",
       "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller"
@@ -788,6 +960,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:60ca34a6879be894d558bca99f7e5c16a2d37d50ac42a6f6d04631119c0e3c98",
+      "task_interface_id": "sha256:23558362fe4f96b2da91e696faddf3e90d28a9b6b8737f170ebbd0750ba0c108",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/delta_compose_internal_permit2_transfer_from_uses_outer_caller.yaml",
       "task_manifest_sha256": "35699ad07a08edd83cc875a86c7418f32df119958f9c9c7e4909e75d39b1eb7f",
       "task_ref": "onedelta/caller_address_integrity/delta_compose_internal_permit2_transfer_from_uses_outer_caller"
@@ -797,6 +971,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:dffa8e3996cc1963e2a22b7125c471a64d3fa8dea3c71789c66a3ecd996c9b30",
+      "task_interface_id": "sha256:0355fbfd24b5ecc9d206e6fb160499ca6e8e62e4ad49415a240a1e99dad5df96",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_erc20_transfer_from_uses_outer_caller.yaml",
       "task_manifest_sha256": "3605d2fc53a48a563ba0a7c2bd32ade48f7acc92b1063cffded30d9551134217",
       "task_ref": "onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller"
@@ -806,6 +982,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:4b6c4e7484843fced1e642d0aa220d182d3cc26a4f31d1070ce87d04860a6316",
+      "task_interface_id": "sha256:59bc223d8ac0a04450cc8b8fd22a7878bb27fac3525b0f33d9d847c7c5cd2958",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/direct_permit2_transfer_from_uses_outer_caller.yaml",
       "task_manifest_sha256": "962c947773fb5dc362ec34b2fa9a4a7a147a035f3877333101e451b2fa28c87e",
       "task_ref": "onedelta/caller_address_integrity/direct_permit2_transfer_from_uses_outer_caller"
@@ -815,6 +993,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:bb66a1ebc18311b42dd911cb4821fd13f5008a3fcb1654dad0a33f33f90826c3",
+      "task_interface_id": "sha256:47f7592cae5c6d3c82f39b356f21568ccd62f6633d8fe0ece216cc65a62c1f85",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/flash_callback_erc20_transfer_from_uses_outer_caller.yaml",
       "task_manifest_sha256": "4ab980a7d70647a36f772ec8f6899327393bac8eea865c17ee09d25c27ee0073",
       "task_ref": "onedelta/caller_address_integrity/flash_callback_erc20_transfer_from_uses_outer_caller"
@@ -824,6 +1004,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:e61c9efb4f15a3b4e97e2533a5413e916637471c5ba6e8f9770d1c19711b4173",
+      "task_interface_id": "sha256:a232951b86fd8e4d0563d5958dabdaa39ad5f09f9ac6fe640b75829bb0c7971f",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/nested_flash_and_swap_callbacks_keep_outer_caller.yaml",
       "task_manifest_sha256": "0094091227883aa479fab2d051853acc5a5449ed9ec08a38d313bb1b390ac631",
       "task_ref": "onedelta/caller_address_integrity/nested_flash_and_swap_callbacks_keep_outer_caller"
@@ -833,6 +1015,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:43bfcabb02b7bac2eb95c6d0ef9b7b79a7c0ef44bc7374b60eb237962b336718",
+      "task_interface_id": "sha256:d2e44ae26f0ba5ff5c26b0780fa6771c62ee1ef4be10eec507ad49297522a2c5",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/swap_callback_permit2_transfer_from_uses_outer_caller.yaml",
       "task_manifest_sha256": "988cbdee8d72f3dd15b63df48c46d21599f694582490bef143373d1ea92e9371",
       "task_ref": "onedelta/caller_address_integrity/swap_callback_permit2_transfer_from_uses_outer_caller"
@@ -842,6 +1026,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:126293feb0ebbd151f5850a78cc5cca8b4f1732e9286c4bc7cdd6507d2362e63",
+      "task_interface_id": "sha256:b03241eba929bc4e7acb085e040606eee7c250987affb04c92f4f06b2f7d7ad2",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_erc20_transfer_from_uses_outer_caller.yaml",
       "task_manifest_sha256": "4c801a7d719bc645f401c9bf7485d75c48984584e83418f30ac4bc6c1fe75eeb",
       "task_ref": "onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller"
@@ -851,6 +1037,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:01a769a493936699b5051c87a22ccac21ccd51d8fa824c6a08d7ec87e7661443",
+      "task_interface_id": "sha256:7059530c0924ee37440c69af6e19798ba633248930813ace9524d52e0eca0932",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/transfers_permit2_transfer_from_uses_outer_caller.yaml",
       "task_manifest_sha256": "242fc342b411ab5844a0220084af8e2a224165bf4f51e02ceebef39b73ce5f83",
       "task_ref": "onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller"
@@ -860,6 +1048,8 @@
       "reference_module": "Benchmark.Cases.OneDelta.CallerAddressIntegrity.Proofs",
       "reference_module_path": "Benchmark/Cases/OneDelta/CallerAddressIntegrity/Proofs.lean",
       "reference_module_sha256": "a46aaa0da82787d9ca0a8a37f59ad6e489c48479a59202daa99968f617de6422",
+      "task_fingerprint": "sha256:3079c8c72725ee8962d8d626ece3d63b77b4f99eab3ecb6d1b4080a5841b59c7",
+      "task_interface_id": "sha256:3d4f8f37d98eb97e6d404f09d538e743eff24c47633c6b1cd45579ed88ad961a",
       "task_manifest_path": "cases/onedelta/caller_address_integrity/tasks/v3_callback_direct_transfer_from_uses_outer_caller.yaml",
       "task_manifest_sha256": "c2c6818153b0cc3f12e456761a51c06a91a6aac2c4ce0b71158c5dbb29491e24",
       "task_ref": "onedelta/caller_address_integrity/v3_callback_direct_transfer_from_uses_outer_caller"
@@ -869,6 +1059,8 @@
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_fingerprint": "sha256:c46ab305e5bdf83410a6d7ba92469fa486318ebede87e3db8dd7fc86eb8c3dd5",
+      "task_interface_id": "sha256:1983a22b2a213072d3c59c112ef7ff26170908b53323db2519f1801e4fc5338a",
       "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_redeem_round_trip_bound.yaml",
       "task_manifest_sha256": "73c27645e8f963876051b26f2956c2dcade4811069f641d190c9d6060f7a3505",
       "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_redeem_round_trip_bound"
@@ -878,6 +1070,8 @@
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_fingerprint": "sha256:3cf432089b01393f15bdbab4b550044dfb35dd44045cbcba8acd01ca7533976d",
+      "task_interface_id": "sha256:41b6e136c39fac88f89522acb8ac3075871aa1ce0974a1b4e434dad3538a79ff",
       "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_sets_total_assets.yaml",
       "task_manifest_sha256": "fd0f6594d4de77a7913c6cd11b082fbdfba40a2aee71903f47f20dfbf2a37b6a",
       "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_assets"
@@ -887,6 +1081,8 @@
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_fingerprint": "sha256:71933348c8c2af67d61d02184bb91cefe70d3a3daf9231af5d72eac1a2c27eac",
+      "task_interface_id": "sha256:618bd71b30283940325c7f359320d011b3dea47c614ec8ff62ab817392b802cb",
       "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/deposit_sets_total_shares.yaml",
       "task_manifest_sha256": "56bcd1b044a6d1559559a61ed7631152bfba5ab4117a28030774143213fcb993",
       "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_sets_total_shares"
@@ -896,6 +1092,8 @@
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_fingerprint": "sha256:cd399f8f9af33f0fdcd6543510b077f8f3b54a49c525ab7697df9bc419ebc8f9",
+      "task_interface_id": "sha256:9ce1c01bbd22978189885b6f46891b9fcf9b787fb0bf3c109df92f9f356d1fb6",
       "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/positive_deposit_mints_positive_shares_under_rate_bound.yaml",
       "task_manifest_sha256": "16bfbd46e002bcf902dce6736512f998b456b1a110b750e2ea4f8cca6c426545",
       "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/positive_deposit_mints_positive_shares_under_rate_bound"
@@ -905,6 +1103,8 @@
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_fingerprint": "sha256:657303c7f1677caa91ec00786de864ba0a56186bfbe1f24e3cc86ad1db59aeb9",
+      "task_interface_id": "sha256:236e18fd83042d214e1a66403712c38db5859ceea5457653cd83579165aa9437",
       "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/preview_deposit_rounds_down.yaml",
       "task_manifest_sha256": "c3915e8dc58d96ca7a63cd1585213f9eeff0bb73d195c3f9fdd0579d7e52361c",
       "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/preview_deposit_rounds_down"
@@ -914,6 +1114,8 @@
       "reference_module": "Benchmark.Cases.OpenZeppelin.ERC4626VirtualOffsetDeposit.Proofs",
       "reference_module_path": "Benchmark/Cases/OpenZeppelin/ERC4626VirtualOffsetDeposit/Proofs.lean",
       "reference_module_sha256": "d36778afa1c05712c956cb6142c8b5f0e3c7cf3cbceb9b1c71289b3484eb2570",
+      "task_fingerprint": "sha256:5ac97b30e006541f416dcd0e0d733b99c200f0114c71f87924e7a4912ae0c3cb",
+      "task_interface_id": "sha256:06c14b1b21aaa0c99780816c717c646b9db1085ca0a861bac694edb8252bcdb0",
       "task_manifest_path": "cases/openzeppelin/erc4626_virtual_offset_deposit/tasks/share_price_monotone_under_donation.yaml",
       "task_manifest_sha256": "ddfd926a9aadbf9cd4f45d197910403560667d5de45d2f5950b0fcb142b70603",
       "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/share_price_monotone_under_donation"
@@ -923,6 +1125,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:90afbb259066f43505ef05bcdc8ac050e74f553ba3288ef7294a5118385d762a",
+      "task_interface_id": "sha256:b37e352970718f9eba13c5a145b331a23f149bf6411acc6133752d888c950970",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_marks_both_claimed.yaml",
       "task_manifest_sha256": "2bbe1ca6435b238176d8cd806b0b19dcdc8ce3cc49631752636b732bea3953de",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed"
@@ -932,6 +1136,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:b0135ecbd5bd9f0bd2ceeb9b220eb13ccef66e476fb7616c891afe1caddc3669",
+      "task_interface_id": "sha256:272671858c21abe52b301d526d8c394dbea878f8fd812c78dd82f2c6b7061e7f",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_updates_round_claimed.yaml",
       "task_manifest_sha256": "7f87fb855aa4f0b06c60f3281ba978bded78426df4c9dbf54d233d97c130fe2b",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_round_claimed"
@@ -941,6 +1147,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:8d5f92f1024d271725dce3a61d562bbb8d4ace3e203f6af5a0eb87cae2a115c0",
+      "task_interface_id": "sha256:68ed4c7709d752fd91599f1528326ab7c51b3c801130f51075f3896846d21322",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claim_updates_total_allocated.yaml",
       "task_manifest_sha256": "babd791600e4b60dcc4515de62caa12bb7f101d22f80fa29475941af92527e33",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_updates_total_allocated"
@@ -950,6 +1158,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:35a611b5b0b5ccbbdc1a922c097fa372fc7ffa67178a102c42d83c656089411b",
+      "task_interface_id": "sha256:543d1365c328d7f808131695b41ea5099dd1e14af1beef5e8fb7e4e85098237a",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_claimed_plus_allocated_conserved.yaml",
       "task_manifest_sha256": "50f446e7ecf98bdeadd4f05dd2498d7c434f0a2c64814ec28cc8c61600a6fad9",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claimed_plus_allocated_conserved"
@@ -959,6 +1169,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:8ddb6beb323d3ae06d1579f1bb99b39b3719606bd4b6335688d70d20065d1a7a",
+      "task_interface_id": "sha256:3e6734598ba1397784615ee52bc42bc12f848bb608aff50b0f899e7bd53ae4ee",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_matches_independent_claims.yaml",
       "task_manifest_sha256": "7593dee451701a767ca90edb7267fd4300b0d63c2fc530991972594732dbf03c",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_matches_independent_claims"
@@ -968,6 +1180,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:b1200a06b93b2d21ba7c2250c57ce47d52b7e6b6d9b86c2ef2b08df4004cf269",
+      "task_interface_id": "sha256:84bec6319b080a602e90dd78021306ceaaecd45b9893cb3084ed5bd5d4ac7be8",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_no_overclaim.yaml",
       "task_manifest_sha256": "5cb5f75ab8e52287f7a5b91b1902a865ef88d33f58c8543a1bc149f67f83bfa8",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_no_overclaim"
@@ -977,6 +1191,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:8f785647ba0c0619582d3ad01fe48b8d2cab96c823a2abdabee1ac40ca00df44",
+      "task_interface_id": "sha256:68d8bf71fd338b575cdbcbde256988a162d359d9398c69c4cbb0f396d50fd288",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_usdc_bound_violation_rejected.yaml",
       "task_manifest_sha256": "8ea235611d9b2ca74d2db7659d73f9550e6841c0bf28d776d75190bb5a7eb86f",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_bound_violation_rejected"
@@ -986,6 +1202,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:895100d852ce5a21c7f4268a409fb08768984b21d0dc6aeba1b68be697483362",
+      "task_interface_id": "sha256:e7711fff5e4dd430412abe52e57ce92027635822e15e27ea620440f31ddbfec4",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_usdc_double_claim_rejected.yaml",
       "task_manifest_sha256": "f9aa4b1905075a0654bc6a88d5a86bb86ffdb6bf2c58e2b8e8de8636dcec9a54",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_usdc_double_claim_rejected"
@@ -995,6 +1213,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:ac9f262d0f184e030dd4e3cda4e0d2344ecaeec28a221604a4fb95626b7a73fe",
+      "task_interface_id": "sha256:51c80da83c351d6ed2d55fc66911f5c7f82e7219edd21160a7043d52c563357f",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_weth_bound_violation_rejected.yaml",
       "task_manifest_sha256": "cfb398a25f3699b80de726126caaadf3f1d440d3072947092a4b284a57dada53",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_bound_violation_rejected"
@@ -1004,6 +1224,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:9ade7dcd77741c39eb25d3df9b7fe39709c55c7efd88793fff0de5b88e29c7a4",
+      "task_interface_id": "sha256:32b61029096f25629e0692c40c499f99e8ea195650e14ee2aa73baca9aef7df8",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/both_weth_double_claim_rejected.yaml",
       "task_manifest_sha256": "2fc6dfc7e919ce429de1b4b5e82025e49bb44b0df051dc89be1d6b324180ddb0",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_weth_double_claim_rejected"
@@ -1013,6 +1235,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:7d1ab76320fc7e6bed54e73ad68284e39202e8e6274bc9a0b762a5a22169e6ea",
+      "task_interface_id": "sha256:203bccb304c8037ef8a6bbc33b5da8125b0b510ada49fb783e5362d2e77cf252",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/bound_violation_rejected.yaml",
       "task_manifest_sha256": "f4c67ed7f6a02efa8780e25be1c701adb244f2e971cf3a00e5f9902273055e70",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/bound_violation_rejected"
@@ -1022,6 +1246,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:e5baf854d7cbe45696ba60999d2b230076df897010c2ccdc816ab8ee85184828",
+      "task_interface_id": "sha256:274826ffd64c58d600cf1a5f37bd573bf12828fd00b64f7e3def9198161564af",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claim_marks_user.yaml",
       "task_manifest_sha256": "9b70485ef234205323545761cda287a0f863c6b2de32da26b6b1387723a2a7d9",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_marks_user"
@@ -1031,6 +1257,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:e70c6b8c8ab9c9e755c714d3349b159fa4bcb9a22b9abf60564cb2bb2165b28b",
+      "task_interface_id": "sha256:9e536a9cb9b19fbeb6a6151e869afce35d4c9eaa8c7190c029f0e0b69a763e29",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claim_updates_round_claimed.yaml",
       "task_manifest_sha256": "f8e4405f74148da394c9483a8cdeb2d3cdb0b932c31a9cae690f65da4a567fe0",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_updates_round_claimed"
@@ -1040,6 +1268,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:2bdf5e3c8a89e31b9299243d20c3bbdd1b2c46fd9ffc683e61fd3a5ff0c5a3f9",
+      "task_interface_id": "sha256:85672f0d685ae1b7bd2c53ac6029876f17612c50b048e4c6936a786c11797236",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claim_updates_total_allocated.yaml",
       "task_manifest_sha256": "deba706cf716b65ea59e639261904b0480bd8674e53dd8a4ce3acac5ddad8c20",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/claim_updates_total_allocated"
@@ -1049,6 +1279,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:a5bca7902bb80b25d6f61cac3918a072bea16a51e5a77250558724bcbced775d",
+      "task_interface_id": "sha256:b140cbdfe5be191c0ea9f17bdb14b7e3b104d065ff6e787265e63f26c3bc7ba7",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/claimed_plus_allocated_conserved.yaml",
       "task_manifest_sha256": "bf3849a7f1a3df30fe49d08a8ba401ee6c0152c752553945322a9ed51867c1a9",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/claimed_plus_allocated_conserved"
@@ -1058,6 +1290,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:7ad13906e1fc687facaacd02ea6ef5d8c0caa93fa4d1dae4717101654ca156a2",
+      "task_interface_id": "sha256:457caf9453c920803b1af5fa64acd7a05d43e52a43a58af04836ff8169dc3d7e",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/double_claim_rejected.yaml",
       "task_manifest_sha256": "82a64b5fdfef1b3b4b1c1cdac0e61d131d446ec501c7e7bb351d2a8a91699428",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/double_claim_rejected"
@@ -1067,6 +1301,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:4c818502a90e45dac441d6eaf2129d295f8f140ebac4650a3a687750b4b1474e",
+      "task_interface_id": "sha256:21f5db4b4e957d2f4a31b8de110ffd5f183d9fe08d79bd1f1ee1308248b51568",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/no_overclaim.yaml",
       "task_manifest_sha256": "d05283dce53c12772f6600c4b130efcf46aff8eb77f89e1625b5e3f7dc606037",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/no_overclaim"
@@ -1076,6 +1312,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:1961a617cb8adc630e9b6e7a44ffe3576be59c7c48cf12501e20bf63f7b53614",
+      "task_interface_id": "sha256:3f2c1b70ddaa390d8d88f83bddf41cd6860ae2d2ec39750f9579f03e585cf8d3",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/usdc_preserves_weth_state.yaml",
       "task_manifest_sha256": "a85c46950f6e6992419c67471b008a58af1243a7e5c833b3780e837de7074852",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/usdc_preserves_weth_state"
@@ -1085,6 +1323,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:b2575aa2e790f57eb4bb6fa469c5163dcd206c57db05294b8092d8f93907acd4",
+      "task_interface_id": "sha256:cdaddc28cf9a671b9c386533fabd607b78d10d85b1ad394a4fadab1008ff4214",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_bound_violation_rejected.yaml",
       "task_manifest_sha256": "1c7a643982e73e822bb3f34333e860dcee6d26dde3a5b7819bec5e149575d7bb",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_bound_violation_rejected"
@@ -1094,6 +1334,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:714fa41be06a763e2aa63449570efb66aacfc55131bd1912b165e68b27d19512",
+      "task_interface_id": "sha256:84e613beb30b204a2507bd2b4474915fc78e94a042aed5858e15c76cb26e2c8f",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_marks_user.yaml",
       "task_manifest_sha256": "fd6c5da5f73cba2addb64161ff95d1a48fac82e248936268b900a8f43f403dd1",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_marks_user"
@@ -1103,6 +1345,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:d8ac6943b9be92e87848767b82aca9c59256c64c06ad581fd9000883e2573835",
+      "task_interface_id": "sha256:2d0dbea2791c06e5de4d6237440ee4253add4fcc312bdf3620ce74080cea4e08",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_updates_round_claimed.yaml",
       "task_manifest_sha256": "59cbd15a69adc259f0fee222e2e186a310bd08b30d806ad890b4b01881368b09",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_round_claimed"
@@ -1112,6 +1356,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:3cfe7f330efa84753500225d22a3511182e7dda284af999fb10a81028109fffd",
+      "task_interface_id": "sha256:cddee075d10c782bb729e13f313ce70a56c9a1fec2989f1f601a5d40eb82d03d",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claim_updates_total_allocated.yaml",
       "task_manifest_sha256": "34f5c4ffe4d77b9505c2de53c68eea41b3706e362dd56d96684a959fa5b234f9",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claim_updates_total_allocated"
@@ -1121,6 +1367,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:e25055cc9591586ed8abad97d52f8eb8a91e8232cea7b0143db0e67fb4a98f92",
+      "task_interface_id": "sha256:bcfe46e59cf62caa66153795517624ef10f7bf6292c6ee4536d8436026b56246",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_claimed_plus_allocated_conserved.yaml",
       "task_manifest_sha256": "24e51d3fc1e6e7b66174ebc3ff2f1382ab97ef5ef43328f6eeadb07ac75249b4",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_claimed_plus_allocated_conserved"
@@ -1130,6 +1378,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:1bb360d9c9555a587522e4227096d846ed421f98a15639878de230108106b64c",
+      "task_interface_id": "sha256:c414d3024196f5643a12d6ce6616a458d71e6625cf4bdc5b3800546ea4e8c7fa",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_double_claim_rejected.yaml",
       "task_manifest_sha256": "42832206f53758fb876269952c7b5944ee08e5e2a7404496e35a181bc12b685f",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_double_claim_rejected"
@@ -1139,6 +1389,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:bb2d137b736b1f83442ce4251bb9f625e77068446ed3c522b79848cc1bdd6c56",
+      "task_interface_id": "sha256:8ead53650ff76b437a3848c111dc8a602eb9d9b73f25d820793b89a0eea4b313",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_no_overclaim.yaml",
       "task_manifest_sha256": "beec747846ab1edbbaddc6b0a1587719326c09feab4d116f8db1b7f9828ef47b",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_no_overclaim"
@@ -1148,6 +1400,8 @@
       "reference_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
       "reference_module_path": "Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Proofs.lean",
       "reference_module_sha256": "32fc16b8041256cc118044c29812fc8890a6566606b7622835fa147a673ac660",
+      "task_fingerprint": "sha256:dde7683eb21faadc2cb4cb66dfeb2ef17a14b85b7ec188ebd705a12fbf9942cf",
+      "task_interface_id": "sha256:371b1e46bdde5072a8b695c1b3bdc3d2fa57afbc01372c74b07c24c1752318da",
       "task_manifest_path": "cases/paladin_votes/stream_recovery_claim_usdc/tasks/weth_preserves_usdc_state.yaml",
       "task_manifest_sha256": "6546e22c483fe013322014e78921a7453de813ca49c7b10b9315bc10e7fa1eb4",
       "task_ref": "paladin_votes/stream_recovery_claim_usdc/weth_preserves_usdc_state"
@@ -1157,6 +1411,8 @@
       "reference_module": "Benchmark.Cases.Pareto.RedemptionBacking.Proofs",
       "reference_module_path": "Benchmark/Cases/Pareto/RedemptionBacking/Proofs.lean",
       "reference_module_sha256": "076bceaec8ed81b677d41947de352e8d305ce3be09c35874fa2bc808f520d127",
+      "task_fingerprint": "sha256:eddbba6072cbf0cfcffd0f11a12a4525b9ee029ffcb34ed3d8154e8bd799d18a",
+      "task_interface_id": "sha256:f7e01b75abb7e2a2bb7c4ae412acc5eef057f1d50ea92e88b843d2a8a9c5d6dc",
       "task_manifest_path": "cases/pareto/redemption_backing/tasks/deposit_funds_preserves_closed_epoch_reserve_guard.yaml",
       "task_manifest_sha256": "4bb52144fbb1c6f0bdcc15397165ba8061c623dbea3d17862e5f8f2ffea0f24e",
       "task_ref": "pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard"
@@ -1166,6 +1422,8 @@
       "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
       "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
       "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
+      "task_fingerprint": "sha256:447d1cf677453dc6099c43ef245bac1203eb76dc447764708545b28c58121d2f",
+      "task_interface_id": "sha256:7981704ee8a4864b4bcdf8cb23cfcb815a561d3906cbb9c24363a7fab581b570",
       "task_manifest_path": "cases/pendle/py_supply_pairing/tasks/mint_py_mints_equal_amount.yaml",
       "task_manifest_sha256": "cb20d0601fc067123138acf05a245d433048739397722fd893a4970bb1c084a0",
       "task_ref": "pendle/py_supply_pairing/mint_py_mints_equal_amount"
@@ -1175,6 +1433,8 @@
       "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
       "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
       "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
+      "task_fingerprint": "sha256:128fd762731f0e2a27d41be067c1749742444767e75523598a9720ecbc961460",
+      "task_interface_id": "sha256:8c3706a1ae60b5477ad7530e138b61ea3ab38c13a6d98c2678428a91897707e9",
       "task_manifest_path": "cases/pendle/py_supply_pairing/tasks/mint_py_preserves_supply_pairing.yaml",
       "task_manifest_sha256": "6fe520c8806d70f814ac43a5befd68bc6d90f25d96512ed7fd9b113af1cab125",
       "task_ref": "pendle/py_supply_pairing/mint_py_preserves_supply_pairing"
@@ -1184,6 +1444,8 @@
       "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
       "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
       "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
+      "task_fingerprint": "sha256:2209c8649a07ba1a6fe93db23f1f64447fbcfb2ecbf395984299e108b6d9ac33",
+      "task_interface_id": "sha256:55ba7e4d3ec2bbfa4da5880946843d5e3814a63f2d9253a5d421743f38fe4f0d",
       "task_manifest_path": "cases/pendle/py_supply_pairing/tasks/redeem_py_pre_expiry_burns_equal_amount.yaml",
       "task_manifest_sha256": "52958913fbf52f1150a722510281c5224328b66c350937c8bc0090b08df3af4e",
       "task_ref": "pendle/py_supply_pairing/redeem_py_pre_expiry_burns_equal_amount"
@@ -1193,6 +1455,8 @@
       "reference_module": "Benchmark.Cases.Pendle.PySupplyPairing.Proofs",
       "reference_module_path": "Benchmark/Cases/Pendle/PySupplyPairing/Proofs.lean",
       "reference_module_sha256": "f0eb84cb3062c8e8027c65963749bdd19db7b3602bb3f913088b7998c9312643",
+      "task_fingerprint": "sha256:3fed573d3d415c560f1618d542db635a766967a35a78271d89bf18f3702842d4",
+      "task_interface_id": "sha256:3a24bff112346cb511b88f0e5e934ededdf98dc78ef8e47f4fbbbfd83e51f366",
       "task_manifest_path": "cases/pendle/py_supply_pairing/tasks/redeem_py_pre_expiry_preserves_supply_pairing.yaml",
       "task_manifest_sha256": "2aef8811a0d04af9c2d95b6463f935342db298d0bf09847aaedf0348eb7a20b6",
       "task_ref": "pendle/py_supply_pairing/redeem_py_pre_expiry_preserves_supply_pairing"
@@ -1202,6 +1466,8 @@
       "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
       "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
+      "task_fingerprint": "sha256:62e80d848b90acc0d2b942a985c900d9236c1d6d9dbf2bf7973c1d70d9e73e23",
+      "task_interface_id": "sha256:f1441e960b5e9f3bcb9bafe185287667b706be5cb50fa7a93ab6ab29f2560245",
       "task_manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_preserves_fund_conservation.yaml",
       "task_manifest_sha256": "e7aa71e86e406bf43b347116b99c7a03ca2750778ab77f6b6c592e5beb7322bb",
       "task_ref": "piku/fund_conservation/amount_paid_preserves_fund_conservation"
@@ -1211,6 +1477,8 @@
       "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
       "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
+      "task_fingerprint": "sha256:8c7966e981010f7571c45cd5d9c73851c750055ef51ee57f6691c730dbdd7719",
+      "task_interface_id": "sha256:c650f3eedebf43920081553f71620f578302f39bd206e9bb9de2c79bf653f0b6",
       "task_manifest_path": "cases/piku/fund_conservation/tasks/amount_paid_records_distribution.yaml",
       "task_manifest_sha256": "daa848160d144262acabee09ce780fb9970b4a8f69c638e008a3e1951f24baf8",
       "task_ref": "piku/fund_conservation/amount_paid_records_distribution"
@@ -1220,6 +1488,8 @@
       "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
       "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
+      "task_fingerprint": "sha256:5862c30d012839276c699f4fe9435ea62d4da88956f43787b033eb849d34242b",
+      "task_interface_id": "sha256:3168a2ddb0c88d67c0d4247d86f02f60176cb6d35247046b4575d6d0446caf04",
       "task_manifest_path": "cases/piku/fund_conservation/tasks/sell_order_preserves_fund_conservation.yaml",
       "task_manifest_sha256": "d13fb743e04cf2a2fd89f847a3d9c15e5a5da42940cb9ae5410f516c94ee91b2",
       "task_ref": "piku/fund_conservation/sell_order_preserves_fund_conservation"
@@ -1229,6 +1499,8 @@
       "reference_module": "Benchmark.Cases.Piku.FundConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Piku/FundConservation/Proofs.lean",
       "reference_module_sha256": "f02f7a8530ed9267bafd4129bb4d2eb653f3ba26a6ded93d148897cfa3570df8",
+      "task_fingerprint": "sha256:6627f01d8996299349aa7a2926f99675d09ce553faf9e33eac4a54fbab57b6f7",
+      "task_interface_id": "sha256:1cf4a588456778c4da4335616d185da4d9545a5f24d0c253cee5ed57a1c3c469",
       "task_manifest_path": "cases/piku/fund_conservation/tasks/sell_order_records_redemption_buckets.yaml",
       "task_manifest_sha256": "7f5b466a31f823a70f1b23419c5611c3eac437e36e7fc1308c6b118281da3fd3",
       "task_ref": "piku/fund_conservation/sell_order_records_redemption_buckets"
@@ -1238,6 +1510,8 @@
       "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
       "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
+      "task_fingerprint": "sha256:c489b0487153861b0764937799d560e8f145d2004322e020afe22fe5b2598338",
+      "task_interface_id": "sha256:a224d8872a83a9fe5da8719396b969f0cb4df90a819e91888f0d1bc008ac4d71",
       "task_manifest_path": "cases/polaris/bonding_curve/tasks/buy_preserves_reserve_ratio_zero.yaml",
       "task_manifest_sha256": "212d20b447c3bdbe5b02a3f9013e35387f2f31fe57ba45351bf7af247309ee62",
       "task_ref": "polaris/bonding_curve/buy_preserves_reserve_ratio_zero"
@@ -1247,6 +1521,8 @@
       "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
       "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
+      "task_fingerprint": "sha256:fd5bff0e82b50f65ad33108f85105beda08edadb8be39b2582cc1ea5f4b114c1",
+      "task_interface_id": "sha256:a8fe79b475bf2575f89a383077f0cab022fc9ef705d46ff57569d5f2a944a3c9",
       "task_manifest_path": "cases/polaris/bonding_curve/tasks/floor_sell_and_burn_preserves_reserve_ratio_zero.yaml",
       "task_manifest_sha256": "3e7b323ed86cb2e8f69ff7035eb37b96d01b37ab9f3bbef653ab659c68118a95",
       "task_ref": "polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero"
@@ -1256,6 +1532,8 @@
       "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
       "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
+      "task_fingerprint": "sha256:3ae238380c990faf6086856a106adb6f8d63ed67b4c656d65a72f576cca53aff",
+      "task_interface_id": "sha256:b61ab1781d07a2322384a44856e221c274b7a49e4d590dc86b7e55914584e9ac",
       "task_manifest_path": "cases/polaris/bonding_curve/tasks/init_reserve_ratio_zero.yaml",
       "task_manifest_sha256": "05dba46bc07fa7152df61ce6d12e2360807aeff5a2082f957faa3136b923413b",
       "task_ref": "polaris/bonding_curve/init_reserve_ratio_zero"
@@ -1265,6 +1543,8 @@
       "reference_module": "Benchmark.Cases.Polaris.BondingCurve.Proofs",
       "reference_module_path": "Benchmark/Cases/Polaris/BondingCurve/Proofs.lean",
       "reference_module_sha256": "d81819d715bc27c13cadd5e562bdd6324036ec4a9fd8512c237844b4a6180a33",
+      "task_fingerprint": "sha256:78904f6093614c66f83c7931a998280bd8db396d59c443e26d2ed5581c1f84fd",
+      "task_interface_id": "sha256:67fe82db7d49bacf4839aa93e47435012db00ee2cf0ff75236793710e90d49b4",
       "task_manifest_path": "cases/polaris/bonding_curve/tasks/sell_preserves_reserve_ratio_zero.yaml",
       "task_manifest_sha256": "b1714fa40467d2f196f872798911491308b9bc12641bb0ec8d1477f3372bf1e5",
       "task_ref": "polaris/bonding_curve/sell_preserves_reserve_ratio_zero"
@@ -1274,6 +1554,8 @@
       "reference_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
       "reference_module_path": "Benchmark/Cases/Polygon/AgglayerBridge/Proofs.lean",
       "reference_module_sha256": "b538b547f87ed98bddcc8d2c57acea9bc606e9d45241c09c272bc1716913c122",
+      "task_fingerprint": "sha256:b3e67e14232140064643adfac4882ca36a39135aee16161402ec9cd0abb8ac9d",
+      "task_interface_id": "sha256:af0de8dadde167ae7699068bbade117d43f3a5db584e1266f8a09b1f173807aa",
       "task_manifest_path": "cases/polygon/agglayer_bridge/tasks/claimAsset_valid_leaf_and_consumes_unique_nullifier.yaml",
       "task_manifest_sha256": "0da27168e6ccdabf2ae0e8645e6e976971a8a3261665797e8df502bf7b377cfd",
       "task_ref": "polygon/agglayer_bridge/claimAsset_valid_leaf_and_consumes_unique_nullifier"
@@ -1283,6 +1565,8 @@
       "reference_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
       "reference_module_path": "Benchmark/Cases/Polygon/AgglayerBridge/Proofs.lean",
       "reference_module_sha256": "b538b547f87ed98bddcc8d2c57acea9bc606e9d45241c09c272bc1716913c122",
+      "task_fingerprint": "sha256:1046dc71850f515ced5d01c28fa4f3d3f40f596aab8266d9f3ca48199777d6be",
+      "task_interface_id": "sha256:34e347ea6d25c8a3bb75ee11bb14b2ad99e449ab587fd0f9ef1bf01b3884a84f",
       "task_manifest_path": "cases/polygon/agglayer_bridge/tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.yaml",
       "task_manifest_sha256": "c73869075eed0f2c83523145cb59cf28ab25bd8319b220f37072e6f1f2dcbb83",
       "task_ref": "polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier"
@@ -1292,6 +1576,8 @@
       "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
       "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
+      "task_fingerprint": "sha256:427a6da670c96c3affc49e9aaf96fe1843854ab7b177ff7789423b3c451000a8",
+      "task_interface_id": "sha256:d1e6afb12e4d03546e988537a925553898f4cdad453528dc9276cbf9991701b2",
       "task_manifest_path": "cases/reserve/auction_price_band/tasks/price_at_end_time.yaml",
       "task_manifest_sha256": "dac8155bf82766f67c0e3fb2483ad3454ddaaa8fdeaafc508800cd9ad248935d",
       "task_ref": "reserve/auction_price_band/price_at_end_time"
@@ -1301,6 +1587,8 @@
       "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
       "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
+      "task_fingerprint": "sha256:7b6336cba459a4b7666eb029b8d5ae2c5803635f73c92d2f58d659389d6f8b19",
+      "task_interface_id": "sha256:70de0efb83462c273a68dac130c2d0262052841642ccabba6d6ee9b2f404e564",
       "task_manifest_path": "cases/reserve/auction_price_band/tasks/price_at_start_time.yaml",
       "task_manifest_sha256": "5559a5092456c35c553a380f9e4fa854d3d768a9f142e2a84816d3d6aa80c58a",
       "task_ref": "reserve/auction_price_band/price_at_start_time"
@@ -1310,6 +1598,8 @@
       "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
       "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
+      "task_fingerprint": "sha256:41570a6f1b57d8027a76e430db33da602c203521500bf891581d2f9f65b3ace1",
+      "task_interface_id": "sha256:909629e53432e6b6067768a1996c43bba1ce70e5d07cd47c835a1386c9ad8e4e",
       "task_manifest_path": "cases/reserve/auction_price_band/tasks/price_lower_bound.yaml",
       "task_manifest_sha256": "be352b8c2c35e0e1ead71f8bab093af5b0351c5f02458239d08ccfae9c3f91f5",
       "task_ref": "reserve/auction_price_band/price_lower_bound"
@@ -1319,6 +1609,8 @@
       "reference_module": "Benchmark.Cases.Reserve.AuctionPriceBand.Proofs",
       "reference_module_path": "Benchmark/Cases/Reserve/AuctionPriceBand/Proofs.lean",
       "reference_module_sha256": "f6f2533b945c3cffdb464dedd4c767d29594432304d28f1fdb9fe783bec02e57",
+      "task_fingerprint": "sha256:5f94fc4c95714e3a6ec16d4aa0f882f542a102ce93de7a53577c08cf844503f8",
+      "task_interface_id": "sha256:06e68e64a71b3f16ab47291a178da5cea812a4460630c69b2308a2175ca2afcb",
       "task_manifest_path": "cases/reserve/auction_price_band/tasks/price_upper_bound.yaml",
       "task_manifest_sha256": "ded5fd031cff55988167dad12319855fd3c96c10667673987660d1904e301736",
       "task_ref": "reserve/auction_price_band/price_upper_bound"
@@ -1328,6 +1620,8 @@
       "reference_module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
       "reference_module_path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
       "reference_module_sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2",
+      "task_fingerprint": "sha256:939dc286553c3bf548aef508c36fac801068a46c90be300531c76da0a21dc05e",
+      "task_interface_id": "sha256:50c5c67a770a0ecdc4b9fded949aa97997bce519004abd7366beed4e1cda7864",
       "task_manifest_path": "cases/rootstock/flyover_quote_lifecycle/tasks/deposit_peg_out_registers_required_amount.yaml",
       "task_manifest_sha256": "18233b899d2fa0a361a34508548ad869e7d106d5010ee446cb1a2733254edf3b",
       "task_ref": "rootstock/flyover_quote_lifecycle/deposit_peg_out_registers_required_amount"
@@ -1337,6 +1631,8 @@
       "reference_module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
       "reference_module_path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
       "reference_module_sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2",
+      "task_fingerprint": "sha256:d9c91b51597e96804f5d362c564b82e9946f137273741610a59511c75f19d674",
+      "task_interface_id": "sha256:458050dec4cb055774e45ed5caa1165b82f0f2c1741733a43bf8c0115c670b68",
       "task_manifest_path": "cases/rootstock/flyover_quote_lifecycle/tasks/refund_peg_out_conserves_quote_amount.yaml",
       "task_manifest_sha256": "230111819507efcca946abbc4242df6aa605ff50ea7798dde445bb80a3ad0d53",
       "task_ref": "rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount"
@@ -1346,6 +1642,8 @@
       "reference_module": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs",
       "reference_module_path": "Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Proofs.lean",
       "reference_module_sha256": "9a856eb005066ba2f3b396470b952b8ebb3ac4a87177ef296b79463a1268c4f2",
+      "task_fingerprint": "sha256:a2a26d15099cf9e721779216404b0bf4febcfd097d313b80cc3ef56ae39b1ae2",
+      "task_interface_id": "sha256:5fbe7ed3a892553ba8d8aeddfa5ae882c94802fa5610b20c2111eb8f59a2ce23",
       "task_manifest_path": "cases/rootstock/flyover_quote_lifecycle/tasks/refund_user_peg_out_conserves_quote_amount.yaml",
       "task_manifest_sha256": "bda6c5abb7e0ef25a61b111d65b0c0c0ea22e75e269fe1a1b338458a4a171021",
       "task_ref": "rootstock/flyover_quote_lifecycle/refund_user_peg_out_conserves_quote_amount"
@@ -1355,6 +1653,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:62abb5e488c04c5f7dda612ce63d6ee84b88004ac3a03738249637a13a5e643a",
+      "task_interface_id": "sha256:6ca9344eff422d2fe6a6b82702e834d500f37d428fe33b92480691c6f3fefd41",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/add_owner_acyclicity.yaml",
       "task_manifest_sha256": "7020e66c7aa91fbd0dfbca346e35a31aa2aee29f51023abcdb7e0f4f4b519057",
       "task_ref": "safe/owner_manager_reach/add_owner_acyclicity"
@@ -1364,6 +1664,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:6dcfb97fc1cb731f3f28e1ad1f07cf76239f1eab031451f586736c881b3c046d",
+      "task_interface_id": "sha256:9390f8b9b3de81a8838c5673de85601f2fec552b99599ae3549a4306610d617d",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/add_owner_is_owner_correctness.yaml",
       "task_manifest_sha256": "6a1edd349c768143afb7d9cd86fe7e8da4e01d25c9bf090c4d3c341c9a41a075",
       "task_ref": "safe/owner_manager_reach/add_owner_is_owner_correctness"
@@ -1373,6 +1675,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:a2f7b22b78bb51f23bb9e1380af90ccb2b8efcc08a21d79dcb6ce46e47d8dae6",
+      "task_interface_id": "sha256:c47239e68b296cc1c348fc285d74ac94976bca1403e2f6096a140286013c4dce",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/add_owner_owner_list_invariant.yaml",
       "task_manifest_sha256": "6b801be7c8f9f165735b1b07ec84736c40362bc8fd22c49c48f73bac2654b2ad",
       "task_ref": "safe/owner_manager_reach/add_owner_owner_list_invariant"
@@ -1382,6 +1686,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:38d8187949b1649ae63d77b78740489d79ea41e149daa12968a68e1402ddbca7",
+      "task_interface_id": "sha256:70a462c7d7077f884883fc822ed75abc8f54024e6c1c364be1152038b2caf39d",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/in_list_reachable.yaml",
       "task_manifest_sha256": "49be94fca5758bcb631c3dd7b1964c10395eb907bbf1d6ea6f2cadc46d58cb74",
       "task_ref": "safe/owner_manager_reach/in_list_reachable"
@@ -1391,6 +1697,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:221a155df8600f37e53b8a34b3644cd526ff2ff3244a1657627dccf140850d87",
+      "task_interface_id": "sha256:70c6106caa25f7d988c4940f6aab4bca3c8dd29947e49e9bea844c79215cbe85",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_acyclicity.yaml",
       "task_manifest_sha256": "dae1edce325712e608bc78ef89b98e0e57f1031bcc2419b32d5f60bc8465c476",
       "task_ref": "safe/owner_manager_reach/remove_owner_acyclicity"
@@ -1400,6 +1708,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:d6e7ff35ee801608b014c124248283e977b82a228a154cebb5bd505609fe2861",
+      "task_interface_id": "sha256:25646e1375cb8d8c3fc67d9631f5a21fd537092f9fe09509ae9185a18ff48bec",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_in_list_reachable.yaml",
       "task_manifest_sha256": "b675032e4b3be1253331c58961d19e751c025e1cfd8f25f342df434ae1ab1d6d",
       "task_ref": "safe/owner_manager_reach/remove_owner_in_list_reachable"
@@ -1409,6 +1719,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:eab002487574551df7925e240ee23e472e8851c03c234788a517f2d7d851d528",
+      "task_interface_id": "sha256:c70e34638f6e53af55ea2d33e4f026ca40da7b9a4b70c17c82e6cb2a42595f38",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_is_owner_correctness.yaml",
       "task_manifest_sha256": "cd47926d53b9abe66c3b7dfa56202c281ed74f9ea066e0e9b83303c9895cfbc1",
       "task_ref": "safe/owner_manager_reach/remove_owner_is_owner_correctness"
@@ -1418,6 +1730,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:28c7691d2f3809410c3191c5a5e2b978ac1b1acf54c9166d430838bc6713f9ed",
+      "task_interface_id": "sha256:fd34ce56fb5b762ee25fe9e93dc95780c64a2e1b5878f9ccc048db06fd15d9a4",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/remove_owner_owner_list_invariant.yaml",
       "task_manifest_sha256": "efd7f216142b75f41b3b5788551127ba5d9163074a838a5101d74b29074dc94b",
       "task_ref": "safe/owner_manager_reach/remove_owner_owner_list_invariant"
@@ -1427,6 +1741,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:f10067aa3095f7d258e1149f4a0f7ca394a8b31b6d23f3198540d4aad1cc5aad",
+      "task_interface_id": "sha256:81e9622f45f122d33dea0ddf881c1739f51102d569cc50826ea66e5086c54da4",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/setup_owners_acyclicity.yaml",
       "task_manifest_sha256": "eeda98bfff3b5841d13283e020059b1aa58a63d746e3f37c406657015e6e24ef",
       "task_ref": "safe/owner_manager_reach/setup_owners_acyclicity"
@@ -1436,6 +1752,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:ee4a9f672546eee5625926aed7d4b1825f71fe3dd7ee148b6753b318e2318754",
+      "task_interface_id": "sha256:67ce07c1850433bc6c09a84b3614c58d5de3765a52873ee7b739a2f8285ad31e",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/setup_owners_in_list_reachable.yaml",
       "task_manifest_sha256": "789771507edbd13a88aa9dd25c41233f87216f15c38421fe673aadcf4721a781",
       "task_ref": "safe/owner_manager_reach/setup_owners_in_list_reachable"
@@ -1445,6 +1763,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:f5f81667a3b77f94229464fc0649806d294bdd581e85704a94a981010af3736d",
+      "task_interface_id": "sha256:2dce11b2abed3840ea99e2cf38fecb7752b99d2bc84cbdb42fc85a52a98b0197",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/setup_owners_owner_list_invariant.yaml",
       "task_manifest_sha256": "3a92e00c8d8152acd629359ce6ac22cdedab2169b86c8ef9a86ed733ac36f112",
       "task_ref": "safe/owner_manager_reach/setup_owners_owner_list_invariant"
@@ -1454,6 +1774,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:02e377884f50687b3bc81bc4eb42fcd531ae8799b3c556743af262dba461b42a",
+      "task_interface_id": "sha256:1a548d4f852e570c53547fc74a214792cb997cc04fed711ca628850368a4434f",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_acyclicity.yaml",
       "task_manifest_sha256": "51f34ebd72c2996cae716b5207bffdf8631f7b928487655bb8818ca22126553b",
       "task_ref": "safe/owner_manager_reach/swap_owner_acyclicity"
@@ -1463,6 +1785,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:6326c7942c948d4cbee642127862d8ffa54f7bb2156c62f497068c8917332ce8",
+      "task_interface_id": "sha256:dab3e6e3e46ae5f45225b050cd8d48f5b1dce461f9415729c1dada10e116325d",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_in_list_reachable.yaml",
       "task_manifest_sha256": "737ed62c09c46ad7d15b30b8453313077dd8d7362c675ce57a0d7c5ed7ffdbc2",
       "task_ref": "safe/owner_manager_reach/swap_owner_in_list_reachable"
@@ -1472,6 +1796,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:ffe3c03193ad2373e50f45105e7f7c0d8e28e5c870459b35fda3584387075e88",
+      "task_interface_id": "sha256:235087b049547a6c5604756c0ea0390c3437abbcda331138f7d4e560043f0708",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_is_owner_correctness.yaml",
       "task_manifest_sha256": "10879abcbac8795f1c20796c87463b4132d952691fa695e38d0aa5d4bbf0bfd2",
       "task_ref": "safe/owner_manager_reach/swap_owner_is_owner_correctness"
@@ -1481,6 +1807,8 @@
       "reference_module": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs",
       "reference_module_path": "Benchmark/Cases/Safe/OwnerManagerReach/Proofs.lean",
       "reference_module_sha256": "40b66bb20151a1c70f8273b29bb5f2e2f02aca9acfd9c2b8955bb1b1dc390833",
+      "task_fingerprint": "sha256:ae527e64b67dcb144766407f104482eabe77117abcfcccb8d21cd4f66e1f457f",
+      "task_interface_id": "sha256:b769c55f94a235f82b6cf7752b75656931a494bf7bdb1a430491c0fb1991ef9b",
       "task_manifest_path": "cases/safe/owner_manager_reach/tasks/swap_owner_owner_list_invariant.yaml",
       "task_manifest_sha256": "8f4e44e8012298dd92e61492dc16210ac51369465760c12518053ea02c996ebf",
       "task_ref": "safe/owner_manager_reach/swap_owner_owner_list_invariant"
@@ -1490,6 +1818,8 @@
       "reference_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
       "reference_module_sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f",
+      "task_fingerprint": "sha256:0adf2cb49da5feeda5ce19cf602bd134049e6fa7f57d2c3f4bbb93e9491d865e",
+      "task_interface_id": "sha256:fba9de12dcc6551a91ef9dd881235daa31b261780468ef9c7eecb3dd990fab78",
       "task_manifest_path": "cases/starkware/starkgate_escrow/tasks/deposit_preserves_escrow_lower_bound.yaml",
       "task_manifest_sha256": "8e9bcd02ff7490776af69e4905b17eed8b8c1fb37d3e1a7b65a2d1934275a2ca",
       "task_ref": "starkware/starkgate_escrow/deposit_preserves_escrow_lower_bound"
@@ -1499,6 +1829,8 @@
       "reference_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
       "reference_module_sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f",
+      "task_fingerprint": "sha256:4ce8b97cfef2c28b447d4f37cad1c15bfeb02c7c1c37d7d55601df06579d046d",
+      "task_interface_id": "sha256:208e7ec7c5d8f26a492b3f740ad6430f000daa46f287f9d4ff35c05286501b4a",
       "task_manifest_path": "cases/starkware/starkgate_escrow/tasks/deposit_reclaim_preserves_escrow_lower_bound.yaml",
       "task_manifest_sha256": "8f52e86f80f3186a683cd73d4ecc1fa59859839eed8330d890af6aa9d3510af4",
       "task_ref": "starkware/starkgate_escrow/deposit_reclaim_preserves_escrow_lower_bound"
@@ -1508,6 +1840,8 @@
       "reference_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/Starkware/StarkgateEscrow/Proofs.lean",
       "reference_module_sha256": "99aa267f1644fe1041755f5f3c60ea8dd7cd1da368437332dcd320f9eded987f",
+      "task_fingerprint": "sha256:054028af6fbdbe0d20ef82e81d9bad27a6ffb77e7ae459101facc3dd96f6c15c",
+      "task_interface_id": "sha256:9215c7978512f2911c3bae48d6649363612449bd572acab10f3d5d243150bf33",
       "task_manifest_path": "cases/starkware/starkgate_escrow/tasks/withdraw_preserves_escrow_lower_bound.yaml",
       "task_manifest_sha256": "382bd969e0b7fac8abba0ec97cfb37d46c17b73faaa15b9972e2e283b17a1448",
       "task_ref": "starkware/starkgate_escrow/withdraw_preserves_escrow_lower_bound"
@@ -1517,6 +1851,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:ab8fa35d8f92a0301bf4752dec3c98b4c49fffe6bb37806c7e232b936360e372",
+      "task_interface_id": "sha256:16de1a3f02f58f1fbe6446ee24c4f27f5a2c20a61a308691afe6b1189183ba3b",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/callback_level_two_is_rejected.yaml",
       "task_manifest_sha256": "47a5dd5036fef5ee107f8fd24d4f3d6fb01219080209428462e4c525ae58e66f",
       "task_ref": "superfluid/realtime_balance_conservation/callback_level_two_is_rejected"
@@ -1526,6 +1862,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:5440576ff0fc1598326df86f6ec53f468fc25e0748e22fa109ac9c2b49ba14dd",
+      "task_interface_id": "sha256:915031343f26e9feb1f82dab0d05a6b412abbd212d8b15464e61b196ac16e564",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_frames_unrelated_account.yaml",
       "task_manifest_sha256": "223277a659b76d614cadcde4e0b117e6b9f85f6e7fc6e5476e9c8b0e6ca359c1",
       "task_ref": "superfluid/realtime_balance_conservation/create_non_app_frames_unrelated_account"
@@ -1535,6 +1873,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:bc69124648b19e7a7dd80bdf98ada1c8043ced2e294bf2caaf2fdb1eafcaa430",
+      "task_interface_id": "sha256:9b05772d3126a3613d709804efa6d84e06b3fa540bf1f003a50533e95de0451b",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_cfa_projection.yaml",
       "task_manifest_sha256": "55fdb7ddab435cbb6d03a14b94d86f288b89553e1793b0a6253b9f496d5e44c9",
       "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_cfa_projection"
@@ -1544,6 +1884,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:8e520148e7691f609b853fa99b102e1174083d280058efd3a2fe8c9af1438923",
+      "task_interface_id": "sha256:08396ab5ee760888d214cdef29b85afd10078952c44337df0f4bccd1db8128ea",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_future_modular_cfa_global_projection.yaml",
       "task_manifest_sha256": "2b12d25a076f01fbaf2bac93253bcbff1278ff8799c1e69d8c8b67325bf9b356",
       "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_future_modular_cfa_global_projection"
@@ -1553,6 +1895,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:6fb950bd6cb4d7133c7f6dfcfd90cd994b213b487c5092c05aea5aace64766f7",
+      "task_interface_id": "sha256:4d7d44a7f5c909b6f7d37c0e0c31d734e13a0c10f52e962753d0ed5eb42ab2e0",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_pair_net_flow_rate.yaml",
       "task_manifest_sha256": "c83a1a9b86474c9c18e60496224108ea7c51dd2a5644db796aa193efb21cbb34",
       "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_pair_net_flow_rate"
@@ -1562,6 +1906,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:c0a4bf260ceba2bdc2a22ca2bbcbc58cface75bae9a6dc295583cfbbb4950bed",
+      "task_interface_id": "sha256:e786b18d5c5bce718a27ff528580edf8022f80b2a6364540a91ed54ba32ca186",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_frames_unrelated_account.yaml",
       "task_manifest_sha256": "5f8e8af6290cfbeb25f3dbe8ce4a8834e2aa03fea596676e03c3d6ab431c375d",
       "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_frames_unrelated_account"
@@ -1571,6 +1917,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:51e098f1d96a883d98f2b99424aa0e7673d2a77eeceaa144e76b56848b1c7676",
+      "task_interface_id": "sha256:6aec4e25372f9bf7c7a6986ba0eecb90ec1d21e8a20a370bcfc712b02cfb322c",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_cfa_projection.yaml",
       "task_manifest_sha256": "8266ac87355289b64e54057adfd46ed2ef22879c288ef82161473bb0d3ef33f7",
       "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_cfa_projection"
@@ -1580,6 +1928,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:398eef6a199b7f6024287799bdc49ba370d7e3f0552227b378cfd6661324642a",
+      "task_interface_id": "sha256:182e4397ab6d7e800d5c92ddbfa35be3f3fcaa0db06f6b22950dfa562f377725",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_future_modular_cfa_global_projection.yaml",
       "task_manifest_sha256": "6407d4c9c0a2b7fb9dc2988d98724826f5a45c5ab82e637189b7cb2d4d2da20f",
       "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_future_modular_cfa_global_projection"
@@ -1589,6 +1939,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:d1be95c6dfff703613e0c3904a1b2b6398c9c25f3ea0218170053bdd1082c8f2",
+      "task_interface_id": "sha256:61297a12c38262341d712c680780c31e3260d0b189a177265f74e7f6fc2d33b7",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_pair_net_flow_rate.yaml",
       "task_manifest_sha256": "103152d5aff602ae5bb67cc714381f1d9dab03bc0cf271d9bf2ff95ce2c264ab",
       "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_pair_net_flow_rate"
@@ -1598,6 +1950,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:584eeaef61cd26372530a5ea8025cdbe53c5a33d2a261b1791387326d86d69aa",
+      "task_interface_id": "sha256:7c0f09343c22a442d40828c7a590c3581773d0dec5aeb259d0c8c40b942a36c2",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/failed_nested_rolls_back_and_prevents_resume.yaml",
       "task_manifest_sha256": "ae550b07abf61d1a6a41f006b4aa1985013549372fde42c8c958bf11bcd3d3c0",
       "task_ref": "superfluid/realtime_balance_conservation/failed_nested_rolls_back_and_prevents_resume"
@@ -1607,6 +1961,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:6eba348495020ab69fc95310535b6e3978cc59c34cf42a8be7bc03734468974c",
+      "task_interface_id": "sha256:5a631075213adf684643eb843060e55d88857602b91c5860aab47bc187d81547",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/pair_and_frame_implies_modular_cfa_global_projection.yaml",
       "task_manifest_sha256": "ec9b54c1f515084066712c0a00ca798ac3ebc4c35f9be5d8df171b702e9b6780",
       "task_ref": "superfluid/realtime_balance_conservation/pair_and_frame_implies_modular_cfa_global_projection"
@@ -1616,6 +1972,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:2d0c9f55bc81c502b9793dff19803df9bbcc407096ba7fa678c82d9ac38899a1",
+      "task_interface_id": "sha256:6057a25a4f7e578ba738283ed67390811f4c7f5c0166ac11e06f34af252e1281",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_frames_unrelated_account.yaml",
       "task_manifest_sha256": "3a8de27be53d75ba313765607aa061646fafbc381be14c35d5433c91e4458d43",
       "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_frames_unrelated_account"
@@ -1625,6 +1983,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:241fd19568b75afcb4fc2e54cb68b3edd8c96ecbaac7fa1771765700d27fb4dd",
+      "task_interface_id": "sha256:c091dab5c39de22e1c36b9b32801bbbb6ae5b9041ae6c718cb69b90bafefaee2",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_matches_factored_instance_behavior.yaml",
       "task_manifest_sha256": "5c4321389a605e8e2aeda0bd2a55a21d2ae5777d5ddc72385fb99d4044737392",
       "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_matches_factored_instance_behavior"
@@ -1634,6 +1994,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:b4fc65b88d7fee4562338528c87339d2ce750c2c8c04b13ffb0a15cce4e2c273",
+      "task_interface_id": "sha256:e2b42304c3509e9f909b95f06f1f474cef266fdf28db22478f233c1c6f0ea49e",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_cfa_projection.yaml",
       "task_manifest_sha256": "a853087dcdab491dd6d381ca7c18a579a5389404523262cb902c1ccb76f0995d",
       "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_cfa_projection"
@@ -1643,6 +2005,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:8bf96ba64e9ee81c31d4aa0e944f1aece34ad81f06aa00e74b719034ba9d17b5",
+      "task_interface_id": "sha256:87730fdd489636256daf4a6919681668bc3af1ca0732120ca7961479e27d9902",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_future_modular_cfa_global_projection.yaml",
       "task_manifest_sha256": "108543bc4cf266f7f82d6486feab379a9b1bc069ebd2cb24fc72119a1135b127",
       "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_future_modular_cfa_global_projection"
@@ -1652,6 +2016,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:29c48b026b9d655e61e065b95f183c81a6b9d603a462d7b72737ed5380066c14",
+      "task_interface_id": "sha256:3937c5d9951cffca886f3b7076f1470d83ba5f1339af60cb0cd302f5e61d38ae",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_pair_net_flow_rate.yaml",
       "task_manifest_sha256": "d2be52781b2662149b329a05e538c1d3cb08cf3d4360906af20d05c9fa58d46d",
       "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_pair_net_flow_rate"
@@ -1661,6 +2027,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:7821542b1c6a7fbf1044bc012da8acfd148e36899041bbc26f1e86a17ddf65af",
+      "task_interface_id": "sha256:033ab3cbfe201aa4e3e527d0009ad368a7ce3a170e141baef996b048d683c0ea",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_reloads_final_zero.yaml",
       "task_manifest_sha256": "0e2ca4ebdea85f669d59e9a97160d21ccb02fca66baf3bb82dd5b1da0c7e029e",
       "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_reloads_final_zero"
@@ -1670,6 +2038,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:3a607e1e12c97044270e5649f036fdafe2c1a719d521f41b3d476b2d0beacf35",
+      "task_interface_id": "sha256:d045eadd365a3e1e851995b1b8fa6a2cb2c57abc45cbebd3df69eaf00bf0fd2e",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/successful_one_level_components_compose.yaml",
       "task_manifest_sha256": "9d1f6aa8557fa50a2f11e4e5c4800ae529337a4b9287e557114012f878f002c5",
       "task_ref": "superfluid/realtime_balance_conservation/successful_one_level_components_compose"
@@ -1679,6 +2049,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:bc1f67c96415ce619930afa824db9d7116ca2306787b4988e3efcb700a8ac973",
+      "task_interface_id": "sha256:558afad95daeddfa9926a6cf76181b1a5cd863c7a7e9a8bca9559448d6480c56",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_frames_unrelated_account.yaml",
       "task_manifest_sha256": "d0b1a7dccabb72593d91a59efa0ffdc722bc56bc1037f324a57c65dcf1337cb9",
       "task_ref": "superfluid/realtime_balance_conservation/update_non_app_frames_unrelated_account"
@@ -1688,6 +2060,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:a72d4ab1946626ab119015ff1a8543234ca55a2cfc170e22827e33513ac7434a",
+      "task_interface_id": "sha256:3864f5dbf07e7ea087e4b052c1e29329c7c4eef9e706120aabc74477624c5ff5",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_cfa_projection.yaml",
       "task_manifest_sha256": "522fa8c13365b119ff40bc46e7fa6459a76e869b5dd87ef8aa831484205de08d",
       "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_cfa_projection"
@@ -1697,6 +2071,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:cdbcf66e462cae5d8057854fd9e04786b4747e49a08201be7bb0a5a328ad2bce",
+      "task_interface_id": "sha256:41beb8897499242558d854467400aca9d3b99fadf38f18fc54a41ab2ec788a2b",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_future_modular_cfa_global_projection.yaml",
       "task_manifest_sha256": "afd2f97a58977c7e79a35b43e90db45ff79a47ef5e09a5403d26307582ee8585",
       "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_future_modular_cfa_global_projection"
@@ -1706,6 +2082,8 @@
       "reference_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
       "reference_module_path": "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Proofs.lean",
       "reference_module_sha256": "bac02d3f6e124d1b6c4b028464e14e58a2657319eead627595771ceba33af491",
+      "task_fingerprint": "sha256:1bfbcfb2aa17fcb7be5bed730b567d03057d8df56bdad37ce7d8085172b62519",
+      "task_interface_id": "sha256:83bb89dde581edb998eb58d010fbadbffbe6468232ab87a5de2585db946e8ca4",
       "task_manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_pair_net_flow_rate.yaml",
       "task_manifest_sha256": "90a1363a71a281cd87c921b72b22c21c8b136342c30a933b83a50705b81c0803",
       "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_pair_net_flow_rate"
@@ -1715,6 +2093,8 @@
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_fingerprint": "sha256:b93f066a15fc79d754532cf9e49619a8b73f75b68ad7b169ff1ccb69a95c5ee7",
+      "task_interface_id": "sha256:72319266343439bad4ef9323eedb1f63544e3077da437002e33df5f5cb8854f2",
       "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/fee_claim_preserves_unclaimed_le_supply.yaml",
       "task_manifest_sha256": "c349f41f5a9a5334652fd17cc29d50cd6f038342a7e22d8bcb8d0f701e9a02e5",
       "task_ref": "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply"
@@ -1724,6 +2104,8 @@
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_fingerprint": "sha256:7343190a0fcf41a429497619cd1c4622566c58378d6cd3359ff7a772fe1ddc79",
+      "task_interface_id": "sha256:ca273466cb50db30c384c770979e7b416a90b70fd61747bf492ad92845181a89",
       "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/gain_loss_recovery_no_double_charge.yaml",
       "task_manifest_sha256": "f990160dacbbac130a3d706fc9e4dc94d8203fa6b7c5e6b0982502b3af060092",
       "task_ref": "t3tris/hwm_performance_fee/gain_loss_recovery_no_double_charge"
@@ -1733,6 +2115,8 @@
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_fingerprint": "sha256:4fcbe9e953de1a650a265fb7108f0edd86dafbadefb670738c1c85b753af4bef",
+      "task_interface_id": "sha256:8bb8b9d4abcf261c99da7b921d02f9cde0aab93b7755afdfff6794b8504d6c0b",
       "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/no_performance_fee_when_pre_pps_le_hwm.yaml",
       "task_manifest_sha256": "c4b85c72cd126851d4babe273227cf6be9538ef3c90808d72efe4c5174789483",
       "task_ref": "t3tris/hwm_performance_fee/no_performance_fee_when_pre_pps_le_hwm"
@@ -1742,6 +2126,8 @@
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_fingerprint": "sha256:43e20d4fa3050032b11be2e8b0a447c0321bbec6023a78bea2ce8961558d387c",
+      "task_interface_id": "sha256:fcf5c36a04f8797f728bf92a008298ca14a9ce7c1b33dda08068f4620c0f1b46",
       "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/period_fee_accounting_preserves_structural_assumptions.yaml",
       "task_manifest_sha256": "65cadbb381d3d6572bc5534e99d39d373354fad0a53ab814575518c1c730bd94",
       "task_ref": "t3tris/hwm_performance_fee/period_fee_accounting_preserves_structural_assumptions"
@@ -1751,6 +2137,8 @@
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_fingerprint": "sha256:f3095c7e2ec51897054ba127f98f09e9c98163e289d5e6dba32da06fa57247cb",
+      "task_interface_id": "sha256:c80ac5e0c363a6ddda09198545e31a7a5d0287bf0703c11f6f57e67e7c7be1fd",
       "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/profit_pnl_uses_cached_hwm.yaml",
       "task_manifest_sha256": "0309b73f47516af59497820325a84c5be378565599e3f06bead0cd893fd005f0",
       "task_ref": "t3tris/hwm_performance_fee/profit_pnl_uses_cached_hwm"
@@ -1760,6 +2148,8 @@
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_fingerprint": "sha256:bd378cbecaa18353e1d0ff6a262316e3705e7792a209cf0207e4afc218a09d22",
+      "task_interface_id": "sha256:34bdcfc272461de00bdd41e800c0f1dbcd6f737374a1b97a201c6f0a6a12af59",
       "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/recovery_then_new_high_uses_stored_hwm.yaml",
       "task_manifest_sha256": "8038c4e3d19a256bc430831ed6a96c7adfa27879bbe0abb75372c4599b793ed4",
       "task_ref": "t3tris/hwm_performance_fee/recovery_then_new_high_uses_stored_hwm"
@@ -1769,6 +2159,8 @@
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_fingerprint": "sha256:6fd966a1af583dd98629f5af986943f46f3149fd840a8a58dfd378a605dbd13a",
+      "task_interface_id": "sha256:e3136cb08b9b31b7878723c92e23ee2799a8dd96b40c1999036c7bff2555c94f",
       "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/validated_initial_state_satisfies_successful_assumptions.yaml",
       "task_manifest_sha256": "3d663310166ed569a2a8a95462a6c36d3e5be47fea3f81b8b07fe65b931bd6db",
       "task_ref": "t3tris/hwm_performance_fee/validated_initial_state_satisfies_successful_assumptions"
@@ -1778,6 +2170,8 @@
       "reference_module": "Benchmark.Cases.T3tris.HwmPerformanceFee.Proofs",
       "reference_module_path": "Benchmark/Cases/T3tris/HwmPerformanceFee/Proofs.lean",
       "reference_module_sha256": "ce2365c58e06e5bbef130d4858c329fd99983611a9a3ad11c15144462fc58e5a",
+      "task_fingerprint": "sha256:1da5238eed17d0ec1bc21e9375920c88d04bb548ed266c6c4cfab2fc86e9e140",
+      "task_interface_id": "sha256:1cc0239f1f4b39d2806869c6a2ab2f111beb4d3ebd55ca7e8b14d11cba9166af",
       "task_manifest_path": "cases/t3tris/hwm_performance_fee/tasks/validated_performance_fee_update_preserves_cap.yaml",
       "task_manifest_sha256": "9039a23620c4ce973a87e0a465e9fdceaa84703766ece51ad43779fc04d13dcc",
       "task_ref": "t3tris/hwm_performance_fee/validated_performance_fee_update_preserves_cap"
@@ -1787,6 +2181,8 @@
       "reference_module": "Benchmark.Cases.TermFinance.TermAuctionClearing.Proofs",
       "reference_module_path": "Benchmark/Cases/TermFinance/TermAuctionClearing/Proofs.lean",
       "reference_module_sha256": "c48567d170e79d060df5a21153ed8ae94988872851bcce3b316cb6189cdd29c6",
+      "task_fingerprint": "sha256:9647d0b56654aa25e3f0dd5462561331fb2a79453a58382a5a5a15949bc1d34e",
+      "task_interface_id": "sha256:c58783ac7fd6e0114823057acf3dd932105a2ea0d28473cb8ed1517259affe28",
       "task_manifest_path": "cases/term_finance/term_auction_clearing/tasks/clearing_assignment_correct.yaml",
       "task_manifest_sha256": "96cb63c6fa35fc83a4352d32baa39da116f1aa925eacd417ec5ad2d8279c8655",
       "task_ref": "term_finance/term_auction_clearing/clearing_assignment_correct"
@@ -1796,6 +2192,8 @@
       "reference_module": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs",
       "reference_module_path": "Benchmark/Cases/TermMax/OrderV2BuyXtSingleSegment/Proofs.lean",
       "reference_module_sha256": "dfb816ab397398b72a26797b10bc29387f59c3a8079f28e809509ba19e89d2ca",
+      "task_fingerprint": "sha256:dd038d7d9686c1027ae2737432ef2c60e45614f96fb88de07b050dada929e412",
+      "task_interface_id": "sha256:dc61644d731eeff70596777e7361424ff7f5e25ffa740cb391bdaa7a8527b218",
       "task_manifest_path": "cases/termmax/order_v2_buy_xt_single_segment/tasks/swap_debt_token_to_xt_updates_virtual_xt_reserve.yaml",
       "task_manifest_sha256": "239e6e1818fbf2888ff9e3cba5a32430a562784781cd08d8f936c5c6961fe760",
       "task_ref": "termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve"
@@ -1805,6 +2203,8 @@
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_fingerprint": "sha256:8da3b2be608ddd3d37bab191b01b370b03bb59a7e88d6fca9306d64984b39052",
+      "task_interface_id": "sha256:3c3006ef888a396535975b4c17cd1283511855b4f9e2fac38f874e65b1725ebd",
       "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_enforces_fee_adjusted_invariant.yaml",
       "task_manifest_sha256": "2b3d842911fd03773f2c1bc395a103f905ba4d56629477d6d88b40ef32560c2d",
       "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_enforces_fee_adjusted_invariant"
@@ -1814,6 +2214,8 @@
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_fingerprint": "sha256:9e828d47302b4156981276afb1534747bbc6f30829a66591bb10aaa487dbee2d",
+      "task_interface_id": "sha256:652f4e2ea2c4b123be4556c969ec71528a3c17c4015385e52f2789d82973ff17",
       "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sandwich_output_bound.yaml",
       "task_manifest_sha256": "0bc66129315b98f54a8d7b7bfc7a876622e17d00b7cc822d1b01ef169fdf898e",
       "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sandwich_output_bound"
@@ -1823,6 +2225,8 @@
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_fingerprint": "sha256:ab4cb08edd8e7acd3cb00b57512b268e28d7aa33ad511e01cf76ca341784ce61",
+      "task_interface_id": "sha256:5dd989fdd205fa2c34524af02dbb9646c8e7db681fd43bcaf327391ce3990dff",
       "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve0.yaml",
       "task_manifest_sha256": "a5f912adcacfebf73a143799d606f5e3861f3708d898566696753ef7f95df5fe",
       "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve0"
@@ -1832,6 +2236,8 @@
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_fingerprint": "sha256:a781e447e4c6eb83778cf3f7e158e8802119cb95046ff6c3e908611118a9f27d",
+      "task_interface_id": "sha256:a8d573789693fab74eba82827dd64329afc589502e8403c22b7a93eed70ae6eb",
       "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve1.yaml",
       "task_manifest_sha256": "f9be2d13d2ec9b8303c4ea0f9eeb13d7aaff91c37bb226fd47c83fcc511fff32",
       "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1"
@@ -1841,6 +2247,8 @@
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_fingerprint": "sha256:11f4c94643d391ed31c508a778e412e61466c00f89329de3f8719925858ad211",
+      "task_interface_id": "sha256:6b5b3864968fad984008ee9aedabb6916cc63c4aa00c2018af5c392bbf00c44b",
       "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/swap_sets_reserve_product.yaml",
       "task_manifest_sha256": "6f4d355ec132a18d61deb2e04c8faf5dd96f356fa5b0498fcd3b63c0f512b983",
       "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve_product"
@@ -1850,6 +2258,8 @@
       "reference_module": "Benchmark.Cases.UniswapV2.PairFeeAdjustedSwap.Proofs",
       "reference_module_path": "Benchmark/Cases/UniswapV2/PairFeeAdjustedSwap/Proofs.lean",
       "reference_module_sha256": "f8f64365214f161762d2edb992e29eb81d01cdfd3516bf5616587bed26b974da",
+      "task_fingerprint": "sha256:83edc605bbf9ff365a25fb0612722b316bba7f91f00475ca588ee40f698157ed",
+      "task_interface_id": "sha256:28958e3fe92756a24c9aa3532fcbcd89f7d91839b4d10a6b40d75d196b707ff2",
       "task_manifest_path": "cases/uniswap_v2/pair_fee_adjusted_swap/tasks/two_swap_k_monotone.yaml",
       "task_manifest_sha256": "a305c33adb43641d4484bb3872e870a3ee00389d74df4eb51efba2a13fb13aac",
       "task_ref": "uniswap_v2/pair_fee_adjusted_swap/two_swap_k_monotone"
@@ -1859,6 +2269,8 @@
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_fingerprint": "sha256:10501b50ed624ae5fd5b49adbbabe98d03e48f316ced61d5d7dc1512c992fccd",
+      "task_interface_id": "sha256:8cd60965e44a6560e4277b190b77d7c00bee652c939315f74884cc3fe9486f3a",
       "task_manifest_path": "cases/usual/dao_collateral/tasks/redeem_conservation.yaml",
       "task_manifest_sha256": "f65e57131a9541ce3450eb13db2350662905722858f911163a00b9eac9e00bc1",
       "task_ref": "usual/dao_collateral/redeem_conservation"
@@ -1868,6 +2280,8 @@
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_fingerprint": "sha256:3a7cd15e4dc59874b20dd08f4670ed783f93a0e15040b8d527c4074a1cb51436",
+      "task_interface_id": "sha256:43733c3410f25619959ab850031e7ccac1daf3dae17339826bf6f3ce2003741e",
       "task_manifest_path": "cases/usual/dao_collateral/tasks/redeem_fee_formula.yaml",
       "task_manifest_sha256": "3a308f1a3f6f57f3ec9dc86cf3cd34800de35a04bdb8fccf6c64f973b97c8595",
       "task_ref": "usual/dao_collateral/redeem_fee_formula"
@@ -1877,6 +2291,8 @@
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_fingerprint": "sha256:d27a31f335e5c65bee2aa30fb43552f9540fb7a42741dbeda7a9c7aae89985b9",
+      "task_interface_id": "sha256:dc133e7dabdbb29a967dd10dfb85fb9b21ca71a61da7e9e49bbd658a54dfb301",
       "task_manifest_path": "cases/usual/dao_collateral/tasks/redeem_return_formula.yaml",
       "task_manifest_sha256": "cc10c95175f079997c2195a2c62737a2f8c381dfb3ecf3ab6b5aca5456f5ecf3",
       "task_ref": "usual/dao_collateral/redeem_return_formula"
@@ -1886,6 +2302,8 @@
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_fingerprint": "sha256:6f1b12dd6fdcaa99fd5f0dcd0c6aad88a99fb8143668428f7b43ae24ddbd9810",
+      "task_interface_id": "sha256:5008ba3026ce4de10fc4f2a4396f944aa261bd1026b38b03f79de88c9651d492",
       "task_manifest_path": "cases/usual/dao_collateral/tasks/swap_conservation.yaml",
       "task_manifest_sha256": "76366d8a1e035a65bdcf88b18647a1bc176e7b42eb8f2984b191a9633a9594cb",
       "task_ref": "usual/dao_collateral/swap_conservation"
@@ -1895,6 +2313,8 @@
       "reference_module": "Benchmark.Cases.Usual.DaoCollateral.Proofs",
       "reference_module_path": "Benchmark/Cases/Usual/DaoCollateral/Proofs.lean",
       "reference_module_sha256": "cad147f31d0a8d9f18c59767e4384877a99cfce097db21c85773cf3ec162f689",
+      "task_fingerprint": "sha256:ca1fc4c2d6f5d67580bfe4f1b2c9c180690e752e729ba19247c7e412b5a586a0",
+      "task_interface_id": "sha256:2ef0a9bfa6fe9f833ecc55544c849c7c7c71817286019c5dbfa7216839abc2a3",
       "task_manifest_path": "cases/usual/dao_collateral/tasks/swap_value_conservation.yaml",
       "task_manifest_sha256": "36d11f294c6b791e65e07e3f581253948dacc252ce5137009f23a9cf1972ddbb",
       "task_ref": "usual/dao_collateral/swap_value_conservation"
@@ -1904,6 +2324,8 @@
       "reference_module": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs",
       "reference_module_path": "Benchmark/Cases/Wildcat/BorrowLiquiditySafety/Proofs.lean",
       "reference_module_sha256": "a6a3a145a4709ce5a4e15b3a1d8ff7b80ab5b8b2698ae00abbe4d6d3987eb922",
+      "task_fingerprint": "sha256:5b91d39b7bdf590f783b018964d185c5762eeefe55c6a4a47bc6412e1b620334",
+      "task_interface_id": "sha256:7175eeda9db801ec8d8aefb8f53296cf6e4dbd74244894aefbd4301566385591",
       "task_manifest_path": "cases/wildcat/borrow_liquidity_safety/tasks/positive_borrow_preserves_required_liquidity.yaml",
       "task_manifest_sha256": "d96bd94d4f0151b618cc2e07df1aef0f8b9ff0fa055dfc49515200d498def69e",
       "task_ref": "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity"
@@ -1913,6 +2335,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:c23806b0f78ba34d542a78d76d3f18e5ceb4ca0900c108265ebf94e3793e6764",
+      "task_interface_id": "sha256:23494869ac7714fadc83e1c9c359b80bed44958ceddcfce169249ceb9557f10f",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/cancel_redeem_accounting.yaml",
       "task_manifest_sha256": "edd71cba47f8263e0dc1b35d830939b07364a40755e0fe65fac322de44059496",
       "task_ref": "yo_protocol/async_redemption_escrow/cancel_redeem_accounting"
@@ -1922,6 +2346,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:202f5b6345decc25e92096d28ccb991ef32bdd49ba338e0af57f3f8887a9e012",
+      "task_interface_id": "sha256:b58ee332be6c3a19ae9187e462253d7206e52545a57c00791750ea6669a643f2",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/candidate_g_source_reachability.yaml",
       "task_manifest_sha256": "001eb7e19448003b30a1b2c69ed70c33a9cd9ed26a36f48af461ec727f0c496d",
       "task_ref": "yo_protocol/async_redemption_escrow/candidate_g_source_reachability"
@@ -1931,6 +2357,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:a83897b9630a833fb49429e775fb736347daf895ddc84eca2f90c3d05cbb9847",
+      "task_interface_id": "sha256:264704ac8165f06c90801ae4c5aba938b56f2144d48e16f5d76e02d767fa7629",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/fee_aliasing.yaml",
       "task_manifest_sha256": "62154c126982640e981296ba4e85b7c25aa5648da7b98b374517d06af17eec34",
       "task_ref": "yo_protocol/async_redemption_escrow/fee_aliasing"
@@ -1940,6 +2368,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:c091947e54fb6520a2f4da7a83a594e30aff0dc52c7318337e5c7f0f0af87445",
+      "task_interface_id": "sha256:4007336f22b8094634e24d667699ecd57c8d92cfa2ec9a8219410465c24a0206",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/fulfill_redeem_accounting.yaml",
       "task_manifest_sha256": "bcf425580f7d86e78534878e8e3dba78033bd448051bd73e956e4f0fc97aa643",
       "task_ref": "yo_protocol/async_redemption_escrow/fulfill_redeem_accounting"
@@ -1949,6 +2379,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:9e9b143e59a7d7817210a769ca5c3adf25883d430d0af133ef88563c8242569b",
+      "task_interface_id": "sha256:082244ec651c5e412075ff518d252d6486afa81daf463fc74fe663423ea6817c",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/full_clear_requeue_replay.yaml",
       "task_manifest_sha256": "ded60ed1b797a608cd727053bf3ba6664f5bcef41d417cd0c38e94b59463f5a7",
       "task_ref": "yo_protocol/async_redemption_escrow/full_clear_requeue_replay"
@@ -1958,6 +2390,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:c0cc3c7491a0c179b258b04c9ed188652a5c5aec516cff3fbce33a33717f6c9a",
+      "task_interface_id": "sha256:c0f4fa37e5b21f3d16484e2e6e078e73331b228b5f256a4d83074ae207069bf7",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/lifecycle_bounds_and_isolation.yaml",
       "task_manifest_sha256": "0f742340895e6a3093c6e3f24a405da15d6bb69e5cc0eac0238b36db545a40ce",
       "task_ref": "yo_protocol/async_redemption_escrow/lifecycle_bounds_and_isolation"
@@ -1967,6 +2401,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:c88b6ebee14265e638cd0746cfef946986d7d4a6f2ddb77d6bb6f7b5fe6798a4",
+      "task_interface_id": "sha256:7d2cdf920db535367b9a19339075ed0231c19d8cbd5caca61f48f14118bad022",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/lifecycle_rollback.yaml",
       "task_manifest_sha256": "347a2b98d75feed73255d46c55533868bf7963af106faf6d42616b8a307c4a55",
       "task_ref": "yo_protocol/async_redemption_escrow/lifecycle_rollback"
@@ -1976,6 +2412,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:e5cf556f772a753cb16baac600e758dcf20dd3cf8d686e14288ed638a53c1f4f",
+      "task_interface_id": "sha256:2e840b29a863eca2332d69489325b57a3bf77fb39aaf0fdd7f1d6475c4c7e19a",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/malformed_pair_lifecycle.yaml",
       "task_manifest_sha256": "df1f4c32d3d951a437ac6f0390e54bd7cf0fcd60c23f8f7286f0f2252e0c117e",
       "task_ref": "yo_protocol/async_redemption_escrow/malformed_pair_lifecycle"
@@ -1985,6 +2423,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:1c7fad4d49eb96bd502b8020b01a7331fdca925f90fb1611ed9d6e3a50cd42c0",
+      "task_interface_id": "sha256:cf5dea3f29f8599ad6420c12c0c6b0e1e26f5f3772af4b4e0630eeca2c8a179b",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/owner_fallback_authorization.yaml",
       "task_manifest_sha256": "94d775937c2634f2ca3a81bf9097a01c7df2ee53c68802b15922afc875eeefc4",
       "task_ref": "yo_protocol/async_redemption_escrow/owner_fallback_authorization"
@@ -1994,6 +2434,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:0edb475532774895d1554a600d6f17b5d3dd6fb200977d6d855e44bb2dd704c2",
+      "task_interface_id": "sha256:ffc373073d3b10e306a7b5e08214a878ef418e98a23f2fc820d31d02c4444284",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/queued_request_aggregation.yaml",
       "task_manifest_sha256": "62ab7d2ccb3d8b14d62b22615e17c9bfa216532525ac9faf5a399b8b82ed06d3",
       "task_ref": "yo_protocol/async_redemption_escrow/queued_request_aggregation"
@@ -2003,6 +2445,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:270d56c83ed8343aadd8c22a64541db0a5b3aefd39257c572d56f52f8d2af8ff",
+      "task_interface_id": "sha256:8293a8a8e1a96195e5ce40d23d2cfdc1e3eadb995d42c15d167f92e61b2f16d4",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/redeem_wrapper.yaml",
       "task_manifest_sha256": "7205c33889bbd3a361258b0044ae750654856a05fc2a2b874db5891d55afc58d",
       "task_ref": "yo_protocol/async_redemption_escrow/redeem_wrapper"
@@ -2012,6 +2456,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:2fe654e1cf7ccb70f9c11c26994da682f0b7c7fb3ec628c6a7082246822cbaa0",
+      "task_interface_id": "sha256:8596107c182864b577bc7490c232c39b8ebc10f5536d6f7d980d3463ff6330f6",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/request_redeem_branching.yaml",
       "task_manifest_sha256": "c61c7c8440511d0cd9a155f80cdc1c85bbe831d2d28475be5e09680303b1b14d",
       "task_ref": "yo_protocol/async_redemption_escrow/request_redeem_branching"
@@ -2021,6 +2467,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:251e3acfecaa0d23c3ffc66ae86b4e89aeac3ac265c98704c3207c59e4240bfc",
+      "task_interface_id": "sha256:2a38f5ec2efb8ae50e23e486b90cbdcbb5b9785e8fe1906514617000a59c9267",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/two_owner_queue_aggregation.yaml",
       "task_manifest_sha256": "c5d426199aecd6458492d807a947ece7b0682aa9278401055eae5f2057d8f87b",
       "task_ref": "yo_protocol/async_redemption_escrow/two_owner_queue_aggregation"
@@ -2030,6 +2478,8 @@
       "reference_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
       "reference_module_path": "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Proofs.lean",
       "reference_module_sha256": "c9ae5567c7b45eaa34ea8bf9b3b416a971fa73cb831799886acbc70e85ff3e45",
+      "task_fingerprint": "sha256:7f79d7b90d30586a2628cd368d9a038dc6202c78b6c692cb8f84af900482205b",
+      "task_interface_id": "sha256:38a6d8902a544ea5f0c29088f527e0e0ee0286d62544866c3e5dfc44ad6dc18a",
       "task_manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/zero_component_lifecycle.yaml",
       "task_manifest_sha256": "e4bfbb5aadd99c26ac55b46d00783480e5338c5ddf4866e4d253d96f5af7fafd",
       "task_ref": "yo_protocol/async_redemption_escrow/zero_component_lifecycle"
@@ -2039,6 +2489,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:28e965077c007446c6cc278c8bf8f4e32b14058f97d6740969512a8835d25cf8",
+      "task_interface_id": "sha256:21ef6e5e76b5afa3f0cff5d6219fd6d18eae96e23ab00693f580b72a9538f5a8",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/burn_decreases_supply.yaml",
       "task_manifest_sha256": "5aa4d9d7faee2784e789b2ec9f1beebdb0a41ab17c669c57271b5112cf038751",
       "task_ref": "zama/erc7984_confidential_token/burn_decreases_supply"
@@ -2048,6 +2500,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:152a112c75ebf32c2f2f2a907189c304ebd17f31fc2a10bd2fff4f1f23951c10",
+      "task_interface_id": "sha256:18041fdd4c48a37a04fcb7133d014491b06ca6d544424447f80144e5909f04d5",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/burn_insufficient.yaml",
       "task_manifest_sha256": "5c7ff3a184501f49f69e70aa126f28c03ba1f4f03e28e2cccb1838baaec71169",
       "task_ref": "zama/erc7984_confidential_token/burn_insufficient"
@@ -2057,6 +2511,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:558f2187b89bc57104194305c7175fd2b052e4e4958d499b81f6d87c45ee1c9e",
+      "task_interface_id": "sha256:1c82f76ed5c3ddb7acafc6a0d1f9a382a6839834e0483407177a098506c1a691",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_ctokens_match_deposit.yaml",
       "task_manifest_sha256": "8e593249b9415b0fef9a6b59f9b9018529eab786dcc86b5816f4c563e393f591",
       "task_ref": "zama/erc7984_confidential_token/mint_ctokens_match_deposit"
@@ -2066,6 +2522,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:1a0aee5c0e576d6e901c1bb222647b836aeebec4308679e8ba36db17fe3fc08d",
+      "task_interface_id": "sha256:ec46a5d01b159edab56715f4df1e4655498d30d19d0cc819251ade139afe2147",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_increases_supply.yaml",
       "task_manifest_sha256": "77d617791ce3675d2324964dd3b593f2a6f1b44adf99d28713e15d234f16b29f",
       "task_ref": "zama/erc7984_confidential_token/mint_increases_supply"
@@ -2075,6 +2533,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:134b08898d71c50513f706077f0fc31654760d127e9474fd5cdb6168a3afcde4",
+      "task_interface_id": "sha256:136c86b490234c24327bb4ef678ff9a5b8a4ddd1046279368bc6fff615ef7dba",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/mint_overflow_protection.yaml",
       "task_manifest_sha256": "20e040cd2e7d66f536f710de2a11f2c1dc87a1c53cebaf231d31106fe0b85409",
       "task_ref": "zama/erc7984_confidential_token/mint_overflow_protection"
@@ -2084,6 +2544,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:03e57e78edef0373f52eb6dac931afa3af336b932e12c5e90fdcb289c1cc6fc5",
+      "task_interface_id": "sha256:f71e48faffd57d3996c8303247401ae014c92f805f612f05cae58d022690f8d8",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/setOperator_updates.yaml",
       "task_manifest_sha256": "3c88dfcebba2c956237a72061df41cd62d8e737528bd18c00420bef4942aefc0",
       "task_ref": "zama/erc7984_confidential_token/setOperator_updates"
@@ -2093,6 +2555,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:1947977bf9be63dad09e5ed55ffae21204634056ea56d7fae0dcb540ce8b032f",
+      "task_interface_id": "sha256:967b849408f9a9e494063e2f67cc85c75a0cc9ada910009b80a08de5fddfc93e",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transferFrom_conservation.yaml",
       "task_manifest_sha256": "23f08d96f358572d7c605122ec28547a8c66e15a45cf1f5574f41b6dd93aec8d",
       "task_ref": "zama/erc7984_confidential_token/transferFrom_conservation"
@@ -2102,6 +2566,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:9e4d9667ebce41847c3d5033cd759abed69521e1dd9d282f1fa8a5b33bf7ea6d",
+      "task_interface_id": "sha256:cbfef676ec45ff1454aa0493b538b6b868df9af7f2598e845bbf78ac12a82d31",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_conservation.yaml",
       "task_manifest_sha256": "cda374589f1ec77fed526cfdbe4fc567b2820441a7b5879f953cabfeb6efa98d",
       "task_ref": "zama/erc7984_confidential_token/transfer_conservation"
@@ -2111,6 +2577,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:79f7525f7b80e758ab46de60f86284d659ee9ff3eb382304a678253568c7c843",
+      "task_interface_id": "sha256:f9ce83747b66ebb7ce0c318a35a70ae54e7def2026afdb73c341d6a8d99756eb",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_insufficient.yaml",
       "task_manifest_sha256": "d9fd5a947d885b661b08111d012fd4fb4cd4b03d7db5966b52b134c6195b2e10",
       "task_ref": "zama/erc7984_confidential_token/transfer_insufficient"
@@ -2120,6 +2588,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:8a7a9faacd5a5ca3dc1b9b4b1ac49f254a8d517c90add123808af1ed1adb927e",
+      "task_interface_id": "sha256:1c7b24f871c34bc78e16904b0dbc92621536381360d57b051064679b58139f29",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_no_balance_revert.yaml",
       "task_manifest_sha256": "e9f724b06f5ddbe591074b42b3b3954a4b97f370fb3cbfe5428027b6f282ba3d",
       "task_ref": "zama/erc7984_confidential_token/transfer_no_balance_revert"
@@ -2129,6 +2599,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:7dfe39e8c3dc42fece594b05ec17737318b578706e6d669a746452ce84816b2b",
+      "task_interface_id": "sha256:9738f11a2917e755186464bde67db25c33acb5c0a4019a2e62d7fe4859a2ce4d",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_preserves_supply.yaml",
       "task_manifest_sha256": "29fd1c0034a645db2cf68e3ccad69f5d5db2ecc712a3926a1ebd8f6a47fdf6d3",
       "task_ref": "zama/erc7984_confidential_token/transfer_preserves_supply"
@@ -2138,6 +2610,8 @@
       "reference_module": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs",
       "reference_module_path": "Benchmark/Cases/Zama/ERC7984ConfidentialToken/Proofs.lean",
       "reference_module_sha256": "d842827804913a3b4902f38e7c04ecfeba6005cacb7d9baf3c76dcef13da8eab",
+      "task_fingerprint": "sha256:43221dc2c0213eaf6a52bd2457ad952b737fce25e8e5bd23ca51ed46dcbd7006",
+      "task_interface_id": "sha256:7470db1c398218111b6ecfbaecc7172f61c628058c1f810407379af7562bd1d9",
       "task_manifest_path": "cases/zama/erc7984_confidential_token/tasks/transfer_sufficient.yaml",
       "task_manifest_sha256": "b20d00f89760bf3c9181603a4b7bd4026c254265a85159ad53cd19acd877c9e7",
       "task_ref": "zama/erc7984_confidential_token/transfer_sufficient"
@@ -2147,6 +2621,8 @@
       "reference_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
       "reference_module_path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
       "reference_module_sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386",
+      "task_fingerprint": "sha256:3cb9282b985526cb710c25b246518adb213d8bbd20df864e09b7bb6784211689",
+      "task_interface_id": "sha256:dfa568d4fcd034988afce5cffc8ab1fe31dbd32a0e26912a9fcca9e860f8f5a9",
       "task_manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/metadata_bridge.yaml",
       "task_manifest_sha256": "95f62a413bf6d20e253670b823e2fedd8677520a159396fd7221652a3029edf5",
       "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge"
@@ -2156,6 +2632,8 @@
       "reference_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
       "reference_module_path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
       "reference_module_sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386",
+      "task_fingerprint": "sha256:1ff1f27d81384a06c5f13fa60c45d1582107ca43e0ca402e242e615899f45515",
+      "task_interface_id": "sha256:b3d6a510ea06674f7433fd2b1f3a70e6cb394ebe4910e177464385c43df56d28",
       "task_manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/roles_decoder_bounds_safe.yaml",
       "task_manifest_sha256": "b2e1521e4aac7f8b42f9f067a845f6f7e9bf358a2ec73275fbac6a0e409c50b5",
       "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe"
@@ -2165,6 +2643,8 @@
       "reference_module": "Benchmark.Cases.Zodiac.RolesDecoderFaithfulness.Proofs",
       "reference_module_path": "Benchmark/Cases/Zodiac/RolesDecoderFaithfulness/Proofs.lean",
       "reference_module_sha256": "5a12d1369ae08eb1dfa9556873573573544782c385ae302f9470052b0949b386",
+      "task_fingerprint": "sha256:638f95f7e5877ec6972bdd11f09e5bceee85adc81057386315ece581e4d1faca",
+      "task_interface_id": "sha256:f9f3ec01c342dd921bf1550b751f53695fd291d62b52e276ca264b5d41efca95",
       "task_manifest_path": "cases/zodiac/roles_decoder_faithfulness/tasks/roles_decoder_faithful.yaml",
       "task_manifest_sha256": "9dd66d82f99bec0ca4ba4d416550468a2f66cc8ad873d0bdb6b2dbb74c3e0745",
       "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_faithful"

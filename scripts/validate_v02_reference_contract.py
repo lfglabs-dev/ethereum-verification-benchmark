@@ -100,8 +100,8 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
                 fail(f"{task.get('task_ref')}: version task metadata malformed")
         if len(refs) != len(set(refs)) or manifest.get("task_count") != len(refs):
             fail("manifest task list duplicate/count drift")
-        if discover_task_refs("all") != refs:
-            fail("production all-suite selector drift")
+        if discover_task_refs("v0.2") != refs:
+            fail("frozen v0.2-suite selector drift")
         expected_task_hash = hashlib.sha256(("\n".join(refs) + "\n").encode()).hexdigest()
         if manifest.get("task_set_sha256") != expected_task_hash:
             fail("manifest task ordering/hash drift")
@@ -120,6 +120,11 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
         for index, (ref, entry) in enumerate(zip(refs, entries, strict=True), start=1):
             if not isinstance(entry, dict):
                 fail(f"{ref}: malformed reference entry")
+            if (
+                entry.get("task_fingerprint") != task_objects[index - 1].get("task_fingerprint")
+                or entry.get("task_interface_id") != task_objects[index - 1].get("task_interface_id")
+            ):
+                fail(f"{ref}: pinned task metadata drift")
             task_path = resolve_task_manifest(ref)
             task = load_task_record(task_path)
             module = entry.get("reference_module")

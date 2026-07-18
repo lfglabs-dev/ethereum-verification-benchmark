@@ -69,6 +69,8 @@ for ref in refs:
         raise SystemExit(f'{ref}: reference module does not exist: {module}')
     entries.append({
         'task_ref': ref,
+        'task_fingerprint': next(task['task_fingerprint'] for task in version_manifest['tasks'] if task['task_ref'] == ref),
+        'task_interface_id': next(task['task_interface_id'] for task in version_manifest['tasks'] if task['task_ref'] == ref),
         'task_manifest_path': str(task_path.relative_to(root)),
         'task_manifest_sha256': hashlib.sha256(task_path.read_bytes()).hexdigest(),
         'reference_module': module,
