@@ -7,7 +7,6 @@ import hashlib
 import json
 import subprocess
 import tempfile
-from contextlib import contextmanager
 from datetime import date
 from pathlib import Path
 
@@ -85,10 +84,16 @@ def digest_json(value: Any) -> str:
 def trusted_closure_helper_source() -> bytes:
     """Return the independently pinned closure helper after fail-closed checks.
 
-    The blob is read as data, checked against literal OID and digest pins, and
-    later materialized outside the candidate checkout.  The OID must be the
-    helper path's blob in the checked-out final tree.  This avoids executing a
-    mutable helper while recomputing a baseline that predates the helper.
+    The candidate path is treated strictly as data: its SHA-256 is checked,
+    ``git ls-tree HEAD`` must name the literal blob OID, and ``git cat-file``
+    bytes for that OID must match the literal SHA-256 before any helper code
+    can execute.  Consumers execute only the returned bytes in a fresh
+    namespace, never through candidate ``scripts`` import resolution.
+
+    The trusted computing base is the literal OID/SHA-256 pins below, Git's
+    object/database and executable, and the Python interpreter/stdlib used to
+    execute verified bytes.  The candidate checkout, its import paths, and
+    all unverified candidate helper bytes are not trusted.
     """
     candidate = ROOT / TRUSTED_CLOSURE_HELPER_PATH
     if not candidate.is_file():
@@ -119,14 +124,15 @@ def trusted_closure_helper_source() -> bytes:
     return source.stdout
 
 
-@contextmanager
-def trusted_closure_helper_directory():
-    """Materialize only verified helper bytes outside any checked-out source."""
+def trusted_closure_helper_namespace() -> dict[str, object]:
+    """Execute verified helper bytes in an isolated, non-imported namespace."""
     source = trusted_closure_helper_source()
-    with tempfile.TemporaryDirectory(prefix="v02-trusted-closure-helper-") as directory:
-        helper = Path(directory) / "v02_reference_closure.py"
-        helper.write_bytes(source)
-        yield helper.parent
+    namespace: dict[str, object] = {
+        "__name__": "_verified_v02_reference_closure_",
+        "__file__": f"<verified git blob {TRUSTED_CLOSURE_HELPER_BLOB}>",
+    }
+    exec(compile(source, namespace["__file__"], "exec"), namespace)
+    return namespace
 
 
 def trusted_closure_helper_metadata() -> dict[str, str]:
@@ -264,13 +270,15 @@ def baseline_contract_entries(
     commit: str,
 ) -> tuple[dict[str, dict[str, object]], dict[str, dict[str, str]]]:
     """Recompute canonical task and reference entries in ``commit`` only."""
+    source = trusted_closure_helper_source()
     program = """
-import hashlib, json, sys
+import hashlib, json
 from pathlib import Path
 from scripts.compute_fingerprints import ordered_tasks
 from harness.task_runner import load_task_record, resolve_task_manifest
-sys.path.insert(0, __CLOSURE_SCRIPT_PATH__)
-from v02_reference_closure import collect_reference_closure
+closure_namespace = {'__name__': '_verified_v02_reference_closure_', '__file__': '<verified closure helper>'}
+exec(compile(__TRUSTED_CLOSURE_SOURCE__, closure_namespace['__file__'], 'exec'), closure_namespace)
+collect_reference_closure = closure_namespace['collect_reference_closure']
 tasks = ordered_tasks('all')
 references = {}
 for task in tasks:
@@ -299,11 +307,10 @@ print(json.dumps({'tasks': tasks, 'references': references}, sort_keys=True))
         if added.returncode:
             raise ValueError(f"pinned source unavailable (infra): {commit}")
         try:
-            with trusted_closure_helper_directory() as helper_directory:
-                program = program.replace("__CLOSURE_SCRIPT_PATH__", repr(str(helper_directory)))
-                result = subprocess.run(
-                    [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=False
-                )
+            result = subprocess.run(
+                [sys.executable, "-c", program.replace("__TRUSTED_CLOSURE_SOURCE__", repr(source))],
+                cwd=worktree, text=True, capture_output=True, check=False
+            )
             if result.returncode:
                 raise ValueError(f"pinned source canonical recomputation unavailable (infra): {commit}")
             data = json.loads(result.stdout)

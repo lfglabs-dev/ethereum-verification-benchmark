@@ -20,7 +20,7 @@ from harness.verify_lease import verify_lease
 from scripts.compute_fingerprints import (
     baseline_version_metadata,
     trusted_closure_helper_metadata,
-    trusted_closure_helper_source,
+    trusted_closure_helper_namespace,
 )
 from scripts.generate_v02_contract import (
     BASELINE,
@@ -29,7 +29,6 @@ from scripts.generate_v02_contract import (
     SOURCE_SELECTOR_COMMAND,
     SOURCE_SELECTOR_FILES,
 )
-from scripts.v02_reference_closure import collect_reference_closure
 
 MANIFEST = ROOT / "benchmark-versions" / "v0.2.json"
 REFERENCES = ROOT / "benchmark-versions" / "v0.2-references.json"
@@ -146,10 +145,12 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail(f"pinned source unavailable (infra): {exc}")
         if {field: manifest.get(field) for field in VERSION_METADATA_FIELDS} != baseline_metadata:
             fail("pinned baseline version metadata drift")
-        # Verify the checked-out helper before importing its closure algorithm.
-        # Its bytes are independently pinned because v0.2's source commit
-        # predates this helper.
-        trusted_closure_helper_source()
+        # Verify before executing its closure algorithm; it is never imported
+        # from the mutable candidate checkout.
+        closure_namespace = trusted_closure_helper_namespace()
+        collect_reference_closure = closure_namespace.get("collect_reference_closure")
+        if not callable(collect_reference_closure):
+            fail("trusted closure helper missing collect_reference_closure")
         expected_source = {
             "commit": BASELINE,
             "entrypoint": SOURCE_ENTRYPOINT,

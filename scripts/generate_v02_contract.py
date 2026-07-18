@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "harness"))
 
-from scripts.compute_fingerprints import trusted_closure_helper_directory, trusted_closure_helper_metadata
+from scripts.compute_fingerprints import trusted_closure_helper_metadata, trusted_closure_helper_source
 
 BASELINE = "c5a2344b121040445ccd745a3f839548ca8f9158"
 CREATED_AT = "2026-07-18"
@@ -51,13 +51,15 @@ def baseline_worktree() -> Path:
 
 def read_baseline_contract_inputs(worktree: Path) -> dict[str, object]:
     """Load selector, version-manifest metadata and references from the pinned tree."""
+    source = trusted_closure_helper_source()
     program = """
-import hashlib, json, sys
+import hashlib, json
 from pathlib import Path
 from scripts.compute_fingerprints import build_version_manifest
 from harness.task_runner import discover_task_refs, load_task_record, resolve_task_manifest
-sys.path.insert(0, __CLOSURE_SCRIPT_PATH__)
-from v02_reference_closure import collect_reference_closure
+closure_namespace = {'__name__': '_verified_v02_reference_closure_', '__file__': '<verified closure helper>'}
+exec(compile(__TRUSTED_CLOSURE_SOURCE__, closure_namespace['__file__'], 'exec'), closure_namespace)
+collect_reference_closure = closure_namespace['collect_reference_closure']
 root = Path.cwd()
 refs = discover_task_refs('all')
 version_manifest = build_version_manifest('0.2', created_at=__CREATED_AT__, suite='all')
@@ -92,14 +94,13 @@ print(json.dumps({'refs': refs, 'tasks': version_manifest['tasks'], 'version_met
 }, 'entries': entries}))
 """
     program = program.replace("__CREATED_AT__", repr(CREATED_AT))
-    with trusted_closure_helper_directory() as helper_directory:
-        completed = subprocess.run(
-            [sys.executable, "-c", program.replace("__CLOSURE_SCRIPT_PATH__", repr(str(helper_directory)))],
-            cwd=worktree,
-            text=True,
-            capture_output=True,
-            check=True,
-        )
+    completed = subprocess.run(
+        [sys.executable, "-c", program.replace("__TRUSTED_CLOSURE_SOURCE__", repr(source))],
+        cwd=worktree,
+        text=True,
+        capture_output=True,
+        check=True,
+    )
     return json.loads(completed.stdout)
 
 

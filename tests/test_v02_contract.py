@@ -16,10 +16,15 @@ from harness import canonical_contract, task_runner
 from scripts import generate_v02_contract as generator
 from scripts import validate_v02_reference_contract as validator
 from scripts import compute_fingerprints
-from scripts.v02_reference_closure import collect_reference_closure, module_path
 
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+def trusted_closure_functions():
+    """Exercise the helper only through the production trust boundary."""
+    namespace = compute_fingerprints.trusted_closure_helper_namespace()
+    return namespace["collect_reference_closure"], namespace["module_path"]
 
 
 class V02ContractTests(unittest.TestCase):
@@ -190,6 +195,7 @@ class V02ContractTests(unittest.TestCase):
         self.assertIn("pinned source unavailable", listed.stderr)
 
     def test_reference_closure_is_case_local_cycle_safe_and_path_contained(self) -> None:
+        collect_reference_closure, _ = trusted_closure_functions()
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             case = root / "Benchmark/Cases/Example/Case"
@@ -207,6 +213,7 @@ class V02ContractTests(unittest.TestCase):
             ])
 
     def test_reference_closure_rejects_missing_helper_and_path_escape(self) -> None:
+        collect_reference_closure, module_path = trusted_closure_functions()
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             case = root / "Benchmark/Cases/Example/Case"
@@ -216,6 +223,37 @@ class V02ContractTests(unittest.TestCase):
                 collect_reference_closure(root, "Benchmark.Cases.Example.Case.Proofs")
             with self.assertRaisesRegex(ValueError, "malformed Lean import"):
                 module_path(root, "Benchmark.Cases.Example.Case...outside")
+
+    def test_malicious_candidate_helper_cannot_execute_during_validation(self) -> None:
+        """Validation rejects mutable helper bytes before their top-level code runs."""
+        helper = ROOT / "scripts/v02_reference_closure.py"
+        original = helper.read_bytes()
+        cases = {
+            "exit": b"import sys\nsys.exit(1)\n",
+            "monkeypatch": b"import hashlib, subprocess\nhashlib.sha256 = lambda *_: None\nsubprocess.run = lambda *_a, **_k: None\n",
+            "file-write": b"from pathlib import Path\nPath('candidate-helper-sentinel').write_text('executed')\n",
+        }
+        try:
+            for name, payload in cases.items():
+                with self.subTest(name=name):
+                    sentinel = ROOT / "candidate-helper-sentinel"
+                    sentinel.unlink(missing_ok=True)
+                    helper.write_bytes(payload)
+                    with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+                        audit = Path(directory) / "audit.json"
+                        result = subprocess.run(
+                            [sys.executable, "scripts/validate_v02_reference_contract.py", "--no-lean", "--audit", str(audit)],
+                            cwd=ROOT,
+                            text=True,
+                            capture_output=True,
+                        )
+                        self.assertEqual(result.returncode, 1, result.stderr)
+                        self.assertTrue(audit.is_file(), result.stderr)
+                        self.assertIn("trusted closure helper digest drift", json.loads(audit.read_text())["errors"][0])
+                    self.assertFalse(sentinel.exists(), name)
+        finally:
+            helper.write_bytes(original)
+            (ROOT / "candidate-helper-sentinel").unlink(missing_ok=True)
 
     def test_baseline_recomputation_rejects_mutable_closure_helper(self) -> None:
         """A regenerated contract cannot redefine the closure boundary."""
