@@ -2561,6 +2561,7 @@ def _attempt_task_fair(
 
     token_budget_exhausted = False
     context_budget_exhausted = False
+    requests_consumed = 0
     for request_index in range(1, request_limit + 1):
         if _proof_attempt_count(attempts) >= max_attempts:
             break
@@ -2570,6 +2571,7 @@ def _attempt_task_fair(
             token_budget_exhausted = True
             break
         try:
+            requests_consumed = request_index
             response = chat_completion(
                 messages,
                 base_url=base_url,
@@ -3001,7 +3003,7 @@ def _attempt_task_fair(
         final_status = "context_budget_exhausted"
     elif tool_calls_executed >= max_tool_calls:
         final_status = "max_tool_calls_exceeded"
-    elif request_limit == max_turns:
+    elif requests_consumed >= max_turns:
         final_status = "max_turns_exceeded"
     elif _proof_attempt_count(attempts) >= max_attempts:
         final_status = "max_attempts_exceeded"
