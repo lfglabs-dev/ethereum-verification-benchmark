@@ -2296,6 +2296,12 @@ def _attempt_task_fair(
     native_tools = DEFAULT_NATIVE_TOOLS if native_tools is None else native_tools
 
     mcp_tools = mcp_session.tools if mcp_session is not None else None
+    mcp_allowed_tool_names = {
+        str(function["name"])
+        for tool in _fair_tools(mcp_tools)
+        if isinstance((function := tool.get("function")), dict)
+        and isinstance(function.get("name"), str)
+    }
     if mcp_session is not None:
         mcp_names = ", ".join(
             str(tool.get("function", {}).get("name"))
@@ -2708,6 +2714,19 @@ def _attempt_task_fair(
                 continue
             if not isinstance(name, str):
                 failure = protocol_failure("invalid_tool_call", request_index, {"error": "tool call missing function name", "tool_call": _shrink_strings(tool_call, 300)})
+                if failure is not None:
+                    return failure
+                continue
+            if mcp_session is not None and name not in mcp_allowed_tool_names:
+                failure = protocol_failure(
+                    "invalid_tool_call",
+                    request_index,
+                    {
+                        "error": "unadvertised_mcp_tool",
+                        "tool": name,
+                        "allowed_tools": sorted(mcp_allowed_tool_names),
+                    },
+                )
                 if failure is not None:
                     return failure
                 continue
