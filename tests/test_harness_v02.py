@@ -11,6 +11,7 @@ from harness.classification import classify_run
 from harness.manifests import load_group
 from harness.result_validity import failure_taxonomy, row_validity
 from harness.runners.lean_tools import _provider_setup_task_rows, _warm_target_modules
+from harness.runners import lean_tools_mcp
 from harness import cli
 from scripts import aggregate_runs
 from scripts import validate_v02_reference_contract as validator
@@ -76,8 +77,14 @@ class HarnessV02Tests(unittest.TestCase):
 
         self.assertEqual((code, run_dir), (0, Path("/tmp/mcp")))
         mcp.assert_called_once()
+        self.assertEqual(mcp.call_args.kwargs["max_turns"], 1)
         self.assertNotIn("run_lean_tools_group", cli.__dict__)
         self.assertNotIn("run_shell_group", cli.__dict__)
+
+    def test_mcp_adapter_forwards_turn_cap(self) -> None:
+        with patch.object(lean_tools_mcp.lean_tools, "run_group", return_value=(0, Path("/tmp/run"))) as runner:
+            lean_tools_mcp.run_group("ethereum/deposit_contract_minimal", max_turns=7)
+        self.assertEqual(runner.call_args.kwargs["max_turns"], 7)
 
     def test_default_profile_is_the_only_runnable_mcp_profile(self) -> None:
         root = Path(__file__).resolve().parent.parent
@@ -189,6 +196,21 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertFalse(setup["valid"])
         verifier_shell_pass = row_validity({"status": "lean_passed", "usage": {"requests": None}, "verifier_confirmed": True})
         self.assertTrue(verifier_shell_pass["valid"])
+
+    def test_strict_hybrid_validity_requires_writer_and_prover_submission(self) -> None:
+        row = {
+            "status": "lean_passed",
+            "usage": {"requests": 1, "total_tokens": 10},
+            "role_metrics": {"role_config": {"strict_role_separation": True}, "prover_writer_calls": 0},
+            "attempts": [{"status": "lean_passed", "prover_derived": False}],
+        }
+        invalid = row_validity(row)
+        self.assertFalse(invalid["valid"])
+        self.assertIn("strict-hybrid row has no prover writer routing", invalid["errors"])
+        self.assertIn("strict-hybrid row has no prover-derived accepted submission", invalid["errors"])
+        row["role_metrics"]["prover_writer_calls"] = 1
+        row["attempts"][0]["prover_derived"] = True
+        self.assertTrue(row_validity(row)["valid"])
 
     def test_budget_artifact_separates_benchmark_and_operational_limits(self) -> None:
         artifact = budget_artifact(BudgetProfile(max_attempts=4, max_tool_calls=40, max_turns=20, shell_timeout_seconds=900))

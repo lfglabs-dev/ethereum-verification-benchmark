@@ -285,6 +285,37 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertNotIn("show_goal", advertised_names)
         self.assertTrue(session.files_changed)
 
+    def test_turn_cap_bounds_the_canonical_request_loop(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            editable = "Benchmark/Generated/Sample.lean"
+            proof_path = workspace / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem sample : True := by\n  exact ?_\n", encoding="utf-8")
+            calls = 0
+
+            def fake_chat(*_args: object, **_kwargs: object) -> dict[str, object]:
+                nonlocal calls
+                calls += 1
+                return {"choices": [{"message": {"role": "assistant", "content": "need another turn"}}], "usage": {}}
+
+            with mock.patch.object(lean_tools, "chat_completion", fake_chat):
+                result = lean_tools._attempt_task_fair(
+                    {"task_ref": "sample/group/task", "task_id": "task", "editable_files": [editable], "target_module": "Benchmark.Generated.Sample", "theorem_name": "sample"},
+                    workspace,
+                    base_url="http://localhost:8000/v1",
+                    max_attempts=1,
+                    max_tool_calls=4,
+                    max_turns=1,
+                    attempts_dir=workspace / "attempts",
+                    tool_log_path=workspace / "tools.jsonl",
+                    conversation_log_path=workspace / "conversation.jsonl",
+                    native_tools=True,
+                    mcp_session=_FakeMcpSession(),
+                )
+        self.assertEqual(calls, 1)
+        self.assertEqual(result["status"], "max_turns_exceeded")
+
     def test_semantic_mcp_smoke_resumes_after_declaration_diagnostics_and_goal_results(self) -> None:
         """A local fake transport proves structured MCP result resumption without providers."""
         with tempfile.TemporaryDirectory() as tmp:

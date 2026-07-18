@@ -122,6 +122,7 @@ def run_group(
             keep_workspace=keep_workspace,
             dry_run=dry_run,
             max_attempts=max_attempts,
+            max_turns=max_turns,
             max_tool_calls=max_tool_calls,
             task_ref=task_ref,
         )
