@@ -3001,8 +3001,8 @@ def run_group(
     task_ref: str | None = None,
     harness_id: str = HARNESS_ID,
     run_slug: str = RUN_SLUG,
-    track: str = "group/lean_tools",
-    tool_backend: str = "builtin",
+    track: str = "group/lean_tools_mcp",
+    tool_backend: str = "lean-lsp-mcp",
 ) -> tuple[int, Path]:
     if max_attempts < 0:
         raise ValueError("max_attempts must be non-negative")
@@ -3037,8 +3037,8 @@ def run_group(
         "max_turns": None,
         "completion_token_budget": DEFAULT_TOKEN_BUDGET,
     }
-    if tool_backend not in {"builtin", "lean-lsp-mcp"}:
-        raise ValueError(f"unknown builtin tool backend: {tool_backend}")
+    if tool_backend not in {"lean-lsp-mcp"}:
+        raise ValueError(f"unsupported non-MCP tool backend: {tool_backend}")
     op_budget = operational_budget()
     budgets = {
         "benchmark_budget": benchmark_budget,

@@ -55,6 +55,26 @@ class _FakeMcpSession:
         self.files_changed = True
 
 
+class _SemanticFakeMcpSession(_FakeMcpSession):
+    """Local MCP fixture: no model/provider transport is ever opened."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.tools = [
+            {"type": "function", "function": {"name": name, "parameters": {"type": "object"}}}
+            for name in ("lean_declaration_file", "lean_diagnostic_messages", "lean_goal")
+        ]
+
+    def call_tool(self, name: str, arguments: dict[str, object]) -> dict[str, object]:
+        self.calls.append((name, arguments))
+        contents = {
+            "lean_declaration_file": "Benchmark/Generated/Sample.lean:1",
+            "lean_diagnostic_messages": "no diagnostics",
+            "lean_goal": "⊢ True",
+        }
+        return {"ok": True, "mcp_tool": name, "content": contents[name]}
+
+
 class BuiltinLeanLspMcpTests(unittest.TestCase):
     def test_mcp_028_requires_lean_424(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -264,6 +284,45 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
         self.assertIn("check_proof", advertised_names)
         self.assertNotIn("show_goal", advertised_names)
         self.assertTrue(session.files_changed)
+
+    def test_semantic_mcp_smoke_resumes_after_declaration_diagnostics_and_goal_results(self) -> None:
+        """A local fake transport proves structured MCP result resumption without providers."""
+        with tempfile.TemporaryDirectory() as tmp:
+            workspace = Path(tmp)
+            editable = "Benchmark/Generated/Sample.lean"
+            proof_path = workspace / editable
+            proof_path.parent.mkdir(parents=True)
+            proof_path.write_text("theorem sample : True := by\n  exact ?_\n", encoding="utf-8")
+            session = _SemanticFakeMcpSession()
+            responses = []
+            for call_id, name, arguments in (
+                ("decl-1", "lean_declaration_file", '{"declaration":"sample"}'),
+                ("diag-1", "lean_diagnostic_messages", '{"file_path":"Benchmark/Generated/Sample.lean"}'),
+                ("goal-1", "lean_goal", '{"file_path":"Benchmark/Generated/Sample.lean","line":1}'),
+                ("proof-1", "check_proof", '{"proof":"trivial"}'),
+            ):
+                responses.append({"choices": [{"message": {"role": "assistant", "content": None, "tool_calls": [{"id": call_id, "type": "function", "function": {"name": name, "arguments": arguments}}]}}], "usage": {"prompt_tokens": 1, "completion_tokens": 1, "total_tokens": 2}})
+            observed_messages: list[list[dict[str, object]]] = []
+
+            def fake_chat(messages: list[dict[str, object]], **_kwargs: object) -> dict[str, object]:
+                observed_messages.append(list(messages))
+                return responses.pop(0)
+
+            with mock.patch.object(lean_tools, "chat_completion", fake_chat), mock.patch.object(
+                lean_tools, "_run_lean_module", return_value=(0, "")
+            ):
+                result = lean_tools._attempt_task_fair(
+                    {"task_ref": "sample/group/task", "task_id": "task", "editable_files": [editable], "target_module": "Benchmark.Generated.Sample", "theorem_name": "sample"},
+                    workspace, base_url="http://127.0.0.1:9/v1", max_attempts=1,
+                    max_tool_calls=8, attempts_dir=workspace / "attempts",
+                    tool_log_path=workspace / "tools.jsonl", conversation_log_path=workspace / "conversation.jsonl",
+                    native_tools=True, mcp_session=session,
+                )
+
+        self.assertEqual(result["status"], "lean_passed")
+        self.assertEqual([name for name, _ in session.calls], ["lean_declaration_file", "lean_diagnostic_messages", "lean_goal"])
+        self.assertEqual(result["tool_calls_executed"], 4)
+        self.assertTrue(all(any(message.get("role") == "tool" for message in messages) for messages in observed_messages[1:]))
 
     def test_json_fallback_prompt_contains_mcp_schemas_and_default_briefing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

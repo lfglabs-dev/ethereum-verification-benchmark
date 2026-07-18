@@ -15,7 +15,7 @@ REQUIRED_FILES = [
     "verifier/verifier.json",
     "report.md",
 ]
-BUILTIN_FAIR_HARNESSES = {"default", "builtin-lean-lsp"}
+BUILTIN_FAIR_HARNESSES = {"default", "builtin-lean-lsp"}  # legacy artifacts remain readable
 
 
 def _load_json(path: Path, errors: list[str]) -> object | None:
@@ -110,14 +110,14 @@ def check_run(run_dir: Path) -> list[str]:
                     if isinstance(task, dict) and "validity" not in task:
                         errors.append(f"{run_dir}: builtin fair task missing validity metadata")
     if (
-        run.get("harness_id") == "builtin-lean-lsp"
+        run.get("harness_id") in {"default", "builtin-lean-lsp"}
         and run.get("run_mode") in {"task", "group"}
         and run.get("harness_status") != "dry_run"
         and isinstance(run.get("mcp_preflight"), dict)
     ):
         metadata = run.get("lean_lsp_mcp")
         if not isinstance(metadata, dict):
-            errors.append(f"{run_dir}: builtin-lean-lsp run missing MCP lifecycle metadata")
+            errors.append(f"{run_dir}: MCP-backed fair run missing MCP lifecycle metadata")
         else:
             for key in (
                 "package_version",
@@ -132,7 +132,7 @@ def check_run(run_dir: Path) -> list[str]:
                 if key not in metadata:
                     errors.append(f"{run_dir}: MCP lifecycle metadata missing {key}")
         if not isinstance(run.get("mcp_preflight"), dict):
-            errors.append(f"{run_dir}: builtin-lean-lsp run missing MCP preflight result")
+            errors.append(f"{run_dir}: MCP-backed fair run missing MCP preflight result")
     if run.get("harness_id") == "grok-build" and run.get("run_mode") in {"task", "group"}:
         for key in ("max_turns", "auth_mode", "timeout_seconds"):
             if key not in request:

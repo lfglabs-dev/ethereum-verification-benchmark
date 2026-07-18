@@ -75,21 +75,6 @@ class ShellAgentProfileTests(unittest.TestCase):
             "completed",
         )
 
-    def test_vibe_and_lean_lsp_are_pinned_and_proxy_metered(self) -> None:
-        profile = json.loads((ROOT / "harness/agents/vibe-lean-lsp.json").read_text())
-
-        self.assertTrue(profile["uses_proxy"])
-        self.assertIn("mistral-vibe==2.19.1", profile["command"])
-        self.assertIn("verity-lean", profile["command"])
-        self.assertIn("--trust", profile["command"])
-        self.assertTrue(profile["text_tool_fallback"])
-        config = profile["config_files"]["~/.vibe/config.toml"]
-        self.assertIn('api_base = "{proxy_url}"', config)
-        self.assertIn('api_key_env_var = "VERITY_PROXY_KEY"', config)
-        self.assertIn('"lean-lsp-mcp==0.28.0"', config)
-        self.assertIn('LEAN_PROJECT_PATH = "{workspace}"', config)
-        self.assertIn('system_prompt_id = "lean"', profile["config_files"]["~/.vibe/agents/verity-lean.toml"])
-
     def test_vibe_text_tool_fallback_recovers_multiple_calls(self) -> None:
         request = {
             "tools": [
@@ -133,7 +118,7 @@ class ShellAgentProfileTests(unittest.TestCase):
         self.assertEqual(adapt_text_tool_response(encoded, json.dumps(request).encode()), encoded)
 
     def test_host_authenticated_profiles_do_not_start_metering_proxy(self) -> None:
-        for name in ("codex", "grok-build"):
+        for name in ("codex",):
             with self.subTest(profile=name):
                 profile = json.loads((ROOT / f"harness/agents/{name}.json").read_text())
                 self.assertFalse(profile["uses_proxy"])

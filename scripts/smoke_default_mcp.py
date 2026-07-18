@@ -24,7 +24,7 @@ DEFAULT_TASK = "ethereum/deposit_contract_minimal/deposit_count"
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Initialize pinned lean-lsp-mcp and execute one real MCP tool"
+        description="Initialize the pinned default MCP backend and execute one real MCP tool"
     )
     parser.add_argument("--task", default=DEFAULT_TASK)
     parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
@@ -33,7 +33,7 @@ def main() -> int:
 
     group_id = group_id_from_task_ref(args.task)
     group = filter_group_to_task(load_group(group_id, args.suite), args.task)
-    built = build_group_workspace(group, run_id="builtin-lean-lsp-mcp-smoke")
+    built = build_group_workspace(group, run_id="default-mcp-smoke")
     task = group.tasks[0]
     query = task.theorem_name.rsplit(".", 1)[-1]
     try:
