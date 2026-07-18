@@ -650,8 +650,20 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
             run["schema_version"] = 1
             run.pop("execution_contract")
             run.pop("mcp_lifecycle")
-            run.pop("lean_lsp_mcp")
-            run.pop("mcp_preflight")
+            # v1 builtin artifacts recorded MCP setup metadata, but predate
+            # the v2 lifecycle contract.  They remain readable historical
+            # records, rather than canonical current fair runs.
+            run["lean_lsp_mcp"] = {
+                "package_version": "0.27.0",
+                "minimum_lean_version": "4.22.0",
+                "workspace_lean_version": "4.22.0",
+                "initialization_count": 1,
+                "tool_call_count": 0,
+                "tool_call_counts": {},
+                "tool_call_duration_seconds": 0.0,
+                "clean_shutdown": True,
+            }
+            run["mcp_preflight"] = {"status": "passed"}
             (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
 
             self.assertEqual(check_run(run_dir), [])
