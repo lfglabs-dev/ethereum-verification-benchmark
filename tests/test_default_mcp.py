@@ -770,6 +770,24 @@ class BuiltinLeanLspMcpTests(unittest.TestCase):
 
                 self.assertEqual(check_run(run_dir), [])
 
+    def test_validator_rejects_non_object_legacy_pre_mcp_response(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = self._missing_credentials_artifact(Path(tmp))
+            run = json.loads((run_dir / "run.json").read_text(encoding="utf-8"))
+            run.update({
+                "harness_id": "builtin-lean-lsp",
+                "schema_version": 1,
+                "harness_status": "missing_credentials",
+            })
+            run.pop("execution_contract")
+            run.pop("mcp_lifecycle")
+            (run_dir / "run.json").write_text(json.dumps(run), encoding="utf-8")
+            (run_dir / "harness-response.json").write_text("[]", encoding="utf-8")
+
+            errors = check_run(run_dir)
+
+        self.assertIn("harness-response.json is not an object", "\n".join(errors))
+
     def test_validator_rejects_current_builtin_mcp_without_lifecycle(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_dir = self._missing_credentials_artifact(Path(tmp))

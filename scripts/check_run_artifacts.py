@@ -186,7 +186,6 @@ def check_run(run_dir: Path) -> list[str]:
             errors.append(f"{run_dir}: builtin fair run must record generic_grindset_only=true")
         if "max_tool_calls" not in request:
             errors.append(f"{run_dir}: builtin fair request missing max_tool_calls")
-        response = _load_json(run_dir / "harness-response.json", errors)
         if isinstance(response, dict) and response.get("status") == "completed":
             if "failure_counts" not in response:
                 errors.append(f"{run_dir}: builtin fair response missing failure_counts")
