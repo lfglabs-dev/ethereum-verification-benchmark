@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import subprocess
+import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -164,6 +165,62 @@ def ordered_tasks(suite: str = "active") -> list[dict[str, object]]:
     for group in list_groups(suite=suite, runnable_only=True):
         tasks.extend(group.tasks)
     return [task_entry(task) for task in sorted(tasks, key=lambda item: item.task_ref)]
+
+
+def task_metadata(suite: str = "all") -> dict[str, tuple[str, str]]:
+    """Return production fingerprints keyed by task reference.
+
+    Keep consumers of frozen contracts on the same ``task_entry`` derivation as
+    version-manifest generation; this is deliberately not a parallel hash
+    implementation.
+    """
+    metadata: dict[str, tuple[str, str]] = {}
+    for task in ordered_tasks(suite):
+        ref = task.get("task_ref")
+        fingerprint = task.get("task_fingerprint")
+        interface_id = task.get("task_interface_id")
+        if not isinstance(ref, str) or not isinstance(fingerprint, str) or not isinstance(interface_id, str):
+            raise ValueError("cannot recompute task metadata")
+        metadata[ref] = (fingerprint, interface_id)
+    return metadata
+
+
+def baseline_task_metadata(commit: str) -> dict[str, tuple[str, str]]:
+    """Recompute production task metadata in ``commit``, never this checkout."""
+    program = """
+import json
+from scripts.compute_fingerprints import ordered_tasks
+print(json.dumps({task['task_ref']: [task['task_fingerprint'], task['task_interface_id']] for task in ordered_tasks('all')}, sort_keys=True))
+"""
+    with tempfile.TemporaryDirectory(prefix="benchmark-baseline-metadata-") as directory:
+        worktree = Path(directory) / "source"
+        added = subprocess.run(
+            ["git", "worktree", "add", "--detach", str(worktree), commit],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if added.returncode:
+            raise ValueError(f"baseline source unavailable: {commit}")
+        try:
+            result = subprocess.run(
+                [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=False
+            )
+            if result.returncode:
+                raise ValueError(f"baseline task metadata unavailable: {commit}")
+            data = json.loads(result.stdout)
+        finally:
+            subprocess.run(["git", "worktree", "remove", "--force", str(worktree)], cwd=ROOT, check=False)
+    if not isinstance(data, dict) or not all(
+        isinstance(ref, str)
+        and isinstance(value, list)
+        and len(value) == 2
+        and all(isinstance(item, str) for item in value)
+        for ref, value in data.items()
+    ):
+        raise ValueError("baseline task metadata malformed")
+    return {ref: (value[0], value[1]) for ref, value in data.items()}
 
 
 def task_set_id(tasks: list[dict[str, object]]) -> str:

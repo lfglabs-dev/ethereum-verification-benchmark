@@ -10,8 +10,10 @@ from pathlib import Path
 from unittest import mock
 
 from harness.task_runner import aggregate_results, discover_task_refs
+from harness import canonical_contract
 from scripts import generate_v02_contract as generator
 from scripts import validate_v02_reference_contract as validator
+from scripts import compute_fingerprints
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -51,8 +53,15 @@ class V02ContractTests(unittest.TestCase):
                 "baseline_file_sha",
                 side_effect=lambda _commit, path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest(),
             ), mock.patch.object(
-                validator,
+                compute_fingerprints,
                 "baseline_task_metadata",
+                return_value={
+                    task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
+                    for task in self.manifest["tasks"]
+                },
+            ), mock.patch.object(
+                compute_fingerprints,
+                "task_metadata",
                 return_value={
                     task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
                     for task in self.manifest["tasks"]
@@ -66,6 +75,25 @@ class V02ContractTests(unittest.TestCase):
                 with context:
                     code = validator.validate(verify_lean=lean, audit_path=audit_path)
             return code, json.loads(audit_path.read_text())
+
+    def _load_refs(self, mutate=None, *, baseline=None, current=None) -> None:
+        manifest = json.loads(json.dumps(self.manifest))
+        if mutate:
+            mutate(manifest)
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+            path = Path(directory) / "v0.2.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            metadata = baseline or {
+                task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
+                for task in self.manifest["tasks"]
+            }
+            current_metadata = current or metadata
+            with mock.patch.object(canonical_contract, "CANONICAL_V02_PATH", path), mock.patch(
+                "scripts.compute_fingerprints.baseline_task_metadata", return_value=metadata
+            ), mock.patch(
+                "scripts.compute_fingerprints.task_metadata", return_value=current_metadata
+            ):
+                return canonical_contract.load_v02_task_refs()
 
     def test_selector_is_frozen_and_operational(self) -> None:
         self.assertEqual(discover_task_refs("v0.2"), [task["task_ref"] for task in self.manifest["tasks"]])
@@ -130,6 +158,39 @@ class V02ContractTests(unittest.TestCase):
                 code, audit = self._validate(mutate)
                 self.assertEqual(code, 1)
                 self.assertIn("pinned baseline task metadata drift", audit["errors"][0])
+
+    def test_canonical_selector_rejects_tampered_fingerprint_string(self) -> None:
+        def mutate(manifest):
+            manifest["tasks"][0]["task_fingerprint"] = "sha256:" + "0" * 64
+
+        with self.assertRaisesRegex(ValueError, "task fingerprint drift"):
+            self._load_refs(mutate)
+
+    def test_canonical_selector_detects_source_drift_with_unchanged_yaml(self) -> None:
+        current = {
+            task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
+            for task in self.manifest["tasks"]
+        }
+        ref = self.manifest["tasks"][0]["task_ref"]
+        # Model a Lean/source input changing while its task YAML mapping remains intact.
+        current[ref] = ("sha256:" + "1" * 64, current[ref][1])
+        with self.assertRaisesRegex(ValueError, "task source fingerprint drift"):
+            self._load_refs(current=current)
+
+    def test_canonical_selector_rejects_coordinated_mutable_self_comparison(self) -> None:
+        def mutate(manifest):
+            for field in ("task_fingerprint", "task_interface_id"):
+                manifest["tasks"][0][field] = "sha256:" + "2" * 64
+
+        # The immutable baseline metadata remains original, so a matching mutable
+        # checkout cannot make this coordinated update pass.
+        with self.assertRaisesRegex(ValueError, "task fingerprint drift"):
+            mutable = {
+                task["task_ref"]: (task["task_fingerprint"], task["task_interface_id"])
+                for task in self.manifest["tasks"]
+            }
+            mutable[self.manifest["tasks"][0]["task_ref"]] = ("sha256:" + "2" * 64, "sha256:" + "2" * 64)
+            self._load_refs(mutate, current=mutable)
 
     def test_coordinated_mutable_task_metadata_drift_is_rejected_against_baseline(self) -> None:
         def mutate(manifest, references):
