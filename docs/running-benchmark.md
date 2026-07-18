@@ -35,6 +35,14 @@ before any task execution or provider call (without re-running Lean proof
 validation per task). This deliberately does not depend on an intermediate PR
 commit, so squash merges and shallow clones remain reproducible.
 
+v0.2 has one intentional final pre-results environment migration: its frozen
+task/reference source remains rooted at its release source commit, while its
+declared execution environment is Lean 4.24.0 with Verity
+`49105e54ceff6d66921572cc85583538c2c8497d`. The preflight hashes the live
+Lake files and rejects a run when they differ from the declared environment;
+no v0.2 results exist, so this is the last permitted environment revision
+before canaries.
+
 ## Harness Runs
 
 Two harness families are supported:

@@ -8,6 +8,12 @@ release operation, not a manifest regeneration operation.
 from __future__ import annotations
 
 BASELINE_COMMIT = "c5a2344b121040445ccd745a3f839548ca8f9158"
+# This is the one intentional pre-results environment migration for v0.2.  The
+# task/reference source remains rooted at ``BASELINE_COMMIT`` below.
+RELEASE_ENVIRONMENT = {
+    "lean_toolchain": "leanprover/lean4:v4.24.0",
+    "verity_rev": "49105e54ceff6d66921572cc85583538c2c8497d",
+}
 RELEASE_METADATA = {
     "benchmark": "ethereum-verification-benchmark",
     "benchmark_version": "0.2",
@@ -17,7 +23,7 @@ RELEASE_METADATA = {
     "task_count": 240,
     "task_set_id": "sha256:ddfd5ad518a6cb840be16a04651f6d5db81690023dda9953250a70e6da8009fe",
     "harness_id": "sha256:244bbf5ca68050dd4a7e56bdb794a68bc01a74d169828039e0943e511f65f867",
-    "environment_id": "sha256:cbdf4628996a8d28af8b6c893d1c08535f7eaffe976ee204e1ad9082ba1bb00a",
+    "environment_id": "sha256:459119d928104ce642f39b1fb8f9bdfd0d5538d493d1dbe2370ccfeae9e93933",
     "mode": "fair",
     "budget": "normal",
 }

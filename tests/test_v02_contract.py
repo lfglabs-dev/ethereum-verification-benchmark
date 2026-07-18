@@ -62,6 +62,9 @@ class V02ContractTests(unittest.TestCase):
             }
         }
 
+    def _release_environment(self) -> dict[str, object]:
+        return dict(self.manifest["environment"])
+
     def _validate(
         self,
         mutate=None,
@@ -70,6 +73,7 @@ class V02ContractTests(unittest.TestCase):
         escape: bool | None = None,
         baseline=None,
         current=None,
+        runtime_environment=None,
         baseline_error=None,
         forbid_baseline_or_task_work: bool = False,
     ) -> tuple[int, dict]:
@@ -135,6 +139,10 @@ class V02ContractTests(unittest.TestCase):
                 "baseline_version_metadata",
                 side_effect=forbidden_work if forbid_baseline_or_task_work else None,
                 return_value=None if forbid_baseline_or_task_work else self._baseline_version_metadata(),
+            ), mock.patch.object(
+                validator,
+                "environment_id",
+                return_value=runtime_environment or self.manifest["environment_id"],
             ), (mock.patch.object(validator, "ESCAPE") if escape is not None else nullcontext()) as matcher:
                 if matcher is not None:
                     matcher.search.return_value = object() if escape else None
@@ -587,6 +595,20 @@ class V02ContractTests(unittest.TestCase):
             newer = compute_fingerprints.build_version_manifest("0.3", suite="all")
         self.assertEqual(newer["environment_id"], "sha256:" + "e" * 64)
         self.assertNotEqual(newer["environment_id"], self.manifest["environment_id"])
+
+    def test_runtime_environment_mismatch_fails_closed_before_task_validation(self) -> None:
+        """A frozen run cannot silently use Lake files unlike its declaration."""
+        code, audit = self._validate(runtime_environment="sha256:" + "0" * 64)
+        self.assertEqual(code, 1)
+        self.assertIn("runtime environment identity drift", audit["errors"][0])
+
+    def test_explicit_verity_environment_provenance_is_trust_rooted(self) -> None:
+        def mutate(manifest, _references):
+            manifest["environment"]["verity_rev"] = "0" * 40
+
+        code, audit = self._validate(mutate)
+        self.assertEqual(code, 1)
+        self.assertIn("release trust-root environment provenance drift", audit["errors"][0])
 
     def test_future_all_suite_task_does_not_invalidate_frozen_v02(self) -> None:
         frozen_refs = [task["task_ref"] for task in self.manifest["tasks"]]
