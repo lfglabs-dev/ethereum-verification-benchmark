@@ -1,0 +1,44 @@
+manifest_kind: task
+schema_version: 1
+task_id: settle_dynamic_fees_exact_accounting
+case_id: enzyme/onyx_fee_handler
+split: active
+family_id: enzyme
+implementation_id: onyx_fee_handler
+source_ref: https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Enzyme.OnyxFeeHandler.settleDynamicFeesGivenPositionsValue_exact_accounting
+proof_family: state_preservation_local_effects
+property_class: cross_contract_fee_accounting
+difficulty: hard
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/enzyme/onyx_fee_handler/verity/Contract.lean
+  - Benchmark/Cases/Enzyme/OnyxFeeHandler/Contract.lean
+specification_files:
+  - cases/enzyme/onyx_fee_handler/verity/Specs.lean
+  - Benchmark/Cases/Enzyme/OnyxFeeHandler/Specs.lean
+editable_files:
+  - Benchmark/Generated/Enzyme/OnyxFeeHandler/Tasks/settle_dynamic_fees_exact_accounting.lean
+reference_solution_module: Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs
+reference_solution_declaration: Benchmark.Cases.Enzyme.OnyxFeeHandler.settleDynamicFeesGivenPositionsValue_exact_accounting
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Quantifies over Verity.Env oracle responses keyed by the dynamic target, exact
+  selector, and exact management-then-performance calldata. Proves successful
+  aggregate/per-recipient accounting for arbitrary tracker return words, including
+  the same-recipient alias case and a frame for modeled scalar, address, and mapping
+  storage projections; Verity knownAddresses bookkeeping is outside that frame.
+  Pinned Verity supports ABI-faithful runtime-target static-word calls, but this
+  protocol slice deliberately uses Env.callOracle to keep return outcomes arbitrary.
+  A successful oracle branch supplies one full return word; short-return and ABI-decode
+  failures are folded into the call-failure outcome.
+  Env.reenter is explicit and assumed to be identity; applying it to the valuation
+  view call is conservative relative to STATICCALL. External callee state is not executed.
+unsupported_feature_codes:
+  - stateful_external_callee_execution_omitted
+  - event_emission_omitted
