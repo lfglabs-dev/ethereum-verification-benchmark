@@ -2570,10 +2570,21 @@ def _attempt_task_fair(
             )
             return None
         if count >= 3:
+            unresolved_writer_failure = bool(
+                STRICT_ROLE_SEPARATION
+                and not attempts
+                and not prover_state.get("latest_draft")
+                and int(role_metrics.get("strict_auto_writer_failures", 0)) > 0
+            )
+            status = "strict_writer_failed" if unresolved_writer_failure else "repetition_loop"
             return {
                 "task_ref": task.get("task_ref"),
-                "status": "repetition_loop",
-                "failure_class": _failure_taxonomy("repetition_loop", attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
+                "status": status,
+                "failure_class": (
+                    "provider_or_context_failure"
+                    if unresolved_writer_failure
+                    else _failure_taxonomy(status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses)
+                ),
                 "usage": usage_totals,
                 "attempts": attempts,
                 "tool_calls_executed": tool_calls_executed,

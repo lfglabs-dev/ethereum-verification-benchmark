@@ -513,6 +513,21 @@ class StrictLoopTests(unittest.TestCase):
         self.assertNotEqual(result["failure_class"], "provider_or_context_failure")
         self.assertFalse(row_validity(result)["valid"])
 
+    def test_partial_writer_failure_survives_repetition_exit(self) -> None:
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                return {"choices": [{"message": {"role": "assistant", "content": "sorry"}}]}
+            return {"choices": [{"message": {"role": "assistant", "content": None, "tool_calls": [
+                {"id": "same", "function": {"name": "check_proof", "arguments": json.dumps({"proof": "exact same"})}}
+            ]}}]}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), writer_attempts=3)
+
+        self.assertEqual(result["status"], "strict_writer_failed")
+        self.assertEqual(result["failure_class"], "provider_or_context_failure")
+        self.assertTrue(row_validity(result)["valid"])
+
     def test_stale_prover_draft_is_blocked_in_strict_mode(self) -> None:
         # Only the LATEST prover draft is submittable: resubmitting an earlier
         # failed draft would let _grade_repair misattribute it as the repair
