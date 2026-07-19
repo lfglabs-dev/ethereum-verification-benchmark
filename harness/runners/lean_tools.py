@@ -3066,7 +3066,14 @@ def _attempt_task_fair(
                 )
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
-    if context_budget_exhausted:
+    strict_writer_failed = bool(
+        STRICT_ROLE_SEPARATION
+        and not attempts
+        and int(role_metrics.get("strict_auto_writer_failures", 0)) > 0
+    )
+    if strict_writer_failed:
+        final_status = "strict_writer_failed"
+    elif context_budget_exhausted:
         final_status = "context_budget_exhausted"
     elif tool_calls_executed >= max_tool_calls:
         final_status = "max_tool_calls_exceeded"
@@ -3081,7 +3088,11 @@ def _attempt_task_fair(
     return {
         "task_ref": task.get("task_ref"),
         "status": final_status,
-        "failure_class": _failure_taxonomy(final_status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
+        "failure_class": (
+            "provider_or_context_failure"
+            if strict_writer_failed
+            else _failure_taxonomy(final_status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses)
+        ),
         "usage": usage_totals,
         "token_budget_exhausted": token_budget_exhausted,
         "context_budget_exhausted": context_budget_exhausted,

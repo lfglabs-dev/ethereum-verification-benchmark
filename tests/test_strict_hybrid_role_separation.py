@@ -273,14 +273,14 @@ class RepairOutcomeClassificationTests(unittest.TestCase):
 
 
 class StrictLoopTests(unittest.TestCase):
-    def _run(self, workspace: Path, fake_chat, fake_run, *, max_tool_calls: int = 8, repair_attempts: int = 2):
+    def _run(self, workspace: Path, fake_chat, fake_run, *, max_tool_calls: int = 8, repair_attempts: int = 2, writer_attempts: int = 1):
         proof_rel = "Benchmark/Generated/Sample.lean"
         proof_path = workspace / proof_rel
         proof_path.parent.mkdir(parents=True, exist_ok=True)
         proof_path.write_text(ORIGINAL, encoding="utf-8")
         task = _task(proof_rel, workspace)
         with ExitStack() as stack:
-            _strict_env(stack, repair_attempts=repair_attempts)
+            _strict_env(stack, repair_attempts=repair_attempts, writer_attempts=writer_attempts)
             stack.enter_context(mock.patch.object(lean_tools, "chat_completion", fake_chat))
             stack.enter_context(mock.patch.object(lean_tools, "_run_lean_module", fake_run))
             return lean_tools._attempt_task_fair(
@@ -472,6 +472,24 @@ class StrictLoopTests(unittest.TestCase):
         self.assertEqual(metrics["prover_writer_exhausted"], 1)
         self.assertEqual(metrics["draft_submitted_count"], 0)
         self.assertIn("strict_writer_exhausted", log)
+
+    def test_partial_writer_failure_survives_driver_budget_exhaustion(self) -> None:
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                return {"choices": [{"message": {"role": "assistant", "content": "sorry"}}]}
+            return {
+                "choices": [{"message": {"role": "assistant", "content": None, "tool_calls": [
+                    {"id": "c1", "function": {"name": "check_proof", "arguments": json.dumps({"proof": "exact driver_proof"})}}
+                ]}}]
+            }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), max_tool_calls=1, writer_attempts=2)
+
+        self.assertEqual(result["status"], "strict_writer_failed")
+        self.assertEqual(result["failure_class"], "provider_or_context_failure")
+        self.assertTrue(row_validity(result)["valid"])
+        self.assertEqual(classify_target({"status": "lean_check_failed"}, result)["final_class"], "INFRA_INVALID")
 
     def test_stale_prover_draft_is_blocked_in_strict_mode(self) -> None:
         # Only the LATEST prover draft is submittable: resubmitting an earlier
