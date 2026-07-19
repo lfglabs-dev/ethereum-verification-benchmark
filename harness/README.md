@@ -157,6 +157,13 @@ Fair-mode behavior notes:
   single-endpoint hybrid runs are unaffected. The resolved `prover_base_url` is
   recorded in the run manifest (`harness-response.json`) and in each draft audit
   log entry; API keys are never logged.
+- In strict hybrid mode, a `check_proof` before any `draft_proof` is routed once
+  through a trusted, metadata-derived writer prompt; the driver proof body is
+  neither forwarded nor checked. `DEFAULT_HARNESS_PROVER_WRITER_ATTEMPTS`
+  bounds automatically routed initial writer calls per task independently of the
+  driver tool-call budget. Exhaustion after writer failure is recorded as
+  `strict_writer_exhausted` / `provider_or_context_failure`, never a scoreable
+  zero-writer proof failure.
 
 Local runtime configuration:
 - Copy `.env.example` to `.env`.

@@ -14,6 +14,8 @@ ALLOWED_TERMINAL_STATUSES = {
     "invalid_tool_call",
     "request_timeout",
     "request_failed",
+    "strict_writer_exhausted",
+    "strict_writer_failed",
     "context_budget_exhausted",
     "context_length_exceeded",
     "max_attempts_exceeded",
@@ -61,6 +63,8 @@ def row_validity(row: dict[str, Any], *, expected_budget: dict[str, Any] | None 
         errors.append(f"terminal status {status!r} is not allowed")
     if status in PROVIDER_SETUP_STATUSES or row.get("provider_setup_error"):
         errors.append("provider setup error")
+    if status in {"strict_writer_exhausted", "strict_writer_failed"} and row.get("failure_class") != "provider_or_context_failure":
+        errors.append("strict writer failure is not a provider or context failure")
     usage = row.get("usage")
     requests = None
     total_tokens = None
@@ -95,7 +99,11 @@ def row_validity(row: dict[str, Any], *, expected_budget: dict[str, Any] | None 
             and attempt.get("status") in {"lean_passed", "lean_failed"}
             for attempt in attempts
         ) if isinstance(attempts, list) else False
-        if not prover_submission:
+        writer_failure = (
+            status in {"strict_writer_exhausted", "strict_writer_failed"}
+            and row.get("failure_class") == "provider_or_context_failure"
+        )
+        if not prover_submission and not writer_failure:
             errors.append("strict-hybrid row has no prover-derived accepted submission")
     if expected_budget is not None:
         observed_budget = row.get("benchmark_budget")

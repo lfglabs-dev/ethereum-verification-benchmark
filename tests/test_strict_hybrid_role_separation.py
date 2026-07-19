@@ -8,6 +8,8 @@ from pathlib import Path
 from unittest import mock
 
 from harness import transport_request
+from harness.classification import classify_target
+from harness.result_validity import row_validity
 from harness.runners import lean_tools
 
 
@@ -27,7 +29,13 @@ end Benchmark.Spec
 """
 
 
-def _strict_env(stack: ExitStack, *, repair_attempts: int = 2, decl_index: int = 40) -> None:
+def _strict_env(
+    stack: ExitStack,
+    *,
+    repair_attempts: int = 2,
+    writer_attempts: int = 1,
+    decl_index: int = 40,
+) -> None:
     """Patch module constants so strict hybrid mode is active with a distinct
     driver and prover model, without touching the real environment."""
     stack.enter_context(mock.patch.object(lean_tools, "DRAFT_PROOF_ENABLED", True))
@@ -38,6 +46,7 @@ def _strict_env(stack: ExitStack, *, repair_attempts: int = 2, decl_index: int =
     stack.enter_context(mock.patch.object(lean_tools, "DEFAULT_PROVER_API_KEY", ""))
     stack.enter_context(mock.patch.object(lean_tools, "DEFAULT_PROVER_MODE", "draft_proof"))
     stack.enter_context(mock.patch.object(lean_tools, "PROVER_REPAIR_ATTEMPTS", repair_attempts))
+    stack.enter_context(mock.patch.object(lean_tools, "PROVER_WRITER_ATTEMPTS", writer_attempts))
     stack.enter_context(mock.patch.object(lean_tools, "DRAFT_PROOF_DECL_INDEX_LIMIT", decl_index))
 
 
@@ -86,6 +95,7 @@ class RoleConfigTests(unittest.TestCase):
         self.assertTrue(config["strict_role_separation"])
         self.assertTrue(config["ensemble"])
         self.assertFalse(config["driver_writes_proofs"])
+        self.assertEqual(config["prover_writer_attempts"], 1)
         self.assertEqual(config["prover_repair_attempts"], 2)
         self.assertEqual(config["stages"][lean_tools.STAGE_WRITER], "prover-model")
         self.assertEqual(config["stages"][lean_tools.STAGE_REPAIRER], "prover-model")
@@ -263,14 +273,14 @@ class RepairOutcomeClassificationTests(unittest.TestCase):
 
 
 class StrictLoopTests(unittest.TestCase):
-    def _run(self, workspace: Path, fake_chat, fake_run, *, max_tool_calls: int = 8, repair_attempts: int = 2):
+    def _run(self, workspace: Path, fake_chat, fake_run, *, max_tool_calls: int = 8, repair_attempts: int = 2, writer_attempts: int = 1):
         proof_rel = "Benchmark/Generated/Sample.lean"
         proof_path = workspace / proof_rel
         proof_path.parent.mkdir(parents=True, exist_ok=True)
         proof_path.write_text(ORIGINAL, encoding="utf-8")
         task = _task(proof_rel, workspace)
         with ExitStack() as stack:
-            _strict_env(stack, repair_attempts=repair_attempts)
+            _strict_env(stack, repair_attempts=repair_attempts, writer_attempts=writer_attempts)
             stack.enter_context(mock.patch.object(lean_tools, "chat_completion", fake_chat))
             stack.enter_context(mock.patch.object(lean_tools, "_run_lean_module", fake_run))
             return lean_tools._attempt_task_fair(
@@ -396,13 +406,127 @@ class StrictLoopTests(unittest.TestCase):
             result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), max_tool_calls=1)
             log = Path(result["tool_log"]).read_text(encoding="utf-8")
 
-        self.assertEqual(result["status"], "max_tool_calls_exceeded")
+        self.assertEqual(result["status"], "strict_writer_exhausted")
+        self.assertEqual(result["failure_class"], "provider_or_context_failure")
         metrics = result["role_metrics"]
         self.assertEqual(metrics["prover_writer_calls"], 1)
         self.assertEqual(metrics["draft_rejected_count"], 1)
         self.assertEqual(metrics["strict_submission_blocked"], 0)
-        self.assertIn("strict_auto_writer_failed", log)
+        self.assertIn("strict_writer_exhausted", log)
         self.assertIn("prover_output_contains_forbidden_placeholder", log)
+
+    def test_persistent_auto_writer_failure_exhausts_once_across_checks(self) -> None:
+        # A failed writer response that consumes the cap must terminate
+        # immediately rather than requiring another driver check call.
+        driver_calls = {"n": 0}
+        writer_calls = {"n": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                writer_calls["n"] += 1
+                return {
+                    "choices": [{"message": {"role": "assistant", "content": "sorry"}}],
+                    "usage": {"prompt_tokens": 3, "completion_tokens": 2, "total_tokens": 5},
+                }
+            driver_calls["n"] += 1
+            return {
+                "choices": [
+                    {
+                        "message": {
+                            "role": "assistant",
+                            "content": None,
+                            "tool_calls": [
+                                {
+                                    "id": f"c{driver_calls['n']}",
+                                    "function": {
+                                        "name": "check_proof",
+                                        "arguments": json.dumps({"proof": f"exact driver_proof_{driver_calls['n']}"}),
+                                    },
+                                }
+                            ],
+                        }
+                    }
+                ]
+            }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), max_tool_calls=6)
+            log = Path(result["tool_log"]).read_text(encoding="utf-8")
+
+        self.assertEqual(result["status"], "strict_writer_exhausted")
+        self.assertEqual(result["failure_class"], "provider_or_context_failure")
+        self.assertEqual(result["error"]["kind"], "prover_writer_budget_exceeded")
+        classified = classify_target({"status": "lean_check_failed"}, result)
+        self.assertEqual(classified["final_class"], "INFRA_INVALID")
+        self.assertEqual(classified["submission_state"], "no_submission")
+        validity = row_validity(result)
+        self.assertTrue(validity["valid"], validity["errors"])
+        result["failure_class"] = "no_tool_calls"
+        self.assertFalse(row_validity(result)["valid"])
+        self.assertEqual(writer_calls["n"], 1)
+        self.assertEqual(driver_calls["n"], 1)
+        self.assertEqual(result["usage"]["total_tokens"], 5)
+        metrics = result["role_metrics"]
+        self.assertEqual(metrics["prover_writer_calls"], 1)
+        self.assertEqual(metrics["strict_auto_writer_failures"], 1)
+        self.assertEqual(metrics["prover_writer_exhausted"], 1)
+        self.assertEqual(metrics["draft_submitted_count"], 0)
+        self.assertIn("strict_writer_exhausted", log)
+
+    def test_partial_writer_failure_survives_driver_budget_exhaustion(self) -> None:
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                return {"choices": [{"message": {"role": "assistant", "content": "sorry"}}]}
+            return {
+                "choices": [{"message": {"role": "assistant", "content": None, "tool_calls": [
+                    {"id": "c1", "function": {"name": "check_proof", "arguments": json.dumps({"proof": "exact driver_proof"})}}
+                ]}}]
+            }
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), max_tool_calls=1, writer_attempts=2)
+
+        self.assertEqual(result["status"], "strict_writer_failed")
+        self.assertEqual(result["failure_class"], "provider_or_context_failure")
+        self.assertTrue(row_validity(result)["valid"])
+        self.assertEqual(classify_target({"status": "lean_check_failed"}, result)["final_class"], "INFRA_INVALID")
+
+    def test_successful_later_draft_clears_partial_writer_failure_terminal(self) -> None:
+        calls = {"driver": 0, "prover": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                calls["prover"] += 1
+                body = "sorry" if calls["prover"] == 1 else "trivial"
+                return {"choices": [{"message": {"role": "assistant", "content": body}}]}
+            calls["driver"] += 1
+            name = "check_proof" if calls["driver"] == 1 else "draft_proof"
+            args = {"proof": "exact driver_proof"} if name == "check_proof" else {"mode": "write", "task_context": "retry"}
+            return {"choices": [{"message": {"role": "assistant", "content": None, "tool_calls": [
+                {"id": f"c{calls['driver']}", "function": {"name": name, "arguments": json.dumps(args)}}
+            ]}}]}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), max_tool_calls=2, writer_attempts=2)
+
+        self.assertEqual(result["status"], "max_tool_calls_exceeded")
+        self.assertNotEqual(result["failure_class"], "provider_or_context_failure")
+        self.assertFalse(row_validity(result)["valid"])
+
+    def test_partial_writer_failure_survives_repetition_exit(self) -> None:
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                return {"choices": [{"message": {"role": "assistant", "content": "sorry"}}]}
+            return {"choices": [{"message": {"role": "assistant", "content": None, "tool_calls": [
+                {"id": "same", "function": {"name": "check_proof", "arguments": json.dumps({"proof": "exact same"})}}
+            ]}}]}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), writer_attempts=3)
+
+        self.assertEqual(result["status"], "strict_writer_failed")
+        self.assertEqual(result["failure_class"], "provider_or_context_failure")
+        self.assertTrue(row_validity(result)["valid"])
 
     def test_stale_prover_draft_is_blocked_in_strict_mode(self) -> None:
         # Only the LATEST prover draft is submittable: resubmitting an earlier
