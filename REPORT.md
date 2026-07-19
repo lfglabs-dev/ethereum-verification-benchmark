@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 37
-- Implementations: 38
-- Active cases: 37
-- Buildable active cases: 37
-- Active tasks: 240
+- Families: 38
+- Implementations: 39
+- Active cases: 38
+- Buildable active cases: 38
+- Active tasks: 241
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -62,6 +62,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `deposit`, `flashLoan`, `withdraw`
 - Upstream source artifact: `contracts/side-entrance/SideEntranceLenderPool.sol`
 - Notes: Compact Side Entrance benchmark focused on the broken coherence between pool assets and withdrawable credit when flash-loan repayment is routed through the deposit path.
+
+### `enzyme/onyx_fee_handler`
+- Family / implementation: `enzyme` / `onyx_fee_handler`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Enzyme.OnyxFeeHandler.Compile`
+- Source ref: `https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol`
+- Selected functions: `settleDynamicFeesGivenPositionsValue`, `__increaseValueOwed`, `__updateValueOwed`, `settleManagementFee`, `settlePerformanceFee`
+- Upstream source artifact: `src/components/fees/FeeHandler.sol`
+- Notes: Proves with no custom axioms and no sorry/admit that a successful settlement with both dynamic trackers enabled uses the configured targets and exact management-then-performance calldata, increases total fees owed by exactly both arbitrary returned amounts, credits the configured recipients, handles recipient aliasing, and frames the modeled scalar, address, and mapping storage projections. Verity knownAddresses bookkeeping is outside that frame. Separate theorems cover successful management-only, performance-only, and both-disabled branches plus transactional rollback for every modeled raw revert. Official onyx-sdk metadata independently identifies LIVE Ethereum v1 implementation addresses; it does not establish bytecode equivalence to the pinned protocol source commit.
 
 ### `erc4337/entry_point_invariant`
 - Family / implementation: `erc4337` / `erc4337_v09`
@@ -518,6 +528,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean`
 - Editable proof file: `Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/FlashLoanViaDepositSetsSenderCredit.lean`
 - Hidden reference solution: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs`
+
+### `enzyme/onyx_fee_handler/settle_dynamic_fees_exact_accounting`
+- Track / property class / proof family: `proof-only` / `cross_contract_fee_accounting` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Enzyme.OnyxFeeHandler.settleDynamicFeesGivenPositionsValue_exact_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/enzyme/onyx_fee_handler/verity/Contract.lean`, `Benchmark/Cases/Enzyme/OnyxFeeHandler/Contract.lean`
+- Specification files: `cases/enzyme/onyx_fee_handler/verity/Specs.lean`, `Benchmark/Cases/Enzyme/OnyxFeeHandler/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Enzyme/OnyxFeeHandler/Tasks/settle_dynamic_fees_exact_accounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs`
 
 ### `erc4337/entry_point_invariant/account_rejection_reverts`
 - Track / property class / proof family: `proof-only` / `authority_required` / `refinement_equivalence`
