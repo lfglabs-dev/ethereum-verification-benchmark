@@ -3069,6 +3069,7 @@ def _attempt_task_fair(
     strict_writer_failed = bool(
         STRICT_ROLE_SEPARATION
         and not attempts
+        and not prover_state.get("latest_draft")
         and int(role_metrics.get("strict_auto_writer_failures", 0)) > 0
     )
     if strict_writer_failed:

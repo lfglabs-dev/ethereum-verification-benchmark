@@ -491,6 +491,28 @@ class StrictLoopTests(unittest.TestCase):
         self.assertTrue(row_validity(result)["valid"])
         self.assertEqual(classify_target({"status": "lean_check_failed"}, result)["final_class"], "INFRA_INVALID")
 
+    def test_successful_later_draft_clears_partial_writer_failure_terminal(self) -> None:
+        calls = {"driver": 0, "prover": 0}
+
+        def fake_chat(messages, **kwargs):
+            if str(kwargs.get("model")) == "prover-model":
+                calls["prover"] += 1
+                body = "sorry" if calls["prover"] == 1 else "trivial"
+                return {"choices": [{"message": {"role": "assistant", "content": body}}]}
+            calls["driver"] += 1
+            name = "check_proof" if calls["driver"] == 1 else "draft_proof"
+            args = {"proof": "exact driver_proof"} if name == "check_proof" else {"mode": "write", "task_context": "retry"}
+            return {"choices": [{"message": {"role": "assistant", "content": None, "tool_calls": [
+                {"id": f"c{calls['driver']}", "function": {"name": name, "arguments": json.dumps(args)}}
+            ]}}]}
+
+        with tempfile.TemporaryDirectory() as tmp:
+            result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), max_tool_calls=2, writer_attempts=2)
+
+        self.assertEqual(result["status"], "max_tool_calls_exceeded")
+        self.assertNotEqual(result["failure_class"], "provider_or_context_failure")
+        self.assertFalse(row_validity(result)["valid"])
+
     def test_stale_prover_draft_is_blocked_in_strict_mode(self) -> None:
         # Only the LATEST prover draft is submittable: resubmitting an earlier
         # failed draft would let _grade_repair misattribute it as the repair
