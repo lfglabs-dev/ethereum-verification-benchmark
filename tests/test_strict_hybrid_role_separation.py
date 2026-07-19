@@ -9,6 +9,7 @@ from unittest import mock
 
 from harness import transport_request
 from harness.classification import classify_target
+from harness.result_validity import row_validity
 from harness.runners import lean_tools
 
 
@@ -458,6 +459,10 @@ class StrictLoopTests(unittest.TestCase):
         classified = classify_target({"status": "lean_check_failed"}, result)
         self.assertEqual(classified["final_class"], "INFRA_INVALID")
         self.assertEqual(classified["submission_state"], "no_submission")
+        validity = row_validity(result)
+        self.assertTrue(validity["valid"], validity["errors"])
+        result["failure_class"] = "no_tool_calls"
+        self.assertFalse(row_validity(result)["valid"])
         self.assertEqual(writer_calls["n"], 1)
         self.assertEqual(driver_calls["n"], 2)
         self.assertEqual(result["usage"]["total_tokens"], 5)
