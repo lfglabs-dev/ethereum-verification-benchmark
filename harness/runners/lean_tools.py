@@ -1983,15 +1983,25 @@ def _execute_fair_tool(
                             break
                         if role_metrics is not None:
                             role_metrics["strict_auto_writer_failures"] = int(role_metrics.get("strict_auto_writer_failures", 0)) + 1
+                        writer_calls_used = int(prover_state.get("auto_writer_count", 0))
+                        writer_exhausted = writer_calls_used >= writer_limit
+                        if writer_exhausted and role_metrics is not None:
+                            role_metrics["prover_writer_exhausted"] = int(role_metrics.get("prover_writer_exhausted", 0)) + 1
                         return {
                             "ok": False,
-                            "error": "strict_auto_writer_failed",
+                            "error": "strict_writer_exhausted" if writer_exhausted else "strict_auto_writer_failed",
+                            "failure_kind": "prover_writer_budget_exceeded" if writer_exhausted else None,
                             "stage": STAGE_WRITER,
                             "prompt_kind": "write",
                             "writer_error": auto_result.get("error"),
-                            "writer_calls_used": int(prover_state.get("auto_writer_count", 0)),
+                            "writer_calls_used": writer_calls_used,
                             "writer_calls_max": writer_limit,
                             "message": (
+                                "STRICT ROLE SEPARATION: the driver attempted to submit before any prover draft. "
+                                "The harness ignored the driver proof and routed to the prover writer, but the writer "
+                                "did not return a usable draft; the writer call cap is now exhausted."
+                                if writer_exhausted
+                                else
                                 "STRICT ROLE SEPARATION: the driver attempted to submit before any prover draft. "
                                 "The harness ignored the driver proof and routed to the prover writer, but the writer "
                                 "did not return a usable draft."

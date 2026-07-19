@@ -406,18 +406,18 @@ class StrictLoopTests(unittest.TestCase):
             result = self._run(Path(tmp), fake_chat, lambda *a, **k: (0, ""), max_tool_calls=1)
             log = Path(result["tool_log"]).read_text(encoding="utf-8")
 
-        self.assertEqual(result["status"], "max_tool_calls_exceeded")
+        self.assertEqual(result["status"], "strict_writer_exhausted")
+        self.assertEqual(result["failure_class"], "provider_or_context_failure")
         metrics = result["role_metrics"]
         self.assertEqual(metrics["prover_writer_calls"], 1)
         self.assertEqual(metrics["draft_rejected_count"], 1)
         self.assertEqual(metrics["strict_submission_blocked"], 0)
-        self.assertIn("strict_auto_writer_failed", log)
+        self.assertIn("strict_writer_exhausted", log)
         self.assertIn("prover_output_contains_forbidden_placeholder", log)
 
     def test_persistent_auto_writer_failure_exhausts_once_across_checks(self) -> None:
-        # Distinct driver check calls must not turn a persistent writer failure
-        # into one paid writer request per tool call. The second check observes
-        # the explicit per-task writer cap and terminates as infra-invalid.
+        # A failed writer response that consumes the cap must terminate
+        # immediately rather than requiring another driver check call.
         driver_calls = {"n": 0}
         writer_calls = {"n": 0}
 
@@ -464,14 +464,13 @@ class StrictLoopTests(unittest.TestCase):
         result["failure_class"] = "no_tool_calls"
         self.assertFalse(row_validity(result)["valid"])
         self.assertEqual(writer_calls["n"], 1)
-        self.assertEqual(driver_calls["n"], 2)
+        self.assertEqual(driver_calls["n"], 1)
         self.assertEqual(result["usage"]["total_tokens"], 5)
         metrics = result["role_metrics"]
         self.assertEqual(metrics["prover_writer_calls"], 1)
         self.assertEqual(metrics["strict_auto_writer_failures"], 1)
         self.assertEqual(metrics["prover_writer_exhausted"], 1)
         self.assertEqual(metrics["draft_submitted_count"], 0)
-        self.assertIn("strict_auto_writer_failed", log)
         self.assertIn("strict_writer_exhausted", log)
 
     def test_stale_prover_draft_is_blocked_in_strict_mode(self) -> None:
