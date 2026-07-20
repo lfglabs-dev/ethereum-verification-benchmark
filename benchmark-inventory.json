@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 37,
-    "implementation_count": 38,
-    "active_case_count": 37,
+    "family_count": 38,
+    "implementation_count": 39,
+    "active_case_count": 38,
     "backlog_case_count": 1,
-    "active_task_count": 240,
+    "active_task_count": 241,
     "backlog_task_count": 0,
-    "buildable_case_count": 37,
-    "runnable_task_count": 240,
+    "buildable_case_count": 38,
+    "runnable_task_count": 241,
     "case_stage_counts": {
-      "build_green": 30,
+      "build_green": 31,
       "candidate": 1,
       "proof_complete": 7
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 37
+      "translated": 38
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 30,
+      "complete": 31,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 240
+      "proof-only": 241
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -65,6 +65,7 @@
       "composition_invariant": 3,
       "configuration_safety": 2,
       "counting_invariant": 1,
+      "cross_contract_fee_accounting": 1,
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
       "escrow_lower_bound": 3,
@@ -131,10 +132,10 @@
       "functional_correctness": 57,
       "protocol_transition_correctness": 39,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 76
+      "state_preservation_local_effects": 77
     },
     "family_split_counts": {
-      "active": 36,
+      "active": 37,
       "mixed": 1
     }
   },
@@ -223,6 +224,23 @@
         "solidity"
       ],
       "manifest_path": "families/damn_vulnerable_defi/family.yaml"
+    },
+    {
+      "family_id": "enzyme",
+      "display_name": "Enzyme",
+      "split": "active",
+      "status": "active",
+      "description": "Enzyme protocol accounting benchmarks, including the Onyx modular vault stack.",
+      "implementation_ids": [
+        "onyx_fee_handler"
+      ],
+      "case_ids": [
+        "enzyme/onyx_fee_handler"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/enzyme/family.yaml"
     },
     {
       "family_id": "erc4337",
@@ -851,6 +869,22 @@
       ],
       "notes": "Active implementation entry for the Damn Vulnerable DeFi challenge set, starting with the Side Entrance flash-loan repayment bug modeled as a compact pool-balance versus credited-liability slice.",
       "manifest_path": "families/damn_vulnerable_defi/implementations/v2/implementation.yaml"
+    },
+    {
+      "family_id": "enzyme",
+      "implementation_id": "onyx_fee_handler",
+      "display_name": "Enzyme Onyx FeeHandler",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/enzymefinance/protocol-onyx",
+      "upstream_commit": "8ae6f589b13a19d8390eb0956836c6a9f48fadab",
+      "source_language": "solidity",
+      "source_artifact_path": "src/components/fees/FeeHandler.sol",
+      "case_ids": [
+        "enzyme/onyx_fee_handler"
+      ],
+      "notes": "Dynamic management/performance fee ordering and aggregate/per-recipient owed-value accounting.",
+      "manifest_path": "families/enzyme/implementations/onyx_fee_handler/implementation.yaml"
     },
     {
       "family_id": "erc4337",
@@ -1614,6 +1648,64 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Specs",
       "proof_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs"
+    },
+    {
+      "case_id": "enzyme/onyx_fee_handler",
+      "project": "enzyme",
+      "case_name": "onyx_fee_handler",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/enzyme/onyx_fee_handler/case.yaml",
+      "split": "active",
+      "family_id": "enzyme",
+      "implementation_id": "onyx_fee_handler",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/enzymefinance/protocol-onyx",
+      "upstream_commit": "8ae6f589b13a19d8390eb0956836c6a9f48fadab",
+      "original_contract_path": "src/components/fees/FeeHandler.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol",
+      "selected_functions": [
+        "settleDynamicFeesGivenPositionsValue",
+        "__increaseValueOwed",
+        "__updateValueOwed",
+        "settleManagementFee",
+        "settlePerformanceFee"
+      ],
+      "lean_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Compile",
+      "failure_reason": null,
+      "notes": "Proves with no custom axioms and no sorry/admit that a successful settlement with both dynamic trackers enabled uses the configured targets and exact management-then-performance calldata, increases total fees owed by exactly both arbitrary returned amounts, credits the configured recipients, handles recipient aliasing, and frames the selected dynamic-fee configuration projection. The arbitrary reentry hook may mutate all other state. The pinned FeeHandler has no reentrancy guard, so the projection-stability condition is an explicit deployment/callee rely condition, not a proved runtime source property. Separate theorems cover successful management-only, performance-only, and both-disabled branches plus transactional rollback for every modeled raw revert. Official onyx-sdk metadata independently identifies LIVE Ethereum v1 implementation addresses; it does not establish bytecode equivalence to the pinned protocol source commit.",
+      "buildable": true,
+      "verity_commit": "49105e54ceff6d66921572cc85583538c2c8497d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "parametric_verity_env_call_oracle",
+        "dynamic_target_selector_calldata_constraints",
+        "exact_management_then_performance_order",
+        "aggregate_and_per_recipient_accounting",
+        "shared_recipient_aliasing",
+        "checked_uint256_arithmetic_preconditions",
+        "abi_address_decode_overapproximation",
+        "external_failure_rollback",
+        "static_valuation_handler_lookup",
+        "projection_stable_tracker_reentry",
+        "registered_reentry_schedule",
+        "selected_dynamic_fee_projection_frame"
+      ],
+      "abstraction_notes": "Models the source function boundary, valuation-handler authorization, optional tracker branches, management-before-performance ordering, checked arithmetic, and aggregate plus per-recipient owed-value updates. Each external boundary queries the universally quantified Verity.Env call oracle with the separate dynamic target, exact ABI selector, and exact calldata words. A second oracle response controls success, and returndata remains arbitrary. Successful tracker calls apply Env.reenter. Accounting theorems require that hook to preserve only the six observed dynamic-fee projections: both tracker addresses, both recipient addresses, aggregate fees owed, and every per-user owed balance. Unrelated state may change. A conditional Verity ReentrancySpec schedule-closure lemma discharges this condition when Env.reenter is explicitly equated to a registered schedule whose entrypoint transitions each satisfy that projection frame. Pinned Verity supports ABI-faithful runtime-target static-word calls; this case deliberately uses Env.callOracle because executable EDSL call semantics do not provide arbitrary parametric return outcomes for this theorem. The Shares valuation-handler view lookup is modeled as a static call and therefore cannot mutate FeeHandler state or invoke the reentry hook, matching Solidity STATICCALL. Valuation-handler returndata is projected to its low 160 address bits, so the model conservatively admits non-canonical words rejected by Solidity ABI decoding. A successful oracle branch supplies one full return word; returndata-length and ABI-decode failures are folded into the call-failure outcome. External callee formulas, callee state, and event logs are not executed. uint256 arithmetic, and theorem hypotheses cover every successful checked add. Event emission and unrelated configuration/claim functions are omitted.",
+      "unsupported_feature_codes": [
+        "stateful_external_callee_execution_omitted",
+        "source_complete_reentry_registry_omitted",
+        "cross_contract_reentry_reachability_omitted",
+        "event_emission_omitted"
+      ],
+      "spec_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Specs",
+      "proof_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs"
     },
     {
       "case_id": "erc4337/entry_point_invariant",
@@ -3801,6 +3893,56 @@
       "abstraction_notes": "This task captures the hidden liability-side effect of the summarized flash loan path: apparent repayment leaves pool ETH unchanged while still minting withdrawable caller credit.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "enzyme/onyx_fee_handler/settle_dynamic_fees_exact_accounting",
+      "task_id": "settle_dynamic_fees_exact_accounting",
+      "case_id": "enzyme/onyx_fee_handler",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/enzyme/onyx_fee_handler/tasks/settle_dynamic_fees_exact_accounting.yaml",
+      "split": "active",
+      "family_id": "enzyme",
+      "implementation_id": "onyx_fee_handler",
+      "source_ref": "https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "cross_contract_fee_accounting",
+      "category": "invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Enzyme.OnyxFeeHandler.settleDynamicFeesGivenPositionsValue_exact_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/enzyme/onyx_fee_handler/verity/Contract.lean",
+        "Benchmark/Cases/Enzyme/OnyxFeeHandler/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/enzyme/onyx_fee_handler/verity/Specs.lean",
+        "Benchmark/Cases/Enzyme/OnyxFeeHandler/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Enzyme/OnyxFeeHandler/Tasks/settle_dynamic_fees_exact_accounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Quantifies over Verity.Env oracle responses keyed by the dynamic target, exact selector, and exact management-then-performance calldata. Proves successful aggregate/per-recipient accounting for arbitrary tracker return words, including the same-recipient alias case and a frame for the selected dynamic-fee configuration projection. Pinned Verity supports ABI-faithful runtime-target static-word calls, but this protocol slice deliberately uses Env.callOracle to keep return outcomes arbitrary. A successful oracle branch supplies one full return word; short-return and ABI-decode failures are folded into the call-failure outcome. The Shares valuation lookup is modeled as STATICCALL and does not apply reentry. Tracker calls apply Env.reenter under a narrow rely condition preserving both tracker addresses, both recipient addresses, total fees owed, and every per-user owed balance; unrelated state may change. A conditional ReentrancySpec schedule-closure lemma discharges the condition when Env.reenter is explicitly equated to a registered schedule of projection-preserving transitions. The source-complete cross-contract reachability proof is out of scope because the pinned FeeHandler has no reentrancy guard and the slice omits Shares role state plus six projection-mutating external entrypoints. External callee state is not executed.",
+      "unsupported_feature_codes": [
+        "stateful_external_callee_execution_omitted",
+        "source_complete_reentry_registry_omitted",
+        "cross_contract_reentry_reachability_omitted",
+        "event_emission_omitted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -14249,5 +14391,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-17T09:57:54.228539+00:00"
+  "generated_at": "2026-07-20T10:25:56.941843+00:00"
 }
