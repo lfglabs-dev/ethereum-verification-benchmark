@@ -37,12 +37,13 @@ Simplifications and their justification:
    so the semantic model also admits non-canonical ABI address words that
    Solidity would reject. This is a conservative over-approximation of
    successful source executions.
-3. A successful external boundary applies `Env.reenter` to handler state. The
-   exact-accounting theorem assumes this hook is `id`, while failure theorems
-   use `Contract.run` to roll the full handler call back. Callee storage,
-   timestamps, rates, and high-water marks are not modeled. Applying the hook
-   to the valuation-handler view call is conservative relative to Solidity's
-   `STATICCALL`; successful accounting still requires the hook to be `id`.
+3. The valuation-handler lookup is modeled as a state-preserving static call,
+   matching Solidity's `STATICCALL`. Successful tracker calls apply
+   `Env.reenter` to FeeHandler state. Exact accounting does not assume that hook
+   is `id`; instead it uses the projection-level rely condition in `Specs.lean`,
+   which permits arbitrary changes outside the six dynamic-fee storage
+   projections needed by the theorem. Callee storage, timestamps, rates, and
+   high-water marks remain outside this single-contract model.
 4. `ManagementFeeSettled`, `PerformanceFeeSettled`,
    `UserValueOwedUpdated`, and `TotalValueOwedUpdated` are omitted because they
    do not affect the liability state proved here.
@@ -80,7 +81,7 @@ def externalCallReturndata
     (target : Address) (selector : Uint256) (arguments : List Uint256) : Uint256 :=
   env.callOracle "externalCallReturndata" (externalCallKeyWords target selector arguments)
 
-/-- Execute an environment call and apply its possible reentry state hook. -/
+/-- Execute a state-changing environment call and apply its possible reentry hook. -/
 def runExternalWordCall
     (env : Verity.Env)
     (target : Address)
@@ -92,6 +93,20 @@ def runExternalWordCall
       (env.reenter s)
   else
     ContractResult.revert "external-call-reverted" s
+
+/-- Execute a `STATICCALL`-like environment read. Successful static calls cannot
+    mutate any contract state, including through a nested callback. -/
+def runStaticWordCall
+    (env : Verity.Env)
+    (target : Address)
+    (selector : Uint256)
+    (arguments : List Uint256) : Contract Uint256 := fun s =>
+  if externalCallSucceeded env target selector arguments then
+    ContractResult.success
+      (externalCallReturndata env target selector arguments)
+      s
+  else
+    ContractResult.revert "external-staticcall-reverted" s
 
 verity_contract FeeHandler where
   storage
@@ -136,7 +151,7 @@ def settleDynamicFeesGivenPositionsValue
     : Contract Unit := do
   let sender ← msgSender
   let valuationHandlerWord ←
-    runExternalWordCall env shares getValuationHandlerSelector []
+    runStaticWordCall env shares getValuationHandlerSelector []
   require (sender == wordToAddress valuationHandlerWord) "unauthorized"
 
   let preTotalFeesOwed ← getStorage totalFeesOwed

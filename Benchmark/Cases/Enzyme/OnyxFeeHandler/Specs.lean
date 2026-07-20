@@ -24,6 +24,32 @@ def managementFeeRecipientOf (s : ContractState) : Address :=
 def performanceFeeRecipientOf (s : ContractState) : Address :=
   s.storageAddr FeeHandler.performanceFeeRecipient.slot
 
+/-- Equality of exactly the FeeHandler projections observed by the dynamic-fee
+    theorem. It deliberately says nothing about context, memory, events,
+    transient state, or storage fields outside this case's selected slice. -/
+structure DynamicFeeProjectionEq (before after : ContractState) : Prop where
+  managementFeeTracker :
+    managementFeeTrackerOf after = managementFeeTrackerOf before
+  performanceFeeTracker :
+    performanceFeeTrackerOf after = performanceFeeTrackerOf before
+  managementFeeRecipient :
+    managementFeeRecipientOf after = managementFeeRecipientOf before
+  performanceFeeRecipient :
+    performanceFeeRecipientOf after = performanceFeeRecipientOf before
+  totalFeesOwed : totalFeesOwedOf after = totalFeesOwedOf before
+  userFeesOwed : ∀ user, feesOwedTo after user = feesOwedTo before user
+
+/-- Rely condition for a tracker callback: reentry may change arbitrary state,
+    but it must frame the four dynamic-fee configuration fields and both
+    liability projections needed for the exact-accounting claim. -/
+def DynamicFeeReentryStable (adv : ContractState → ContractState) : Prop :=
+  ∀ s, DynamicFeeProjectionEq s (adv s)
+
+/-- Snapshot invariant used to package projection-framing entrypoints in a
+    genuine `ReentrancySpec`. -/
+def dynamicFeeProjectionInvariant (baseline : ContractState) : ContractState → Prop :=
+  DynamicFeeProjectionEq baseline
+
 def valuationHandlerCallSucceeds (env : Verity.Env) (shares : Address) : Prop :=
   externalCallSucceeded env shares getValuationHandlerSelector [] = true
 
@@ -87,20 +113,14 @@ def expectedFeesOwedAfterDynamicSettlement
   else
     afterManagement
 
-/--
-Frame for the modeled EVM storage projections. The transition may change only
-the aggregate liability slot and the address-keyed liability mapping slot.
-Verity's `knownAddresses` proof-bookkeeping field is intentionally outside this
-frame because `setMapping` updates it when recording written mapping keys.
--/
+/-- Frame for the four modeled configuration fields. Liability changes are
+    specified separately by the exact equations. Other state may be changed by
+    an admissible callback and is intentionally not framed. -/
 def feeHandlerStorageFrame (s s' : ContractState) : Prop :=
-  s'.storageAddr = s.storageAddr ∧
-  (∀ storageSlot,
-    storageSlot ≠ FeeHandler.totalFeesOwed.slot →
-      s'.storage storageSlot = s.storage storageSlot) ∧
-  (∀ mappingSlot user,
-    mappingSlot ≠ FeeHandler.userFeesOwed.slot →
-      s'.storageMap mappingSlot user = s.storageMap mappingSlot user)
+  managementFeeTrackerOf s' = managementFeeTrackerOf s ∧
+  performanceFeeTrackerOf s' = performanceFeeTrackerOf s ∧
+  managementFeeRecipientOf s' = managementFeeRecipientOf s ∧
+  performanceFeeRecipientOf s' = performanceFeeRecipientOf s
 
 def managementOnlyExactSettlement
     (env : Verity.Env)

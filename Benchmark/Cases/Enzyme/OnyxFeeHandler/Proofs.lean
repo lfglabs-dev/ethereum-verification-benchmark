@@ -1,4 +1,5 @@
 import Benchmark.Cases.Enzyme.OnyxFeeHandler.Specs
+import Verity.Core.Reentrancy
 import Verity.Proofs.Stdlib.Automation
 import Verity.Proofs.Stdlib.Math
 
@@ -8,22 +9,122 @@ open Verity
 open Verity.EVM.Uint256
 open Verity.Stdlib.Math
 open Verity.Proofs.Stdlib.Math (safeAdd_some safeAdd_none)
+open Verity.Core.Invariant
+open Verity.Core.Reentrancy
 
 set_option linter.unusedSimpArgs false
+
+namespace DynamicFeeProjectionEq
+
+theorem refl (s : ContractState) : DynamicFeeProjectionEq s s := by
+  exact ⟨rfl, rfl, rfl, rfl, rfl, fun _ => rfl⟩
+
+theorem trans {a b c : ContractState}
+    (hab : DynamicFeeProjectionEq a b)
+    (hbc : DynamicFeeProjectionEq b c) : DynamicFeeProjectionEq a c := by
+  exact
+    ⟨hbc.managementFeeTracker.trans hab.managementFeeTracker,
+      hbc.performanceFeeTracker.trans hab.performanceFeeTracker,
+      hbc.managementFeeRecipient.trans hab.managementFeeRecipient,
+      hbc.performanceFeeRecipient.trans hab.performanceFeeRecipient,
+      hbc.totalFeesOwed.trans hab.totalFeesOwed,
+      fun user => (hbc.userFeesOwed user).trans (hab.userFeesOwed user)⟩
+
+end DynamicFeeProjectionEq
+
+/-- A projection-framing callback preserves every baseline snapshot invariant. -/
+theorem dynamicFeeReentryStable_preserves
+    {adv : ContractState → ContractState}
+    (hAdv : DynamicFeeReentryStable adv)
+    (baseline : ContractState) :
+    Preserves (dynamicFeeProjectionInvariant baseline) adv := by
+  intro s hs
+  exact hs.trans (hAdv s)
+
+/-- Package any audited finite registry of projection-framing callbacks as a
+    genuine Verity reentrancy specification. -/
+def dynamicFeeReentrancySpec
+    (baseline : ContractState)
+    (entrypoints : List (ContractState → ContractState))
+    (hEntrypoints : ∀ f, f ∈ entrypoints → DynamicFeeReentryStable f) :
+    ReentrancySpec where
+  Inv := dynamicFeeProjectionInvariant baseline
+  entrypoints := entrypoints
+  entrypoints_preserve := by
+    intro f hf
+    exact dynamicFeeReentryStable_preserves (hEntrypoints f hf) baseline
+
+/-- Any finite schedule drawn from an audited projection-framing registry is a
+    valid callback transformer for the settlement theorem below. -/
+theorem registered_reentry_schedule_stable
+    (entrypoints schedule : List (ContractState → ContractState))
+    (hEntrypoints : ∀ f, f ∈ entrypoints → DynamicFeeReentryStable f)
+    (hSchedule : ∀ f, f ∈ schedule → f ∈ entrypoints) :
+    DynamicFeeReentryStable (runSeq schedule) := by
+  intro s
+  exact (dynamicFeeReentrancySpec s entrypoints hEntrypoints).schedule_preserves
+    schedule hSchedule s (DynamicFeeProjectionEq.refl s)
+
+/-- Explicitly discharge the settlement theorem's callback rely when the
+    environment hook is a schedule drawn from an audited framing registry. -/
+theorem env_reentry_stable_of_registered_schedule
+    (env : Verity.Env)
+    (entrypoints schedule : List (ContractState → ContractState))
+    (hEntrypoints : ∀ f, f ∈ entrypoints → DynamicFeeReentryStable f)
+    (hSchedule : ∀ f, f ∈ schedule → f ∈ entrypoints)
+    (hEnvReentry : env.reenter = runSeq schedule) :
+    DynamicFeeReentryStable env.reenter := by
+  rw [hEnvReentry]
+  exact registered_reentry_schedule_stable entrypoints schedule hEntrypoints hSchedule
+
+/-- Raw storage equalities extracted once for proof automation. -/
+theorem dynamicFeeReentryStable_raw
+    {adv : ContractState → ContractState}
+    (hAdv : DynamicFeeReentryStable adv) :
+    (∀ s, (adv s).storageAddr FeeHandler.managementFeeTracker.slot =
+      s.storageAddr FeeHandler.managementFeeTracker.slot) ∧
+    (∀ s, (adv s).storageAddr FeeHandler.performanceFeeTracker.slot =
+      s.storageAddr FeeHandler.performanceFeeTracker.slot) ∧
+    (∀ s, (adv s).storageAddr FeeHandler.managementFeeRecipient.slot =
+      s.storageAddr FeeHandler.managementFeeRecipient.slot) ∧
+    (∀ s, (adv s).storageAddr FeeHandler.performanceFeeRecipient.slot =
+      s.storageAddr FeeHandler.performanceFeeRecipient.slot) ∧
+    (∀ s, (adv s).storage FeeHandler.totalFeesOwed.slot =
+      s.storage FeeHandler.totalFeesOwed.slot) ∧
+    (∀ s user, (adv s).storageMap FeeHandler.userFeesOwed.slot user =
+      s.storageMap FeeHandler.userFeesOwed.slot user) := by
+  constructor
+  · intro s
+    simpa [managementFeeTrackerOf] using (hAdv s).managementFeeTracker
+  constructor
+  · intro s
+    simpa [performanceFeeTrackerOf] using (hAdv s).performanceFeeTracker
+  constructor
+  · intro s
+    simpa [managementFeeRecipientOf] using (hAdv s).managementFeeRecipient
+  constructor
+  · intro s
+    simpa [performanceFeeRecipientOf] using (hAdv s).performanceFeeRecipient
+  constructor
+  · intro s
+    simpa [totalFeesOwedOf] using (hAdv s).totalFeesOwed
+  · intro s user
+    simpa [feesOwedTo] using (hAdv s).userFeesOwed user
 
 /--
 For every environment whose exact valuation and tracker calls succeed, both
 enabled trackers update aggregate and per-recipient liabilities by exactly their
-arbitrary oracle return words. The theorem also proves successful termination,
-the scalar/address/mapping storage-projection frame, and the shared-recipient
-alias case.
+arbitrary oracle return words. Tracker callbacks may arbitrarily transform state
+outside the six observed dynamic-fee projections. The theorem also proves
+successful termination, the selected configuration frame, and the
+shared-recipient alias case.
 -/
 theorem settleDynamicFeesGivenPositionsValue_exact_accounting
     (env : Verity.Env)
     (totalPositionsValue : Uint256)
     (shares : Address)
     (s : ContractState)
-    (hNoReentry : env.reenter = id)
+    (hReentry : DynamicFeeReentryStable env.reenter)
     (hValuationCall : valuationHandlerCallSucceeds env shares)
     (hCaller : s.sender = wordToAddress (valuationHandlerWord env shares))
     (hPositionsCoverPriorFees : totalFeesOwedOf s <= totalPositionsValue)
@@ -49,6 +150,9 @@ theorem settleDynamicFeesGivenPositionsValue_exact_accounting
       FeeHandler.settleDynamicFeesGivenPositionsValue env totalPositionsValue shares s =
         ContractResult.success () s' ∧
       exact_dynamic_fee_settlement env totalPositionsValue s s' := by
+  obtain ⟨hReentryManagementTracker, hReentryPerformanceTracker,
+      hReentryManagementRecipient, hReentryPerformanceRecipient,
+      hReentryTotal, hReentryUsers⟩ := dynamicFeeReentryStable_raw hReentry
   have hSafeManagementRecipient := safeAdd_some
     (feesOwedTo s (managementFeeRecipientOf s))
     (managementFeeAmount env s totalPositionsValue)
@@ -203,7 +307,7 @@ theorem settleDynamicFeesGivenPositionsValue_exact_accounting
       totalFeesOwedAfterManagement,
       FeeHandler.settleDynamicFeesGivenPositionsValue,
       FeeHandler.__increaseValueOwed, FeeHandler.__updateValueOwed,
-      runExternalWordCall,
+      runStaticWordCall, runExternalWordCall,
       valuationHandlerCallSucceeds, valuationHandlerWord,
       managementFeeCallSucceeds, performanceFeeCallSucceeds,
       externalCallSucceeded,
@@ -212,7 +316,10 @@ theorem settleDynamicFeesGivenPositionsValue_exact_accounting
       managementFeeRecipientOf, performanceFeeRecipientOf,
       managementFeeBase, managementFeeAmount,
       performanceFeeBase, performanceFeeAmount,
-      hNoReentry, hValuationOracleRaw, hManagementOracleRaw, hPerformanceOracleRaw,
+      hReentryManagementTracker, hReentryPerformanceTracker,
+      hReentryManagementRecipient, hReentryPerformanceRecipient,
+      hReentryTotal, hReentryUsers,
+      hValuationOracleRaw, hManagementOracleRaw, hPerformanceOracleRaw,
       hCallerRaw, hPositionsRaw, hManagementEnabledRaw, hPerformanceEnabledRaw,
       hManagementFitsRaw, hSafeManagementRecipientSame, hSafeManagementTotalRaw,
       hSafePerformanceRecipientRaw, hSafePerformanceTotalRaw,
@@ -223,17 +330,11 @@ theorem settleDynamicFeesGivenPositionsValue_exact_accounting
       ContractState.readSlot, ContractState.readAddrSlot, ContractState.readMap,
       ContractState.writeSlot, ContractState.writeMap,
       HAdd.hAdd, Add.add, beq_iff_eq, decide_eq_true_eq]
-    constructor
-    · intro user
-      by_cases hUserRecipient :
-          user = s.storageAddr FeeHandler.performanceFeeRecipient.slot
-      · simp [hUserRecipient]
-      · simp [hUserRecipient]
-    · constructor
-      · intro storageSlot hStorageSlot
-        simp [hStorageSlot]
-      · intro mappingSlot user hMappingSlot
-        simp [hMappingSlot]
+    intro user
+    by_cases hUserRecipient :
+        user = s.storageAddr FeeHandler.performanceFeeRecipient.slot
+    · simp [hUserRecipient]
+    · simp [hUserRecipient]
   · have hDifferentRecipientRaw :
         s.storageAddr FeeHandler.managementFeeRecipient.slot ≠
           s.storageAddr FeeHandler.performanceFeeRecipient.slot := by
@@ -266,7 +367,7 @@ theorem settleDynamicFeesGivenPositionsValue_exact_accounting
       totalFeesOwedAfterManagement,
       FeeHandler.settleDynamicFeesGivenPositionsValue,
       FeeHandler.__increaseValueOwed, FeeHandler.__updateValueOwed,
-      runExternalWordCall,
+      runStaticWordCall, runExternalWordCall,
       valuationHandlerCallSucceeds, valuationHandlerWord,
       managementFeeCallSucceeds, performanceFeeCallSucceeds,
       externalCallSucceeded,
@@ -275,7 +376,10 @@ theorem settleDynamicFeesGivenPositionsValue_exact_accounting
       managementFeeRecipientOf, performanceFeeRecipientOf,
       managementFeeBase, managementFeeAmount,
       performanceFeeBase, performanceFeeAmount,
-      hNoReentry, hValuationOracleRaw, hManagementOracleRaw, hPerformanceOracleRaw,
+      hReentryManagementTracker, hReentryPerformanceTracker,
+      hReentryManagementRecipient, hReentryPerformanceRecipient,
+      hReentryTotal, hReentryUsers,
+      hValuationOracleRaw, hManagementOracleRaw, hPerformanceOracleRaw,
       hCallerRaw, hPositionsRaw, hManagementEnabledRaw, hPerformanceEnabledRaw,
       hManagementFitsRaw, hSafeManagementRecipientRaw, hSafeManagementTotalRaw,
       hSafePerformanceRecipientRaw, hSafePerformanceTotalRaw,
@@ -286,27 +390,21 @@ theorem settleDynamicFeesGivenPositionsValue_exact_accounting
       ContractState.readSlot, ContractState.readAddrSlot, ContractState.readMap,
       ContractState.writeSlot, ContractState.writeMap,
       HAdd.hAdd, Add.add, beq_iff_eq, decide_eq_true_eq]
-    constructor
-    · intro user
-      by_cases hPerformanceRecipient :
-          user = s.storageAddr FeeHandler.performanceFeeRecipient.slot
-      · simp [hPerformanceRecipient, hDifferentRecipientRawSymm]
-      · by_cases hManagementRecipient :
-            user = s.storageAddr FeeHandler.managementFeeRecipient.slot
-        · simp [hPerformanceRecipient, hManagementRecipient, hDifferentRecipientRaw]
-        · simp [hPerformanceRecipient, hManagementRecipient, hDifferentRecipientRaw]
-    · constructor
-      · intro storageSlot hStorageSlot
-        simp [hStorageSlot]
-      · intro mappingSlot user hMappingSlot
-        simp [hMappingSlot]
+    intro user
+    by_cases hPerformanceRecipient :
+        user = s.storageAddr FeeHandler.performanceFeeRecipient.slot
+    · simp [hPerformanceRecipient, hDifferentRecipientRawSymm]
+    · by_cases hManagementRecipient :
+          user = s.storageAddr FeeHandler.managementFeeRecipient.slot
+      · simp [hPerformanceRecipient, hManagementRecipient, hDifferentRecipientRaw]
+      · simp [hPerformanceRecipient, hManagementRecipient, hDifferentRecipientRaw]
 
 theorem management_only_exact_accounting
     (env : Verity.Env)
     (totalPositionsValue : Uint256)
     (shares : Address)
     (s : ContractState)
-    (hNoReentry : env.reenter = id)
+    (hReentry : DynamicFeeReentryStable env.reenter)
     (hValuationCall : valuationHandlerCallSucceeds env shares)
     (hCaller : s.sender = wordToAddress (valuationHandlerWord env shares))
     (hPositionsCoverPriorFees : totalFeesOwedOf s ≤ totalPositionsValue)
@@ -323,6 +421,9 @@ theorem management_only_exact_accounting
       FeeHandler.settleDynamicFeesGivenPositionsValue env totalPositionsValue shares s =
         ContractResult.success () s' ∧
       managementOnlyExactSettlement env s s' totalPositionsValue := by
+  obtain ⟨hReentryManagementTracker, hReentryPerformanceTracker,
+      hReentryManagementRecipient, hReentryPerformanceRecipient,
+      hReentryTotal, hReentryUsers⟩ := dynamicFeeReentryStable_raw hReentry
   have hSafeRecipient := safeAdd_some
     (feesOwedTo s (managementFeeRecipientOf s))
     (managementFeeAmount env s totalPositionsValue)
@@ -380,11 +481,14 @@ theorem management_only_exact_accounting
   simp [managementOnlyExactSettlement, feeHandlerStorageFrame,
     FeeHandler.settleDynamicFeesGivenPositionsValue,
     FeeHandler.__increaseValueOwed, FeeHandler.__updateValueOwed,
-    runExternalWordCall, externalCallSucceeded,
+    runStaticWordCall, runExternalWordCall, externalCallSucceeded,
     totalFeesOwedOf, feesOwedTo,
     managementFeeTrackerOf, performanceFeeTrackerOf, managementFeeRecipientOf,
     managementFeeBase, managementFeeAmount,
-    hNoReentry, hValuationOracle, hManagementOracle,
+    hReentryManagementTracker, hReentryPerformanceTracker,
+    hReentryManagementRecipient, hReentryPerformanceRecipient,
+    hReentryTotal, hReentryUsers,
+    hValuationOracle, hManagementOracle,
     hPositionsRaw, hManagementEnabledRaw, hPerformanceDisabledRaw, hCallerRaw,
     hSafeRecipientRaw, hSafeTotalRaw,
     getStorage, getStorageAddr, getMapping, setStorage, setMapping, msgSender,
@@ -398,18 +502,14 @@ theorem management_only_exact_accounting
     by_cases hRecipient : user = s.storageAddr FeeHandler.managementFeeRecipient.slot
     · simp [hRecipient]
     · simp [hRecipient]
-  · constructor
-    · intro storageSlot hStorageSlot
-      simp [hStorageSlot]
-    · intro mappingSlot user hMappingSlot
-      simp [hMappingSlot]
+  · simpa [performanceFeeRecipientOf] using hReentryPerformanceRecipient s
 
 theorem performance_only_exact_accounting
     (env : Verity.Env)
     (totalPositionsValue : Uint256)
     (shares : Address)
     (s : ContractState)
-    (hNoReentry : env.reenter = id)
+    (hReentry : DynamicFeeReentryStable env.reenter)
     (hValuationCall : valuationHandlerCallSucceeds env shares)
     (hCaller : s.sender = wordToAddress (valuationHandlerWord env shares))
     (hPositionsCoverPriorFees : totalFeesOwedOf s ≤ totalPositionsValue)
@@ -426,6 +526,9 @@ theorem performance_only_exact_accounting
       FeeHandler.settleDynamicFeesGivenPositionsValue env totalPositionsValue shares s =
         ContractResult.success () s' ∧
       performanceOnlyExactSettlement env s s' totalPositionsValue := by
+  obtain ⟨hReentryManagementTracker, hReentryPerformanceTracker,
+      hReentryManagementRecipient, hReentryPerformanceRecipient,
+      hReentryTotal, hReentryUsers⟩ := dynamicFeeReentryStable_raw hReentry
   have hSafeRecipient := safeAdd_some
     (feesOwedTo s (performanceFeeRecipientOf s))
     (performanceOnlyFeeAmount env s totalPositionsValue)
@@ -493,11 +596,14 @@ theorem performance_only_exact_accounting
     performanceOnlyCallSucceeds, performanceOnlyFeeBase, performanceOnlyFeeAmount,
     FeeHandler.settleDynamicFeesGivenPositionsValue,
     FeeHandler.__increaseValueOwed, FeeHandler.__updateValueOwed,
-    runExternalWordCall, externalCallSucceeded,
+    runStaticWordCall, runExternalWordCall, externalCallSucceeded,
     totalFeesOwedOf, feesOwedTo,
     managementFeeTrackerOf, performanceFeeTrackerOf, performanceFeeRecipientOf,
     managementFeeBase, sub,
-    hNoReentry, hValuationOracle, hPerformanceOracle,
+    hReentryManagementTracker, hReentryPerformanceTracker,
+    hReentryManagementRecipient, hReentryPerformanceRecipient,
+    hReentryTotal, hReentryUsers,
+    hValuationOracle, hPerformanceOracle,
     hPositionsRaw, hManagementDisabledRaw, hPerformanceEnabledRaw, hCallerRaw,
     hSubZero,
     hSafeRecipientRaw, hSafeTotalRaw,
@@ -512,11 +618,7 @@ theorem performance_only_exact_accounting
     by_cases hRecipient : user = s.storageAddr FeeHandler.performanceFeeRecipient.slot
     · simp [hRecipient]
     · simp [hRecipient]
-  · constructor
-    · intro storageSlot hStorageSlot
-      simp [hStorageSlot]
-    · intro mappingSlot user hMappingSlot
-      simp [hMappingSlot]
+  · simpa [managementFeeRecipientOf] using hReentryManagementRecipient s
 
 /-- With both dynamic trackers disabled, successful authorization leaves state unchanged. -/
 theorem both_trackers_disabled_noop
@@ -524,7 +626,6 @@ theorem both_trackers_disabled_noop
     (totalPositionsValue : Uint256)
     (shares : Address)
     (s : ContractState)
-    (hNoReentry : env.reenter = id)
     (hValuationCall : valuationHandlerCallSucceeds env shares)
     (hCaller : s.sender = wordToAddress (valuationHandlerWord env shares))
     (hPositionsCoverPriorFees : totalFeesOwedOf s ≤ totalPositionsValue)
@@ -552,8 +653,8 @@ theorem both_trackers_disabled_noop
         (externalCallReturndata env shares getValuationHandlerSelector []) := by
     simpa [valuationHandlerWord] using hCaller
   simp [FeeHandler.settleDynamicFeesGivenPositionsValue,
-    runExternalWordCall, externalCallSucceeded,
-    hNoReentry, hValuationOracle, hCallerRaw, hPositionsRaw,
+    runStaticWordCall, externalCallSucceeded,
+    hValuationOracle, hCallerRaw, hPositionsRaw,
     hManagementDisabledRaw, hPerformanceDisabledRaw,
     getStorage, getStorageAddr, msgSender,
     Verity.require, Verity.bind, Bind.bind,

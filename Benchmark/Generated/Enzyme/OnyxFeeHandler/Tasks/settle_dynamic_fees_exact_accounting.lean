@@ -15,7 +15,7 @@ theorem settleDynamicFeesGivenPositionsValue_exact_accounting
     (totalPositionsValue : Uint256)
     (shares : Address)
     (s : ContractState)
-    (hNoReentry : env.reenter = id)
+    (hReentry : DynamicFeeReentryStable env.reenter)
     (hValuationCall : valuationHandlerCallSucceeds env shares)
     (hCaller : s.sender = wordToAddress (valuationHandlerWord env shares))
     (hPositionsCoverPriorFees : totalFeesOwedOf s <= totalPositionsValue)

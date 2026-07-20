@@ -31,14 +31,24 @@ abstraction_notes: >
   Quantifies over Verity.Env oracle responses keyed by the dynamic target, exact
   selector, and exact management-then-performance calldata. Proves successful
   aggregate/per-recipient accounting for arbitrary tracker return words, including
-  the same-recipient alias case and a frame for modeled scalar, address, and mapping
-  storage projections; Verity knownAddresses bookkeeping is outside that frame.
+  the same-recipient alias case and a frame for the selected dynamic-fee
+  configuration projection.
   Pinned Verity supports ABI-faithful runtime-target static-word calls, but this
   protocol slice deliberately uses Env.callOracle to keep return outcomes arbitrary.
   A successful oracle branch supplies one full return word; short-return and ABI-decode
   failures are folded into the call-failure outcome.
-  Env.reenter is explicit and assumed to be identity; applying it to the valuation
-  view call is conservative relative to STATICCALL. External callee state is not executed.
+  The Shares valuation lookup is modeled as STATICCALL and does not apply reentry.
+  Tracker calls apply Env.reenter under a narrow rely condition preserving both
+  tracker addresses, both recipient addresses, total fees owed, and every per-user
+  owed balance; unrelated state may change. A conditional ReentrancySpec
+  schedule-closure lemma discharges the condition when Env.reenter is explicitly
+  equated to a registered schedule of projection-preserving transitions. The
+  source-complete cross-contract reachability proof is
+  out of scope because the pinned FeeHandler has no reentrancy guard and the slice
+  omits Shares role state plus six projection-mutating external entrypoints.
+  External callee state is not executed.
 unsupported_feature_codes:
   - stateful_external_callee_execution_omitted
+  - source_complete_reentry_registry_omitted
+  - cross_contract_reentry_reachability_omitted
   - event_emission_omitted

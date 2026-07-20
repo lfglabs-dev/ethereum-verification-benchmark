@@ -1678,7 +1678,7 @@
       ],
       "lean_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Compile",
       "failure_reason": null,
-      "notes": "Proves with no custom axioms and no sorry/admit that a successful settlement with both dynamic trackers enabled uses the configured targets and exact management-then-performance calldata, increases total fees owed by exactly both arbitrary returned amounts, credits the configured recipients, handles recipient aliasing, and frames the modeled scalar, address, and mapping storage projections. Verity knownAddresses bookkeeping is outside that frame. Separate theorems cover successful management-only, performance-only, and both-disabled branches plus transactional rollback for every modeled raw revert. Official onyx-sdk metadata independently identifies LIVE Ethereum v1 implementation addresses; it does not establish bytecode equivalence to the pinned protocol source commit.",
+      "notes": "Proves with no custom axioms and no sorry/admit that a successful settlement with both dynamic trackers enabled uses the configured targets and exact management-then-performance calldata, increases total fees owed by exactly both arbitrary returned amounts, credits the configured recipients, handles recipient aliasing, and frames the selected dynamic-fee configuration projection. The arbitrary reentry hook may mutate all other state. The pinned FeeHandler has no reentrancy guard, so the projection-stability condition is an explicit deployment/callee rely condition, not a proved runtime source property. Separate theorems cover successful management-only, performance-only, and both-disabled branches plus transactional rollback for every modeled raw revert. Official onyx-sdk metadata independently identifies LIVE Ethereum v1 implementation addresses; it does not establish bytecode equivalence to the pinned protocol source commit.",
       "buildable": true,
       "verity_commit": "49105e54ceff6d66921572cc85583538c2c8497d",
       "lean_toolchain": "leanprover/lean4:v4.24.0",
@@ -1692,11 +1692,16 @@
         "checked_uint256_arithmetic_preconditions",
         "abi_address_decode_overapproximation",
         "external_failure_rollback",
-        "storage_frame"
+        "static_valuation_handler_lookup",
+        "projection_stable_tracker_reentry",
+        "registered_reentry_schedule",
+        "selected_dynamic_fee_projection_frame"
       ],
-      "abstraction_notes": "Models the source function boundary, valuation-handler authorization, optional tracker branches, management-before-performance ordering, checked arithmetic, and aggregate plus per-recipient owed-value updates. Each external boundary queries the universally quantified Verity.Env call oracle with the separate dynamic target, exact ABI selector, and exact calldata words. A second oracle response controls success, and returndata remains arbitrary. Successful calls apply Env.reenter; accounting theorems assume that hook is the identity. Pinned Verity supports ABI-faithful runtime-target static-word calls; this case deliberately uses Env.callOracle because executable EDSL call semantics do not provide arbitrary parametric return outcomes for this theorem. Applying Env.reenter to the valuation-handler view call is conservative relative to Solidity STATICCALL. Valuation-handler returndata is projected to its low 160 address bits, so the model conservatively admits non-canonical words rejected by Solidity ABI decoding. A successful oracle branch supplies one full return word; returndata-length and ABI-decode failures are folded into the call-failure outcome. External callee formulas, callee state, and event logs are not executed. uint256 arithmetic, and theorem hypotheses cover every successful checked add. Event emission and unrelated configuration/claim functions are omitted.",
+      "abstraction_notes": "Models the source function boundary, valuation-handler authorization, optional tracker branches, management-before-performance ordering, checked arithmetic, and aggregate plus per-recipient owed-value updates. Each external boundary queries the universally quantified Verity.Env call oracle with the separate dynamic target, exact ABI selector, and exact calldata words. A second oracle response controls success, and returndata remains arbitrary. Successful tracker calls apply Env.reenter. Accounting theorems require that hook to preserve only the six observed dynamic-fee projections: both tracker addresses, both recipient addresses, aggregate fees owed, and every per-user owed balance. Unrelated state may change. A conditional Verity ReentrancySpec schedule-closure lemma discharges this condition when Env.reenter is explicitly equated to a registered schedule whose entrypoint transitions each satisfy that projection frame. Pinned Verity supports ABI-faithful runtime-target static-word calls; this case deliberately uses Env.callOracle because executable EDSL call semantics do not provide arbitrary parametric return outcomes for this theorem. The Shares valuation-handler view lookup is modeled as a static call and therefore cannot mutate FeeHandler state or invoke the reentry hook, matching Solidity STATICCALL. Valuation-handler returndata is projected to its low 160 address bits, so the model conservatively admits non-canonical words rejected by Solidity ABI decoding. A successful oracle branch supplies one full return word; returndata-length and ABI-decode failures are folded into the call-failure outcome. External callee formulas, callee state, and event logs are not executed. uint256 arithmetic, and theorem hypotheses cover every successful checked add. Event emission and unrelated configuration/claim functions are omitted.",
       "unsupported_feature_codes": [
         "stateful_external_callee_execution_omitted",
+        "source_complete_reentry_registry_omitted",
+        "cross_contract_reentry_reachability_omitted",
         "event_emission_omitted"
       ],
       "spec_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Specs",
@@ -3930,9 +3935,11 @@
         "Benchmark/Generated/Enzyme/OnyxFeeHandler/Tasks/settle_dynamic_fees_exact_accounting.lean"
       ],
       "abstraction_level": "protocol_slice",
-      "abstraction_notes": "Quantifies over Verity.Env oracle responses keyed by the dynamic target, exact selector, and exact management-then-performance calldata. Proves successful aggregate/per-recipient accounting for arbitrary tracker return words, including the same-recipient alias case and a frame for modeled scalar, address, and mapping storage projections; Verity knownAddresses bookkeeping is outside that frame. Pinned Verity supports ABI-faithful runtime-target static-word calls, but this protocol slice deliberately uses Env.callOracle to keep return outcomes arbitrary. A successful oracle branch supplies one full return word; short-return and ABI-decode failures are folded into the call-failure outcome. Env.reenter is explicit and assumed to be identity; applying it to the valuation view call is conservative relative to STATICCALL. External callee state is not executed.",
+      "abstraction_notes": "Quantifies over Verity.Env oracle responses keyed by the dynamic target, exact selector, and exact management-then-performance calldata. Proves successful aggregate/per-recipient accounting for arbitrary tracker return words, including the same-recipient alias case and a frame for the selected dynamic-fee configuration projection. Pinned Verity supports ABI-faithful runtime-target static-word calls, but this protocol slice deliberately uses Env.callOracle to keep return outcomes arbitrary. A successful oracle branch supplies one full return word; short-return and ABI-decode failures are folded into the call-failure outcome. The Shares valuation lookup is modeled as STATICCALL and does not apply reentry. Tracker calls apply Env.reenter under a narrow rely condition preserving both tracker addresses, both recipient addresses, total fees owed, and every per-user owed balance; unrelated state may change. A conditional ReentrancySpec schedule-closure lemma discharges the condition when Env.reenter is explicitly equated to a registered schedule of projection-preserving transitions. The source-complete cross-contract reachability proof is out of scope because the pinned FeeHandler has no reentrancy guard and the slice omits Shares role state plus six projection-mutating external entrypoints. External callee state is not executed.",
       "unsupported_feature_codes": [
         "stateful_external_callee_execution_omitted",
+        "source_complete_reentry_registry_omitted",
+        "cross_contract_reentry_reachability_omitted",
         "event_emission_omitted"
       ],
       "reference_solution_module": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs",
@@ -14384,5 +14391,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-19T18:03:22.427643+00:00"
+  "generated_at": "2026-07-20T10:25:56.941843+00:00"
 }
