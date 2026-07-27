@@ -5,7 +5,7 @@ import Mathlib.Data.Int.Basic
 
 Source-faithful arithmetic model of `RoycoAccountant._previewSyncTrancheAccounting`.
 
-Upstream: lfglabs-dev/royco-dawn
+Upstream: roycoprotocol/royco-dawn
 Commit:   5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2
 Files:    src/accountant/RoycoAccountant.sol
           src/libraries/Units.sol

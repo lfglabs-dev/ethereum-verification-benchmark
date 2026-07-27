@@ -278,7 +278,7 @@ This report is generated from the benchmark manifests.
 - Stage: `build_green`
 - Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
 - Lean target: `Benchmark.Cases.Royco.DawnValuationRecovery.Compile`
-- Source ref: `https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol`
+- Source ref: `https://github.com/roycoprotocol/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol`
 - Selected functions: `RoycoAccountant._previewSyncTrancheAccounting`, `RoycoAccountant._attributeDeltaToClaimOnRawNAV`, `UnitsMathLib.computeNAVDelta`, `UtilsLib.computeUtilization`
 - Upstream source artifact: `src/accountant/RoycoAccountant.sol`
 - Notes: The headline theorem is the exact ordered liability-recovery partition selected in Phase 1. Supporting tasks cover line-585 NAV conservation, attribution residual, loss booking, forced-perpetual JT-liability erasure, and the signed overflow boundary regression.

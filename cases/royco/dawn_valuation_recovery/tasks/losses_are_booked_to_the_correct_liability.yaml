@@ -5,7 +5,7 @@ case_id: royco/dawn_valuation_recovery
 split: active
 family_id: royco
 implementation_id: royco_dawn
-source_ref: https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol
+source_ref: https://github.com/roycoprotocol/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol
 task_interface_version: 2
 theorem_name: Benchmark.Cases.Royco.DawnValuationRecovery.losses_are_booked_to_the_correct_liability
 proof_family: functional_correctness

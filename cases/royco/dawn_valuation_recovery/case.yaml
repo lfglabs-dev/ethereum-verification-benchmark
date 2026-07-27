@@ -9,11 +9,11 @@ stage: build_green
 translation_status: translated
 spec_status: frozen
 proof_status: complete
-upstream_repo: https://github.com/lfglabs-dev/royco-dawn
+upstream_repo: https://github.com/roycoprotocol/royco-dawn
 upstream_commit: 5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2
 audit_target_commit: 5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2
 original_contract_path: src/accountant/RoycoAccountant.sol
-source_ref: https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol
+source_ref: https://github.com/roycoprotocol/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol
 lean_target: Benchmark.Cases.Royco.DawnValuationRecovery.Compile
 selected_functions:
   - RoycoAccountant._previewSyncTrancheAccounting
