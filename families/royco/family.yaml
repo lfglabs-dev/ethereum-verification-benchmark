@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: royco
+display_name: Royco Dawn
+split: active
+status: active
+description: Royco Dawn senior/junior tranche accounting verification cases.
+implementation_ids:
+  - royco_dawn
+case_ids:
+  - royco/dawn_valuation_recovery
+source_languages:
+  - solidity

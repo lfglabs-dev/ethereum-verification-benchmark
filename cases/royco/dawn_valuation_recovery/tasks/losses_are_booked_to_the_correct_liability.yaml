@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: losses_are_booked_to_the_correct_liability
+case_id: royco/dawn_valuation_recovery
+split: active
+family_id: royco
+implementation_id: royco_dawn
+source_ref: https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Royco.DawnValuationRecovery.losses_are_booked_to_the_correct_liability
+proof_family: functional_correctness
+property_class: ordered_loss_booking
+difficulty: hard
+category: temporal-accounting-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/royco/dawn_valuation_recovery/verity/Contract.lean
+  - Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean
+specification_files:
+  - cases/royco/dawn_valuation_recovery/verity/Specs.lean
+  - Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean
+editable_files:
+  - Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/LossesAreBookedToTheCorrectLiability.lean
+reference_solution_module: Benchmark.Cases.Royco.DawnValuationRecovery.Proofs
+reference_solution_declaration: Benchmark.Cases.Royco.DawnValuationRecovery.losses_are_booked_to_the_correct_liability
+abstraction_level: source_structured_arithmetic_slice
+abstraction_notes: >
+  Prove the exact JT-first and ST-second loss trace, including uncovered ST loss,
+  JT coverage consumption, and both impermanent-loss ledgers.
+unsupported_feature_codes:
+  - automatic_solidity_checked_arithmetic_obligations_missing_issue_1993
+  - first_class_narrow_integer_types_missing_issue_2086

@@ -1,0 +1,52 @@
+manifest_kind: case
+project: royco
+case_id: dawn_valuation_recovery
+schema_version: 1
+split: active
+family_id: royco
+implementation_id: royco_dawn
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/lfglabs-dev/royco-dawn
+upstream_commit: 5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2
+audit_target_commit: 5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2
+original_contract_path: src/accountant/RoycoAccountant.sol
+source_ref: https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol
+lean_target: Benchmark.Cases.Royco.DawnValuationRecovery.Compile
+selected_functions:
+  - RoycoAccountant._previewSyncTrancheAccounting
+  - RoycoAccountant._attributeDeltaToClaimOnRawNAV
+  - UnitsMathLib.computeNAVDelta
+  - UtilsLib.computeUtilization
+source_language: solidity
+verity_version: 49105e54ceff6d66921572cc85583538c2c8497d
+lean_toolchain: leanprover/lean4:v4.24.0
+abstraction_level: source_structured_arithmetic_slice
+abstraction_tags:
+  - signed-nav-delta
+  - claim-attribution
+  - first-loss-waterfall
+  - liability-recovery
+  - fixed-point-rounding
+  - market-state-transition
+abstraction_notes: >
+  Source-ordered model of the full view-function accounting transition. It
+  preserves independent raw NAV deltas, claim-on-raw-NAV attribution, JT then ST
+  loss/gain branches, ordered ST-IL and JT-coverage-IL recovery, yield splitting,
+  fee recomputation, utilization, fixed-term transitions, and explicit JT-IL
+  erasure. Supplying the external YDM preview output as an input and exposing
+  view storage as an immutable structure are deliberate boundaries for this
+  non-compiled arithmetic slice, not unsupported Verity features. Explicit
+  Nat/Int source-order success bounds are in Specs.lean.
+unsupported_feature_codes:
+  - automatic_solidity_checked_arithmetic_obligations_missing_issue_1993
+  - first_class_narrow_integer_types_missing_issue_2086
+spec_target: Benchmark.Cases.Royco.DawnValuationRecovery.Specs
+proof_target: Benchmark.Cases.Royco.DawnValuationRecovery.Proofs
+notes: >
+  The headline theorem is the exact ordered liability-recovery partition selected
+  in Phase 1. Supporting tasks cover line-585 NAV conservation, attribution
+  residual, loss booking, forced-perpetual JT-liability erasure, and the signed
+  overflow boundary regression.

@@ -23,7 +23,7 @@ RELEASE_METADATA = {
     "task_count": 240,
     "task_set_id": "sha256:ddfd5ad518a6cb840be16a04651f6d5db81690023dda9953250a70e6da8009fe",
     "harness_id": "sha256:244bbf5ca68050dd4a7e56bdb794a68bc01a74d169828039e0943e511f65f867",
-    "environment_id": "sha256:436d4bdd7a6f8d7d0acc059f68d85c71f89e406addb8617a68931f5cdc8dd24d",
+    "environment_id": "sha256:cbdcae0f1d76e764829af4f9a376e6bf0fff968f72afbf1e2f00c808419e7bfb",
     "mode": "fair",
     "budget": "normal",
 }

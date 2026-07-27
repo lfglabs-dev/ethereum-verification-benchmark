@@ -1,0 +1,17 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: royco
+implementation_id: royco_dawn
+display_name: Royco Dawn Accountant
+split: active
+status: translated
+upstream_repo: https://github.com/lfglabs-dev/royco-dawn
+upstream_commit: 5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2
+source_language: solidity
+source_artifact_path: families/royco/implementations/royco_dawn/source/RoycoAccountant.sol
+case_ids:
+  - royco/dawn_valuation_recovery
+notes: >
+  Pinned RoycoAccountant source for the Dawn valuation-recovery waterfall case.
+  Solidity is authoritative; repository Certora specifications are supporting
+  translation evidence.

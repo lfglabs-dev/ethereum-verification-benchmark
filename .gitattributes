@@ -1,0 +1,2 @@
+# Preserve the byte-identical pinned upstream source snapshot.
+families/royco/implementations/royco_dawn/source/RoycoAccountant.sol whitespace=-blank-at-eol,-blank-at-eof

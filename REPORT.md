@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 38
-- Implementations: 39
-- Active cases: 38
-- Buildable active cases: 38
-- Active tasks: 241
+- Families: 39
+- Implementations: 40
+- Active cases: 39
+- Buildable active cases: 39
+- Active tasks: 247
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -272,6 +272,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `depositPegOut`, `refundPegOut`, `refundUserPegOut`, `_increaseBalance`
 - Upstream source artifact: `src/PegOutContract.sol`
 - Notes: This case focuses on quote lifecycle conservation and single settlement for Rootstock Flyover / LBC peg-outs. The property proved here is not a Bitcoin proof verifier; it is the Rootstock-side accounting guarantee for the amount already registered by depositPegOut.
+
+### `royco/dawn_valuation_recovery`
+- Family / implementation: `royco` / `royco_dawn`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Royco.DawnValuationRecovery.Compile`
+- Source ref: `https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol`
+- Selected functions: `RoycoAccountant._previewSyncTrancheAccounting`, `RoycoAccountant._attributeDeltaToClaimOnRawNAV`, `UnitsMathLib.computeNAVDelta`, `UtilsLib.computeUtilization`
+- Upstream source artifact: `src/accountant/RoycoAccountant.sol`
+- Notes: The headline theorem is the exact ordered liability-recovery partition selected in Phase 1. Supporting tasks cover line-585 NAV conservation, attribution residual, loss booking, forced-perpetual JT-liability erasure, and the signed overflow boundary regression.
 
 ### `safe/owner_manager_reach`
 - Family / implementation: `safe` / `smart_account`
@@ -1898,6 +1908,66 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/rootstock/flyover_quote_lifecycle/verity/Specs.lean`, `Benchmark/Cases/Rootstock/FlyoverQuoteLifecycle/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Rootstock/FlyoverQuoteLifecycle/Tasks/RefundUserPegOutConservesQuoteAmount.lean`
 - Hidden reference solution: `Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs`
+
+### `royco/dawn_valuation_recovery/attribution_residual_absorbed_by_junior`
+- Track / property class / proof family: `proof-only` / `signed_rounding_residual_conservation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Royco.DawnValuationRecovery.attribution_residual_absorbed_by_junior`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco/dawn_valuation_recovery/verity/Contract.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean`
+- Specification files: `cases/royco/dawn_valuation_recovery/verity/Specs.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/AttributionResidualAbsorbedByJunior.lean`
+- Hidden reference solution: `Benchmark.Cases.Royco.DawnValuationRecovery.Proofs`
+
+### `royco/dawn_valuation_recovery/forced_perpetual_erasure_is_explicit`
+- Track / property class / proof family: `proof-only` / `explicit_liability_erasure_trace` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Royco.DawnValuationRecovery.forced_perpetual_erasure_is_explicit`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco/dawn_valuation_recovery/verity/Contract.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean`
+- Specification files: `cases/royco/dawn_valuation_recovery/verity/Specs.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/ForcedPerpetualErasureIsExplicit.lean`
+- Hidden reference solution: `Benchmark.Cases.Royco.DawnValuationRecovery.Proofs`
+
+### `royco/dawn_valuation_recovery/losses_are_booked_to_the_correct_liability`
+- Track / property class / proof family: `proof-only` / `ordered_loss_booking` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Royco.DawnValuationRecovery.losses_are_booked_to_the_correct_liability`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco/dawn_valuation_recovery/verity/Contract.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean`
+- Specification files: `cases/royco/dawn_valuation_recovery/verity/Specs.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/LossesAreBookedToTheCorrectLiability.lean`
+- Hidden reference solution: `Benchmark.Cases.Royco.DawnValuationRecovery.Proofs`
+
+### `royco/dawn_valuation_recovery/preview_sync_preserves_nav_conservation`
+- Track / property class / proof family: `proof-only` / `valuation_conservation` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Royco.DawnValuationRecovery.preview_sync_preserves_nav_conservation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco/dawn_valuation_recovery/verity/Contract.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean`
+- Specification files: `cases/royco/dawn_valuation_recovery/verity/Specs.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/PreviewSyncPreservesNavConservation.lean`
+- Hidden reference solution: `Benchmark.Cases.Royco.DawnValuationRecovery.Proofs`
+
+### `royco/dawn_valuation_recovery/recovery_waterfall_orders_liabilities`
+- Track / property class / proof family: `proof-only` / `ordered_liability_recovery` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Royco.DawnValuationRecovery.recovery_waterfall_orders_liabilities`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco/dawn_valuation_recovery/verity/Contract.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean`
+- Specification files: `cases/royco/dawn_valuation_recovery/verity/Specs.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/RecoveryWaterfallOrdersLiabilities.lean`
+- Hidden reference solution: `Benchmark.Cases.Royco.DawnValuationRecovery.Proofs`
+
+### `royco/dawn_valuation_recovery/signed_delta_overflow_boundary_rejected`
+- Track / property class / proof family: `proof-only` / `checked_arithmetic_boundary` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Royco.DawnValuationRecovery.signed_delta_overflow_boundary_rejected`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco/dawn_valuation_recovery/verity/Contract.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean`
+- Specification files: `cases/royco/dawn_valuation_recovery/verity/Specs.lean`, `Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/SignedDeltaOverflowBoundaryRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.Royco.DawnValuationRecovery.Proofs`
 
 ### `safe/owner_manager_reach/add_owner_acyclicity`
 - Track / property class / proof family: `proof-only` / `linked_list_acyclicity` / `state_preservation_local_effects`

@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 38,
-    "implementation_count": 39,
-    "active_case_count": 38,
+    "family_count": 39,
+    "implementation_count": 40,
+    "active_case_count": 39,
     "backlog_case_count": 1,
-    "active_task_count": 241,
+    "active_task_count": 247,
     "backlog_task_count": 0,
-    "buildable_case_count": 38,
-    "runnable_task_count": 241,
+    "buildable_case_count": 39,
+    "runnable_task_count": 247,
     "case_stage_counts": {
-      "build_green": 31,
+      "build_green": 32,
       "candidate": 1,
       "proof_complete": 7
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 38
+      "translated": 39
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 31,
+      "complete": 32,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 241
+      "proof-only": 247
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -61,6 +61,7 @@
       "calldata_decoder_bounds": 1,
       "calldata_decoder_faithfulness": 1,
       "calldata_decoder_metadata": 1,
+      "checked_arithmetic_boundary": 1,
       "compliance_boundary": 3,
       "composition_invariant": 3,
       "configuration_safety": 2,
@@ -69,6 +70,7 @@
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
       "escrow_lower_bound": 3,
+      "explicit_liability_erasure_trace": 1,
       "exploit_trace": 1,
       "failure_propagation": 3,
       "fee_accounting_bounds": 2,
@@ -95,6 +97,8 @@
       "non_leakage": 1,
       "nonce_monotonicity": 1,
       "noninterference": 1,
+      "ordered_liability_recovery": 1,
+      "ordered_loss_booking": 1,
       "output_range": 2,
       "overflow_safety": 1,
       "owner_fallback_and_authority_order": 1,
@@ -112,6 +116,7 @@
       "revert_safety": 2,
       "safety_invariant": 2,
       "scope_invariant": 1,
+      "signed_rounding_residual_conservation": 1,
       "silent_failure": 2,
       "source_permitted_noop": 1,
       "source_reachable_counterexample_coverage": 1,
@@ -124,18 +129,19 @@
       "threshold_partition": 1,
       "total_conservation": 1,
       "tree_conservation": 1,
+      "valuation_conservation": 1,
       "weighted_selection": 1,
       "wrapper_delegation_and_pause": 1
     },
     "task_proof_family_counts": {
       "authorization_enablement": 26,
-      "functional_correctness": 57,
-      "protocol_transition_correctness": 39,
+      "functional_correctness": 61,
+      "protocol_transition_correctness": 41,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 77
     },
     "family_split_counts": {
-      "active": 37,
+      "active": 38,
       "mixed": 1
     }
   },
@@ -581,6 +587,23 @@
         "solidity"
       ],
       "manifest_path": "families/rootstock/family.yaml"
+    },
+    {
+      "family_id": "royco",
+      "display_name": "Royco Dawn",
+      "split": "active",
+      "status": "active",
+      "description": "Royco Dawn senior/junior tranche accounting verification cases.",
+      "implementation_ids": [
+        "royco_dawn"
+      ],
+      "case_ids": [
+        "royco/dawn_valuation_recovery"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/royco/family.yaml"
     },
     {
       "family_id": "safe",
@@ -1205,6 +1228,22 @@
       ],
       "notes": "Flyover's Liquidity Bridge Contract accelerates Rootstock peg-ins and peg-outs through liquidity providers. This implementation entry covers the peg-out quote lifecycle in PegOutContract.",
       "manifest_path": "families/rootstock/implementations/flyover-lbc/implementation.yaml"
+    },
+    {
+      "family_id": "royco",
+      "implementation_id": "royco_dawn",
+      "display_name": "Royco Dawn Accountant",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/lfglabs-dev/royco-dawn",
+      "upstream_commit": "5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2",
+      "source_language": "solidity",
+      "source_artifact_path": "families/royco/implementations/royco_dawn/source/RoycoAccountant.sol",
+      "case_ids": [
+        "royco/dawn_valuation_recovery"
+      ],
+      "notes": "Pinned RoycoAccountant source for the Dawn valuation-recovery waterfall case. Solidity is authoritative; repository Certora specifications are supporting translation evidence.",
+      "manifest_path": "families/royco/implementations/royco_dawn/implementation.yaml"
     },
     {
       "family_id": "safe",
@@ -2644,6 +2683,55 @@
       ],
       "spec_target": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Specs",
       "proof_target": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs"
+    },
+    {
+      "case_id": "royco/dawn_valuation_recovery",
+      "project": "royco",
+      "case_name": "dawn_valuation_recovery",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco/dawn_valuation_recovery/case.yaml",
+      "split": "active",
+      "family_id": "royco",
+      "implementation_id": "royco_dawn",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/lfglabs-dev/royco-dawn",
+      "upstream_commit": "5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2",
+      "original_contract_path": "src/accountant/RoycoAccountant.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol",
+      "selected_functions": [
+        "RoycoAccountant._previewSyncTrancheAccounting",
+        "RoycoAccountant._attributeDeltaToClaimOnRawNAV",
+        "UnitsMathLib.computeNAVDelta",
+        "UtilsLib.computeUtilization"
+      ],
+      "lean_target": "Benchmark.Cases.Royco.DawnValuationRecovery.Compile",
+      "failure_reason": null,
+      "notes": "The headline theorem is the exact ordered liability-recovery partition selected in Phase 1. Supporting tasks cover line-585 NAV conservation, attribution residual, loss booking, forced-perpetual JT-liability erasure, and the signed overflow boundary regression.",
+      "buildable": true,
+      "verity_commit": "49105e54ceff6d66921572cc85583538c2c8497d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "source_structured_arithmetic_slice",
+      "abstraction_tags": [
+        "signed-nav-delta",
+        "claim-attribution",
+        "first-loss-waterfall",
+        "liability-recovery",
+        "fixed-point-rounding",
+        "market-state-transition"
+      ],
+      "abstraction_notes": "Source-ordered model of the full view-function accounting transition. It preserves independent raw NAV deltas, claim-on-raw-NAV attribution, JT then ST loss/gain branches, ordered ST-IL and JT-coverage-IL recovery, yield splitting, fee recomputation, utilization, fixed-term transitions, and explicit JT-IL erasure. Supplying the external YDM preview output as an input and exposing view storage as an immutable structure are deliberate boundaries for this non-compiled arithmetic slice, not unsupported Verity features. Explicit Nat/Int source-order success bounds are in Specs.lean.",
+      "unsupported_feature_codes": [
+        "automatic_solidity_checked_arithmetic_obligations_missing_issue_1993",
+        "first_class_narrow_integer_types_missing_issue_2086"
+      ],
+      "spec_target": "Benchmark.Cases.Royco.DawnValuationRecovery.Specs",
+      "proof_target": "Benchmark.Cases.Royco.DawnValuationRecovery.Proofs"
     },
     {
       "case_id": "safe/owner_manager_reach",
@@ -10153,6 +10241,294 @@
       }
     },
     {
+      "task_ref": "royco/dawn_valuation_recovery/attribution_residual_absorbed_by_junior",
+      "task_id": "attribution_residual_absorbed_by_junior",
+      "case_id": "royco/dawn_valuation_recovery",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco/dawn_valuation_recovery/tasks/attribution_residual_absorbed_by_junior.yaml",
+      "split": "active",
+      "family_id": "royco",
+      "implementation_id": "royco_dawn",
+      "source_ref": "https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "signed_rounding_residual_conservation",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Royco.DawnValuationRecovery.attribution_residual_absorbed_by_junior",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Contract.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Specs.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/AttributionResidualAbsorbedByJunior.lean"
+      ],
+      "abstraction_level": "source_structured_arithmetic_slice",
+      "abstraction_notes": "Supporting algebraic lemma: the JT effective delta receives every signed residual after the floor-rounded ST claim attribution.",
+      "unsupported_feature_codes": [
+        "automatic_solidity_checked_arithmetic_obligations_missing_issue_1993",
+        "first_class_narrow_integer_types_missing_issue_2086"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Royco.DawnValuationRecovery.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco/dawn_valuation_recovery/forced_perpetual_erasure_is_explicit",
+      "task_id": "forced_perpetual_erasure_is_explicit",
+      "case_id": "royco/dawn_valuation_recovery",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco/dawn_valuation_recovery/tasks/forced_perpetual_erasure_is_explicit.yaml",
+      "split": "active",
+      "family_id": "royco",
+      "implementation_id": "royco_dawn",
+      "source_ref": "https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "explicit_liability_erasure_trace",
+      "category": "state-transition-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Royco.DawnValuationRecovery.forced_perpetual_erasure_is_explicit",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Contract.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Specs.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/ForcedPerpetualErasureIsExplicit.lean"
+      ],
+      "abstraction_level": "source_structured_arithmetic_slice",
+      "abstraction_notes": "Prove that every forced-perpetual path returns zero JT coverage liability, records the exact erased pre-resolution amount, and leaves effective NAV unchanged.",
+      "unsupported_feature_codes": [
+        "automatic_solidity_checked_arithmetic_obligations_missing_issue_1993",
+        "first_class_narrow_integer_types_missing_issue_2086"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Royco.DawnValuationRecovery.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco/dawn_valuation_recovery/losses_are_booked_to_the_correct_liability",
+      "task_id": "losses_are_booked_to_the_correct_liability",
+      "case_id": "royco/dawn_valuation_recovery",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco/dawn_valuation_recovery/tasks/losses_are_booked_to_the_correct_liability.yaml",
+      "split": "active",
+      "family_id": "royco",
+      "implementation_id": "royco_dawn",
+      "source_ref": "https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "ordered_loss_booking",
+      "category": "temporal-accounting-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Royco.DawnValuationRecovery.losses_are_booked_to_the_correct_liability",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Contract.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Specs.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/LossesAreBookedToTheCorrectLiability.lean"
+      ],
+      "abstraction_level": "source_structured_arithmetic_slice",
+      "abstraction_notes": "Prove the exact JT-first and ST-second loss trace, including uncovered ST loss, JT coverage consumption, and both impermanent-loss ledgers.",
+      "unsupported_feature_codes": [
+        "automatic_solidity_checked_arithmetic_obligations_missing_issue_1993",
+        "first_class_narrow_integer_types_missing_issue_2086"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Royco.DawnValuationRecovery.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco/dawn_valuation_recovery/preview_sync_preserves_nav_conservation",
+      "task_id": "preview_sync_preserves_nav_conservation",
+      "case_id": "royco/dawn_valuation_recovery",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco/dawn_valuation_recovery/tasks/preview_sync_preserves_nav_conservation.yaml",
+      "split": "active",
+      "family_id": "royco",
+      "implementation_id": "royco_dawn",
+      "source_ref": "https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "valuation_conservation",
+      "category": "temporal-accounting-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Royco.DawnValuationRecovery.preview_sync_preserves_nav_conservation",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Contract.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Specs.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/PreviewSyncPreservesNavConservation.lean"
+      ],
+      "abstraction_level": "source_structured_arithmetic_slice",
+      "abstraction_notes": "Prove that a source-safe synchronization preserves aggregate effective NAV equal to aggregate raw NAV at the Solidity checkpoint and final return.",
+      "unsupported_feature_codes": [
+        "automatic_solidity_checked_arithmetic_obligations_missing_issue_1993",
+        "first_class_narrow_integer_types_missing_issue_2086"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Royco.DawnValuationRecovery.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco/dawn_valuation_recovery/recovery_waterfall_orders_liabilities",
+      "task_id": "recovery_waterfall_orders_liabilities",
+      "case_id": "royco/dawn_valuation_recovery",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco/dawn_valuation_recovery/tasks/recovery_waterfall_orders_liabilities.yaml",
+      "split": "active",
+      "family_id": "royco",
+      "implementation_id": "royco_dawn",
+      "source_ref": "https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "ordered_liability_recovery",
+      "category": "temporal-accounting-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Royco.DawnValuationRecovery.recovery_waterfall_orders_liabilities",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Contract.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Specs.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/RecoveryWaterfallOrdersLiabilities.lean"
+      ],
+      "abstraction_level": "source_structured_arithmetic_slice",
+      "abstraction_notes": "Prove both exact recovery partitions and the priority implications: JT gain is ST-IL recovery plus residual JT gain; ST gain is ST-IL recovery plus JT-IL recovery plus residual fresh yield.",
+      "unsupported_feature_codes": [
+        "automatic_solidity_checked_arithmetic_obligations_missing_issue_1993",
+        "first_class_narrow_integer_types_missing_issue_2086"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Royco.DawnValuationRecovery.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco/dawn_valuation_recovery/signed_delta_overflow_boundary_rejected",
+      "task_id": "signed_delta_overflow_boundary_rejected",
+      "case_id": "royco/dawn_valuation_recovery",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco/dawn_valuation_recovery/tasks/signed_delta_overflow_boundary_rejected.yaml",
+      "split": "active",
+      "family_id": "royco",
+      "implementation_id": "royco_dawn",
+      "source_ref": "https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "checked_arithmetic_boundary",
+      "category": "arithmetic-safety",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Royco.DawnValuationRecovery.signed_delta_overflow_boundary_rejected",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Contract.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco/dawn_valuation_recovery/verity/Specs.lean",
+        "Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/SignedDeltaOverflowBoundaryRejected.lean"
+      ],
+      "abstraction_level": "source_structured_arithmetic_slice",
+      "abstraction_notes": "Prove that two INT256_MAX raw gains are rejected by the explicit source-order int256 sum bound, matching the Solidity 0.8 panic boundary.",
+      "unsupported_feature_codes": [
+        "automatic_solidity_checked_arithmetic_obligations_missing_issue_1993",
+        "first_class_narrow_integer_types_missing_issue_2086"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Royco.DawnValuationRecovery.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "safe/owner_manager_reach/add_owner_acyclicity",
       "task_id": "add_owner_acyclicity",
       "case_id": "safe/owner_manager_reach",
@@ -14391,5 +14767,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-20T10:25:56.941843+00:00"
+  "generated_at": "2026-07-27T18:33:05.946995+00:00"
 }

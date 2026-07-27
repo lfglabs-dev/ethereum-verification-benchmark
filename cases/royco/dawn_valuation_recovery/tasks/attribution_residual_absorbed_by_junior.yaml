@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: attribution_residual_absorbed_by_junior
+case_id: royco/dawn_valuation_recovery
+split: active
+family_id: royco
+implementation_id: royco_dawn
+source_ref: https://github.com/lfglabs-dev/royco-dawn@5fd7c9922b7bd1d9c860ce4ce39c339d28798cb2:src/accountant/RoycoAccountant.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Royco.DawnValuationRecovery.attribution_residual_absorbed_by_junior
+proof_family: functional_correctness
+property_class: signed_rounding_residual_conservation
+difficulty: medium
+category: arithmetic-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/royco/dawn_valuation_recovery/verity/Contract.lean
+  - Benchmark/Cases/Royco/DawnValuationRecovery/Contract.lean
+specification_files:
+  - cases/royco/dawn_valuation_recovery/verity/Specs.lean
+  - Benchmark/Cases/Royco/DawnValuationRecovery/Specs.lean
+editable_files:
+  - Benchmark/Generated/Royco/DawnValuationRecovery/Tasks/AttributionResidualAbsorbedByJunior.lean
+reference_solution_module: Benchmark.Cases.Royco.DawnValuationRecovery.Proofs
+reference_solution_declaration: Benchmark.Cases.Royco.DawnValuationRecovery.attribution_residual_absorbed_by_junior
+abstraction_level: source_structured_arithmetic_slice
+abstraction_notes: >
+  Supporting algebraic lemma: the JT effective delta receives every signed
+  residual after the floor-rounded ST claim attribution.
+unsupported_feature_codes:
+  - automatic_solidity_checked_arithmetic_obligations_missing_issue_1993
+  - first_class_narrow_integer_types_missing_issue_2086
