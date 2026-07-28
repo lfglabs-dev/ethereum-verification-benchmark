@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 39
-- Implementations: 40
-- Active cases: 39
-- Buildable active cases: 39
-- Active tasks: 245
+- Families: 40
+- Implementations: 41
+- Active cases: 40
+- Buildable active cases: 40
+- Active tasks: 247
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -102,6 +102,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `deposit`, `requestRedeem`, `claimRedeem`, `redeemTokenGatewayDepreciated`, `transferRemote`, `handle`, `report`
 - Upstream source artifact: `TokenGateway.sol`
 - Notes: Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.
+
+### `hypernova/settled_payout_safety`
+- Family / implementation: `hypernova` / `arbitrum-deployment`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Compile`
+- Source ref: `https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract`
+- Selected functions: `requestPayout`, `_executePayout`, `processPayout`
+- Upstream source artifact: `TradingAccounts.sol + Vault.sol`
+- Notes: The theorem proves on-chain accounting after canWithdraw is already true. It does not independently model getMaxWithdrawable or updateEquityAndSettle, nor prove off-chain P&L, flat-position detection, daily caps, owner honesty, proxy immutability, or reserve sufficiency beyond the actual trader transfer. Verified source SHA-256 values are recorded in the accompanying case-study research artifacts.
 
 ### `ipor/plasma_vault_redeem_split`
 - Family / implementation: `ipor` / `ipor_fusion`
@@ -998,6 +1008,26 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
 - Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean`
 - Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `hypernova/settled_payout_safety/successful_payout_never_overpays`
+- Track / property class / proof family: `proof-only` / `payout_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.successfulPayout_never_overpays`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/hypernova/settled_payout_safety/verity/Contract.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean`
+- Specification files: `cases/hypernova/settled_payout_safety/verity/Specs.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/SuccessfulPayoutNeverOverpays.lean`
+- Hidden reference solution: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs`
+
+### `hypernova/settled_payout_safety/valid_settled_payout_is_safe`
+- Track / property class / proof family: `proof-only` / `payout_safety` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.validSettledPayout_is_safe`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/hypernova/settled_payout_safety/verity/Contract.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean`
+- Specification files: `cases/hypernova/settled_payout_safety/verity/Specs.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/ValidSettledPayoutIsSafe.lean`
+- Hidden reference solution: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs`
 
 ### `ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free`
 - Track / property class / proof family: `proof-only` / `fee_payout_bound` / `functional_correctness`
