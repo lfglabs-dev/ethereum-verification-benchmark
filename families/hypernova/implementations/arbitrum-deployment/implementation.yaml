@@ -1,0 +1,20 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: hypernova
+implementation_id: arbitrum-deployment
+display_name: Hypernova Arbitrum Payout Deployment
+split: active
+status: translated
+upstream_repo: null
+upstream_commit: null
+source_language: solidity
+source_artifact_path: >
+  TradingAccounts.sol and Vault.sol, verified on Arbitrum Blockscout
+case_ids:
+  - hypernova/settled_payout_safety
+notes: >
+  This implementation pins TradingAccounts proxy
+  0x429d8f223acb622e5e748f6a7bdf1235b2334fcb, verified implementation
+  0x8Ed9f54425c53ABE68AfE3fBD936e703C8775a5B, and Vault
+  0x920973eebffd3bf7da14dd9fb52bd3bea1664c67 on Arbitrum One. The
+  selected path is requestPayout through _executePayout and processPayout.
