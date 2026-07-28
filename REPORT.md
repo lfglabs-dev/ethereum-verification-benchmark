@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 38
-- Implementations: 39
-- Active cases: 38
-- Buildable active cases: 38
-- Active tasks: 241
+- Families: 40
+- Implementations: 41
+- Active cases: 40
+- Buildable active cases: 40
+- Active tasks: 247
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -102,6 +102,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `deposit`, `requestRedeem`, `claimRedeem`, `redeemTokenGatewayDepreciated`, `transferRemote`, `handle`, `report`
 - Upstream source artifact: `TokenGateway.sol`
 - Notes: Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.
+
+### `hypernova/settled_payout_safety`
+- Family / implementation: `hypernova` / `arbitrum-deployment`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Compile`
+- Source ref: `https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract`
+- Selected functions: `requestPayout`, `_executePayout`, `processPayout`
+- Upstream source artifact: `TradingAccounts.sol + Vault.sol`
+- Notes: The theorem proves on-chain accounting after canWithdraw is already true. It does not independently model getMaxWithdrawable or updateEquityAndSettle, nor prove off-chain P&L, flat-position detection, daily caps, owner honesty, proxy immutability, or reserve sufficiency beyond the actual trader transfer. Verified source SHA-256 values are recorded in the accompanying case-study research artifacts.
 
 ### `ipor/plasma_vault_redeem_split`
 - Family / implementation: `ipor` / `ipor_fusion`
@@ -382,6 +392,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_update`, `_transfer`, `_mint`, `_burn`, `confidentialTransferFrom`, `setOperator`
 - Upstream source artifact: `contracts/token/ERC7984/ERC7984.sol`
 - Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source`
+- Family / implementation: `zama_protocol_apps` / `protocol_apps_confidential_wrapper`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile`
+- Source ref: `https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol`
+- Selected functions: `_update`, `_transfer`, `confidentialTransfer`
+- Upstream source artifact: `contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol`
+- Notes: Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish, under explicit euint64-domain hypotheses: uninitialized senders return the modeled ERC7984ZeroBalance error class with unchanged modeled accounting state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. The revert proof does not model custom-error payload/returndata or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.
 
 ### `zodiac/roles_decoder_faithfulness`
 - Family / implementation: `zodiac` / `roles-v3`
@@ -988,6 +1008,26 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
 - Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean`
 - Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `hypernova/settled_payout_safety/successful_payout_never_overpays`
+- Track / property class / proof family: `proof-only` / `payout_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.successfulPayout_never_overpays`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/hypernova/settled_payout_safety/verity/Contract.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean`
+- Specification files: `cases/hypernova/settled_payout_safety/verity/Specs.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/SuccessfulPayoutNeverOverpays.lean`
+- Hidden reference solution: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs`
+
+### `hypernova/settled_payout_safety/valid_settled_payout_is_safe`
+- Track / property class / proof family: `proof-only` / `payout_safety` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.validSettledPayout_is_safe`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/hypernova/settled_payout_safety/verity/Contract.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean`
+- Specification files: `cases/hypernova/settled_payout_safety/verity/Specs.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/ValidSettledPayoutIsSafe.lean`
+- Hidden reference solution: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs`
 
 ### `ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free`
 - Track / property class / proof family: `proof-only` / `fee_payout_bound` / `functional_correctness`
@@ -2778,6 +2818,46 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/zama/erc7984_confidential_token/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984ConfidentialToken/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferSufficient.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero`
+- Track / property class / proof family: `proof-only` / `insufficient_balance_zero_transfer` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_insufficient_transfer_zero`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert`
+- Track / property class / proof family: `proof-only` / `non_reversion` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_no_balance_revert`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferNoBalanceRevert.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation`
+- Track / property class / proof family: `proof-only` / `balance_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_pair_conservation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferPairConservation.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes`
+- Track / property class / proof family: `proof-only` / `revert_rollback` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.uninitialized_sender_reverts_without_writes`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
 
 ### `zodiac/roles_decoder_faithfulness/metadata_bridge`
 - Track / property class / proof family: `proof-only` / `calldata_decoder_metadata` / `refinement_equivalence`

@@ -38,9 +38,11 @@ commit, so squash merges and shallow clones remain reproducible.
 v0.2 has one intentional final pre-results environment migration: its frozen
 task/reference source remains rooted at its release source commit, while its
 declared execution environment is Lean 4.24.0 with Verity
-`49105e54ceff6d66921572cc85583538c2c8497d`. The preflight hashes the live
-Lake files and rejects a run when they differ from the declared environment;
-no v0.2 results exist, so this is the last permitted environment revision
+`49105e54ceff6d66921572cc85583538c2c8497d`. The preflight compares the live
+`lean-toolchain` text and the `verity` package's `rev` and `inputRev` in
+`lake-manifest.json` with that declaration. It does not derive v0.2's
+historical `environment_id` from the mutable `benchmark.toml` suite selector.
+No v0.2 results exist, so this is the last permitted environment revision
 before canaries.
 
 ## Harness Runs
@@ -131,7 +133,8 @@ Benchmark versions live in `benchmark-versions/`. A version manifest records:
 - `task_fingerprint`: execution-relevant task files and manifest fields.
 - `task_interface_id`: public/editable files and fields visible to models.
 - `harness_id`: harness code, policies, prompts, runner scripts, and agent configs.
-- `environment_id`: Lean/Lake toolchain and runtime dependency pins.
+- `environment_id`: Lean/Lake toolchain and runtime dependency pins, excluding
+  mutable suite selectors such as `benchmark.toml`.
 
 Create or refresh a version manifest:
 
