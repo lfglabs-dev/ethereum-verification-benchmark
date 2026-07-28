@@ -11,29 +11,29 @@
   },
   "summary": {
     "family_count": 33,
-    "implementation_count": 34,
-    "active_case_count": 33,
+    "implementation_count": 35,
+    "active_case_count": 34,
     "backlog_case_count": 1,
-    "active_task_count": 200,
+    "active_task_count": 204,
     "backlog_task_count": 0,
-    "buildable_case_count": 33,
-    "runnable_task_count": 200,
+    "buildable_case_count": 34,
+    "runnable_task_count": 204,
     "case_stage_counts": {
       "build_green": 28,
       "candidate": 1,
-      "proof_complete": 5
+      "proof_complete": 6
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 33
+      "translated": 34
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 26,
+      "complete": 27,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 200
+      "proof-only": 204
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -50,7 +50,7 @@
       "atomic_finalization": 2,
       "authority_required": 2,
       "authorization_state": 9,
-      "balance_conservation": 2,
+      "balance_conservation": 3,
       "balance_credit_update": 2,
       "balance_update": 1,
       "base_case_invariant": 1,
@@ -77,6 +77,7 @@
       "functional_property": 1,
       "guarded_solvency": 7,
       "independence_invariant": 1,
+      "insufficient_balance_zero_transfer": 1,
       "isOwner_effect": 3,
       "length_invariant": 1,
       "lifecycle_accounting": 3,
@@ -88,6 +89,7 @@
       "monotonic_counter": 2,
       "no_partial_success": 1,
       "non_leakage": 1,
+      "non_reversion": 1,
       "nonce_monotonicity": 1,
       "noninterference": 1,
       "output_range": 2,
@@ -99,6 +101,7 @@
       "redemption_reserve_guard": 1,
       "replay_protection": 2,
       "reserve_state_transition": 5,
+      "revert_rollback": 1,
       "revert_safety": 1,
       "safety_invariant": 2,
       "scope_invariant": 1,
@@ -116,10 +119,10 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 25,
-      "functional_correctness": 56,
+      "functional_correctness": 58,
       "protocol_transition_correctness": 23,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 54
+      "state_preservation_local_effects": 56
     },
     "family_split_counts": {
       "active": 32,
@@ -661,12 +664,14 @@
       "display_name": "Zama",
       "split": "active",
       "status": "active",
-      "description": "Benchmark family for Zama fhEVM confidential contract logic, starting with the ERC-7984 confidential token standard (co-developed with OpenZeppelin). Focuses on verifying the accounting correctness of FHE-based token operations where balances and transfer amounts are encrypted.",
+      "description": "Benchmark family for Zama fhEVM confidential contract logic and the ERC-7984 confidential token standard. It keeps the OpenZeppelin reference model and a distinct exact-source Zama protocol-apps transfer case so provenance and proof scope remain explicit.",
       "implementation_ids": [
-        "confidential_contracts"
+        "confidential_contracts",
+        "protocol_apps_confidential_wrapper"
       ],
       "case_ids": [
-        "zama/erc7984_confidential_token"
+        "zama/erc7984_confidential_token",
+        "zama/erc7984_upgradeable_exact_source"
       ],
       "source_languages": [
         "solidity"
@@ -1219,6 +1224,22 @@
       ],
       "notes": "OpenZeppelin's reference implementation of ERC-7984, the confidential fungible token standard for Zama's fhEVM. Uses FHESafeMath for overflow-safe encrypted arithmetic and the FHE.select pattern for branchless conditional transfers.",
       "manifest_path": "families/zama/implementations/confidential_contracts/implementation.yaml"
+    },
+    {
+      "family_id": "zama",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "display_name": "Zama Protocol Apps Confidential Wrapper",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/zama-ai/protocol-apps",
+      "upstream_commit": "2f88eef1d0b545438b1f74e21cdff7ea771805da",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "case_ids": [
+        "zama/erc7984_upgradeable_exact_source"
+      ],
+      "notes": "Exact-source implementation entry for the upgradeable ERC-7984 base used by Zama protocol-apps ConfidentialWrapper. The retained source and transfer proofs are scoped separately from the existing OpenZeppelin reference case.",
+      "manifest_path": "families/zama/implementations/protocol_apps_confidential_wrapper/implementation.yaml"
     },
     {
       "family_id": "zodiac",
@@ -2752,6 +2773,56 @@
       ],
       "spec_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs",
       "proof_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs"
+    },
+    {
+      "case_id": "zama/erc7984_upgradeable_exact_source",
+      "project": "zama",
+      "case_name": "erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/case.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/zama-ai/protocol-apps",
+      "upstream_commit": "2f88eef1d0b545438b1f74e21cdff7ea771805da",
+      "original_contract_path": "contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "selected_functions": [
+        "_update",
+        "_transfer",
+        "confidentialTransfer"
+      ],
+      "lean_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile",
+      "failure_reason": null,
+      "notes": "Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish: uninitialized senders revert with the exact original state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "exact_source_retained",
+        "fhe_homomorphic_plaintext_equivalence",
+        "initialization_state_explicit",
+        "wrapper_preconditions_assumed",
+        "acl_elided",
+        "callbacks_elided",
+        "erc7201_slot_derivation_elided"
+      ],
+      "abstraction_notes": "The exact selected Solidity file is retained byte-for-byte under upstream/ with commit, blob, and SHA-256 provenance. The Lean model preserves the transfer-relevant control flow of `_update`, including the pre-write FHE.isInitialized(fromBalance) guard, tryDecrease selection, source and destination balance writes, and zero-address checks. Encrypted euint64 values use plaintext-equivalent Uint256 values with explicit modulo-2^64 destination arithmetic. A trusted Boolean represents successful public input-proof or ACL wrapper validation. FHE cryptography and permissions, ERC-7201 physical slot derivation, events, transfer callbacks/refunds, ConfidentialWrapper denylist/staticcall gates, wrap/unwrap conversion and underlying ERC-20 settlement, gateway/signature behavior, and other public functions are outside the model.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "spec_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Specs",
+      "proof_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs"
     },
     {
       "case_id": "zodiac/roles_decoder_faithfulness",
@@ -11866,6 +11937,202 @@
       }
     },
     {
+      "task_ref": "zama/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero",
+      "task_id": "initialized_insufficient_transfer_zero",
+      "case_id": "zama/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/tasks/initialized_insufficient_transfer_zero.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "insufficient_balance_zero_transfer",
+      "category": "arithmetic",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_insufficient_transfer_zero",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses the retained Zama source as provenance and the transfer-focused Lean semantic model. Encrypted euint64 operations are plaintext-equivalent modulo 2^64; FHE ACL/cryptography, callbacks, wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert",
+      "task_id": "initialized_transfer_no_balance_revert",
+      "case_id": "zama/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/tasks/initialized_transfer_no_balance_revert.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "non_reversion",
+      "category": "control_flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_no_balance_revert",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferNoBalanceRevert.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses the retained Zama source as provenance and the transfer-focused Lean semantic model. Encrypted euint64 operations are plaintext-equivalent modulo 2^64; FHE ACL/cryptography, callbacks, wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation",
+      "task_id": "initialized_transfer_pair_conservation",
+      "case_id": "zama/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/tasks/initialized_transfer_pair_conservation.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "balance_conservation",
+      "category": "accounting",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_pair_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferPairConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses the retained Zama source as provenance and the transfer-focused Lean semantic model. Encrypted euint64 operations are plaintext-equivalent modulo 2^64; FHE ACL/cryptography, callbacks, wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes",
+      "task_id": "uninitialized_sender_reverts_without_writes",
+      "case_id": "zama/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/tasks/uninitialized_sender_reverts_without_writes.yaml",
+      "split": "active",
+      "family_id": "zama",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "revert_rollback",
+      "category": "edge_cases",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.uninitialized_sender_reverts_without_writes",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses the retained Zama source as provenance and the transfer-focused Lean semantic model. Encrypted euint64 operations are plaintext-equivalent modulo 2^64; FHE ACL/cryptography, callbacks, wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge",
       "task_id": "metadata_bridge",
       "case_id": "zodiac/roles_decoder_faithfulness",
@@ -12009,5 +12276,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-03T08:12:01.872326+00:00"
+  "generated_at": "2026-07-28T10:47:33.047041+00:00"
 }

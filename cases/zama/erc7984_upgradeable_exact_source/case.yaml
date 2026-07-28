@@ -1,0 +1,62 @@
+manifest_kind: case
+project: zama
+case_id: erc7984_upgradeable_exact_source
+schema_version: 1
+split: active
+family_id: zama
+implementation_id: protocol_apps_confidential_wrapper
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/zama-ai/protocol-apps
+upstream_commit: 2f88eef1d0b545438b1f74e21cdff7ea771805da
+original_contract_path: contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol
+source_ref: https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol
+lean_target: Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile
+spec_target: Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Specs
+proof_target: Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs
+selected_functions:
+  - _update
+  - _transfer
+  - confidentialTransfer
+source_language: solidity
+verity_version: 4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - exact_source_retained
+  - fhe_homomorphic_plaintext_equivalence
+  - initialization_state_explicit
+  - wrapper_preconditions_assumed
+  - acl_elided
+  - callbacks_elided
+  - erc7201_slot_derivation_elided
+abstraction_notes: >
+  The exact selected Solidity file is retained byte-for-byte under upstream/
+  with commit, blob, and SHA-256 provenance. The Lean model preserves the
+  transfer-relevant control flow of `_update`, including the pre-write
+  FHE.isInitialized(fromBalance) guard, tryDecrease selection, source and
+  destination balance writes, and zero-address checks. Encrypted euint64
+  values use plaintext-equivalent Uint256 values with explicit modulo-2^64
+  destination arithmetic. A trusted Boolean represents successful public
+  input-proof or ACL wrapper validation. FHE cryptography and permissions,
+  ERC-7201 physical slot derivation, events, transfer callbacks/refunds,
+  ConfidentialWrapper denylist/staticcall gates, wrap/unwrap conversion and
+  underlying ERC-20 settlement, gateway/signature behavior, and other public
+  functions are outside the model.
+unsupported_feature_codes:
+  - external_contract_call
+  - off_chain_interaction
+  - fhe_cryptographic_layer
+notes: >
+  Distinct exact-source Zama protocol-apps case. Four complete reference proofs
+  establish: uninitialized senders revert with the exact original state even
+  for amount zero; initialized senders do not balance-revert after explicit
+  wrapper and plaintext guards pass; insufficient initialized transfers return
+  zero and preserve the two distinct parties' plaintext-equivalent balances;
+  and distinct-party pair accounting is conserved when destination addition
+  cannot wrap for the amount actually transferred. Generated task modules keep
+  explicit `exact ?_` placeholders for benchmark evaluation. The separate
+  retained OpenZeppelin case `zama/erc7984_confidential_token` at commit
+  83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.

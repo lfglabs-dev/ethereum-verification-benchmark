@@ -50,6 +50,7 @@ active_cases = [
   "wildcat/borrow_liquidity_safety",
   "zodiac/roles_decoder_faithfulness",
   "zama/erc7984_confidential_token",
+  "zama/erc7984_upgradeable_exact_source",
 ]
 backlog_cases = [
   "usual/placeholder",
