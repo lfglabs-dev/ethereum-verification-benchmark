@@ -18,6 +18,42 @@
       "name": "MathLib_ln",
       "boundary": "Opaque model of PRBMath UD60x18.ln pending a Verity fixed-point ln primitive.",
       "justification": "The value is used only to compute the decay rate inside the translated function and is treated as opaque by the benchmark proofs."
+    },
+    {
+      "path": "Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean",
+      "name": "payoutStaticHashOracleValue",
+      "boundary": "Trusted Keccak-256 result for the exact static EIP-712 payout payload.",
+      "justification": "The pinned proof interpreter does not execute the hashing ECM, so this relation preserves the source inputs while making Keccak correctness an explicit boundary."
+    },
+    {
+      "path": "Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean",
+      "name": "payoutDigestOracleValue",
+      "boundary": "Trusted EIP-712 domain-separated digest for the exact domain separator and struct hash.",
+      "justification": "The pinned proof interpreter does not execute the EIP-712 digest ECM, so this relation preserves the source inputs while making digest correctness an explicit boundary."
+    },
+    {
+      "path": "Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean",
+      "name": "payoutEcrecoverOracleValue",
+      "boundary": "Trusted ECDSA recovery result for the exact payout digest and signature tuple.",
+      "justification": "The pinned proof interpreter does not execute the ecrecover precompile, so this relation preserves the source inputs while making signature-recovery correctness an explicit boundary."
+    },
+    {
+      "path": "cases/hypernova/settled_payout_safety/verity/Contract.lean",
+      "name": "payoutStaticHashOracleValue",
+      "boundary": "Trusted Keccak-256 result for the exact static EIP-712 payout payload.",
+      "justification": "The case source mirrors the generated benchmark model; this relation preserves source inputs while making Keccak correctness an explicit boundary."
+    },
+    {
+      "path": "cases/hypernova/settled_payout_safety/verity/Contract.lean",
+      "name": "payoutDigestOracleValue",
+      "boundary": "Trusted EIP-712 domain-separated digest for the exact domain separator and struct hash.",
+      "justification": "The case source mirrors the generated benchmark model; this relation preserves source inputs while making digest correctness an explicit boundary."
+    },
+    {
+      "path": "cases/hypernova/settled_payout_safety/verity/Contract.lean",
+      "name": "payoutEcrecoverOracleValue",
+      "boundary": "Trusted ECDSA recovery result for the exact payout digest and signature tuple.",
+      "justification": "The case source mirrors the generated benchmark model; this relation preserves source inputs while making signature-recovery correctness an explicit boundary."
     }
   ]
 }
