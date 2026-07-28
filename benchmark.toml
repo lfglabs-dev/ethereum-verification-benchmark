@@ -26,6 +26,7 @@ active_cases = [
   "erc4337/entry_point_invariant",
   "ethereum/deposit_contract_minimal",
   "forgeyields/global_solvency",
+  "hypernova/settled_payout_safety",
   "ipor/plasma_vault_redeem_split",
   "kleros/sortition_trees",
   "kyberswap/partial_fill_price_floor",

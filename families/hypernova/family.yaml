@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: hypernova
+display_name: Hypernova
+split: active
+status: active
+description: >
+  Benchmark family for Hypernova funded-trading account settlement and payout
+  accounting invariants on Arbitrum.
+implementation_ids:
+  - arbitrum-deployment
+case_ids:
+  - hypernova/settled_payout_safety
+source_languages:
+  - solidity
