@@ -1,0 +1,14 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: enzyme
+implementation_id: onyx_fee_handler
+display_name: Enzyme Onyx FeeHandler
+split: active
+status: translated
+upstream_repo: https://github.com/enzymefinance/protocol-onyx
+upstream_commit: 8ae6f589b13a19d8390eb0956836c6a9f48fadab
+source_language: solidity
+source_artifact_path: src/components/fees/FeeHandler.sol
+case_ids:
+  - enzyme/onyx_fee_handler
+notes: Dynamic management/performance fee ordering and aggregate/per-recipient owed-value accounting.

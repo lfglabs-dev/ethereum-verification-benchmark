@@ -1,0 +1,17 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: starkware
+implementation_id: starkgate_bridge
+display_name: StarkGate Token Bridge
+split: active
+status: translated
+upstream_repo: https://github.com/starknet-io/starkgate-contracts
+upstream_commit: 07e11c39119a10d5742735be5b1d51894ebf5311
+source_language: solidity
+source_artifact_path: src/solidity/StarknetTokenBridge.sol
+case_ids:
+  - starkware/starkgate_escrow
+notes: >
+  Verity model of the StarkGate L1 bridge accounting, focused on the escrow
+  lower-bound invariant: the L1 escrow balance covers cumulative deposits minus
+  cumulative withdrawals.

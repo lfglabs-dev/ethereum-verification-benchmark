@@ -208,6 +208,26 @@ def task_is_runnable(task: Task) -> bool:
 
 
 def list_groups(suite: str = "active", *, runnable_only: bool = True) -> list[Group]:
+    if suite == "v0.2":
+        # Frozen grouping is derived from the independently verified selector,
+        # never from mutable case/group configuration.
+        try:
+            from .canonical_contract import load_v02_task_refs
+        except ImportError:
+            from canonical_contract import load_v02_task_refs
+
+        frozen = set(load_v02_task_refs())
+        grouped: dict[str, list[Task]] = {}
+        for manifest in discover_task_manifests("all"):
+            task = load_task(manifest)
+            if task.task_ref in frozen and (not runnable_only or task_is_runnable(task)):
+                grouped.setdefault(task.case_id, []).append(task)
+        if {task.task_ref for tasks in grouped.values() for task in tasks} != frozen:
+            raise ValueError("canonical v0.2 group task set drift")
+        return [
+            Group(group_id=group_id, suite="v0.2", tasks=tuple(sorted(tasks, key=lambda item: item.task_id)))
+            for group_id, tasks in sorted(grouped.items())
+        ]
     configured = _configured_groups(suite)
     if configured:
         if runnable_only:
@@ -231,7 +251,8 @@ def list_groups(suite: str = "active", *, runnable_only: bool = True) -> list[Gr
 
 
 def load_group(group_id: str, suite: str = "active", *, runnable_only: bool = True) -> Group:
-    resolve_case_manifest(group_id, suite)
+    if suite != "v0.2":
+        resolve_case_manifest(group_id, suite)
     groups = {group.group_id: group for group in list_groups(suite, runnable_only=runnable_only)}
     if group_id not in groups:
         raise FileNotFoundError(f"no runnable group found for {group_id} in suite {suite}")

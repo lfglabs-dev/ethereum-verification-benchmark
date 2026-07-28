@@ -24,6 +24,96 @@ def append_jsonl(path: Path, payload: dict[str, Any]) -> None:
         handle.write(json.dumps(payload) + "\n")
 
 
+def _sanitize_tool_message_order(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Reorder messages so every assistant ``tool_calls`` turn is immediately
+    followed by the ``tool`` replies answering each call id.
+
+    The fair tool loop can interleave a corrective ``user`` message (e.g. the
+    repetition warning) between an assistant ``tool_calls`` message and the
+    ``tool`` result that follows. Lenient OpenAI-compatible/local endpoints
+    accept that, but the official Mistral API rejects it with
+    ``HTTP 400 invalid_request_message_order`` ("Unexpected role 'tool' after
+    role 'user'"). We move the tool replies back next to their assistant turn
+    and defer any interleaved non-tool message to just after them, and we
+    synthesize an empty stub reply for any tool_call id that never got one so
+    the call/response counts always match.
+
+    Some endpoints omit ``tool_call.id``; the fair loop then records the real
+    result under a fallback ``tool_call_id`` (``call-{request_index}``), so an
+    unanswered call first consumes the next orphan tool reply (one whose id
+    matches no assistant call) before falling back to an empty stub.
+    """
+    tool_slots: dict[str, list[int]] = {}
+    for idx, message in enumerate(messages):
+        if message.get("role") == "tool":
+            tool_slots.setdefault(str(message.get("tool_call_id")), []).append(idx)
+
+    known_call_ids = {
+        str(call.get("id"))
+        for message in messages
+        if message.get("role") == "assistant" and isinstance(message.get("tool_calls"), list)
+        for call in message["tool_calls"]
+        if isinstance(call, dict)
+    }
+
+    used: set[int] = set()
+    result: list[dict[str, Any]] = []
+    for current_idx, message in enumerate(messages):
+        if message.get("role") == "tool":
+            continue  # emitted next to its originating assistant turn
+        result.append(message)
+        if message.get("role") != "assistant":
+            continue
+        tool_calls = message.get("tool_calls")
+        if not isinstance(tool_calls, list):
+            continue
+
+        # Only fallback/orphan tool replies from this assistant turn's segment
+        # may answer this assistant. A later assistant with a missing id can also
+        # produce a fallback ``call-{request_index}`` reply; consuming that
+        # globally for an earlier unanswered call would attach real tool output
+        # to the wrong turn and hide the result that should guide the next
+        # request.
+        next_assistant_idx = next(
+            (
+                idx
+                for idx in range(current_idx + 1, len(messages))
+                if messages[idx].get("role") == "assistant"
+            ),
+            len(messages),
+        )
+        current_orphan_reply_indices = [
+            idx
+            for idx in range(current_idx + 1, next_assistant_idx)
+            if messages[idx].get("role") == "tool"
+            and str(messages[idx].get("tool_call_id")) not in known_call_ids
+        ]
+        for call in tool_calls:
+            if not isinstance(call, dict):
+                continue
+            call_id = call.get("id")
+            reply_idx = next(
+                (i for i in tool_slots.get(str(call_id), []) if i not in used),
+                None,
+            )
+            if reply_idx is None:
+                reply_idx = next((i for i in current_orphan_reply_indices if i not in used), None)
+            if reply_idx is not None:
+                used.add(reply_idx)
+                result.append(messages[reply_idx])
+            else:
+                function = call.get("function") if isinstance(call.get("function"), dict) else {}
+                result.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": call_id if isinstance(call_id, str) else "unknown",
+                        "name": function.get("name", ""),
+                        "content": "",
+                    }
+                )
+    return result
+
+
 PROVIDER_DEFAULTS = {
     "qwen": {
         "base_url": "https://spark-de79.gazella-vector.ts.net/v1",
@@ -75,6 +165,22 @@ REQUEST_RETRIES = int(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRIES", os.envir
 REQUEST_RETRY_BACKOFF_SECONDS = float(os.environ.get("DEFAULT_HARNESS_REQUEST_RETRY_BACKOFF_SECONDS", os.environ.get("GAZELLA_REQUEST_RETRY_BACKOFF_SECONDS", "2")))
 DEFAULT_CONTEXT_TOKENS = os.environ.get("DEFAULT_HARNESS_CONTEXT_TOKENS", os.environ.get("GAZELLA_N_CTX"))
 DEFAULT_MAX_RESPONSE_TOKENS = int(os.environ.get("DEFAULT_HARNESS_MAX_RESPONSE_TOKENS", "8192"))
+DEFAULT_TEMPERATURE = float(os.environ.get("DEFAULT_HARNESS_TEMPERATURE", "0") or 0)
+DEFAULT_REASONING_EFFORT = (os.environ.get("DEFAULT_HARNESS_REASONING_EFFORT", "") or "").strip()
+DEFAULT_OMIT_SAMPLING = os.environ.get("DEFAULT_HARNESS_OMIT_SAMPLING", "0").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+}
+# Some strict OpenAI-compatible providers reject any request that carries a
+# token-limit field and answer with a generic 400 (observed with Virtuals'
+# openai-gpt-56-sol-pro, which 400s on max_tokens / max_completion_tokens /
+# reasoning_effort but returns 201 with none of them). This opt-in switch drops
+# every token-limit parameter from the outgoing request so such providers can be
+# evaluated fairly. It is generic (no provider-name special casing), off by
+# default, and leaves the request shape unchanged for every other provider.
+_TOKEN_LIMIT_PARAM_KEYS = ("max_tokens", "max_completion_tokens", "reasoning_effort")
+DEFAULT_OMIT_MAX_TOKENS = os.environ.get("DEFAULT_HARNESS_OMIT_MAX_TOKENS", "0").strip().lower() in {"1", "true", "yes"}
 HTTP_USER_AGENT = os.environ.get("DEFAULT_HARNESS_HTTP_USER_AGENT", HARNESS_USER_AGENT)
 DEFAULT_STREAMING_ENABLED = os.environ.get("DEFAULT_HARNESS_STREAMING", "1").strip().lower() not in {"0", "false", "no"}
 
@@ -86,7 +192,9 @@ DEFAULT_STREAMING_ENABLED = os.environ.get("DEFAULT_HARNESS_STREAMING", "1").str
 # boundary regardless of server-side template/EOG configuration.
 _DEFAULT_STOP_SEQUENCES = (
     "<|im_end|>",
+    "</|im_end|>",
     "<|im_start|>",
+    "</|im_start|>",
     "<|tool_call_begin|>",
     "<|tool_call_end|>",
 )
@@ -103,6 +211,30 @@ def _configured_stop_sequences() -> list[str]:
 
 DEFAULT_STOP_SEQUENCES = _configured_stop_sequences()
 _streaming_fallback_reason: str | None = None
+
+
+def effective_sampling(sampling: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Return the sampling fields that will actually be sent on the wire.
+
+    Keeping this derivation separate from ``chat_completion`` lets artifact
+    writers persist the same effective policy, including implicit greedy
+    ``top_p=1`` and compatibility-mode removal of ``reasoning_effort``.
+    """
+    if DEFAULT_OMIT_SAMPLING:
+        return {}
+    effective: dict[str, Any] = {"temperature": DEFAULT_TEMPERATURE}
+    if DEFAULT_REASONING_EFFORT:
+        effective["reasoning_effort"] = DEFAULT_REASONING_EFFORT
+    if sampling:
+        for key in ("temperature", "top_p", "reasoning_effort"):
+            value = sampling.get(key)
+            if value is not None:
+                effective[key] = value
+    if effective.get("temperature") == 0 and "top_p" not in effective:
+        effective["top_p"] = 1
+    if DEFAULT_OMIT_MAX_TOKENS:
+        effective.pop("reasoning_effort", None)
+    return effective
 
 
 def api_key() -> str | None:
@@ -304,13 +436,17 @@ def chat_completion(
     request_log_path: Path | None = None,
     request_index: int | None = None,
     api_key_override: str | None = None,
+    sampling: dict[str, Any] | None = None,
 ) -> dict[str, object]:
     payload: dict[str, Any] = {
         "model": model,
-        "messages": messages,
-        "max_tokens": max_tokens,
-        "temperature": 0,
+        "messages": _sanitize_tool_message_order(messages),
     }
+    # Per-call overrides (for example the hybrid prover's vendor-recommended
+    # regime) are folded into the exact policy persisted in run artifacts.
+    payload.update(effective_sampling(sampling))
+    if not DEFAULT_OMIT_MAX_TOKENS:
+        payload["max_tokens"] = max_tokens
     if DEFAULT_STOP_SEQUENCES:
         payload["stop"] = list(DEFAULT_STOP_SEQUENCES)
     if DEFAULT_CONTEXT_TOKENS:
@@ -319,6 +455,11 @@ def chat_completion(
         payload["tools"] = tools
     if tool_choice is not None:
         payload["tool_choice"] = tool_choice
+    if DEFAULT_OMIT_MAX_TOKENS:
+        # Fail-safe: drop any token-limit key regardless of how it entered the
+        # payload, so a strict provider never sees one.
+        for key in _TOKEN_LIMIT_PARAM_KEYS:
+            payload.pop(key, None)
 
     max_request_attempts = max(1, REQUEST_RETRIES + 1)
     last_error: ChatCompletionError | None = None

@@ -1,0 +1,36 @@
+manifest_kind: task
+schema_version: 1
+task_id: redeem_wrapper
+case_id: yo_protocol/async_redemption_escrow
+split: active
+family_id: yo_protocol
+implementation_id: core_v2
+source_ref: https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.redeem_wrapper
+proof_family: protocol_transition_correctness
+property_class: wrapper_delegation_and_pause
+difficulty: medium
+category: redemption-lifecycle
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/yo_protocol/async_redemption_escrow/verity/Contract.lean
+  - Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean
+specification_files:
+  - cases/yo_protocol/async_redemption_escrow/verity/Specs.lean
+  - Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean
+editable_files:
+  - Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/RedeemWrapperDelegates.lean
+reference_solution_module: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs
+reference_solution_declaration: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.redeem_wrapper
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Models the selected public ERC-4626 redeem wrapper, including its own pause
+  guard before requestRedeem delegation and explicit successful preview/balance
+  read outcomes.
+unsupported_feature_codes:
+  - oracle_price_correctness_not_modeled
+  - external_erc20_balance_state_not_modeled

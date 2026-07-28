@@ -1,0 +1,25 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: superfluid
+implementation_id: cfa_realtime_accounting
+display_name: Superfluid Constant Flow Agreement V1 realtime accounting
+split: active
+status: translated
+upstream_repo: https://github.com/superfluid-finance/protocol-monorepo
+upstream_commit: 414109689d9041a8b6900b67b947f3f203c1da5d
+source_language: solidity
+source_artifact_path: packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol
+case_ids:
+  - superfluid/realtime_balance_conservation
+notes: >
+  CFA endpoint settlement and opposite-rate updates in a hand-translated decoded
+  model, with a fixed duplicate-free account-list modular projection and a factored
+  one-level receiver-SuperApp same-flow self-delete schedule. The behavioral hook
+  executes supplied Verity Contracts and rejects level 2, but deliberately is not
+  complete Host ABI/context semantics; the concrete instance retains actor, app,
+  token/context, registry, noop, jailed, and credit guards. Source key and Host
+  execution fidelity remain audited translation assumptions, not kernel-proved
+  Solidity semantics. The completed reference proof suite covers all 22 tasks,
+  including finite-list modular projection preservation at every later observation
+  time, typed one-level composition, nested-revert rollback, and the concrete
+  factored SelfDeleting callback instance.
