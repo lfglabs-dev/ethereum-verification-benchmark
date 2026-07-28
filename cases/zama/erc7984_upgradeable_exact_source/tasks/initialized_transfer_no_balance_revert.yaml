@@ -28,7 +28,12 @@ reference_solution_module: Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Pr
 reference_solution_declaration: Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_no_balance_revert
 abstraction_level: protocol_slice
 abstraction_notes: >
-  The task uses the retained Zama source as provenance and the transfer-focused Lean semantic model. Encrypted euint64 operations are plaintext-equivalent modulo 2^64; FHE ACL/cryptography, callbacks, wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.
+  The task uses retained Zama source provenance and a base transfer-slice Lean
+  model whose caller input represents msg.sender. Explicit hypotheses constrain
+  modeled euint64 amounts and relevant initialized balances below 2^64. FHE
+  ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates,
+  wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical
+  slot derivation are outside the proof boundary.
 unsupported_feature_codes:
   - external_contract_call
   - off_chain_interaction

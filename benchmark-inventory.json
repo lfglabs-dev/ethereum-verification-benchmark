@@ -1238,7 +1238,7 @@
       "case_ids": [
         "zama/erc7984_upgradeable_exact_source"
       ],
-      "notes": "Exact-source implementation entry for the upgradeable ERC-7984 base used by Zama protocol-apps ConfidentialWrapper. The retained source and transfer proofs are scoped separately from the existing OpenZeppelin reference case.",
+      "notes": "Exact-source implementation entry for the upgradeable ERC-7984 base used by Zama protocol-apps ConfidentialWrapper. The retained source and base transfer-slice proofs are scoped separately from the derived wrapper gates and from the existing OpenZeppelin reference case.",
       "manifest_path": "families/zama/implementations/protocol_apps_confidential_wrapper/implementation.yaml"
     },
     {
@@ -2801,7 +2801,7 @@
       ],
       "lean_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile",
       "failure_reason": null,
-      "notes": "Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish: uninitialized senders revert with the exact original state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.",
+      "notes": "Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish, under explicit euint64-domain hypotheses: uninitialized senders return the modeled ERC7984ZeroBalance error class with unchanged modeled accounting state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. The revert proof does not model custom-error payload/returndata or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
       "lean_toolchain": "leanprover/lean4:v4.22.0",
@@ -2815,7 +2815,7 @@
         "callbacks_elided",
         "erc7201_slot_derivation_elided"
       ],
-      "abstraction_notes": "The exact selected Solidity file is retained byte-for-byte under upstream/ with commit, blob, and SHA-256 provenance. The Lean model preserves the transfer-relevant control flow of `_update`, including the pre-write FHE.isInitialized(fromBalance) guard, tryDecrease selection, source and destination balance writes, and zero-address checks. Encrypted euint64 values use plaintext-equivalent Uint256 values with explicit modulo-2^64 destination arithmetic. A trusted Boolean represents successful public input-proof or ACL wrapper validation. FHE cryptography and permissions, ERC-7201 physical slot derivation, events, transfer callbacks/refunds, ConfidentialWrapper denylist/staticcall gates, wrap/unwrap conversion and underlying ERC-20 settlement, gateway/signature behavior, and other public functions are outside the model.",
+      "abstraction_notes": "The exact selected Solidity file is retained byte-for-byte under upstream/ with commit, blob, and SHA-256 provenance. The Lean model preserves the transfer-relevant control flow of `_update`, including the pre-write FHE.isInitialized(fromBalance) guard, tryDecrease selection, source and destination balance writes, and zero-address checks. Encrypted euint64 values use plaintext-equivalent Uint256 values with explicit theorem hypotheses constraining amounts and relevant initialized balances below 2^64, plus modulo-2^64 destination arithmetic. A trusted Boolean represents successful input-proof or ACL validation. The transfer-slice caller input represents source-level msg.sender and is not an independent `from` ABI argument. FHE cryptography and permissions, ERC-7201 physical slot derivation, events, transfer callbacks/refunds, ConfidentialWrapper denylist/staticcall gates, wrap/unwrap conversion and underlying ERC-20 settlement, gateway/signature behavior, and other public functions are outside the model.",
       "unsupported_feature_codes": [
         "external_contract_call",
         "off_chain_interaction",
@@ -11968,7 +11968,7 @@
         "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean"
       ],
       "abstraction_level": "protocol_slice",
-      "abstraction_notes": "The task uses the retained Zama source as provenance and the transfer-focused Lean semantic model. Encrypted euint64 operations are plaintext-equivalent modulo 2^64; FHE ACL/cryptography, callbacks, wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
       "unsupported_feature_codes": [
         "external_contract_call",
         "off_chain_interaction",
@@ -12017,7 +12017,7 @@
         "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferNoBalanceRevert.lean"
       ],
       "abstraction_level": "protocol_slice",
-      "abstraction_notes": "The task uses the retained Zama source as provenance and the transfer-focused Lean semantic model. Encrypted euint64 operations are plaintext-equivalent modulo 2^64; FHE ACL/cryptography, callbacks, wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
       "unsupported_feature_codes": [
         "external_contract_call",
         "off_chain_interaction",
@@ -12066,7 +12066,7 @@
         "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferPairConservation.lean"
       ],
       "abstraction_level": "protocol_slice",
-      "abstraction_notes": "The task uses the retained Zama source as provenance and the transfer-focused Lean semantic model. Encrypted euint64 operations are plaintext-equivalent modulo 2^64; FHE ACL/cryptography, callbacks, wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
       "unsupported_feature_codes": [
         "external_contract_call",
         "off_chain_interaction",
@@ -12115,7 +12115,7 @@
         "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean"
       ],
       "abstraction_level": "protocol_slice",
-      "abstraction_notes": "The task uses the retained Zama source as provenance and the transfer-focused Lean semantic model. Encrypted euint64 operations are plaintext-equivalent modulo 2^64; FHE ACL/cryptography, callbacks, wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
       "unsupported_feature_codes": [
         "external_contract_call",
         "off_chain_interaction",
@@ -12276,5 +12276,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-28T10:47:33.047041+00:00"
+  "generated_at": "2026-07-28T12:02:13.034737+00:00"
 }

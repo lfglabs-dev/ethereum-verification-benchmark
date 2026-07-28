@@ -31,9 +31,10 @@ private theorem uint256_mod_uint64_of_lt {x : Uint256}
       exact Nat.mod_eq_of_lt hlt
 
 /--
-The exact-source `FHE.isInitialized(fromBalance)` guard fires before any write.
-At the public wrapper, a passed wrapper predicate and valid nonzero addresses
-therefore still produce `ERC7984ZeroBalance` with the original state.
+The exact-source `FHE.isInitialized(fromBalance)` guard fires before modeled
+accounting writes. At the transfer-slice entry point, a passed wrapper predicate
+and valid nonzero addresses therefore produce the modeled `ERC7984ZeroBalance`
+error class with the original modeled accounting state.
 -/
 theorem uninitialized_sender_reverts_without_writes
     (sender recipient : Address) (amount : Uint256)
@@ -41,14 +42,15 @@ theorem uninitialized_sender_reverts_without_writes
     (hWrapper : wrapperPreconditionsPassed = true)
     (hFrom : (sender != zeroAddress) = true)
     (hTo : (recipient != zeroAddress) = true)
+    (hAmount64 : amount < UINT64_MOD)
     (hUninitialized : s.storageMap 2 sender = 0) :
     uninitialized_sender_reverts_without_writes_spec
-      ((ERC7984UpgradeableExact.confidentialTransfer
+      ((ERC7984UpgradeableExact.confidentialTransferSlice
         sender recipient amount wrapperPreconditionsPassed).run s) s := by
   have hSenderNZ := address_ne_of_neq_zero hFrom
   have hRecipientNZ := address_ne_of_neq_zero hTo
   unfold uninitialized_sender_reverts_without_writes_spec
-  simp [ERC7984UpgradeableExact.confidentialTransfer,
+  simp [ERC7984UpgradeableExact.confidentialTransferSlice,
     ERC7984UpgradeableExact._transfer, ERC7984UpgradeableExact._update,
     ERC7984UpgradeableExact.balances,
     ERC7984UpgradeableExact.balanceInitialized,
@@ -67,14 +69,17 @@ theorem initialized_transfer_no_balance_revert
     (hWrapper : wrapperPreconditionsPassed = true)
     (hFrom : (sender != zeroAddress) = true)
     (hTo : (recipient != zeroAddress) = true)
-    (hInitialized : balanceIsInitialized s sender) :
+    (hInitialized : balanceIsInitialized s sender)
+    (hAmount64 : amount < UINT64_MOD)
+    (hSender64 : balanceOf s sender < UINT64_MOD)
+    (hRecipient64 : balanceOf s recipient < UINT64_MOD) :
     initialized_transfer_no_balance_revert_spec
-      ((ERC7984UpgradeableExact.confidentialTransfer
+      ((ERC7984UpgradeableExact.confidentialTransferSlice
         sender recipient amount wrapperPreconditionsPassed).run s) := by
   have hSenderNZ := address_ne_of_neq_zero hFrom
   have hRecipientNZ := address_ne_of_neq_zero hTo
   unfold initialized_transfer_no_balance_revert_spec balanceIsInitialized at *
-  simp [ERC7984UpgradeableExact.confidentialTransfer,
+  simp [ERC7984UpgradeableExact.confidentialTransferSlice,
     ERC7984UpgradeableExact._transfer, ERC7984UpgradeableExact._update,
     ERC7984UpgradeableExact.balances,
     ERC7984UpgradeableExact.balanceInitialized,
@@ -93,11 +98,13 @@ theorem initialized_insufficient_transfer_zero
     (hFrom : (sender != zeroAddress) = true)
     (hTo : (recipient != zeroAddress) = true)
     (hInitialized : balanceIsInitialized s sender)
+    (hAmount64 : amount < UINT64_MOD)
+    (hSender64 : balanceOf s sender < UINT64_MOD)
+    (hRecipient64 : balanceOf s recipient < UINT64_MOD)
     (hDistinct : sender ≠ recipient)
-    (hInsufficient : ¬ (balanceOf s sender >= amount))
-    (hRecipient64 : balanceOf s recipient < UINT64_MOD) :
+    (hInsufficient : ¬ (balanceOf s sender >= amount)) :
     initialized_insufficient_transfer_zero_spec sender recipient s
-      ((ERC7984UpgradeableExact.confidentialTransfer
+      ((ERC7984UpgradeableExact.confidentialTransferSlice
         sender recipient amount wrapperPreconditionsPassed).run s) := by
   have hSenderNZ := address_ne_of_neq_zero hFrom
   have hRecipientNZ := address_ne_of_neq_zero hTo
@@ -105,7 +112,7 @@ theorem initialized_insufficient_transfer_zero
     simpa [balanceOf] using hInsufficient
   unfold initialized_insufficient_transfer_zero_spec balanceIsInitialized balanceOf at *
   constructor
-  · simp [ERC7984UpgradeableExact.confidentialTransfer,
+  · simp [ERC7984UpgradeableExact.confidentialTransferSlice,
       ERC7984UpgradeableExact._transfer, ERC7984UpgradeableExact._update,
       ERC7984UpgradeableExact.balances,
       ERC7984UpgradeableExact.balanceInitialized,
@@ -113,7 +120,7 @@ theorem initialized_insufficient_transfer_zero
       Verity.pure, Pure.pure, Contract.run, ContractResult.isSuccess,
       hWrapper, hSenderNZ, hRecipientNZ, hInitialized, hInsufficient']
   constructor
-  · simp [ERC7984UpgradeableExact.confidentialTransfer,
+  · simp [ERC7984UpgradeableExact.confidentialTransferSlice,
       ERC7984UpgradeableExact._transfer, ERC7984UpgradeableExact._update,
       ERC7984UpgradeableExact.balances,
       ERC7984UpgradeableExact.balanceInitialized,
@@ -121,7 +128,7 @@ theorem initialized_insufficient_transfer_zero
       Verity.pure, Pure.pure, Contract.run, ContractResult.fst,
       hWrapper, hSenderNZ, hRecipientNZ, hInitialized, hInsufficient']
   constructor
-  · simp [ERC7984UpgradeableExact.confidentialTransfer,
+  · simp [ERC7984UpgradeableExact.confidentialTransferSlice,
       ERC7984UpgradeableExact._transfer, ERC7984UpgradeableExact._update,
       ERC7984UpgradeableExact.balances,
       ERC7984UpgradeableExact.balanceInitialized,
@@ -129,7 +136,7 @@ theorem initialized_insufficient_transfer_zero
       Verity.pure, Pure.pure, Contract.run, ContractResult.snd,
       hWrapper, hSenderNZ, hRecipientNZ, hInitialized, hInsufficient', hDistinct]
   · have hDistinct' : recipient ≠ sender := Ne.symm hDistinct
-    simp [ERC7984UpgradeableExact.confidentialTransfer,
+    simp [ERC7984UpgradeableExact.confidentialTransferSlice,
       ERC7984UpgradeableExact._transfer, ERC7984UpgradeableExact._update,
       ERC7984UpgradeableExact.balances,
       ERC7984UpgradeableExact.balanceInitialized,
@@ -152,10 +159,13 @@ theorem initialized_transfer_pair_conservation
     (hFrom : (sender != zeroAddress) = true)
     (hTo : (recipient != zeroAddress) = true)
     (hInitialized : balanceIsInitialized s sender)
+    (hAmount64 : amount < UINT64_MOD)
+    (hSender64 : balanceOf s sender < UINT64_MOD)
+    (hRecipient64 : balanceOf s recipient < UINT64_MOD)
     (hDistinct : sender ≠ recipient)
     (hRecipientNoWrap :
       balanceOf s recipient + selectedTransferAmount s sender amount < UINT64_MOD) :
-    let s' := ((ERC7984UpgradeableExact.confidentialTransfer
+    let s' := ((ERC7984UpgradeableExact.confidentialTransferSlice
       sender recipient amount wrapperPreconditionsPassed).run s).snd
     initialized_transfer_pair_conservation_spec sender recipient s s' := by
   have hSenderNZ := address_ne_of_neq_zero hFrom
@@ -168,7 +178,7 @@ theorem initialized_transfer_pair_conservation
     have hToNoWrap : s.storageMap 1 recipient + amount < UINT64_MOD := by
       simpa only [selectedTransferAmount, balanceOf, if_pos hSufficient]
         using hRecipientNoWrap
-    simp [ERC7984UpgradeableExact.confidentialTransfer,
+    simp [ERC7984UpgradeableExact.confidentialTransferSlice,
       ERC7984UpgradeableExact._transfer, ERC7984UpgradeableExact._update,
       ERC7984UpgradeableExact.balances,
       ERC7984UpgradeableExact.balanceInitialized,
@@ -198,7 +208,7 @@ theorem initialized_transfer_pair_conservation
     have hToBal64 : s.storageMap 1 recipient < UINT64_MOD := by
       simpa only [selectedTransferAmount, balanceOf, if_neg hSufficient,
         Verity.Core.Uint256.add_zero] using hRecipientNoWrap
-    simp [ERC7984UpgradeableExact.confidentialTransfer,
+    simp [ERC7984UpgradeableExact.confidentialTransferSlice,
       ERC7984UpgradeableExact._transfer, ERC7984UpgradeableExact._update,
       ERC7984UpgradeableExact.balances,
       ERC7984UpgradeableExact.balanceInitialized,

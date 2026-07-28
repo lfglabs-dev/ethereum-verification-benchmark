@@ -15,10 +15,12 @@ automatic or line-by-line translation of all Solidity behavior.
 
 ## What is modeled
 
-The Lean model preserves the selected base `ERC7984Upgradeable` transfer path:
+The Lean model preserves the selected base `ERC7984Upgradeable` transfer path.
+Its `caller` input represents Solidity's execution-context `msg.sender`; it is
+not a second user-supplied `from` ABI argument:
 
-1. successful public input-proof/ACL wrapper validation as an explicit trusted
-   Boolean precondition;
+1. successful public input-proof/ACL validation as an explicit trusted Boolean
+   precondition at a transfer-slice entry point;
 2. `_transfer` nonzero sender and receiver checks;
 3. `_update` reading the sender balance handle;
 4. `require(FHE.isInitialized(fromBalance), ERC7984ZeroBalance(from))` before
@@ -32,20 +34,29 @@ Initialization is represented by a logical mapping separate from the modeled
 plaintext-equivalent encrypted balance. The storage fields are logical; the
 model does not claim physical ERC-7201 slot equivalence.
 
+The theorem interfaces restrict each modeled `euint64` amount to `[0, 2^64)`.
+The initialized-sender theorems also restrict the relevant initialized sender
+and recipient plaintext-equivalent balances to that range. Pair conservation
+additionally assumes the recipient plus the selected transfer amount is below
+`2^64`. These are semantic representation/domain hypotheses, not extra runtime
+checks in the Solidity function. No plaintext range is assigned to an
+uninitialized sender handle.
+
 ## Proved reference theorems
 
 `Proofs.lean` contains four proofs with no `sorry` or added axioms:
 
 - `uninitialized_sender_reverts_without_writes`: after wrapper and plaintext
   address guards pass, an uninitialized sender returns the modeled
-  `ERC7984ZeroBalance` revert with the exact original `ContractState`. The
-  theorem has no positive-amount hypothesis, so it includes amount zero.
+  `ERC7984ZeroBalance` error class with the original modeled accounting state.
+  The theorem has no positive-amount hypothesis, so its uint64-domain includes
+  amount zero. It does not model the custom error's address payload or returndata.
 - `initialized_transfer_no_balance_revert`: after the same guards and sender
   initialization, balance sufficiency selects the transferred amount but does
-  not select success versus revert.
+  not select success versus revert, for modeled euint64-domain inputs/balances.
 - `initialized_insufficient_transfer_zero`: for distinct parties and a
-  uint64-range recipient balance, insufficiency returns zero and preserves both
-  plaintext-equivalent balances.
+  modeled euint64-domain amount and balances, insufficiency returns zero and
+  preserves both plaintext-equivalent balances.
 - `initialized_transfer_pair_conservation`: for distinct parties and a
   destination addition that cannot wrap for the amount actually selected,
   sender-plus-recipient plaintext-equivalent accounting is conserved.
@@ -62,13 +73,15 @@ public input-proof verification itself, transfer-and-call callbacks/refunds,
 underlying ERC-20 transfer behavior or collateralization, gateway/signature
 behavior, events, upgrade authorization, all other inherited functions, or
 physical ERC-7201 storage slot derivation. An earlier wrapper failure can revert
-before `ERC7984ZeroBalance`; the exact-revert theorem explicitly assumes the
-modeled wrapper and plaintext address checks pass.
+before `ERC7984ZeroBalance`; the modeled-revert theorem explicitly assumes the
+modeled wrapper and plaintext address checks pass. Revert-result equality covers
+only the modeled error class and logical accounting fields, not exact Solidity
+returndata or the complete EVM/FHE/global state.
 
 ## Relationship to the retained OpenZeppelin reference
 
 This case does not replace or mutate `zama/erc7984_confidential_token`. That
 separate benchmark retains OpenZeppelin Confidential Contracts commit
-`83364738f0d2b1655c60627588e3493099c359f7`. Its selected source lacks the
-pre-write initialization guard present in this pinned Zama file, so results from
-the two cases must be reported separately.
+`83364738f0d2b1655c60627588e3493099c359f7`. The selected source at that pin lacks
+the pre-write initialization guard present at protocol-apps `2f88eef1`, so this
+is a source-version/pin delta and the two result sets must be reported separately.

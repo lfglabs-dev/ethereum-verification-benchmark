@@ -38,9 +38,12 @@ abstraction_notes: >
   transfer-relevant control flow of `_update`, including the pre-write
   FHE.isInitialized(fromBalance) guard, tryDecrease selection, source and
   destination balance writes, and zero-address checks. Encrypted euint64
-  values use plaintext-equivalent Uint256 values with explicit modulo-2^64
-  destination arithmetic. A trusted Boolean represents successful public
-  input-proof or ACL wrapper validation. FHE cryptography and permissions,
+  values use plaintext-equivalent Uint256 values with explicit theorem
+  hypotheses constraining amounts and relevant initialized balances below
+  2^64, plus modulo-2^64 destination arithmetic. A trusted Boolean represents
+  successful input-proof or ACL validation. The transfer-slice caller input
+  represents source-level msg.sender and is not an independent `from` ABI
+  argument. FHE cryptography and permissions,
   ERC-7201 physical slot derivation, events, transfer callbacks/refunds,
   ConfidentialWrapper denylist/staticcall gates, wrap/unwrap conversion and
   underlying ERC-20 settlement, gateway/signature behavior, and other public
@@ -51,12 +54,15 @@ unsupported_feature_codes:
   - fhe_cryptographic_layer
 notes: >
   Distinct exact-source Zama protocol-apps case. Four complete reference proofs
-  establish: uninitialized senders revert with the exact original state even
-  for amount zero; initialized senders do not balance-revert after explicit
-  wrapper and plaintext guards pass; insufficient initialized transfers return
-  zero and preserve the two distinct parties' plaintext-equivalent balances;
-  and distinct-party pair accounting is conserved when destination addition
-  cannot wrap for the amount actually transferred. Generated task modules keep
-  explicit `exact ?_` placeholders for benchmark evaluation. The separate
+  establish, under explicit euint64-domain hypotheses: uninitialized senders
+  return the modeled ERC7984ZeroBalance error class with unchanged modeled
+  accounting state even for amount zero; initialized senders do not
+  balance-revert after explicit wrapper and plaintext guards pass; insufficient
+  initialized transfers return zero and preserve the two distinct parties'
+  plaintext-equivalent balances; and distinct-party pair accounting is
+  conserved when destination addition cannot wrap for the amount actually
+  transferred. The revert proof does not model custom-error payload/returndata
+  or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_`
+  placeholders for benchmark evaluation. The separate
   retained OpenZeppelin case `zama/erc7984_confidential_token` at commit
   83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.

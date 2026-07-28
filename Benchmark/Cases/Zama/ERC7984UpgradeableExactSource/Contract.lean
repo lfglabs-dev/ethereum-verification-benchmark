@@ -13,15 +13,17 @@ open Verity.EVM.Uint256
   Exact retained Solidity source and immutable provenance are stored under
   `cases/zama/erc7984_upgradeable_exact_source/upstream/`. This Lean module is
   not a line-by-line Solidity translation. It models the transfer-relevant
-  `_update`, `_transfer`, and `confidentialTransfer` control flow, including the
-  source's pre-write `FHE.isInitialized(fromBalance)` guard.
+  `_update`, `_transfer`, and public-overload transfer slice, including the
+  source's pre-accounting-write `FHE.isInitialized(fromBalance)` guard.
 
   Semantic boundaries:
   - encrypted `euint64` values are represented by plaintext `Uint256` values
-    with explicit modulo-2^64 arithmetic;
+    with explicit modulo-2^64 arithmetic; theorem interfaces separately impose
+    the `< 2^64` representation domain on amounts and initialized balances;
   - FHE initialization is represented by a separate logical mapping;
   - one trusted Boolean represents the selected public overload's successful
     `FHE.fromExternal` input-proof or `FHE.isAllowed` wrapper predicate;
+  - the transfer-slice `caller` input represents source-level `msg.sender`;
   - FHE ACL calls, events, callbacks, metadata, and ERC-7201 slot derivation are
     outside this transfer-accounting slice.
 -/
@@ -109,18 +111,21 @@ verity_contract ERC7984UpgradeableExact where
     return transferred
 
   /-
-    Public confidential-transfer wrapper.
+    Transfer-slice entry point for the two public `confidentialTransfer`
+    overloads.
 
     `wrapperPreconditionsPassed` is a trusted abstraction of either successful
     `FHE.fromExternal(encryptedAmount, inputProof)` validation or the
     `FHE.isAllowed(amount, msg.sender)` guard, depending on the selected Solidity
-    overload. The proof tasks explicitly require it to be true.
+    overload. `caller` is the execution-context value corresponding to
+    `msg.sender`; it is not an independently supplied Solidity ABI argument.
+    The proof tasks explicitly require the wrapper predicate to be true.
   -/
-  function confidentialTransfer
-      (sender : Address, recipient : Address, amount : Uint256,
+  function confidentialTransferSlice
+      (caller : Address, recipient : Address, amount : Uint256,
         wrapperPreconditionsPassed : Bool) : Uint256 := do
     require wrapperPreconditionsPassed "ERC7984WrapperPreconditionFailed"
-    let transferred ← _transfer sender recipient amount
+    let transferred ← _transfer caller recipient amount
     return transferred
 
 end Benchmark.Cases.Zama.ERC7984UpgradeableExactSource

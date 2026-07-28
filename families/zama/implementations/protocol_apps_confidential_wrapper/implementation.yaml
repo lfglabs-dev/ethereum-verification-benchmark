@@ -13,5 +13,6 @@ case_ids:
   - zama/erc7984_upgradeable_exact_source
 notes: >
   Exact-source implementation entry for the upgradeable ERC-7984 base used by
-  Zama protocol-apps ConfidentialWrapper. The retained source and transfer
-  proofs are scoped separately from the existing OpenZeppelin reference case.
+  Zama protocol-apps ConfidentialWrapper. The retained source and base
+  transfer-slice proofs are scoped separately from the derived wrapper gates and
+  from the existing OpenZeppelin reference case.

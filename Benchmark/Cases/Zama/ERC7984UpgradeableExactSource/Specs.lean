@@ -20,9 +20,11 @@ def selectedTransferAmount
   if balanceOf s sender >= amount then amount else 0
 
 /--
-The exact public-call result is the source guard's custom-error class with the
-original pre-call state. Equality of the full `ContractResult` establishes both
-reversion and rollback/no writes, rather than relying only on `.snd`.
+The modeled transfer-slice result records the source guard's custom-error class
+with the original modeled accounting state. The Solidity error's address payload
+and ABI returndata are outside this model. Equality of the full `ContractResult`
+establishes reversion and no writes to the modeled fields, rather than relying
+only on `.snd`; it does not claim equality of unmodeled EVM, FHE, or ACL state.
 -/
 def uninitialized_sender_reverts_without_writes_spec
     (result : ContractResult Uint256) (preState : ContractState) : Prop :=

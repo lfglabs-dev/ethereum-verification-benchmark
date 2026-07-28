@@ -16,9 +16,12 @@ theorem initialized_transfer_no_balance_revert
     (hWrapper : wrapperPreconditionsPassed = true)
     (hFrom : (sender != zeroAddress) = true)
     (hTo : (recipient != zeroAddress) = true)
-    (hInitialized : balanceIsInitialized s sender) :
+    (hInitialized : balanceIsInitialized s sender)
+    (hAmount64 : amount < UINT64_MOD)
+    (hSender64 : balanceOf s sender < UINT64_MOD)
+    (hRecipient64 : balanceOf s recipient < UINT64_MOD) :
     initialized_transfer_no_balance_revert_spec
-      ((ERC7984UpgradeableExact.confidentialTransfer
+      ((ERC7984UpgradeableExact.confidentialTransferSlice
         sender recipient amount wrapperPreconditionsPassed).run s) := by
   exact ?_
 

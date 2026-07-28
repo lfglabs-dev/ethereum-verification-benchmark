@@ -16,9 +16,10 @@ theorem uninitialized_sender_reverts_without_writes
     (hWrapper : wrapperPreconditionsPassed = true)
     (hFrom : (sender != zeroAddress) = true)
     (hTo : (recipient != zeroAddress) = true)
+    (hAmount64 : amount < UINT64_MOD)
     (hUninitialized : s.storageMap 2 sender = 0) :
     uninitialized_sender_reverts_without_writes_spec
-      ((ERC7984UpgradeableExact.confidentialTransfer
+      ((ERC7984UpgradeableExact.confidentialTransferSlice
         sender recipient amount wrapperPreconditionsPassed).run s) s := by
   exact ?_
 

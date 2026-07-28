@@ -17,10 +17,13 @@ theorem initialized_transfer_pair_conservation
     (hFrom : (sender != zeroAddress) = true)
     (hTo : (recipient != zeroAddress) = true)
     (hInitialized : balanceIsInitialized s sender)
+    (hAmount64 : amount < UINT64_MOD)
+    (hSender64 : balanceOf s sender < UINT64_MOD)
+    (hRecipient64 : balanceOf s recipient < UINT64_MOD)
     (hDistinct : sender ≠ recipient)
     (hRecipientNoWrap :
       balanceOf s recipient + selectedTransferAmount s sender amount < UINT64_MOD) :
-    let s' := ((ERC7984UpgradeableExact.confidentialTransfer
+    let s' := ((ERC7984UpgradeableExact.confidentialTransferSlice
       sender recipient amount wrapperPreconditionsPassed).run s).snd
     initialized_transfer_pair_conservation_spec sender recipient s s' := by
   exact ?_
