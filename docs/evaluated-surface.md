@@ -48,7 +48,7 @@ The active suite currently contains 39 cases and 245 task manifests. Of those, 2
 | `wildcat/borrow_liquidity_safety` | 1 | `complete` |
 | `yo_protocol/async_redemption_escrow` | 14 | `complete` |
 | `zama/erc7984_confidential_token` | 12 | `partial` |
-| `zama/erc7984_upgradeable_exact_source` | 4 | `complete` |
+| `zama_protocol_apps/erc7984_upgradeable_exact_source` | 4 | `complete` |
 | `zodiac/roles_decoder_faithfulness` | 3 | `complete` |
 
 ## Backlog

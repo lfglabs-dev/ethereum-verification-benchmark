@@ -10,7 +10,7 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 38,
+    "family_count": 39,
     "implementation_count": 40,
     "active_case_count": 39,
     "backlog_case_count": 1,
@@ -138,7 +138,7 @@
       "state_preservation_local_effects": 79
     },
     "family_split_counts": {
-      "active": 37,
+      "active": 38,
       "mixed": 1
     }
   },
@@ -762,19 +762,34 @@
       "display_name": "Zama",
       "split": "active",
       "status": "active",
-      "description": "Benchmark family for Zama fhEVM confidential contract logic and the ERC-7984 confidential token standard. It keeps the OpenZeppelin reference model and a distinct exact-source Zama protocol-apps transfer case so provenance and proof scope remain explicit.",
+      "description": "Benchmark family for Zama fhEVM confidential contract logic, starting with the ERC-7984 confidential token standard (co-developed with OpenZeppelin). Focuses on verifying the accounting correctness of FHE-based token operations where balances and transfer amounts are encrypted.",
       "implementation_ids": [
-        "confidential_contracts",
-        "protocol_apps_confidential_wrapper"
+        "confidential_contracts"
       ],
       "case_ids": [
-        "zama/erc7984_confidential_token",
-        "zama/erc7984_upgradeable_exact_source"
+        "zama/erc7984_confidential_token"
       ],
       "source_languages": [
         "solidity"
       ],
       "manifest_path": "families/zama/family.yaml"
+    },
+    {
+      "family_id": "zama_protocol_apps",
+      "display_name": "Zama Protocol Apps",
+      "split": "active",
+      "status": "active",
+      "description": "Exact-source verification benchmarks for Zama protocol applications and confidential wrapper contracts.",
+      "implementation_ids": [
+        "protocol_apps_confidential_wrapper"
+      ],
+      "case_ids": [
+        "zama_protocol_apps/erc7984_upgradeable_exact_source"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/zama_protocol_apps/family.yaml"
     },
     {
       "family_id": "zodiac",
@@ -1404,7 +1419,7 @@
       "manifest_path": "families/zama/implementations/confidential_contracts/implementation.yaml"
     },
     {
-      "family_id": "zama",
+      "family_id": "zama_protocol_apps",
       "implementation_id": "protocol_apps_confidential_wrapper",
       "display_name": "Zama Protocol Apps Confidential Wrapper",
       "split": "active",
@@ -1414,10 +1429,10 @@
       "source_language": "solidity",
       "source_artifact_path": "contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
       "case_ids": [
-        "zama/erc7984_upgradeable_exact_source"
+        "zama_protocol_apps/erc7984_upgradeable_exact_source"
       ],
       "notes": "Exact-source implementation entry for the upgradeable ERC-7984 base used by Zama protocol-apps ConfidentialWrapper. The retained source and base transfer-slice proofs are scoped separately from the derived wrapper gates and from the existing OpenZeppelin reference case.",
-      "manifest_path": "families/zama/implementations/protocol_apps_confidential_wrapper/implementation.yaml"
+      "manifest_path": "families/zama_protocol_apps/implementations/protocol_apps_confidential_wrapper/implementation.yaml"
     },
     {
       "family_id": "zodiac",
@@ -3227,14 +3242,14 @@
       "proof_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs"
     },
     {
-      "case_id": "zama/erc7984_upgradeable_exact_source",
-      "project": "zama",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "project": "zama_protocol_apps",
       "case_name": "erc7984_upgradeable_exact_source",
       "suite": "active",
       "schema_version": 1,
-      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/case.yaml",
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/case.yaml",
       "split": "active",
-      "family_id": "zama",
+      "family_id": "zama_protocol_apps",
       "implementation_id": "protocol_apps_confidential_wrapper",
       "stage": "proof_complete",
       "translation_status": "translated",
@@ -14319,14 +14334,14 @@
       }
     },
     {
-      "task_ref": "zama/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero",
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero",
       "task_id": "initialized_insufficient_transfer_zero",
-      "case_id": "zama/erc7984_upgradeable_exact_source",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
       "suite": "active",
       "schema_version": 1,
-      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/tasks/initialized_insufficient_transfer_zero.yaml",
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_insufficient_transfer_zero.yaml",
       "split": "active",
-      "family_id": "zama",
+      "family_id": "zama_protocol_apps",
       "implementation_id": "protocol_apps_confidential_wrapper",
       "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
       "task_interface_version": 2,
@@ -14339,11 +14354,11 @@
       "translation_status": "translated",
       "proof_status": "complete",
       "implementation_files": [
-        "cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
         "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
       ],
       "specification_files": [
-        "cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
         "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
       ],
       "editable_files": [
@@ -14368,14 +14383,14 @@
       }
     },
     {
-      "task_ref": "zama/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert",
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert",
       "task_id": "initialized_transfer_no_balance_revert",
-      "case_id": "zama/erc7984_upgradeable_exact_source",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
       "suite": "active",
       "schema_version": 1,
-      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/tasks/initialized_transfer_no_balance_revert.yaml",
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_transfer_no_balance_revert.yaml",
       "split": "active",
-      "family_id": "zama",
+      "family_id": "zama_protocol_apps",
       "implementation_id": "protocol_apps_confidential_wrapper",
       "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
       "task_interface_version": 2,
@@ -14388,11 +14403,11 @@
       "translation_status": "translated",
       "proof_status": "complete",
       "implementation_files": [
-        "cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
         "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
       ],
       "specification_files": [
-        "cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
         "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
       ],
       "editable_files": [
@@ -14417,14 +14432,14 @@
       }
     },
     {
-      "task_ref": "zama/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation",
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation",
       "task_id": "initialized_transfer_pair_conservation",
-      "case_id": "zama/erc7984_upgradeable_exact_source",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
       "suite": "active",
       "schema_version": 1,
-      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/tasks/initialized_transfer_pair_conservation.yaml",
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_transfer_pair_conservation.yaml",
       "split": "active",
-      "family_id": "zama",
+      "family_id": "zama_protocol_apps",
       "implementation_id": "protocol_apps_confidential_wrapper",
       "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
       "task_interface_version": 2,
@@ -14437,11 +14452,11 @@
       "translation_status": "translated",
       "proof_status": "complete",
       "implementation_files": [
-        "cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
         "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
       ],
       "specification_files": [
-        "cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
         "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
       ],
       "editable_files": [
@@ -14466,14 +14481,14 @@
       }
     },
     {
-      "task_ref": "zama/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes",
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes",
       "task_id": "uninitialized_sender_reverts_without_writes",
-      "case_id": "zama/erc7984_upgradeable_exact_source",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
       "suite": "active",
       "schema_version": 1,
-      "manifest_path": "cases/zama/erc7984_upgradeable_exact_source/tasks/uninitialized_sender_reverts_without_writes.yaml",
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/uninitialized_sender_reverts_without_writes.yaml",
       "split": "active",
-      "family_id": "zama",
+      "family_id": "zama_protocol_apps",
       "implementation_id": "protocol_apps_confidential_wrapper",
       "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
       "task_interface_version": 2,
@@ -14486,11 +14501,11 @@
       "translation_status": "translated",
       "proof_status": "complete",
       "implementation_files": [
-        "cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
         "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
       ],
       "specification_files": [
-        "cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
         "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
       ],
       "editable_files": [
@@ -14658,5 +14673,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-28T12:08:54.144161+00:00"
+  "generated_at": "2026-07-28T12:56:48.253365+00:00"
 }

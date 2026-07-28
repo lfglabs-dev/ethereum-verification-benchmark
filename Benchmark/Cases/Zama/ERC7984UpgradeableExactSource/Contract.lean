@@ -11,7 +11,7 @@ open Verity.EVM.Uint256
   commit `2f88eef1d0b545438b1f74e21cdff7ea771805da`.
 
   Exact retained Solidity source and immutable provenance are stored under
-  `cases/zama/erc7984_upgradeable_exact_source/upstream/`. This Lean module is
+  `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/upstream/`. This Lean module is
   not a line-by-line Solidity translation. It models the transfer-relevant
   `_update`, `_transfer`, and public-overload transfer slice, including the
   source's pre-accounting-write `FHE.isInitialized(fromBalance)` guard.

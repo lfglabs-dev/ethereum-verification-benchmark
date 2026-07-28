@@ -4,7 +4,7 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 38
+- Families: 39
 - Implementations: 40
 - Active cases: 39
 - Buildable active cases: 39
@@ -383,8 +383,8 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/token/ERC7984/ERC7984.sol`
 - Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.
 
-### `zama/erc7984_upgradeable_exact_source`
-- Family / implementation: `zama` / `protocol_apps_confidential_wrapper`
+### `zama_protocol_apps/erc7984_upgradeable_exact_source`
+- Family / implementation: `zama_protocol_apps` / `protocol_apps_confidential_wrapper`
 - Stage: `proof_complete`
 - Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
 - Lean target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile`
@@ -2789,43 +2789,43 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferSufficient.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
 
-### `zama/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero`
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero`
 - Track / property class / proof family: `proof-only` / `insufficient_balance_zero_transfer` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_insufficient_transfer_zero`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
-- Specification files: `cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
 
-### `zama/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert`
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert`
 - Track / property class / proof family: `proof-only` / `non_reversion` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_no_balance_revert`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
-- Specification files: `cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferNoBalanceRevert.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
 
-### `zama/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation`
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation`
 - Track / property class / proof family: `proof-only` / `balance_conservation` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_pair_conservation`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
-- Specification files: `cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferPairConservation.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
 
-### `zama/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes`
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes`
 - Track / property class / proof family: `proof-only` / `revert_rollback` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.uninitialized_sender_reverts_without_writes`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
-- Specification files: `cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
 

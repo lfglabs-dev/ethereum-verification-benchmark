@@ -85,3 +85,7 @@ separate benchmark retains OpenZeppelin Confidential Contracts commit
 `83364738f0d2b1655c60627588e3493099c359f7`. The selected source at that pin lacks
 the pre-write initialization guard present at protocol-apps `2f88eef1`, so this
 is a source-version/pin delta and the two result sets must be reported separately.
+
+The exact-source case uses the dedicated `zama_protocol_apps` metadata family.
+This keeps the already frozen v0.2 fingerprints for the earlier `zama` family
+immutable; it does not change the source provenance or theorem scope above.

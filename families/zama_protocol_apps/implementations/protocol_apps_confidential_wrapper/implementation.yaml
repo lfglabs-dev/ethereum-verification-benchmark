@@ -1,6 +1,6 @@
 manifest_kind: implementation
 schema_version: 1
-family_id: zama
+family_id: zama_protocol_apps
 implementation_id: protocol_apps_confidential_wrapper
 display_name: Zama Protocol Apps Confidential Wrapper
 split: active
@@ -10,7 +10,7 @@ upstream_commit: 2f88eef1d0b545438b1f74e21cdff7ea771805da
 source_language: solidity
 source_artifact_path: contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol
 case_ids:
-  - zama/erc7984_upgradeable_exact_source
+  - zama_protocol_apps/erc7984_upgradeable_exact_source
 notes: >
   Exact-source implementation entry for the upgradeable ERC-7984 base used by
   Zama protocol-apps ConfidentialWrapper. The retained source and base

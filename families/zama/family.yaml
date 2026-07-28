@@ -5,15 +5,13 @@ display_name: Zama
 split: active
 status: active
 description: >
-  Benchmark family for Zama fhEVM confidential contract logic and the ERC-7984
-  confidential token standard. It keeps the OpenZeppelin reference model and a
-  distinct exact-source Zama protocol-apps transfer case so provenance and
-  proof scope remain explicit.
+  Benchmark family for Zama fhEVM confidential contract logic, starting with
+  the ERC-7984 confidential token standard (co-developed with OpenZeppelin).
+  Focuses on verifying the accounting correctness of FHE-based token operations
+  where balances and transfer amounts are encrypted.
 implementation_ids:
   - confidential_contracts
-  - protocol_apps_confidential_wrapper
 case_ids:
   - zama/erc7984_confidential_token
-  - zama/erc7984_upgradeable_exact_source
 source_languages:
   - solidity

@@ -1,9 +1,9 @@
 manifest_kind: task
 schema_version: 1
 task_id: initialized_insufficient_transfer_zero
-case_id: zama/erc7984_upgradeable_exact_source
+case_id: zama_protocol_apps/erc7984_upgradeable_exact_source
 split: active
-family_id: zama
+family_id: zama_protocol_apps
 implementation_id: protocol_apps_confidential_wrapper
 source_ref: https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol
 task_interface_version: 2
@@ -17,10 +17,10 @@ translation_status: translated
 proof_status: complete
 evaluation_engine: lean_proof_generation
 implementation_files:
-  - cases/zama/erc7984_upgradeable_exact_source/verity/Contract.lean
+  - cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean
   - Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean
 specification_files:
-  - cases/zama/erc7984_upgradeable_exact_source/verity/Specs.lean
+  - cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean
   - Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean
 editable_files:
   - Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean
