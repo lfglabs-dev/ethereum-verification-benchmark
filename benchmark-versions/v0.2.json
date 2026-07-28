@@ -8,7 +8,7 @@
     "lean_toolchain": "leanprover/lean4:v4.24.0",
     "verity_rev": "49105e54ceff6d66921572cc85583538c2c8497d"
   },
-  "environment_id": "sha256:2d31f7cd5eb154c6cc176a0818c86b8bcf69cb19dd1664a58f7060007d89dfd5",
+  "environment_id": "sha256:436d4bdd7a6f8d7d0acc059f68d85c71f89e406addb8617a68931f5cdc8dd24d",
   "git_sha": "c5a2344b121040445ccd745a3f839548ca8f9158",
   "harness_id": "sha256:244bbf5ca68050dd4a7e56bdb794a68bc01a74d169828039e0943e511f65f867",
   "manifest_schema_version": 1,

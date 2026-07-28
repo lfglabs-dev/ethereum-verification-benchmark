@@ -3271,7 +3271,7 @@
       "notes": "Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish, under explicit euint64-domain hypotheses: uninitialized senders return the modeled ERC7984ZeroBalance error class with unchanged modeled accounting state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. The revert proof does not model custom-error payload/returndata or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "exact_source_retained",
@@ -14673,5 +14673,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-28T12:56:48.253365+00:00"
+  "generated_at": "2026-07-28T14:04:03.600411+00:00"
 }

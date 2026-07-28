@@ -24,6 +24,25 @@ commit `f0914b66f9f3766915403587b1ef1432d53054d3`. This benchmark's comparison
 point is the repository's separately retained OpenZeppelin reference case at
 commit `83364738f0d2b1655c60627588e3493099c359f7`; do not conflate those pins.
 
+## Scoped FHESafeMath dependency provenance
+
+At the captured protocol-apps commit, the selected Solidity source imports
+`@openzeppelin/confidential-contracts/utils/FHESafeMath.sol`. Its sibling
+`contracts/confidential-wrapper/package-lock.json` resolves
+`@openzeppelin/confidential-contracts` to `0.4.0`; the locked package tarball
+SHA-512 is
+`adb82557ec166323756dcea8828a80ad087ee6bc108f33ad53bfbf02baf5a559394f9ad6f48b803c2e88125f3cacd6f446e022ba92b6cadaaef42c084e5660f2`.
+The package's `utils/FHESafeMath.sol` has SHA-256
+`72eb2b13fc6799ab5ff91241bc6f07c4536e9a120522720f0e0cdef5940188bd`.
+
+This provenance supports only the initialized `tryDecrease` call site in the
+selected `_update` branch. In that dependency version, after the selected
+source guard establishes an initialized `oldValue`, `tryDecrease` computes
+`success = FHE.ge(oldValue, delta)` and selects either
+`FHE.sub(oldValue, delta)` or `oldValue`. The Lean slice preserves this branch
+and the caller's preceding initialization guard. It does not claim to model
+the dependency's uninitialized-handle branches or other FHESafeMath functions.
+
 Reason for selection:
 
 - `_update` requires `FHE.isInitialized(fromBalance)` before `tryDecrease` and
