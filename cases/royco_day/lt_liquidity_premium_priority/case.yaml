@@ -1,0 +1,61 @@
+manifest_kind: case
+project: royco_day
+case_id: lt_liquidity_premium_priority
+schema_version: 1
+split: active
+family_id: royco_day
+implementation_id: day
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: partial
+upstream_repo: https://github.com/roycoprotocol/royco-day
+upstream_commit: 3401dd0f6b010cf920b49c6c26e6704fa7c769b7
+original_contract_path: src/accountant/RoycoDayAccountant.sol
+source_ref: https://github.com/roycoprotocol/royco-day@3401dd0f6b010cf920b49c6c26e6704fa7c769b7:src/accountant/RoycoDayAccountant.sol
+lean_target: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Compile
+spec_target: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Specs
+proof_target: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs
+selected_functions:
+  - _previewSyncTrancheAccounting
+  - _handlePositiveSTDelta
+  - postOpSyncTrancheAccounting
+  - _processFeesAndLiquidityPremium
+  - _computeSTFeeAndLiquidityPremiumSharesToMint
+  - _convertToShares
+  - _computeCoverageUtilization
+  - _computeLiquidityUtilization
+  - attemptLiquidityPremiumReinvestment
+source_language: solidity
+verity_version: 49105e54ceff6d66921572cc85583538c2c8497d
+lean_toolchain: leanprover/lean4:v4.24.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - pnl_claim_attribution_precomputed
+  - ydm_time_weighted_accumulators_precomputed
+  - market_state_selection_precomputed
+  - balancer_oracle_slippage_floor_precomputed
+  - erc20_balances_pruned
+abstraction_notes: >
+  Models current raw NAVs, both source-attributed signed effective deltas, the
+  source-ordered JT and ST waterfalls, dust-gated and recomputed fees, exact
+  fixed-term output zeroing, exact utilization formulas, exact share-conversion
+  boundaries, post-mint supply, operation-specific unchecked post-op formulas,
+  and source-shaped inner reinvestment success/failure transitions. Claim
+  attribution, external YDM calls that produce the elapsed window and
+  time-weighted accumulators, market-state selection, and Balancer
+  oracle/slippage valuation are explicit inputs to this slice. Premium division
+  retains the source numerator, denominator, and single floor.
+unsupported_feature_codes:
+  - automatic_checked_arithmetic_obligations
+  - pnl_claim_attribution
+  - external_ydm_rate_accrual
+  - market_state_selection
+  - balancer_oracle_slippage_valuation
+  - erc20_share_mint_callbacks
+notes: >
+  Proves the corrected invariant: senior recovery services JT coverage IL
+  before any senior-sourced JT/ LT premium or protocol fee; gross LT premium
+  is coverage neutral, then split into net LT-owned and protocol-owned mint
+  inputs. A concrete task preserves the source-faithful counterexample to the
+  broader statement because an independent JT PnL fee may coexist with dust IL.

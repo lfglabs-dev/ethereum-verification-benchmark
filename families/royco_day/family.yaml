@@ -1,0 +1,16 @@
+manifest_kind: family
+schema_version: 1
+family_id: royco_day
+display_name: Royco Day
+split: active
+status: active
+description: >
+  Benchmark family for Royco Day's three-tranche fixed-yield markets. Covers
+  ST/JT loss absorption, recovery priority, LT premium accounting, fee-share
+  ownership, post-operation checkpoints, and the inner LT reinvestment leg.
+implementation_ids:
+  - day
+case_ids:
+  - royco_day/lt_liquidity_premium_priority
+source_languages:
+  - solidity

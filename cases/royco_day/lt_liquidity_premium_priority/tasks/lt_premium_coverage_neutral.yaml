@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: lt_premium_coverage_neutral
+case_id: royco_day/lt_liquidity_premium_priority
+split: active
+family_id: royco_day
+implementation_id: day
+source_ref: https://github.com/roycoprotocol/royco-day@3401dd0f6b010cf920b49c6c26e6704fa7c769b7:src/accountant/RoycoDayAccountant.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._lt_premium_coverage_neutral
+proof_family: functional_correctness
+property_class: accounting_conservation
+category: accounting_neutrality
+difficulty: hard
+track: proof-only
+translation_status: translated
+proof_status: partial
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean
+  - Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean
+specification_files:
+  - cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean
+  - Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean
+editable_files:
+  - Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/LTPremiumCoverageNeutral.lean
+reference_solution_module: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs
+reference_solution_declaration: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._lt_premium_coverage_neutral
+abstraction_level: protocol_slice
+abstraction_notes: >
+  See the case manifest and Contract.lean simplification ledger. Arithmetic
+  floor behavior is preserved exactly; external calls and pre-attribution are
+  explicit scope boundaries.
+unsupported_feature_codes:
+  - external_ydm_rate_accrual
