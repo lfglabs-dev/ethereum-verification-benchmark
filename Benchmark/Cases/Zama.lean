@@ -1,2 +1,3 @@
 import Benchmark.Cases.Zama.ERC7984ConfidentialToken.Compile
 import Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs
+import Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile

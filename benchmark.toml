@@ -26,6 +26,7 @@ active_cases = [
   "erc4337/entry_point_invariant",
   "ethereum/deposit_contract_minimal",
   "forgeyields/global_solvency",
+  "hypernova/settled_payout_safety",
   "ipor/plasma_vault_redeem_split",
   "kleros/sortition_trees",
   "kyberswap/partial_fill_price_floor",
@@ -56,6 +57,7 @@ active_cases = [
   "yo_protocol/async_redemption_escrow",
   "zodiac/roles_decoder_faithfulness",
   "zama/erc7984_confidential_token",
+  "zama_protocol_apps/erc7984_upgradeable_exact_source",
 ]
 backlog_cases = [
   "usual/placeholder",

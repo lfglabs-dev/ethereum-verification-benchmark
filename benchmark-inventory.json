@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 38,
-    "implementation_count": 39,
-    "active_case_count": 38,
+    "family_count": 40,
+    "implementation_count": 41,
+    "active_case_count": 40,
     "backlog_case_count": 1,
-    "active_task_count": 241,
+    "active_task_count": 247,
     "backlog_task_count": 0,
-    "buildable_case_count": 38,
-    "runnable_task_count": 241,
+    "buildable_case_count": 40,
+    "runnable_task_count": 247,
     "case_stage_counts": {
       "build_green": 31,
       "candidate": 1,
-      "proof_complete": 7
+      "proof_complete": 9
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 38
+      "translated": 40
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 31,
+      "complete": 33,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 241
+      "proof-only": 247
     },
     "task_property_class_counts": {
       "access_control_identity": 10,
@@ -50,7 +50,7 @@
       "atomic_finalization": 2,
       "authority_required": 2,
       "authorization_state": 9,
-      "balance_conservation": 2,
+      "balance_conservation": 3,
       "balance_credit_update": 2,
       "balance_update": 1,
       "base_case_invariant": 1,
@@ -81,6 +81,7 @@
       "functional_property": 2,
       "guarded_solvency": 7,
       "independence_invariant": 1,
+      "insufficient_balance_zero_transfer": 1,
       "isOwner_effect": 3,
       "length_invariant": 1,
       "lifecycle_accounting": 3,
@@ -93,11 +94,13 @@
       "monotonic_counter": 2,
       "no_partial_success": 1,
       "non_leakage": 1,
+      "non_reversion": 1,
       "nonce_monotonicity": 1,
       "noninterference": 1,
       "output_range": 2,
       "overflow_safety": 1,
       "owner_fallback_and_authority_order": 1,
+      "payout_safety": 2,
       "per_receiver_isolation": 1,
       "pps_nondecrease": 1,
       "price_band": 2,
@@ -109,6 +112,7 @@
       "replay_protection": 2,
       "reserve_state_transition": 5,
       "revert_atomicity": 1,
+      "revert_rollback": 1,
       "revert_safety": 2,
       "safety_invariant": 2,
       "scope_invariant": 1,
@@ -129,13 +133,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 26,
-      "functional_correctness": 57,
-      "protocol_transition_correctness": 39,
+      "functional_correctness": 60,
+      "protocol_transition_correctness": 40,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 77
+      "state_preservation_local_effects": 79
     },
     "family_split_counts": {
-      "active": 37,
+      "active": 39,
       "mixed": 1
     }
   },
@@ -292,6 +296,23 @@
         "solidity"
       ],
       "manifest_path": "families/forgeyields/family.yaml"
+    },
+    {
+      "family_id": "hypernova",
+      "display_name": "Hypernova",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Hypernova funded-trading account settlement and payout accounting invariants on Arbitrum.",
+      "implementation_ids": [
+        "arbitrum-deployment"
+      ],
+      "case_ids": [
+        "hypernova/settled_payout_safety"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/hypernova/family.yaml"
     },
     {
       "family_id": "ipor",
@@ -772,6 +793,23 @@
       "manifest_path": "families/zama/family.yaml"
     },
     {
+      "family_id": "zama_protocol_apps",
+      "display_name": "Zama Protocol Apps",
+      "split": "active",
+      "status": "active",
+      "description": "Exact-source verification benchmarks for Zama protocol applications and confidential wrapper contracts.",
+      "implementation_ids": [
+        "protocol_apps_confidential_wrapper"
+      ],
+      "case_ids": [
+        "zama_protocol_apps/erc7984_upgradeable_exact_source"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/zama_protocol_apps/family.yaml"
+    },
+    {
       "family_id": "zodiac",
       "display_name": "Zodiac Roles",
       "split": "active",
@@ -933,6 +971,22 @@
       ],
       "notes": "Focused TokenGateway accounting implementation entry for the guarded global-solvency benchmark.",
       "manifest_path": "families/forgeyields/implementations/contracts/implementation.yaml"
+    },
+    {
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "display_name": "Hypernova Arbitrum Payout Deployment",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "source_language": "solidity",
+      "source_artifact_path": "TradingAccounts.sol and Vault.sol, verified on Arbitrum Blockscout",
+      "case_ids": [
+        "hypernova/settled_payout_safety"
+      ],
+      "notes": "This implementation pins TradingAccounts proxy 0x429d8f223acb622e5e748f6a7bdf1235b2334fcb, verified implementation 0x8Ed9f54425c53ABE68AfE3fBD936e703C8775a5B, and Vault 0x920973eebffd3bf7da14dd9fb52bd3bea1664c67 on Arbitrum One. The selected path is requestPayout through _executePayout and processPayout.",
+      "manifest_path": "families/hypernova/implementations/arbitrum-deployment/implementation.yaml"
     },
     {
       "family_id": "ipor",
@@ -1399,6 +1453,22 @@
       "manifest_path": "families/zama/implementations/confidential_contracts/implementation.yaml"
     },
     {
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "display_name": "Zama Protocol Apps Confidential Wrapper",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/zama-ai/protocol-apps",
+      "upstream_commit": "2f88eef1d0b545438b1f74e21cdff7ea771805da",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "case_ids": [
+        "zama_protocol_apps/erc7984_upgradeable_exact_source"
+      ],
+      "notes": "Exact-source implementation entry for the upgradeable ERC-7984 base used by Zama protocol-apps ConfidentialWrapper. The retained source and base transfer-slice proofs are scoped separately from the derived wrapper gates and from the existing OpenZeppelin reference case.",
+      "manifest_path": "families/zama_protocol_apps/implementations/protocol_apps_confidential_wrapper/implementation.yaml"
+    },
+    {
       "family_id": "zodiac",
       "implementation_id": "roles-v3",
       "display_name": "Zodiac Roles v3 ABI Decoder",
@@ -1851,6 +1921,61 @@
       ],
       "spec_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Specs",
       "proof_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs"
+    },
+    {
+      "case_id": "hypernova/settled_payout_safety",
+      "project": "hypernova",
+      "case_name": "settled_payout_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/hypernova/settled_payout_safety/case.yaml",
+      "split": "active",
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "original_contract_path": "TradingAccounts.sol + Vault.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract",
+      "selected_functions": [
+        "requestPayout",
+        "_executePayout",
+        "processPayout"
+      ],
+      "lean_target": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Compile",
+      "failure_reason": null,
+      "notes": "The theorem proves on-chain accounting after canWithdraw is already true. It does not independently model getMaxWithdrawable or updateEquityAndSettle, nor prove off-chain P&L, flat-position detection, daily caps, owner honesty, proxy immutability, or reserve sufficiency beyond the actual trader transfer. Verified source SHA-256 values are recorded in the accompanying case-study research artifacts.",
+      "buildable": true,
+      "verity_commit": "49105e54ceff6d66921572cc85583538c2c8497d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "deployed_proxy_and_vault_wiring_pinned",
+        "composite_cross_contract_state",
+        "nested_address_bytes32_funded_account_mapping",
+        "packed_account_fields_with_source_word_offsets",
+        "checked_solidity_arithmetic",
+        "explicit_eip712_inputs_with_trusted_cryptography",
+        "pinned_vault_trading_accounts_immutable",
+        "native_usdc_transfer_as_boolean_and_balance_projection",
+        "one_shot_can_withdraw_flag",
+        "per_trader_nonce_consumption"
+      ],
+      "abstraction_notes": "The model follows the deployed TradingAccounts requestPayout call through _executePayout, Vault.processPayout, and native USDC safeTransfer. The two contract states and token balance projection share one composite ContractState so Contract.run preserves whole-transaction rollback. The proof-side authorization hypothesis passes the source payout type hash, trader, funded-account ID, amount, consumed nonce, deadline, pinned EIP-712 domain separator, and parsed (v,r,s) words explicitly to narrow body-less trusted uninterpreted operations. Lean does not establish their cryptographic semantics or input dependence. The compiler model separately uses Verity's hashing and precompile ECMs for the source-shaped flow. Native USDC safeTransfer is represented by a success Boolean and exact Vault and trader balance updates. The funded account keeps its address plus bytes32 nested key and the source word offsets for the modeled status, initialEquity, equity, and canWithdraw fields. The whole-word canWithdraw projection is scoped to canonical source-reachable states with zero unused upper padding; arbitrary raw padding, assembly writes, and excluded upgrades are out of scope. Events and unrelated struct fields are omitted.",
+      "unsupported_feature_codes": [
+        "deployed_proxy_upgrade_out_of_scope",
+        "owner_vault_rewiring_out_of_scope",
+        "native_usdc_call_as_boolean_and_balance_projection",
+        "composite_cross_contract_storage_namespace",
+        "admin_settlement_truth_assumed"
+      ],
+      "spec_target": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Specs",
+      "proof_target": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs"
     },
     {
       "case_id": "ipor/plasma_vault_redeem_split",
@@ -3204,6 +3329,56 @@
       ],
       "spec_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs",
       "proof_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs"
+    },
+    {
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "project": "zama_protocol_apps",
+      "case_name": "erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/case.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/zama-ai/protocol-apps",
+      "upstream_commit": "2f88eef1d0b545438b1f74e21cdff7ea771805da",
+      "original_contract_path": "contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "selected_functions": [
+        "_update",
+        "_transfer",
+        "confidentialTransfer"
+      ],
+      "lean_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile",
+      "failure_reason": null,
+      "notes": "Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish, under explicit euint64-domain hypotheses: uninitialized senders return the modeled ERC7984ZeroBalance error class with unchanged modeled accounting state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. The revert proof does not model custom-error payload/returndata or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "exact_source_retained",
+        "fhe_homomorphic_plaintext_equivalence",
+        "initialization_state_explicit",
+        "wrapper_preconditions_assumed",
+        "acl_elided",
+        "callbacks_elided",
+        "erc7201_slot_derivation_elided"
+      ],
+      "abstraction_notes": "The exact selected Solidity file is retained byte-for-byte under upstream/ with commit, blob, and SHA-256 provenance. The Lean model preserves the transfer-relevant control flow of `_update`, including the pre-write FHE.isInitialized(fromBalance) guard, tryDecrease selection, source and destination balance writes, and zero-address checks. Encrypted euint64 values use plaintext-equivalent Uint256 values with explicit theorem hypotheses constraining amounts and relevant initialized balances below 2^64, plus modulo-2^64 destination arithmetic. A trusted Boolean represents successful input-proof or ACL validation. The transfer-slice caller input represents source-level msg.sender and is not an independent `from` ABI argument. FHE cryptography and permissions, ERC-7201 physical slot derivation, events, transfer callbacks/refunds, ConfidentialWrapper denylist/staticcall gates, wrap/unwrap conversion and underlying ERC-20 settlement, gateway/signature behavior, and other public functions are outside the model.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "spec_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Specs",
+      "proof_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs"
     },
     {
       "case_id": "zodiac/roles_decoder_faithfulness",
@@ -5996,6 +6171,101 @@
         "bytes_report_parsing_decoded"
       ],
       "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "hypernova/settled_payout_safety/successful_payout_never_overpays",
+      "task_id": "successful_payout_never_overpays",
+      "case_id": "hypernova/settled_payout_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/hypernova/settled_payout_safety/tasks/successful_payout_never_overpays.yaml",
+      "split": "active",
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "source_ref": "https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "payout_safety",
+      "category": "funded_trading_payout",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Hypernova.SettledPayoutSafety.successfulPayout_never_overpays",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/hypernova/settled_payout_safety/verity/Contract.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/hypernova/settled_payout_safety/verity/Specs.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/SuccessfulPayoutNeverOverpays.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the stronger arithmetic fact that the split-adjusted trader amount cannot exceed the authorized gross request because the split is clamped to 10,000 basis points. The public implication remains scoped to pinned bidirectional deployment wiring.",
+      "unsupported_feature_codes": [
+        "native_usdc_call_as_boolean_and_balance_projection"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "hypernova/settled_payout_safety/valid_settled_payout_is_safe",
+      "task_id": "valid_settled_payout_is_safe",
+      "case_id": "hypernova/settled_payout_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/hypernova/settled_payout_safety/tasks/valid_settled_payout_is_safe.yaml",
+      "split": "active",
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "source_ref": "https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "payout_safety",
+      "category": "funded_trading_payout",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Hypernova.SettledPayoutSafety.validSettledPayout_is_safe",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/hypernova/settled_payout_safety/verity/Contract.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/hypernova/settled_payout_safety/verity/Specs.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/ValidSettledPayoutIsSafe.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves exact account equity reduction, one-shot settlement closure, one nonce increment, and equal Vault debit plus trader credit for the split-adjusted USDC amount on the valid deployed payout path. The at-most-gross split bound is derived from the clamped basis-point formula rather than assumed. Signature authorization is an explicit trusted equality hypothesis whose body-less operations take the source EIP-712 tuple, consumed nonce, pinned domain separator, and parsed signature as arguments. Their cryptographic semantics are not mechanically proved.",
+      "unsupported_feature_codes": [
+        "native_usdc_call_as_boolean_and_balance_projection",
+        "composite_cross_contract_storage_namespace"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -14248,6 +14518,202 @@
       }
     },
     {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero",
+      "task_id": "initialized_insufficient_transfer_zero",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_insufficient_transfer_zero.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "insufficient_balance_zero_transfer",
+      "category": "arithmetic",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_insufficient_transfer_zero",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert",
+      "task_id": "initialized_transfer_no_balance_revert",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_transfer_no_balance_revert.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "non_reversion",
+      "category": "control_flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_no_balance_revert",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferNoBalanceRevert.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation",
+      "task_id": "initialized_transfer_pair_conservation",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_transfer_pair_conservation.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "balance_conservation",
+      "category": "accounting",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_pair_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferPairConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes",
+      "task_id": "uninitialized_sender_reverts_without_writes",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/uninitialized_sender_reverts_without_writes.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "revert_rollback",
+      "category": "edge_cases",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.uninitialized_sender_reverts_without_writes",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge",
       "task_id": "metadata_bridge",
       "case_id": "zodiac/roles_decoder_faithfulness",
@@ -14391,5 +14857,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-20T10:25:56.941843+00:00"
+  "generated_at": "2026-07-28T15:46:53.212507+00:00"
 }

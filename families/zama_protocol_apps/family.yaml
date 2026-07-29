@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: zama_protocol_apps
+display_name: Zama Protocol Apps
+split: active
+status: active
+description: Exact-source verification benchmarks for Zama protocol applications and confidential wrapper contracts.
+implementation_ids:
+  - protocol_apps_confidential_wrapper
+case_ids:
+  - zama_protocol_apps/erc7984_upgradeable_exact_source
+source_languages:
+  - solidity

@@ -425,11 +425,11 @@ def harness_id() -> str:
 
 
 def environment_id() -> str:
+    """Hash Lean/Lake runtime inputs, never a mutable suite selector."""
     roots = [
         ROOT / "lean-toolchain",
         ROOT / "lakefile.lean",
         ROOT / "lake-manifest.json",
-        ROOT / "benchmark.toml",
         ROOT / ".github" / "actions" / "setup-lean",
     ]
     return hash_tree(roots)

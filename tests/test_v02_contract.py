@@ -73,7 +73,7 @@ class V02ContractTests(unittest.TestCase):
         escape: bool | None = None,
         baseline=None,
         current=None,
-        runtime_environment=None,
+        runtime_error=None,
         baseline_error=None,
         forbid_baseline_or_task_work: bool = False,
     ) -> tuple[int, dict]:
@@ -91,6 +91,8 @@ class V02ContractTests(unittest.TestCase):
         pinned_commit = manifest["source"]["commit"]
         references["source_commit"] = pinned_commit
         fixture_source = json.loads(json.dumps(manifest["source"]))
+        fixture_metadata = self._baseline_version_metadata()
+        fixture_environment = self._release_environment()
         if mutate:
             mutate(manifest, references)
         def forbidden_work(*_args, **_kwargs):
@@ -108,6 +110,8 @@ class V02ContractTests(unittest.TestCase):
             with mock.patch.object(validator, "MANIFEST", manifest_path), mock.patch.object(
                 validator, "REFERENCES", reference_path
             ), mock.patch.object(validator, "RELEASE_SOURCE", fixture_source), mock.patch.object(
+                validator, "RELEASE_METADATA", fixture_metadata
+            ), mock.patch.object(validator, "RELEASE_ENVIRONMENT", fixture_environment), mock.patch.object(
                 validator, "BASELINE_COMMIT", pinned_commit
             ), mock.patch.object(
                 validator,
@@ -141,8 +145,8 @@ class V02ContractTests(unittest.TestCase):
                 return_value=None if forbid_baseline_or_task_work else self._baseline_version_metadata(),
             ), mock.patch.object(
                 validator,
-                "environment_id",
-                return_value=runtime_environment or self.manifest["environment_id"],
+                "runtime_environment_error",
+                return_value=runtime_error,
             ), (mock.patch.object(validator, "ESCAPE") if escape is not None else nullcontext()) as matcher:
                 if matcher is not None:
                     matcher.search.return_value = object() if escape else None
@@ -596,11 +600,67 @@ class V02ContractTests(unittest.TestCase):
         self.assertEqual(newer["environment_id"], "sha256:" + "e" * 64)
         self.assertNotEqual(newer["environment_id"], self.manifest["environment_id"])
 
+    def test_environment_id_excludes_mutable_suite_selector(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            files = {
+                "lean-toolchain": "leanprover/lean4:v4.24.0\n",
+                "lakefile.lean": "require verity from git \"https://example.invalid/verity\"\n",
+                "lake-manifest.json": "{\"packages\": []}\n",
+                "benchmark.toml": "[suites]\nall = [\"first/task\"]\n",
+                ".github/actions/setup-lean/action.yml": "runs:\n  using: composite\n",
+            }
+            for relative, contents in files.items():
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(contents, encoding="utf-8")
+            with mock.patch.object(compute_fingerprints, "ROOT", root):
+                original = compute_fingerprints.environment_id()
+                (root / "benchmark.toml").write_text("[suites]\nall = [\"second/task\"]\n", encoding="utf-8")
+                self.assertEqual(compute_fingerprints.environment_id(), original)
+                (root / "lean-toolchain").write_text("leanprover/lean4:v4.25.0\n", encoding="utf-8")
+                self.assertNotEqual(compute_fingerprints.environment_id(), original)
+
     def test_runtime_environment_mismatch_fails_closed_before_task_validation(self) -> None:
         """A frozen run cannot silently use Lake files unlike its declaration."""
-        code, audit = self._validate(runtime_environment="sha256:" + "0" * 64)
+        code, audit = self._validate(
+            runtime_error="runtime Lean toolchain provenance drift",
+            forbid_baseline_or_task_work=True,
+        )
         self.assertEqual(code, 1)
-        self.assertIn("runtime environment identity drift", audit["errors"][0])
+        self.assertIn("runtime Lean toolchain provenance drift", audit["errors"][0])
+
+    def test_runtime_environment_error_checks_declared_toolchain_and_verity_lock(self) -> None:
+        environment = self._release_environment()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "lean-toolchain").write_text(f"{environment['lean_toolchain']}\n", encoding="utf-8")
+            (root / "lake-manifest.json").write_text(
+                json.dumps(
+                    {
+                        "packages": [
+                            {
+                                "name": "verity",
+                                "rev": environment["verity_rev"],
+                                "inputRev": environment["verity_rev"],
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            with mock.patch.object(validator, "ROOT", root), mock.patch.object(
+                validator, "RELEASE_ENVIRONMENT", environment
+            ):
+                self.assertIsNone(validator.runtime_environment_error())
+                (root / "lean-toolchain").write_text("leanprover/lean4:v0.0.0\n", encoding="utf-8")
+                self.assertEqual(validator.runtime_environment_error(), "runtime Lean toolchain provenance drift")
+                (root / "lean-toolchain").write_text(f"{environment['lean_toolchain']}\n", encoding="utf-8")
+                (root / "lake-manifest.json").write_text(
+                    json.dumps({"packages": [{"name": "verity", "rev": environment["verity_rev"], "inputRev": "drift"}]}),
+                    encoding="utf-8",
+                )
+                self.assertEqual(validator.runtime_environment_error(), "runtime Verity package provenance drift")
 
     def test_explicit_verity_environment_provenance_is_trust_rooted(self) -> None:
         def mutate(manifest, _references):

@@ -20,7 +20,6 @@ from harness.verify_lease import verify_lease
 from harness.v02_release import BASELINE_COMMIT, RELEASE_ENVIRONMENT, RELEASE_METADATA, RELEASE_SOURCE
 from scripts.compute_fingerprints import (
     baseline_version_metadata,
-    environment_id,
     trusted_closure_helper_namespace,
 )
 
@@ -78,6 +77,34 @@ def optional_sha(path: Path) -> str | None:
         return sha(path)
     except OSError:
         return None
+
+
+def runtime_environment_error() -> str | None:
+    """Return a fail-closed error when live Lean/Lake provenance drifts."""
+    expected_toolchain = RELEASE_ENVIRONMENT.get("lean_toolchain")
+    expected_verity_rev = RELEASE_ENVIRONMENT.get("verity_rev")
+    if not isinstance(expected_toolchain, str) or not isinstance(expected_verity_rev, str):
+        return "release trust-root runtime provenance malformed"
+    try:
+        toolchain = (ROOT / "lean-toolchain").read_text(encoding="utf-8").strip()
+    except OSError:
+        return "runtime Lean toolchain provenance unavailable"
+    if toolchain != expected_toolchain:
+        return "runtime Lean toolchain provenance drift"
+    try:
+        lake_manifest = json.loads((ROOT / "lake-manifest.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return "runtime Lake manifest provenance unavailable"
+    packages = lake_manifest.get("packages") if isinstance(lake_manifest, dict) else None
+    if not isinstance(packages, list):
+        return "runtime Verity package provenance missing"
+    verity_packages = [package for package in packages if isinstance(package, dict) and package.get("name") == "verity"]
+    if len(verity_packages) != 1:
+        return "runtime Verity package provenance missing"
+    verity = verity_packages[0]
+    if verity.get("rev") != expected_verity_rev or verity.get("inputRev") != expected_verity_rev:
+        return "runtime Verity package provenance drift"
+    return None
 
 
 def write_audit_atomically(audit_path: Path, audit: dict) -> None:
@@ -173,8 +200,9 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail("release trust-root version metadata drift")
         if manifest.get("environment") != RELEASE_ENVIRONMENT:
             fail("release trust-root environment provenance drift")
-        if environment_id() != manifest["environment_id"]:
-            fail("runtime environment identity drift")
+        runtime_error = runtime_environment_error()
+        if runtime_error:
+            fail(runtime_error)
         try:
             baseline_metadata = baseline_version_metadata(BASELINE_COMMIT, version="0.2", created_at=RELEASE_METADATA["created_at"])
         except ValueError as exc:
