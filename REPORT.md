@@ -4,14 +4,24 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 34
-- Implementations: 35
-- Active cases: 34
-- Buildable active cases: 34
-- Active tasks: 216
+- Families: 41
+- Implementations: 42
+- Active cases: 41
+- Buildable active cases: 41
+- Active tasks: 263
 - Backlog cases: 1
 
 ## Buildable active cases
+
+### `1inch/xycswap_curve_safety`
+- Family / implementation: `1inch` / `aqua_xycswap`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.OneInch.XYCSwapCurveSafety.Compile`
+- Source ref: `https://github.com/1inch/aqua@81c26e4619ce21556ab02b3284ee2685de21fb18:examples/apps/XYCSwap.sol`
+- Selected functions: `_quoteExactIn`, `swapExactIn`
+- Upstream source artifact: `examples/apps/XYCSwap.sol`
+- Notes: Benchmark case proving the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The theorem states that the output amount computed by _quoteExactIn satisfies the integer-division rounding bound: output * denominator <= feeAdjustedInput * balanceOut. This is the direct analog of the Uniswap V2 K invariant, adapted to XYCSwap's basis-points fee structure.
 
 ### `alchemix/earmark_conservation`
 - Family / implementation: `alchemix` / `v3`
@@ -63,6 +73,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/side-entrance/SideEntranceLenderPool.sol`
 - Notes: Compact Side Entrance benchmark focused on the broken coherence between pool assets and withdrawable credit when flash-loan repayment is routed through the deposit path.
 
+### `enzyme/onyx_fee_handler`
+- Family / implementation: `enzyme` / `onyx_fee_handler`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Enzyme.OnyxFeeHandler.Compile`
+- Source ref: `https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol`
+- Selected functions: `settleDynamicFeesGivenPositionsValue`, `__increaseValueOwed`, `__updateValueOwed`, `settleManagementFee`, `settlePerformanceFee`
+- Upstream source artifact: `src/components/fees/FeeHandler.sol`
+- Notes: Proves with no custom axioms and no sorry/admit that a successful settlement with both dynamic trackers enabled uses the configured targets and exact management-then-performance calldata, increases total fees owed by exactly both arbitrary returned amounts, credits the configured recipients, handles recipient aliasing, and frames the selected dynamic-fee configuration projection. The arbitrary reentry hook may mutate all other state. The pinned FeeHandler has no reentrancy guard, so the projection-stability condition is an explicit deployment/callee rely condition, not a proved runtime source property. Separate theorems cover successful management-only, performance-only, and both-disabled branches plus transactional rollback for every modeled raw revert. Official onyx-sdk metadata independently identifies LIVE Ethereum v1 implementation addresses; it does not establish bytecode equivalence to the pinned protocol source commit.
+
 ### `erc4337/entry_point_invariant`
 - Family / implementation: `erc4337` / `erc4337_v09`
 - Stage: `build_green`
@@ -92,6 +112,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `deposit`, `requestRedeem`, `claimRedeem`, `redeemTokenGatewayDepreciated`, `transferRemote`, `handle`, `report`
 - Upstream source artifact: `TokenGateway.sol`
 - Notes: Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.
+
+### `hypernova/settled_payout_safety`
+- Family / implementation: `hypernova` / `arbitrum-deployment`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Compile`
+- Source ref: `https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract`
+- Selected functions: `requestPayout`, `_executePayout`, `processPayout`
+- Upstream source artifact: `TradingAccounts.sol + Vault.sol`
+- Notes: The theorem proves on-chain accounting after canWithdraw is already true. It does not independently model getMaxWithdrawable or updateEquityAndSettle, nor prove off-chain P&L, flat-position detection, daily caps, owner honesty, proxy immutability, or reserve sufficiency beyond the actual trader transfer. Verified source SHA-256 values are recorded in the accompanying case-study research artifacts.
 
 ### `ipor/plasma_vault_redeem_split`
 - Family / implementation: `ipor` / `ipor_fusion`
@@ -273,6 +303,26 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/base/OwnerManager.sol`
 - Notes: Linked list reachability invariant preservation and functional correctness for the Safe OwnerManager. Based on the Certora OwnerReach.spec which defines the inListReachable and reachableInList invariants. All 15 proof tasks are complete (0 sorry) covering acyclicity, inListReachable, ownerListInvariant preservation, and isOwner functional correctness for all four operations. The unprovable stronglyAcyclic axiom was replaced with the provable uniquePredecessor property. Functional correctness proofs verify that each operation changes exactly the intended owners and leaves all others unchanged.
 
+### `starkware/starkgate_escrow`
+- Family / implementation: `starkware` / `starkgate_bridge`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Starkware.StarkgateEscrow.Compile`
+- Source ref: `https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol`
+- Selected functions: `deposit`, `withdraw`, `depositReclaim`
+- Upstream source artifact: `src/solidity/StarknetTokenBridge.sol`
+- Notes: Reference proofs are complete for the escrow lower-bound invariant across the three modeled transitions (deposit, withdraw, depositReclaim). Arithmetic hypotheses expose Solidity checked-arithmetic obligations (no-overflow on additions, sufficient-balance on subtractions).
+
+### `superfluid/realtime_balance_conservation`
+- Family / implementation: `superfluid` / `cfa_realtime_accounting`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Compile`
+- Source ref: `https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol`
+- Selected functions: `SuperfluidToken.realtimeBalanceOf`, `ConstantFlowAgreementV1._createFlow`, `ConstantFlowAgreementV1._updateFlow`, `ConstantFlowAgreementV1._deleteFlow`, `ConstantFlowAgreementV1._changeFlowToNonApp`, `ConstantFlowAgreementV1._changeFlowToApp`, `ConstantFlowAgreementV1._changeFlow`, `ConstantFlowAgreementV1._updateAccountFlowState`, `SelfDeletingFlowTestApp.afterAgreementCreated`, `Superfluid.callAgreementWithContext`, `Superfluid._updateContext`
+- Upstream source artifact: `packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol`
+- Notes: This case does not prove SuperToken supply conservation and does not equate its modulo-2^256 CFA projection sum to native `realtimeBalanceOf` outside the stated relation. All 22 task declarations have kernel-checked reference proofs, including the nine finite-global, future-time, callback-composition, rollback, and concrete factored-instance strengthening tasks. Translation fidelity is an audited trust boundary, separate from the kernel-checked Lean proof of the model.
+
 ### `t3tris/hwm_performance_fee`
 - Family / implementation: `t3tris` / `t3tris_vault`
 - Stage: `proof_complete`
@@ -333,6 +383,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `src/market/WildcatMarket.sol`
 - Notes: Wildcat V2 borrow safety slice proving that a successful positive borrow cannot pull market assets below the liquidity requirement computed from the updated state used by the borrow guard. The required liquidity includes the reserve-ratio-backed portion of non-pending supply, 100% of pending withdrawals, 100% of normalized unclaimed withdrawals, and updated accrued protocol fees.
 
+### `yo_protocol/async_redemption_escrow`
+- Family / implementation: `yo_protocol` / `core_v2`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Compile`
+- Source ref: `https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol`
+- Selected functions: `YoVault.requestRedeem`, `YoVault.redeem`, `YoVault.fulfillRedeem`, `YoVault.cancelRedeem`, `YoVault.updateWithdrawFee`, `YoVault.updateFeeRecipient`, `YoVault._withdraw`, `YoVault._getAvailableBalance`, `AuthUpgradeable.isAuthorized`
+- Upstream source artifact: `src/YoVault.sol`
+- Notes: The reviewed case has 14 generated theorem interfaces, all version 2, with matching proof-complete reference declarations. Independent Phase 2 and Phase 3 review gates passed. The deployment context is Base yoUSD at block 48,628,300 as recorded in Phase 1; this case proves the pinned source lifecycle, not the snapshot's current configuration.
+
 ### `zama/erc7984_confidential_token`
 - Family / implementation: `zama` / `confidential_contracts`
 - Stage: `build_green`
@@ -342,6 +402,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_update`, `_transfer`, `_mint`, `_burn`, `confidentialTransferFrom`, `setOperator`
 - Upstream source artifact: `contracts/token/ERC7984/ERC7984.sol`
 - Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source`
+- Family / implementation: `zama_protocol_apps` / `protocol_apps_confidential_wrapper`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile`
+- Source ref: `https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol`
+- Selected functions: `_update`, `_transfer`, `confidentialTransfer`
+- Upstream source artifact: `contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol`
+- Notes: Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish, under explicit euint64-domain hypotheses: uninitialized senders return the modeled ERC7984ZeroBalance error class with unchanged modeled accounting state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. The revert proof does not model custom-error payload/returndata or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.
 
 ### `zodiac/roles_decoder_faithfulness`
 - Family / implementation: `zodiac` / `roles-v3`
@@ -358,6 +428,16 @@ This report is generated from the benchmark manifests.
 - None
 
 ## Active tasks
+
+### `1inch/xycswap_curve_safety/quote_exact_in_curve_safety`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.OneInch.XYCSwapCurveSafety.quoteExactIn_curve_safety`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/1inch/xycswap_curve_safety/verity/Contract.lean`, `Benchmark/Cases/OneInch/XYCSwapCurveSafety/Contract.lean`
+- Specification files: `cases/1inch/xycswap_curve_safety/verity/Specs.lean`, `Benchmark/Cases/OneInch/XYCSwapCurveSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/OneInch/XYCSwapCurveSafety/Tasks/QuoteExactInCurveSafety.lean`
+- Hidden reference solution: `Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs`
 
 ### `alchemix/earmark_conservation/earmark_preserves_invariant`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
@@ -638,6 +718,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean`
 - Editable proof file: `Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/FlashLoanViaDepositSetsSenderCredit.lean`
 - Hidden reference solution: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs`
+
+### `enzyme/onyx_fee_handler/settle_dynamic_fees_exact_accounting`
+- Track / property class / proof family: `proof-only` / `cross_contract_fee_accounting` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Enzyme.OnyxFeeHandler.settleDynamicFeesGivenPositionsValue_exact_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/enzyme/onyx_fee_handler/verity/Contract.lean`, `Benchmark/Cases/Enzyme/OnyxFeeHandler/Contract.lean`
+- Specification files: `cases/enzyme/onyx_fee_handler/verity/Specs.lean`, `Benchmark/Cases/Enzyme/OnyxFeeHandler/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Enzyme/OnyxFeeHandler/Tasks/settle_dynamic_fees_exact_accounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs`
 
 ### `erc4337/entry_point_invariant/account_rejection_reverts`
 - Track / property class / proof family: `proof-only` / `authority_required` / `refinement_equivalence`
@@ -1088,6 +1178,26 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
 - Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean`
 - Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `hypernova/settled_payout_safety/successful_payout_never_overpays`
+- Track / property class / proof family: `proof-only` / `payout_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.successfulPayout_never_overpays`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/hypernova/settled_payout_safety/verity/Contract.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean`
+- Specification files: `cases/hypernova/settled_payout_safety/verity/Specs.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/SuccessfulPayoutNeverOverpays.lean`
+- Hidden reference solution: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs`
+
+### `hypernova/settled_payout_safety/valid_settled_payout_is_safe`
+- Track / property class / proof family: `proof-only` / `payout_safety` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.validSettledPayout_is_safe`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/hypernova/settled_payout_safety/verity/Contract.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean`
+- Specification files: `cases/hypernova/settled_payout_safety/verity/Specs.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/ValidSettledPayoutIsSafe.lean`
+- Hidden reference solution: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs`
 
 ### `ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free`
 - Track / property class / proof family: `proof-only` / `fee_payout_bound` / `functional_correctness`
@@ -2149,6 +2259,256 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Safe/OwnerManagerReach/Tasks/SwapOwnerOwnerListInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Safe.OwnerManagerReach.Proofs`
 
+### `starkware/starkgate_escrow/deposit_preserves_escrow_lower_bound`
+- Track / property class / proof family: `proof-only` / `escrow_lower_bound` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Starkware.StarkgateEscrow.deposit_preserves_escrow_lower_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/starkware/starkgate_escrow/verity/Contract.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean`
+- Specification files: `cases/starkware/starkgate_escrow/verity/Specs.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/DepositPreservesEscrowLowerBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Starkware.StarkgateEscrow.Proofs`
+
+### `starkware/starkgate_escrow/deposit_reclaim_preserves_escrow_lower_bound`
+- Track / property class / proof family: `proof-only` / `escrow_lower_bound` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Starkware.StarkgateEscrow.depositReclaim_preserves_escrow_lower_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/starkware/starkgate_escrow/verity/Contract.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean`
+- Specification files: `cases/starkware/starkgate_escrow/verity/Specs.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/DepositReclaimPreservesEscrowLowerBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Starkware.StarkgateEscrow.Proofs`
+
+### `starkware/starkgate_escrow/withdraw_preserves_escrow_lower_bound`
+- Track / property class / proof family: `proof-only` / `escrow_lower_bound` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Starkware.StarkgateEscrow.withdraw_preserves_escrow_lower_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/starkware/starkgate_escrow/verity/Contract.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean`
+- Specification files: `cases/starkware/starkgate_escrow/verity/Specs.lean`, `Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/WithdrawPreservesEscrowLowerBound.lean`
+- Hidden reference solution: `Benchmark.Cases.Starkware.StarkgateEscrow.Proofs`
+
+### `superfluid/realtime_balance_conservation/callback_level_two_is_rejected`
+- Track / property class / proof family: `proof-only` / `failure_propagation` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.callbackLevelTwo_is_rejected`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CallbackLevelTwoIsRejected.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/create_non_app_frames_unrelated_account`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_frames_unrelated_account`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppFramesUnrelatedAccount.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/create_non_app_preserves_cfa_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_cfa_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesCfaProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/create_non_app_preserves_future_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_future_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesFutureModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/create_non_app_preserves_pair_net_flow_rate`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_pair_net_flow_rate`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesPairNetFlowRate.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/delete_non_app_frames_unrelated_account`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_frames_unrelated_account`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppFramesUnrelatedAccount.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/delete_non_app_preserves_cfa_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_cfa_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesCfaProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/delete_non_app_preserves_future_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_future_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesFutureModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/delete_non_app_preserves_pair_net_flow_rate`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_pair_net_flow_rate`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesPairNetFlowRate.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/failed_nested_rolls_back_and_prevents_resume`
+- Track / property class / proof family: `proof-only` / `revert_safety` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.failedNested_rolls_back_and_prevents_resume`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/FailedNestedRollsBackAndPreventsResume.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/pair_and_frame_implies_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `composition_invariant` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.pairAndFrame_implies_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/PairAndFrameImpliesModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_frames_unrelated_account`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_frames_unrelated_account`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackFramesUnrelatedAccount.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_matches_factored_instance_behavior`
+- Track / property class / proof family: `proof-only` / `functional_property` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_matches_factored_instance_behavior`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackMatchesFactoredInstanceBehavior.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_cfa_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_cfa_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesCfaProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_future_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_future_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesFutureModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_pair_net_flow_rate`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_pair_net_flow_rate`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesPairNetFlowRate.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/receiver_delete_callback_reloads_final_zero`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_reloads_final_zero`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackReloadsFinalZero.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/successful_one_level_components_compose`
+- Track / property class / proof family: `proof-only` / `composition_invariant` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.successfulOneLevel_components_compose`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/SuccessfulOneLevelComponentsCompose.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/update_non_app_frames_unrelated_account`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_frames_unrelated_account`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppFramesUnrelatedAccount.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/update_non_app_preserves_cfa_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_cfa_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesCfaProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/update_non_app_preserves_future_modular_cfa_global_projection`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_future_modular_cfa_global_projection`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesFutureModularCfaGlobalProjection.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
+### `superfluid/realtime_balance_conservation/update_non_app_preserves_pair_net_flow_rate`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_pair_net_flow_rate`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/superfluid/realtime_balance_conservation/verity/Contract.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean`
+- Specification files: `cases/superfluid/realtime_balance_conservation/verity/Specs.lean`, `Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesPairNetFlowRate.lean`
+- Hidden reference solution: `Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs`
+
 ### `t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply`
 - Track / property class / proof family: `proof-only` / `fee_accounting_bounds` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -2369,6 +2729,146 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Wildcat/BorrowLiquiditySafety/Tasks/PositiveBorrowPreservesRequiredLiquidity.lean`
 - Hidden reference solution: `Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs`
 
+### `yo_protocol/async_redemption_escrow/cancel_redeem_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.cancel_redeem_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/CancelRedeemExactAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/candidate_g_source_reachability`
+- Track / property class / proof family: `proof-only` / `source_reachable_counterexample_coverage` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.candidate_g_source_reachability`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/CandidateGSourceReachability.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/fee_aliasing`
+- Track / property class / proof family: `proof-only` / `fee_rounding_and_aliasing` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fee_aliasing`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FeeAliasingUsesCurrentFee.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/fulfill_redeem_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_invariant` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fulfill_redeem_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FulfillRedeemExactAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/full_clear_requeue_replay`
+- Track / property class / proof family: `proof-only` / `replay_lifecycle` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.full_clear_requeue_replay`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FullClearRequeueReplay.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/lifecycle_bounds_and_isolation`
+- Track / property class / proof family: `proof-only` / `per_receiver_isolation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_bounds_and_isolation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/LifecycleBoundsAndIsolation.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/lifecycle_rollback`
+- Track / property class / proof family: `proof-only` / `revert_atomicity` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_rollback`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/LifecycleFailureRollsBack.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/malformed_pair_lifecycle`
+- Track / property class / proof family: `proof-only` / `malformed_record_behavior` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.malformed_pair_lifecycle`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/MalformedPairDormancyAndRevival.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/owner_fallback_authorization`
+- Track / property class / proof family: `proof-only` / `owner_fallback_and_authority_order` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.owner_fallback_authorization`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/OwnerFallbackAuthorization.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/queued_request_aggregation`
+- Track / property class / proof family: `proof-only` / `accounting_update` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.queued_request_aggregation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/QueuedRequestAggregatesReceiver.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/redeem_wrapper`
+- Track / property class / proof family: `proof-only` / `wrapper_delegation_and_pause` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.redeem_wrapper`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/RedeemWrapperDelegates.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/request_redeem_branching`
+- Track / property class / proof family: `proof-only` / `branch_correctness` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.request_redeem_branching`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/RequestRedeemPreservesBranches.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/two_owner_queue_aggregation`
+- Track / property class / proof family: `proof-only` / `receiver_aggregation` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.two_owner_queue_aggregation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/TwoOwnerQueueAggregatesReceiver.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
+### `yo_protocol/async_redemption_escrow/zero_component_lifecycle`
+- Track / property class / proof family: `proof-only` / `source_permitted_noop` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.zero_component_lifecycle`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/yo_protocol/async_redemption_escrow/verity/Contract.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean`
+- Specification files: `cases/yo_protocol/async_redemption_escrow/verity/Specs.lean`, `Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean`
+- Editable proof file: `Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/ZeroComponentLifecycleNoop.lean`
+- Hidden reference solution: `Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs`
+
 ### `zama/erc7984_confidential_token/burn_decreases_supply`
 - Track / property class / proof family: `proof-only` / `supply_update` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -2489,6 +2989,46 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferSufficient.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
 
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero`
+- Track / property class / proof family: `proof-only` / `insufficient_balance_zero_transfer` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_insufficient_transfer_zero`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert`
+- Track / property class / proof family: `proof-only` / `non_reversion` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_no_balance_revert`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferNoBalanceRevert.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation`
+- Track / property class / proof family: `proof-only` / `balance_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_pair_conservation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferPairConservation.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes`
+- Track / property class / proof family: `proof-only` / `revert_rollback` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.uninitialized_sender_reverts_without_writes`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
 ### `zodiac/roles_decoder_faithfulness/metadata_bridge`
 - Track / property class / proof family: `proof-only` / `calldata_decoder_metadata` / `refinement_equivalence`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -2536,5 +3076,6 @@ This report is generated from the benchmark manifests.
 - Regenerate metadata: `python3 scripts/generate_metadata.py`
 - Run one task: `./scripts/run_task.sh <project/case_id/task_id>`
 - Run one case: `./scripts/run_case.sh <project/case_id>`
-- Run active suite: `./scripts/run_all.sh`
+- Run mutable full suite: `./scripts/run_all.sh`
+- Run frozen v0.2 suite: `./scripts/run_all.sh --suite v0.2`
 - Run repo check: `./scripts/check.sh`

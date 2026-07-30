@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: malformed_pair_lifecycle
+case_id: yo_protocol/async_redemption_escrow
+split: active
+family_id: yo_protocol
+implementation_id: core_v2
+source_ref: https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.malformed_pair_lifecycle
+proof_family: protocol_transition_correctness
+property_class: malformed_record_behavior
+difficulty: hard
+category: malformed-pending-pairs
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/yo_protocol/async_redemption_escrow/verity/Contract.lean
+  - Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean
+specification_files:
+  - cases/yo_protocol/async_redemption_escrow/verity/Specs.lean
+  - Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean
+editable_files:
+  - Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/MalformedPairDormancyAndRevival.lean
+reference_solution_module: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs
+reference_solution_declaration: Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.malformed_pair_lifecycle
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Constructs one-sided records through queued source transitions and permitted
+  settlements, then proves both dormant guards and positive-gross repair queues.
+unsupported_feature_codes: []

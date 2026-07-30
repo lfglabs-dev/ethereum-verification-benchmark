@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import subprocess
+import tempfile
 from datetime import date
 from pathlib import Path
 
@@ -23,6 +24,15 @@ from manifests import list_groups  # noqa: E402
 from manifest_utils import load_manifest_data  # noqa: E402
 
 HASH_PREFIX = "sha256:"
+# v0.2's closure helper did not exist in the frozen source commit.  Its exact
+# bytes are therefore a separately pinned part of the frozen verifier TCB.
+# This is a blob OID in this reviewed tree, rather than a PR commit OID: a
+# squash merge and a shallow checkout retain the tree's blobs but need not
+# retain intermediate PR commits.  Never substitute candidate-checkout bytes
+# into a pinned baseline worktree.
+TRUSTED_CLOSURE_HELPER_BLOB = "c6f1a35009258bbe209a4c2ee6ae01148127e858"
+TRUSTED_CLOSURE_HELPER_PATH = "scripts/v02_reference_closure.py"
+TRUSTED_CLOSURE_HELPER_SHA256 = "ec090173fd2555e2557e33fb88920ea9f1d83bf2aa1fa0bb971aa30c6c3937b2"
 TASK_METADATA_FIELDS = (
     "proof_family",
     "property_class",
@@ -69,6 +79,69 @@ def digest_bytes(value: bytes) -> str:
 
 def digest_json(value: Any) -> str:
     return digest_bytes(canonical_json(value))
+
+
+def trusted_closure_helper_source() -> bytes:
+    """Return the independently pinned closure helper after fail-closed checks.
+
+    The candidate path is treated strictly as data: its SHA-256 is checked,
+    ``git ls-tree HEAD`` must name the literal blob OID, and ``git cat-file``
+    bytes for that OID must match the literal SHA-256 before any helper code
+    can execute.  Consumers execute only the returned bytes in a fresh
+    namespace, never through candidate ``scripts`` import resolution.
+
+    The trusted computing base is the literal OID/SHA-256 pins below, Git's
+    object/database and executable, and the Python interpreter/stdlib used to
+    execute verified bytes.  The candidate checkout, its import paths, and
+    all unverified candidate helper bytes are not trusted.
+    """
+    candidate = ROOT / TRUSTED_CLOSURE_HELPER_PATH
+    if not candidate.is_file():
+        raise ValueError("trusted closure helper missing from candidate checkout")
+    candidate_bytes = candidate.read_bytes()
+    if hashlib.sha256(candidate_bytes).hexdigest() != TRUSTED_CLOSURE_HELPER_SHA256:
+        raise ValueError("trusted closure helper digest drift in candidate checkout")
+    tree_entry = subprocess.run(
+        ["git", "ls-tree", "-r", "--full-tree", "HEAD", "--", TRUSTED_CLOSURE_HELPER_PATH],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    expected_entry = f"100644 blob {TRUSTED_CLOSURE_HELPER_BLOB}\t{TRUSTED_CLOSURE_HELPER_PATH}"
+    if tree_entry.returncode or tree_entry.stdout.strip() != expected_entry:
+        raise ValueError("trusted closure helper blob is not reachable from the final tree")
+    source = subprocess.run(
+        ["git", "cat-file", "blob", TRUSTED_CLOSURE_HELPER_BLOB],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if source.returncode:
+        raise ValueError("trusted closure helper unavailable (infra): pinned blob not materialized")
+    if hashlib.sha256(source.stdout).hexdigest() != TRUSTED_CLOSURE_HELPER_SHA256:
+        raise ValueError("trusted closure helper digest drift in pinned source")
+    return source.stdout
+
+
+def trusted_closure_helper_namespace() -> dict[str, object]:
+    """Execute verified helper bytes in an isolated, non-imported namespace."""
+    source = trusted_closure_helper_source()
+    namespace: dict[str, object] = {
+        "__name__": "_verified_v02_reference_closure_",
+        "__file__": f"<verified git blob {TRUSTED_CLOSURE_HELPER_BLOB}>",
+    }
+    exec(compile(source, namespace["__file__"], "exec"), namespace)
+    return namespace
+
+
+def trusted_closure_helper_metadata() -> dict[str, str]:
+    """Provenance recorded in the v0.2 source metadata."""
+    return {
+        "blob": TRUSTED_CLOSURE_HELPER_BLOB,
+        "path": TRUSTED_CLOSURE_HELPER_PATH,
+        "sha256": TRUSTED_CLOSURE_HELPER_SHA256,
+    }
 
 
 def read_file_entry(path: Path) -> dict[str, object]:
@@ -166,6 +239,162 @@ def ordered_tasks(suite: str = "active") -> list[dict[str, object]]:
     return [task_entry(task) for task in sorted(tasks, key=lambda item: item.task_ref)]
 
 
+def task_entries(suite: str = "all") -> dict[str, dict[str, object]]:
+    """Return canonical task entries keyed by ref from the production derivation."""
+    entries = ordered_tasks(suite)
+    result = {str(entry["task_ref"]): entry for entry in entries}
+    if len(result) != len(entries):
+        raise ValueError("cannot recompute task entries with duplicate refs")
+    return result
+
+
+def task_metadata(suite: str = "all") -> dict[str, tuple[str, str]]:
+    """Return production fingerprints keyed by task reference.
+
+    Keep consumers of frozen contracts on the same ``task_entry`` derivation as
+    version-manifest generation; this is deliberately not a parallel hash
+    implementation.
+    """
+    metadata: dict[str, tuple[str, str]] = {}
+    for task in task_entries(suite).values():
+        ref = task.get("task_ref")
+        fingerprint = task.get("task_fingerprint")
+        interface_id = task.get("task_interface_id")
+        if not isinstance(ref, str) or not isinstance(fingerprint, str) or not isinstance(interface_id, str):
+            raise ValueError("cannot recompute task metadata")
+        metadata[ref] = (fingerprint, interface_id)
+    return metadata
+
+
+def baseline_contract_entries(
+    commit: str,
+) -> tuple[dict[str, dict[str, object]], dict[str, dict[str, str]]]:
+    """Recompute canonical task and reference entries in ``commit`` only."""
+    source = trusted_closure_helper_source()
+    program = """
+import hashlib, json
+from pathlib import Path
+from scripts.compute_fingerprints import ordered_tasks
+from harness.task_runner import load_task_record, resolve_task_manifest
+closure_namespace = {'__name__': '_verified_v02_reference_closure_', '__file__': '<verified closure helper>'}
+exec(compile(__TRUSTED_CLOSURE_SOURCE__, closure_namespace['__file__'], 'exec'), closure_namespace)
+collect_reference_closure = closure_namespace['collect_reference_closure']
+tasks = ordered_tasks('all')
+references = {}
+for task in tasks:
+    task_path = resolve_task_manifest(task['task_ref'])
+    reference = load_task_record(task_path)['reference_solution']
+    module = reference['module']
+    module_path = Path.cwd().joinpath(*module.split('.')).with_suffix('.lean')
+    references[task['task_ref']] = {
+        'reference_module': module,
+        'reference_declaration': reference['declaration'],
+        'reference_module_path': str(module_path.relative_to(Path.cwd())),
+        'reference_module_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
+        'reference_import_closure': collect_reference_closure(Path.cwd(), module),
+    }
+print(json.dumps({'tasks': tasks, 'references': references}, sort_keys=True))
+"""
+    with tempfile.TemporaryDirectory(prefix="benchmark-baseline-metadata-") as directory:
+        worktree = Path(directory) / "source"
+        added = subprocess.run(
+            ["git", "worktree", "add", "--detach", str(worktree), commit],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if added.returncode:
+            raise ValueError(f"pinned source unavailable (infra): {commit}")
+        try:
+            result = subprocess.run(
+                [sys.executable, "-c", program.replace("__TRUSTED_CLOSURE_SOURCE__", repr(source))],
+                cwd=worktree, text=True, capture_output=True, check=False
+            )
+            if result.returncode:
+                raise ValueError(f"pinned source canonical recomputation unavailable (infra): {commit}")
+            data = json.loads(result.stdout)
+        finally:
+            subprocess.run(["git", "worktree", "remove", "--force", str(worktree)], cwd=ROOT, check=False)
+    tasks = data.get("tasks") if isinstance(data, dict) else None
+    references = data.get("references") if isinstance(data, dict) else None
+    if not isinstance(tasks, list) or not isinstance(references, dict):
+        raise ValueError("pinned source canonical entries malformed")
+    entries = {entry.get("task_ref"): entry for entry in tasks if isinstance(entry, dict)}
+    if len(entries) != len(tasks) or not all(isinstance(ref, str) for ref in entries):
+        raise ValueError("pinned source canonical task entries malformed")
+    if set(references) != set(entries) or not all(
+        isinstance(ref, str) and isinstance(entry, dict) for ref, entry in references.items()
+    ):
+        raise ValueError("pinned source reference entries malformed")
+    return entries, references
+
+
+def baseline_version_metadata(
+    commit: str,
+    *,
+    version: str,
+    created_at: str,
+    suite: str = "all",
+    mode: str = "fair",
+    budget: str = "normal",
+) -> dict[str, object]:
+    """Derive version-level metadata in the immutable pinned source tree.
+
+    This deliberately calls the same ``build_version_manifest`` implementation
+    used for ordinary releases, rather than reimplementing its identity hashes.
+    """
+    program = f"""
+import json
+from scripts.compute_fingerprints import build_version_manifest
+manifest = build_version_manifest(
+    {version!r}, created_at={created_at!r}, suite={suite!r}, mode={mode!r}, budget={budget!r}
+)
+print(json.dumps({{key: value for key, value in manifest.items() if key != 'tasks'}}, sort_keys=True))
+"""
+    with tempfile.TemporaryDirectory(prefix="benchmark-baseline-version-") as directory:
+        worktree = Path(directory) / "source"
+        added = subprocess.run(
+            ["git", "worktree", "add", "--detach", str(worktree), commit],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if added.returncode:
+            raise ValueError(f"pinned source unavailable (infra): {commit}")
+        try:
+            result = subprocess.run(
+                [sys.executable, "-c", program], cwd=worktree, text=True, capture_output=True, check=False
+            )
+            if result.returncode:
+                raise ValueError(f"pinned source version metadata recomputation unavailable (infra): {commit}")
+            metadata = json.loads(result.stdout)
+        finally:
+            subprocess.run(["git", "worktree", "remove", "--force", str(worktree)], cwd=ROOT, check=False)
+    if not isinstance(metadata, dict) or not all(isinstance(key, str) for key in metadata):
+        raise ValueError("pinned source version metadata malformed")
+    return metadata
+
+
+def baseline_task_entries(commit: str) -> dict[str, dict[str, object]]:
+    """Return full canonical entries from the pinned source revision."""
+    return baseline_contract_entries(commit)[0]
+
+
+def baseline_reference_entries(commit: str) -> dict[str, dict[str, str]]:
+    """Return reference declarations and module hashes from the pinned revision."""
+    return baseline_contract_entries(commit)[1]
+
+
+def baseline_task_metadata(commit: str) -> dict[str, tuple[str, str]]:
+    """Compatibility view of the pinned canonical task entries."""
+    return {
+        ref: (str(entry["task_fingerprint"]), str(entry["task_interface_id"]))
+        for ref, entry in baseline_task_entries(commit).items()
+    }
+
+
 def task_set_id(tasks: list[dict[str, object]]) -> str:
     return digest_json([task["task_ref"] for task in tasks])
 
@@ -196,11 +425,11 @@ def harness_id() -> str:
 
 
 def environment_id() -> str:
+    """Hash Lean/Lake runtime inputs, never a mutable suite selector."""
     roots = [
         ROOT / "lean-toolchain",
         ROOT / "lakefile.lean",
         ROOT / "lake-manifest.json",
-        ROOT / "benchmark.toml",
         ROOT / ".github" / "actions" / "setup-lean",
     ]
     return hash_tree(roots)

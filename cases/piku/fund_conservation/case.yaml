@@ -25,7 +25,7 @@ selected_functions:
   - executePaymentQueue
 source_language: solidity
 verity_version: 74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224
-lean_toolchain: leanprover/lean4:v4.22.0
+lean_toolchain: leanprover/lean4:v4.24.0
 abstraction_level: protocol_slice
 abstraction_tags:
   - ghost_accounting_slots

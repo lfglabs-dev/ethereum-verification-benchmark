@@ -103,8 +103,8 @@ def main() -> int:
             }
         ],
     )
-    if _single_class(gradeable_then_request_failure) != "GENUINE_FAIL":
-        errors.append("verifier failure after a gradeable submission should stay genuine")
+    if _single_class(gradeable_then_request_failure) != "INFRA_INVALID":
+        errors.append("verifier timeout after a gradeable submission should fail closed as INFRA_INVALID")
 
     tool_call_degeneration = classify_run(
         _verifier("no_submission"),

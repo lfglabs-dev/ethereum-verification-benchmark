@@ -446,7 +446,8 @@ def write_report(
         "- Regenerate metadata: `python3 scripts/generate_metadata.py`",
         "- Run one task: `./scripts/run_task.sh <project/case_id/task_id>`",
         "- Run one case: `./scripts/run_case.sh <project/case_id>`",
-        "- Run active suite: `./scripts/run_all.sh`",
+        "- Run mutable full suite: `./scripts/run_all.sh`",
+        "- Run frozen v0.2 suite: `./scripts/run_all.sh --suite v0.2`",
         "- Run repo check: `./scripts/check.sh`",
         "",
     ])

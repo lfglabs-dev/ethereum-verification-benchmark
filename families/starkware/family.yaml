@@ -1,0 +1,14 @@
+manifest_kind: family
+schema_version: 1
+family_id: starkware
+display_name: StarkWare / StarkGate
+split: active
+status: active
+description: >
+  StarkGate bridge L1 accounting verification cases.
+implementation_ids:
+  - starkgate_bridge
+case_ids:
+  - starkware/starkgate_escrow
+source_languages:
+  - solidity

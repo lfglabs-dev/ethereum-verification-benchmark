@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: create_non_app_preserves_cfa_projection
+case_id: superfluid/realtime_balance_conservation
+split: active
+family_id: superfluid
+implementation_id: cfa_realtime_accounting
+source_ref: https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_cfa_projection
+proof_family: state_preservation_local_effects
+property_class: accounting_conservation
+difficulty: hard
+category: cfa_projection_conservation
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/superfluid/realtime_balance_conservation/verity/Contract.lean
+  - Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean
+specification_files:
+  - cases/superfluid/realtime_balance_conservation/verity/Specs.lean
+  - Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean
+editable_files:
+  - Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesCfaProjection.lean
+reference_solution_module: Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs
+reference_solution_declaration: Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_cfa_projection
+abstraction_level: protocol_slice
+abstraction_notes: >
+  See the case manifest and Contract.lean source relation. The theorem concerns
+  the CFA projection, not native multi-agreement realtimeBalanceOf.
+unsupported_feature_codes:
+  - signed_mapping_surface_syntax

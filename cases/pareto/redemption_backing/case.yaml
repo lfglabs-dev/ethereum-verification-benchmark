@@ -20,7 +20,7 @@ selected_functions:
   - depositFunds
 source_language: solidity
 verity_version: d26a6ffa83ec8e8445533f076442c06dd1cdf487
-lean_toolchain: leanprover/lean4:v4.22.0
+lean_toolchain: leanprover/lean4:v4.24.0
 abstraction_level: protocol_slice
 abstraction_tags:
   - redemption_queue

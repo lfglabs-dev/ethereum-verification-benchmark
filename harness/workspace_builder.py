@@ -3,23 +3,566 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import signal
 import shutil
+import subprocess
 import tempfile
+import time
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 
 try:
     from .manifests import Group, group_to_json
     from .paths import ROOT
+    from .verify_lease import verify_lease
 except ImportError:
     from manifests import Group, group_to_json
     from paths import ROOT
+    from verify_lease import verify_lease
 
 
 @dataclass(frozen=True)
 class BuiltWorkspace:
     path: Path
     manifest_path: Path
+
+
+# Every generated fair/shell workspace gets this restricted, public Grindset
+# surface. Warm the component modules in the repo cache up front; otherwise the
+# first provider arm silently pays their multi-minute cold build even after a
+# successful `warm-task`. Do not warm the repository's broader Grindset
+# umbrella, whose imports intentionally differ from the generated workspace.
+PUBLIC_WORKSPACE_GRINDSET_MODULES = (
+    "Benchmark.Grindset.ArithCore",
+    "Benchmark.Grindset.Attr",
+    "Benchmark.Grindset.Core",
+    "Benchmark.Grindset.Monad",
+    "Benchmark.Grindset.Reach",
+)
+
+
+def declared_lean_toolchain() -> str:
+    """Return the exact repository toolchain used by every setup command."""
+    path = ROOT / "lean-toolchain"
+    value = path.read_text(encoding="utf-8").strip()
+    if not value or any(char.isspace() for char in value):
+        raise RuntimeError(f"invalid lean-toolchain declaration: {value!r}")
+    return value
+
+
+def toolchain_command(program: str, *args: str) -> list[str]:
+    """Run a Lean tool through the declared Elan toolchain, never host default."""
+    return ["elan", "run", "--install", declared_lean_toolchain(), program, *args]
+
+
+def toolchain_environment() -> dict[str, str]:
+    env = os.environ.copy()
+    # A workspace-level override must not silently beat the repository pin.
+    override = env.pop("ELAN_TOOLCHAIN", None)
+    declared = declared_lean_toolchain()
+    if override is not None and override != declared:
+        raise RuntimeError(
+            f"ELAN_TOOLCHAIN={override!r} conflicts with repository pin {declared!r}"
+        )
+    return env
+
+
+def _validate_effective_toolchain(
+    log_path: Path, *, timeout_seconds: int
+) -> dict[str, object]:
+    """Validate the pinned toolchain within the enclosing warm budget.
+
+    ``elan run --install`` may download a missing pinned toolchain, so this
+    required preflight must use the same bounded cold-install allowance as the
+    dependency warm phase rather than a separate short validation cap.
+    """
+    expected = declared_lean_toolchain().rsplit(":v", 1)[-1]
+    command = toolchain_command("lean", "--version")
+    started = time.monotonic()
+    try:
+        completed = subprocess.run(
+            command,
+            cwd=ROOT,
+            env=toolchain_environment(),
+            capture_output=True,
+            text=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+        output = (completed.stdout + completed.stderr).strip()
+        exit_code = completed.returncode
+    except subprocess.TimeoutExpired:
+        output = (
+            f"toolchain validation timed out after {timeout_seconds} seconds "
+            f"while running {' '.join(command)}"
+        )
+        exit_code = 124
+    except (OSError, RuntimeError) as exc:
+        output = str(exc)
+        exit_code = 127
+    matched = exit_code == 0 and f"version {expected}" in output
+    status = "passed" if matched else "timeout" if exit_code == 124 else "failed"
+    return {
+        "kind": "lean_toolchain",
+        "required": True,
+        "status": status,
+        "exit_code": 0 if matched else exit_code or 1,
+        "duration_seconds": round(time.monotonic() - started, 3),
+        "declared_toolchain": declared_lean_toolchain(),
+        "effective_version": output.splitlines()[0] if output else "",
+        "command": command,
+        "log_path": str(log_path),
+    }
+
+
+def _invalid_package_checkouts() -> list[str]:
+    packages = ROOT / ".lake" / "packages"
+    try:
+        manifest = json.loads(
+            (ROOT / "lake-manifest.json").read_text(encoding="utf-8")
+        )
+        if not isinstance(manifest, dict):
+            raise ValueError("manifest is not an object")
+        manifest_entries = manifest.get("packages", [])
+        if not isinstance(manifest_entries, list):
+            raise ValueError("manifest packages is not a list")
+    except (OSError, ValueError, json.JSONDecodeError, TypeError):
+        return ["<invalid-lake-manifest>"]
+
+    invalid: list[str] = []
+    manifest_packages: set[str] = set()
+    for entry in manifest_entries:
+        if not isinstance(entry, dict) or entry.get("type") != "git":
+            continue
+        name = entry.get("name")
+        if not _safe_package_component(name):
+            invalid.append(_package_diagnostic(name))
+            continue
+        manifest_packages.add(name)
+
+    if not manifest_packages:
+        return sorted(set(invalid))
+    try:
+        root_location = ROOT.resolve(strict=True)
+        package_root = packages.resolve(strict=True)
+        valid_package_root = (
+            packages.is_dir()
+            and not packages.is_symlink()
+            and package_root.is_relative_to(root_location)
+        )
+    except (OSError, RuntimeError, ValueError):
+        valid_package_root = False
+        package_root = None
+    if not valid_package_root or package_root is None:
+        return sorted(set(invalid).union(manifest_packages))
+
+    for name in sorted(manifest_packages):
+        package = packages / name
+        try:
+            package_location = package.resolve(strict=True)
+            owns_location = (
+                not package.is_symlink()
+                and package.is_dir()
+                and package_location.parent == package_root
+            )
+            if not owns_location:
+                invalid.append(package.name)
+                continue
+            top_level = subprocess.run(
+                ["git", "-C", str(package), "rev-parse", "--show-toplevel"],
+                env=toolchain_environment(),
+                capture_output=True,
+                text=True,
+                timeout=10,
+                check=False,
+            )
+            head = subprocess.run(
+                ["git", "-C", str(package), "rev-parse", "--verify", "HEAD"],
+                env=toolchain_environment(),
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=10,
+                check=False,
+            )
+            owns_worktree = (
+                top_level.returncode == 0
+                and bool(top_level.stdout.strip())
+                and Path(top_level.stdout.strip()).resolve(strict=True) == package_location
+            )
+        except (OSError, RuntimeError, ValueError, subprocess.TimeoutExpired):
+            owns_worktree = False
+            head = None
+        if not owns_worktree or head is None or head.returncode != 0:
+            invalid.append(name)
+    return sorted(set(invalid))
+
+
+def _safe_package_component(name: object) -> bool:
+    """Return whether a manifest package name can name one package child."""
+    if not isinstance(name, str) or not name or name in {".", ".."}:
+        return False
+    try:
+        return (
+            "/" not in name
+            and "\\" not in name
+            and not Path(name).is_absolute()
+            and not PureWindowsPath(name).is_absolute()
+            and not PureWindowsPath(name).drive
+        )
+    except ValueError:
+        return False
+
+
+def _package_diagnostic(name: object) -> str:
+    """Keep malformed manifest diagnostics safe and bounded for warm logs."""
+    if isinstance(name, str):
+        return name[:120] or "<invalid-package-name>"
+    return "<invalid-package-name>"
+
+
+def _wait_for_package_checkouts(log_path: Path) -> dict[str, object]:
+    """Wait out a concurrent Lake checkout instead of observing partial Git state."""
+    timeout = float(os.environ.get("VERITY_PACKAGE_CHECKOUT_TIMEOUT_SECONDS", "180"))
+    started = time.monotonic()
+    invalid = _invalid_package_checkouts()
+    while invalid and time.monotonic() - started < timeout:
+        time.sleep(1)
+        invalid = _invalid_package_checkouts()
+    return {
+        "kind": "package_checkout_health",
+        "required": True,
+        "status": "passed" if not invalid else "failed",
+        "exit_code": 0 if not invalid else 1,
+        "duration_seconds": round(time.monotonic() - started, 3),
+        "invalid_packages": invalid,
+        "log_path": str(log_path),
+    }
+
+
+def warm_result_failed(item: dict[str, object]) -> bool:
+    """Return whether a required warm step failed."""
+    return item.get("required", True) is not False and item.get("exit_code") != 0
+
+
+def _mathlib_cache_fingerprint() -> str:
+    digest = hashlib.sha256()
+    for name in ("lean-toolchain", "lake-manifest.json"):
+        path = ROOT / name
+        if path.is_file():
+            digest.update(name.encode())
+            digest.update(path.read_bytes())
+    return digest.hexdigest()[:20]
+
+
+def _prefetch_mathlib_cache(
+    *, timeout_seconds: int, log, log_path: Path, heartbeat_seconds: float
+) -> dict[str, object]:
+    """Best-effort Mathlib binary-cache fetch before source compilation."""
+    sentinel = ROOT / ".lake" / f".verity-mathlib-cache-{_mathlib_cache_fingerprint()}"
+    if sentinel.is_file():
+        print("[dependency-warm] cache=mathlib state=cached", flush=True)
+        return {
+            "kind": "mathlib_cache",
+            "required": False,
+            "status": "cached",
+            "exit_code": 0,
+            "duration_seconds": 0.0,
+            "log_path": str(log_path),
+        }
+
+    queued_at = time.monotonic()
+    print("[dependency-warm] cache=mathlib state=waiting_for_lease", flush=True)
+    with verify_lease(label="dependency_cache_get") as lease_reason:
+        if sentinel.is_file():
+            return {
+                "kind": "mathlib_cache",
+                "required": False,
+                "status": "cached",
+                "exit_code": 0,
+                "duration_seconds": 0.0,
+                "lease": lease_reason,
+                "lease_wait_seconds": round(time.monotonic() - queued_at, 3),
+                "log_path": str(log_path),
+            }
+        started = time.monotonic()
+        lease_wait_seconds = round(started - queued_at, 3)
+        log.write("\n$ lake exe cache get\n")
+        log.flush()
+        try:
+            process = subprocess.Popen(
+                toolchain_command("lake", "exe", "cache", "get"),
+                cwd=ROOT,
+                env=toolchain_environment(),
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                text=True,
+                start_new_session=True,
+            )
+        except OSError as exc:
+            duration = round(time.monotonic() - started, 3)
+            log.write(f"best-effort cache prefetch could not start: {exc}\n")
+            log.flush()
+            return {
+                "kind": "mathlib_cache",
+                "required": False,
+                "status": "failed",
+                "exit_code": 127,
+                "duration_seconds": duration,
+                "lease": lease_reason,
+                "lease_wait_seconds": lease_wait_seconds,
+                "log_path": str(log_path),
+                "error": str(exc),
+            }
+        timed_out = False
+        try:
+            while process.poll() is None:
+                elapsed = time.monotonic() - started
+                remaining = timeout_seconds - elapsed
+                if remaining <= 0:
+                    timed_out = True
+                    try:
+                        os.killpg(process.pid, signal.SIGTERM)
+                    except ProcessLookupError:
+                        pass
+                    try:
+                        process.wait(timeout=5)
+                    except subprocess.TimeoutExpired:
+                        try:
+                            os.killpg(process.pid, signal.SIGKILL)
+                        except ProcessLookupError:
+                            pass
+                        process.wait()
+                    break
+                try:
+                    process.wait(timeout=min(heartbeat_seconds, remaining))
+                except subprocess.TimeoutExpired:
+                    print(
+                        f"[dependency-warm] cache=mathlib state=running elapsed_seconds={int(elapsed)}",
+                        flush=True,
+                    )
+        except BaseException:
+            if process.poll() is None:
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                process.wait()
+            raise
+
+        duration = round(time.monotonic() - started, 3)
+        exit_code = 124 if timed_out else int(process.returncode or 0)
+        status = "timeout" if timed_out else "passed" if exit_code == 0 else "failed"
+        if exit_code == 0:
+            sentinel.parent.mkdir(parents=True, exist_ok=True)
+            sentinel.write_text("ok\n", encoding="utf-8")
+        print(
+            f"[dependency-warm] cache=mathlib state={status} exit_code={exit_code} "
+            f"duration_seconds={duration}",
+            flush=True,
+        )
+        return {
+            "kind": "mathlib_cache",
+            "required": False,
+            "status": status,
+            "exit_code": exit_code,
+            "duration_seconds": duration,
+            "lease": lease_reason,
+            "lease_wait_seconds": lease_wait_seconds,
+            "log_path": str(log_path),
+        }
+
+
+def public_dependency_modules(group: Group) -> list[str]:
+    """Return public, non-editable Lean modules worth warming once at repo scope."""
+    modules: set[str] = set(PUBLIC_WORKSPACE_GRINDSET_MODULES)
+    for task in group.tasks:
+        for rel_path in (*task.implementation_files, *task.specification_files):
+            path = Path(rel_path)
+            if path.suffix != ".lean":
+                continue
+            if "Proofs.lean" in rel_path or "GeneratedPreview" in path.parts:
+                raise ValueError(f"refusing to warm forbidden dependency {rel_path}")
+            # The configured Lean library is rooted at Benchmark/. Lower-case
+            # cases/** files are translation/context inputs, not Lake targets.
+            if not path.parts or path.parts[0] != "Benchmark":
+                continue
+            modules.add(".".join(path.with_suffix("").parts))
+    return sorted(modules)
+
+
+def warm_public_dependencies(
+    group: Group,
+    *,
+    timeout_seconds: int,
+    log_path: Path,
+    heartbeat_seconds: float = 10.0,
+) -> list[dict[str, object]]:
+    """Warm public implementation/spec modules in the persistent repo cache.
+
+    Workspaces clone ``ROOT/.lake/build`` after this step, so repeated task
+    runs do not recompile the same dependency graph. Output stays in a durable
+    log while concise heartbeats make long cold builds externally observable.
+    """
+    log_path.parent.mkdir(parents=True, exist_ok=True)
+    results: list[dict[str, object]] = []
+    with log_path.open("a", encoding="utf-8") as log:
+        toolchain_result = _validate_effective_toolchain(
+            log_path, timeout_seconds=timeout_seconds
+        )
+        results.append(toolchain_result)
+        log.write(
+            "$ " + " ".join(toolchain_result["command"]) + "\n"
+            + str(toolchain_result["effective_version"]) + "\n"
+        )
+        log.flush()
+        if warm_result_failed(toolchain_result):
+            print(
+                f"[dependency-warm] toolchain state={toolchain_result['status']} "
+                f"declared={toolchain_result['declared_toolchain']} "
+                f"exit_code={toolchain_result['exit_code']}",
+                flush=True,
+            )
+            return results
+        cache_timeout = min(
+            timeout_seconds,
+            int(os.environ.get("VERITY_CACHE_GET_TIMEOUT_SECONDS", "1800")),
+        )
+        results.append(
+            _prefetch_mathlib_cache(
+                timeout_seconds=cache_timeout,
+                log=log,
+                log_path=log_path,
+                heartbeat_seconds=heartbeat_seconds,
+            )
+        )
+        for module in public_dependency_modules(group):
+            queued_at = time.monotonic()
+            print(f"[dependency-warm] module={module} state=waiting_for_lease", flush=True)
+            log.write(f"\n$ lake build {module}\n")
+            log.flush()
+            timed_out = False
+            with verify_lease(label="dependency_warm") as lease_reason:
+                # Cache hydration shares this lease. Validate again after acquiring
+                # it so another warmer cannot leave a partial checkout between the
+                # earlier health check and this required build.
+                checkout_result = _wait_for_package_checkouts(log_path)
+                results.append(checkout_result)
+                if warm_result_failed(checkout_result):
+                    log.write(
+                        "invalid package checkouts: "
+                        + ", ".join(checkout_result["invalid_packages"])
+                        + "\n"
+                    )
+                    log.flush()
+                    print(
+                        "[dependency-warm] package_checkout state=failed invalid="
+                        + ",".join(checkout_result["invalid_packages"]),
+                        flush=True,
+                    )
+                    return results
+                started = time.monotonic()
+                lease_wait_seconds = round(started - queued_at, 3)
+                print(
+                    f"[dependency-warm] module={module} state=starting "
+                    f"lease={lease_reason} lease_wait_seconds={lease_wait_seconds}",
+                    flush=True,
+                )
+                try:
+                    process = subprocess.Popen(
+                        toolchain_command("lake", "build", module),
+                        cwd=ROOT,
+                        env=toolchain_environment(),
+                        stdout=log,
+                        stderr=subprocess.STDOUT,
+                        text=True,
+                        start_new_session=True,
+                    )
+                except OSError as exc:
+                    duration = round(time.monotonic() - started, 3)
+                    message = f"failed to start lake build: {exc}"
+                    log.write(f"{message}\n")
+                    log.flush()
+                    print(
+                        f"[dependency-warm] module={module} state=failed "
+                        f"exit_code=127 duration_seconds={duration}",
+                        flush=True,
+                    )
+                    results.append(
+                        {
+                            "module": module,
+                            "status": "failed",
+                            "exit_code": 127,
+                            "duration_seconds": duration,
+                            "lease": lease_reason,
+                            "lease_wait_seconds": lease_wait_seconds,
+                            "log_path": str(log_path),
+                            "error": message,
+                        }
+                    )
+                    break
+                try:
+                    while process.poll() is None:
+                        elapsed = time.monotonic() - started
+                        remaining = timeout_seconds - elapsed
+                        if remaining <= 0:
+                            timed_out = True
+                            try:
+                                os.killpg(process.pid, signal.SIGTERM)
+                            except ProcessLookupError:
+                                pass
+                            try:
+                                process.wait(timeout=5)
+                            except subprocess.TimeoutExpired:
+                                try:
+                                    os.killpg(process.pid, signal.SIGKILL)
+                                except ProcessLookupError:
+                                    pass
+                                process.wait()
+                            break
+                        try:
+                            process.wait(timeout=min(heartbeat_seconds, remaining))
+                        except subprocess.TimeoutExpired:
+                            print(
+                                f"[dependency-warm] module={module} state=running elapsed_seconds={int(elapsed)}",
+                                flush=True,
+                            )
+                except BaseException:
+                    if process.poll() is None:
+                        try:
+                            os.killpg(process.pid, signal.SIGTERM)
+                        except ProcessLookupError:
+                            pass
+                        try:
+                            process.wait(timeout=5)
+                        except subprocess.TimeoutExpired:
+                            try:
+                                os.killpg(process.pid, signal.SIGKILL)
+                            except ProcessLookupError:
+                                pass
+                            process.wait()
+                    raise
+            duration = round(time.monotonic() - started, 3)
+            exit_code = 124 if timed_out else int(process.returncode or 0)
+            status = "timeout" if timed_out else "passed" if exit_code == 0 else "failed"
+            print(
+                f"[dependency-warm] module={module} state={status} exit_code={exit_code} "
+                f"duration_seconds={duration}",
+                flush=True,
+            )
+            results.append(
+                {
+                    "module": module,
+                    "status": status,
+                    "exit_code": exit_code,
+                    "duration_seconds": duration,
+                    "lease": lease_reason,
+                    "lease_wait_seconds": lease_wait_seconds,
+                    "log_path": str(log_path),
+                }
+            )
+            if exit_code != 0:
+                break
+    return results
 
 
 def sha256_file(path: Path) -> str:
@@ -195,7 +738,12 @@ def setup_private_lake(root_dir: Path, *, prune_to_sources: bool = False) -> dic
         (root_dir / ".lake" / "packages").symlink_to(lake_cache / "packages", target_is_directory=True)
         dependency_cache = {"path": ".lake/packages", "target": str(lake_cache / "packages")}
     if (lake_cache / "build").is_dir():
-        _clone_tree(lake_cache / "build", root_dir / ".lake" / "build")
+        # Dependency warms mutate the shared repo build cache under this same
+        # lease. Reacquire it for the complete clone so another runner cannot
+        # change the source tree halfway through our copy and produce a mixed
+        # workspace cache.
+        with verify_lease(label="dependency_cache_clone"):
+            _clone_tree(lake_cache / "build", root_dir / ".lake" / "build")
         if prune_to_sources:
             _prune_build_to_sources(root_dir)
     return dependency_cache

@@ -10,100 +10,116 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 34,
-    "implementation_count": 35,
-    "active_case_count": 34,
+    "family_count": 41,
+    "implementation_count": 42,
+    "active_case_count": 41,
     "backlog_case_count": 1,
-    "active_task_count": 216,
+    "active_task_count": 263,
     "backlog_task_count": 0,
-    "buildable_case_count": 34,
-    "runnable_task_count": 216,
+    "buildable_case_count": 41,
+    "runnable_task_count": 263,
     "case_stage_counts": {
-      "build_green": 29,
+      "build_green": 32,
       "candidate": 1,
-      "proof_complete": 5
+      "proof_complete": 9
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 34
+      "translated": 41
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 27,
+      "complete": 34,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 216
+      "proof-only": 263
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
-      "accounting_bound": 17,
-      "accounting_conservation": 15,
+      "accounting_bound": 18,
+      "accounting_conservation": 32,
       "accounting_effect": 2,
-      "accounting_invariant": 2,
+      "accounting_invariant": 3,
       "accounting_invariant_break": 1,
-      "accounting_update": 8,
+      "accounting_update": 10,
       "additivity": 1,
       "all_or_nothing": 3,
       "arithmetic_rounding": 6,
       "atomic_finalization": 2,
       "authority_required": 2,
       "authorization_state": 9,
-      "balance_conservation": 2,
+      "balance_conservation": 3,
       "balance_credit_update": 2,
       "balance_update": 1,
       "base_case_invariant": 1,
       "batch_completeness": 2,
       "biconditional_invariant": 3,
       "bounds_invariant": 1,
+      "branch_correctness": 1,
       "calldata_decoder_bounds": 1,
       "calldata_decoder_faithfulness": 1,
       "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
-      "composition_invariant": 1,
+      "composition_invariant": 3,
       "configuration_safety": 2,
       "counting_invariant": 1,
+      "cross_contract_fee_accounting": 1,
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
+      "escrow_lower_bound": 3,
       "exploit_trace": 1,
-      "failure_propagation": 2,
+      "failure_propagation": 3,
       "fee_accounting_bounds": 2,
       "fee_base_correctness": 2,
       "fee_conservation": 5,
       "fee_payout_bound": 1,
+      "fee_rounding_and_aliasing": 1,
       "fee_trigger": 1,
       "frame_property": 2,
-      "functional_property": 1,
+      "functional_property": 2,
       "guarded_solvency": 7,
       "independence_invariant": 1,
+      "insufficient_balance_zero_transfer": 1,
       "isOwner_effect": 3,
       "length_invariant": 1,
       "lifecycle_accounting": 3,
       "linked_list_acyclicity": 4,
       "linked_list_invariant": 8,
       "liveness_invariant": 1,
+      "malformed_record_behavior": 1,
       "mapping_consistency": 1,
       "minimum_output_gate": 1,
       "monotonic_counter": 2,
       "no_partial_success": 1,
       "non_leakage": 1,
+      "non_reversion": 1,
       "nonce_monotonicity": 1,
       "noninterference": 1,
       "output_range": 2,
       "overflow_safety": 1,
+      "owner_fallback_and_authority_order": 1,
+      "payout_safety": 2,
+      "per_receiver_isolation": 1,
       "pps_nondecrease": 1,
       "price_band": 2,
       "price_computation": 5,
       "price_floor": 1,
+      "receiver_aggregation": 1,
       "redemption_reserve_guard": 1,
+      "replay_lifecycle": 1,
       "replay_protection": 2,
       "reserve_state_transition": 5,
-      "revert_safety": 1,
+      "revert_atomicity": 1,
+      "revert_rollback": 1,
+      "revert_safety": 2,
       "safety_invariant": 2,
       "scope_invariant": 1,
       "silent_failure": 2,
+      "source_permitted_noop": 1,
+      "source_reachable_counterexample_coverage": 1,
       "storage_update": 3,
       "storage_write": 6,
       "subtree_partition": 1,
@@ -113,21 +129,39 @@
       "threshold_partition": 1,
       "total_conservation": 1,
       "tree_conservation": 1,
-      "weighted_selection": 1
+      "weighted_selection": 1,
+      "wrapper_delegation_and_pause": 1
     },
     "task_proof_family_counts": {
-      "authorization_enablement": 41,
-      "functional_correctness": 56,
-      "protocol_transition_correctness": 23,
+      "authorization_enablement": 42,
+      "functional_correctness": 60,
+      "protocol_transition_correctness": 40,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 54
+      "state_preservation_local_effects": 79
     },
     "family_split_counts": {
-      "active": 33,
+      "active": 40,
       "mixed": 1
     }
   },
   "families": [
+    {
+      "family_id": "1inch",
+      "display_name": "1inch Aqua",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for 1inch Aqua shared liquidity layer, starting with the XYCSwap constant-product AMM curve safety invariant.",
+      "implementation_ids": [
+        "aqua_xycswap"
+      ],
+      "case_ids": [
+        "1inch/xycswap_curve_safety"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/1inch/family.yaml"
+    },
     {
       "family_id": "alchemix",
       "display_name": "Alchemix",
@@ -214,6 +248,23 @@
       "manifest_path": "families/damn_vulnerable_defi/family.yaml"
     },
     {
+      "family_id": "enzyme",
+      "display_name": "Enzyme",
+      "split": "active",
+      "status": "active",
+      "description": "Enzyme protocol accounting benchmarks, including the Onyx modular vault stack.",
+      "implementation_ids": [
+        "onyx_fee_handler"
+      ],
+      "case_ids": [
+        "enzyme/onyx_fee_handler"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/enzyme/family.yaml"
+    },
+    {
       "family_id": "erc4337",
       "display_name": "ERC-4337",
       "split": "active",
@@ -263,6 +314,23 @@
         "solidity"
       ],
       "manifest_path": "families/forgeyields/family.yaml"
+    },
+    {
+      "family_id": "hypernova",
+      "display_name": "Hypernova",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Hypernova funded-trading account settlement and payout accounting invariants on Arbitrum.",
+      "implementation_ids": [
+        "arbitrum-deployment"
+      ],
+      "case_ids": [
+        "hypernova/settled_payout_safety"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/hypernova/family.yaml"
     },
     {
       "family_id": "ipor",
@@ -571,6 +639,40 @@
       "manifest_path": "families/safe/family.yaml"
     },
     {
+      "family_id": "starkware",
+      "display_name": "StarkWare / StarkGate",
+      "split": "active",
+      "status": "active",
+      "description": "StarkGate bridge L1 accounting verification cases.",
+      "implementation_ids": [
+        "starkgate_bridge"
+      ],
+      "case_ids": [
+        "starkware/starkgate_escrow"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/starkware/family.yaml"
+    },
+    {
+      "family_id": "superfluid",
+      "display_name": "Superfluid",
+      "split": "active",
+      "status": "active",
+      "description": "Hand-translated Superfluid agreement-accounting benchmarks over realtime token balances, continuous flows, and explicitly scoped callback schedules.",
+      "implementation_ids": [
+        "cfa_realtime_accounting"
+      ],
+      "case_ids": [
+        "superfluid/realtime_balance_conservation"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/superfluid/family.yaml"
+    },
+    {
       "family_id": "t3tris",
       "display_name": "T3tris Finance",
       "split": "active",
@@ -675,6 +777,23 @@
       "manifest_path": "families/wildcat/family.yaml"
     },
     {
+      "family_id": "yo_protocol",
+      "display_name": "YO Protocol",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for YO Protocol vault accounting, beginning with the receiver-keyed asynchronous redemption escrow lifecycle.",
+      "implementation_ids": [
+        "core_v2"
+      ],
+      "case_ids": [
+        "yo_protocol/async_redemption_escrow"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/yo_protocol/family.yaml"
+    },
+    {
       "family_id": "zama",
       "display_name": "Zama",
       "split": "active",
@@ -690,6 +809,23 @@
         "solidity"
       ],
       "manifest_path": "families/zama/family.yaml"
+    },
+    {
+      "family_id": "zama_protocol_apps",
+      "display_name": "Zama Protocol Apps",
+      "split": "active",
+      "status": "active",
+      "description": "Exact-source verification benchmarks for Zama protocol applications and confidential wrapper contracts.",
+      "implementation_ids": [
+        "protocol_apps_confidential_wrapper"
+      ],
+      "case_ids": [
+        "zama_protocol_apps/erc7984_upgradeable_exact_source"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/zama_protocol_apps/family.yaml"
     },
     {
       "family_id": "zodiac",
@@ -710,6 +846,22 @@
     }
   ],
   "implementations": [
+    {
+      "family_id": "1inch",
+      "implementation_id": "aqua_xycswap",
+      "display_name": "1inch Aqua XYCSwap",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/1inch/aqua",
+      "upstream_commit": "81c26e4619ce21556ab02b3284ee2685de21fb18",
+      "source_language": "solidity",
+      "source_artifact_path": "examples/apps/XYCSwap.sol",
+      "case_ids": [
+        "1inch/xycswap_curve_safety"
+      ],
+      "notes": "Implementation entry for the 1inch Aqua XYCSwap constant-product AMM app, scoped to the curve safety invariant over _quoteExactIn.",
+      "manifest_path": "families/1inch/implementations/aqua_xycswap/implementation.yaml"
+    },
     {
       "family_id": "alchemix",
       "implementation_id": "v3",
@@ -791,6 +943,22 @@
       "manifest_path": "families/damn_vulnerable_defi/implementations/v2/implementation.yaml"
     },
     {
+      "family_id": "enzyme",
+      "implementation_id": "onyx_fee_handler",
+      "display_name": "Enzyme Onyx FeeHandler",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/enzymefinance/protocol-onyx",
+      "upstream_commit": "8ae6f589b13a19d8390eb0956836c6a9f48fadab",
+      "source_language": "solidity",
+      "source_artifact_path": "src/components/fees/FeeHandler.sol",
+      "case_ids": [
+        "enzyme/onyx_fee_handler"
+      ],
+      "notes": "Dynamic management/performance fee ordering and aggregate/per-recipient owed-value accounting.",
+      "manifest_path": "families/enzyme/implementations/onyx_fee_handler/implementation.yaml"
+    },
+    {
       "family_id": "erc4337",
       "implementation_id": "erc4337_v09",
       "display_name": "ERC-4337 EntryPoint v0.9",
@@ -837,6 +1005,22 @@
       ],
       "notes": "Focused TokenGateway accounting implementation entry for the guarded global-solvency benchmark.",
       "manifest_path": "families/forgeyields/implementations/contracts/implementation.yaml"
+    },
+    {
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "display_name": "Hypernova Arbitrum Payout Deployment",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "source_language": "solidity",
+      "source_artifact_path": "TradingAccounts.sol and Vault.sol, verified on Arbitrum Blockscout",
+      "case_ids": [
+        "hypernova/settled_payout_safety"
+      ],
+      "notes": "This implementation pins TradingAccounts proxy 0x429d8f223acb622e5e748f6a7bdf1235b2334fcb, verified implementation 0x8Ed9f54425c53ABE68AfE3fBD936e703C8775a5B, and Vault 0x920973eebffd3bf7da14dd9fb52bd3bea1664c67 on Arbitrum One. The selected path is requestPayout through _executePayout and processPayout.",
+      "manifest_path": "families/hypernova/implementations/arbitrum-deployment/implementation.yaml"
     },
     {
       "family_id": "ipor",
@@ -1127,6 +1311,38 @@
       "manifest_path": "families/safe/implementations/smart_account/implementation.yaml"
     },
     {
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "display_name": "StarkGate Token Bridge",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/starknet-io/starkgate-contracts",
+      "upstream_commit": "07e11c39119a10d5742735be5b1d51894ebf5311",
+      "source_language": "solidity",
+      "source_artifact_path": "src/solidity/StarknetTokenBridge.sol",
+      "case_ids": [
+        "starkware/starkgate_escrow"
+      ],
+      "notes": "Verity model of the StarkGate L1 bridge accounting, focused on the escrow lower-bound invariant: the L1 escrow balance covers cumulative deposits minus cumulative withdrawals.",
+      "manifest_path": "families/starkware/implementations/starkgate_bridge/implementation.yaml"
+    },
+    {
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "display_name": "Superfluid Constant Flow Agreement V1 realtime accounting",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/superfluid-finance/protocol-monorepo",
+      "upstream_commit": "414109689d9041a8b6900b67b947f3f203c1da5d",
+      "source_language": "solidity",
+      "source_artifact_path": "packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "case_ids": [
+        "superfluid/realtime_balance_conservation"
+      ],
+      "notes": "CFA endpoint settlement and opposite-rate updates in a hand-translated decoded model, with a fixed duplicate-free account-list modular projection and a factored one-level receiver-SuperApp same-flow self-delete schedule. The behavioral hook executes supplied Verity Contracts and rejects level 2, but deliberately is not complete Host ABI/context semantics; the concrete instance retains actor, app, token/context, registry, noop, jailed, and credit guards. Source key and Host execution fidelity remain audited translation assumptions, not kernel-proved Solidity semantics. The completed reference proof suite covers all 22 tasks, including finite-list modular projection preservation at every later observation time, typed one-level composition, nested-revert rollback, and the concrete factored SelfDeleting callback instance.",
+      "manifest_path": "families/superfluid/implementations/cfa_realtime_accounting/implementation.yaml"
+    },
+    {
       "family_id": "t3tris",
       "implementation_id": "t3tris_vault",
       "display_name": "T3tris Vault",
@@ -1239,6 +1455,22 @@
       "manifest_path": "families/wildcat/implementations/v2_protocol/implementation.yaml"
     },
     {
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "display_name": "YO Protocol Core V2",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/yoprotocol/core-v2",
+      "upstream_commit": "7b023145cc99bc424e57ffa554584c609a1ecb30",
+      "source_language": "solidity",
+      "source_artifact_path": "src/YoVault.sol",
+      "case_ids": [
+        "yo_protocol/async_redemption_escrow"
+      ],
+      "notes": "Pinned Core V2 implementation whose YoVault redemption lifecycle is inherited unchanged by the reviewed Base yoUSD proxy implementation.",
+      "manifest_path": "families/yo_protocol/implementations/core_v2/implementation.yaml"
+    },
+    {
       "family_id": "zama",
       "implementation_id": "confidential_contracts",
       "display_name": "OpenZeppelin Confidential Contracts (ERC-7984)",
@@ -1253,6 +1485,22 @@
       ],
       "notes": "OpenZeppelin's reference implementation of ERC-7984, the confidential fungible token standard for Zama's fhEVM. Uses FHESafeMath for overflow-safe encrypted arithmetic and the FHE.select pattern for branchless conditional transfers.",
       "manifest_path": "families/zama/implementations/confidential_contracts/implementation.yaml"
+    },
+    {
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "display_name": "Zama Protocol Apps Confidential Wrapper",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/zama-ai/protocol-apps",
+      "upstream_commit": "2f88eef1d0b545438b1f74e21cdff7ea771805da",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "case_ids": [
+        "zama_protocol_apps/erc7984_upgradeable_exact_source"
+      ],
+      "notes": "Exact-source implementation entry for the upgradeable ERC-7984 base used by Zama protocol-apps ConfidentialWrapper. The retained source and base transfer-slice proofs are scoped separately from the derived wrapper gates and from the existing OpenZeppelin reference case.",
+      "manifest_path": "families/zama_protocol_apps/implementations/protocol_apps_confidential_wrapper/implementation.yaml"
     },
     {
       "family_id": "zodiac",
@@ -1272,6 +1520,50 @@
     }
   ],
   "cases": [
+    {
+      "case_id": "1inch/xycswap_curve_safety",
+      "project": "1inch",
+      "case_name": "xycswap_curve_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/1inch/xycswap_curve_safety/case.yaml",
+      "split": "active",
+      "family_id": "1inch",
+      "implementation_id": "aqua_xycswap",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/1inch/aqua",
+      "upstream_commit": "81c26e4619ce21556ab02b3284ee2685de21fb18",
+      "original_contract_path": "examples/apps/XYCSwap.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/1inch/aqua@81c26e4619ce21556ab02b3284ee2685de21fb18:examples/apps/XYCSwap.sol",
+      "selected_functions": [
+        "_quoteExactIn",
+        "swapExactIn"
+      ],
+      "lean_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Compile",
+      "failure_reason": null,
+      "notes": "Benchmark case proving the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The theorem states that the output amount computed by _quoteExactIn satisfies the integer-division rounding bound: output * denominator <= feeAdjustedInput * balanceOut. This is the direct analog of the Uniswap V2 K invariant, adapted to XYCSwap's basis-points fee structure.",
+      "buildable": true,
+      "verity_commit": "506bae406185497d5c2cb2a143f2d063ef31e04d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "amm_invariant",
+        "fee_adjusted_curve",
+        "constant_product",
+        "output_bound",
+        "external_calls_elided",
+        "storage_elided"
+      ],
+      "abstraction_notes": "The slice isolates the pure arithmetic of _quoteExactIn, which computes the output amount for a swap using the fee-adjusted constant-product formula. External calls (AQUA.pull, xycSwapCallback, _safeCheckAquaPush) are elided because the output amount is a pure function of the formula inputs. The Strategy struct is flattened: feeBps is a direct parameter. The zeroForOne direction selector is abstracted. _quoteExactOut is not modeled.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Specs",
+      "proof_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs"
+    },
     {
       "case_id": "alchemix/earmark_conservation",
       "project": "alchemix",
@@ -1305,7 +1597,7 @@
       "notes": "Earmark conservation invariant for Alchemix V3 lazy-accrual debt accounting. The literal \"sum of stored account.earmarked equals cumulativeEarmarked\" is provably false on the deployed code (see AlchemistV3.sol:1014 comment \"Global can lag local by rounding\") because per-account earmarked is updated lazily inside _sync(tokenId). The lazy-projected version proven here is the property the design actually maintains and that downstream consumers (redemption math, collateral debit) rely on.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "q128_idealized",
@@ -1401,7 +1693,7 @@
       "notes": "Certora I-01 identified that an intermediate floor division can undermine an intended rounding-up path. This case isolates the ReClamm arithmetic surface where that class of issue matters: exact-in swaps must not overpay output, and exact-out swaps must not undercharge input.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "two_token_memory_array_scalarized",
@@ -1450,7 +1742,7 @@
       "notes": "Cork Phoenix pool solvency slice targeting the Certora P-02 gap. Based on the Certora formal verification report (September-December 2025). P-02 was verified for all functions except unwindExerciseOther (timeout).",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "oracle_elided",
@@ -1494,7 +1786,7 @@
       "notes": "Compact Side Entrance benchmark focused on the broken coherence between pool assets and withdrawable credit when flash-loan repayment is routed through the deposit path.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "callback_elided",
@@ -1507,6 +1799,64 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Specs",
       "proof_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs"
+    },
+    {
+      "case_id": "enzyme/onyx_fee_handler",
+      "project": "enzyme",
+      "case_name": "onyx_fee_handler",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/enzyme/onyx_fee_handler/case.yaml",
+      "split": "active",
+      "family_id": "enzyme",
+      "implementation_id": "onyx_fee_handler",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/enzymefinance/protocol-onyx",
+      "upstream_commit": "8ae6f589b13a19d8390eb0956836c6a9f48fadab",
+      "original_contract_path": "src/components/fees/FeeHandler.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol",
+      "selected_functions": [
+        "settleDynamicFeesGivenPositionsValue",
+        "__increaseValueOwed",
+        "__updateValueOwed",
+        "settleManagementFee",
+        "settlePerformanceFee"
+      ],
+      "lean_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Compile",
+      "failure_reason": null,
+      "notes": "Proves with no custom axioms and no sorry/admit that a successful settlement with both dynamic trackers enabled uses the configured targets and exact management-then-performance calldata, increases total fees owed by exactly both arbitrary returned amounts, credits the configured recipients, handles recipient aliasing, and frames the selected dynamic-fee configuration projection. The arbitrary reentry hook may mutate all other state. The pinned FeeHandler has no reentrancy guard, so the projection-stability condition is an explicit deployment/callee rely condition, not a proved runtime source property. Separate theorems cover successful management-only, performance-only, and both-disabled branches plus transactional rollback for every modeled raw revert. Official onyx-sdk metadata independently identifies LIVE Ethereum v1 implementation addresses; it does not establish bytecode equivalence to the pinned protocol source commit.",
+      "buildable": true,
+      "verity_commit": "49105e54ceff6d66921572cc85583538c2c8497d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "parametric_verity_env_call_oracle",
+        "dynamic_target_selector_calldata_constraints",
+        "exact_management_then_performance_order",
+        "aggregate_and_per_recipient_accounting",
+        "shared_recipient_aliasing",
+        "checked_uint256_arithmetic_preconditions",
+        "abi_address_decode_overapproximation",
+        "external_failure_rollback",
+        "static_valuation_handler_lookup",
+        "projection_stable_tracker_reentry",
+        "registered_reentry_schedule",
+        "selected_dynamic_fee_projection_frame"
+      ],
+      "abstraction_notes": "Models the source function boundary, valuation-handler authorization, optional tracker branches, management-before-performance ordering, checked arithmetic, and aggregate plus per-recipient owed-value updates. Each external boundary queries the universally quantified Verity.Env call oracle with the separate dynamic target, exact ABI selector, and exact calldata words. A second oracle response controls success, and returndata remains arbitrary. Successful tracker calls apply Env.reenter. Accounting theorems require that hook to preserve only the six observed dynamic-fee projections: both tracker addresses, both recipient addresses, aggregate fees owed, and every per-user owed balance. Unrelated state may change. A conditional Verity ReentrancySpec schedule-closure lemma discharges this condition when Env.reenter is explicitly equated to a registered schedule whose entrypoint transitions each satisfy that projection frame. Pinned Verity supports ABI-faithful runtime-target static-word calls; this case deliberately uses Env.callOracle because executable EDSL call semantics do not provide arbitrary parametric return outcomes for this theorem. The Shares valuation-handler view lookup is modeled as a static call and therefore cannot mutate FeeHandler state or invoke the reentry hook, matching Solidity STATICCALL. Valuation-handler returndata is projected to its low 160 address bits, so the model conservatively admits non-canonical words rejected by Solidity ABI decoding. A successful oracle branch supplies one full return word; returndata-length and ABI-decode failures are folded into the call-failure outcome. External callee formulas, callee state, and event logs are not executed. uint256 arithmetic, and theorem hypotheses cover every successful checked add. Event emission and unrelated configuration/claim functions are omitted.",
+      "unsupported_feature_codes": [
+        "stateful_external_callee_execution_omitted",
+        "source_complete_reentry_registry_omitted",
+        "cross_contract_reentry_reachability_omitted",
+        "event_emission_omitted"
+      ],
+      "spec_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Specs",
+      "proof_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs"
     },
     {
       "case_id": "erc4337/entry_point_invariant",
@@ -1538,7 +1888,7 @@
       "notes": "ERC-4337 EntryPoint control-flow invariant slice: the operation execution path is reached if and only if validation passed. This is not a full proof of arbitrary account/paymaster EVM behavior or `innerHandleOp` calldata effects; it proves the selected two-loop model for all possible validation outcomes.",
       "buildable": true,
       "verity_commit": "a287329d5fb8b3966c8eb62f03173639c7e66307",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "abi_backed_batch_model",
@@ -1589,7 +1939,7 @@
       "notes": "Counter-oriented slice of the deposit path. Merkle tree, SSZ hashing, and log emission are omitted so the benchmark can focus on threshold-driven state updates.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "merkle_elided",
@@ -1636,7 +1986,7 @@
       "notes": "Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "guarded_depreciation_invariant",
@@ -1652,6 +2002,61 @@
       ],
       "spec_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Specs",
       "proof_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs"
+    },
+    {
+      "case_id": "hypernova/settled_payout_safety",
+      "project": "hypernova",
+      "case_name": "settled_payout_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/hypernova/settled_payout_safety/case.yaml",
+      "split": "active",
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "original_contract_path": "TradingAccounts.sol + Vault.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract",
+      "selected_functions": [
+        "requestPayout",
+        "_executePayout",
+        "processPayout"
+      ],
+      "lean_target": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Compile",
+      "failure_reason": null,
+      "notes": "The theorem proves on-chain accounting after canWithdraw is already true. It does not independently model getMaxWithdrawable or updateEquityAndSettle, nor prove off-chain P&L, flat-position detection, daily caps, owner honesty, proxy immutability, or reserve sufficiency beyond the actual trader transfer. Verified source SHA-256 values are recorded in the accompanying case-study research artifacts.",
+      "buildable": true,
+      "verity_commit": "49105e54ceff6d66921572cc85583538c2c8497d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "deployed_proxy_and_vault_wiring_pinned",
+        "composite_cross_contract_state",
+        "nested_address_bytes32_funded_account_mapping",
+        "packed_account_fields_with_source_word_offsets",
+        "checked_solidity_arithmetic",
+        "explicit_eip712_inputs_with_trusted_cryptography",
+        "pinned_vault_trading_accounts_immutable",
+        "native_usdc_transfer_as_boolean_and_balance_projection",
+        "one_shot_can_withdraw_flag",
+        "per_trader_nonce_consumption"
+      ],
+      "abstraction_notes": "The model follows the deployed TradingAccounts requestPayout call through _executePayout, Vault.processPayout, and native USDC safeTransfer. The two contract states and token balance projection share one composite ContractState so Contract.run preserves whole-transaction rollback. The proof-side authorization hypothesis passes the source payout type hash, trader, funded-account ID, amount, consumed nonce, deadline, pinned EIP-712 domain separator, and parsed (v,r,s) words explicitly to narrow body-less trusted uninterpreted operations. Lean does not establish their cryptographic semantics or input dependence. The compiler model separately uses Verity's hashing and precompile ECMs for the source-shaped flow. Native USDC safeTransfer is represented by a success Boolean and exact Vault and trader balance updates. The funded account keeps its address plus bytes32 nested key and the source word offsets for the modeled status, initialEquity, equity, and canWithdraw fields. The whole-word canWithdraw projection is scoped to canonical source-reachable states with zero unused upper padding; arbitrary raw padding, assembly writes, and excluded upgrades are out of scope. Events and unrelated struct fields are omitted.",
+      "unsupported_feature_codes": [
+        "deployed_proxy_upgrade_out_of_scope",
+        "owner_vault_rewiring_out_of_scope",
+        "native_usdc_call_as_boolean_and_balance_projection",
+        "composite_cross_contract_storage_namespace",
+        "admin_settlement_truth_assumed"
+      ],
+      "spec_target": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Specs",
+      "proof_target": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs"
     },
     {
       "case_id": "ipor/plasma_vault_redeem_split",
@@ -1684,7 +2089,7 @@
       "notes": "This case is intentionally scoped to the safety property that remains true after the failed split-fairness target: a successful modeled redeem cannot decrease virtualized conversion PPS. It should be described as no decrease in the modeled ERC4626 redeemable-value ratio, not as a proof that fee-splitting is impossible or that the whole vault is bug-free.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "arithmetic_slice",
       "abstraction_tags": [
         "erc4626_virtual_offset",
@@ -1731,7 +2136,7 @@
       "notes": "Sortition-tree slice focused on additive parent invariants, root conservation, interval-based draws, and ID/index correspondence.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "fixed_arity_slice",
@@ -1772,7 +2177,7 @@
       "notes": "Helper-level proof only. The public paths compute `spentAmount` and `returnAmount` before calling `_checkReturnAmount`; this case proves the helper enforces the checked scaled inequality for successful partial-fill helper execution. Reading the guard as an effective-price floor additionally assumes `spentAmount <= amount`, which the helper does not enforce and the theorem does not assume.",
       "buildable": true,
       "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "helper_level_guard",
@@ -1813,7 +2218,7 @@
       "notes": "Proves that Lagoon guardrail compliance accepts exactly the annualized PPS variations admitted by the configured 1e18-scaled upper and signed lower bounds under the encoded successfulSolidityArithmeticScope.",
       "buildable": true,
       "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "pure_function_slice",
@@ -1854,7 +2259,7 @@
       "notes": "Locked-amount arithmetic slice of Lido VaultHub (V3 vaults branch). Based on the Certora formal verification report (December 2025). F-01 could not be proven by Certora and is the primary benchmark task. P-VH-03 and P-VH-04 were proven by Certora and serve as supporting lemmas.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "oracle_elided",
@@ -1901,7 +2306,7 @@
       "notes": "This is an atomicity benchmark, not a price-quality or route-optimality benchmark. It proves that the modeled LI.FI route cannot commit a public final transfer unless every modeled public-route gate succeeds, every modeled route step succeeds, and the output amount meets the minimum.",
       "buildable": true,
       "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "decoded_swap_steps",
@@ -1947,7 +2352,7 @@
       "notes": "Price-band slice of Nexus Mutual RAMM. The Verity model keeps the buffered book-value computation behind buy and sell spot prices and omits unrelated state evolution machinery.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "reserve_dynamics_elided",
@@ -1995,7 +2400,7 @@
       "notes": "This is a caller-identity benchmark, not an accounting benchmark. It proves that every modeled ERC20 and Permit2 fund-pull path uses the outer deltaCompose caller rather than an intermediate callback contract, the composer itself, or an embedded calldata address. The scope is transfer-command pulls plus the V3 callback direct-pull shortcut, not every transferFrom in the full composer source tree.",
       "buildable": true,
       "verity_commit": "d71bf23d908a7a952bf041ee5ebe41ba68b54426",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "packed_calldata_decoded_commands",
@@ -2039,7 +2444,7 @@
       "notes": "Active ERC-4626 benchmark slice derived from OpenZeppelin's virtual-offset design and inflation-attack analysis. The committed proof module validates the four original arithmetic and state-transition theorems plus the two harder rounding tasks (deposit/redeem round-trip bound and share-price monotonicity under donation), so every task is runnable in the reference-solution benchmark path.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "erc4626",
@@ -2085,7 +2490,7 @@
       "notes": "Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "merkle_elided",
@@ -2125,7 +2530,7 @@
       "notes": "Reference proof is complete for the modeled successful depositFunds path under the source reserve require (`hReserveGuard`) and checked-arithmetic side conditions: the resulting state satisfies the closed-epoch reserve guard.",
       "buildable": true,
       "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "redemption_queue",
@@ -2179,7 +2584,7 @@
       "notes": "Proves that successful mintPY and successful pre-expiry redeemPY preserve the equality of PT and YT total supplies when that pairing held before the call. Post-expiry redeem is intentionally excluded from the preservation theorem because Pendle burns PT but not YT after maturity.",
       "buildable": true,
       "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "external_transfer_elided",
@@ -2228,7 +2633,7 @@
       "notes": "Fund-conservation benchmark for Piku's oracle-priced queued redemption flow: distributed backing + queued redemption backing + remaining backing + protocol treasury fees + project treasury fees equals initial backing. Queue execution functions are source context; the modeled settlement transition is the successful `amountPaid` callback.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "ghost_accounting_slots",
@@ -2281,7 +2686,7 @@
       "notes": "Polaris' Foundry invariant asserts reserveRatioDeviation() == 0 and the same predicate for floorSupply/floorBalance. This case records the corresponding state-transition preservation property over the bonding curve accounting slice as Lean theorems with no custom axioms and no sorry/admit. The broad helper-output and raw-pow witness boundaries have been removed from the theorem statements: the proof now computes the helper's multiply and `(left + DECIMAL_PRECISION - 1) / B_PLUS_1` path around a linked external `curvePow` boundary. This benchmark still does not bit-prove PRB/ABDK pow. The generated task files remain open challenge entrypoints for agents; they do not contradict the reference proof.",
       "buildable": true,
       "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "fixed_point_pow_linked_external_boundary",
@@ -2335,7 +2740,7 @@
       "notes": "The public claim theorems show successful claims validate the leaf and consume the source-network/leaf-index bitmap entry. A private reachability lemma feeds the shared helper theorem that proves successful nullifier-helper execution flips the expected bitmap bit.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "merkle_proof_summary",
@@ -2377,7 +2782,7 @@
       "notes": "Auction price band slice of Reserve DTF Protocol's RebalancingLib._price. The Verity model keeps the start/end branching plus the interior exponential decay; storage I/O and external view calls (auction + rebalance state) are folded into pure parameters.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "auction_price_band",
@@ -2421,7 +2826,7 @@
       "notes": "This case focuses on quote lifecycle conservation and single settlement for Rootstock Flyover / LBC peg-outs. The property proved here is not a Bitcoin proof verifier; it is the Rootstock-side accounting guarantee for the amount already registered by depositPegOut.",
       "buildable": true,
       "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "quote_hash_address_keyed",
@@ -2477,7 +2882,7 @@
       "notes": "Linked list reachability invariant preservation and functional correctness for the Safe OwnerManager. Based on the Certora OwnerReach.spec which defines the inListReachable and reachableInList invariants. All 15 proof tasks are complete (0 sorry) covering acyclicity, inListReachable, ownerListInvariant preservation, and isOwner functional correctness for all four operations. The unprovable stronglyAcyclic axiom was replaced with the provable uniquePredecessor property. Functional correctness proofs verify that each operation changes exactly the intended owners and leaves all others unchanged.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "threshold_elided",
@@ -2487,6 +2892,117 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Safe.OwnerManagerReach.Specs",
       "proof_target": "Benchmark.Cases.Safe.OwnerManagerReach.Proofs"
+    },
+    {
+      "case_id": "starkware/starkgate_escrow",
+      "project": "starkware",
+      "case_name": "starkgate_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/starkware/starkgate_escrow/case.yaml",
+      "split": "active",
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/starknet-io/starkgate-contracts",
+      "upstream_commit": "07e11c39119a10d5742735be5b1d51894ebf5311",
+      "original_contract_path": "src/solidity/StarknetTokenBridge.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol",
+      "selected_functions": [
+        "deposit",
+        "withdraw",
+        "depositReclaim"
+      ],
+      "lean_target": "Benchmark.Cases.Starkware.StarkgateEscrow.Compile",
+      "failure_reason": null,
+      "notes": "Reference proofs are complete for the escrow lower-bound invariant across the three modeled transitions (deposit, withdraw, depositReclaim). Arithmetic hypotheses expose Solidity checked-arithmetic obligations (no-overflow on additions, sufficient-balance on subtractions).",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "ghost_erc20_balance",
+        "ghost_cumulative_counters",
+        "messaging_gate_elided",
+        "fee_donation_equivalent",
+        "single_token_slice"
+      ],
+      "abstraction_notes": "Focused StarkGate L1 accounting slice for the escrow lower-bound invariant. The ghost `assetBalance` represents `IERC20.balanceOf(address(this))` (or `address(this).balance` for the ETH bridge). The ghost counters `cumulativeDeposits` and `cumulativeWithdrawals` track total accepted deposits and total outflows (withdrawals plus reclaims). Cross-domain messaging (sendMessageToL2, consumeMessageFromL2, cancelL1ToL2Message) is abstracted as gates that succeed on the modeled path. The max-balance cap is modeled as a hypothesis, not an internal constraint.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "cross_domain_messaging_elided",
+        "fee_logic_donation_equivalent"
+      ],
+      "spec_target": "Benchmark.Cases.Starkware.StarkgateEscrow.Specs",
+      "proof_target": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs"
+    },
+    {
+      "case_id": "superfluid/realtime_balance_conservation",
+      "project": "superfluid",
+      "case_name": "realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/case.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/superfluid-finance/protocol-monorepo",
+      "upstream_commit": "414109689d9041a8b6900b67b947f3f203c1da5d",
+      "original_contract_path": "packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "selected_functions": [
+        "SuperfluidToken.realtimeBalanceOf",
+        "ConstantFlowAgreementV1._createFlow",
+        "ConstantFlowAgreementV1._updateFlow",
+        "ConstantFlowAgreementV1._deleteFlow",
+        "ConstantFlowAgreementV1._changeFlowToNonApp",
+        "ConstantFlowAgreementV1._changeFlowToApp",
+        "ConstantFlowAgreementV1._changeFlow",
+        "ConstantFlowAgreementV1._updateAccountFlowState",
+        "SelfDeletingFlowTestApp.afterAgreementCreated",
+        "Superfluid.callAgreementWithContext",
+        "Superfluid._updateContext"
+      ],
+      "lean_target": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Compile",
+      "failure_reason": null,
+      "notes": "This case does not prove SuperToken supply conservation and does not equate its modulo-2^256 CFA projection sum to native `realtimeBalanceOf` outside the stated relation. All 22 task declarations have kernel-checked reference proofs, including the nine finite-global, future-time, callback-composition, rollback, and concrete factored-instance strengthening tasks. Translation fidelity is an audited trust boundary, separate from the kernel-checked Lean proof of the model.",
+      "buildable": true,
+      "verity_commit": "1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "cfa_projection_only",
+        "decoded_packed_state_relation",
+        "checked_arithmetic_relation_explicit",
+        "source_deposit_calculation_modeled",
+        "host_registry_relation_explicit",
+        "hand_translated_source_model",
+        "source_execution_relation_assumed",
+        "create_only_self_delete_callback",
+        "fixed_duplicate_free_account_universe",
+        "modular_cfa_global_projection",
+        "future_observation_time",
+        "behavioral_one_level_callback_hook",
+        "nested_revert_rollback",
+        "liquidation_excluded"
+      ],
+      "abstraction_notes": "The completed reference proofs verify the CFA projection `sharedSettled + dynamic CFA balance` at the transaction update boundary, the pair net-rate sum, and unrelated-account framing for separate create, update, and sender-noncritical delete entrypoints. The strengthened reference proofs lift pair cancellation and framing to a duplicate-free fixed List Address modular CFA-only sum for every tau at or after the operation timestamp. The case explicitly scopes the Host timestamp to the canonical uint32 chain-time range; this is not a Solidity revert guard. Decoded source state enforces sign-extended int96 rates, clipped deposits, existence guards, zero-address guards, outer direct-call context with a zero app-credit token and actor equal to the flow sender, exact source deposit calculation with arbitrary governance minimum selection and source-faithful low-64-bit packed storage writes. Raw flow/account deposit writes are explicitly scoped below 2^96 to exclude source-accepted values whose unmasked high bits overlap the adjacent packed rate field, and CFA-only availability checks. Non-app paths require both endpoints to be non-app. The callback model pins contracts/mocks/CFAAppMocks.t.sol:190-243: an active non-jailed receiver app has before-created NOOP, executes after-created, calls Host context to delete the same newly created flow, causes no nested callback, uses zero app credit, and lets the outer CFA code reload the zero flow. That schedule is factored into executable prefix, level-1 contextual delete, and resume/reload components. A reusable behavioral hook executes an actual supplied Contract at level 1, rejects level 2 before nested execution, and relies on Verity bind/run semantics for no-resume rollback. The hook is not complete Host ABI/context semantics; concrete actor/app/token/context, registry, noop, jailed, and credit guards remain in the SelfDeleting prefix. The source precondition pins a non-jailed receiver and successful execution selects the no-damage final-availability path. IDA/GDA and pools, multi-agreement native available-balance aggregation, critical deletion and liquidation, arbitrary callbacks, update callbacks, mint/burn, and wrapping are not covered. Frame theorems cover account projection fields only. This is a proof of the hand-translated Verity model under explicit source-key, Host-context, and callback-schedule hypotheses. It is not a Solidity bytecode simulation theorem, and it does not independently derive Keccak flow keys or Host execution from source semantics.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "spec_target": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Specs",
+      "proof_target": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs"
     },
     {
       "case_id": "t3tris/hwm_performance_fee",
@@ -2518,7 +3034,7 @@
       "notes": "This case targets the coverage gap not present in Cyfrin's T3tris suite: structural HWM facts are already proved, but the multi-step economic property that recovery up to the fee-accounted HWM charges no second performance fee is not.",
       "buildable": true,
       "verity_commit": "d26a6ffa83ec8e8445533f076442c06dd1cdf487",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "arithmetic_slice",
       "abstraction_tags": [
         "hwm_performance_fee",
@@ -2568,7 +3084,7 @@
       "notes": "Clearing assignment correctness for the weekly sealed-bid uniform-price double auction: positive bid assignments respect the clearing rate floor, positive offer assignments respect the clearing rate ceiling, and assigned purchase-token principal balances exactly across both sides.",
       "buildable": true,
       "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "clearing_offset_zero",
@@ -2618,7 +3134,7 @@
       "notes": "TermMax range-order AMM slice for pricing-state transition correctness. The proof target is the highest-signal easy theorem in this family: on the successful single-segment `debtToken -> XT` exact-input path, the stored `virtualXtReserve` decreases by exactly the XT amount implied by the curve.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "exact_in_xt_only",
@@ -2669,7 +3185,7 @@
       "notes": "Active AMM benchmark slice for reasoning about fee-adjusted constant-product guards and post-swap reserve synchronization without exposing the full Uniswap execution path. Promoted from the backlog with complete hidden reference proofs, plus harder multi-swap monotonicity and sandwich output-bound tasks layered on the same slice.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "amm_invariant",
@@ -2715,7 +3231,7 @@
       "notes": "Usual USD0 DaoCollateral conservation case. It verifies that no direct swap/redeem transition can create unaccounted ghost USD0 supply or debit more ghost collateral than the contract's modeled accounting permits, modulo configured redeem fee, oracle price, CBR coefficient, token decimals, and floor rounding.",
       "buildable": true,
       "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "oracle_price_explicit",
@@ -2770,7 +3286,7 @@
       "notes": "Wildcat V2 borrow safety slice proving that a successful positive borrow cannot pull market assets below the liquidity requirement computed from the updated state used by the borrow guard. The required liquidity includes the reserve-ratio-backed portion of non-pending supply, 100% of pending withdrawals, 100% of normalized unclaimed withdrawals, and updated accrued protocol fees.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "borrow_liquidity_slice",
@@ -2782,6 +3298,67 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Specs",
       "proof_target": "Benchmark.Cases.Wildcat.BorrowLiquiditySafety.Proofs"
+    },
+    {
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "project": "yo_protocol",
+      "case_name": "async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/case.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/yoprotocol/core-v2",
+      "upstream_commit": "7b023145cc99bc424e57ffa554584c609a1ecb30",
+      "original_contract_path": "src/YoVault.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "selected_functions": [
+        "YoVault.requestRedeem",
+        "YoVault.redeem",
+        "YoVault.fulfillRedeem",
+        "YoVault.cancelRedeem",
+        "YoVault.updateWithdrawFee",
+        "YoVault.updateFeeRecipient",
+        "YoVault._withdraw",
+        "YoVault._getAvailableBalance",
+        "AuthUpgradeable.isAuthorized"
+      ],
+      "lean_target": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Compile",
+      "failure_reason": null,
+      "notes": "The reviewed case has 14 generated theorem interfaces, all version 2, with matching proof-complete reference declarations. Independent Phase 2 and Phase 3 review gates passed. The deployment context is Base yoUSD at block 48,628,300 as recorded in Phase 1; this case proves the pinned source lifecycle, not the snapshot's current configuration.",
+      "buildable": true,
+      "verity_commit": "1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "receiver_keyed_pending_struct_split",
+        "oracle_preview_explicit_input",
+        "oracle_preview_success_outcome",
+        "external_balance_snapshot_input",
+        "external_balance_read_success_outcome",
+        "authority_outcome_explicit_input",
+        "trusted_external_outcome_revert_abstraction",
+        "no_callback_modeled_state_mutation",
+        "pinned_underlying_not_vault",
+        "erc20_well_formed_unchecked_update",
+        "current_fee_on_total_rounding",
+        "lifecycle_only_no_manage_or_upgrade"
+      ],
+      "abstraction_notes": "Source-close model for requestRedeem, public redeem, fulfillRedeem, cancelRedeem, _withdraw, _getAvailableBalance, fee configuration, and AuthUpgradeable.isAuthorized. Successful oracle preview and balance-read outcomes, selector authority outcomes, and SafeERC20 outcomes are explicit trusted boundary abstractions; they are not executable token semantics. During any authority, preview/read, or token boundary, no callback may mutate any modeled vault state. Pending assets are gross units; fulfillment uses the current fee-on-total configuration. The pinned underlying is constrained distinct from the vault where relevant. Events, unrelated ERC-4626 behavior, manage calls between lifecycle transitions, and later proxy upgrades remain excluded.",
+      "unsupported_feature_codes": [
+        "external_authority_contract_state_not_modeled",
+        "external_erc20_balance_state_not_modeled",
+        "oracle_price_correctness_not_modeled"
+      ],
+      "spec_target": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Specs",
+      "proof_target": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs"
     },
     {
       "case_id": "zama/erc7984_confidential_token",
@@ -2816,7 +3393,7 @@
       "notes": "ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance \u2192 silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.",
       "buildable": true,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "fhe_homomorphic_plaintext_equivalence",
@@ -2833,6 +3410,56 @@
       ],
       "spec_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Specs",
       "proof_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs"
+    },
+    {
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "project": "zama_protocol_apps",
+      "case_name": "erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/case.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/zama-ai/protocol-apps",
+      "upstream_commit": "2f88eef1d0b545438b1f74e21cdff7ea771805da",
+      "original_contract_path": "contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "selected_functions": [
+        "_update",
+        "_transfer",
+        "confidentialTransfer"
+      ],
+      "lean_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile",
+      "failure_reason": null,
+      "notes": "Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish, under explicit euint64-domain hypotheses: uninitialized senders return the modeled ERC7984ZeroBalance error class with unchanged modeled accounting state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. The revert proof does not model custom-error payload/returndata or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "exact_source_retained",
+        "fhe_homomorphic_plaintext_equivalence",
+        "initialization_state_explicit",
+        "wrapper_preconditions_assumed",
+        "acl_elided",
+        "callbacks_elided",
+        "erc7201_slot_derivation_elided"
+      ],
+      "abstraction_notes": "The exact selected Solidity file is retained byte-for-byte under upstream/ with commit, blob, and SHA-256 provenance. The Lean model preserves the transfer-relevant control flow of `_update`, including the pre-write FHE.isInitialized(fromBalance) guard, tryDecrease selection, source and destination balance writes, and zero-address checks. Encrypted euint64 values use plaintext-equivalent Uint256 values with explicit theorem hypotheses constraining amounts and relevant initialized balances below 2^64, plus modulo-2^64 destination arithmetic. A trusted Boolean represents successful input-proof or ACL validation. The transfer-slice caller input represents source-level msg.sender and is not an independent `from` ABI argument. FHE cryptography and permissions, ERC-7201 physical slot derivation, events, transfer callbacks/refunds, ConfidentialWrapper denylist/staticcall gates, wrap/unwrap conversion and underlying ERC-20 settlement, gateway/signature behavior, and other public functions are outside the model.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "spec_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Specs",
+      "proof_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs"
     },
     {
       "case_id": "zodiac/roles_decoder_faithfulness",
@@ -2867,7 +3494,7 @@
       "notes": "This case targets the v3 decoder/callee mismatch class that required custom verifiers in Zodiac Roles v2. The theorem scope covers static values, dynamic bytes/string, tuples, dynamic arrays, nested AbiEncoded, and transparent logical wrappers. Operator.Custom, Zip, Slice, Pluck, MultiSendUnwrapper, comparison consumption, and external calls are intentionally out of scope.",
       "buildable": true,
       "verity_commit": "74d8fe20ffa2f5dbb94959f3dd40a62df6aa8224",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "protocol_slice",
       "abstraction_tags": [
         "lazy_abi_decoder",
@@ -2912,7 +3539,7 @@
       "notes": "Pending private repository access and target selection.",
       "buildable": false,
       "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
-      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
       "abstraction_level": "inaccessible_upstream",
       "abstraction_tags": [
         "intake_placeholder",
@@ -2927,6 +3554,51 @@
     }
   ],
   "tasks": [
+    {
+      "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+      "task_id": "quote_exact_in_curve_safety",
+      "case_id": "1inch/xycswap_curve_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/1inch/xycswap_curve_safety/tasks/quote_exact_in_curve_safety.yaml",
+      "split": "active",
+      "family_id": "1inch",
+      "implementation_id": "aqua_xycswap",
+      "source_ref": "https://github.com/1inch/aqua@81c26e4619ce21556ab02b3284ee2685de21fb18:examples/apps/XYCSwap.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.quoteExactIn_curve_safety",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/1inch/xycswap_curve_safety/verity/Contract.lean",
+        "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/1inch/xycswap_curve_safety/verity/Specs.lean",
+        "Benchmark/Cases/OneInch/XYCSwapCurveSafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/OneInch/XYCSwapCurveSafety/Tasks/QuoteExactInCurveSafety.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "This task captures the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The output of _quoteExactIn satisfies the integer division rounding bound that prevents over-extraction of maker reserves.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
     {
       "task_ref": "alchemix/earmark_conservation/earmark_preserves_invariant",
       "task_id": "earmark_preserves_invariant",
@@ -4197,6 +4869,56 @@
       "abstraction_notes": "This task captures the hidden liability-side effect of the summarized flash loan path: apparent repayment leaves pool ETH unchanged while still minting withdrawable caller credit.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "enzyme/onyx_fee_handler/settle_dynamic_fees_exact_accounting",
+      "task_id": "settle_dynamic_fees_exact_accounting",
+      "case_id": "enzyme/onyx_fee_handler",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/enzyme/onyx_fee_handler/tasks/settle_dynamic_fees_exact_accounting.yaml",
+      "split": "active",
+      "family_id": "enzyme",
+      "implementation_id": "onyx_fee_handler",
+      "source_ref": "https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "cross_contract_fee_accounting",
+      "category": "invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Enzyme.OnyxFeeHandler.settleDynamicFeesGivenPositionsValue_exact_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/enzyme/onyx_fee_handler/verity/Contract.lean",
+        "Benchmark/Cases/Enzyme/OnyxFeeHandler/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/enzyme/onyx_fee_handler/verity/Specs.lean",
+        "Benchmark/Cases/Enzyme/OnyxFeeHandler/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Enzyme/OnyxFeeHandler/Tasks/settle_dynamic_fees_exact_accounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Quantifies over Verity.Env oracle responses keyed by the dynamic target, exact selector, and exact management-then-performance calldata. Proves successful aggregate/per-recipient accounting for arbitrary tracker return words, including the same-recipient alias case and a frame for the selected dynamic-fee configuration projection. Pinned Verity supports ABI-faithful runtime-target static-word calls, but this protocol slice deliberately uses Env.callOracle to keep return outcomes arbitrary. A successful oracle branch supplies one full return word; short-return and ABI-decode failures are folded into the call-failure outcome. The Shares valuation lookup is modeled as STATICCALL and does not apply reentry. Tracker calls apply Env.reenter under a narrow rely condition preserving both tracker addresses, both recipient addresses, total fees owed, and every per-user owed balance; unrelated state may change. A conditional ReentrancySpec schedule-closure lemma discharges the condition when Env.reenter is explicitly equated to a registered schedule of projection-preserving transitions. The source-complete cross-contract reachability proof is out of scope because the pinned FeeHandler has no reentrancy guard and the slice omits Shares role state plus six projection-mutating external entrypoints. External callee state is not executed.",
+      "unsupported_feature_codes": [
+        "stateful_external_callee_execution_omitted",
+        "source_complete_reentry_registry_omitted",
+        "cross_contract_reentry_reachability_omitted",
+        "event_emission_omitted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -6250,6 +6972,101 @@
         "bytes_report_parsing_decoded"
       ],
       "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "hypernova/settled_payout_safety/successful_payout_never_overpays",
+      "task_id": "successful_payout_never_overpays",
+      "case_id": "hypernova/settled_payout_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/hypernova/settled_payout_safety/tasks/successful_payout_never_overpays.yaml",
+      "split": "active",
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "source_ref": "https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "payout_safety",
+      "category": "funded_trading_payout",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Hypernova.SettledPayoutSafety.successfulPayout_never_overpays",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/hypernova/settled_payout_safety/verity/Contract.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/hypernova/settled_payout_safety/verity/Specs.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/SuccessfulPayoutNeverOverpays.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the stronger arithmetic fact that the split-adjusted trader amount cannot exceed the authorized gross request because the split is clamped to 10,000 basis points. The public implication remains scoped to pinned bidirectional deployment wiring.",
+      "unsupported_feature_codes": [
+        "native_usdc_call_as_boolean_and_balance_projection"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "hypernova/settled_payout_safety/valid_settled_payout_is_safe",
+      "task_id": "valid_settled_payout_is_safe",
+      "case_id": "hypernova/settled_payout_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/hypernova/settled_payout_safety/tasks/valid_settled_payout_is_safe.yaml",
+      "split": "active",
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "source_ref": "https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "payout_safety",
+      "category": "funded_trading_payout",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Hypernova.SettledPayoutSafety.validSettledPayout_is_safe",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/hypernova/settled_payout_safety/verity/Contract.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/hypernova/settled_payout_safety/verity/Specs.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/ValidSettledPayoutIsSafe.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves exact account equity reduction, one-shot settlement closure, one nonce increment, and equal Vault debit plus trader credit for the split-adjusted USDC amount on the valid deployed payout path. The at-most-gross split bound is derived from the clamped basis-point formula rather than assumed. Signature authorization is an explicit trusted equality hypothesis whose body-less operations take the source EIP-712 tuple, consumed nonce, pinned domain separator, and parsed signature as arguments. Their cryptographic semantics are not mechanically proved.",
+      "unsupported_feature_codes": [
+        "native_usdc_call_as_boolean_and_balance_projection",
+        "composite_cross_contract_storage_namespace"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -11082,6 +11899,1187 @@
       }
     },
     {
+      "task_ref": "starkware/starkgate_escrow/deposit_preserves_escrow_lower_bound",
+      "task_id": "deposit_preserves_escrow_lower_bound",
+      "case_id": "starkware/starkgate_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/starkware/starkgate_escrow/tasks/deposit_preserves_escrow_lower_bound.yaml",
+      "split": "active",
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "source_ref": "https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "escrow_lower_bound",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Starkware.StarkgateEscrow.deposit_preserves_escrow_lower_bound",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/starkware/starkgate_escrow/verity/Contract.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/starkware/starkgate_escrow/verity/Specs.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/DepositPreservesEscrowLowerBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Deposit transition proof for the StarkGate escrow lower-bound invariant. Shows that increasing both the ghost balance and cumulative deposits by the same amount preserves balance >= deposits - withdrawals.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "cross_domain_messaging_elided",
+        "fee_logic_donation_equivalent"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "starkware/starkgate_escrow/deposit_reclaim_preserves_escrow_lower_bound",
+      "task_id": "deposit_reclaim_preserves_escrow_lower_bound",
+      "case_id": "starkware/starkgate_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/starkware/starkgate_escrow/tasks/deposit_reclaim_preserves_escrow_lower_bound.yaml",
+      "split": "active",
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "source_ref": "https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "escrow_lower_bound",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Starkware.StarkgateEscrow.depositReclaim_preserves_escrow_lower_bound",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/starkware/starkgate_escrow/verity/Contract.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/starkware/starkgate_escrow/verity/Specs.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/DepositReclaimPreservesEscrowLowerBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Deposit reclaim transition proof for the StarkGate escrow lower-bound invariant. Reclaims return previously-deposited funds; they decrease the ghost balance and increase cumulative withdrawals, preserving the lower bound given the contract requires amount <= balance.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "cross_domain_messaging_elided",
+        "fee_logic_donation_equivalent"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "starkware/starkgate_escrow/withdraw_preserves_escrow_lower_bound",
+      "task_id": "withdraw_preserves_escrow_lower_bound",
+      "case_id": "starkware/starkgate_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/starkware/starkgate_escrow/tasks/withdraw_preserves_escrow_lower_bound.yaml",
+      "split": "active",
+      "family_id": "starkware",
+      "implementation_id": "starkgate_bridge",
+      "source_ref": "https://github.com/starknet-io/starkgate-contracts@07e11c39119a10d5742735be5b1d51894ebf5311:src/solidity/StarknetTokenBridge.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "escrow_lower_bound",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Starkware.StarkgateEscrow.withdraw_preserves_escrow_lower_bound",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/starkware/starkgate_escrow/verity/Contract.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/starkware/starkgate_escrow/verity/Specs.lean",
+        "Benchmark/Cases/Starkware/StarkgateEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Starkware/StarkgateEscrow/Tasks/WithdrawPreservesEscrowLowerBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Withdrawal transition proof for the StarkGate escrow lower-bound invariant. Shows that decreasing the ghost balance and increasing cumulative withdrawals by the same amount preserves balance >= deposits - withdrawals, given the contract requires amount <= balance.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_ghosted",
+        "cross_domain_messaging_elided",
+        "fee_logic_donation_equivalent"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Starkware.StarkgateEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/callback_level_two_is_rejected",
+      "task_id": "callback_level_two_is_rejected",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/callback_level_two_is_rejected.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "failure_propagation",
+      "category": "control-flow",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.callbackLevelTwo_is_rejected",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CallbackLevelTwoIsRejected.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The executable behavioral hook rejects callback level 2 before the supplied nested Contract executes, corresponding to the pinned Host maximum level.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_frames_unrelated_account",
+      "task_id": "create_non_app_frames_unrelated_account",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_frames_unrelated_account.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_frames_unrelated_account",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppFramesUnrelatedAccount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_cfa_projection",
+      "task_id": "create_non_app_preserves_cfa_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_cfa_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_cfa_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesCfaProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_future_modular_cfa_global_projection",
+      "task_id": "create_non_app_preserves_future_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_future_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_future_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesFutureModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful non-app create preserves a duplicate-free finite modular CFA-only projection sum for every tau at or after the inclusive uint32 operation time.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/create_non_app_preserves_pair_net_flow_rate",
+      "task_id": "create_non_app_preserves_pair_net_flow_rate",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/create_non_app_preserves_pair_net_flow_rate.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.createNonApp_preserves_pair_net_flow_rate",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/CreateNonAppPreservesPairNetFlowRate.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_frames_unrelated_account",
+      "task_id": "delete_non_app_frames_unrelated_account",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_frames_unrelated_account.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_frames_unrelated_account",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppFramesUnrelatedAccount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_cfa_projection",
+      "task_id": "delete_non_app_preserves_cfa_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_cfa_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_cfa_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesCfaProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_future_modular_cfa_global_projection",
+      "task_id": "delete_non_app_preserves_future_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_future_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_future_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesFutureModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful sender noncritical delete preserves a duplicate-free finite modular CFA-only projection sum for every tau at or after the operation time.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/delete_non_app_preserves_pair_net_flow_rate",
+      "task_id": "delete_non_app_preserves_pair_net_flow_rate",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/delete_non_app_preserves_pair_net_flow_rate.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.deleteNonApp_preserves_pair_net_flow_rate",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/DeleteNonAppPreservesPairNetFlowRate.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/failed_nested_rolls_back_and_prevents_resume",
+      "task_id": "failed_nested_rolls_back_and_prevents_resume",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/failed_nested_rolls_back_and_prevents_resume.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "revert_safety",
+      "category": "revert",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.failedNested_rolls_back_and_prevents_resume",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/FailedNestedRollsBackAndPreventsResume.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Verity bind short-circuits the actual failed nested execution, skips arbitrary resume code, and top-level Contract.run restores the pre-prefix state.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/pair_and_frame_implies_modular_cfa_global_projection",
+      "task_id": "pair_and_frame_implies_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/pair_and_frame_implies_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "composition_invariant",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.pairAndFrame_implies_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/PairAndFrameImpliesModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Lifts pair cancellation and finite-universe framing to a duplicate-free List Address modular CFA-only projection sum. It is not native realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_frames_unrelated_account",
+      "task_id": "receiver_delete_callback_frames_unrelated_account",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_frames_unrelated_account.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_frames_unrelated_account",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackFramesUnrelatedAccount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_matches_factored_instance_behavior",
+      "task_id": "receiver_delete_callback_matches_factored_instance_behavior",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_matches_factored_instance_behavior.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "functional_property",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_matches_factored_instance_behavior",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackMatchesFactoredInstanceBehavior.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Exposes retained actor/app/token/context, registry, noop, jailed, and credit bindings and the exact same-pair contextual nested delete in the factored runner.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_cfa_projection",
+      "task_id": "receiver_delete_callback_preserves_cfa_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_cfa_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_cfa_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesCfaProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_future_modular_cfa_global_projection",
+      "task_id": "receiver_delete_callback_preserves_future_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_future_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_future_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesFutureModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The concrete guarded one-level SelfDeleting receiver callback preserves the finite modular CFA-only sum at all later tau; the generic hook is not full Host semantics.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_preserves_pair_net_flow_rate",
+      "task_id": "receiver_delete_callback_preserves_pair_net_flow_rate",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_preserves_pair_net_flow_rate.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_preserves_pair_net_flow_rate",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackPreservesPairNetFlowRate.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/receiver_delete_callback_reloads_final_zero",
+      "task_id": "receiver_delete_callback_reloads_final_zero",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/receiver_delete_callback_reloads_final_zero.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.receiverDeleteCallback_reloads_final_zero",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/ReceiverDeleteCallbackReloadsFinalZero.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/successful_one_level_components_compose",
+      "task_id": "successful_one_level_components_compose",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/successful_one_level_components_compose.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "composition_invariant",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.successfulOneLevel_components_compose",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/SuccessfulOneLevelComponentsCompose.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful typed prefix, nested, and resume Contract components compose through the selected behavioral level-1 hook; full Host ABI/context validation is outside it.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_frames_unrelated_account",
+      "task_id": "update_non_app_frames_unrelated_account",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_frames_unrelated_account.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_frames_unrelated_account",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppFramesUnrelatedAccount.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_cfa_projection",
+      "task_id": "update_non_app_preserves_cfa_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_cfa_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_cfa_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesCfaProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_future_modular_cfa_global_projection",
+      "task_id": "update_non_app_preserves_future_modular_cfa_global_projection",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_future_modular_cfa_global_projection.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_future_modular_cfa_global_projection",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesFutureModularCfaGlobalProjection.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful non-app update preserves a duplicate-free finite modular CFA-only projection sum for every tau at or after the inclusive uint32 operation time.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "superfluid/realtime_balance_conservation/update_non_app_preserves_pair_net_flow_rate",
+      "task_id": "update_non_app_preserves_pair_net_flow_rate",
+      "case_id": "superfluid/realtime_balance_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/superfluid/realtime_balance_conservation/tasks/update_non_app_preserves_pair_net_flow_rate.yaml",
+      "split": "active",
+      "family_id": "superfluid",
+      "implementation_id": "cfa_realtime_accounting",
+      "source_ref": "https://github.com/superfluid-finance/protocol-monorepo@414109689d9041a8b6900b67b947f3f203c1da5d:packages/ethereum-contracts/contracts/agreements/ConstantFlowAgreementV1.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "cfa_projection_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.updateNonApp_preserves_pair_net_flow_rate",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/superfluid/realtime_balance_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Superfluid/RealtimeBalanceConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Superfluid/RealtimeBalanceConservation/Tasks/UpdateNonAppPreservesPairNetFlowRate.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "See the case manifest and Contract.lean source relation. The theorem concerns the CFA projection, not native multi-agreement realtimeBalanceOf.",
+      "unsupported_feature_codes": [
+        "signed_mapping_surface_syntax"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Superfluid.RealtimeBalanceConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply",
       "task_id": "fee_claim_preserves_unclaimed_le_supply",
       "case_id": "t3tris/hwm_performance_fee",
@@ -12127,6 +14125,660 @@
       }
     },
     {
+      "task_ref": "yo_protocol/async_redemption_escrow/cancel_redeem_accounting",
+      "task_id": "cancel_redeem_accounting",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/cancel_redeem_accounting.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.cancel_redeem_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/CancelRedeemExactAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Explicitly proves a successful ContractResult for independent cancellation decrements and transfer to receiver, including receiver-vault aliasing without an invalid net-balance claim.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/candidate_g_source_reachability",
+      "task_id": "candidate_g_source_reachability",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/candidate_g_source_reachability.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "source_reachable_counterexample_coverage",
+      "category": "malformed-pending-pairs",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.candidate_g_source_reachability",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/CandidateGSourceReachability.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Builds the positive (100 shares, 200 gross assets) pair through requestRedeem, then covers every source-permitted zero-component fulfillment/cancellation shape and the positive non-proportional (1,199) fulfillment.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/fee_aliasing",
+      "task_id": "fee_aliasing",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/fee_aliasing.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "fee_rounding_and_aliasing",
+      "category": "redemption-lifecycle",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fee_aliasing",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FeeAliasingUsesCurrentFee.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Queues a pair, changes the source fee through owner-authorized configuration, then covers zero/nonzero fee-recipient branches, receiver-fee-recipient alias, and conditional second-transfer rollback without asserting token balances.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/fulfill_redeem_accounting",
+      "task_id": "fulfill_redeem_accounting",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/fulfill_redeem_accounting.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_invariant",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.fulfill_redeem_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FulfillRedeemExactAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves a successful ContractResult for the accepted narrow per-receiver accounting invariant, pooled share burn, supply burn, and current fee split.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/full_clear_requeue_replay",
+      "task_id": "full_clear_requeue_replay",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/full_clear_requeue_replay.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "replay_lifecycle",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.full_clear_requeue_replay",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/FullClearRequeueReplay.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Replay prevention is intentionally immediate only. The interface supplies a distinct funded request owner and enough initial supply for both burns.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/lifecycle_bounds_and_isolation",
+      "task_id": "lifecycle_bounds_and_isolation",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/lifecycle_bounds_and_isolation.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "per_receiver_isolation",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_bounds_and_isolation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/LifecycleBoundsAndIsolation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Direct-write isolation is scoped to the explicit environment in which no authority/token callback mutates any modeled vault state during the call.",
+      "unsupported_feature_codes": [
+        "stateful_external_reentry_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/lifecycle_rollback",
+      "task_id": "lifecycle_rollback",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/lifecycle_rollback.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "revert_atomicity",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.lifecycle_rollback",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/LifecycleFailureRollsBack.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Verifies observable rollback after reaching authority, pause, receiver-transfer, and conditional nonzero-fee-transfer failure boundaries.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/malformed_pair_lifecycle",
+      "task_id": "malformed_pair_lifecycle",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/malformed_pair_lifecycle.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "malformed_record_behavior",
+      "category": "malformed-pending-pairs",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.malformed_pair_lifecycle",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/MalformedPairDormancyAndRevival.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Constructs one-sided records through queued source transitions and permitted settlements, then proves both dormant guards and positive-gross repair queues.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/owner_fallback_authorization",
+      "task_id": "owner_fallback_authorization",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/owner_fallback_authorization.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "owner_fallback_and_authority_order",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.owner_fallback_authorization",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/OwnerFallbackAuthorization.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A nonzero authority successfully returning false falls back to the stored owner. A reverted authority call still blocks that owner because source evaluation invokes canCall before the owner comparison.",
+      "unsupported_feature_codes": [
+        "external_authority_contract_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/queued_request_aggregation",
+      "task_id": "queued_request_aggregation",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/queued_request_aggregation.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_update",
+      "category": "redemption-lifecycle",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.queued_request_aggregation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/QueuedRequestAggregatesReceiver.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Requires successful preview/balance-read outcomes and checked pending adds for receiver-keyed aggregation and pooled vault-share movement.",
+      "unsupported_feature_codes": [
+        "oracle_price_correctness_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/redeem_wrapper",
+      "task_id": "redeem_wrapper",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/redeem_wrapper.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "wrapper_delegation_and_pause",
+      "category": "redemption-lifecycle",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.redeem_wrapper",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/RedeemWrapperDelegates.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Models the selected public ERC-4626 redeem wrapper, including its own pause guard before requestRedeem delegation and explicit successful preview/balance read outcomes.",
+      "unsupported_feature_codes": [
+        "oracle_price_correctness_not_modeled",
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/request_redeem_branching",
+      "task_id": "request_redeem_branching",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/request_redeem_branching.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "branch_correctness",
+      "category": "redemption-lifecycle",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.request_redeem_branching",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/RequestRedeemPreservesBranches.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The successful gross preview and external balance read are explicit outcome assumptions; the task proves a successful instant or queued branch result.",
+      "unsupported_feature_codes": [
+        "oracle_price_correctness_not_modeled",
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/two_owner_queue_aggregation",
+      "task_id": "two_owner_queue_aggregation",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/two_owner_queue_aggregation.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "receiver_aggregation",
+      "category": "redemption-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.two_owner_queue_aggregation",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/TwoOwnerQueueAggregatesReceiver.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Positive-gross sequential distinct-owner requests use separate sender contexts, checked pending and pooled-vault sequential capacity, and aggregate without owner provenance.",
+      "unsupported_feature_codes": [
+        "oracle_price_correctness_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "yo_protocol/async_redemption_escrow/zero_component_lifecycle",
+      "task_id": "zero_component_lifecycle",
+      "case_id": "yo_protocol/async_redemption_escrow",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/yo_protocol/async_redemption_escrow/tasks/zero_component_lifecycle.yaml",
+      "split": "active",
+      "family_id": "yo_protocol",
+      "implementation_id": "core_v2",
+      "source_ref": "https://github.com/yoprotocol/core-v2@7b023145cc99bc424e57ffa554584c609a1ecb30:src/YoVault.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "source_permitted_noop",
+      "category": "malformed-pending-pairs",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.zero_component_lifecycle",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Contract.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/yo_protocol/async_redemption_escrow/verity/Specs.lean",
+        "Benchmark/Cases/YOProtocol/AsyncRedemptionEscrow/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/YOProtocol/AsyncRedemptionEscrow/Tasks/ZeroComponentLifecycleNoop.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Guards intentionally retain no source-absent positivity check. Success and EVM-observable storage/mapping equality exclude Verity known-address metadata.",
+      "unsupported_feature_codes": [
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.YOProtocol.AsyncRedemptionEscrow.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "zama/erc7984_confidential_token/burn_decreases_supply",
       "task_id": "burn_decreases_supply",
       "case_id": "zama/erc7984_confidential_token",
@@ -12667,6 +15319,202 @@
       }
     },
     {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero",
+      "task_id": "initialized_insufficient_transfer_zero",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_insufficient_transfer_zero.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "insufficient_balance_zero_transfer",
+      "category": "arithmetic",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_insufficient_transfer_zero",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert",
+      "task_id": "initialized_transfer_no_balance_revert",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_transfer_no_balance_revert.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "non_reversion",
+      "category": "control_flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_no_balance_revert",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferNoBalanceRevert.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation",
+      "task_id": "initialized_transfer_pair_conservation",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_transfer_pair_conservation.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "balance_conservation",
+      "category": "accounting",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_pair_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferPairConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes",
+      "task_id": "uninitialized_sender_reverts_without_writes",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/uninitialized_sender_reverts_without_writes.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "revert_rollback",
+      "category": "edge_cases",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.uninitialized_sender_reverts_without_writes",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge",
       "task_id": "metadata_bridge",
       "case_id": "zodiac/roles_decoder_faithfulness",
@@ -12810,5 +15658,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-30T12:37:16.079768+00:00"
+  "generated_at": "2026-07-30T12:51:38.751230+00:00"
 }

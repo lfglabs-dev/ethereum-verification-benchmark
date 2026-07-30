@@ -183,6 +183,7 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
             {
                 "status": task_status or ("lean_passed" if verifier_passed else status),
                 "harness_status": status,
+                "failure_class": task_dicts[0].get("failure_class") if len(task_dicts) == 1 else None,
                 "provider_setup_error": run.get("provider_setup_error") or status in {"missing_credentials", "preflight_failed"},
                 "usage": usage,
                 "tool_calls": tool_calls,
