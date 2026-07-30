@@ -1,0 +1,53 @@
+manifest_kind: case
+project: aragon_osx
+case_id: execute_authorization
+schema_version: 1
+split: active
+family_id: aragon_osx
+implementation_id: osx-dao
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/aragon/osx
+upstream_commit: daf4fbb06b89ab0a05516bccb70b625a1a38303b
+original_contract_path: src/core/dao/DAO.sol
+source_ref: https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol
+lean_target: Benchmark.Cases.AragonOSx.ExecuteAuthorization.Compile
+spec_target: Benchmark.Cases.AragonOSx.ExecuteAuthorization.Specs
+proof_target: Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs
+selected_functions:
+  - DAO.execute
+  - PermissionManager.isGranted
+  - PermissionManager._auth
+  - PermissionManager.grant
+  - PermissionManager.grantWithCondition
+  - PermissionManager.revoke
+source_language: solidity
+verity_version: 1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - fixed_dao_permission_domains
+  - condition_callbacks_as_boolean_outcomes
+  - execute_body_entry_boundary
+  - omitted_action_payloads_and_external_calls
+  - target_class_projection
+abstraction_notes: >
+  The model preserves caller-specific, ANY_ADDR caller, and ANY_ADDR target
+  lookup order for the DAO target; ALLOW_FLAG and condition semantics; the
+  terminal behavior of a present specific condition; ROOT checks before direct
+  mutations; and wildcard rejection for EXECUTE_PERMISSION_ID and
+  ROOT_PERMISSION_ID. Grant targets are projected into DAO, ANY_ADDR, and other
+  classes. Grants to other non-wildcard targets succeed without changing the
+  modeled DAO-target slice. Condition callbacks are boolean outcomes, with false
+  covering both false returns and caught reverts.
+unsupported_feature_codes: []
+notes: >
+  This is an authorization benchmark, not an action-execution correctness
+  benchmark. A successful execute reaches the modeled execute-body boundary only after
+  exact permission resolution. Action calldata, native-value transfers,
+  allowFailureMap handling, result hashing, events, and reentrancy are outside
+  the theorem scope. DAO.sol is the primary case source. Its inherited authorization
+  path is pinned at src/core/permission/PermissionManager.sol in the same upstream
+  commit and is the source for isGranted, _auth, grant, grantWithCondition, and revoke.

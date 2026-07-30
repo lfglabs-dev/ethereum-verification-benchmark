@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 33
-- Implementations: 34
-- Active cases: 33
-- Buildable active cases: 33
-- Active tasks: 200
+- Families: 34
+- Implementations: 35
+- Active cases: 34
+- Buildable active cases: 34
+- Active tasks: 216
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -22,6 +22,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_earmark`, `_sync`, `_computeUnrealizedAccount`, `redeem`, `_subEarmarkedDebt`, `_subDebt`
 - Upstream source artifact: `src/AlchemistV3.sol`
 - Notes: Earmark conservation invariant for Alchemix V3 lazy-accrual debt accounting. The literal "sum of stored account.earmarked equals cumulativeEarmarked" is provably false on the deployed code (see AlchemistV3.sol:1014 comment "Global can lag local by rounding") because per-account earmarked is updated lazily inside _sync(tokenId). The lazy-projected version proven here is the property the design actually maintains and that downstream consumers (redemption math, collateral debit) rely on.
+
+### `aragon_osx/execute_authorization`
+- Family / implementation: `aragon_osx` / `osx-dao`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Compile`
+- Source ref: `https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol`
+- Selected functions: `DAO.execute`, `PermissionManager.isGranted`, `PermissionManager._auth`, `PermissionManager.grant`, `PermissionManager.grantWithCondition`, `PermissionManager.revoke`
+- Upstream source artifact: `src/core/dao/DAO.sol`
+- Notes: This is an authorization benchmark, not an action-execution correctness benchmark. A successful execute reaches the modeled execute-body boundary only after exact permission resolution. Action calldata, native-value transfers, allowFailureMap handling, result hashing, events, and reentrancy are outside the theorem scope. DAO.sol is the primary case source. Its inherited authorization path is pinned at src/core/permission/PermissionManager.sol in the same upstream commit and is the source for isGranted, _auth, grant, grantWithCondition, and revoke.
 
 ### `balancer/reclamm_swap_rounding`
 - Family / implementation: `balancer` / `reclamm`
@@ -398,6 +408,166 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/alchemix/earmark_conservation/verity/Specs.lean`, `Benchmark/Cases/Alchemix/EarmarkConservation/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SyncAccountPreservesInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Alchemix.EarmarkConservation.Proofs`
+
+### `aragon_osx/execute_authorization/execute_success_implies_authorized`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.execute_success_implies_authorized`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/ExecuteSuccessImpliesAuthorized.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_caller`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_condition_rejects_wildcard_caller`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteConditionRejectsWildcardCaller.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_target`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_condition_rejects_wildcard_target`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteConditionRejectsWildcardTarget.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_rejects_wildcard_caller`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_rejects_wildcard_caller`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRejectsWildcardCaller.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_rejects_wildcard_target`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_rejects_wildcard_target`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRejectsWildcardTarget.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_with_condition_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_with_condition_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteWithConditionRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_caller`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_condition_rejects_wildcard_caller`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootConditionRejectsWildcardCaller.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_target`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_condition_rejects_wildcard_target`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootConditionRejectsWildcardTarget.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_rejects_wildcard_caller`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_rejects_wildcard_caller`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRejectsWildcardCaller.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_rejects_wildcard_target`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_rejects_wildcard_target`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRejectsWildcardTarget.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_with_condition_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_with_condition_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootWithConditionRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/revoke_execute_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.revoke_execute_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/RevokeExecuteRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/revoke_root_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.revoke_root_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/RevokeRootRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/specific_condition_denial_is_terminal`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.specific_condition_denial_is_terminal`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/SpecificConditionDenialIsTerminal.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
 
 ### `balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing`
 - Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `state_preservation_local_effects`

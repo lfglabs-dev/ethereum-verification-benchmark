@@ -7,11 +7,12 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 33 cases and 200 task manifests. Of those, 200 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 34 cases and 216 task manifests. Of those, 216 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
 | `alchemix/earmark_conservation` | 5 | `complete` |
+| `aragon_osx/execute_authorization` | 16 | `complete` |
 | `balancer/reclamm_swap_rounding` | 1 | `complete` |
 | `cork/pool_solvency` | 1 | `partial` |
 | `damn_vulnerable_defi/side_entrance` | 5 | `partial` |

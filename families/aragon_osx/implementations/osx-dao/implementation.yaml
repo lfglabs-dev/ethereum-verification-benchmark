@@ -1,0 +1,18 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: aragon_osx
+implementation_id: osx-dao
+display_name: Aragon OSx DAO
+split: active
+status: translated
+upstream_repo: https://github.com/aragon/osx
+upstream_commit: daf4fbb06b89ab0a05516bccb70b625a1a38303b
+source_language: solidity
+source_artifact_path: src/core/dao/DAO.sol
+case_ids:
+  - aragon_osx/execute_authorization
+notes: >
+  Aragon OSx DAO authorization slice pinned to the cited upstream commit. The
+  implementation entry covers DAO.execute and the inherited PermissionManager
+  authorization, direct grant, conditional grant, and revoke surfaces relevant
+  to EXECUTE_PERMISSION_ID and ROOT_PERMISSION_ID.

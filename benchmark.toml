@@ -18,6 +18,7 @@ backlog_task_glob = "backlog/*/*/tasks/*.yaml"
 result_schema = "schemas/run-result.schema.json"
 active_cases = [
   "alchemix/earmark_conservation",
+  "aragon_osx/execute_authorization",
   "balancer/reclamm_swap_rounding",
   "cork/pool_solvency",
   "damn_vulnerable_defi/side_entrance",
