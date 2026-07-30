@@ -2,276 +2,171 @@ import Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Contract
 
 namespace Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority
 
-def signedDeltasMatchRaw
-    (last : AccountingState)
-    (current : RawNAVs)
-    (deltaJT deltaST : SignedDelta) : Prop :=
-  let oldTotal := last.raw.stRawNAV + last.raw.jtRawNAV
-  let newTotal := current.stRawNAV + current.jtRawNAV
-  match deltaJT, deltaST with
-  | .gain jt, .gain st => newTotal = oldTotal + jt + st
-  | .gain jt, .flat => newTotal = oldTotal + jt
-  | .gain jt, .loss st => newTotal + st = oldTotal + jt
-  | .flat, .gain st => newTotal = oldTotal + st
-  | .flat, .flat => newTotal = oldTotal
-  | .flat, .loss st => newTotal + st = oldTotal
-  | .loss jt, .gain st => newTotal + jt = oldTotal + st
-  | .loss jt, .flat => newTotal + jt = oldTotal
-  | .loss jt, .loss st => newTotal + jt + st = oldTotal
-
+/-- Successful pure-accountant path, including the source require boundaries. -/
 def successfulSyncDomain
     (last : AccountingState)
-    (current : RawNAVs)
-    (deltaJT deltaST : SignedDelta)
-    (syncCfg : SyncConfig)
+    (currentCollateralNAV : Nat)
     (yieldCfg : YieldConfig) : Prop :=
-  let jtStep := applyJTEffectiveDelta
-    last.jtEffectiveNAV deltaJT
-    syncCfg.effectiveNAVDustTolerance yieldCfg.jtProtocolFeeWAD
+  let gain := currentCollateralNAV - last.collateralNAV
+  let repaid := min gain last.jtImpermanentLoss
+  let residual := gain - repaid
+  let stGain := residualSTGain last currentCollateralNAV
+  let jtPremium := grossPremium stGain yieldCfg.twJTYieldShareAccruedWAD
+    yieldCfg.elapsedSinceLastPremiumPayments
+  let lptPremium := grossPremium stGain yieldCfg.twLPTYieldShareAccruedWAD
+    yieldCfg.elapsedSinceLastPremiumPayments
+  let jtGain := residual - stGain
   last.conserves ∧
     yieldCfg.valid ∧
-    signedDeltasMatchRaw last current deltaJT deltaST ∧
-    (match deltaJT with
-      | .loss loss => loss ≤ last.jtEffectiveNAV
-      | _ => True) ∧
-    (match deltaST with
-      | .loss loss =>
-          loss - min loss jtStep.jtEffectiveNAV ≤ last.stEffectiveNAV
-      | _ => True)
+    (currentCollateralNAV < last.collateralNAV →
+      last.collateralNAV - currentCollateralNAV -
+        min (last.collateralNAV - currentCollateralNAV)
+          last.jtEffectiveNAV ≤ last.stEffectiveNAV ∧
+      last.jtImpermanentLoss +
+        min (last.collateralNAV - currentCollateralNAV)
+          last.jtEffectiveNAV ≤ UINT256_MAX) ∧
+    (last.collateralNAV < currentCollateralNAV →
+      stGain ≤ residual ∧
+      jtPremium + lptPremium ≤ stGain ∧
+      last.collateralNAV + repaid ≤ UINT256_MAX ∧
+      last.stEffectiveNAV + stGain ≤ UINT256_MAX ∧
+      last.jtEffectiveNAV + repaid ≤ UINT256_MAX ∧
+      last.jtEffectiveNAV + repaid + jtGain ≤ UINT256_MAX ∧
+      last.jtEffectiveNAV + repaid + jtGain + jtPremium ≤ UINT256_MAX)
 
 /-!
-## Nat-to-uint256 refinement boundary
+## Solidity refinement boundary
 
-The implementation model uses unbounded naturals for tractable proofs. These
-predicates describe the successful Solidity boundary: source inputs, checked
-arithmetic results, full-precision `mulDiv` quotients, and committed outputs
-must fit `uint256`. Every source-facing theorem receives the matching premise.
+The executable model uses unbounded naturals. Source-facing theorems require exact
+`uint256`/`int256` encodings, `uint128` accumulator bounds, successful checked
+add/sub results, and bounded full-precision `mulDiv` quotients.
 -/
 
-def RawNAVs.uint256Bounded (raw : RawNAVs) : Prop :=
-  raw.stRawNAV ≤ UINT256_MAX ∧
-    raw.jtRawNAV ≤ UINT256_MAX ∧
-    raw.ltRawNAV ≤ UINT256_MAX ∧
-    raw.stRawNAV + raw.jtRawNAV ≤ UINT256_MAX
-
 def AccountingState.uint256Bounded (s : AccountingState) : Prop :=
-  s.raw.uint256Bounded ∧
+  s.collateralNAV ≤ UINT256_MAX ∧
+    s.lptRawNAV ≤ UINT256_MAX ∧
     s.stEffectiveNAV ≤ UINT256_MAX ∧
     s.jtEffectiveNAV ≤ UINT256_MAX ∧
-    s.jtCoverageImpermanentLoss ≤ UINT256_MAX ∧
+    s.jtImpermanentLoss ≤ UINT256_MAX ∧
     s.stEffectiveNAV + s.jtEffectiveNAV ≤ UINT256_MAX
 
-def YieldConfig.uint256Bounded (cfg : YieldConfig) : Prop :=
+def YieldConfig.uintBounded (cfg : YieldConfig) : Prop :=
   cfg.elapsedSinceLastPremiumPayments ≤ UINT256_MAX ∧
-    cfg.twJTYieldShareAccruedWAD ≤ UINT256_MAX ∧
-    cfg.twLTYieldShareAccruedWAD ≤ UINT256_MAX ∧
+    cfg.twJTYieldShareAccruedWAD ≤ UINT128_MAX ∧
+    cfg.twLPTYieldShareAccruedWAD ≤ UINT128_MAX ∧
     cfg.elapsedSinceLastPremiumPayments * WAD ≤ UINT256_MAX ∧
-    cfg.stProtocolFeeWAD ≤ UINT256_MAX ∧
-    cfg.jtProtocolFeeWAD ≤ UINT256_MAX ∧
-    cfg.jtYieldShareProtocolFeeWAD ≤ UINT256_MAX ∧
-    cfg.ltYieldShareProtocolFeeWAD ≤ UINT256_MAX
+    cfg.stProtocolFeeWAD ≤ UINT64_MAX ∧
+    cfg.jtProtocolFeeWAD ≤ UINT64_MAX ∧
+    cfg.jtYieldShareProtocolFeeWAD ≤ UINT64_MAX ∧
+    cfg.lptYieldShareProtocolFeeWAD ≤ UINT64_MAX
 
 def SyncConfig.uint256Bounded (cfg : SyncConfig) : Prop :=
-  cfg.effectiveNAVDustTolerance ≤ UINT256_MAX ∧
-    cfg.minCoverageWAD ≤ UINT256_MAX ∧
-    cfg.minLiquidityWAD ≤ UINT256_MAX
+  cfg.dustTolerance ≤ UINT256_MAX ∧
+    cfg.minCoverageWAD ≤ UINT64_MAX ∧
+    cfg.minLiquidityWAD ≤ UINT64_MAX ∧
+    cfg.coverageLiquidationUtilizationWAD ≤ UINT256_MAX
+
+def YieldOutputs.uint256Bounded (outputs : YieldOutputs) : Prop :=
+  outputs.lptLiquidityPremium ≤ UINT256_MAX ∧
+    outputs.stProtocolFee ≤ UINT256_MAX ∧
+    outputs.jtProtocolFee ≤ UINT256_MAX ∧
+    outputs.lptProtocolFee ≤ UINT256_MAX
 
 def SyncResult.uint256Bounded (result : SyncResult) : Prop :=
   result.accounting.uint256Bounded ∧
-    result.outputs.ltLiquidityPremium ≤ UINT256_MAX ∧
-    result.outputs.stProtocolFee ≤ UINT256_MAX ∧
-    result.outputs.jtProtocolFee ≤ UINT256_MAX ∧
-    result.outputs.ltProtocolFee ≤ UINT256_MAX ∧
-    result.recoveredCoverageIL ≤ UINT256_MAX ∧
-    result.remainingCoverageILBeforeTransition ≤ UINT256_MAX ∧
-    result.residualSeniorYield ≤ UINT256_MAX ∧
+    result.outputs.uint256Bounded ∧
+    result.jtImpermanentLossRepaid ≤ UINT256_MAX ∧
+    result.remainingImpermanentLossBeforeTransition ≤ UINT256_MAX ∧
+    result.residualGainAfterRepayment ≤ UINT256_MAX ∧
+    result.stGain ≤ UINT256_MAX ∧
+    result.jtGain ≤ UINT256_MAX ∧
     result.jtRiskPremiumGross ≤ UINT256_MAX ∧
     result.jtYieldShareProtocolFee ≤ UINT256_MAX ∧
-    result.priorJTPnlProtocolFee ≤ UINT256_MAX ∧
-    result.jtCoverageApplied ≤ UINT256_MAX ∧
-    result.residualSeniorLoss ≤ UINT256_MAX ∧
+    result.jtLossAbsorbed ≤ UINT256_MAX ∧
+    result.residualSTLoss ≤ UINT256_MAX ∧
     result.coverageUtilization ≤ UINT256_MAX ∧
     result.liquidityUtilization ≤ UINT256_MAX
 
-/-- Checked intermediate additions/subtractions on the source-ordered sync path. -/
-def syncIntermediateUint256Safe
-    (last : AccountingState)
-    (deltaJT deltaST : SignedDelta)
-    (syncCfg : SyncConfig)
-    (yieldCfg : YieldConfig) : Prop :=
-  let jtStep := applyJTEffectiveDelta
-    last.jtEffectiveNAV deltaJT
-    syncCfg.effectiveNAVDustTolerance yieldCfg.jtProtocolFeeWAD
-  (match deltaJT with
-    | .loss loss => loss ≤ last.jtEffectiveNAV
-    | .flat => True
-    | .gain gain => last.jtEffectiveNAV + gain ≤ UINT256_MAX) ∧
-  (match deltaST with
-    | .flat => True
-    | .loss loss =>
-        let coverage := min loss jtStep.jtEffectiveNAV
-        let residual := loss - coverage
-        residual ≤ last.stEffectiveNAV ∧
-          last.jtCoverageImpermanentLoss + coverage ≤ UINT256_MAX
-    | .gain gain =>
-        let recovered := min gain last.jtCoverageImpermanentLoss
-        let residual := gain - recovered
-        let jtPremium := grossPremium residual yieldCfg.twJTYieldShareAccruedWAD
-          yieldCfg.elapsedSinceLastPremiumPayments
-        let ltPremium := grossPremium residual yieldCfg.twLTYieldShareAccruedWAD
-          yieldCfg.elapsedSinceLastPremiumPayments
-        let jtYieldFee :=
-          if residual > syncCfg.effectiveNAVDustTolerance then
-            mulDivDown jtPremium yieldCfg.jtYieldShareProtocolFeeWAD WAD
-          else 0
-        last.stEffectiveNAV + residual ≤ UINT256_MAX ∧
-          jtPremium + ltPremium ≤ residual ∧
-          jtStep.jtEffectiveNAV + recovered ≤ UINT256_MAX ∧
-          jtStep.jtEffectiveNAV + recovered + jtPremium ≤ UINT256_MAX ∧
-          jtStep.jtProtocolFee + jtYieldFee ≤ UINT256_MAX)
-
-/--
-The modeled waterfall begins after Royco Day computes raw NAV deltas and attributes
-them to effective ST/JT PnL. This predicate records the successful source prelude:
-both raw operands accepted the source's checked `toInt256`, and the supplied signed
-attribution outputs are representable results of that omitted signed-arithmetic step.
--/
-def sourceAttributionInt256Safe
-    (last : AccountingState)
-    (current : RawNAVs)
-    (deltaJT deltaST : SignedDelta) : Prop :=
-  last.raw.stRawNAV ≤ INT256_MAX ∧
-    last.raw.jtRawNAV ≤ INT256_MAX ∧
-    current.stRawNAV ≤ INT256_MAX ∧
-    current.jtRawNAV ≤ INT256_MAX ∧
-    (match deltaJT with
-      | .loss amount | .gain amount => amount ≤ INT256_MAX
-      | .flat => True) ∧
-    (match deltaST with
-      | .loss amount | .gain amount => amount ≤ INT256_MAX
-      | .flat => True) ∧
-    deltaJT.magnitude + deltaST.magnitude ≤ INT256_MAX
-
 def sourceSyncDomain
     (last : AccountingState)
-    (current : RawNAVs)
-    (deltaJT deltaST : SignedDelta)
+    (currentCollateralNAV : Nat)
     (syncCfg : SyncConfig)
     (yieldCfg : YieldConfig) : Prop :=
-  successfulSyncDomain last current deltaJT deltaST syncCfg yieldCfg ∧
-    syncIntermediateUint256Safe last deltaJT deltaST syncCfg yieldCfg ∧
-    sourceAttributionInt256Safe last current deltaJT deltaST ∧
+  successfulSyncDomain last currentCollateralNAV yieldCfg ∧
     last.uint256Bounded ∧
-    current.uint256Bounded ∧
+    currentCollateralNAV ≤ UINT256_MAX ∧
     syncCfg.uint256Bounded ∧
-    yieldCfg.uint256Bounded ∧
-    (match deltaJT with
-      | .loss amount | .gain amount => amount ≤ UINT256_MAX
-      | .flat => True) ∧
-    (match deltaST with
-      | .loss amount | .gain amount => amount ≤ UINT256_MAX
-      | .flat => True) ∧
+    yieldCfg.uintBounded ∧
     (previewSyncTrancheAccounting
-      last current deltaJT deltaST syncCfg yieldCfg).uint256Bounded
+      last currentCollateralNAV syncCfg yieldCfg).uint256Bounded
 
-/-- A natural is represented exactly, rather than reduced modulo `2^256`. -/
 def natUint256EncodingExact (n : Nat) : Prop :=
   (Verity.Core.Uint256.ofNat n).val = n
 
-/-- A signed source operand/result round-trips exactly through Verity `Int256`. -/
 def int256EncodingExact (value : Int) : Prop :=
   ((Verity.Core.Int256.ofInt value : Verity.Core.Int256) : Int) = value
 
 def natInt256EncodingExact (n : Nat) : Prop :=
   int256EncodingExact (Int.ofNat n)
 
-def RawNAVs.sourceInt256EncodingExact (raw : RawNAVs) : Prop :=
-  natInt256EncodingExact raw.stRawNAV ∧
-    natInt256EncodingExact raw.jtRawNAV
-
-def RawNAVs.uint256EncodingExact (raw : RawNAVs) : Prop :=
-  natUint256EncodingExact raw.stRawNAV ∧
-    natUint256EncodingExact raw.jtRawNAV ∧
-    natUint256EncodingExact raw.ltRawNAV
-
 def AccountingState.uint256EncodingExact (s : AccountingState) : Prop :=
-  s.raw.uint256EncodingExact ∧
+  natUint256EncodingExact s.collateralNAV ∧
+    natUint256EncodingExact s.lptRawNAV ∧
     natUint256EncodingExact s.stEffectiveNAV ∧
     natUint256EncodingExact s.jtEffectiveNAV ∧
-    natUint256EncodingExact s.jtCoverageImpermanentLoss
+    natUint256EncodingExact s.jtImpermanentLoss
 
-def YieldConfig.uint256EncodingExact (cfg : YieldConfig) : Prop :=
+def YieldConfig.uintEncodingExact (cfg : YieldConfig) : Prop :=
   natUint256EncodingExact cfg.elapsedSinceLastPremiumPayments ∧
     natUint256EncodingExact cfg.twJTYieldShareAccruedWAD ∧
-    natUint256EncodingExact cfg.twLTYieldShareAccruedWAD ∧
+    natUint256EncodingExact cfg.twLPTYieldShareAccruedWAD ∧
     natUint256EncodingExact cfg.stProtocolFeeWAD ∧
     natUint256EncodingExact cfg.jtProtocolFeeWAD ∧
     natUint256EncodingExact cfg.jtYieldShareProtocolFeeWAD ∧
-    natUint256EncodingExact cfg.ltYieldShareProtocolFeeWAD
+    natUint256EncodingExact cfg.lptYieldShareProtocolFeeWAD
 
 def SyncConfig.uint256EncodingExact (cfg : SyncConfig) : Prop :=
-  natUint256EncodingExact cfg.effectiveNAVDustTolerance ∧
+  natUint256EncodingExact cfg.dustTolerance ∧
     natUint256EncodingExact cfg.minCoverageWAD ∧
-    natUint256EncodingExact cfg.minLiquidityWAD
-
-def SignedDelta.uint256EncodingExact (delta : SignedDelta) : Prop :=
-  match delta with
-  | .loss amount | .gain amount => natUint256EncodingExact amount
-  | .flat => True
-
-def SignedDelta.int256EncodingExact (delta : SignedDelta) : Prop :=
-  match delta with
-  | .loss amount =>
-      Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.int256EncodingExact
-        (-(Int.ofNat amount))
-  | .flat =>
-      Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.int256EncodingExact 0
-  | .gain amount =>
-      Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.int256EncodingExact
-        (Int.ofNat amount)
+    natUint256EncodingExact cfg.minLiquidityWAD ∧
+    natUint256EncodingExact cfg.coverageLiquidationUtilizationWAD
 
 def YieldOutputs.uint256EncodingExact (outputs : YieldOutputs) : Prop :=
-  natUint256EncodingExact outputs.ltLiquidityPremium ∧
+  natUint256EncodingExact outputs.lptLiquidityPremium ∧
     natUint256EncodingExact outputs.stProtocolFee ∧
     natUint256EncodingExact outputs.jtProtocolFee ∧
-    natUint256EncodingExact outputs.ltProtocolFee
+    natUint256EncodingExact outputs.lptProtocolFee
 
 def SyncResult.uint256EncodingExact (result : SyncResult) : Prop :=
   result.accounting.uint256EncodingExact ∧
     result.outputs.uint256EncodingExact ∧
-    natUint256EncodingExact result.recoveredCoverageIL ∧
-    natUint256EncodingExact result.remainingCoverageILBeforeTransition ∧
-    natUint256EncodingExact result.residualSeniorYield ∧
+    natUint256EncodingExact result.jtImpermanentLossRepaid ∧
+    natUint256EncodingExact result.remainingImpermanentLossBeforeTransition ∧
+    natUint256EncodingExact result.residualGainAfterRepayment ∧
+    natUint256EncodingExact result.stGain ∧
+    natUint256EncodingExact result.jtGain ∧
     natUint256EncodingExact result.jtRiskPremiumGross ∧
     natUint256EncodingExact result.jtYieldShareProtocolFee ∧
-    natUint256EncodingExact result.priorJTPnlProtocolFee ∧
-    natUint256EncodingExact result.jtCoverageApplied ∧
-    natUint256EncodingExact result.residualSeniorLoss ∧
+    natUint256EncodingExact result.jtLossAbsorbed ∧
+    natUint256EncodingExact result.residualSTLoss ∧
     natUint256EncodingExact result.coverageUtilization ∧
     natUint256EncodingExact result.liquidityUtilization
 
-/-- Solidity-0.8 checked addition and subtraction agree with natural arithmetic. -/
 def checkedArithmeticRefinesNat : Prop :=
   ∀ a b : Nat,
-    a ≤ UINT256_MAX →
-    b ≤ UINT256_MAX →
+    a ≤ UINT256_MAX → b ≤ UINT256_MAX →
     (a + b ≤ UINT256_MAX →
       Verity.Stdlib.Math.safeAdd
-        (Verity.Core.Uint256.ofNat a)
-        (Verity.Core.Uint256.ofNat b) =
+        (Verity.Core.Uint256.ofNat a) (Verity.Core.Uint256.ofNat b) =
           some (Verity.Core.Uint256.ofNat (a + b))) ∧
     (b ≤ a →
       Verity.Stdlib.Math.safeSub
-        (Verity.Core.Uint256.ofNat a)
-        (Verity.Core.Uint256.ofNat b) =
+        (Verity.Core.Uint256.ofNat a) (Verity.Core.Uint256.ofNat b) =
           some (Verity.Core.Uint256.ofNat (a - b)))
 
-/-- Verity's full-precision floor/ceil helpers agree with the natural model. -/
 def fullPrecisionMulDivRefinesNat : Prop :=
   ∀ a b denominator : Nat,
-    a ≤ UINT256_MAX →
-    b ≤ UINT256_MAX →
-    denominator ≤ UINT256_MAX →
+    a ≤ UINT256_MAX → b ≤ UINT256_MAX → denominator ≤ UINT256_MAX →
     denominator ≠ 0 →
     (mulDivDown a b denominator ≤ UINT256_MAX →
       Verity.Stdlib.Math.mulDiv512Down?
@@ -286,355 +181,289 @@ def fullPrecisionMulDivRefinesNat : Prop :=
         (Verity.Core.Uint256.ofNat denominator) =
           some (Verity.Core.Uint256.ofNat (mulDivUp a b denominator)))
 
-/--
-Semantic refinement proposition for a successful source sync. It constructs exact
-`Uint256` encodings for the actual inputs/result, exact sign-preserving `Int256`
-encodings for source PnL attribution operands/results, and proves checked add/sub plus
-full-precision floor/ceil multiply-divide agree with the natural-number model.
--/
 def NatUint256RefinementSpec
     (last : AccountingState)
-    (current : RawNAVs)
-    (deltaJT deltaST : SignedDelta)
+    (currentCollateralNAV : Nat)
     (syncCfg : SyncConfig)
     (yieldCfg : YieldConfig) : Prop :=
   let result := previewSyncTrancheAccounting
-    last current deltaJT deltaST syncCfg yieldCfg
-  last.uint256EncodingExact ∧
-    current.uint256EncodingExact ∧
-    last.raw.sourceInt256EncodingExact ∧
-    current.sourceInt256EncodingExact ∧
-    deltaJT.uint256EncodingExact ∧
-    deltaST.uint256EncodingExact ∧
-    deltaJT.int256EncodingExact ∧
-    deltaST.int256EncodingExact ∧
+    last currentCollateralNAV syncCfg yieldCfg
+  successfulSyncDomain last currentCollateralNAV yieldCfg ∧
+    result.uint256Bounded ∧
+    last.uint256EncodingExact ∧
+    natUint256EncodingExact currentCollateralNAV ∧
     syncCfg.uint256EncodingExact ∧
-    yieldCfg.uint256EncodingExact ∧
+    yieldCfg.uintEncodingExact ∧
     result.uint256EncodingExact ∧
     checkedArithmeticRefinesNat ∧
     fullPrecisionMulDivRefinesNat
 
-/-- Recovery consumes `min(gain, IL)` before any ST-sourced yield share. -/
+/-- Collateral recovery repays `min(gain, IL)` before any residual yield. -/
 def RecoveryBeforeYieldSpec
     (last : AccountingState)
-    (current : RawNAVs)
-    (deltaJT : SignedDelta)
-    (stGain : Nat)
+    (gain : Nat)
     (syncCfg : SyncConfig)
     (yieldCfg : YieldConfig) : Prop :=
   let result := previewSyncTrancheAccounting
-    last current deltaJT (.gain stGain) syncCfg yieldCfg
-  result.recoveredCoverageIL = min stGain last.jtCoverageImpermanentLoss ∧
-    result.remainingCoverageILBeforeTransition =
-      last.jtCoverageImpermanentLoss - result.recoveredCoverageIL ∧
-    result.residualSeniorYield = stGain - result.recoveredCoverageIL ∧
-    (stGain ≤ last.jtCoverageImpermanentLoss →
-      result.residualSeniorYield = 0 ∧
+    last (last.collateralNAV + gain) syncCfg yieldCfg
+  result.jtImpermanentLossRepaid = min gain last.jtImpermanentLoss ∧
+    result.remainingImpermanentLossBeforeTransition =
+      last.jtImpermanentLoss - result.jtImpermanentLossRepaid ∧
+    result.residualGainAfterRepayment =
+      gain - result.jtImpermanentLossRepaid ∧
+    (gain ≤ last.jtImpermanentLoss →
+      result.residualGainAfterRepayment = 0 ∧
+      result.stGain = 0 ∧ result.jtGain = 0 ∧
       result.jtRiskPremiumGross = 0 ∧
-      result.outputs.ltLiquidityPremium = 0 ∧
-      result.outputs.stProtocolFee = 0 ∧
-      result.jtYieldShareProtocolFee = 0 ∧
-      result.outputs.ltProtocolFee = 0)
+      result.outputs = YieldOutputs.zero)
 
-/-- The two gross yield shares cannot exceed residual senior yield. -/
-def CombinedPremiumBoundSpec
-    (stGain coverageIL : Nat)
-    (cfg : YieldConfig) : Prop :=
-  let residual := residualSeniorYield stGain coverageIL
-  grossPremium residual cfg.twJTYieldShareAccruedWAD
+/-- The two gross yield shares cannot exceed the senior gain. -/
+def CombinedPremiumBoundSpec (stGain : Nat) (cfg : YieldConfig) : Prop :=
+  grossPremium stGain cfg.twJTYieldShareAccruedWAD
       cfg.elapsedSinceLastPremiumPayments +
-    grossPremium residual cfg.twLTYieldShareAccruedWAD
-      cfg.elapsedSinceLastPremiumPayments ≤ residual
+    grossPremium stGain cfg.twLPTYieldShareAccruedWAD
+      cfg.elapsedSinceLastPremiumPayments ≤ stGain
 
-/-- Changing only LT's accrued numerator cannot change ST/JT accounting or utilization. -/
-def LTPremiumCoverageNeutralSpec
+/-- Changing only LPT's premium numerator cannot change ST/JT accounting. -/
+def LPTPremiumCoverageNeutralSpec
     (last : AccountingState)
-    (current : RawNAVs)
-    (deltaJT deltaST : SignedDelta)
+    (currentCollateralNAV : Nat)
     (syncCfg : SyncConfig)
     (cfg : YieldConfig)
-    (ltAccruedA ltAccruedB : Nat) : Prop :=
-  let cfgA := { cfg with twLTYieldShareAccruedWAD := ltAccruedA }
-  let cfgB := { cfg with twLTYieldShareAccruedWAD := ltAccruedB }
-  let resultA := previewSyncTrancheAccounting
-    last current deltaJT deltaST syncCfg cfgA
-  let resultB := previewSyncTrancheAccounting
-    last current deltaJT deltaST syncCfg cfgB
+    (lptAccruedA lptAccruedB : Nat) : Prop :=
+  let resultA := previewSyncTrancheAccounting last currentCollateralNAV
+    syncCfg { cfg with twLPTYieldShareAccruedWAD := lptAccruedA }
+  let resultB := previewSyncTrancheAccounting last currentCollateralNAV
+    syncCfg { cfg with twLPTYieldShareAccruedWAD := lptAccruedB }
   resultA.accounting = resultB.accounting ∧
-    resultA.coverageUtilization = resultB.coverageUtilization ∧
-    resultA.liquidityUtilization = resultB.liquidityUtilization
+    resultA.coverageUtilization = resultB.coverageUtilization
 
-/-- Gross LT NAV splits exactly, then each recipient uses exact source conversion. -/
-def LTPremiumMintSplitSpec (input : FeeMintInput) : Prop :=
+/-- Gross LPT NAV splits exactly and both recipients use the same conversion. -/
+def LPTPremiumMintSplitSpec (input : FeeMintInput) : Prop :=
   let result := processFeesAndLiquidityPremium input
-  result.ltLiquidityPremiumNet + input.ltYieldShareProtocolFee =
-      input.ltLiquidityPremiumGross ∧
+  result.retainedSTNAV = input.stEffectiveNAV -
+      input.lptLiquidityPremiumGross - input.stProtocolFee ∧
+    result.retainedJTNAV = input.jtEffectiveNAV - input.jtProtocolFee ∧
+    result.lptLiquidityPremiumNet + input.lptProtocolFee =
+      input.lptLiquidityPremiumGross ∧
     result.pooledProtocolFeeNAV =
-      input.stProtocolFee + input.ltYieldShareProtocolFee ∧
-    result.ltOwnedSeniorTrancheSharesMinted =
-      convertToShares
-        result.ltLiquidityPremiumNet result.retainedSTNAV input.stTotalSupply ∧
-    result.protocolSeniorTrancheSharesMinted =
-      convertToShares
-        result.pooledProtocolFeeNAV result.retainedSTNAV input.stTotalSupply ∧
-    result.stTotalSupplyAfterMints =
-      input.stTotalSupply +
-        result.ltOwnedSeniorTrancheSharesMinted +
-        result.protocolSeniorTrancheSharesMinted
+      input.stProtocolFee + input.lptProtocolFee ∧
+    result.lptOwnedSeniorTrancheSharesMinted = convertToShares
+      result.lptLiquidityPremiumNet result.retainedSTNAV input.stTotalSupply ∧
+    result.protocolSeniorTrancheSharesMinted = convertToShares
+      result.pooledProtocolFeeNAV result.retainedSTNAV input.stTotalSupply ∧
+    result.protocolJuniorTrancheSharesMinted = convertToShares
+      input.jtProtocolFee result.retainedJTNAV input.jtTotalSupply ∧
+    result.stTotalSupplyAfterMints = input.stTotalSupply +
+      result.lptOwnedSeniorTrancheSharesMinted +
+      result.protocolSeniorTrancheSharesMinted ∧
+    result.jtTotalSupplyAfterMint = input.jtTotalSupply +
+      result.protocolJuniorTrancheSharesMinted
 
 def FeeMintInput.uint256Bounded (input : FeeMintInput) : Prop :=
-  input.stEffectiveNAV ≤ UINT256_MAX ∧
-    input.stTotalSupply ≤ UINT256_MAX ∧
-    input.ltLiquidityPremiumGross ≤ UINT256_MAX ∧
-    input.stProtocolFee ≤ UINT256_MAX ∧
-    input.ltYieldShareProtocolFee ≤ UINT256_MAX
+  input.stEffectiveNAV ≤ UINT256_MAX ∧ input.stTotalSupply ≤ UINT256_MAX ∧
+    input.jtEffectiveNAV ≤ UINT256_MAX ∧ input.jtTotalSupply ≤ UINT256_MAX ∧
+    input.lptLiquidityPremiumGross ≤ UINT256_MAX ∧
+    input.stProtocolFee ≤ UINT256_MAX ∧ input.jtProtocolFee ≤ UINT256_MAX ∧
+    input.lptProtocolFee ≤ UINT256_MAX
 
 def FeeMintResult.uint256Bounded (result : FeeMintResult) : Prop :=
   result.retainedSTNAV ≤ UINT256_MAX ∧
-    result.ltLiquidityPremiumNet ≤ UINT256_MAX ∧
+    result.retainedJTNAV ≤ UINT256_MAX ∧
+    result.lptLiquidityPremiumNet ≤ UINT256_MAX ∧
     result.pooledProtocolFeeNAV ≤ UINT256_MAX ∧
-    result.ltOwnedSeniorTrancheSharesMinted ≤ UINT256_MAX ∧
+    result.lptOwnedSeniorTrancheSharesMinted ≤ UINT256_MAX ∧
     result.protocolSeniorTrancheSharesMinted ≤ UINT256_MAX ∧
-    result.stTotalSupplyAfterMints ≤ UINT256_MAX
+    result.protocolJuniorTrancheSharesMinted ≤ UINT256_MAX ∧
+    result.stTotalSupplyAfterMints ≤ UINT256_MAX ∧
+    result.jtTotalSupplyAfterMint ≤ UINT256_MAX
+
+/-- Every eager `Math.mulDiv` evaluated by source `_convertToShares` must fit. -/
+def convertToSharesSourceSafe
+    (value totalValue totalSupply : Nat) : Prop :=
+  let effectiveSupply := totalSupply + VIRTUAL_SHARES
+  let effectiveValue := totalValue + VIRTUAL_VALUE
+  let clampGate := mulDivUp effectiveSupply
+    (WAD - MAX_MINT_DILUTION_WAD) MAX_MINT_DILUTION_WAD
+  effectiveSupply ≤ UINT256_MAX ∧
+    effectiveValue ≤ UINT256_MAX ∧
+    clampGate ≤ UINT256_MAX ∧
+    (clampGate > effectiveValue →
+      mulDivDown effectiveSupply MAX_MINT_DILUTION_WAD
+        (WAD - MAX_MINT_DILUTION_WAD) ≤ UINT256_MAX) ∧
+    mulDivDown effectiveSupply value effectiveValue ≤ UINT256_MAX
 
 def successfulMintDomain (input : FeeMintInput) : Prop :=
+  let result := processFeesAndLiquidityPremium input
   input.uint256Bounded ∧
-    input.ltYieldShareProtocolFee ≤ input.ltLiquidityPremiumGross ∧
-    input.ltLiquidityPremiumGross + input.stProtocolFee ≤ input.stEffectiveNAV ∧
-    (processFeesAndLiquidityPremium input).uint256Bounded
+    input.stTotalSupply < UINT256_MAX ∧ input.jtTotalSupply < UINT256_MAX ∧
+    input.lptProtocolFee ≤ input.lptLiquidityPremiumGross ∧
+    input.stProtocolFee + input.lptProtocolFee ≤ UINT256_MAX ∧
+    input.lptLiquidityPremiumGross + input.stProtocolFee ≤ input.stEffectiveNAV ∧
+    input.jtProtocolFee ≤ input.jtEffectiveNAV ∧
+    input.stEffectiveNAV - input.lptLiquidityPremiumGross -
+      input.stProtocolFee < UINT256_MAX ∧
+    input.jtEffectiveNAV - input.jtProtocolFee < UINT256_MAX ∧
+    convertToSharesSourceSafe result.lptLiquidityPremiumNet
+      result.retainedSTNAV input.stTotalSupply ∧
+    convertToSharesSourceSafe result.pooledProtocolFeeNAV
+      result.retainedSTNAV input.stTotalSupply ∧
+    convertToSharesSourceSafe input.jtProtocolFee
+      result.retainedJTNAV input.jtTotalSupply ∧
+    result.uint256Bounded
 
-/-- ST loss is absorbed by JT first and creates an equal IL liability. -/
+/-- A collateral loss is absorbed by JT first and creates equal recoverable IL. -/
 def STLossCoveragePrioritySpec
     (last : AccountingState)
-    (current : RawNAVs)
-    (deltaJT : SignedDelta)
-    (stLoss : Nat)
+    (loss : Nat)
     (syncCfg : SyncConfig)
     (yieldCfg : YieldConfig) : Prop :=
-  let jtStep := applyJTEffectiveDelta
-    last.jtEffectiveNAV deltaJT
-    syncCfg.effectiveNAVDustTolerance yieldCfg.jtProtocolFeeWAD
   let result := previewSyncTrancheAccounting
-    last current deltaJT (.loss stLoss) syncCfg yieldCfg
-  result.jtCoverageApplied = min stLoss jtStep.jtEffectiveNAV ∧
-    result.residualSeniorLoss = stLoss - result.jtCoverageApplied ∧
-    result.remainingCoverageILBeforeTransition =
-      last.jtCoverageImpermanentLoss + result.jtCoverageApplied ∧
-    result.outputs.ltLiquidityPremium = 0 ∧
-    result.outputs.stProtocolFee = 0 ∧
-    result.outputs.ltProtocolFee = 0
+    last (last.collateralNAV - loss) syncCfg yieldCfg
+  result.jtLossAbsorbed = min loss last.jtEffectiveNAV ∧
+    result.residualSTLoss = loss - result.jtLossAbsorbed ∧
+    result.remainingImpermanentLossBeforeTransition =
+      last.jtImpermanentLoss + result.jtLossAbsorbed ∧
+    result.outputs = YieldOutputs.zero
 
-/-- Full source-ordered sync conserves ST/JT NAV on its successful domain. -/
+/-- The full head-source sync conserves collateral NAV on its successful domain. -/
 def SyncConservationSpec
     (last : AccountingState)
-    (current : RawNAVs)
-    (deltaJT deltaST : SignedDelta)
+    (currentCollateralNAV : Nat)
     (syncCfg : SyncConfig)
     (yieldCfg : YieldConfig) : Prop :=
-  (previewSyncTrancheAccounting
-    last current deltaJT deltaST syncCfg yieldCfg).accounting.conserves
+  (previewSyncTrancheAccounting last currentCollateralNAV
+    syncCfg yieldCfg).accounting.conserves
+
+/-- At head, outstanding IL means the residual-gain fee/premium path was not reached. -/
+def FeesRequireFullRecoverySpec
+    (last : AccountingState)
+    (currentCollateralNAV : Nat)
+    (syncCfg : SyncConfig)
+    (yieldCfg : YieldConfig) : Prop :=
+  let result := previewSyncTrancheAccounting last currentCollateralNAV
+    syncCfg yieldCfg
+  result.remainingImpermanentLossBeforeTransition > 0 →
+    result.outputs = YieldOutputs.zero
 
 def successfulPostOpInput
-    (before : AccountingState)
-    (op : Operation)
-    (amounts : OperationAmounts) : Prop :=
+    (before : AccountingState) (op : Operation) (input : PostOpInput) : Prop :=
   match op with
-  | .stDeposit =>
-      0 < amounts.stAmount ∧
-      amounts.jtAmount = 0 ∧
-      amounts.ltRawNAVAfter = before.raw.ltRawNAV ∧
-      amounts.stSelfLiquidationBonusNAV = 0
-  | .jtDeposit =>
-      amounts.stAmount = 0 ∧
-      0 < amounts.jtAmount ∧
-      amounts.ltRawNAVAfter = before.raw.ltRawNAV ∧
-      amounts.stSelfLiquidationBonusNAV = 0
-  | .ltDeposit =>
-      before.raw.ltRawNAV < amounts.ltRawNAVAfter ∧
-      amounts.jtAmount = 0 ∧
-      amounts.stSelfLiquidationBonusNAV = 0
-  | .stRedeem =>
-      amounts.ltRawNAVAfter = before.raw.ltRawNAV ∧
-      0 < amounts.stAmount + amounts.jtAmount ∧
-      amounts.stAmount ≤ before.raw.stRawNAV ∧
-      amounts.jtAmount ≤ before.raw.jtRawNAV ∧
-      amounts.stSelfLiquidationBonusNAV ≤ amounts.stAmount + amounts.jtAmount ∧
-      amounts.stSelfLiquidationBonusNAV ≤ before.jtEffectiveNAV ∧
-      amounts.stAmount + amounts.jtAmount - amounts.stSelfLiquidationBonusNAV ≤
-        before.stEffectiveNAV
-  | .jtRedeem =>
-      amounts.ltRawNAVAfter = before.raw.ltRawNAV ∧
-      0 < amounts.stAmount + amounts.jtAmount ∧
-      amounts.stAmount ≤ before.raw.stRawNAV ∧
-      amounts.jtAmount ≤ before.raw.jtRawNAV ∧
-      amounts.stAmount + amounts.jtAmount ≤ before.jtEffectiveNAV ∧
-      amounts.stSelfLiquidationBonusNAV = 0
-  | .ltRedeem =>
-      amounts.ltRawNAVAfter ≤ before.raw.ltRawNAV ∧
-      amounts.stAmount ≤ before.raw.stRawNAV ∧
-      amounts.jtAmount ≤ before.raw.jtRawNAV ∧
-      amounts.stSelfLiquidationBonusNAV ≤ amounts.stAmount + amounts.jtAmount ∧
-      amounts.stSelfLiquidationBonusNAV ≤ before.jtEffectiveNAV ∧
-      amounts.stAmount + amounts.jtAmount - amounts.stSelfLiquidationBonusNAV ≤
-        before.stEffectiveNAV
+  | .stDeposit => before.collateralNAV < input.collateralNAV ∧
+      input.lptRawNAV = before.lptRawNAV ∧ input.stSelfLiquidationBonusNAV = 0
+  | .stRedemption => input.collateralNAV < before.collateralNAV ∧
+      input.lptRawNAV = before.lptRawNAV ∧
+      input.stSelfLiquidationBonusNAV ≤ before.collateralNAV - input.collateralNAV ∧
+      input.stSelfLiquidationBonusNAV ≤ before.jtEffectiveNAV ∧
+      before.collateralNAV - input.collateralNAV -
+        input.stSelfLiquidationBonusNAV ≤ before.stEffectiveNAV
+  | .jtDeposit => before.collateralNAV < input.collateralNAV ∧
+      input.lptRawNAV = before.lptRawNAV ∧ input.stSelfLiquidationBonusNAV = 0
+  | .jtRedemption => input.collateralNAV < before.collateralNAV ∧
+      input.lptRawNAV = before.lptRawNAV ∧
+      before.collateralNAV - input.collateralNAV ≤ before.jtEffectiveNAV ∧
+      input.stSelfLiquidationBonusNAV = 0
+  | .lptDeposit => input.collateralNAV = before.collateralNAV ∧
+      before.lptRawNAV < input.lptRawNAV ∧ input.stSelfLiquidationBonusNAV = 0
+  | .lptRedemption => input.collateralNAV = before.collateralNAV ∧
+      input.lptRawNAV < before.lptRawNAV ∧ input.stSelfLiquidationBonusNAV = 0
 
-def OperationAmounts.uint256Bounded (amounts : OperationAmounts) : Prop :=
-  amounts.stAmount ≤ UINT256_MAX ∧
-    amounts.jtAmount ≤ UINT256_MAX ∧
-    amounts.ltRawNAVAfter ≤ UINT256_MAX ∧
-    amounts.stSelfLiquidationBonusNAV ≤ UINT256_MAX ∧
-    amounts.stAmount + amounts.jtAmount ≤ UINT256_MAX
+def PostOpInput.uint256Bounded (input : PostOpInput) : Prop :=
+  input.collateralNAV ≤ UINT256_MAX ∧ input.lptRawNAV ≤ UINT256_MAX ∧
+    input.stSelfLiquidationBonusNAV ≤ UINT256_MAX
 
 def PostOpResult.uint256Bounded (result : PostOpResult) : Prop :=
-  result.accounting.uint256Bounded ∧
-    result.coverageUtilization ≤ UINT256_MAX ∧
+  result.accounting.uint256Bounded ∧ result.coverageUtilization ≤ UINT256_MAX ∧
     result.liquidityUtilization ≤ UINT256_MAX
 
 def successfulPostOpSourceDomain
-    (before : AccountingState)
-    (op : Operation)
-    (amounts : OperationAmounts)
+    (before : AccountingState) (op : Operation) (input : PostOpInput)
     (minCoverageWAD minLiquidityWAD : Nat) : Prop :=
-  before.conserves ∧
-    before.uint256Bounded ∧
-    amounts.uint256Bounded ∧
-    minCoverageWAD ≤ UINT256_MAX ∧
-    minLiquidityWAD ≤ UINT256_MAX ∧
-    successfulPostOpInput before op amounts ∧
-    (postOpSyncTrancheAccountingUnchecked
-      before op amounts minCoverageWAD minLiquidityWAD).uint256Bounded
+  before.conserves ∧ before.uint256Bounded ∧ input.uint256Bounded ∧
+    before.collateralNAV ≤ INT256_MAX ∧ input.collateralNAV ≤ INT256_MAX ∧
+    before.lptRawNAV ≤ INT256_MAX ∧ input.lptRawNAV ≤ INT256_MAX ∧
+    minCoverageWAD ≤ UINT64_MAX ∧ minLiquidityWAD ≤ UINT64_MAX ∧
+    successfulPostOpInput before op input ∧
+    (postOpSyncTrancheAccounting before op input
+      minCoverageWAD minLiquidityWAD).uint256Bounded
 
 def PostOpNoYieldSpec
-    (before : AccountingState)
-    (op : Operation)
-    (amounts : OperationAmounts)
+    (before : AccountingState) (op : Operation) (input : PostOpInput)
     (minCoverageWAD minLiquidityWAD : Nat) : Prop :=
-  (postOpSyncTrancheAccountingUnchecked
-    before op amounts minCoverageWAD minLiquidityWAD).yields = YieldOutputs.zero
+  (postOpSyncTrancheAccounting before op input
+    minCoverageWAD minLiquidityWAD).yields = YieldOutputs.zero
 
 def PostOpConservationSpec
-    (before : AccountingState)
-    (op : Operation)
-    (amounts : OperationAmounts)
+    (before : AccountingState) (op : Operation) (input : PostOpInput)
     (minCoverageWAD minLiquidityWAD : Nat) : Prop :=
-  (postOpSyncTrancheAccountingUnchecked
-    before op amounts minCoverageWAD minLiquidityWAD).accounting.conserves
+  (postOpSyncTrancheAccounting before op input
+    minCoverageWAD minLiquidityWAD).accounting.conserves
 
-/-- Exact success/failure reinvestment cannot mutate ST/JT coverage accounting. -/
 def InnerReinvestmentCoverageNeutralSpec
     (before : ReinvestmentState)
-    (requestedShares minLTAssetsOut ltAssetsMinted minCoverageWAD : Nat)
+    (requestedShares minLPTAssetsOut lptAssetsMinted minCoverageWAD : Nat)
     (venueCallSucceeded : Bool) : Prop :=
-  let after := attemptLiquidityPremiumReinvestment
-    before requestedShares minLTAssetsOut ltAssetsMinted venueCallSucceeded
+  let after := attemptLiquidityPremiumReinvestment before requestedShares
+    minLPTAssetsOut lptAssetsMinted venueCallSucceeded
   after.accounting = before.accounting ∧
-    coverageUtilizationWAD
-      after.accounting.raw minCoverageWAD after.accounting.jtEffectiveNAV =
-    coverageUtilizationWAD
-      before.accounting.raw minCoverageWAD before.accounting.jtEffectiveNAV
+    coverageUtilizationWAD after.accounting.collateralNAV minCoverageWAD
+      after.accounting.jtEffectiveNAV =
+    coverageUtilizationWAD before.accounting.collateralNAV minCoverageWAD
+      before.accounting.jtEffectiveNAV
 
 def ReinvestmentState.uint256Bounded (state : ReinvestmentState) : Prop :=
   state.accounting.uint256Bounded ∧
-    state.ltOwnedSeniorTrancheShares ≤ UINT256_MAX ∧
-    state.ltOwnedYieldBearingAssets ≤ UINT256_MAX
+    state.lptOwnedSeniorTrancheShares ≤ UINT256_MAX ∧
+    state.totalLPTAssets ≤ UINT256_MAX
 
 def successfulReinvestmentDomain
     (before : ReinvestmentState)
-    (requestedShares minLTAssetsOut ltAssetsMinted minCoverageWAD : Nat)
+    (requestedShares minLPTAssetsOut lptAssetsMinted minCoverageWAD : Nat)
     (venueCallSucceeded : Bool) : Prop :=
-  before.uint256Bounded ∧
-    requestedShares ≤ UINT256_MAX ∧
-    minLTAssetsOut ≤ UINT256_MAX ∧
-    ltAssetsMinted ≤ UINT256_MAX ∧
-    minCoverageWAD ≤ UINT256_MAX ∧
-    (attemptLiquidityPremiumReinvestment
-      before requestedShares minLTAssetsOut ltAssetsMinted
-      venueCallSucceeded).uint256Bounded
+  before.uint256Bounded ∧ requestedShares ≤ UINT256_MAX ∧
+    minLPTAssetsOut ≤ UINT256_MAX ∧ lptAssetsMinted ≤ UINT256_MAX ∧
+    minCoverageWAD ≤ UINT64_MAX ∧
+    (venueCallSucceeded = true → minLPTAssetsOut ≤ lptAssetsMinted) ∧
+    (attemptLiquidityPremiumReinvestment before requestedShares
+      minLPTAssetsOut lptAssetsMinted venueCallSucceeded).uint256Bounded
 
-/-- Concrete sign regressions: losses encode as negative words; gains stay positive. -/
-example : (SignedDelta.loss 1).int256EncodingExact := by rfl
-
-example : (SignedDelta.gain 1).int256EncodingExact := by rfl
-
-def int256BoundaryRejectedLast : AccountingState := {
-  raw := { stRawNAV := 2 ^ 255, jtRawNAV := 0, ltRawNAV := 0 }
-  stEffectiveNAV := 2 ^ 255
-  jtEffectiveNAV := 0
-  jtCoverageImpermanentLoss := 0
-}
-
-def int256BoundaryRejectedCurrent : RawNAVs := {
-  stRawNAV := 2 ^ 255
-  jtRawNAV := 0
-  ltRawNAV := 0
-}
-
-/-- The top-bit witness fits uint256 but the source's checked `toInt256` rejects it. -/
-example : ¬ sourceAttributionInt256Safe
-    int256BoundaryRejectedLast int256BoundaryRejectedCurrent .flat .flat := by
-  norm_num [sourceAttributionInt256Safe, int256BoundaryRejectedLast,
-    int256BoundaryRejectedCurrent, INT256_MAX]
-
-def dustCounterexampleLast : AccountingState := {
-  raw := {
-    stRawNAV := 1_000_000_000_000_000_000_000
-    jtRawNAV := 200_000_000_000_000_000_000
-    ltRawNAV := 0
-  }
+/-- Regression state: a two-wei gain only repays two wei of a five-wei IL. -/
+def partialRecoveryLast : AccountingState := {
+  marketState := .fixedTerm
+  collateralNAV := 1_200_000_000_000_000_000_000
+  lptRawNAV := 100_000_000_000_000_000_000
   stEffectiveNAV := 1_000_000_000_000_000_000_005
   jtEffectiveNAV := 199_999_999_999_999_999_995
-  jtCoverageImpermanentLoss := 5
+  jtImpermanentLoss := 5
 }
 
-def dustCounterexampleCurrentRaw : RawNAVs := {
-  stRawNAV := 1_000_000_000_000_000_000_002
-  jtRawNAV := 220_000_000_000_000_000_000
-  ltRawNAV := 0
-}
-
-def dustCounterexampleYieldConfig : YieldConfig := {
+def partialRecoveryYieldConfig : YieldConfig := {
   elapsedSinceLastPremiumPayments := 1
   twJTYieldShareAccruedWAD := 100_000_000_000_000_000
-  twLTYieldShareAccruedWAD := 50_000_000_000_000_000
+  twLPTYieldShareAccruedWAD := 50_000_000_000_000_000
   stProtocolFeeWAD := 100_000_000_000_000_000
   jtProtocolFeeWAD := 100_000_000_000_000_000
   jtYieldShareProtocolFeeWAD := 100_000_000_000_000_000
-  ltYieldShareProtocolFeeWAD := 100_000_000_000_000_000
+  lptYieldShareProtocolFeeWAD := 100_000_000_000_000_000
 }
 
-def dustCounterexampleSyncConfig : SyncConfig := {
-  effectiveNAVDustTolerance := 7
+def partialRecoverySyncConfig : SyncConfig := {
+  dustTolerance := 0
   minCoverageWAD := 100_000_000_000_000_000
-  minLiquidityWAD := 0
-  resultingMarketState := .perpetual
-  eraseCoverageIL := false
+  minLiquidityWAD := 100_000_000_000_000_000
+  coverageLiquidationUtilizationWAD := 2 * WAD
+  fixedTermDurationZero := false
+  fixedTermExpired := false
 }
 
-/--
-Concrete pinned-source counterexample to the broad no-fee wording: concurrent JT
-appreciation creates a 2e18 JT fee while a 2-wei senior recovery leaves 3 wei IL.
--/
-def IndependentJTFeeCounterexampleSpec : Prop :=
-  let result := previewSyncTrancheAccounting
-    dustCounterexampleLast
-    dustCounterexampleCurrentRaw
-    (.gain 20_000_000_000_000_000_000)
-    (.gain 2)
-    dustCounterexampleSyncConfig
-    dustCounterexampleYieldConfig
-  sourceSyncDomain
-      dustCounterexampleLast
-      dustCounterexampleCurrentRaw
-      (.gain 20_000_000_000_000_000_000)
-      (.gain 2)
-      dustCounterexampleSyncConfig
-      dustCounterexampleYieldConfig ∧
-    result.accounting.conserves ∧
-    result.recoveredCoverageIL = 2 ∧
-    result.remainingCoverageILBeforeTransition = 3 ∧
-    result.residualSeniorYield = 0 ∧
-    result.jtRiskPremiumGross = 0 ∧
-    result.outputs.ltLiquidityPremium = 0 ∧
-    result.outputs.jtProtocolFee = 2_000_000_000_000_000_000
+def PartialRecoveryNoFeeRegressionSpec : Prop :=
+  let result := previewSyncTrancheAccounting partialRecoveryLast
+    (partialRecoveryLast.collateralNAV + 2) partialRecoverySyncConfig
+    partialRecoveryYieldConfig
+  result.accounting.conserves ∧
+    result.jtImpermanentLossRepaid = 2 ∧
+    result.remainingImpermanentLossBeforeTransition = 3 ∧
+    result.residualGainAfterRepayment = 0 ∧
+    result.outputs = YieldOutputs.zero
 
 end Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority
