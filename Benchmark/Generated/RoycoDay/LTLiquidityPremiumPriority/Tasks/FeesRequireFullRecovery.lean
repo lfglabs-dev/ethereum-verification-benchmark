@@ -2,15 +2,15 @@ import Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Specs
 
 namespace Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority
 
-theorem _nat_uint256_refinement
+theorem _fees_require_full_recovery
     (last : AccountingState)
     (currentCollateralNAV : Nat)
     (syncCfg : SyncConfig)
     (yieldCfg : YieldConfig)
-    (hDomain : sourceSyncDomain
+    (_hDomain : sourceSyncDomain
       last currentCollateralNAV syncCfg yieldCfg) :
-    NatUint256RefinementSpec
-      last currentCollateralNAV syncCfg yieldCfg := by
+    FeesRequireFullRecoverySpec last currentCollateralNAV
+      syncCfg yieldCfg := by
   exact ?_
 
 end Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority

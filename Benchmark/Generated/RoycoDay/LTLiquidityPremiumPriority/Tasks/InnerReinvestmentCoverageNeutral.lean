@@ -4,14 +4,12 @@ namespace Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority
 
 theorem _inner_reinvestment_coverage_neutral
     (before : ReinvestmentState)
-    (requestedShares minLTAssetsOut ltAssetsMinted minCoverageWAD : Nat)
+    (requestedShares minLPTAssetsOut lptAssetsMinted minCoverageWAD : Nat)
     (venueCallSucceeded : Bool)
-    (hDomain : successfulReinvestmentDomain
-      before requestedShares minLTAssetsOut ltAssetsMinted
-      minCoverageWAD venueCallSucceeded) :
-    InnerReinvestmentCoverageNeutralSpec
-      before requestedShares minLTAssetsOut ltAssetsMinted
-      minCoverageWAD venueCallSucceeded := by
+    (_hDomain : successfulReinvestmentDomain before requestedShares
+      minLPTAssetsOut lptAssetsMinted minCoverageWAD venueCallSucceeded) :
+    InnerReinvestmentCoverageNeutralSpec before requestedShares
+      minLPTAssetsOut lptAssetsMinted minCoverageWAD venueCallSucceeded := by
   exact ?_
 
 end Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority

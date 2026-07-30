@@ -2,66 +2,73 @@ import Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Specs
 
 namespace Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority
 
-#eval previewSyncTrancheAccounting
-  dustCounterexampleLast
-  dustCounterexampleCurrentRaw
-  (.gain 20_000_000_000_000_000_000)
-  (.gain 2)
-  dustCounterexampleSyncConfig
-  dustCounterexampleYieldConfig
+#eval previewSyncTrancheAccounting partialRecoveryLast
+  (partialRecoveryLast.collateralNAV + 2) partialRecoverySyncConfig
+  partialRecoveryYieldConfig
 
 #eval processFeesAndLiquidityPremium {
   stEffectiveNAV := 1_100_000_000_000_000_000_000
   stTotalSupply := 1_000_000_000_000_000_000_000
-  ltLiquidityPremiumGross := 5_000_000_000_000_000_000
+  jtEffectiveNAV := 200_000_000_000_000_000_000
+  jtTotalSupply := 180_000_000_000_000_000_000
+  lptLiquidityPremiumGross := 5_000_000_000_000_000_000
   stProtocolFee := 8_500_000_000_000_000_000
-  ltYieldShareProtocolFee := 500_000_000_000_000_000
+  jtProtocolFee := 250_000_000_000_000_000
+  lptProtocolFee := 500_000_000_000_000_000
 }
 
-/--
-Regression: preserve the source's single floor over a non-divisible time-weighted
-premium window. Moving the floor before multiplying would produce `WAD - 2`.
--/
+def clampOverflowMintInput : FeeMintInput := {
+  stEffectiveNAV := 0
+  stTotalSupply := UINT256_MAX - 1
+  jtEffectiveNAV := 0
+  jtTotalSupply := 0
+  lptLiquidityPremiumGross := 0
+  stProtocolFee := 0
+  jtProtocolFee := 0
+  lptProtocolFee := 0
+}
+
+/-- Solidity's eager dilution-clamp mulDiv overflows on this Nat-model witness. -/
+example : ¬ successfulMintDomain clampOverflowMintInput := by
+  unfold successfulMintDomain convertToSharesSourceSafe
+  norm_num [clampOverflowMintInput, processFeesAndLiquidityPremium,
+    FeeMintInput.uint256Bounded, FeeMintResult.uint256Bounded,
+    convertToShares, mulDivDown, mulDivUp, VIRTUAL_SHARES, VIRTUAL_VALUE,
+    MAX_MINT_DILUTION_WAD, WAD, UINT256_MAX]
+
+/-- Preserve the source's single floor over a non-divisible accumulator window. -/
 example : grossPremium (2 * WAD) (WAD - 1) 2 = WAD - 1 := by
   native_decide
 
-/-- Regression: every supported post-op branch conserves a persisted valid state. -/
-example
-    (before : AccountingState)
-    (op : Operation)
-    (amounts : OperationAmounts)
-    (minCoverageWAD minLiquidityWAD : Nat)
-    (hDomain : successfulPostOpSourceDomain
-      before op amounts minCoverageWAD minLiquidityWAD) :
-    PostOpConservationSpec
-      before op amounts minCoverageWAD minLiquidityWAD := by
-  rcases hDomain with ⟨hConserves, _, _, _, _, hInput, _⟩
-  unfold AccountingState.conserves at hConserves
-  cases op <;>
-    simp only [PostOpConservationSpec, postOpSyncTrancheAccountingUnchecked,
-      AccountingState.conserves] <;>
-    simp only [successfulPostOpInput] at hInput <;>
-    omega
+/-- The head regression has no residual gain and therefore cannot mint fees. -/
+example :
+    let result := previewSyncTrancheAccounting partialRecoveryLast
+      (partialRecoveryLast.collateralNAV + 2) partialRecoverySyncConfig
+      partialRecoveryYieldConfig
+    result.remainingImpermanentLossBeforeTransition = 3 ∧
+      result.outputs = YieldOutputs.zero := by
+  native_decide
 
 def nonConservingPostOpRegressionState : AccountingState := {
-  raw := { stRawNAV := 1, jtRawNAV := 0, ltRawNAV := 0 }
+  marketState := .fixedTerm
+  collateralNAV := 1
+  lptRawNAV := 0
   stEffectiveNAV := 0
   jtEffectiveNAV := 0
-  jtCoverageImpermanentLoss := 0
+  jtImpermanentLoss := 0
 }
 
-def oneSTDepositRegressionAmounts : OperationAmounts := {
-  stAmount := 1
-  jtAmount := 0
-  ltRawNAVAfter := 0
+def oneSTDepositRegressionInput : PostOpInput := {
+  collateralNAV := 2
+  lptRawNAV := 0
   stSelfLiquidationBonusNAV := 0
 }
 
-/-- Regression: the successful source domain rejects an invalid persisted state. -/
+/-- The successful source domain rejects an invalid persisted accounting state. -/
 example : ¬ successfulPostOpSourceDomain
     nonConservingPostOpRegressionState
     .stDeposit
-    oneSTDepositRegressionAmounts
+    oneSTDepositRegressionInput
     0
     0 := by
   intro hDomain
