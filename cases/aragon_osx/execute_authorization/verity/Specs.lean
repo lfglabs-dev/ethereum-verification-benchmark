@@ -21,15 +21,25 @@ def rootAuthorized
     genericCallerConditionAllows genericTargetConditionAllows s =
       ContractResult.success true s
 
-/-- Successful `execute` entry means authorization passed and the modeled function-body
-boundary was reached for the original caller. -/
-def executeAuthorization_spec
+/-- The modeled `execute` call returned successfully. -/
+def executeSucceeds
+    (s s' : ContractState)
+    (specificConditionAllows genericCallerConditionAllows genericTargetConditionAllows : Bool) : Prop :=
+  (DAOAuthorization.execute specificConditionAllows genericCallerConditionAllows
+    genericTargetConditionAllows).run s = ContractResult.success () s'
+
+/-- The modeled function-body boundary was reached and retained the original caller. -/
+def actionStartedByOriginalCaller (s s' : ContractState) : Prop :=
+  s'.storage 4 = 1 ∧
+  s'.storage 5 = addressToWord s.sender
+
+/-- A successful `execute` entry was authorized and reached the action boundary. -/
+def authorizedExecutionStarted
     (s s' : ContractState)
     (specificConditionAllows genericCallerConditionAllows genericTargetConditionAllows : Bool) : Prop :=
   executeAuthorized s specificConditionAllows genericCallerConditionAllows
     genericTargetConditionAllows ∧
-  s'.storage 4 = 1 ∧
-  s'.storage 5 = addressToWord s.sender
+  actionStartedByOriginalCaller s s'
 
 /-- A present caller-specific condition that denies is terminal: wildcard entries are
 not consulted. A reverting condition is represented by the same false outcome because

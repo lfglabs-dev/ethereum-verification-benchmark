@@ -11,7 +11,7 @@ theorem task_execute_success_implies_authorized
     (s s' : ContractState)
     (h : (DAOAuthorization.execute specificAllows genericCallerAllows genericTargetAllows).run s =
       ContractResult.success () s') :
-    executeAuthorization_spec s s' specificAllows genericCallerAllows genericTargetAllows := by
+    authorizedExecutionStarted s s' specificAllows genericCallerAllows genericTargetAllows := by
   exact ?_
 
 end Benchmark.Generated.AragonOSx.ExecuteAuthorization.Tasks
