@@ -49,15 +49,14 @@ private lemma resolveRoot_of_guarded_success
     simp_all [ANY_ADDR, getMapping, Contract.run, Verity.bind, Bind.bind,
       Verity.require, Verity.pure, Pure.pure]
 
-/-- Successful entry into `DAO.execute` implies exact EXECUTE authorization and
-records that the action-loop boundary was reached by the caller. -/
+/-- Successful entry into `DAO.execute` implies authorized execution started. -/
 theorem execute_success_implies_authorized
     (specificAllows genericCallerAllows genericTargetAllows : Bool)
     (s s' : ContractState)
-    (h : (DAOAuthorization.execute specificAllows genericCallerAllows genericTargetAllows).run s =
-      ContractResult.success () s') :
-    executeAuthorization_spec s s' specificAllows genericCallerAllows genericTargetAllows := by
-  unfold executeAuthorization_spec
+    (h : executeSucceeds s s' specificAllows genericCallerAllows genericTargetAllows) :
+    authorizedExecutionStarted s s' specificAllows genericCallerAllows genericTargetAllows := by
+  unfold executeSucceeds at h
+  unfold authorizedExecutionStarted
   unfold DAOAuthorization.execute at h
   have hAuth : executeAuthorized s specificAllows genericCallerAllows genericTargetAllows := by
     unfold executeAuthorized
@@ -74,7 +73,8 @@ theorem execute_success_implies_authorized
         Verity.bind, Bind.bind, Verity.require, Verity.pure, Pure.pure]
   constructor
   · exact hAuth
-  · unfold executeAuthorized at hAuth
+  · unfold actionStartedByOriginalCaller
+    unfold executeAuthorized at hAuth
     simp only [Contract.run, msgSender, Verity.bind, Bind.bind] at h
     rw [hAuth] at h
     simp [msgSender, setStorage, Contract.run, Verity.bind, Bind.bind,
