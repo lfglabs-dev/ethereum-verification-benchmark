@@ -1,0 +1,17 @@
+manifest_kind: family
+schema_version: 1
+family_id: aragon_osx
+display_name: Aragon OSx
+split: active
+status: active
+description: >
+  Benchmark family for Aragon OSx DAO authorization and permission-management
+  invariants. The initial case targets DAO.execute admission, exact wildcard
+  fallback ordering, ROOT-gated direct mutations, and restricted-permission
+  wildcard rejection.
+implementation_ids:
+  - osx-dao
+case_ids:
+  - aragon_osx/execute_authorization
+source_languages:
+  - solidity

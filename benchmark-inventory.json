@@ -10,32 +10,33 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 40,
-    "implementation_count": 41,
-    "active_case_count": 40,
+    "family_count": 41,
+    "implementation_count": 42,
+    "active_case_count": 41,
     "backlog_case_count": 1,
-    "active_task_count": 247,
+    "active_task_count": 263,
     "backlog_task_count": 0,
-    "buildable_case_count": 40,
-    "runnable_task_count": 247,
+    "buildable_case_count": 41,
+    "runnable_task_count": 263,
     "case_stage_counts": {
-      "build_green": 31,
+      "build_green": 32,
       "candidate": 1,
       "proof_complete": 9
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 40
+      "translated": 41
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 33,
+      "complete": 34,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 247
+      "proof-only": 263
     },
     "task_property_class_counts": {
+      "access_control_authorization": 16,
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
       "accounting_bound": 18,
@@ -132,14 +133,14 @@
       "wrapper_delegation_and_pause": 1
     },
     "task_proof_family_counts": {
-      "authorization_enablement": 26,
+      "authorization_enablement": 42,
       "functional_correctness": 60,
       "protocol_transition_correctness": 40,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 79
     },
     "family_split_counts": {
-      "active": 39,
+      "active": 40,
       "mixed": 1
     }
   },
@@ -177,6 +178,23 @@
         "solidity"
       ],
       "manifest_path": "families/alchemix/family.yaml"
+    },
+    {
+      "family_id": "aragon_osx",
+      "display_name": "Aragon OSx",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Aragon OSx DAO authorization and permission-management invariants. The initial case targets DAO.execute admission, exact wildcard fallback ordering, ROOT-gated direct mutations, and restricted-permission wildcard rejection.",
+      "implementation_ids": [
+        "osx-dao"
+      ],
+      "case_ids": [
+        "aragon_osx/execute_authorization"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/aragon_osx/family.yaml"
     },
     {
       "family_id": "balancer",
@@ -859,6 +877,22 @@
       ],
       "notes": "Implementation entry for the Alchemix V3 master branch, benchmarking the earmarking accounting system (_earmark, _sync, _computeUnrealizedAccount, redeem, _subEarmarkedDebt, _subDebt) and the lazy-projected earmark conservation invariant the team identified as most important (Ov3rkoalafied, 2026-04-24).",
       "manifest_path": "families/alchemix/implementations/v3/implementation.yaml"
+    },
+    {
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "display_name": "Aragon OSx DAO",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/aragon/osx",
+      "upstream_commit": "daf4fbb06b89ab0a05516bccb70b625a1a38303b",
+      "source_language": "solidity",
+      "source_artifact_path": "src/core/dao/DAO.sol",
+      "case_ids": [
+        "aragon_osx/execute_authorization"
+      ],
+      "notes": "Aragon OSx DAO authorization slice pinned to the cited upstream commit. The implementation entry covers DAO.execute and the inherited PermissionManager authorization, direct grant, conditional grant, and revoke surfaces relevant to EXECUTE_PERMISSION_ID and ROOT_PERMISSION_ID.",
+      "manifest_path": "families/aragon_osx/implementations/osx-dao/implementation.yaml"
     },
     {
       "family_id": "balancer",
@@ -1581,6 +1615,53 @@
       ],
       "spec_target": "Benchmark.Cases.Alchemix.EarmarkConservation.Specs",
       "proof_target": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs"
+    },
+    {
+      "case_id": "aragon_osx/execute_authorization",
+      "project": "aragon_osx",
+      "case_name": "execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/case.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/aragon/osx",
+      "upstream_commit": "daf4fbb06b89ab0a05516bccb70b625a1a38303b",
+      "original_contract_path": "src/core/dao/DAO.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "selected_functions": [
+        "DAO.execute",
+        "PermissionManager.isGranted",
+        "PermissionManager._auth",
+        "PermissionManager.grant",
+        "PermissionManager.grantWithCondition",
+        "PermissionManager.revoke"
+      ],
+      "lean_target": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Compile",
+      "failure_reason": null,
+      "notes": "This is an authorization benchmark, not an action-execution correctness benchmark. A successful execute reaches the modeled execute-body boundary only after exact permission resolution. Action calldata, native-value transfers, allowFailureMap handling, result hashing, events, and reentrancy are outside the theorem scope. DAO.sol is the primary case source. Its inherited authorization path is pinned at src/core/permission/PermissionManager.sol in the same upstream commit and is the source for isGranted, _auth, grant, grantWithCondition, and revoke.",
+      "buildable": true,
+      "verity_commit": "1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "fixed_dao_permission_domains",
+        "condition_callbacks_as_boolean_outcomes",
+        "execute_body_entry_boundary",
+        "omitted_action_payloads_and_external_calls",
+        "target_class_projection"
+      ],
+      "abstraction_notes": "The model preserves caller-specific, ANY_ADDR caller, and ANY_ADDR target lookup order for the DAO target; ALLOW_FLAG and condition semantics; the terminal behavior of a present specific condition; ROOT checks before direct mutations; and wildcard rejection for EXECUTE_PERMISSION_ID and ROOT_PERMISSION_ID. Grant targets are projected into DAO, ANY_ADDR, and other classes. Grants to other non-wildcard targets succeed without changing the modeled DAO-target slice. Condition callbacks are boolean outcomes, with false covering both false returns and caught reverts.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Specs",
+      "proof_target": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs"
     },
     {
       "case_id": "balancer/reclamm_swap_rounding",
@@ -3748,6 +3829,726 @@
         "mapping_uint_keyset_tracking"
       ],
       "reference_solution_module": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/execute_success_implies_authorized",
+      "task_id": "execute_success_implies_authorized",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/execute_success_implies_authorized.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.execute_success_implies_authorized",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/ExecuteSuccessImpliesAuthorized.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_caller",
+      "task_id": "grant_execute_condition_rejects_wildcard_caller",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_condition_rejects_wildcard_caller.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_condition_rejects_wildcard_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteConditionRejectsWildcardCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_target",
+      "task_id": "grant_execute_condition_rejects_wildcard_target",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_condition_rejects_wildcard_target.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_condition_rejects_wildcard_target",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteConditionRejectsWildcardTarget.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_rejects_wildcard_caller",
+      "task_id": "grant_execute_rejects_wildcard_caller",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_rejects_wildcard_caller.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_rejects_wildcard_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRejectsWildcardCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_rejects_wildcard_target",
+      "task_id": "grant_execute_rejects_wildcard_target",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_rejects_wildcard_target.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_rejects_wildcard_target",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRejectsWildcardTarget.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_requires_root",
+      "task_id": "grant_execute_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_with_condition_requires_root",
+      "task_id": "grant_execute_with_condition_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_with_condition_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_with_condition_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteWithConditionRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_caller",
+      "task_id": "grant_root_condition_rejects_wildcard_caller",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_condition_rejects_wildcard_caller.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_condition_rejects_wildcard_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootConditionRejectsWildcardCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_target",
+      "task_id": "grant_root_condition_rejects_wildcard_target",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_condition_rejects_wildcard_target.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_condition_rejects_wildcard_target",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootConditionRejectsWildcardTarget.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_rejects_wildcard_caller",
+      "task_id": "grant_root_rejects_wildcard_caller",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_rejects_wildcard_caller.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_rejects_wildcard_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRejectsWildcardCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_rejects_wildcard_target",
+      "task_id": "grant_root_rejects_wildcard_target",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_rejects_wildcard_target.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_rejects_wildcard_target",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRejectsWildcardTarget.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_requires_root",
+      "task_id": "grant_root_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_with_condition_requires_root",
+      "task_id": "grant_root_with_condition_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_with_condition_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_with_condition_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootWithConditionRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/revoke_execute_requires_root",
+      "task_id": "revoke_execute_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/revoke_execute_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.revoke_execute_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/RevokeExecuteRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/revoke_root_requires_root",
+      "task_id": "revoke_root_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/revoke_root_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.revoke_root_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/RevokeRootRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/specific_condition_denial_is_terminal",
+      "task_id": "specific_condition_denial_is_terminal",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/specific_condition_denial_is_terminal.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.specific_condition_denial_is_terminal",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/SpecificConditionDenialIsTerminal.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -14857,5 +15658,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-28T15:46:53.212507+00:00"
+  "generated_at": "2026-07-30T12:51:38.751230+00:00"
 }

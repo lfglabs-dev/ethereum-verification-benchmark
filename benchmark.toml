@@ -19,6 +19,7 @@ result_schema = "schemas/run-result.schema.json"
 active_cases = [
   "1inch/xycswap_curve_safety",
   "alchemix/earmark_conservation",
+  "aragon_osx/execute_authorization",
   "balancer/reclamm_swap_rounding",
   "cork/pool_solvency",
   "damn_vulnerable_defi/side_entrance",
