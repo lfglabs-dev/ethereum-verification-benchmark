@@ -29,7 +29,7 @@ Publication note:
 
 Harness note:
 - For `--harness default`, the effective proof-search knobs are `max_attempts` and `max_tool_calls`.
-- `max_turns` and `shell_timeout_seconds` are still recorded in the profile so the same ladder can be reused for shell-agent harnesses, where those knobs are binding.
+- `max_turns` caps the canonical tool loop; `shell_timeout_seconds` remains recorded for result-manifest compatibility.
 
 Run cascade:
 ```bash

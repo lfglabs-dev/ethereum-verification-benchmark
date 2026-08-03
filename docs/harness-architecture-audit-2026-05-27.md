@@ -56,18 +56,15 @@ python3 scripts/check_harness_helpers.py
 python3 -m py_compile harness/*.py harness/runners/*.py scripts/check_fair_harness_policy.py scripts/check_harness_helpers.py
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --dry-run
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --mode tuned --dry-run
-python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --dry-run
 python3 scripts/check_run_artifacts.py results/runs/20260527T173326-default-fair-ethereum__deposit_contract_minimal__deposit_count
 python3 scripts/check_run_artifacts.py results/runs/20260527T173342-default-tuned-ethereum__deposit_contract_minimal__deposit_count
 python3 scripts/check_run_artifacts.py results/runs/20260527T173326-grok-build-ethereum__deposit_contract_minimal__deposit_count
 python3 -m harness.cli compare --runs results/runs/20260527T173326-default-fair-ethereum__deposit_contract_minimal__deposit_count results/runs/20260527T173342-default-tuned-ethereum__deposit_contract_minimal__deposit_count results/runs/20260527T173326-grok-build-ethereum__deposit_contract_minimal__deposit_count
 DEFAULT_HARNESS_BASE_URL=http://127.0.0.1:8766/v1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 1 --max-tool-calls 3
 python3 scripts/check_run_artifacts.py results/runs/20260527T174642-default-fair-ethereum__deposit_contract_minimal__deposit_count
-PATH=<fake-grok-dir>:$PATH GROK_CODE_XAI_API_KEY=dummy python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --max-turns 1
 python3 scripts/check_run_artifacts.py results/runs/20260527T174320-grok-build-ethereum__deposit_contract_minimal__deposit_count
 python3 scripts/check_group_workspaces.py ethereum/deposit_contract_minimal
 python3 -m harness.cli run-suite --suite active --harness default --dry-run
-python3 -m harness.cli run-suite --suite active --harness grok-build --dry-run
 python3 scripts/check_run_artifacts.py results/runs/20260527T173437-default-fair-suite-active results/runs/20260527T173437-grok-build-suite-active
 python3 scripts/check_run_artifacts.py <20 child artifacts from results/runs/20260527T173437-default-fair-suite-active/run.json>
 python3 scripts/check_run_artifacts.py <20 child artifacts from results/runs/20260527T173437-grok-build-suite-active/run.json>
