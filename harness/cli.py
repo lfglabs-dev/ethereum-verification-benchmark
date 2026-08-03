@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
+import sys
 import time
 from collections import Counter
 from datetime import datetime, timezone
@@ -415,6 +417,15 @@ def main() -> int:
     compare_parser.add_argument("--runs", nargs="+", required=True)
 
     args = parser.parse_args()
+    if (
+        getattr(args, "suite", None) == "v0.2"
+        and os.environ.get("VERITY_V02_PINNED_CHECKOUT") != "1"
+    ):
+        return subprocess.run(
+            [sys.executable, "scripts/run_in_v02_environment.py", "--", sys.executable, "-m", "harness.cli", *sys.argv[1:]],
+            cwd=Path(__file__).resolve().parent.parent,
+            check=False,
+        ).returncode
     if args.command == "list":
         groups = list_groups(args.suite)
         if args.json:
