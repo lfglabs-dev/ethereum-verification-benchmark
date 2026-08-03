@@ -53,6 +53,16 @@ def run(command: list[str]) -> int:
             (ROOT / "results").mkdir(exist_ok=True)
             checkout_results.symlink_to(ROOT / "results", target_is_directory=True)
 
+            # Keep the expensive frozen dependency/build cache across disposable
+            # checkouts, keyed by the reviewed checkout so another release can
+            # never reuse it accidentally.
+            lake_cache = ROOT / ".lake" / f"v02-{RELEASE_CHECKOUT_COMMIT[:12]}"
+            lake_cache.mkdir(parents=True, exist_ok=True)
+            checkout_lake = checkout / ".lake"
+            if checkout_lake.exists():
+                checkout_lake.rename(checkout / ".lake.frozen")
+            checkout_lake.symlink_to(lake_cache, target_is_directory=True)
+
             env = os.environ.copy()
             env[REENTRY_ENV] = "1"
             env.pop("ELAN_TOOLCHAIN", None)
