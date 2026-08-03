@@ -6,6 +6,9 @@ namespace Benchmark.Cases.Superfluid.RealtimeBalanceConservation
 open Verity
 open Verity.EVM.Uint256
 
+private theorem uint256_add_notation (a b : Uint256) : a + b = add a b := rfl
+private theorem uint256_sub_notation (a b : Uint256) : a - b = sub a b := rfl
+
 def StatePreserving {α : Type} (m : Contract α) : Prop :=
   ∀ s, m.runState s = s
 
@@ -925,11 +928,13 @@ private theorem updateAccountFlowState_map2_preserving
   · apply map2_preserving_bind
     · exact settle_map2_preserving _ _
     intro _
-    simpa [updateFinishTail] using updateFinish_map2_preserving account rateDelta depositDelta owedDelta timestamp oldRate
+    change Map2Preserving (updateFinishTail account rateDelta depositDelta owedDelta timestamp oldRate)
+    exact updateFinish_map2_preserving account rateDelta depositDelta owedDelta timestamp oldRate
   · apply map2_preserving_bind
     · exact map2_preserving_pure _
     intro _
-    simpa [updateFinishTail] using updateFinish_map2_preserving account rateDelta depositDelta owedDelta timestamp oldRate
+    change Map2Preserving (updateFinishTail account rateDelta depositDelta owedDelta timestamp oldRate)
+    exact updateFinish_map2_preserving account rateDelta depositDelta owedDelta timestamp oldRate
 
 private theorem updateAccountFlowState_storage_preserving
     (account : Address) (rateDelta depositDelta owedDelta timestamp : Uint256) :
@@ -956,13 +961,13 @@ private theorem updateAccountFlowState_storage_preserving
   · apply storage_preserving_bind
     · exact settle_storage_preserving _ _
     intro _
-    simpa [updateFinishTail] using
-      updateFinish_storage_preserving account rateDelta depositDelta owedDelta timestamp oldRate
+    change StoragePreserving (updateFinishTail account rateDelta depositDelta owedDelta timestamp oldRate)
+    exact updateFinish_storage_preserving account rateDelta depositDelta owedDelta timestamp oldRate
   · apply storage_preserving_bind
     · exact storage_preserving_pure _
     intro _
-    simpa [updateFinishTail] using
-      updateFinish_storage_preserving account rateDelta depositDelta owedDelta timestamp oldRate
+    change StoragePreserving (updateFinishTail account rateDelta depositDelta owedDelta timestamp oldRate)
+    exact updateFinish_storage_preserving account rateDelta depositDelta owedDelta timestamp oldRate
 
 private theorem updateAccountFlowState_account_environment_preserving
     (account : Address) (rateDelta depositDelta owedDelta timestamp : Uint256) :
@@ -989,13 +994,15 @@ private theorem updateAccountFlowState_account_environment_preserving
   · apply account_environment_preserving_bind
     · exact settle_account_environment_preserving _ _
     intro _
-    simpa [updateFinishTail] using
-      updateFinish_account_environment_preserving account rateDelta depositDelta owedDelta timestamp oldRate
+    change AccountEnvironmentPreserving
+      (updateFinishTail account rateDelta depositDelta owedDelta timestamp oldRate)
+    exact updateFinish_account_environment_preserving account rateDelta depositDelta owedDelta timestamp oldRate
   · apply account_environment_preserving_bind
     · exact account_environment_preserving_pure _
     intro _
-    simpa [updateFinishTail] using
-      updateFinish_account_environment_preserving account rateDelta depositDelta owedDelta timestamp oldRate
+    change AccountEnvironmentPreserving
+      (updateFinishTail account rateDelta depositDelta owedDelta timestamp oldRate)
+    exact updateFinish_account_environment_preserving account rateDelta depositDelta owedDelta timestamp oldRate
 
 private theorem getMapping2_value_of_success
     (sl : StorageSlot (Address → Address → Uint256)) (left right : Address)
@@ -1397,7 +1404,19 @@ private theorem changeFlow_observations
 private theorem opposite_rate_deltas_sequential_cancel (a oldRate newRate : Uint256) :
     add (add a (sub oldRate newRate)) (sub newRate oldRate) = a := by
   have hdelta : add (sub oldRate newRate) (sub newRate oldRate) = 0 := by
-    simpa using opposite_rate_deltas_cancel 0 0 oldRate newRate
+    have hcancel : add (sub oldRate newRate) newRate = oldRate := by
+      calc
+        add (sub oldRate newRate) newRate = add newRate (sub oldRate newRate) :=
+          Verity.Core.Uint256.add_comm _ _
+        _ = oldRate := by
+          simpa [uint256_add_notation, uint256_sub_notation] using
+            Verity.Core.Uint256.sub_add_cancel_left oldRate newRate
+    calc
+      add (sub oldRate newRate) (sub newRate oldRate) =
+          sub (add (sub oldRate newRate) newRate) oldRate := by
+            exact add_sub_assoc _ _ _
+      _ = sub oldRate oldRate := by rw [hcancel]
+      _ = 0 := Verity.Core.Uint256.sub_self oldRate
   calc
     add (add a (sub oldRate newRate)) (sub newRate oldRate) =
         add a (add (sub oldRate newRate) (sub newRate oldRate)) := by
@@ -2272,7 +2291,9 @@ private theorem packed_rate_positive (rate : Uint256)
     simpa using hzero
   have hrpos : 0 < rate.val := Nat.pos_of_ne_zero hrvalne
   have hrle' : rate.val ≤ 39614081257132168796771975167 := by
-    simpa [Verity.Core.Uint256.le_def] using hrle
+    have hraw : rate.val ≤ (39614081257132168796771975167 : Uint256).val := by
+      simpa [Verity.Core.Uint256.le_def] using hrle
+    exact hraw.trans (by native_decide)
   have hrate : rate.val < 79228162514264337593543950336 := by omega
   have hprod : rate.val * 340282366920938463463374607431768211456 <
       Verity.Core.Uint256.modulus := by
@@ -2360,16 +2381,22 @@ private theorem packed_flow_positive
     (hdeposit : deposit < 79228162514264337593543950336) :
     packFlowData timestamp rate deposit 0 > 0 := by
   have htimestampVal : timestamp.val ≤ 4294967295 := by
-    simpa [Verity.Core.Uint256.le_def] using htimestamp
+    have hraw : timestamp.val ≤ (4294967295 : Uint256).val := by
+      simpa [Verity.Core.Uint256.le_def] using htimestamp
+    exact hraw.trans (by native_decide)
   have hrateValNe : rate.val ≠ 0 := by
     intro hzero
     apply hrateNe
     apply Verity.Core.Uint256.ext
     simpa using hzero
   have hrateVal : rate.val ≤ 39614081257132168796771975167 := by
-    simpa [Verity.Core.Uint256.le_def] using hrateLe
+    have hraw : rate.val ≤ (39614081257132168796771975167 : Uint256).val := by
+      simpa [Verity.Core.Uint256.le_def] using hrateLe
+    exact hraw.trans (by native_decide)
   have hdepositVal : deposit.val < 79228162514264337593543950336 := by
-    simpa [Verity.Core.Uint256.lt_def] using hdeposit
+    have hraw : deposit.val < (79228162514264337593543950336 : Uint256).val := by
+      simpa [Verity.Core.Uint256.lt_def] using hdeposit
+    exact lt_of_lt_of_le hraw (by native_decide)
   have hmodulus : Verity.Core.Uint256.modulus =
       115792089237316195423570985008687907853269984665640564039457584007913129639936 := by
     rw [Verity.Core.Uint256.modulus, Verity.Core.UINT256_MODULUS]
@@ -3173,6 +3200,7 @@ private def receiverDeleteCallbackTail
     (sender receiver : Address) (newRate newDeposit timestamp : Uint256) : Contract Uint256 := do
   SuperfluidCFA._changeFlow sender receiver newRate newDeposit timestamp
   setMapping2 SuperfluidCFA.flowExists sender receiver 1
+  let _prefixValue ← (Pure.pure newDeposit : Contract Uint256)
   SuperfluidCFA._requireCfaOnlyAvailableNonnegative sender timestamp
   SuperfluidCFA._requireExistingZeroOwedFlow sender receiver
   SuperfluidCFA._changeFlow sender receiver 0 0 timestamp
@@ -3195,6 +3223,9 @@ private theorem receiverDeleteCallbackTail_storage_preserving
   intro _
   apply storage_preserving_bind
   · exact storage_preserving_setMapping2 _ _ _ _
+  intro _
+  apply storage_preserving_bind
+  · exact storage_preserving_pure newDeposit
   intro _
   apply storage_preserving_bind
   · exact state_preserving_storage (availableNonnegative_preserving _ _)
@@ -3241,6 +3272,9 @@ private theorem receiverDeleteCallbackTail_account_environment_preserving
   intro _
   apply account_environment_preserving_bind
   · exact account_environment_preserving_setMapping2 _ _ _ _
+  intro _
+  apply account_environment_preserving_bind
+  · exact account_environment_preserving_pure newDeposit
   intro _
   apply account_environment_preserving_bind
   · exact state_preserving_account_environment (availableNonnegative_preserving _ _)
@@ -3709,8 +3743,9 @@ private theorem receiverDeleteCallback_storage_preserving
     apply storage_preserving_bind
     · exact storage_preserving_require _ _
     intro _
-    simpa [receiverDeleteCallbackTail] using
-      receiverDeleteCallbackTail_storage_preserving sender receiver newRate newDeposit timestamp
+    change StoragePreserving
+      (receiverDeleteCallbackTail sender receiver newRate newDeposit timestamp)
+    exact receiverDeleteCallbackTail_storage_preserving sender receiver newRate newDeposit timestamp
 
   · simp only [Contract.bind_assoc]
     apply storage_preserving_bind
@@ -3725,8 +3760,9 @@ private theorem receiverDeleteCallback_storage_preserving
     apply storage_preserving_bind
     · exact storage_preserving_require _ _
     intro _
-    simpa [receiverDeleteCallbackTail] using
-      receiverDeleteCallbackTail_storage_preserving sender receiver newRate newDeposit timestamp
+    change StoragePreserving
+      (receiverDeleteCallbackTail sender receiver newRate newDeposit timestamp)
+    exact receiverDeleteCallbackTail_storage_preserving sender receiver newRate newDeposit timestamp
 
 private theorem receiverDeleteCallback_account_environment_preserving
     (sender receiver : Address) (newRate liquidationPeriod minimumDeposit timestamp : Uint256) :
@@ -3879,8 +3915,9 @@ private theorem receiverDeleteCallback_account_environment_preserving
     apply account_environment_preserving_bind
     · exact account_environment_preserving_require _ _
     intro _
-    simpa [receiverDeleteCallbackTail] using
-      receiverDeleteCallbackTail_account_environment_preserving sender receiver newRate newDeposit timestamp
+    change AccountEnvironmentPreserving
+      (receiverDeleteCallbackTail sender receiver newRate newDeposit timestamp)
+    exact receiverDeleteCallbackTail_account_environment_preserving sender receiver newRate newDeposit timestamp
   · simp only [Contract.bind_assoc]
     apply account_environment_preserving_bind
     · exact account_environment_preserving_require _ _
@@ -3894,8 +3931,9 @@ private theorem receiverDeleteCallback_account_environment_preserving
     apply account_environment_preserving_bind
     · exact account_environment_preserving_require _ _
     intro _
-    simpa [receiverDeleteCallbackTail] using
-      receiverDeleteCallbackTail_account_environment_preserving sender receiver newRate newDeposit timestamp
+    change AccountEnvironmentPreserving
+      (receiverDeleteCallbackTail sender receiver newRate newDeposit timestamp)
+    exact receiverDeleteCallbackTail_account_environment_preserving sender receiver newRate newDeposit timestamp
 
 theorem receiverDeleteCallback_reloads_final_zero
     (source : PinnedSourceState) (s : ContractState) (sender receiver : Address)
@@ -4205,7 +4243,7 @@ theorem pairAndFrame_implies_modular_cfa_global_projection
   have hpair' :
       cfaProjectionAt post sender timestamp + cfaProjectionAt post receiver timestamp =
         cfaProjectionAt pre sender timestamp + cfaProjectionAt pre receiver timestamp := by
-    simpa [pairCfaProjectionAt] using hpair
+    simpa [pairCfaProjectionAt, uint256_add_notation] using hpair
   calc
     cfaProjectionAt post sender timestamp +
         (cfaProjectionAt post receiver timestamp +

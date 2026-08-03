@@ -24,6 +24,8 @@ private theorem structSlot2_offset_ne
   have hMod :
       nestedBase + offset1 ≡ nestedBase + offset2
         [MOD Compiler.Constants.evmModulus] := by
+    show (nestedBase + offset1) % Compiler.Constants.evmModulus =
+      (nestedBase + offset2) % Compiler.Constants.evmModulus
     simpa [Contracts.structSlot2, nestedBase] using hEq
   have hOffsets :
       offset1 ≡ offset2 [MOD Compiler.Constants.evmModulus] :=
@@ -222,7 +224,7 @@ theorem validSettledPayout_is_safe
     simpa [initialEquityAt, equityAt, HypernovaPayoutSystem.initialEquityOf,
       HypernovaPayoutSystem.equityOf, HypernovaPayoutSystem.structMember2,
       Contracts.structMember2At, Verity.bind, Bind.bind, Verity.pure,
-      Pure.pure, Contract.run, ContractResult.fst, getStorage] using
+      Pure.pure, Contract.run, ContractResult.fst, getStorage, getStorageAddr] using
       hPostEquityGeInitial
   simp [zeroAddress] at hPinnedVaultNonzero hConfiguredNonzero hTraderNonzero
   simp [fundedStatusAt, canWithdrawAt, equityAt, initialEquityAt,

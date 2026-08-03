@@ -6,6 +6,9 @@ namespace Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc
 open Verity
 open Verity.EVM.Uint256
 
+private theorem uint256_add_notation (a b : Uint256) : a + b = add a b := rfl
+private theorem uint256_sub_notation (a b : Uint256) : a - b = sub a b := rfl
+
 private theorem add_sub_assoc (a b c : Uint256) : a + (b - c) = (a + b) - c := by
   have lhs_eq : (a + (b - c)) + c = a + b := by
     have hCancel := Verity.Core.Uint256.sub_add_cancel_left b c
@@ -235,7 +238,8 @@ theorem claimUsdc_claimed_plus_allocated_conserved
                         (s.storage 1)
                         (sub (s.storage 2) (computedClaimAmount shareWad s))
     _ = add (computedClaimAmount shareWad s) ((add (s.storage 1) (s.storage 2)) - computedClaimAmount shareWad s) := by
-          simpa using congrArg (fun t => add (computedClaimAmount shareWad s) t)
+          simpa [uint256_add_notation, uint256_sub_notation] using
+            congrArg (fun t => add (computedClaimAmount shareWad s) t)
             (add_sub_assoc (s.storage 1) (s.storage 2) (computedClaimAmount shareWad s))
     _ = add ((add (s.storage 1) (s.storage 2)) - computedClaimAmount shareWad s) (computedClaimAmount shareWad s) := by
           exact Verity.Core.Uint256.add_comm _ _
@@ -403,7 +407,8 @@ theorem claimWeth_claimed_plus_allocated_conserved
                         (s.storage 7)
                         (sub (s.storage 8) (computedWethClaimAmount shareWad s))
     _ = add (computedWethClaimAmount shareWad s) ((add (s.storage 7) (s.storage 8)) - computedWethClaimAmount shareWad s) := by
-          simpa using congrArg (fun t => add (computedWethClaimAmount shareWad s) t)
+          simpa [uint256_add_notation, uint256_sub_notation] using
+            congrArg (fun t => add (computedWethClaimAmount shareWad s) t)
             (add_sub_assoc (s.storage 7) (s.storage 8) (computedWethClaimAmount shareWad s))
     _ = add ((add (s.storage 7) (s.storage 8)) - computedWethClaimAmount shareWad s) (computedWethClaimAmount shareWad s) := by
           exact Verity.Core.Uint256.add_comm _ _
@@ -559,8 +564,7 @@ theorem claimBoth_claimed_plus_allocated_conserved
     ⟨_, _, hUsdcClaimed, hUsdcAllocated, _, _, hWethClaimed, hWethAllocated⟩
   unfold claimBoth_claimed_plus_allocated_conserved_spec
   constructor
-  · dsimp
-    rw [hUsdcClaimed, hUsdcAllocated]
+  · rw [hUsdcClaimed, hUsdcAllocated]
     calc
       add (add (s.storage 1) (computedClaimAmount usdcShareWad s)) (sub (s.storage 2) (computedClaimAmount usdcShareWad s))
           = add (computedClaimAmount usdcShareWad s) (add (s.storage 1) (sub (s.storage 2) (computedClaimAmount usdcShareWad s))) := by
@@ -579,15 +583,15 @@ theorem claimBoth_claimed_plus_allocated_conserved
                           (s.storage 1)
                           (sub (s.storage 2) (computedClaimAmount usdcShareWad s))
       _ = add (computedClaimAmount usdcShareWad s) ((add (s.storage 1) (s.storage 2)) - computedClaimAmount usdcShareWad s) := by
-            simpa using congrArg (fun t => add (computedClaimAmount usdcShareWad s) t)
+            simpa [uint256_add_notation, uint256_sub_notation] using
+              congrArg (fun t => add (computedClaimAmount usdcShareWad s) t)
               (add_sub_assoc (s.storage 1) (s.storage 2) (computedClaimAmount usdcShareWad s))
       _ = add ((add (s.storage 1) (s.storage 2)) - computedClaimAmount usdcShareWad s) (computedClaimAmount usdcShareWad s) := by
             exact Verity.Core.Uint256.add_comm _ _
       _ = add (s.storage 1) (s.storage 2) := by
             exact Verity.Core.Uint256.sub_add_cancel_left (add (s.storage 1) (s.storage 2))
               (computedClaimAmount usdcShareWad s)
-  · dsimp
-    rw [hWethClaimed, hWethAllocated]
+  · rw [hWethClaimed, hWethAllocated]
     calc
       add (add (s.storage 7) (computedWethClaimAmount wethShareWad s)) (sub (s.storage 8) (computedWethClaimAmount wethShareWad s))
           = add (computedWethClaimAmount wethShareWad s) (add (s.storage 7) (sub (s.storage 8) (computedWethClaimAmount wethShareWad s))) := by
@@ -606,7 +610,8 @@ theorem claimBoth_claimed_plus_allocated_conserved
                           (s.storage 7)
                           (sub (s.storage 8) (computedWethClaimAmount wethShareWad s))
       _ = add (computedWethClaimAmount wethShareWad s) ((add (s.storage 7) (s.storage 8)) - computedWethClaimAmount wethShareWad s) := by
-            simpa using congrArg (fun t => add (computedWethClaimAmount wethShareWad s) t)
+            simpa [uint256_add_notation, uint256_sub_notation] using
+              congrArg (fun t => add (computedWethClaimAmount wethShareWad s) t)
               (add_sub_assoc (s.storage 7) (s.storage 8) (computedWethClaimAmount wethShareWad s))
       _ = add ((add (s.storage 7) (s.storage 8)) - computedWethClaimAmount wethShareWad s) (computedWethClaimAmount wethShareWad s) := by
             exact Verity.Core.Uint256.add_comm _ _

@@ -3,6 +3,9 @@ import Verity.Proofs.Stdlib.Automation
 
 namespace Benchmark.Cases.Polaris.BondingCurve
 
+set_option maxRecDepth 10000
+set_option maxHeartbeats 2000000
+
 open Verity
 open Verity.EVM.Uint256
 

@@ -3,12 +3,27 @@ import Verity.Proofs.Stdlib.Automation
 
 set_option linter.unnecessarySimpa false
 set_option linter.unusedSimpArgs false
+set_option maxRecDepth 100000
 
 namespace Benchmark.Cases.Midas.CustomFeedGrowthSafe
 
 open Contracts
 open Verity
 open Verity.EVM.Uint256
+
+@[simp] private theorem getStorage_apply_raw (sl : StorageSlot Uint256)
+    (s : ContractState) :
+    getStorage sl s = ContractResult.success (s.readSlot sl.slot) s := rfl
+@[simp] private theorem setStorage_apply_raw (sl : StorageSlot Uint256)
+    (value : Uint256) (s : ContractState) :
+    setStorage sl value s = ContractResult.success () (s.writeSlot sl.slot value) := rfl
+@[simp] private theorem getMappingUint_apply_raw (sl : StorageSlot (Uint256 → Uint256))
+    (key : Uint256) (s : ContractState) :
+    getMappingUint sl key s = ContractResult.success (s.readMapUint sl.slot key) s := rfl
+@[simp] private theorem setMappingUint_apply_raw (sl : StorageSlot (Uint256 → Uint256))
+    (key value : Uint256) (s : ContractState) :
+    setMappingUint sl key value s =
+      ContractResult.success () (s.writeMapUint sl.slot key value) := rfl
 
 private theorem latestRoundSlot : CustomFeedGrowthSafe.latestRound.slot = 5 := by native_decide
 private theorem onlyUpSlot : CustomFeedGrowthSafe.onlyUp.slot = 6 := by native_decide
@@ -21,6 +36,24 @@ private theorem roundAnswerSlot : CustomFeedGrowthSafe.roundAnswer.slot = 7 := b
 private theorem roundStartedAtSlot : CustomFeedGrowthSafe.roundStartedAt.slot = 8 := by native_decide
 private theorem roundUpdatedAtSlot : CustomFeedGrowthSafe.roundUpdatedAt.slot = 9 := by native_decide
 private theorem roundGrowthAprSlot : CustomFeedGrowthSafe.roundGrowthApr.slot = 10 := by native_decide
+
+private theorem oneNum : ONE = 100000000 := by native_decide
+private theorem hundredOneNum : HUNDRED_ONE = 10000000000 := by native_decide
+private theorem yearSecondsNum : YEAR_SECONDS = 31536000 := by native_decide
+private theorem growthDenominatorNum : GROWTH_DENOMINATOR = 315360000000000000 := by
+  native_decide
+private theorem lastStartedAtRaw (s : ContractState) :
+    lastStartedAtOf s = s.storageMapUint 8 (s.storage 5) := rfl
+private theorem maxAnswerDeviationRaw (s : ContractState) :
+    maxAnswerDeviationOf s = s.storage 0 := rfl
+private theorem hourVal : (3600 : Uint256).val = 3600 := by native_decide
+private theorem hundredOneVal : (10000000000 : Uint256).val = 10000000000 := by native_decide
+
+attribute [local simp] oneNum hundredOneNum yearSecondsNum growthDenominatorNum
+  lastStartedAtRaw maxAnswerDeviationRaw latestRoundSlot roundAnswerSlot
+  roundStartedAtSlot roundUpdatedAtSlot roundGrowthAprSlot maxAnswerDeviationSlot
+  hourVal hundredOneVal
+
 
 private def setRoundWrites
     (roundId data dataTimestamp growthApr blockTimestamp : Uint256) : Contract Unit := do
@@ -77,12 +110,15 @@ private theorem setRoundData_writes
   simp only [getStorage, getMappingUint, setStorage, setMappingUint, Verity.bind, Bind.bind, Pure.pure,
     Contract.run, ContractResult.snd]
   constructor
-  · simp [hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt]
-    simpa [writeStorageAfterRound] using
-      setRoundWrites_storage (nextRoundIdOf s) data dataTimestamp growthApr blockTimestamp s storageSlot
-  · simp [hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt]
-    simpa [writeMapUintAfterRound] using
-      setRoundWrites_storageMapUint (nextRoundIdOf s) data dataTimestamp growthApr blockTimestamp s mapSlot k
+  · simp [hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt,
+      Verity.bind, Bind.bind, Contract.run, getStorage, getMappingUint, setStorage,
+      setMappingUint, writeStorageAfterRound, nextRoundIdOf, latestRoundOf,
+      latestRoundSlot, ContractState.writeSlot, ContractState.writeMapUint]
+  · simp [hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt,
+      Verity.bind, Bind.bind, Contract.run, getStorage, getMappingUint, setStorage,
+      setMappingUint, writeMapUintAfterRound, nextRoundIdOf, latestRoundOf,
+      latestRoundSlot, roundGrowthAprSlot, roundUpdatedAtSlot, roundStartedAtSlot,
+      roundAnswerSlot, ContractState.writeSlot, ContractState.writeMapUint]
 
 private theorem applyGrowth_eval
     (answer growthApr timestampFrom blockTimestamp : Uint256) (s : ContractState)
@@ -90,7 +126,8 @@ private theorem applyGrowth_eval
     ((CustomFeedGrowthSafe.applyGrowth answer growthApr timestampFrom blockTimestamp).run s) =
       ContractResult.success (applyGrowthAtRaw answer growthApr timestampFrom blockTimestamp) s := by
   unfold CustomFeedGrowthSafe.applyGrowth CustomFeedGrowthSafe.applyGrowthAt Verity.require applyGrowthAtRaw
-  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, hTime]
+  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, hTime,
+    GROWTH_DENOMINATOR]
 
 private theorem lastAnswer_eval
     (blockTimestamp : Uint256) (s : ContractState)
@@ -101,7 +138,10 @@ private theorem lastAnswer_eval
   simp [CustomFeedGrowthSafe.lastRawAnswer, CustomFeedGrowthSafe.lastGrowthApr, CustomFeedGrowthSafe.lastStartedAt,
     getStorage, getMappingUint, Verity.bind, Bind.bind, Contract.run]
   simpa [lastAnswerOf, lastRawAnswerOf, lastGrowthAprOf, lastStartedAtOf, latestRoundOf, roundAnswerOf,
-    roundGrowthAprOf, roundStartedAtOf, applyGrowthNowRaw, applyGrowthAtRaw] using
+    roundGrowthAprOf, roundStartedAtOf, applyGrowthNowRaw, applyGrowthAtRaw,
+    latestRoundSlot, roundAnswerSlot, roundGrowthAprSlot, roundStartedAtSlot,
+    getStorage, getMappingUint, Verity.bind, Bind.bind, Contract.run,
+    Verity.require, Verity.pure, Pure.pure] using
     (applyGrowth_eval (s.storageMapUint 7 (s.storage 5)) (s.storageMapUint 10 (s.storage 5))
       (s.storageMapUint 8 (s.storage 5)) blockTimestamp s (by
         simpa [lastStartedAtOf, roundStartedAtOf, latestRoundOf] using hTime))

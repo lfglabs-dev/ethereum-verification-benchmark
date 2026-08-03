@@ -22,7 +22,9 @@ private theorem uint256_mod_uint64_of_lt {x : Uint256}
   cases hBal : x with
   | mk val hlt =>
       have hval : val < 18446744073709551616 := by
-        simpa [hBal, UINT64_MOD] using hx
+        norm_num [hBal, UINT64_MOD, Verity.Core.Uint256.ofNat,
+          Verity.Core.Uint256.modulus, Verity.Core.UINT256_MODULUS] at hx
+        exact lt_of_lt_of_le hx (by decide)
       show (({ val := val, isLt := hlt } : Uint256) % 18446744073709551616) =
           ({ val := val, isLt := hlt } : Uint256)
       apply Verity.Core.Uint256.ext
