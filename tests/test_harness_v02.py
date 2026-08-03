@@ -68,7 +68,7 @@ class HarnessV02Tests(unittest.TestCase):
                 verifier.assert_not_called()
 
     def test_default_dispatches_only_to_mcp_runner_without_provider_setup(self) -> None:
-        """The canonical default must not select the bespoke Lean loop or shell agents."""
+        """The canonical default dispatches only to its MCP runner."""
         with patch("harness.cli.run_lean_tools_mcp_group", return_value=(0, Path("/tmp/mcp"))) as mcp:
             code, run_dir = cli.run_group(
                 "ethereum/deposit_contract_minimal", "default", "active",
@@ -93,7 +93,7 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(profile["command"][:3], ["python3", "-m", "harness.runners.lean_tools_mcp"])
         self.assertEqual(profile["track"], "group/lean_tools_mcp")
         self.assertEqual(profile["lean_lsp_mcp_version"], "0.28.0")
-        for obsolete in ("builtin-lean-lsp.json", "grok-build.json", "vibe-lean-lsp.json", "opencode.json"):
+        for obsolete in ("builtin-lean-lsp.json", "codex.json", "grok-build.json", "vibe-lean-lsp.json", "opencode.json"):
             self.assertFalse((root / "harness/agents" / obsolete).exists())
 
     def test_target_warming_stops_after_first_timeout(self) -> None:

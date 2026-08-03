@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://ethereum-verification-benchmark.local/schemas/agent-config.schema.json",
   "title": "Benchmark Harness Profile",
-  "description": "Metadata for the two supported benchmark harnesses: default Lean-tools and Grok Build.",
+  "description": "Metadata for the canonical default benchmark harness.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -35,7 +35,7 @@
       "enum": ["custom"]
     },
     "track": {
-      "enum": ["group/shell", "group/lean_tools", "group/lean_tools_mcp"]
+      "const": "group/lean_tools_mcp"
     },
     "run_slug": {
       "type": "string",

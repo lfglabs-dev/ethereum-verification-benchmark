@@ -1,7 +1,7 @@
 # Harness
 
-The benchmark has two kinds of harness, both running in isolated generated
-workspaces and verified by the same independent verifier:
+The benchmark has one canonical harness, running in isolated generated
+workspaces and verified by the independent verifier:
 
 - `default`: the canonical fair harness (OpenAI-compatible tool loop) with its
   Lean IDE surface supplied by a pinned `lean-lsp-mcp` subprocess.
@@ -109,8 +109,7 @@ Default harness API env:
 - `DEFAULT_HARNESS_MAX_TOOL_CALLS`
 - `DEFAULT_HARNESS_MAX_RESPONSE_TOKENS`
 - `DEFAULT_HARNESS_OMIT_SAMPLING` (`0` default; set `1` to omit
-  `temperature`, `top_p`, and `reasoning_effort` for builtin and proxied shell
-  harnesses)
+  `temperature`, `top_p`, and `reasoning_effort` from requests)
 - `DEFAULT_HARNESS_NATIVE_TOOLS`
 - `DEFAULT_HARNESS_TOOL_RESULT_CHARS`
 - `DEFAULT_HARNESS_TASK_SUMMARY_CHARS`
@@ -181,11 +180,6 @@ Compatibility env still accepted by the default harness:
 - `GAZELLA_MODEL`
 - `GAZELLA_API_KEY`
 - `OPENAI_API_KEY`
-
-Grok auth:
-- CI/local automation should set `GROK_CODE_XAI_API_KEY`.
-- Host `~/.grok/auth.json` is not copied unless `VERITY_ALLOW_HOST_GROK_AUTH=1`.
-- Without usable auth, the Grok runner writes a `harness_error` artifact instead of blocking on an interactive login prompt. It preflights `grok models` inside the isolated run home so stale copied host auth fails quickly.
 
 Useful commands:
 

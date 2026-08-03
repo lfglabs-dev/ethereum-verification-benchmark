@@ -49,8 +49,9 @@ before canaries.
 
 The canonical runnable harness is `default`: the built-in fair harness. It
 exposes Lean-native tools through an OpenAI-compatible loop and logs every tool
-call and conversation turn. The named profiles in `harness/agents/*.json` are
-legacy configuration files, not supported `--harness` values.
+call and conversation turn. Its canonical profile is
+`harness/agents/default.json`; `default` is the only supported `--harness`
+value.
 
 All harnesses get the same public files, generated `harness/TASK_SUMMARY.md`, and `./harness/check.sh`. Hidden reference proofs and private build artifacts are removed from the agent workspace. The verifier rebuilds submissions in a private copy and rejects hidden imports, placeholders, added assumptions, and theorem-statement changes.
 
@@ -113,9 +114,8 @@ default, so the request shape is unchanged for every other provider.
 
 Set `DEFAULT_HARNESS_OMIT_SAMPLING=1` when a comparison contract requires the
 provider's own sampling defaults. It removes `temperature`, `top_p`, and
-`reasoning_effort` from builtin requests and at the metering-proxy boundary for
-shell harnesses, so a CLI profile cannot silently reintroduce those fields. The
-effective policy is persisted in run artifacts.
+`reasoning_effort` from requests. The effective policy is persisted in run
+artifacts.
 
 Budget profiles:
 
