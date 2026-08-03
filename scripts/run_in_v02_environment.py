@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -55,6 +56,13 @@ def run(command: list[str]) -> int:
             env = os.environ.copy()
             env[REENTRY_ENV] = "1"
             env.pop("ELAN_TOOLCHAIN", None)
+            # Sandbox/CI wrappers named ``lake`` may bind execution to the
+            # active checkout. Prefer Elan's own shims so the pinned checkout's
+            # lean-toolchain file selects the frozen compiler.
+            elan = shutil.which("elan", path=env.get("PATH"))
+            if elan is None:
+                raise RuntimeError("elan is required for frozen v0.2 execution")
+            env["PATH"] = f"{Path(elan).parent}{os.pathsep}{env.get('PATH', '')}"
             return subprocess.run(command, cwd=checkout, env=env, check=False).returncode
         finally:
             _git("worktree", "remove", "--force", str(checkout), capture_output=True)
