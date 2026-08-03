@@ -37,7 +37,19 @@ python3 scripts/check_verity_pin_staleness.py --warn-only
 python3 scripts/validate_manifests.py
 v02_audit="$(mktemp -t verity-v02-reference-validation.XXXXXX.json)"
 trap 'rm -f "$v02_audit"' EXIT
-python3 scripts/validate_v02_reference_contract.py --audit "$v02_audit"
+if ! python3 scripts/validate_v02_reference_contract.py --audit "$v02_audit"; then
+  python3 -c '
+import json, pathlib, sys
+audit = json.loads(pathlib.Path(sys.argv[1]).read_text(encoding="utf-8"))
+manifest = json.loads(pathlib.Path("benchmark-versions/v0.2.json").read_text(encoding="utf-8"))
+active = pathlib.Path("lean-toolchain").read_text(encoding="utf-8").strip()
+expected = manifest["environment"]["lean_toolchain"]
+errors = audit.get("errors")
+if active == expected or errors != ["runtime Lean toolchain provenance drift"]:
+    raise SystemExit(f"unexpected frozen v0.2 validation failure: {errors!r}")
+print(f"frozen v0.2 correctly rejected active toolchain {active!r}; expected {expected!r}")
+' "$v02_audit"
+fi
 python3 scripts/generate_metadata.py
 if [[ "${VERITY_RUN_FULL_TASK_SWEEP:-0}" == "1" ]]; then
   if ! ./scripts/run_all.sh; then
