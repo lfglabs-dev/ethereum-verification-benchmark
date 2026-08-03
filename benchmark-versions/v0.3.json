@@ -4,7 +4,7 @@
   "budget": "normal",
   "created_at": "2026-08-03",
   "environment_id": "sha256:c2b6593676b790a2ce3e0ba258b70438e286b809ff26811fe4099ff6d8dd897a",
-  "git_sha": "6cfeb16fd93efb064757533e6c3db3fbd8973701",
+  "git_sha": "1f35e969a2b8435e822935df72d00035564e61aa",
   "harness_id": "sha256:38db263e15ce31b4ef2f099d8a0d7303ac1751e29e1e1a012b854786c888c9e0",
   "manifest_schema_version": 1,
   "mode": "fair",
