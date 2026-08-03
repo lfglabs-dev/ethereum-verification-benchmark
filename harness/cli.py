@@ -418,7 +418,8 @@ def main() -> int:
 
     args = parser.parse_args()
     if (
-        getattr(args, "suite", None) == "v0.2"
+        args.command != "list"
+        and getattr(args, "suite", None) == "v0.2"
         and os.environ.get("VERITY_V02_PINNED_CHECKOUT") != "1"
     ):
         return subprocess.run(
