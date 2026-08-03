@@ -140,10 +140,10 @@ theorem redeem_return_formula
       Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
       Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping,
       ContractState.writeSlot, ContractState.writeMap]
-    all_goals try unfold Verity.bind
     all_goals simp_all [Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
       ContractResult.snd, setStorage, setMapping, ContractState.writeSlot,
       ContractState.writeMap]
+    all_goals grind
   · rcases hArithmetic with
       ⟨hSupportedUnit, hConfig, hFeeMul, hFeeLe, hNetMul, hCbrMul, hSupplyAdd, hSupplyLe,
         hCollateralLe⟩
@@ -165,10 +165,10 @@ theorem redeem_return_formula
       Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
       Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping,
       ContractState.writeSlot, ContractState.writeMap]
-    all_goals try unfold Verity.bind
     all_goals simp_all [Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
       ContractResult.snd, setStorage, setMapping, ContractState.writeSlot,
       ContractState.writeMap]
+    all_goals grind
 
 theorem redeem_conservation
     (rwaToken : Address) (stableAmount minAmountOut price tokenUnit : Uint256)
@@ -211,10 +211,10 @@ theorem redeem_conservation
       Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.snd,
       Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping,
       ContractState.writeSlot, ContractState.writeMap]
-    all_goals try unfold Verity.bind
     all_goals simp_all [Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
       ContractResult.snd, setStorage, setMapping, ContractState.writeSlot,
       ContractState.writeMap]
+    all_goals grind
   · rcases hArithmetic with
       ⟨hSupportedUnit, hConfig, hFeeMul, hFeeLe, hNetMul, hCbrMul, hSupplyAdd, hSupplyLe,
         hCollateralLe⟩
@@ -238,9 +238,9 @@ theorem redeem_conservation
       Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.snd,
       Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping,
       ContractState.writeSlot, ContractState.writeMap]
-    all_goals try unfold Verity.bind
     all_goals simp_all [Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
       ContractResult.snd, setStorage, setMapping, ContractState.writeSlot,
       ContractState.writeMap]
+    all_goals grind
 
 end Benchmark.Cases.Usual.DaoCollateral

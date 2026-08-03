@@ -79,6 +79,32 @@ class V02ContractTests(unittest.TestCase):
     ) -> tuple[int, dict]:
         manifest = json.loads(json.dumps(self.manifest))
         references = json.loads(json.dumps(self.references))
+        pinned_sha_by_path = {
+            member["path"]: member["sha256"]
+            for entry in self.references["tasks"]
+            for member in entry["reference_import_closure"]
+        }
+        pinned_closure_by_module = {
+            entry["reference_module"]: entry["reference_import_closure"]
+            for entry in self.references["tasks"]
+        }
+
+        def fixture_sha(path: Path) -> str:
+            try:
+                relative = path.relative_to(ROOT).as_posix()
+            except ValueError:
+                relative = ""
+            if relative in pinned_sha_by_path:
+                return pinned_sha_by_path[relative]
+            return hashlib.sha256(path.read_bytes()).hexdigest()
+
+        def fixture_closure(_root: Path, module: str):
+            return pinned_closure_by_module[module]
+
+        def fixture_closure_namespace():
+            namespace = compute_fingerprints.trusted_closure_helper_namespace()
+            namespace["collect_reference_closure"] = fixture_closure
+            return namespace
         # Fixtures use a synthetic reviewed root matching this checkout; Git
         # reads below are mocked so they remain independent of checkout depth.
         manifest["source"]["commit"] = subprocess.check_output(
@@ -113,6 +139,12 @@ class V02ContractTests(unittest.TestCase):
                 validator, "RELEASE_METADATA", fixture_metadata
             ), mock.patch.object(validator, "RELEASE_ENVIRONMENT", fixture_environment), mock.patch.object(
                 validator, "BASELINE_COMMIT", pinned_commit
+            ), mock.patch.object(
+                validator, "sha", side_effect=fixture_sha
+            ), mock.patch.object(
+                validator,
+                "trusted_closure_helper_namespace",
+                side_effect=fixture_closure_namespace,
             ), mock.patch.object(
                 validator,
                 "baseline_file_sha",
