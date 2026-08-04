@@ -6,10 +6,8 @@ Each task gives the agent:
 - one editable proof file
 - one theorem target
 
-Shell-style agents edit and return the full proof file. Tool-loop agents submit
-tactic bodies through the provided proof-checking tools. In both modes, the
-agent must not change specs, change implementations, or rely on hidden solved
-proofs.
+The agent submits tactic bodies through the provided proof-checking tools. It
+must not change specs, change implementations, or rely on hidden solved proofs.
 
 The harness rejects placeholders, runs Lean in a temp workspace, and checks
 the target theorem.

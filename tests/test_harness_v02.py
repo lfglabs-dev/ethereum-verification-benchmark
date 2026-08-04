@@ -68,7 +68,7 @@ class HarnessV02Tests(unittest.TestCase):
                 verifier.assert_not_called()
 
     def test_default_dispatches_only_to_mcp_runner_without_provider_setup(self) -> None:
-        """The canonical default must not select the bespoke Lean loop or shell agents."""
+        """The canonical default dispatches only to its MCP runner."""
         with patch("harness.cli.run_lean_tools_mcp_group", return_value=(0, Path("/tmp/mcp"))) as mcp:
             code, run_dir = cli.run_group(
                 "ethereum/deposit_contract_minimal", "default", "active",
@@ -93,7 +93,7 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(profile["command"][:3], ["python3", "-m", "harness.runners.lean_tools_mcp"])
         self.assertEqual(profile["track"], "group/lean_tools_mcp")
         self.assertEqual(profile["lean_lsp_mcp_version"], "0.28.0")
-        for obsolete in ("builtin-lean-lsp.json", "grok-build.json", "vibe-lean-lsp.json", "opencode.json"):
+        for obsolete in ("builtin-lean-lsp.json", "codex.json", "grok-build.json", "vibe-lean-lsp.json", "opencode.json"):
             self.assertFalse((root / "harness/agents" / obsolete).exists())
 
     def test_target_warming_stops_after_first_timeout(self) -> None:
@@ -240,6 +240,43 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(summary["passed"], 1)
         self.assertEqual(summary["failure_counts"], {"provider_setup_error": 1})
 
+    def test_aggregate_summarizes_accounting_provenance_without_overwriting_it(self) -> None:
+        rows = [
+            {"valid": True, "reusable": True, "passed": True, "completion_tokens": 10, "prompt_tokens": 20, "usage_source": "proxy-metered", "failure_counts": {}},
+            {"valid": True, "reusable": True, "passed": False, "completion_tokens": 5, "prompt_tokens": 10, "usage_source": "estimated", "failure_counts": {}},
+        ]
+
+        summary = aggregate_runs._model_summary(rows)
+
+        self.assertEqual(summary["usage_sources"], {"estimated": 1, "proxy-metered": 1})
+        markdown = aggregate_runs._leaderboard_markdown(
+            {"shell:model": summary},
+            [{"harness": "shell", "model": "model", "task_ref": "task", **rows[0]}],
+            {},
+            {"date": "today"},
+        )
+        self.assertIn("| Accounting |", markdown)
+        self.assertIn("estimated (1), proxy-metered (1)", markdown)
+        self.assertNotIn("canonical harness's in-loop accounting", markdown)
+
+    def test_aggregate_marks_missing_or_stale_merged_provenance_as_legacy_unknown(self) -> None:
+        previous = [
+            {"run_id": "old-shell", "harness": "shell", "usage_source": "proxy-metered"},
+            {"run_id": "older-shell", "harness": "shell"},
+            {"run_id": "stale-shell", "harness": "shell", "usage_source": "in-loop"},
+            {"run_id": "builtin", "harness": "default", "usage_source": "in-loop"},
+            {"run_id": "legacy-builtin", "harness": "builtin-lean-lsp", "usage_source": "in-loop"},
+        ]
+
+        prepared = aggregate_runs._legacy_rows(previous)
+
+        self.assertEqual(prepared[0]["usage_source"], "proxy-metered")
+        self.assertEqual(prepared[1]["usage_source"], "legacy-unknown")
+        self.assertEqual(prepared[2]["usage_source"], "legacy-unknown")
+        self.assertEqual(prepared[3]["usage_source"], "in-loop")
+        self.assertEqual(prepared[4]["usage_source"], "in-loop")
+        self.assertNotIn("usage_source", previous[1])
+
     def test_aggregate_accepts_verifier_clean_shell_pass_without_requests(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_dir = Path(tmp) / "run"
@@ -262,6 +299,7 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertTrue(rows[0]["valid"])
         self.assertTrue(rows[0]["passed"])
+        self.assertEqual(rows[0]["usage_source"], "legacy-unknown")
 
     def test_aggregate_counts_suite_failures_as_valid_failures(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

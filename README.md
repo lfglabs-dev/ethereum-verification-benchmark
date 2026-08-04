@@ -84,7 +84,7 @@ python3 scripts/check.py
 | `cases/` | Active benchmark cases and task manifests |
 | `backlog/` | Runnable tasks not yet in the active suite |
 | `Benchmark/` | Lean modules for contracts, specs, proofs, and shared Grindset lemmas |
-| `harness/` | Fair harness, agent adapters, metering, and verifier policy |
+| `harness/` | Canonical fair harness, metering, and verifier policy |
 | `scripts/` | Verification, aggregation, release, and analysis tooling |
 | `benchmark-versions/` | Version manifests and compatibility fingerprints |
 | `results/` | Published result indexes, summaries, and leaderboards |
