@@ -1,0 +1,30 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: velora
+implementation_id: bridge_staking
+display_name: Velora BridgeStaking
+split: active
+status: translated
+upstream_repo: https://github.com/VeloraDEX/velora-miro-contracts
+upstream_commit: bfb5f8093bc6f6db0f0840b83d22e803c2811fcb
+source_language: solidity
+source_artifact_path: contracts/BridgeStaking.sol
+case_ids:
+  - velora/bridge_staking
+notes: >
+  BridgeStaking cross-chain staking accounting. Receives VLR/WETH via Across
+  protocol two-leg delivery, allocates them to pending staking records, and
+  either deposits them into seVLR or rescues them back to the beneficiary.
+  Successful seVLR deposit is selected by an unconstrained branch abstraction and
+  modeled with exact equal decrements to allocation and BridgeStaking balance for
+  both tokens, under standard ERC-20 and atomic-call balance assumptions documented
+  by the case. Storage is flattened semantically rather than preserving EVM layout;
+  the exact beneficiary sentinel and post-initialization stored-amount check are
+  preserved.
+  Withdrawal, rescue, and handle-message conservation all have complete Lean
+  proofs from the incoming invariant. Explicit Boolean outcomes model each
+  SafeTransferLib call; a failed transfer atomically reverts the full modeled
+  transaction, including earlier rescue writes. The handle proof composes
+  source-faithful record-preparation, token-credit, and settlement lemmas;
+  checked-arithmetic failures and explicit failed guards also revert to the
+  incoming state.

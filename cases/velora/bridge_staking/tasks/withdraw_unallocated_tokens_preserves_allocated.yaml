@@ -1,0 +1,40 @@
+manifest_kind: task
+schema_version: 1
+task_id: withdraw_unallocated_tokens_preserves_allocated
+case_id: velora/bridge_staking
+split: active
+family_id: velora
+implementation_id: bridge_staking
+source_ref: https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Velora.BridgeStaking.withdrawUnallocatedTokens_preserves_allocated
+proof_family: state_preservation_local_effects
+property_class: accounting_conservation
+difficulty: easy
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - Benchmark/Cases/Velora/BridgeStaking/Contract.lean
+specification_files:
+  - Benchmark/Cases/Velora/BridgeStaking/Specs.lean
+editable_files:
+  - Benchmark/Generated/Velora/BridgeStaking/Tasks/withdraw_unallocated_tokens_preserves_allocated.lean
+reference_solution_module: Benchmark.Cases.Velora.BridgeStaking.Proofs
+reference_solution_declaration: Benchmark.Cases.Velora.BridgeStaking.withdrawUnallocatedTokens_preserves_allocated
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Fully proved under the conservation invariant alone. Successful executions
+  withdraw balance - allocated and leave balance equal to allocated; arithmetic,
+  zero-amount, and explicit SafeTransferLib failure outcomes atomically revert to
+  the unchanged state. The Boolean transfer result is an external-call outcome
+  abstraction. Relating successful modeled debits to ERC-20 execution assumes
+  faithful balanceOf, exact requested-amount debits, and no fees, rebases, seizures,
+  donations, reentrancy-induced accounting mutation, or other atomic balance
+  perturbations. Solidity accepts arbitrary token addresses; this task intentionally
+  covers only the VLR/WETH accounting slice selected by `isVlr`. Owner authorization
+  is a public-boundary scope exclusion.
+unsupported_feature_codes:
+  - erc20_external_balance_modeled_as_storage

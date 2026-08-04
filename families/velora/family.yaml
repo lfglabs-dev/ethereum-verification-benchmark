@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: velora
+display_name: Velora
+split: active
+status: active
+description: Velora (formerly ParaSwap) BridgeStaking cross-chain staking accounting benchmarks.
+implementation_ids:
+  - bridge_staking
+case_ids:
+  - velora/bridge_staking
+source_languages:
+  - solidity
