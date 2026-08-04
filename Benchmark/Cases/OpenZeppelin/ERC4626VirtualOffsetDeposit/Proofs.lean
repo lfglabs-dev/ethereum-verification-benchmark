@@ -42,7 +42,10 @@ theorem previewDeposit_rounds_down
     (hMul : (assets : Nat) * ((add (s.storage 1) virtualShares : Uint256) : Nat) <= MAX_UINT256) :
     previewDeposit_rounds_down_spec assets s := by
   unfold previewDeposit_rounds_down_spec previewDeposit previewDepositAmount
-  simpa [mulDivDown] using mulDivDown_mul_le assets (add (s.storage 1) virtualShares)
+  change ((assets * add (s.storage 1) virtualShares / add (s.storage 0) virtualAssets).val *
+    (add (s.storage 0) virtualAssets).val) ≤
+    assets.val * (add (s.storage 1) virtualShares).val
+  exact mulDivDown_mul_le assets (add (s.storage 1) virtualShares)
     (add (s.storage 0) virtualAssets) hMul
 
 theorem positive_deposit_mints_positive_shares_under_rate_bound
@@ -54,7 +57,8 @@ theorem positive_deposit_mints_positive_shares_under_rate_bound
     (hMul : (assets : Nat) * ((add (s.storage 1) virtualShares : Uint256) : Nat) <= MAX_UINT256) :
     positive_deposit_mints_positive_shares_under_rate_bound_spec assets s := by
   unfold positive_deposit_mints_positive_shares_under_rate_bound_spec previewDeposit previewDepositAmount
-  simpa [mulDivDown] using mulDivDown_pos assets (add (s.storage 1) virtualShares)
+  change 0 < (assets * add (s.storage 1) virtualShares / add (s.storage 0) virtualAssets).val
+  exact mulDivDown_pos assets (add (s.storage 1) virtualShares)
     (add (s.storage 0) virtualAssets) hDenom hRate hMul
 
 /--
@@ -191,7 +195,10 @@ theorem share_price_monotone_under_donation
     simp [donate]
   unfold share_price_monotone_under_donation_spec previewRedeem previewRedeemAmount
   rw [hs0, hs1]
-  simpa [mulDivDown] using mulDivDown_monotone_right shares
+  change (shares * add (s.storage 0) virtualAssets / add (s.storage 1) virtualShares).val ≤
+    (shares * add (add (s.storage 0) donation) virtualAssets /
+      add (s.storage 1) virtualShares).val
+  exact mulDivDown_monotone_right shares
     (add (s.storage 0) virtualAssets)
     (add (add (s.storage 0) donation) virtualAssets)
     (add (s.storage 1) virtualShares) hLe hMul'

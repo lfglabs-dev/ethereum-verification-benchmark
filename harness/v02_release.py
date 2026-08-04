@@ -8,6 +8,9 @@ release operation, not a manifest regeneration operation.
 from __future__ import annotations
 
 BASELINE_COMMIT = "c5a2344b121040445ccd745a3f839548ca8f9158"
+# Reviewed pre-migration checkout containing the frozen v0.2 sources and Lake
+# environment. Its published v0.2 manifest/reference bytes match this branch.
+RELEASE_CHECKOUT_COMMIT = "7ac3666e8db57175b478b85cac75ef4fae3d6c0d"
 # This is the one intentional pre-results environment migration for v0.2.  The
 # task/reference source remains rooted at ``BASELINE_COMMIT`` below.
 RELEASE_ENVIRONMENT = {

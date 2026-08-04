@@ -200,6 +200,13 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             fail("release trust-root version metadata drift")
         if manifest.get("environment") != RELEASE_ENVIRONMENT:
             fail("release trust-root environment provenance drift")
+        # Verify the independently pinned helper before reporting broader live
+        # environment drift. Candidate helper code is never executed, and a
+        # targeted TCB failure cannot be masked by an unrelated migration.
+        closure_namespace = trusted_closure_helper_namespace()
+        collect_reference_closure = closure_namespace.get("collect_reference_closure")
+        if not callable(collect_reference_closure):
+            fail("trusted closure helper missing collect_reference_closure")
         runtime_error = runtime_environment_error()
         if runtime_error:
             fail(runtime_error)
@@ -213,12 +220,6 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
         baseline_fields = tuple(field for field in VERSION_METADATA_FIELDS if field != "environment_id")
         if {field: manifest.get(field) for field in baseline_fields} != {field: baseline_metadata.get(field) for field in baseline_fields}:
             fail("pinned baseline version metadata drift")
-        # Verify before executing its closure algorithm; it is never imported
-        # from the mutable candidate checkout.
-        closure_namespace = trusted_closure_helper_namespace()
-        collect_reference_closure = closure_namespace.get("collect_reference_closure")
-        if not callable(collect_reference_closure):
-            fail("trusted closure helper missing collect_reference_closure")
         expected_source = RELEASE_SOURCE
         if source != expected_source:
             fail("pinned baseline source provenance drift")
@@ -328,8 +329,6 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
             module_path = ROOT.joinpath(*module.split(".")).with_suffix(".lean")
             if entry.get("reference_module_path") != str(module_path.relative_to(ROOT)) or not module_path.is_file():
                 fail(f"{ref}: reference module missing/path drift")
-            if entry.get("reference_module_sha256") != sha(module_path):
-                fail(f"{ref}: reference module hash drift")
             closure = entry.get("reference_import_closure")
             if not isinstance(closure, list) or not closure:
                 fail(f"{ref}: malformed reference import closure")
@@ -343,6 +342,8 @@ def validate(*, verify_lean: bool, audit_path: Path) -> int:
                     fail(f"{ref}: forbidden reference escape hatch")
                 if member.get("sha256") != sha(path):
                     fail(f"{ref}: reference helper missing/hash drift")
+            if entry.get("reference_module_sha256") != sha(module_path):
+                fail(f"{ref}: reference module hash drift")
             if closure != collect_reference_closure(ROOT, module):
                 fail(f"{ref}: reference import closure drift")
             if verify_lean and (index == 1 or index % 10 == 0 or index == len(refs)):

@@ -241,6 +241,7 @@ theorem redeem_py_pre_expiry_burns_equal_amount
     hYtBalanceEnough, hPtSupplyEnough, hYtSupplyEnough, hRedeemUint248,
     hIndexNonzero, hSelfNZ, hIndexNZ, hIndexNZBody, requireSomeUint,
     Verity.Stdlib.Math.requireSomeUint, uint248Max, ONE]
+  all_goals exact ⟨rfl, rfl, rfl, rfl⟩
 
 /--
 Before expiry, `redeemPY` burns the same amount from PT and YT, so it preserves

@@ -16,6 +16,9 @@ fi
 mkdir -p results
 
 if [[ "$suite" == "v0.2" ]]; then
+  if [[ "${VERITY_V02_PINNED_CHECKOUT:-0}" != "1" ]]; then
+    exec python3 scripts/run_in_v02_environment.py -- ./scripts/run_all.sh --suite v0.2
+  fi
   # Shared Python API; structural only, before selecting/running any task.
   python3 -c 'from scripts.validate_v02_reference_contract import ensure_structural_contract; ensure_structural_contract()'
 fi

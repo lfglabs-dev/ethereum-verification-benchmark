@@ -598,7 +598,7 @@ class PublicDependencyWarmTests(unittest.TestCase):
                 "elan",
                 "run",
                 "--install",
-                "leanprover/lean4:v4.24.0",
+                "leanprover/lean4:v4.31.0",
                 "lake",
                 "build",
                 "Benchmark.Cases.ERC20.State.Impl",

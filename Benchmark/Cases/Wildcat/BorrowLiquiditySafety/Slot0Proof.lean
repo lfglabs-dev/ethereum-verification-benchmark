@@ -18,6 +18,35 @@ set_option compiler.maxRecInlineIfReduce 0
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 
+private theorem totalAssetsStoredSlot : BorrowLiquiditySafety.totalAssetsStored.slot = 0 := by native_decide
+private theorem isClosedSlot : BorrowLiquiditySafety.isClosed.slot = 1 := by native_decide
+private theorem accruedProtocolFeesSlot : BorrowLiquiditySafety.accruedProtocolFees.slot = 2 := by native_decide
+private theorem normalizedUnclaimedWithdrawalsSlot :
+    BorrowLiquiditySafety.normalizedUnclaimedWithdrawals.slot = 3 := by native_decide
+private theorem scaledTotalSupplySlot : BorrowLiquiditySafety.scaledTotalSupply.slot = 4 := by native_decide
+private theorem scaledPendingWithdrawalsSlot :
+    BorrowLiquiditySafety.scaledPendingWithdrawals.slot = 5 := by native_decide
+private theorem reserveRatioBipsSlot : BorrowLiquiditySafety.reserveRatioBips.slot = 6 := by native_decide
+private theorem scaleFactorSlot : BorrowLiquiditySafety.scaleFactor.slot = 7 := by native_decide
+private theorem pendingProtocolFeeDeltaSlot :
+    BorrowLiquiditySafety.pendingProtocolFeeDelta.slot = 8 := by native_decide
+private theorem borrowerFlaggedSlot : BorrowLiquiditySafety.borrowerFlagged.slot = 9 := by native_decide
+private theorem hookAllowsBorrowSlot : BorrowLiquiditySafety.hookAllowsBorrow.slot = 10 := by native_decide
+
+attribute [local simp] totalAssetsStoredSlot isClosedSlot accruedProtocolFeesSlot
+  normalizedUnclaimedWithdrawalsSlot scaledTotalSupplySlot scaledPendingWithdrawalsSlot
+  reserveRatioBipsSlot scaleFactorSlot pendingProtocolFeeDeltaSlot borrowerFlaggedSlot
+  hookAllowsBorrowSlot
+attribute [local simp] BIP HALF_BIP RAY HALF_RAY
+
+private theorem uint256_add_notation (a b : Uint256) : a + b = add a b := rfl
+private theorem uint256_sub_notation (a b : Uint256) : a - b = sub a b := rfl
+private theorem uint256_mul_notation (a b : Uint256) : a * b = mul a b := rfl
+private theorem uint256_div_notation (a b : Uint256) : a / b = div a b := rfl
+
+attribute [local simp] uint256_add_notation uint256_sub_notation
+  uint256_mul_notation uint256_div_notation
+
 private def updatedFeesExpr' (s : ContractState) : Uint256 :=
   s.storage 2 + s.storage 8
 
@@ -233,6 +262,7 @@ private theorem borrowerFlagPrefix_run
     (hFlaggedSlot : borrowerFlaggedOf preState = 0) :
     borrowerFlagPrefix.run preState = ContractResult.success () preState := by
   have hFlaggedRaw := borrowerFlagged_raw preState hFlaggedSlot
+  simp only [borrowerFlaggedSlot] at hFlaggedRaw
   unfold borrowerFlagPrefix Contract.run getStorage require
   simp [Bind.bind, Verity.bind, hFlaggedRaw]
 
@@ -243,7 +273,9 @@ private theorem borrow_reduces_to_borrowAfterBorrowerCheck
       (borrowAfterBorrowerCheck amount).runState preState := by
   rw [borrow_eq_factored]
   unfold borrowFactored
-  simpa using
+  change (Verity.bind borrowerFlagPrefix
+      (fun _ => borrowAfterBorrowerCheck amount)).runState preState = _
+  exact
     (bind_runState_of_success_same borrowerFlagPrefix
       (fun _ => borrowAfterBorrowerCheck amount) preState ()
       (borrowerFlagPrefix_run preState hFlaggedSlot))
@@ -255,7 +287,9 @@ private theorem borrow_reduces_to_tailFromReads
       (borrowTailFromReads amount (readsOf preState)).runState preState := by
   rw [borrow_reduces_to_borrowAfterBorrowerCheck amount preState hFlaggedSlot]
   unfold borrowAfterBorrowerCheck
-  simpa using
+  change (Verity.bind readBorrowInputs
+      (fun r => borrowTailFromReads amount r)).runState preState = _
+  exact
     (bind_runState_of_success_same readBorrowInputs
       (fun r => borrowTailFromReads amount r) preState (readsOf preState)
       (readBorrowInputs_run preState))
@@ -295,7 +329,8 @@ private theorem reserveNumerator_some
       ((scaledOutstandingExpr' preState : Nat) *
           (preState.storage BorrowLiquiditySafety.reserveRatioBips.slot : Nat)) +
         (HALF_BIP : Nat) <= MAX_UINT256 := by
-    simpa [scaledOutstandingExpr'] using hReserve
+    simpa [scaledOutstandingExpr', scaledOutstandingSupplyOf, outstandingSupply,
+      scaledTotalSupplyOf, scaledPendingWithdrawalsOf, reserveRatioBipsOf] using hReserve
   have hReserveMulLt :
       (scaledOutstandingExpr' preState : Nat) *
           (preState.storage BorrowLiquiditySafety.reserveRatioBips.slot : Nat) <
@@ -316,7 +351,8 @@ private theorem reserveNumerator_some
       ((mul (scaledOutstandingExpr' preState)
           (preState.storage BorrowLiquiditySafety.reserveRatioBips.slot) : Uint256) : Nat) +
         (HALF_BIP : Nat) <= MAX_UINT256 := by
-    simpa [hReserveMulVal] using hReserveBound
+    rw [hReserveMulVal]
+    exact hReserveBound
   simpa [reserveNumeratorExpr', HALF_BIP] using
     (safeAdd_some
       (scaledOutstandingExpr' preState * preState.storage BorrowLiquiditySafety.reserveRatioBips.slot)
@@ -342,7 +378,7 @@ private theorem normalizeNumerator_some_expanded
       ((scaledRequiredExpr' preState : Nat) *
           (preState.storage BorrowLiquiditySafety.scaleFactor.slot : Nat)) +
         (HALF_RAY : Nat) <= MAX_UINT256 := by
-    simpa [normalizeNumeratorExpr', scaledRequired_eq preState] using hNormalize
+    simpa [normalizeNumeratorExpr', scaledRequired_eq preState, scaleFactorOf] using hNormalize
   have hNormalizeMulLt :
       (scaledRequiredExpr' preState : Nat) *
           (preState.storage BorrowLiquiditySafety.scaleFactor.slot : Nat) <
@@ -363,7 +399,8 @@ private theorem normalizeNumerator_some_expanded
       ((mul (scaledRequiredExpr' preState)
           (preState.storage BorrowLiquiditySafety.scaleFactor.slot) : Uint256) : Nat) +
         (HALF_RAY : Nat) <= MAX_UINT256 := by
-    simpa [hNormalizeMulVal] using hNormalizeBound
+    rw [hNormalizeMulVal]
+    exact hNormalizeBound
   have hNormalizeNumeratorRaw :
       safeAdd
         (mul (scaledRequiredExpr' preState)
@@ -490,9 +527,12 @@ private theorem amountGuard
       ite (preState.storage BorrowLiquiditySafety.totalAssetsStored.slot > liquidityRequiredExpr' preState)
         (preState.storage BorrowLiquiditySafety.totalAssetsStored.slot - liquidityRequiredExpr' preState)
         0 := by
-  simpa [borrowableAssetsAfterUpdate, borrowableAssetsFromFields, satSub,
-    liquidityRequired_eq preState, totalAssetsOf]
-    using hAmount
+  have hAmount' : amount <=
+      ite (totalAssetsOf preState > requiredLiquidityAfterUpdate preState)
+        (totalAssetsOf preState - requiredLiquidityAfterUpdate preState) 0 := by
+    simpa [borrowableAssetsAfterUpdate, borrowableAssetsFromFields,
+      requiredLiquidityAfterUpdate, satSub] using hAmount
+  simpa [totalAssetsOf, liquidityRequired_eq preState] using hAmount'
 
 private def slot0WrittenValue (amount : Uint256) (preState : ContractState) : Uint256 :=
   if 0 = BorrowLiquiditySafety.pendingProtocolFeeDelta.slot then 0
@@ -1035,6 +1075,7 @@ private theorem borrow_slot0_reduces_to_after_updatedFees
     (runBorrow amount preState).storage 0 = slot0AfterUpdatedFees amount preState := by
   rcases hPre with ⟨hFlaggedSlot, hClosedSlot, _, _, hFees, _, _, _, _, _⟩
   have hClosedRaw := isClosed_raw preState hClosedSlot
+  simp only [isClosedSlot] at hClosedRaw
   have hUpdatedFees := updatedFees_some preState hFees
   have hPrefix :
       (runBorrow amount preState).storage 0 =

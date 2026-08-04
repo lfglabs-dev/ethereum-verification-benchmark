@@ -9,6 +9,45 @@ namespace Benchmark.Cases.Usual.DaoCollateral
 open Verity
 open Verity.EVM.Uint256
 
+@[simp] private theorem getStorage_apply_raw (sl : StorageSlot Uint256)
+    (s : ContractState) :
+    getStorage sl s = ContractResult.success (s.readSlot sl.slot) s := rfl
+
+@[simp] private theorem setStorage_apply_raw (sl : StorageSlot Uint256)
+    (value : Uint256) (s : ContractState) :
+    setStorage sl value s = ContractResult.success () (s.writeSlot sl.slot value) := rfl
+
+@[simp] private theorem getMapping_apply_raw (sl : StorageSlot (Address → Uint256))
+    (key : Address) (s : ContractState) :
+    getMapping sl key s = ContractResult.success (s.readMap sl.slot key) s := rfl
+
+@[simp] private theorem setMapping_apply_raw (sl : StorageSlot (Address → Uint256))
+    (key : Address) (value : Uint256) (s : ContractState) :
+    setMapping sl key value s = ContractResult.success ()
+      { s.writeMap sl.slot key value with
+        knownAddresses := fun «slot» =>
+          if «slot» == sl.slot then (s.knownAddresses «slot»).insert key
+          else s.knownAddresses «slot» } := rfl
+
+@[simp] private theorem bind_getStorage_raw {α : Type} (sl : StorageSlot Uint256)
+    (f : Uint256 → Contract α) (s : ContractState) :
+    Verity.bind (getStorage sl) f s = f (s.readSlot sl.slot) s := rfl
+@[simp] private theorem bind_setStorage_raw {α : Type} (sl : StorageSlot Uint256)
+    (value : Uint256) (f : Unit → Contract α) (s : ContractState) :
+    Verity.bind (setStorage sl value) f s = f () (s.writeSlot sl.slot value) := rfl
+@[simp] private theorem bind_getMapping_raw {α : Type}
+    (sl : StorageSlot (Address → Uint256)) (key : Address)
+    (f : Uint256 → Contract α) (s : ContractState) :
+    Verity.bind (getMapping sl key) f s = f (s.readMap sl.slot key) s := rfl
+@[simp] private theorem bind_setMapping_raw {α : Type}
+    (sl : StorageSlot (Address → Uint256)) (key : Address) (value : Uint256)
+    (f : Unit → Contract α) (s : ContractState) :
+    Verity.bind (setMapping sl key value) f s = f ()
+      { s.writeMap sl.slot key value with
+        knownAddresses := fun «slot» =>
+          if «slot» == sl.slot then (s.knownAddresses «slot»).insert key
+          else s.knownAddresses «slot» } := rfl
+
 theorem swap_conservation
     (rwaToken : Address) (amount minAmountOut price tokenUnit : Uint256) (s : ContractState)
     (hAmount : amount != 0)
@@ -99,7 +138,12 @@ theorem redeem_return_formula
       DaoCollateral.ghostUsd0Supply, DaoCollateral.ghostTreasuryCollateral,
       DaoCollateral.redeemFeeBps, DaoCollateral.cbrOn, DaoCollateral.cbrCoefficient,
       Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
-      Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping]
+      Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping,
+      ContractState.writeSlot, ContractState.writeMap]
+    all_goals simp_all [Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
+      ContractResult.snd, setStorage, setMapping, ContractState.writeSlot,
+      ContractState.writeMap]
+    all_goals grind
   · rcases hArithmetic with
       ⟨hSupportedUnit, hConfig, hFeeMul, hFeeLe, hNetMul, hCbrMul, hSupplyAdd, hSupplyLe,
         hCollateralLe⟩
@@ -119,7 +163,12 @@ theorem redeem_return_formula
       DaoCollateral.ghostUsd0Supply, DaoCollateral.ghostTreasuryCollateral,
       DaoCollateral.redeemFeeBps, DaoCollateral.cbrOn, DaoCollateral.cbrCoefficient,
       Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
-      Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping]
+      Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping,
+      ContractState.writeSlot, ContractState.writeMap]
+    all_goals simp_all [Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
+      ContractResult.snd, setStorage, setMapping, ContractState.writeSlot,
+      ContractState.writeMap]
+    all_goals grind
 
 theorem redeem_conservation
     (rwaToken : Address) (stableAmount minAmountOut price tokenUnit : Uint256)
@@ -160,7 +209,12 @@ theorem redeem_conservation
       DaoCollateral.ghostUsd0Supply, DaoCollateral.ghostTreasuryCollateral,
       DaoCollateral.redeemFeeBps, DaoCollateral.cbrOn, DaoCollateral.cbrCoefficient,
       Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.snd,
-      Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping]
+      Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping,
+      ContractState.writeSlot, ContractState.writeMap]
+    all_goals simp_all [Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
+      ContractResult.snd, setStorage, setMapping, ContractState.writeSlot,
+      ContractState.writeMap]
+    all_goals grind
   · rcases hArithmetic with
       ⟨hSupportedUnit, hConfig, hFeeMul, hFeeLe, hNetMul, hCbrMul, hSupplyAdd, hSupplyLe,
         hCollateralLe⟩
@@ -182,6 +236,11 @@ theorem redeem_conservation
       DaoCollateral.ghostUsd0Supply, DaoCollateral.ghostTreasuryCollateral,
       DaoCollateral.redeemFeeBps, DaoCollateral.cbrOn, DaoCollateral.cbrCoefficient,
       Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.snd,
-      Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping]
+      Verity.pure, Pure.pure, getStorage, setStorage, getMapping, setMapping,
+      ContractState.writeSlot, ContractState.writeMap]
+    all_goals simp_all [Verity.bind, Bind.bind, Contract.run, ContractResult.fst,
+      ContractResult.snd, setStorage, setMapping, ContractState.writeSlot,
+      ContractState.writeMap]
+    all_goals grind
 
 end Benchmark.Cases.Usual.DaoCollateral

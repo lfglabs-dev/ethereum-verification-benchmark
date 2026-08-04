@@ -48,7 +48,7 @@ private theorem ceil_sub_one_div_mul_ge
     have hNPos : 0 < n.val := Nat.pos_of_ne_zero hNVal
     have hSub : (sub n 1).val = n.val - 1 := by
       apply sub_val_no_uf
-      simpa using hNPos
+      exact hNPos
     have hDiv : (div (sub n 1) d).val = (n.val - 1) / d.val := by
       rw [div_val _ _ hD, hSub]
     have hDivLe : (n.val - 1) / d.val ≤ n.val - 1 := Nat.div_le_self _ _
@@ -65,7 +65,8 @@ private theorem ceil_sub_one_div_mul_ge
     have hLt := Nat.lt_div_mul_add (a := n.val - 1) (b := d.val) hDPos
     have hMain : n.val ≤ (n.val - 1) / d.val * d.val + d.val := by omega
     simp [hN, hAdd]
-    simpa [Nat.add_mul, Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using hMain
+    rw [Nat.add_mul, Nat.one_mul]
+    simpa [Nat.mul_comm] using hMain
 
 private theorem exact_in_product_non_decreasing
     (x y dx q : Nat)
@@ -159,7 +160,8 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
         rw [mul_val_no_ovf]
         · rw [hAddB]
         · rw [hAddB]
-          simpa using hExactInNumeratorNoOverflow
+          change (balanceB.val + virtualBalanceB.val) * amountGivenScaled18.val < modulus at hExactInNumeratorNoOverflow
+          exact hExactInNumeratorNoOverflow
       have hExactInRoundsDown :
           amountCalculatedScaled18.val *
               (balanceA.val + virtualBalanceA.val + amountGivenScaled18.val)
@@ -291,6 +293,8 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
         rw [add_val_no_ovf]
         · rw [hAddB]
         · rw [hAddB]
+          have h10 : (1 : Uint256) ≠ 0 := by decide
+          simp [h10] at hExactInDenominatorNoOverflow
           simpa [Nat.add_assoc] using hExactInDenominatorNoOverflow
       have hDenValNe :
           (add (add balanceB virtualBalanceB) amountGivenScaled18).val ≠ 0 := by
@@ -382,7 +386,8 @@ theorem onSwap_fixed_virtual_balances_product_non_decreasing
         rw [mul_val_no_ovf]
         · rw [hAddB]
         · rw [hAddB]
-          simpa using hExactOutNumeratorNoOverflow
+          change (balanceB.val + virtualBalanceB.val) * amountGivenScaled18.val < modulus at hExactOutNumeratorNoOverflow
+          exact hExactOutNumeratorNoOverflow
       have hExactOutRoundsUp :
           amountCalculatedScaled18.val *
               (balanceA.val + virtualBalanceA.val - amountGivenScaled18.val)

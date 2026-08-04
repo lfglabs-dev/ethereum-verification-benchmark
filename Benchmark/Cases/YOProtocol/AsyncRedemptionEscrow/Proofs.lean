@@ -18,6 +18,15 @@ set_option linter.unusedSimpArgs false
 set_option maxHeartbeats 1000000
 set_option maxRecDepth 20000
 
+private theorem shareBalancesSlot : YoAsyncRedemptionEscrow.shareBalances.slot = 5 := by
+  native_decide
+private theorem shareBalancesDef :
+    YoAsyncRedemptionEscrow.shareBalances = ({ «slot» := 5 } : StorageSlot (Address → Uint256)) := by
+  rfl
+private theorem uint256_add_notation (a b : Uint256) : a + b = add a b := rfl
+
+attribute [local simp] shareBalancesSlot shareBalancesDef
+
 /-- A full-precision ceiling quotient cannot exceed its left factor when the
 right factor is strictly smaller than the divisor.  The failure sentinel is
 zero, so the statement covers both helper outcomes. -/
@@ -697,7 +706,8 @@ private theorem cancelRedeem_apply_authorized
         (pendingFulfillPostState s receiver shares grossAssets).thisAddress).val := by
     simpa [pendingFulfillPostState, mapWriteState, ContractState.writeSlot, ContractState.writeMap]
       using hVaultShares
-  simpa [cancelledPostState] using
+  simpa [cancelledPostState, pendingFulfillPostState, mapWriteState,
+    ContractState.writeSlot, ContractState.writeMap] using
     transfer_apply (pendingFulfillPostState s receiver shares grossAssets)
       (pendingFulfillPostState s receiver shares grossAssets).thisAddress receiver shares
       hPendingVault hPendingReceiver hPendingUnpaused hPendingVaultShares
@@ -2880,7 +2890,7 @@ theorem two_owner_queue_aggregation
   have hSecondNotFirst : secondOwner ≠ firstOwner := by
     simpa using (show firstOwner ≠ secondOwner by simpa using hDistinctOwners).symm
   have hSecondOwnerBalance : secondState.storageMap 5 secondOwner >= secondShares := by
-    simpa [secondState, firstPost, firstState, queuedPostState, mapWriteState,
+    simpa [shareBalanceOf, secondState, firstPost, firstState, queuedPostState, mapWriteState,
       ContractState.writeSlot, ContractState.writeMap, hSecondNotFirst, hSecondNotVaultSlot]
       using hSecondShares
   have hSecondQueued :
@@ -3979,7 +3989,9 @@ theorem full_clear_requeue_replay
     · simpa [queueState] using hClearedVault
     · exact hRequestOwnerSlot
     · exact hReceiverSlot
-    · simpa [queueState] using hRequestOwnerNotVaultSlot
+    · simpa [queueState, cleared, fulfilledPostState, burnPostState,
+        pendingFulfillPostState, mapWriteState, ContractState.writeSlot,
+        ContractState.writeMap] using hRequestOwnerNotVaultSlot
     · rfl
     · simpa [queueState] using hClearedUnpaused
     · exact hSharesPositive
@@ -4499,7 +4511,8 @@ theorem fee_aliasing
       (mulDiv512Up 200 (feeState.storage 1)
         (feeState.storage 1 + 1000000000000000000) : Nat) := by
     simpa [feeState, q, queuedPostState, mapWriteState, ContractState.writeSlot,
-      ContractState.writeMap, feeAmountWith] using hPositiveNewFeeAmount
+      ContractState.writeMap, feeAmountWith, feeDenominator,
+      Verity.Core.Uint256.add_comm, uint256_add_notation] using hPositiveNewFeeAmount
   have hZeroNoAuthority : zeroRecipientState.storageAddr 9 = 0 := by
     simpa [zeroRecipientState] using hFeeNoAuthority
   have hZeroSenderOwner : zeroRecipientState.sender = zeroRecipientState.storageAddr 8 := by
