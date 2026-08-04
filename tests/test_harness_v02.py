@@ -265,6 +265,7 @@ class HarnessV02Tests(unittest.TestCase):
             {"run_id": "older-shell", "harness": "shell"},
             {"run_id": "stale-shell", "harness": "shell", "usage_source": "in-loop"},
             {"run_id": "builtin", "harness": "default", "usage_source": "in-loop"},
+            {"run_id": "legacy-builtin", "harness": "builtin-lean-lsp", "usage_source": "in-loop"},
         ]
 
         prepared = aggregate_runs._legacy_rows(previous)
@@ -273,6 +274,7 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(prepared[1]["usage_source"], "legacy-unknown")
         self.assertEqual(prepared[2]["usage_source"], "legacy-unknown")
         self.assertEqual(prepared[3]["usage_source"], "in-loop")
+        self.assertEqual(prepared[4]["usage_source"], "in-loop")
         self.assertNotIn("usage_source", previous[1])
 
     def test_aggregate_accepts_verifier_clean_shell_pass_without_requests(self) -> None:

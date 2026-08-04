@@ -28,6 +28,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from harness.result_validity import failure_counts_from_tasks, row_validity  # noqa: E402
 from release_config import BENCHMARK_TITLE, HARNESS_USER_AGENT
 
+LEGACY_SHELL_HARNESSES = {"codex", "grok-build", "opencode", "shell", "vibe-lean-lsp"}
+
 
 def _slug(model: str) -> str:
     return "".join(ch if ch.isalnum() else "-" for ch in model).strip("-").lower()
@@ -334,7 +336,7 @@ def _legacy_rows(rows: object) -> list[dict[str, object]]:
         if (
             not isinstance(source, str)
             or not source.strip()
-            or (source == "in-loop" and harness != "default")
+            or (source == "in-loop" and harness in LEGACY_SHELL_HARNESSES)
         ):
             copied["usage_source"] = "legacy-unknown"
         prepared.append(copied)
