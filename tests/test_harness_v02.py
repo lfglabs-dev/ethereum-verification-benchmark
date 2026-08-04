@@ -259,16 +259,20 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertIn("estimated (1), proxy-metered (1)", markdown)
         self.assertNotIn("canonical harness's in-loop accounting", markdown)
 
-    def test_aggregate_marks_only_missing_merged_provenance_as_legacy_unknown(self) -> None:
+    def test_aggregate_marks_missing_or_stale_merged_provenance_as_legacy_unknown(self) -> None:
         previous = [
-            {"run_id": "old-shell", "usage_source": "proxy-metered"},
-            {"run_id": "older-shell"},
+            {"run_id": "old-shell", "harness": "shell", "usage_source": "proxy-metered"},
+            {"run_id": "older-shell", "harness": "shell"},
+            {"run_id": "stale-shell", "harness": "shell", "usage_source": "in-loop"},
+            {"run_id": "builtin", "harness": "default", "usage_source": "in-loop"},
         ]
 
         prepared = aggregate_runs._legacy_rows(previous)
 
         self.assertEqual(prepared[0]["usage_source"], "proxy-metered")
         self.assertEqual(prepared[1]["usage_source"], "legacy-unknown")
+        self.assertEqual(prepared[2]["usage_source"], "legacy-unknown")
+        self.assertEqual(prepared[3]["usage_source"], "in-loop")
         self.assertNotIn("usage_source", previous[1])
 
     def test_aggregate_accepts_verifier_clean_shell_pass_without_requests(self) -> None:

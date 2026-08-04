@@ -321,7 +321,7 @@ def _usage_sources_display(summary: dict[str, object]) -> str:
 
 
 def _legacy_rows(rows: object) -> list[dict[str, object]]:
-    """Copy merge rows while making absent accounting provenance explicit."""
+    """Copy merge rows while making absent or stale provenance explicit."""
     prepared: list[dict[str, object]] = []
     if not isinstance(rows, list):
         return prepared
@@ -330,7 +330,12 @@ def _legacy_rows(rows: object) -> list[dict[str, object]]:
             continue
         copied = dict(row)
         source = copied.get("usage_source")
-        if not isinstance(source, str) or not source.strip():
+        harness = copied.get("harness")
+        if (
+            not isinstance(source, str)
+            or not source.strip()
+            or (source == "in-loop" and harness != "default")
+        ):
             copied["usage_source"] = "legacy-unknown"
         prepared.append(copied)
     return prepared
