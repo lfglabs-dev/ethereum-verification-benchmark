@@ -240,6 +240,37 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(summary["passed"], 1)
         self.assertEqual(summary["failure_counts"], {"provider_setup_error": 1})
 
+    def test_aggregate_summarizes_accounting_provenance_without_overwriting_it(self) -> None:
+        rows = [
+            {"valid": True, "reusable": True, "passed": True, "completion_tokens": 10, "prompt_tokens": 20, "usage_source": "proxy-metered", "failure_counts": {}},
+            {"valid": True, "reusable": True, "passed": False, "completion_tokens": 5, "prompt_tokens": 10, "usage_source": "estimated", "failure_counts": {}},
+        ]
+
+        summary = aggregate_runs._model_summary(rows)
+
+        self.assertEqual(summary["usage_sources"], {"estimated": 1, "proxy-metered": 1})
+        markdown = aggregate_runs._leaderboard_markdown(
+            {"shell:model": summary},
+            [{"harness": "shell", "model": "model", "task_ref": "task", **rows[0]}],
+            {},
+            {"date": "today"},
+        )
+        self.assertIn("| Accounting |", markdown)
+        self.assertIn("estimated (1), proxy-metered (1)", markdown)
+        self.assertNotIn("canonical harness's in-loop accounting", markdown)
+
+    def test_aggregate_marks_only_missing_merged_provenance_as_legacy_unknown(self) -> None:
+        previous = [
+            {"run_id": "old-shell", "usage_source": "proxy-metered"},
+            {"run_id": "older-shell"},
+        ]
+
+        prepared = aggregate_runs._legacy_rows(previous)
+
+        self.assertEqual(prepared[0]["usage_source"], "proxy-metered")
+        self.assertEqual(prepared[1]["usage_source"], "legacy-unknown")
+        self.assertNotIn("usage_source", previous[1])
+
     def test_aggregate_accepts_verifier_clean_shell_pass_without_requests(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_dir = Path(tmp) / "run"
@@ -262,6 +293,7 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertTrue(rows[0]["valid"])
         self.assertTrue(rows[0]["passed"])
+        self.assertEqual(rows[0]["usage_source"], "legacy-unknown")
 
     def test_aggregate_counts_suite_failures_as_valid_failures(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
