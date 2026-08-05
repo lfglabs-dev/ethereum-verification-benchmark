@@ -8,15 +8,16 @@
     "model_id",
     "commit_sha",
     "lean_version",
+    "task_set_id",
     "verity_commit",
     "artifacts"
   ],
   "properties": {
     "run_id": {"type": "string", "minLength": 1},
-    "model_id": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "model_id": {"type": "string", "minLength": 1},
     "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
     "lean_version": {"const": "4.31.0"},
-    "task_set_id": {"type": "string", "minLength": 1},
+    "task_set_id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
     "verity_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
     "artifacts": {
       "type": "array",
