@@ -229,6 +229,7 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
         run_id = artifact_run_id(artifact, run_file)
         model_id = artifact.get("model")
         run_dir = _artifact_run_dir(run_file)
+        response_meta = artifact.get("response_meta") if isinstance(artifact, dict) else None
         for target in iter_run_targets(artifact):
             result = classify(
                 target["status"],
@@ -244,6 +245,16 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
                 if reason:
                     row["outcome"] = "infra_invalid"
                     row["detail"] = reason
+                else:
+                    # When the harness captured a finish_reason="length" for a
+                    # non-passing target, the verdict is a model-truncation
+                    # rather than a deliberate sorry / missing theorem. This
+                    # matters because truncation is fixable by raising the
+                    # completion budget, whereas forbidden_placeholder would
+                    # suggest the model gave up.
+                    if _is_truncated_response(target, response_meta):
+                        row["outcome"] = "model_truncation"
+                        row["detail"] = "finish_reason=length recorded in response_meta"
             rows.append(
                 {
                     "run_id": run_id,
@@ -253,6 +264,28 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
                 }
             )
     return rows
+
+
+def _is_truncated_response(target: dict[str, Any], response_meta: Any) -> bool:
+    """Return True if the response meta for this target shows finish_reason=length.
+
+    The aggregate response_meta is keyed ``{task_ref}/{request_index}``; we scan
+    every recorded request and treat the target as truncated if at least one
+    non-empty request was clipped on length. We restrict to non-pass targets so
+    a passing proof with extra follow-up turns (also length-clipped) does not
+    trigger a false positive.
+    """
+    if not isinstance(response_meta, dict):
+        return False
+    task_ref = target.get("task_ref")
+    for key, value in response_meta.items():
+        if not isinstance(value, dict):
+            continue
+        if task_ref is not None and not str(key).startswith(f"{task_ref}/"):
+            continue
+        if value.get("finish_reason") == "length":
+            return True
+    return False
 
 
 def run_self_test() -> int:

@@ -2509,6 +2509,7 @@ def _attempt_task_fair(
         "strict_context_blocked": 0,
     }
     usage_totals = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
+    response_meta_totals: dict[str, dict[str, object]] = {}
     corrective_protocol_sent = False
     repeated_signatures: dict[str, int] = {}
 
@@ -2613,6 +2614,21 @@ def _attempt_task_fair(
                 value = usage.get(key)
                 if isinstance(value, (int, float)):
                     usage_totals[key] += int(value)
+        # Capture transport-layer metadata for post-run analysis so a
+        # finish_reason="length" or non-200 status is observable per request
+        # rather than hidden inside an in-memory response object.
+        if isinstance(response, dict):
+            choices = response.get("choices")
+            finish_reason = None
+            returned_model = response.get("_returned_model") or response.get("model")
+            http_status = response.get("_transport_http_status")
+            if isinstance(choices, list) and choices and isinstance(choices[0], dict):
+                finish_reason = choices[0].get("finish_reason")
+            response_meta_totals[str(usage_totals["requests"])] = {
+                "finish_reason": finish_reason,
+                "returned_model": returned_model,
+                "http_status": http_status,
+            }
 
     token_budget_exhausted = False
     context_budget_exhausted = False
@@ -3106,6 +3122,7 @@ def _attempt_task_fair(
             else _failure_taxonomy(final_status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses)
         ),
         "usage": usage_totals,
+        "response_meta": response_meta_totals,
         "token_budget_exhausted": token_budget_exhausted,
         "context_budget_exhausted": context_budget_exhausted,
         "attempts": attempts,
@@ -3352,6 +3369,7 @@ def run_group(
                     task_results[-1]["benchmark_budget"] = benchmark_budget
                     task_results[-1]["validity"] = row_validity(task_results[-1], expected_budget=benchmark_budget)
             aggregate_usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
+            aggregate_response_meta: dict[str, dict[str, object]] = {}
             for task_result in task_results:
                 task_usage = task_result.get("usage")
                 if isinstance(task_usage, dict):
@@ -3359,6 +3377,11 @@ def run_group(
                         value = task_usage.get(key)
                         if isinstance(value, (int, float)):
                             aggregate_usage[key] += int(value)
+                task_meta = task_result.get("response_meta")
+                if isinstance(task_meta, dict):
+                    for key, value in task_meta.items():
+                        if isinstance(value, dict):
+                            aggregate_response_meta[f"{task_result.get('task_ref') or key}/{key}"] = value
             aggregate_role_metrics = _aggregate_role_metrics(task_results)
             response = {
                 "status": "completed",
@@ -3383,6 +3406,7 @@ def run_group(
                 if tool_backend == "lean-lsp-mcp"
                 else None,
                 "usage": aggregate_usage,
+                "response_meta": aggregate_response_meta,
                 "preflight": preflight,
                 "dependency_warm_builds": dependency_warm_builds,
                 "warm_builds": warm_builds,
@@ -3575,6 +3599,7 @@ def run_group(
         "mcp_preflight": response.get("mcp_preflight"),
         "provider_preflight": response.get("preflight"),
         "usage": response.get("usage"),
+        "response_meta": response.get("response_meta"),
         "benchmark_budget": benchmark_budget,
         "operational_budget": budgets["operational_budget"],
         "failure_counts": response.get("failure_counts") or ({str(response.get("failure_class")): 1} if response.get("failure_class") else {}),
