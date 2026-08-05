@@ -53,6 +53,7 @@ active_cases = [
   "t3tris/hwm_performance_fee",
   "uniswap_v2/pair_fee_adjusted_swap",
   "usual/dao_collateral",
+  "velora/bridge_staking",
   "wildcat/borrow_liquidity_safety",
   "yo_protocol/async_redemption_escrow",
   "zodiac/roles_decoder_faithfulness",
