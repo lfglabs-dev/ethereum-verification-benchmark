@@ -18,6 +18,7 @@ import argparse
 import json
 import re
 import sys
+import tempfile
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -254,12 +255,85 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
     return rows
 
 
+def run_self_test() -> int:
+    """Exercise the CLI classifier's pass, genuine-failure, and infra paths offline."""
+    taxonomy = load_taxonomy()
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+
+        fixtures = (
+            ("passed", "passed", "", "passed"),
+            ("genuine", "lean_check_failed", "unsolved goals\n⊢ False", "lean_check_failed"),
+            ("infra", "no_submission", "", "infra_invalid"),
+        )
+        for run_id, status, output, _expected in fixtures:
+            run_dir = root / run_id
+            run_dir.mkdir()
+            artifact = {
+                "run_id": run_id,
+                "model": "self-test-model",
+                "harness_status": "completed",
+                "verifier": {
+                    "targets": [
+                        {"task_ref": f"self-test/{run_id}", "status": status, "output": output}
+                    ]
+                },
+            }
+            (run_dir / "run.json").write_text(json.dumps(artifact), encoding="utf-8")
+
+        infra_dir = root / "infra"
+        (infra_dir / "harness-response.json").write_text(
+            json.dumps(
+                {
+                    "status": "completed",
+                    "tasks": [
+                        {
+                            "task_ref": "self-test/infra",
+                            "status": "request_failed",
+                            "failure_class": "provider_or_context_failure",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        conversations = infra_dir / "conversations"
+        conversations.mkdir()
+        (conversations / "infra.jsonl").write_text(
+            json.dumps(
+                {
+                    "status": "request_failed",
+                    "request_index": 1,
+                    "error": {"kind": "http_transient", "last_status": 524},
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+        rows = classify_runs_dir(root, taxonomy=taxonomy)
+
+    actual = {row["run_id"]: row["outcome"] for row in rows}
+    expected = {run_id: outcome for run_id, _status, _output, outcome in fixtures}
+    if actual != expected:
+        print(f"classifier self-test failed: expected {expected!r}, got {actual!r}", file=sys.stderr)
+        return 1
+    print("failure classifier self-test passed")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("runs_dir", type=Path, help="Directory of detailed run artifacts to classify")
+    parser.add_argument("runs_dir", type=Path, nargs="?", help="Directory of detailed run artifacts to classify")
     parser.add_argument("--taxonomy", type=Path, default=DEFAULT_TAXONOMY)
     parser.add_argument("--format", choices=("text", "json"), default="text")
+    parser.add_argument("--self-test", action="store_true", help="run deterministic offline sanity checks")
     args = parser.parse_args()
+
+    if args.self_test:
+        return run_self_test()
+    if args.runs_dir is None:
+        parser.error("provide runs_dir or --self-test")
 
     taxonomy = load_taxonomy(args.taxonomy)
     rows = classify_runs_dir(args.runs_dir, taxonomy=taxonomy)
