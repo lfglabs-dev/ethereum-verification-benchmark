@@ -13,7 +13,14 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # `github.ref` differs between the two events that fire for the same commit:
+  # a push to `codex/**` gives `refs/heads/codex/...` while its pull_request
+  # gives `refs/pull/N/merge`. The groups never matched, so both ran — and on
+  # this repo's single self-hosted runner they serialise, doubling time-to-green
+  # (PR #158: check passed in 1h56, its duplicate then queued for another).
+  # `head_ref` is the PR's source branch, so a PR now shares a group with the
+  # push that created it and cancel-in-progress keeps only the newer run.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 env:
