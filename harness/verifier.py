@@ -15,12 +15,12 @@ try:
     from .manifests import Group, Task, group_to_json
     from .paths import ROOT
     from .verify_lease import verify_lease
-    from .workspace_builder import setup_private_lake, sha256_file
+    from .workspace_builder import initialise_remote_git_checkout, setup_private_lake, sha256_file
 except ImportError:
     from manifests import Group, Task, group_to_json
     from paths import ROOT
     from verify_lease import verify_lease
-    from workspace_builder import setup_private_lake, sha256_file
+    from workspace_builder import initialise_remote_git_checkout, setup_private_lake, sha256_file
 
 FORBIDDEN_RE = re.compile(r"\b(sorry|admit|axiom)\b|\?_[A-Za-z0-9_']*")
 IMPORT_RE = re.compile(r"^\s*import\s+(.+)$", re.MULTILINE)
@@ -163,6 +163,11 @@ def _copy_repo_for_verification() -> Path:
         return ignored
 
     shutil.copytree(ROOT, dst, ignore=ignore, symlinks=True, ignore_dangling_symlinks=True)
+    # The verifier runs `lake build` after applying the submitted proof.  In a
+    # remote_required sandbox this copy needs the same fetchable Git base and
+    # overlay semantics as the model workspace, otherwise check_proof fails
+    # before Lean starts with "not inside a git checkout".
+    initialise_remote_git_checkout(dst)
     # Private build dir (cheap clone): verification builds must not write
     # into the repo cache, and the workspace umbrella overlay below would
     # otherwise be rebuilt into the shared .lake. No pruning: the verifier
