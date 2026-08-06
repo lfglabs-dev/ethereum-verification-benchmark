@@ -2109,7 +2109,7 @@ def _execute_fair_tool(
                     "status": "rejected_forbidden_placeholder",
                     "exit_code": None,
                     "candidate_path": str(candidate_path),
-                    "output": "proof contains sorry, admit, axiom, or an unsolved placeholder",
+                    "output": "REJECTED: proof contains sorry, admit, axiom, or an unsolved placeholder. These tokens are always rejected. Replace with a real tactic: try omega, linarith, nlinarith, simp_arith, decide, native_decide, or grind [...] with contract function and storage field names. Do NOT submit sorry again.",
                     "failure_kind": "forbidden_placeholder",
                     "diagnostics": {
                         "changed_goal": False,
