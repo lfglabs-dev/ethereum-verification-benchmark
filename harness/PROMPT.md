@@ -12,6 +12,14 @@ must not change specs, change implementations, or rely on hidden solved proofs.
 The harness rejects placeholders, runs Lean in a temp workspace, and checks
 the target theorem.
 
+## Forbidden tokens (critical)
+
+The harness will reject any proof containing `sorry`, `admit`, `axiom`,
+`?_`, or similar placeholders. These are never valid proof tactics. If you
+cannot close a goal, try alternative tactics (omega, linarith, decide,
+native_decide, simp_arith) rather than leaving a placeholder. A rejected
+placeholder wastes one of your limited attempts.
+
 ## Proof strategy
 
 Some generated preview skeletons import `Benchmark.Grindset`, but evaluated

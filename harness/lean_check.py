@@ -88,6 +88,12 @@ def _first_meaningful_lean_error(output: str) -> str:
 
 def _classify_lean_failure(output: str) -> str:
     lowered = output.lower()
+    # Infrastructure failures must be checked first: they are not proof
+    # failures and should not be attributed to the model.
+    if "remote-lean-build" in lowered or "sandboxed lake shim" in lowered or "local execution is blocked" in lowered:
+        return "infra_lean_execution_blocked"
+    if "remote build" in lowered and ("unavailable" in lowered or "failed" in lowered or "not configured" in lowered):
+        return "infra_lean_execution_blocked"
     # Order matters: goal/identifier outputs routinely contain the substring
     # "expected" (e.g. "expected to have type"), so the parse-error pattern
     # must come after the more specific classes.
