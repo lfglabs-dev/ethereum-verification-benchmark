@@ -2368,6 +2368,7 @@ def _attempt_task_fair(
             f"Available MCP tools: {mcp_names}. "
             "Use lean_local_search before guessing declaration names and lean_multi_attempt to compare small "
             "tactic snippets at a proof position. Iterate: submit, read the Lean error, fix, resubmit. "
+            "Submit early and iterate from Lean feedback rather than reading everything first. "
             "Do not use sorry, "
             "admit, axiom, hidden imports, Benchmark.GeneratedPreview, or reference Proofs modules. "
             "Do not assume a hardcoded solution from the task name."
@@ -2381,7 +2382,10 @@ def _attempt_task_fair(
             )
         user_prompt = (
             f"Solve the Lean task in editable file {editable}. Call show_task first, inspect the goal through "
-            "lean-lsp-mcp, then submit proof bodies with check_proof until Lean passes."
+            "lean-lsp-mcp, then submit proof bodies with check_proof until Lean passes. "
+            "CRITICAL: you must call check_proof within your first 3 tool calls after show_task. "
+            "Do not spend more than 3 tool calls reading files before submitting a proof attempt. "
+            "A failed proof with Lean feedback is better than no attempt."
         )
     elif native_tools:
         draft_tool_instruction = (
@@ -2402,13 +2406,17 @@ def _attempt_task_fair(
             "check_proof accepts either a tactic body to place under `:= by`, or a complete Lean file "
             "(with imports, namespace, helper lemmas, and the target theorem); the theorem statement must stay byte-identical. "
             "Iterate: submit, read the Lean error, fix, resubmit. "
+            "Submit early and iterate from Lean feedback rather than reading everything first. "
             "Do not use sorry, admit, axiom, hidden imports, "
             "Benchmark.GeneratedPreview, or reference Proofs modules. Do not assume a hardcoded solution from the task name. "
             "If native tool calling is unavailable, return JSON like {\"tool\":\"show_task\",\"arguments\":{}}."
         )
         user_prompt = (
             f"Solve the Lean task in editable file {editable}. "
-            "Call show_task first, then inspect the public files and check proof bodies until Lean passes."
+            "Call show_task first, then inspect the public files and check proof bodies until Lean passes. "
+            "CRITICAL: call check_proof within your first 3 tool calls after show_task. "
+            "Do not spend more than 3 tool calls reading files before submitting a proof attempt. "
+            "A failed proof with Lean feedback is better than no attempt."
         )
     else:
         draft_tool_instruction = (
