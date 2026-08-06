@@ -855,6 +855,26 @@ def build_group_workspace(
 
     dependency_cache = setup_private_lake(workspace, prune_to_sources=True)
 
+    # When running under sandboxed.sh with compute_policy=remote_required, the
+    # lake shim routes builds to remote-lean-build, which requires a git
+    # checkout. The workspace is a temp dir without .git, so initialise a
+    # minimal git repo here to let remote-lean-build resolve origin and HEAD.
+    try:
+        import subprocess as _sp
+        _sp.run(["git", "init", "-q"], cwd=workspace, check=True, timeout=10)
+        _sp.run(["git", "add", "-A"], cwd=workspace, check=True, timeout=30)
+        _sp.run(
+            ["git", "commit", "-q", "-m", "harness workspace snapshot", "--allow-empty"],
+            cwd=workspace,
+            check=True,
+            timeout=30,
+            env={**os.environ, "GIT_AUTHOR_NAME": "harness", "GIT_AUTHOR_EMAIL": "harness@local", "GIT_COMMITTER_NAME": "harness", "GIT_COMMITTER_EMAIL": "harness@local"},
+        )
+        origin_url = os.environ.get("BENCHMARK_ORIGIN_URL", "https://github.com/lfglabs-dev/ethereum-verification-benchmark.git")
+        _sp.run(["git", "remote", "add", "origin", origin_url], cwd=workspace, check=True, timeout=10)
+    except Exception:
+        pass  # Not fatal: local_allowed workspaces do not need this.
+
     manifest = {
         "schema_version": 1,
         "run_id": run_id,
