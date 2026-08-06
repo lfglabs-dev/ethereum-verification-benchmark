@@ -1,0 +1,42 @@
+manifest_kind: case
+project: monetrix
+case_id: pm_borrow_accounting
+schema_version: 1
+split: active
+family_id: monetrix
+implementation_id: code4rena_2026_04
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/code-423n4/2026-04-monetrix
+upstream_commit: 3d94be1361ca01d959f9165a78f0d75c5657fe3e
+original_contract_path: src/core/PrecompileReader.sol
+source_ref: https://github.com/code-423n4/2026-04-monetrix@3d94be1361ca01d959f9165a78f0d75c5657fe3e:src/core/PrecompileReader.sol
+lean_target: Benchmark.Cases.Monetrix.PMBorrowAccounting.Compile
+spec_target: Benchmark.Cases.Monetrix.PMBorrowAccounting.Specs
+proof_target: Benchmark.Cases.Monetrix.PMBorrowAccounting.Proofs
+selected_functions:
+  - suppliedBalance
+  - _readL1Backing
+  - surplus
+  - distributableSurplus
+  - settleDailyPnL
+source_language: solidity
+verity_version: 38d53df8b4488d5322894619ea8385fcbb2e6f5d
+lean_toolchain: leanprover/lean4:v4.24.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - code4rena_2026_04
+  - pm_borrow_liability
+  - backing_accounting
+  - phantom_surplus
+abstraction_notes: >
+  Models normalized PM supply and borrow values after precompile decoding and
+  unit conversion. External precompile calls, registered-asset loops, oracle
+  valuation, role checks, and the APR gate are excluded. The slice preserves
+  the M-01 root cause: source backing credits supply without subtracting borrow.
+unsupported_feature_codes: []
+notes: >
+  Derived from Code4rena Monetrix M-01, final report published 2026-05-26:
+  https://code4rena.com/reports/2026-04-monetrix

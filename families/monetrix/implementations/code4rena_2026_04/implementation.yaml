@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: monetrix
+implementation_id: code4rena_2026_04
+display_name: Monetrix Code4rena April 2026 snapshot
+split: active
+status: translated
+upstream_repo: https://github.com/code-423n4/2026-04-monetrix
+upstream_commit: 3d94be1361ca01d959f9165a78f0d75c5657fe3e
+source_language: solidity
+source_artifact_path: src/core/MonetrixAccountant.sol
+case_ids:
+  - monetrix/pm_borrow_accounting
+notes: >
+  Pinned Code4rena contest snapshot. The case also models the decoded 0x811
+  response from src/core/PrecompileReader.sol. Final report published 2026-05-26.

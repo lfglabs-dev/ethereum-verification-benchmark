@@ -1,0 +1,38 @@
+manifest_kind: case
+project: olas
+case_id: balancer_rejected_update
+schema_version: 1
+split: active
+family_id: olas
+implementation_id: tokenomics_v1_4_2_code4rena
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/valory-xyz/autonolas-tokenomics
+upstream_commit: bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb
+original_contract_path: contracts/oracles/BalancerPriceOracle.sol
+source_ref: https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/oracles/BalancerPriceOracle.sol
+lean_target: Benchmark.Cases.Olas.BalancerRejectedUpdate.Compile
+spec_target: Benchmark.Cases.Olas.BalancerRejectedUpdate.Specs
+proof_target: Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs
+selected_functions:
+  - updatePrice
+source_language: solidity
+verity_version: 38d53df8b4488d5322894619ea8385fcbb2e6f5d
+lean_toolchain: leanprover/lean4:v4.24.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - code4rena_2026_01
+  - rejected_update
+  - cumulative_price
+  - write_ordering
+abstraction_notes: >
+  Models the post-initialization, post-minimum-period branch after the slippage
+  predicate rejects the current price. External Balancer reads, event emission,
+  initialization, and checked uint256 overflow are excluded. The persistent
+  cumulative-price write and unchanged timestamp match the H-11 source path.
+unsupported_feature_codes: []
+notes: >
+  Derived from Code4rena Olas H-11, final report published 2026-05-18:
+  https://code4rena.com/reports/2026-01-olas

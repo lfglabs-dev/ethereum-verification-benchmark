@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: phantom_surplus_gate_witness
+case_id: monetrix/pm_borrow_accounting
+split: active
+family_id: monetrix
+implementation_id: code4rena_2026_04
+source_ref: https://github.com/code-423n4/2026-04-monetrix@3d94be1361ca01d959f9165a78f0d75c5657fe3e:src/core/PrecompileReader.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Monetrix.PMBorrowAccounting.phantom_surplus_gate_witness
+proof_family: protocol_transition_correctness
+property_class: exploit_trace
+difficulty: medium
+category: settlement-gate
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/monetrix/pm_borrow_accounting/verity/Contract.lean
+  - Benchmark/Cases/Monetrix/PMBorrowAccounting/Contract.lean
+specification_files:
+  - cases/monetrix/pm_borrow_accounting/verity/Specs.lean
+  - Benchmark/Cases/Monetrix/PMBorrowAccounting/Specs.lean
+editable_files:
+  - Benchmark/Generated/Monetrix/PMBorrowAccounting/Tasks/PhantomSurplusGateWitness.lean
+reference_solution_module: Benchmark.Cases.Monetrix.PMBorrowAccounting.Proofs
+reference_solution_declaration: Benchmark.Cases.Monetrix.PMBorrowAccounting.phantom_surplus_gate_witness
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Recent Code4rena-derived proof task. See the case manifest and Contract.lean
+  for the exact source-path abstraction boundary.
+unsupported_feature_codes: []

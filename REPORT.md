@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 41
-- Implementations: 42
-- Active cases: 41
-- Buildable active cases: 41
-- Active tasks: 263
+- Families: 43
+- Implementations: 44
+- Active cases: 44
+- Buildable active cases: 44
+- Active tasks: 274
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -183,6 +183,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `src/Facets/GenericSwapFacet.sol`
 - Notes: This is an atomicity benchmark, not a price-quality or route-optimality benchmark. It proves that the modeled LI.FI route cannot commit a public final transfer unless every modeled public-route gate succeeds, every modeled route step succeeds, and the output amount meets the minimum.
 
+### `monetrix/pm_borrow_accounting`
+- Family / implementation: `monetrix` / `code4rena_2026_04`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Monetrix.PMBorrowAccounting.Compile`
+- Source ref: `https://github.com/code-423n4/2026-04-monetrix@3d94be1361ca01d959f9165a78f0d75c5657fe3e:src/core/PrecompileReader.sol`
+- Selected functions: `suppliedBalance`, `_readL1Backing`, `surplus`, `distributableSurplus`, `settleDailyPnL`
+- Upstream source artifact: `src/core/PrecompileReader.sol`
+- Notes: Derived from Code4rena Monetrix M-01, final report published 2026-05-26: https://code4rena.com/reports/2026-04-monetrix
+
 ### `nexus_mutual/ramm_price_band`
 - Family / implementation: `nexus_mutual` / `smart_contracts`
 - Stage: `build_green`
@@ -192,6 +202,26 @@ This report is generated from the benchmark manifests.
 - Selected functions: `calculateNxm`, `_getReserves`, `getSpotPrices`, `getBookValue`
 - Upstream source artifact: `contracts/modules/capital/Ramm.sol`
 - Notes: Price-band slice of Nexus Mutual RAMM. The Verity model keeps the buffered book-value computation behind buy and sell spot prices and omits unrelated state evolution machinery.
+
+### `olas/balancer_rejected_update`
+- Family / implementation: `olas` / `tokenomics_v1_4_2_code4rena`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Olas.BalancerRejectedUpdate.Compile`
+- Source ref: `https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/oracles/BalancerPriceOracle.sol`
+- Selected functions: `updatePrice`
+- Upstream source artifact: `contracts/oracles/BalancerPriceOracle.sol`
+- Notes: Derived from Code4rena Olas H-11, final report published 2026-05-18: https://code4rena.com/reports/2026-01-olas
+
+### `olas/v3_dead_deviation_guard`
+- Family / implementation: `olas` / `tokenomics_v1_4_2_code4rena`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Olas.V3DeadDeviationGuard.Compile`
+- Source ref: `https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/pol/LiquidityManagerCore.sol`
+- Selected functions: `getTwapFromOracle`, `checkPoolAndGetCenterPrice`
+- Upstream source artifact: `contracts/pol/LiquidityManagerCore.sol`
+- Notes: Derived from Code4rena Olas H-02, final report published 2026-05-18: https://code4rena.com/reports/2026-01-olas
 
 ### `onedelta/caller_address_integrity`
 - Family / implementation: `onedelta` / `ethereum-composer`
@@ -1429,6 +1459,36 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/LiFi/SwapAtomicity/Tasks/RouteGateFailurePreventsCommit.lean`
 - Hidden reference solution: `Benchmark.Cases.LiFi.SwapAtomicity.Proofs`
 
+### `monetrix/pm_borrow_accounting/phantom_surplus_gate_witness`
+- Track / property class / proof family: `proof-only` / `exploit_trace` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Monetrix.PMBorrowAccounting.phantom_surplus_gate_witness`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/monetrix/pm_borrow_accounting/verity/Contract.lean`, `Benchmark/Cases/Monetrix/PMBorrowAccounting/Contract.lean`
+- Specification files: `cases/monetrix/pm_borrow_accounting/verity/Specs.lean`, `Benchmark/Cases/Monetrix/PMBorrowAccounting/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Monetrix/PMBorrowAccounting/Tasks/PhantomSurplusGateWitness.lean`
+- Hidden reference solution: `Benchmark.Cases.Monetrix.PMBorrowAccounting.Proofs`
+
+### `monetrix/pm_borrow_accounting/reported_surplus_overstates_by_borrow`
+- Track / property class / proof family: `proof-only` / `accounting_invariant_break` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Monetrix.PMBorrowAccounting.reported_surplus_overstates_by_borrow`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/monetrix/pm_borrow_accounting/verity/Contract.lean`, `Benchmark/Cases/Monetrix/PMBorrowAccounting/Contract.lean`
+- Specification files: `cases/monetrix/pm_borrow_accounting/verity/Specs.lean`, `Benchmark/Cases/Monetrix/PMBorrowAccounting/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Monetrix/PMBorrowAccounting/Tasks/ReportedSurplusOverstatesByBorrow.lean`
+- Hidden reference solution: `Benchmark.Cases.Monetrix.PMBorrowAccounting.Proofs`
+
+### `monetrix/pm_borrow_accounting/supplied_balance_returns_supply`
+- Track / property class / proof family: `proof-only` / `accounting_effect` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Monetrix.PMBorrowAccounting.suppliedBalance_returns_supply`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/monetrix/pm_borrow_accounting/verity/Contract.lean`, `Benchmark/Cases/Monetrix/PMBorrowAccounting/Contract.lean`
+- Specification files: `cases/monetrix/pm_borrow_accounting/verity/Specs.lean`, `Benchmark/Cases/Monetrix/PMBorrowAccounting/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Monetrix/PMBorrowAccounting/Tasks/SuppliedBalanceReturnsSupply.lean`
+- Hidden reference solution: `Benchmark.Cases.Monetrix.PMBorrowAccounting.Proofs`
+
 ### `nexus_mutual/ramm_price_band/sync_sets_book_value`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -1468,6 +1528,86 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/nexus_mutual/ramm_price_band/verity/Specs.lean`, `Benchmark/Cases/NexusMutual/RammPriceBand/Specs.lean`
 - Editable proof file: `Benchmark/Generated/NexusMutual/RammPriceBand/Tasks/SyncSetsSellPrice.lean`
 - Hidden reference solution: `Benchmark.Cases.NexusMutual.RammPriceBand.Proofs`
+
+### `olas/balancer_rejected_update/rejected_update_corruption_witness`
+- Track / property class / proof family: `proof-only` / `exploit_trace` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Olas.BalancerRejectedUpdate.rejected_update_corruption_witness`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/olas/balancer_rejected_update/verity/Contract.lean`, `Benchmark/Cases/Olas/BalancerRejectedUpdate/Contract.lean`
+- Specification files: `cases/olas/balancer_rejected_update/verity/Specs.lean`, `Benchmark/Cases/Olas/BalancerRejectedUpdate/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Olas/BalancerRejectedUpdate/Tasks/RejectedUpdateCorruptionWitness.lean`
+- Hidden reference solution: `Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs`
+
+### `olas/balancer_rejected_update/rejected_update_mutates_cumulative`
+- Track / property class / proof family: `proof-only` / `storage_update` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Olas.BalancerRejectedUpdate.rejected_update_mutates_cumulative`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/olas/balancer_rejected_update/verity/Contract.lean`, `Benchmark/Cases/Olas/BalancerRejectedUpdate/Contract.lean`
+- Specification files: `cases/olas/balancer_rejected_update/verity/Specs.lean`, `Benchmark/Cases/Olas/BalancerRejectedUpdate/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Olas/BalancerRejectedUpdate/Tasks/RejectedUpdateMutatesCumulative.lean`
+- Hidden reference solution: `Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs`
+
+### `olas/balancer_rejected_update/rejected_update_preserves_metadata`
+- Track / property class / proof family: `proof-only` / `frame_property` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Olas.BalancerRejectedUpdate.rejected_update_preserves_metadata`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/olas/balancer_rejected_update/verity/Contract.lean`, `Benchmark/Cases/Olas/BalancerRejectedUpdate/Contract.lean`
+- Specification files: `cases/olas/balancer_rejected_update/verity/Specs.lean`, `Benchmark/Cases/Olas/BalancerRejectedUpdate/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Olas/BalancerRejectedUpdate/Tasks/RejectedUpdatePreservesMetadata.lean`
+- Hidden reference solution: `Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs`
+
+### `olas/balancer_rejected_update/repeated_rejection_double_counts`
+- Track / property class / proof family: `proof-only` / `accounting_invariant_break` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Olas.BalancerRejectedUpdate.repeated_rejection_double_counts`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/olas/balancer_rejected_update/verity/Contract.lean`, `Benchmark/Cases/Olas/BalancerRejectedUpdate/Contract.lean`
+- Specification files: `cases/olas/balancer_rejected_update/verity/Specs.lean`, `Benchmark/Cases/Olas/BalancerRejectedUpdate/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Olas/BalancerRejectedUpdate/Tasks/RepeatedRejectionDoubleCounts.lean`
+- Hidden reference solution: `Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs`
+
+### `olas/v3_dead_deviation_guard/dead_deviation_guard_accepts`
+- Track / property class / proof family: `proof-only` / `source_reachable_counterexample_coverage` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Olas.V3DeadDeviationGuard.dead_deviation_guard_accepts`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/olas/v3_dead_deviation_guard/verity/Contract.lean`, `Benchmark/Cases/Olas/V3DeadDeviationGuard/Contract.lean`
+- Specification files: `cases/olas/v3_dead_deviation_guard/verity/Specs.lean`, `Benchmark/Cases/Olas/V3DeadDeviationGuard/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Olas/V3DeadDeviationGuard/Tasks/DeadDeviationGuardAccepts.lean`
+- Hidden reference solution: `Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs`
+
+### `olas/v3_dead_deviation_guard/normal_path_deviation_is_zero`
+- Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Olas.V3DeadDeviationGuard.normal_path_deviation_is_zero`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/olas/v3_dead_deviation_guard/verity/Contract.lean`, `Benchmark/Cases/Olas/V3DeadDeviationGuard/Contract.lean`
+- Specification files: `cases/olas/v3_dead_deviation_guard/verity/Specs.lean`, `Benchmark/Cases/Olas/V3DeadDeviationGuard/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Olas/V3DeadDeviationGuard/Tasks/NormalPathDeviationIsZero.lean`
+- Hidden reference solution: `Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs`
+
+### `olas/v3_dead_deviation_guard/normal_path_ignores_spot`
+- Track / property class / proof family: `proof-only` / `noninterference` / `refinement_equivalence`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Olas.V3DeadDeviationGuard.normal_path_ignores_spot`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/olas/v3_dead_deviation_guard/verity/Contract.lean`, `Benchmark/Cases/Olas/V3DeadDeviationGuard/Contract.lean`
+- Specification files: `cases/olas/v3_dead_deviation_guard/verity/Specs.lean`, `Benchmark/Cases/Olas/V3DeadDeviationGuard/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Olas/V3DeadDeviationGuard/Tasks/NormalPathIgnoresSpot.lean`
+- Hidden reference solution: `Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs`
+
+### `olas/v3_dead_deviation_guard/normal_path_returns_twap_center`
+- Track / property class / proof family: `proof-only` / `functional_property` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Olas.V3DeadDeviationGuard.normal_path_returns_twap_center`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/olas/v3_dead_deviation_guard/verity/Contract.lean`, `Benchmark/Cases/Olas/V3DeadDeviationGuard/Contract.lean`
+- Specification files: `cases/olas/v3_dead_deviation_guard/verity/Specs.lean`, `Benchmark/Cases/Olas/V3DeadDeviationGuard/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Olas/V3DeadDeviationGuard/Tasks/NormalPathReturnsTwapCenter.lean`
+- Hidden reference solution: `Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs`
 
 ### `onedelta/caller_address_integrity/delta_compose_internal_erc20_transfer_from_uses_outer_caller`
 - Track / property class / proof family: `proof-only` / `access_control_identity` / `authorization_enablement`

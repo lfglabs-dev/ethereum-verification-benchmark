@@ -22,3 +22,5 @@ import Benchmark.Cases.IPOR
 import Benchmark.Cases.ERC4337
 import Benchmark.Cases.Pareto
 import Benchmark.Cases.T3tris
+import Benchmark.Cases.Monetrix
+import Benchmark.Cases.Olas

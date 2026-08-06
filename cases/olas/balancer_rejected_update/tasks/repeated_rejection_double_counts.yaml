@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: repeated_rejection_double_counts
+case_id: olas/balancer_rejected_update
+split: active
+family_id: olas
+implementation_id: tokenomics_v1_4_2_code4rena
+source_ref: https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/oracles/BalancerPriceOracle.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Olas.BalancerRejectedUpdate.repeated_rejection_double_counts
+proof_family: protocol_transition_correctness
+property_class: accounting_invariant_break
+difficulty: medium
+category: twap-accounting
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/olas/balancer_rejected_update/verity/Contract.lean
+  - Benchmark/Cases/Olas/BalancerRejectedUpdate/Contract.lean
+specification_files:
+  - cases/olas/balancer_rejected_update/verity/Specs.lean
+  - Benchmark/Cases/Olas/BalancerRejectedUpdate/Specs.lean
+editable_files:
+  - Benchmark/Generated/Olas/BalancerRejectedUpdate/Tasks/RepeatedRejectionDoubleCounts.lean
+reference_solution_module: Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs
+reference_solution_declaration: Benchmark.Cases.Olas.BalancerRejectedUpdate.repeated_rejection_double_counts
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Recent Code4rena-derived proof task. See the case manifest and Contract.lean
+  for the exact source-path abstraction boundary.
+unsupported_feature_codes: []

@@ -1,0 +1,17 @@
+manifest_kind: family
+schema_version: 1
+family_id: olas
+display_name: Olas
+split: active
+status: active
+description: >
+  Benchmark family derived from the Code4rena 2026-01 Olas audit. Cases capture
+  two accepted High-risk oracle findings: rejected-update TWAP corruption and a
+  dead Uniswap V3 deviation guard caused by overwriting the spot price.
+implementation_ids:
+  - tokenomics_v1_4_2_code4rena
+case_ids:
+  - olas/balancer_rejected_update
+  - olas/v3_dead_deviation_guard
+source_languages:
+  - solidity

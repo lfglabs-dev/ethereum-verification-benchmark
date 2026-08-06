@@ -1,0 +1,38 @@
+manifest_kind: case
+project: olas
+case_id: v3_dead_deviation_guard
+schema_version: 1
+split: active
+family_id: olas
+implementation_id: tokenomics_v1_4_2_code4rena
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/valory-xyz/autonolas-tokenomics
+upstream_commit: bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb
+original_contract_path: contracts/pol/LiquidityManagerCore.sol
+source_ref: https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/pol/LiquidityManagerCore.sol
+lean_target: Benchmark.Cases.Olas.V3DeadDeviationGuard.Compile
+spec_target: Benchmark.Cases.Olas.V3DeadDeviationGuard.Specs
+proof_target: Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs
+selected_functions:
+  - getTwapFromOracle
+  - checkPoolAndGetCenterPrice
+source_language: solidity
+verity_version: 38d53df8b4488d5322894619ea8385fcbb2e6f5d
+lean_toolchain: leanprover/lean4:v4.24.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - code4rena_2026_01
+  - oracle_guard
+  - variable_overwrite
+  - dead_deviation_check
+abstraction_notes: >
+  Models the successful TWAP-oracle path where the named return variable holding
+  spot sqrt price is overwritten by TWAP sqrt price. Pool calls, ABI mechanics,
+  stale/new-pool early returns, and FullMath implementation details are excluded.
+unsupported_feature_codes: []
+notes: >
+  Derived from Code4rena Olas H-02, final report published 2026-05-18:
+  https://code4rena.com/reports/2026-01-olas

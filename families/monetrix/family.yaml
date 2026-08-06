@@ -1,0 +1,16 @@
+manifest_kind: family
+schema_version: 1
+family_id: monetrix
+display_name: Monetrix
+split: active
+status: active
+description: >
+  Benchmark family derived from the Code4rena 2026-04 Monetrix audit. The
+  initial case captures the Portfolio Margin borrow-liability omission behind
+  the M-01 phantom-surplus settlement finding.
+implementation_ids:
+  - code4rena_2026_04
+case_ids:
+  - monetrix/pm_borrow_accounting
+source_languages:
+  - solidity

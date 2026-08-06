@@ -1,0 +1,17 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: olas
+implementation_id: tokenomics_v1_4_2_code4rena
+display_name: Autonolas Tokenomics v1.4.2 pre-audit
+split: active
+status: translated
+upstream_repo: https://github.com/valory-xyz/autonolas-tokenomics
+upstream_commit: bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb
+source_language: solidity
+source_artifact_path: contracts/oracles/BalancerPriceOracle.sol
+case_ids:
+  - olas/balancer_rejected_update
+  - olas/v3_dead_deviation_guard
+notes: >
+  Tokenomics submodule pinned by the Code4rena 2026-01 Olas contest. Final
+  Code4rena report published 2026-05-18.

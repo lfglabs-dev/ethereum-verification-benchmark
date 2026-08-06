@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 41,
-    "implementation_count": 42,
-    "active_case_count": 41,
+    "family_count": 43,
+    "implementation_count": 44,
+    "active_case_count": 44,
     "backlog_case_count": 1,
-    "active_task_count": 263,
+    "active_task_count": 274,
     "backlog_task_count": 0,
-    "buildable_case_count": 41,
-    "runnable_task_count": 263,
+    "buildable_case_count": 44,
+    "runnable_task_count": 274,
     "case_stage_counts": {
       "build_green": 32,
       "candidate": 1,
-      "proof_complete": 9
+      "proof_complete": 12
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 41
+      "translated": 44
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 34,
+      "complete": 37,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 263
+      "proof-only": 274
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
@@ -41,9 +41,9 @@
       "accounting_and_rate_guard": 1,
       "accounting_bound": 18,
       "accounting_conservation": 32,
-      "accounting_effect": 2,
+      "accounting_effect": 3,
       "accounting_invariant": 3,
-      "accounting_invariant_break": 1,
+      "accounting_invariant_break": 3,
       "accounting_update": 10,
       "additivity": 1,
       "all_or_nothing": 3,
@@ -70,7 +70,7 @@
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
       "escrow_lower_bound": 3,
-      "exploit_trace": 1,
+      "exploit_trace": 3,
       "failure_propagation": 3,
       "fee_accounting_bounds": 2,
       "fee_base_correctness": 2,
@@ -78,8 +78,8 @@
       "fee_payout_bound": 1,
       "fee_rounding_and_aliasing": 1,
       "fee_trigger": 1,
-      "frame_property": 2,
-      "functional_property": 2,
+      "frame_property": 3,
+      "functional_property": 3,
       "guarded_solvency": 7,
       "independence_invariant": 1,
       "insufficient_balance_zero_transfer": 1,
@@ -97,7 +97,7 @@
       "non_leakage": 1,
       "non_reversion": 1,
       "nonce_monotonicity": 1,
-      "noninterference": 1,
+      "noninterference": 2,
       "output_range": 2,
       "overflow_safety": 1,
       "owner_fallback_and_authority_order": 1,
@@ -105,7 +105,7 @@
       "per_receiver_isolation": 1,
       "pps_nondecrease": 1,
       "price_band": 2,
-      "price_computation": 5,
+      "price_computation": 6,
       "price_floor": 1,
       "receiver_aggregation": 1,
       "redemption_reserve_guard": 1,
@@ -119,8 +119,8 @@
       "scope_invariant": 1,
       "silent_failure": 2,
       "source_permitted_noop": 1,
-      "source_reachable_counterexample_coverage": 1,
-      "storage_update": 3,
+      "source_reachable_counterexample_coverage": 2,
+      "storage_update": 4,
       "storage_write": 6,
       "subtree_partition": 1,
       "supply_invariance": 1,
@@ -134,13 +134,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 42,
-      "functional_correctness": 60,
-      "protocol_transition_correctness": 40,
-      "refinement_equivalence": 42,
-      "state_preservation_local_effects": 79
+      "functional_correctness": 63,
+      "protocol_transition_correctness": 44,
+      "refinement_equivalence": 44,
+      "state_preservation_local_effects": 81
     },
     "family_split_counts": {
-      "active": 40,
+      "active": 42,
       "mixed": 1
     }
   },
@@ -435,6 +435,23 @@
       "manifest_path": "families/lifi/family.yaml"
     },
     {
+      "family_id": "monetrix",
+      "display_name": "Monetrix",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family derived from the Code4rena 2026-04 Monetrix audit. The initial case captures the Portfolio Margin borrow-liability omission behind the M-01 phantom-surplus settlement finding.",
+      "implementation_ids": [
+        "code4rena_2026_04"
+      ],
+      "case_ids": [
+        "monetrix/pm_borrow_accounting"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/monetrix/family.yaml"
+    },
+    {
       "family_id": "nexus_mutual",
       "display_name": "Nexus Mutual",
       "split": "active",
@@ -450,6 +467,24 @@
         "solidity"
       ],
       "manifest_path": "families/nexus_mutual/family.yaml"
+    },
+    {
+      "family_id": "olas",
+      "display_name": "Olas",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family derived from the Code4rena 2026-01 Olas audit. Cases capture two accepted High-risk oracle findings: rejected-update TWAP corruption and a dead Uniswap V3 deviation guard caused by overwriting the spot price.",
+      "implementation_ids": [
+        "tokenomics_v1_4_2_code4rena"
+      ],
+      "case_ids": [
+        "olas/balancer_rejected_update",
+        "olas/v3_dead_deviation_guard"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/olas/family.yaml"
     },
     {
       "family_id": "onedelta",
@@ -1119,6 +1154,22 @@
       "manifest_path": "families/lifi/implementations/contracts/implementation.yaml"
     },
     {
+      "family_id": "monetrix",
+      "implementation_id": "code4rena_2026_04",
+      "display_name": "Monetrix Code4rena April 2026 snapshot",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/code-423n4/2026-04-monetrix",
+      "upstream_commit": "3d94be1361ca01d959f9165a78f0d75c5657fe3e",
+      "source_language": "solidity",
+      "source_artifact_path": "src/core/MonetrixAccountant.sol",
+      "case_ids": [
+        "monetrix/pm_borrow_accounting"
+      ],
+      "notes": "Pinned Code4rena contest snapshot. The case also models the decoded 0x811 response from src/core/PrecompileReader.sol. Final report published 2026-05-26.",
+      "manifest_path": "families/monetrix/implementations/code4rena_2026_04/implementation.yaml"
+    },
+    {
       "family_id": "nexus_mutual",
       "implementation_id": "smart_contracts",
       "display_name": "Nexus Mutual Smart Contracts",
@@ -1133,6 +1184,23 @@
       ],
       "notes": "Active implementation entry for the Nexus Mutual smart-contract repository, currently benchmarking the RAMM price-band slice.",
       "manifest_path": "families/nexus_mutual/implementations/smart_contracts/implementation.yaml"
+    },
+    {
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "display_name": "Autonolas Tokenomics v1.4.2 pre-audit",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/valory-xyz/autonolas-tokenomics",
+      "upstream_commit": "bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/oracles/BalancerPriceOracle.sol",
+      "case_ids": [
+        "olas/balancer_rejected_update",
+        "olas/v3_dead_deviation_guard"
+      ],
+      "notes": "Tokenomics submodule pinned by the Code4rena 2026-01 Olas contest. Final Code4rena report published 2026-05-18.",
+      "manifest_path": "families/olas/implementations/tokenomics_v1_4_2_code4rena/implementation.yaml"
     },
     {
       "family_id": "onedelta",
@@ -2322,6 +2390,51 @@
       "proof_target": "Benchmark.Cases.LiFi.SwapAtomicity.Proofs"
     },
     {
+      "case_id": "monetrix/pm_borrow_accounting",
+      "project": "monetrix",
+      "case_name": "pm_borrow_accounting",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/monetrix/pm_borrow_accounting/case.yaml",
+      "split": "active",
+      "family_id": "monetrix",
+      "implementation_id": "code4rena_2026_04",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/code-423n4/2026-04-monetrix",
+      "upstream_commit": "3d94be1361ca01d959f9165a78f0d75c5657fe3e",
+      "original_contract_path": "src/core/PrecompileReader.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/code-423n4/2026-04-monetrix@3d94be1361ca01d959f9165a78f0d75c5657fe3e:src/core/PrecompileReader.sol",
+      "selected_functions": [
+        "suppliedBalance",
+        "_readL1Backing",
+        "surplus",
+        "distributableSurplus",
+        "settleDailyPnL"
+      ],
+      "lean_target": "Benchmark.Cases.Monetrix.PMBorrowAccounting.Compile",
+      "failure_reason": null,
+      "notes": "Derived from Code4rena Monetrix M-01, final report published 2026-05-26: https://code4rena.com/reports/2026-04-monetrix",
+      "buildable": true,
+      "verity_commit": "38d53df8b4488d5322894619ea8385fcbb2e6f5d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "code4rena_2026_04",
+        "pm_borrow_liability",
+        "backing_accounting",
+        "phantom_surplus"
+      ],
+      "abstraction_notes": "Models normalized PM supply and borrow values after precompile decoding and unit conversion. External precompile calls, registered-asset loops, oracle valuation, role checks, and the APR gate are excluded. The slice preserves the M-01 root cause: source backing credits supply without subtracting borrow.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Monetrix.PMBorrowAccounting.Specs",
+      "proof_target": "Benchmark.Cases.Monetrix.PMBorrowAccounting.Proofs"
+    },
+    {
       "case_id": "nexus_mutual/ramm_price_band",
       "project": "nexus_mutual",
       "case_name": "ramm_price_band",
@@ -2364,6 +2477,89 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.NexusMutual.RammPriceBand.Specs",
       "proof_target": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs"
+    },
+    {
+      "case_id": "olas/balancer_rejected_update",
+      "project": "olas",
+      "case_name": "balancer_rejected_update",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/balancer_rejected_update/case.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/valory-xyz/autonolas-tokenomics",
+      "upstream_commit": "bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb",
+      "original_contract_path": "contracts/oracles/BalancerPriceOracle.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/oracles/BalancerPriceOracle.sol",
+      "selected_functions": [
+        "updatePrice"
+      ],
+      "lean_target": "Benchmark.Cases.Olas.BalancerRejectedUpdate.Compile",
+      "failure_reason": null,
+      "notes": "Derived from Code4rena Olas H-11, final report published 2026-05-18: https://code4rena.com/reports/2026-01-olas",
+      "buildable": true,
+      "verity_commit": "38d53df8b4488d5322894619ea8385fcbb2e6f5d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "code4rena_2026_01",
+        "rejected_update",
+        "cumulative_price",
+        "write_ordering"
+      ],
+      "abstraction_notes": "Models the post-initialization, post-minimum-period branch after the slippage predicate rejects the current price. External Balancer reads, event emission, initialization, and checked uint256 overflow are excluded. The persistent cumulative-price write and unchanged timestamp match the H-11 source path.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Olas.BalancerRejectedUpdate.Specs",
+      "proof_target": "Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs"
+    },
+    {
+      "case_id": "olas/v3_dead_deviation_guard",
+      "project": "olas",
+      "case_name": "v3_dead_deviation_guard",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/v3_dead_deviation_guard/case.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/valory-xyz/autonolas-tokenomics",
+      "upstream_commit": "bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb",
+      "original_contract_path": "contracts/pol/LiquidityManagerCore.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/pol/LiquidityManagerCore.sol",
+      "selected_functions": [
+        "getTwapFromOracle",
+        "checkPoolAndGetCenterPrice"
+      ],
+      "lean_target": "Benchmark.Cases.Olas.V3DeadDeviationGuard.Compile",
+      "failure_reason": null,
+      "notes": "Derived from Code4rena Olas H-02, final report published 2026-05-18: https://code4rena.com/reports/2026-01-olas",
+      "buildable": true,
+      "verity_commit": "38d53df8b4488d5322894619ea8385fcbb2e6f5d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "code4rena_2026_01",
+        "oracle_guard",
+        "variable_overwrite",
+        "dead_deviation_check"
+      ],
+      "abstraction_notes": "Models the successful TWAP-oracle path where the named return variable holding spot sqrt price is overwritten by TWAP sqrt price. Pool calls, ABI mechanics, stale/new-pool early returns, and FullMath implementation details are excluded.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Olas.V3DeadDeviationGuard.Specs",
+      "proof_target": "Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs"
     },
     {
       "case_id": "onedelta/caller_address_integrity",
@@ -8121,6 +8317,141 @@
       }
     },
     {
+      "task_ref": "monetrix/pm_borrow_accounting/phantom_surplus_gate_witness",
+      "task_id": "phantom_surplus_gate_witness",
+      "case_id": "monetrix/pm_borrow_accounting",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/monetrix/pm_borrow_accounting/tasks/phantom_surplus_gate_witness.yaml",
+      "split": "active",
+      "family_id": "monetrix",
+      "implementation_id": "code4rena_2026_04",
+      "source_ref": "https://github.com/code-423n4/2026-04-monetrix@3d94be1361ca01d959f9165a78f0d75c5657fe3e:src/core/PrecompileReader.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "exploit_trace",
+      "category": "settlement-gate",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Monetrix.PMBorrowAccounting.phantom_surplus_gate_witness",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/monetrix/pm_borrow_accounting/verity/Contract.lean",
+        "Benchmark/Cases/Monetrix/PMBorrowAccounting/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/monetrix/pm_borrow_accounting/verity/Specs.lean",
+        "Benchmark/Cases/Monetrix/PMBorrowAccounting/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Monetrix/PMBorrowAccounting/Tasks/PhantomSurplusGateWitness.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Monetrix.PMBorrowAccounting.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "monetrix/pm_borrow_accounting/reported_surplus_overstates_by_borrow",
+      "task_id": "reported_surplus_overstates_by_borrow",
+      "case_id": "monetrix/pm_borrow_accounting",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/monetrix/pm_borrow_accounting/tasks/reported_surplus_overstates_by_borrow.yaml",
+      "split": "active",
+      "family_id": "monetrix",
+      "implementation_id": "code4rena_2026_04",
+      "source_ref": "https://github.com/code-423n4/2026-04-monetrix@3d94be1361ca01d959f9165a78f0d75c5657fe3e:src/core/PrecompileReader.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_invariant_break",
+      "category": "backing-accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Monetrix.PMBorrowAccounting.reported_surplus_overstates_by_borrow",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/monetrix/pm_borrow_accounting/verity/Contract.lean",
+        "Benchmark/Cases/Monetrix/PMBorrowAccounting/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/monetrix/pm_borrow_accounting/verity/Specs.lean",
+        "Benchmark/Cases/Monetrix/PMBorrowAccounting/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Monetrix/PMBorrowAccounting/Tasks/ReportedSurplusOverstatesByBorrow.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Monetrix.PMBorrowAccounting.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "monetrix/pm_borrow_accounting/supplied_balance_returns_supply",
+      "task_id": "supplied_balance_returns_supply",
+      "case_id": "monetrix/pm_borrow_accounting",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/monetrix/pm_borrow_accounting/tasks/supplied_balance_returns_supply.yaml",
+      "split": "active",
+      "family_id": "monetrix",
+      "implementation_id": "code4rena_2026_04",
+      "source_ref": "https://github.com/code-423n4/2026-04-monetrix@3d94be1361ca01d959f9165a78f0d75c5657fe3e:src/core/PrecompileReader.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_effect",
+      "category": "source-decoder",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Monetrix.PMBorrowAccounting.suppliedBalance_returns_supply",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/monetrix/pm_borrow_accounting/verity/Contract.lean",
+        "Benchmark/Cases/Monetrix/PMBorrowAccounting/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/monetrix/pm_borrow_accounting/verity/Specs.lean",
+        "Benchmark/Cases/Monetrix/PMBorrowAccounting/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Monetrix/PMBorrowAccounting/Tasks/SuppliedBalanceReturnsSupply.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Monetrix.PMBorrowAccounting.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "nexus_mutual/ramm_price_band/sync_sets_book_value",
       "task_id": "sync_sets_book_value",
       "case_id": "nexus_mutual/ramm_price_band",
@@ -8290,6 +8621,366 @@
       "abstraction_notes": "This task checks that the synchronized sell-side quote matches the discounted book-value formula.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.NexusMutual.RammPriceBand.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "olas/balancer_rejected_update/rejected_update_corruption_witness",
+      "task_id": "rejected_update_corruption_witness",
+      "case_id": "olas/balancer_rejected_update",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/balancer_rejected_update/tasks/rejected_update_corruption_witness.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/oracles/BalancerPriceOracle.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "exploit_trace",
+      "category": "twap-accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Olas.BalancerRejectedUpdate.rejected_update_corruption_witness",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/olas/balancer_rejected_update/verity/Contract.lean",
+        "Benchmark/Cases/Olas/BalancerRejectedUpdate/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/olas/balancer_rejected_update/verity/Specs.lean",
+        "Benchmark/Cases/Olas/BalancerRejectedUpdate/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Olas/BalancerRejectedUpdate/Tasks/RejectedUpdateCorruptionWitness.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "olas/balancer_rejected_update/rejected_update_mutates_cumulative",
+      "task_id": "rejected_update_mutates_cumulative",
+      "case_id": "olas/balancer_rejected_update",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/balancer_rejected_update/tasks/rejected_update_mutates_cumulative.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/oracles/BalancerPriceOracle.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "storage_update",
+      "category": "rejected-update",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Olas.BalancerRejectedUpdate.rejected_update_mutates_cumulative",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/olas/balancer_rejected_update/verity/Contract.lean",
+        "Benchmark/Cases/Olas/BalancerRejectedUpdate/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/olas/balancer_rejected_update/verity/Specs.lean",
+        "Benchmark/Cases/Olas/BalancerRejectedUpdate/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Olas/BalancerRejectedUpdate/Tasks/RejectedUpdateMutatesCumulative.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "olas/balancer_rejected_update/rejected_update_preserves_metadata",
+      "task_id": "rejected_update_preserves_metadata",
+      "case_id": "olas/balancer_rejected_update",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/balancer_rejected_update/tasks/rejected_update_preserves_metadata.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/oracles/BalancerPriceOracle.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "frame_property",
+      "category": "rejected-update",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Olas.BalancerRejectedUpdate.rejected_update_preserves_metadata",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/olas/balancer_rejected_update/verity/Contract.lean",
+        "Benchmark/Cases/Olas/BalancerRejectedUpdate/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/olas/balancer_rejected_update/verity/Specs.lean",
+        "Benchmark/Cases/Olas/BalancerRejectedUpdate/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Olas/BalancerRejectedUpdate/Tasks/RejectedUpdatePreservesMetadata.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "olas/balancer_rejected_update/repeated_rejection_double_counts",
+      "task_id": "repeated_rejection_double_counts",
+      "case_id": "olas/balancer_rejected_update",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/balancer_rejected_update/tasks/repeated_rejection_double_counts.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/oracles/BalancerPriceOracle.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_invariant_break",
+      "category": "twap-accounting",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Olas.BalancerRejectedUpdate.repeated_rejection_double_counts",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/olas/balancer_rejected_update/verity/Contract.lean",
+        "Benchmark/Cases/Olas/BalancerRejectedUpdate/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/olas/balancer_rejected_update/verity/Specs.lean",
+        "Benchmark/Cases/Olas/BalancerRejectedUpdate/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Olas/BalancerRejectedUpdate/Tasks/RepeatedRejectionDoubleCounts.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Olas.BalancerRejectedUpdate.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "olas/v3_dead_deviation_guard/dead_deviation_guard_accepts",
+      "task_id": "dead_deviation_guard_accepts",
+      "case_id": "olas/v3_dead_deviation_guard",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/v3_dead_deviation_guard/tasks/dead_deviation_guard_accepts.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/pol/LiquidityManagerCore.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "source_reachable_counterexample_coverage",
+      "category": "oracle-guard",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Olas.V3DeadDeviationGuard.dead_deviation_guard_accepts",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/olas/v3_dead_deviation_guard/verity/Contract.lean",
+        "Benchmark/Cases/Olas/V3DeadDeviationGuard/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/olas/v3_dead_deviation_guard/verity/Specs.lean",
+        "Benchmark/Cases/Olas/V3DeadDeviationGuard/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Olas/V3DeadDeviationGuard/Tasks/DeadDeviationGuardAccepts.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "olas/v3_dead_deviation_guard/normal_path_deviation_is_zero",
+      "task_id": "normal_path_deviation_is_zero",
+      "case_id": "olas/v3_dead_deviation_guard",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/v3_dead_deviation_guard/tasks/normal_path_deviation_is_zero.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/pol/LiquidityManagerCore.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_computation",
+      "category": "oracle-guard",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Olas.V3DeadDeviationGuard.normal_path_deviation_is_zero",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/olas/v3_dead_deviation_guard/verity/Contract.lean",
+        "Benchmark/Cases/Olas/V3DeadDeviationGuard/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/olas/v3_dead_deviation_guard/verity/Specs.lean",
+        "Benchmark/Cases/Olas/V3DeadDeviationGuard/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Olas/V3DeadDeviationGuard/Tasks/NormalPathDeviationIsZero.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "olas/v3_dead_deviation_guard/normal_path_ignores_spot",
+      "task_id": "normal_path_ignores_spot",
+      "case_id": "olas/v3_dead_deviation_guard",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/v3_dead_deviation_guard/tasks/normal_path_ignores_spot.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/pol/LiquidityManagerCore.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "noninterference",
+      "category": "oracle-guard",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Olas.V3DeadDeviationGuard.normal_path_ignores_spot",
+      "proof_family": "refinement_equivalence",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/olas/v3_dead_deviation_guard/verity/Contract.lean",
+        "Benchmark/Cases/Olas/V3DeadDeviationGuard/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/olas/v3_dead_deviation_guard/verity/Specs.lean",
+        "Benchmark/Cases/Olas/V3DeadDeviationGuard/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Olas/V3DeadDeviationGuard/Tasks/NormalPathIgnoresSpot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "olas/v3_dead_deviation_guard/normal_path_returns_twap_center",
+      "task_id": "normal_path_returns_twap_center",
+      "case_id": "olas/v3_dead_deviation_guard",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/olas/v3_dead_deviation_guard/tasks/normal_path_returns_twap_center.yaml",
+      "split": "active",
+      "family_id": "olas",
+      "implementation_id": "tokenomics_v1_4_2_code4rena",
+      "source_ref": "https://github.com/valory-xyz/autonolas-tokenomics@bbec5ac12721a62672fb7a5ffba5c40f5a46d8cb:contracts/pol/LiquidityManagerCore.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "functional_property",
+      "category": "oracle-guard",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Olas.V3DeadDeviationGuard.normal_path_returns_twap_center",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/olas/v3_dead_deviation_guard/verity/Contract.lean",
+        "Benchmark/Cases/Olas/V3DeadDeviationGuard/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/olas/v3_dead_deviation_guard/verity/Specs.lean",
+        "Benchmark/Cases/Olas/V3DeadDeviationGuard/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Olas/V3DeadDeviationGuard/Tasks/NormalPathReturnsTwapCenter.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Recent Code4rena-derived proof task. See the case manifest and Contract.lean for the exact source-path abstraction boundary.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Olas.V3DeadDeviationGuard.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -15658,5 +16349,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-30T12:51:38.751230+00:00"
+  "generated_at": "2026-08-06T15:27:19.501517+00:00"
 }
