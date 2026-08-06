@@ -10,6 +10,22 @@ from harness.runners import lean_tools
 
 
 class LeanDiagnosticsAndChecksTests(unittest.TestCase):
+    def test_remote_required_checks_enable_remote_lake_verification(self) -> None:
+        class Process:
+            returncode = 0
+            pid = 1
+
+            def communicate(self, timeout: int) -> tuple[str, str]:
+                return "", ""
+
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.dict(
+            "os.environ", {"SANDBOXED_COMPUTE_POLICY": "remote_required"}, clear=True
+        ), mock.patch.object(lean_check.subprocess, "Popen", return_value=Process()) as popen:
+            code, _ = lean_check._run_lean_command_unleased(Path(tmp), ["lake", "env", "lean", "Sample.lean"], 1)
+
+        self.assertEqual(code, 0)
+        self.assertEqual(popen.call_args.kwargs["env"]["SANDBOXED_REMOTE_LAKE_VERIFY"], "1")
+
     def test_file_check_success_is_confirmed_by_module_build(self) -> None:
         calls: list[list[str]] = []
 

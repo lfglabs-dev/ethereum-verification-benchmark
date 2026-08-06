@@ -857,21 +857,37 @@ def build_group_workspace(
 
     # When running under sandboxed.sh with compute_policy=remote_required, the
     # lake shim routes builds to remote-lean-build, which requires a git
-    # checkout. The workspace is a temp dir without .git, so initialise a
-    # minimal git repo here to let remote-lean-build resolve origin and HEAD.
+    # checkout whose HEAD can be fetched from origin.  A synthetic snapshot
+    # commit is not fetchable by a remote node, so seed the temporary index
+    # with ROOT's real HEAD instead.  Files present in this reduced workspace
+    # are then ordinary overlays against that commit; absent files are marked
+    # assume-unchanged so they are not published as mass deletions.
     try:
         import subprocess as _sp
         _sp.run(["git", "init", "-q"], cwd=workspace, check=True, timeout=10)
-        _sp.run(["git", "add", "-A"], cwd=workspace, check=True, timeout=30)
+        base_head = _sp.check_output(
+            ["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True, timeout=10
+        ).strip()
+        # Fetch locally from the benchmark checkout: this is fast, avoids a
+        # second network credential path, and preserves the origin object id
+        # that the remote builder later fetches from BENCHMARK_ORIGIN_URL.
         _sp.run(
-            ["git", "commit", "-q", "-m", "harness workspace snapshot", "--allow-empty"],
+            ["git", "fetch", "-q", "--depth=1", str(ROOT), base_head],
             cwd=workspace,
             check=True,
             timeout=30,
-            env={**os.environ, "GIT_AUTHOR_NAME": "harness", "GIT_AUTHOR_EMAIL": "harness@local", "GIT_COMMITTER_NAME": "harness", "GIT_COMMITTER_EMAIL": "harness@local"},
         )
+        _sp.run(["git", "update-ref", "refs/heads/harness-base", base_head], cwd=workspace, check=True, timeout=10)
+        _sp.run(["git", "symbolic-ref", "HEAD", "refs/heads/harness-base"], cwd=workspace, check=True, timeout=10)
+        _sp.run(["git", "read-tree", base_head], cwd=workspace, check=True, timeout=20)
         origin_url = os.environ.get("BENCHMARK_ORIGIN_URL", "https://github.com/lfglabs-dev/ethereum-verification-benchmark.git")
         _sp.run(["git", "remote", "add", "origin", origin_url], cwd=workspace, check=True, timeout=10)
+        tracked = _sp.check_output(["git", "ls-files", "-z"], cwd=workspace, timeout=20).decode().split("\0")
+        tracked = [path for path in tracked if path]
+        _sp.run(["git", "update-index", "--assume-unchanged", "--", *tracked], cwd=workspace, check=True, timeout=30)
+        present = [path for path in tracked if (workspace / path).is_file()]
+        if present:
+            _sp.run(["git", "update-index", "--no-assume-unchanged", "--", *present], cwd=workspace, check=True, timeout=30)
     except Exception:
         pass  # Not fatal: local_allowed workspaces do not need this.
 
