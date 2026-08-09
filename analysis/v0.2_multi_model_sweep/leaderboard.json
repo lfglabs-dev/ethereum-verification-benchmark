@@ -1,0 +1,124 @@
+{
+  "benchmark_version": "v0.2",
+  "benchmark_head": "c5a2344b121040445ccd745a3f839548ca8f9158",
+  "lean_version": "4.24.0",
+  "harness_id": "sha256:244bbf5ca68050dd4a7e56bdb794a68bc01a74d169828039e0943e511f65f867",
+  "generated_at": "2026-08-09T00:00:00Z",
+  "total_tasks_v0.2": 240,
+  "panel": {
+    "fast12": {
+      "task_count": 12,
+      "selection": "stratified, seed=42, first 12 tasks from 50-task panel"
+    },
+    "full240": {
+      "task_count": 240,
+      "selection": "all tasks"
+    },
+    "p4_50": {
+      "task_count": 50,
+      "selection": "stratified, seed=42"
+    }
+  },
+  "models": [
+    {
+      "model": "gpt-5.6-terra",
+      "panel": "p4_50",
+      "tasks_evaluated": 16,
+      "tasks_solved": 6,
+      "solve_rate": 0.375,
+      "infra_invalid": 0,
+      "genuine_fail": 10,
+      "total_tokens": 311227,
+      "avg_tokens_per_task": 19452,
+      "profile": "p4_normal",
+      "solved_tasks": [
+        "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+        "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+        "ethereum/deposit_contract_minimal/chain_start_threshold",
+        "ethereum/deposit_contract_minimal/deposit_count",
+        "forgeyields/global_solvency/handle_preserves_global_solvency",
+        "forgeyields/global_solvency/report_preserves_global_solvency"
+      ]
+    },
+    {
+      "model": "minimax/MiniMax-M2.7",
+      "panel": "fast12",
+      "tasks_evaluated": 9,
+      "tasks_solved": 1,
+      "solve_rate": 0.1111,
+      "infra_invalid": 0,
+      "genuine_fail": 8,
+      "total_tokens": 315600,
+      "avg_tokens_per_task": 35067,
+      "profile": "p1_release",
+      "solved_tasks": [
+        "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance"
+      ]
+    },
+    {
+      "model": "minimax/MiniMax-M3",
+      "panel": "full240",
+      "tasks_evaluated": 240,
+      "tasks_solved": 12,
+      "solve_rate": 0.05,
+      "infra_invalid": 0,
+      "genuine_fail": 228,
+      "total_tokens": 122550014,
+      "avg_tokens_per_task": 510625,
+      "profile": "p1_release",
+      "solved_tasks": [
+        "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply",
+        "usual/dao_collateral/redeem_fee_formula",
+        "nexus_mutual/ramm_price_band/sync_sets_book_value",
+        "nexus_mutual/ramm_price_band/sync_sets_buy_price",
+        "nexus_mutual/ramm_price_band/sync_sets_sell_price",
+        "lido/vaulthub_locked/max_liability_shares_bound",
+        "lido/vaulthub_locked/reserve_ratio_bounds",
+        "erc4337/entry_point_invariant/no_beneficiary_payout_on_revert",
+        "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity",
+        "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit",
+        "paladin_votes/stream_recovery_claim_usdc/no_overclaim",
+        "kleros/sortition_trees/root_equals_sum_of_leaves"
+      ]
+    },
+    {
+      "model": "zai/glm-5.2",
+      "panel": "fast12",
+      "tasks_evaluated": 1,
+      "tasks_solved": 0,
+      "solve_rate": 0.0,
+      "infra_invalid": 1,
+      "genuine_fail": 0,
+      "total_tokens": 0,
+      "avg_tokens_per_task": 0,
+      "profile": "full-240",
+      "solved_tasks": []
+    },
+    {
+      "model": "anthropic/claude-opus-5",
+      "panel": "fast12",
+      "tasks_evaluated": 12,
+      "tasks_solved": 0,
+      "solve_rate": 0.0,
+      "infra_invalid": 12,
+      "genuine_fail": 0,
+      "total_tokens": 0,
+      "avg_tokens_per_task": 0,
+      "profile": "full-240",
+      "solved_tasks": []
+    },
+    {
+      "model": "openai/gpt-5.6",
+      "panel": "fast12",
+      "tasks_evaluated": 1,
+      "tasks_solved": 0,
+      "solve_rate": 0.0,
+      "infra_invalid": 1,
+      "genuine_fail": 0,
+      "total_tokens": 0,
+      "avg_tokens_per_task": 0,
+      "profile": "full-240",
+      "solved_tasks": []
+    }
+  ]
+}
