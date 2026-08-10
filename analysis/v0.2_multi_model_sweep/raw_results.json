@@ -13,7 +13,9 @@
     "prompt_tokens": 25760,
     "completion_tokens": 863,
     "total_tokens": 26623,
-    "requests": 8
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -29,7 +31,9 @@
     "prompt_tokens": 46354,
     "completion_tokens": 2224,
     "total_tokens": 48578,
-    "requests": 10
+    "requests": 10,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -45,7 +49,9 @@
     "prompt_tokens": 42679,
     "completion_tokens": 521,
     "total_tokens": 43200,
-    "requests": 12
+    "requests": 12,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -61,7 +67,9 @@
     "prompt_tokens": 46807,
     "completion_tokens": 877,
     "total_tokens": 47684,
-    "requests": 12
+    "requests": 12,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -77,7 +85,9 @@
     "prompt_tokens": 33193,
     "completion_tokens": 4917,
     "total_tokens": 38110,
-    "requests": 10
+    "requests": 10,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -93,7 +103,9 @@
     "prompt_tokens": 10357,
     "completion_tokens": 410,
     "total_tokens": 10767,
-    "requests": 4
+    "requests": 4,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -109,7 +121,9 @@
     "prompt_tokens": 6644,
     "completion_tokens": 356,
     "total_tokens": 7000,
-    "requests": 3
+    "requests": 3,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -125,7 +139,9 @@
     "prompt_tokens": 24312,
     "completion_tokens": 901,
     "total_tokens": 25213,
-    "requests": 8
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -141,7 +157,9 @@
     "prompt_tokens": 26091,
     "completion_tokens": 935,
     "total_tokens": 27026,
-    "requests": 9
+    "requests": 9,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -157,7 +175,9 @@
     "prompt_tokens": 34375,
     "completion_tokens": 6601,
     "total_tokens": 40976,
-    "requests": 10
+    "requests": 10,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -173,7 +193,9 @@
     "prompt_tokens": 31024,
     "completion_tokens": 915,
     "total_tokens": 31939,
-    "requests": 10
+    "requests": 10,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -189,7 +211,9 @@
     "prompt_tokens": 31520,
     "completion_tokens": 1275,
     "total_tokens": 32795,
-    "requests": 9
+    "requests": 9,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M2.7",
@@ -205,7 +229,9 @@
     "prompt_tokens": 48064,
     "completion_tokens": 1134,
     "total_tokens": 49198,
-    "requests": 14
+    "requests": 14,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M2.7",
@@ -221,7 +247,9 @@
     "prompt_tokens": 24060,
     "completion_tokens": 1450,
     "total_tokens": 25510,
-    "requests": 8
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M2.7",
@@ -237,7 +265,9 @@
     "prompt_tokens": 32714,
     "completion_tokens": 2477,
     "total_tokens": 35191,
-    "requests": 10
+    "requests": 10,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M2.7",
@@ -253,7 +283,9 @@
     "prompt_tokens": 54569,
     "completion_tokens": 1842,
     "total_tokens": 56411,
-    "requests": 15
+    "requests": 15,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M2.7",
@@ -269,7 +301,9 @@
     "prompt_tokens": 41611,
     "completion_tokens": 2984,
     "total_tokens": 44595,
-    "requests": 12
+    "requests": 12,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M2.7",
@@ -285,7 +319,9 @@
     "prompt_tokens": 36489,
     "completion_tokens": 1971,
     "total_tokens": 38460,
-    "requests": 13
+    "requests": 13,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M2.7",
@@ -301,7 +337,9 @@
     "prompt_tokens": 16475,
     "completion_tokens": 952,
     "total_tokens": 17427,
-    "requests": 5
+    "requests": 5,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M2.7",
@@ -317,7 +355,9 @@
     "prompt_tokens": 17852,
     "completion_tokens": 564,
     "total_tokens": 18416,
-    "requests": 6
+    "requests": 6,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "minimax/MiniMax-M2.7",
@@ -333,7 +373,2655 @@
     "prompt_tokens": 28819,
     "completion_tokens": 1573,
     "total_tokens": 30392,
-    "requests": 10
+    "requests": 10,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "minimax/MiniMax-M2.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T061420-default-fair-minimax-minimax-m2-7-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 498.8,
+    "prompt_tokens": 45830,
+    "completion_tokens": 1848,
+    "total_tokens": 47678,
+    "requests": 15,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "minimax/MiniMax-M2.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T062239-default-fair-minimax-minimax-m2-7-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 486.4,
+    "prompt_tokens": 33019,
+    "completion_tokens": 1250,
+    "total_tokens": 34269,
+    "requests": 11,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "minimax/MiniMax-M2.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T063047-default-fair-minimax-minimax-m2-7-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 575.7,
+    "prompt_tokens": 29182,
+    "completion_tokens": 1077,
+    "total_tokens": 30259,
+    "requests": 10,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T064121-default-fair-muse-muse-spark-1-1-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 152.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T064554-default-fair-muse-muse-spark-1-1-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 163.8,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T065038-default-fair-muse-muse-spark-1-1-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 119.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T065437-default-fair-muse-muse-spark-1-1-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 131.2,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T065848-default-fair-muse-muse-spark-1-1-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 126.2,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T070254-default-fair-muse-muse-spark-1-1-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 117.7,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T070652-default-fair-muse-muse-spark-1-1-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 97.3,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T071029-default-fair-muse-muse-spark-1-1-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 93.2,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T071402-default-fair-muse-muse-spark-1-1-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 100.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T071743-default-fair-muse-muse-spark-1-1-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 87.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T072111-default-fair-muse-muse-spark-1-1-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 84.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.1",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T072435-default-fair-muse-muse-spark-1-1-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 88.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T072904-default-fair-muse-muse-spark-1-2-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 106.3,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T073250-default-fair-muse-muse-spark-1-2-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 85.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T073615-default-fair-muse-muse-spark-1-2-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 84.8,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T073940-default-fair-muse-muse-spark-1-2-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 87.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T074308-default-fair-muse-muse-spark-1-2-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 84.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T074633-default-fair-muse-muse-spark-1-2-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 88.3,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T075001-default-fair-muse-muse-spark-1-2-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 107.8,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T075349-default-fair-muse-muse-spark-1-2-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 86.7,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T075716-default-fair-muse-muse-spark-1-2-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 99.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T080055-default-fair-muse-muse-spark-1-2-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 89.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T080425-default-fair-muse-muse-spark-1-2-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 89.3,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T080754-default-fair-muse-muse-spark-1-2-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 91.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T081226-default-fair-zai-glm-5-2-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 107.8,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T081614-default-fair-zai-glm-5-2-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 87.2,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T081941-default-fair-zai-glm-5-2-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 88.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T082309-default-fair-zai-glm-5-2-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 101.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T082651-default-fair-zai-glm-5-2-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 88.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T083019-default-fair-zai-glm-5-2-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 95.2,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T083354-default-fair-zai-glm-5-2-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 88.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T083722-default-fair-zai-glm-5-2-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 92.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T084055-default-fair-zai-glm-5-2-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 83.7,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T084419-default-fair-zai-glm-5-2-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 89.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T084748-default-fair-zai-glm-5-2-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 89.8,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T085118-default-fair-zai-glm-5-2-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 90.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T085549-default-fair-zai-glm-4-7-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 88.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T085917-default-fair-zai-glm-4-7-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 86.8,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T090244-default-fair-zai-glm-4-7-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 107.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T090631-default-fair-zai-glm-4-7-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 87.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T090959-default-fair-zai-glm-4-7-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 217.7,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T091538-default-fair-zai-glm-4-7-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 156.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T092014-default-fair-zai-glm-4-7-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 85.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T092338-default-fair-zai-glm-4-7-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 86.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T092705-default-fair-zai-glm-4-7-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 89.2,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T093034-default-fair-zai-glm-4-7-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 90.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T093404-default-fair-zai-glm-4-7-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 85.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "zai/glm-4.7",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T093729-default-fair-zai-glm-4-7-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 108.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T094217-default-fair-gpt-5-6-terra-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 167.9,
+    "prompt_tokens": 36376,
+    "completion_tokens": 2175,
+    "total_tokens": 38551,
+    "requests": 13,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T094505-default-fair-gpt-5-6-terra-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 122.4,
+    "prompt_tokens": 28034,
+    "completion_tokens": 680,
+    "total_tokens": 28714,
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T094707-default-fair-gpt-5-6-terra-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 139.4,
+    "prompt_tokens": 26839,
+    "completion_tokens": 928,
+    "total_tokens": 27767,
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T094927-default-fair-gpt-5-6-terra-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 157.8,
+    "prompt_tokens": 32494,
+    "completion_tokens": 1866,
+    "total_tokens": 34360,
+    "requests": 10,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T095205-default-fair-gpt-5-6-terra-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 89.4,
+    "prompt_tokens": 23313,
+    "completion_tokens": 535,
+    "total_tokens": 23848,
+    "requests": 7,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T095334-default-fair-gpt-5-6-terra-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 114.2,
+    "prompt_tokens": 15746,
+    "completion_tokens": 891,
+    "total_tokens": 16637,
+    "requests": 7,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T095528-default-fair-gpt-5-6-terra-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 0,
+    "elapsed_seconds": 106.2,
+    "prompt_tokens": 9899,
+    "completion_tokens": 576,
+    "total_tokens": 10475,
+    "requests": 4,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T095714-default-fair-gpt-5-6-terra-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 0,
+    "elapsed_seconds": 222.2,
+    "prompt_tokens": 31162,
+    "completion_tokens": 3343,
+    "total_tokens": 34505,
+    "requests": 12,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T100057-default-fair-gpt-5-6-terra-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 114.2,
+    "prompt_tokens": 29730,
+    "completion_tokens": 978,
+    "total_tokens": 30708,
+    "requests": 11,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T100251-default-fair-gpt-5-6-terra-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 0,
+    "elapsed_seconds": 71.1,
+    "prompt_tokens": 7644,
+    "completion_tokens": 257,
+    "total_tokens": 7901,
+    "requests": 3,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T100402-default-fair-gpt-5-6-terra-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 103.5,
+    "prompt_tokens": 14949,
+    "completion_tokens": 939,
+    "total_tokens": 15888,
+    "requests": 7,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T100545-default-fair-gpt-5-6-terra-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 116.2,
+    "prompt_tokens": 15191,
+    "completion_tokens": 1580,
+    "total_tokens": 16771,
+    "requests": 7,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T100842-default-fair-gpt-5-6-luna-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 226.7,
+    "prompt_tokens": 20752,
+    "completion_tokens": 4356,
+    "total_tokens": 25108,
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T101228-default-fair-gpt-5-6-luna-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 76.3,
+    "prompt_tokens": 13609,
+    "completion_tokens": 554,
+    "total_tokens": 14163,
+    "requests": 5,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T101345-default-fair-gpt-5-6-luna-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 136.4,
+    "prompt_tokens": 16601,
+    "completion_tokens": 686,
+    "total_tokens": 17287,
+    "requests": 5,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T101601-default-fair-gpt-5-6-luna-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 143.4,
+    "prompt_tokens": 25909,
+    "completion_tokens": 739,
+    "total_tokens": 26648,
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T101825-default-fair-gpt-5-6-luna-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 126.9,
+    "prompt_tokens": 26096,
+    "completion_tokens": 614,
+    "total_tokens": 26710,
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T102031-default-fair-gpt-5-6-luna-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 573.8,
+    "prompt_tokens": 37128,
+    "completion_tokens": 11992,
+    "total_tokens": 49120,
+    "requests": 16,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T103005-default-fair-gpt-5-6-luna-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 0,
+    "elapsed_seconds": 209.1,
+    "prompt_tokens": 16046,
+    "completion_tokens": 2502,
+    "total_tokens": 18548,
+    "requests": 7,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T103334-default-fair-gpt-5-6-luna-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 107.1,
+    "prompt_tokens": 20269,
+    "completion_tokens": 775,
+    "total_tokens": 21044,
+    "requests": 7,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T103521-default-fair-gpt-5-6-luna-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 86.9,
+    "prompt_tokens": 15815,
+    "completion_tokens": 582,
+    "total_tokens": 16397,
+    "requests": 6,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T103648-default-fair-gpt-5-6-luna-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 0,
+    "elapsed_seconds": 80.9,
+    "prompt_tokens": 7799,
+    "completion_tokens": 379,
+    "total_tokens": 8178,
+    "requests": 3,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T103809-default-fair-gpt-5-6-luna-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 0,
+    "elapsed_seconds": 82.3,
+    "prompt_tokens": 7432,
+    "completion_tokens": 389,
+    "total_tokens": 7821,
+    "requests": 3,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T103932-default-fair-gpt-5-6-luna-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 226.1,
+    "prompt_tokens": 21175,
+    "completion_tokens": 5207,
+    "total_tokens": 26382,
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T104418-default-fair-gpt-5-6-sol-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 130.3,
+    "prompt_tokens": 41305,
+    "completion_tokens": 869,
+    "total_tokens": 42174,
+    "requests": 10,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T104628-default-fair-gpt-5-6-sol-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 132.3,
+    "prompt_tokens": 33858,
+    "completion_tokens": 778,
+    "total_tokens": 34636,
+    "requests": 9,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T104840-default-fair-gpt-5-6-sol-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 157.2,
+    "prompt_tokens": 38300,
+    "completion_tokens": 878,
+    "total_tokens": 39178,
+    "requests": 12,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T105117-default-fair-gpt-5-6-sol-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 133.3,
+    "prompt_tokens": 45446,
+    "completion_tokens": 760,
+    "total_tokens": 46206,
+    "requests": 12,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T105331-default-fair-gpt-5-6-sol-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 127.5,
+    "prompt_tokens": 28113,
+    "completion_tokens": 713,
+    "total_tokens": 28826,
+    "requests": 9,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T105538-default-fair-gpt-5-6-sol-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 431.9,
+    "prompt_tokens": 33775,
+    "completion_tokens": 6081,
+    "total_tokens": 39856,
+    "requests": 15,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T110250-default-fair-gpt-5-6-sol-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 0,
+    "elapsed_seconds": 92.2,
+    "prompt_tokens": 7428,
+    "completion_tokens": 327,
+    "total_tokens": 7755,
+    "requests": 3,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T110422-default-fair-gpt-5-6-sol-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 0,
+    "elapsed_seconds": 132.9,
+    "prompt_tokens": 18814,
+    "completion_tokens": 641,
+    "total_tokens": 19455,
+    "requests": 7,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T110635-default-fair-gpt-5-6-sol-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 0,
+    "elapsed_seconds": 90.7,
+    "prompt_tokens": 14345,
+    "completion_tokens": 369,
+    "total_tokens": 14714,
+    "requests": 4,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T110806-default-fair-gpt-5-6-sol-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 0,
+    "elapsed_seconds": 93.3,
+    "prompt_tokens": 19838,
+    "completion_tokens": 412,
+    "total_tokens": 20250,
+    "requests": 5,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T110939-default-fair-gpt-5-6-sol-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 0,
+    "elapsed_seconds": 422.3,
+    "prompt_tokens": 36810,
+    "completion_tokens": 7712,
+    "total_tokens": 44522,
+    "requests": 15,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T111642-default-fair-gpt-5-6-sol-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 0,
+    "elapsed_seconds": 103.1,
+    "prompt_tokens": 9544,
+    "completion_tokens": 377,
+    "total_tokens": 9921,
+    "requests": 3,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T111925-default-fair-openai-gpt-5-6-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 98.2,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T112303-default-fair-openai-gpt-5-6-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 100.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T112644-default-fair-openai-gpt-5-6-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 218.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T113222-default-fair-openai-gpt-5-6-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 99.3,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T113601-default-fair-openai-gpt-5-6-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 101.7,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T113943-default-fair-openai-gpt-5-6-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 110.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T114333-default-fair-openai-gpt-5-6-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 113.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T114726-default-fair-openai-gpt-5-6-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 190.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T115236-default-fair-openai-gpt-5-6-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 210.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T115808-default-fair-openai-gpt-5-6-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 237.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T120403-default-fair-openai-gpt-5-6-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 131.8,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.6",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T120815-default-fair-openai-gpt-5-6-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 107.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T121303-default-fair-openai-gpt-5-5-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 94.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T121638-default-fair-openai-gpt-5-5-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 82.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T122000-default-fair-openai-gpt-5-5-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 81.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T122322-default-fair-openai-gpt-5-5-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 58.2,
+    "prompt_tokens": 27820,
+    "completion_tokens": 299,
+    "total_tokens": 28119,
+    "requests": 6,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T122420-default-fair-openai-gpt-5-5-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 67.4,
+    "prompt_tokens": 30625,
+    "completion_tokens": 377,
+    "total_tokens": 31002,
+    "requests": 9,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T122527-default-fair-openai-gpt-5-5-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 77.5,
+    "prompt_tokens": 11142,
+    "completion_tokens": 370,
+    "total_tokens": 11512,
+    "requests": 4,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T122645-default-fair-openai-gpt-5-5-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 72.2,
+    "prompt_tokens": 11026,
+    "completion_tokens": 328,
+    "total_tokens": 11354,
+    "requests": 4,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T122757-default-fair-openai-gpt-5-5-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 45.9,
+    "prompt_tokens": 20464,
+    "completion_tokens": 304,
+    "total_tokens": 20768,
+    "requests": 6,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T122843-default-fair-openai-gpt-5-5-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 56.7,
+    "prompt_tokens": 22735,
+    "completion_tokens": 447,
+    "total_tokens": 23182,
+    "requests": 8,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T122940-default-fair-openai-gpt-5-5-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 0,
+    "elapsed_seconds": 85.2,
+    "prompt_tokens": 10892,
+    "completion_tokens": 255,
+    "total_tokens": 11147,
+    "requests": 4,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T123105-default-fair-openai-gpt-5-5-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 0,
+    "elapsed_seconds": 96.9,
+    "prompt_tokens": 10484,
+    "completion_tokens": 282,
+    "total_tokens": 10766,
+    "requests": 4,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "openai/gpt-5.5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T123242-default-fair-openai-gpt-5-5-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 63.3,
+    "prompt_tokens": 14084,
+    "completion_tokens": 353,
+    "total_tokens": 14437,
+    "requests": 4,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T123445-default-fair-anthropic-claude-opus-5-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 91.7,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T123817-default-fair-anthropic-claude-opus-5-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 90.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T124147-default-fair-anthropic-claude-opus-5-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 88.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T124515-default-fair-anthropic-claude-opus-5-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 95.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T124851-default-fair-anthropic-claude-opus-5-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 95.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T125226-default-fair-anthropic-claude-opus-5-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 94.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T125601-default-fair-anthropic-claude-opus-5-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 99.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T125940-default-fair-anthropic-claude-opus-5-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 90.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T130310-default-fair-anthropic-claude-opus-5-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 89.2,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T130640-default-fair-anthropic-claude-opus-5-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 102.7,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T131022-default-fair-anthropic-claude-opus-5-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 92.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-opus-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T131355-default-fair-anthropic-claude-opus-5-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 94.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T131829-default-fair-anthropic-claude-sonnet-5-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 83.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T132153-default-fair-anthropic-claude-sonnet-5-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 89.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T132522-default-fair-anthropic-claude-sonnet-5-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 84.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T132847-default-fair-anthropic-claude-sonnet-5-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 103.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T133230-default-fair-anthropic-claude-sonnet-5-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 102.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T133614-default-fair-anthropic-claude-sonnet-5-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 283.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T134256-default-fair-anthropic-claude-sonnet-5-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 112.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T134648-default-fair-anthropic-claude-sonnet-5-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 93.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T135022-default-fair-anthropic-claude-sonnet-5-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 79.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T135341-default-fair-anthropic-claude-sonnet-5-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 83.4,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T135704-default-fair-anthropic-claude-sonnet-5-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 84.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-sonnet-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T140028-default-fair-anthropic-claude-sonnet-5-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 139.3,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T140547-default-fair-anthropic-claude-fable-5-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 101.8,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T140930-default-fair-anthropic-claude-fable-5-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 175.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T141425-default-fair-anthropic-claude-fable-5-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 154.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T141858-default-fair-anthropic-claude-fable-5-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 113.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T142251-default-fair-anthropic-claude-fable-5-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 98.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T142630-default-fair-anthropic-claude-fable-5-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
+    "returncode": 1,
+    "elapsed_seconds": 102.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T143012-default-fair-anthropic-claude-fable-5-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 95.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T143348-default-fair-anthropic-claude-fable-5-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
+    "returncode": 1,
+    "elapsed_seconds": 84.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T143712-default-fair-anthropic-claude-fable-5-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 109.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T144102-default-fair-anthropic-claude-fable-5-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 109.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T144451-default-fair-anthropic-claude-fable-5-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 209.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
+  },
+  {
+    "model": "anthropic/claude-fable-5",
+    "profile": "p1_release",
+    "max_attempts": 2,
+    "max_tool_calls": 24,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T145021-default-fair-anthropic-claude-fable-5-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 89.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0,
+    "panel": "FAST-12",
+    "source": "overnight"
   },
   {
     "model": "gpt-5.6-terra",
@@ -349,7 +3037,9 @@
     "prompt_tokens": 15676,
     "completion_tokens": 1405,
     "total_tokens": 17081,
-    "requests": 7
+    "requests": 7,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -365,7 +3055,9 @@
     "prompt_tokens": 22692,
     "completion_tokens": 546,
     "total_tokens": 23238,
-    "requests": 6
+    "requests": 6,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -381,7 +3073,9 @@
     "prompt_tokens": 27198,
     "completion_tokens": 715,
     "total_tokens": 27913,
-    "requests": 8
+    "requests": 8,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -397,7 +3091,9 @@
     "prompt_tokens": 22940,
     "completion_tokens": 581,
     "total_tokens": 23521,
-    "requests": 7
+    "requests": 7,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -413,7 +3109,9 @@
     "prompt_tokens": 36592,
     "completion_tokens": 597,
     "total_tokens": 37189,
-    "requests": 10
+    "requests": 10,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -429,7 +3127,9 @@
     "prompt_tokens": 12128,
     "completion_tokens": 1047,
     "total_tokens": 13175,
-    "requests": 6
+    "requests": 6,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -445,7 +3145,9 @@
     "prompt_tokens": 9897,
     "completion_tokens": 729,
     "total_tokens": 10626,
-    "requests": 4
+    "requests": 4,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -461,7 +3163,9 @@
     "prompt_tokens": 18359,
     "completion_tokens": 387,
     "total_tokens": 18746,
-    "requests": 6
+    "requests": 6,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -477,7 +3181,9 @@
     "prompt_tokens": 16003,
     "completion_tokens": 548,
     "total_tokens": 16551,
-    "requests": 6
+    "requests": 6,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -493,7 +3199,9 @@
     "prompt_tokens": 7644,
     "completion_tokens": 256,
     "total_tokens": 7900,
-    "requests": 3
+    "requests": 3,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -509,7 +3217,9 @@
     "prompt_tokens": 6453,
     "completion_tokens": 313,
     "total_tokens": 6766,
-    "requests": 3
+    "requests": 3,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -525,7 +3235,9 @@
     "prompt_tokens": 21318,
     "completion_tokens": 1067,
     "total_tokens": 22385,
-    "requests": 6
+    "requests": 6,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -541,7 +3253,9 @@
     "prompt_tokens": 12820,
     "completion_tokens": 275,
     "total_tokens": 13095,
-    "requests": 4
+    "requests": 4,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -557,7 +3271,9 @@
     "prompt_tokens": 13498,
     "completion_tokens": 1152,
     "total_tokens": 14650,
-    "requests": 6
+    "requests": 6,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -573,7 +3289,9 @@
     "prompt_tokens": 34493,
     "completion_tokens": 9530,
     "total_tokens": 44023,
-    "requests": 13
+    "requests": 13,
+    "panel": "P4-50",
+    "source": "multi-model"
   },
   {
     "model": "gpt-5.6-terra",
@@ -589,7 +3307,29 @@
     "prompt_tokens": 12914,
     "completion_tokens": 1454,
     "total_tokens": 14368,
-    "requests": 6
+    "requests": 6,
+    "panel": "P4-50",
+    "source": "multi-model"
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 15888,
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "source": "full-240"
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 44388,
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "source": "full-240"
   },
   {
     "model": "minimax/MiniMax-M3",
@@ -597,8 +3337,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 43246,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T210001-default-fair-minimax-minimax-m3-ipor__plasma_vault_redeem_split__fee_payout_bounded_by_fee_free",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -607,8 +3347,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 310752,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034130-default-fair-minimax-minimax-m3-t3tris__hwm_performance_fee",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -617,8 +3357,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 310752,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034130-default-fair-minimax-minimax-m3-t3tris__hwm_performance_fee",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -627,8 +3367,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 310752,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034130-default-fair-minimax-minimax-m3-t3tris__hwm_performance_fee",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -637,8 +3377,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 310752,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034130-default-fair-minimax-minimax-m3-t3tris__hwm_performance_fee",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -647,8 +3387,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 310752,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034130-default-fair-minimax-minimax-m3-t3tris__hwm_performance_fee",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -657,8 +3397,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 310752,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034130-default-fair-minimax-minimax-m3-t3tris__hwm_performance_fee",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -667,8 +3407,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 310752,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034130-default-fair-minimax-minimax-m3-t3tris__hwm_performance_fee",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -677,28 +3417,28 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 310752,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034130-default-fair-minimax-minimax-m3-t3tris__hwm_performance_fee",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
-    "model": "zai/glm-5.2",
+    "model": "minimax/MiniMax-M3",
     "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
     "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T024359-default-fair-zai-glm-5-2-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
-    "profile": "full-240",
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 39856,
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "cork/pool_solvency/solvency_preserved",
     "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T020837-default-fair-anthropic-claude-opus-5-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
-    "profile": "full-240",
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 151551,
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -707,8 +3447,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 33287,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T022956-default-fair-minimax-minimax-m3-pareto__redemption_backing",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -717,8 +3457,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -727,8 +3467,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -737,8 +3477,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -747,8 +3487,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -757,8 +3497,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -767,8 +3507,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -777,8 +3517,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -787,8 +3527,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -797,8 +3537,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -807,8 +3547,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -817,8 +3557,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -827,8 +3567,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -837,8 +3577,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -847,8 +3587,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -857,28 +3597,58 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 565958,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025643-default-fair-minimax-minimax-m3-safe__owner_manager_reach",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
     "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T213449-default-fair-anthropic-claude-opus-5-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
-    "profile": "full-240",
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 42174,
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
     "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T220935-default-fair-anthropic-claude-opus-5-ethereum__deposit_contract_minimal__chain_start_threshold",
-    "profile": "full-240",
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 18746,
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "source": "full-240"
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 28119,
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "source": "full-240"
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": true,
+    "final_class": "SOLVED",
+    "total_tokens": 24126,
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "source": "full-240"
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": true,
+    "final_class": "SOLVED",
+    "total_tokens": 14714,
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -887,8 +3657,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 82441,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024735-default-fair-minimax-minimax-m3-polygon__agglayer_bridge",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -897,8 +3667,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 82441,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024735-default-fair-minimax-minimax-m3-polygon__agglayer_bridge",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -907,18 +3677,28 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 67046,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T005713-default-fair-minimax-minimax-m3-ipor__plasma_vault_redeem_split",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
     "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T212117-default-fair-anthropic-claude-opus-5-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
-    "profile": "full-240",
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 22999,
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "source": "full-240"
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": true,
+    "final_class": "SOLVED",
+    "total_tokens": 7901,
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -927,8 +3707,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 230454,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035710-default-fair-minimax-minimax-m3-usual__dao_collateral",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -937,8 +3717,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 230454,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035710-default-fair-minimax-minimax-m3-usual__dao_collateral",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -947,8 +3727,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 230454,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035710-default-fair-minimax-minimax-m3-usual__dao_collateral",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -957,8 +3737,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 230454,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035710-default-fair-minimax-minimax-m3-usual__dao_collateral",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -967,8 +3747,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 230454,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035710-default-fair-minimax-minimax-m3-usual__dao_collateral",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -977,8 +3757,18 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 58835,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T211240-default-fair-minimax-minimax-m3-lagoon__guardrails__exact_compliance",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "source": "full-240"
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 36976,
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -987,8 +3777,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 131087,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T023844-default-fair-minimax-minimax-m3-piku__fund_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -997,8 +3787,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 131087,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T023844-default-fair-minimax-minimax-m3-piku__fund_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1007,8 +3797,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 131087,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T023844-default-fair-minimax-minimax-m3-piku__fund_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1017,8 +3807,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 131087,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T023844-default-fair-minimax-minimax-m3-piku__fund_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1027,8 +3817,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 234985,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T013633-default-fair-minimax-minimax-m3-openzeppelin__erc4626_virtual_offset_deposit",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1037,8 +3827,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 234985,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T013633-default-fair-minimax-minimax-m3-openzeppelin__erc4626_virtual_offset_deposit",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1047,8 +3837,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 234985,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T013633-default-fair-minimax-minimax-m3-openzeppelin__erc4626_virtual_offset_deposit",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1057,8 +3847,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 234985,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T013633-default-fair-minimax-minimax-m3-openzeppelin__erc4626_virtual_offset_deposit",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1067,8 +3857,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 234985,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T013633-default-fair-minimax-minimax-m3-openzeppelin__erc4626_virtual_offset_deposit",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1077,38 +3867,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 234985,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T013633-default-fair-minimax-minimax-m3-openzeppelin__erc4626_virtual_offset_deposit",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
-    "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T220534-default-fair-anthropic-claude-opus-5-erc4337__entry_point_invariant__execution_length_eq_validation_length",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
-    "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T214754-default-fair-anthropic-claude-opus-5-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
-    "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T013018-default-fair-anthropic-claude-opus-5-ethereum__deposit_contract_minimal__deposit_count",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1117,8 +3877,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 169380,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T011008-default-fair-minimax-minimax-m3-lagoon__guardrails",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1127,8 +3887,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 169380,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T011008-default-fair-minimax-minimax-m3-lagoon__guardrails",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1137,8 +3897,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 45480,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T214801-default-fair-minimax-minimax-m3-lifi__swap_atomicity__final_transfer_implies_all_steps_succeeded",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1147,8 +3907,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1157,8 +3917,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1167,8 +3927,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1177,8 +3937,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1187,8 +3947,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1197,8 +3957,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1207,8 +3967,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1217,8 +3977,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1227,8 +3987,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1237,8 +3997,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1247,8 +4007,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1257,8 +4017,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1267,8 +4027,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1277,8 +4037,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1287,8 +4047,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1297,8 +4057,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1307,8 +4067,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1317,8 +4077,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1327,8 +4087,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1337,8 +4097,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1347,8 +4107,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1357,8 +4117,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 681081,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T032055-default-fair-minimax-minimax-m3-superfluid__realtime_balance_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1367,8 +4127,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 41765,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034729-default-fair-minimax-minimax-m3-term_finance__term_auction_clearing",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1377,8 +4137,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 166338,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T023131-default-fair-minimax-minimax-m3-pendle__py_supply_pairing",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1387,8 +4147,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 166338,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T023131-default-fair-minimax-minimax-m3-pendle__py_supply_pairing",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1397,8 +4157,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 166338,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T023131-default-fair-minimax-minimax-m3-pendle__py_supply_pairing",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1407,8 +4167,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 166338,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T023131-default-fair-minimax-minimax-m3-pendle__py_supply_pairing",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1417,8 +4177,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 246930,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T234115-default-fair-minimax-minimax-m3-alchemix__earmark_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1427,8 +4187,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 246930,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T234115-default-fair-minimax-minimax-m3-alchemix__earmark_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1437,8 +4197,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 246930,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T234115-default-fair-minimax-minimax-m3-alchemix__earmark_conservation",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1447,8 +4207,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 170160,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T031303-default-fair-minimax-minimax-m3-starkware__starkgate_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1457,8 +4217,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 170160,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T031303-default-fair-minimax-minimax-m3-starkware__starkgate_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1467,8 +4227,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 170160,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T031303-default-fair-minimax-minimax-m3-starkware__starkgate_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1477,8 +4237,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 136146,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024853-default-fair-minimax-minimax-m3-reserve__auction_price_band",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1487,8 +4247,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 136146,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024853-default-fair-minimax-minimax-m3-reserve__auction_price_band",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1497,8 +4257,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 136146,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024853-default-fair-minimax-minimax-m3-reserve__auction_price_band",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1507,8 +4267,18 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 136146,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024853-default-fair-minimax-minimax-m3-reserve__auction_price_band",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "source": "full-240"
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency",
+    "passed": true,
+    "final_class": "SOLVED",
+    "total_tokens": 13095,
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1517,8 +4287,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 65346,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T212533-default-fair-minimax-minimax-m3-lido__vaulthub_locked__shares_conversion_monotone",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1527,8 +4297,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 164442,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024353-default-fair-minimax-minimax-m3-polaris__bonding_curve",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1537,8 +4307,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 164442,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024353-default-fair-minimax-minimax-m3-polaris__bonding_curve",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1547,8 +4317,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 164442,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024353-default-fair-minimax-minimax-m3-polaris__bonding_curve",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1557,8 +4327,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 164442,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T024353-default-fair-minimax-minimax-m3-polaris__bonding_curve",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1567,8 +4337,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 197115,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T003156-default-fair-minimax-minimax-m3-ethereum__deposit_contract_minimal",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1577,8 +4347,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 197115,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T003156-default-fair-minimax-minimax-m3-ethereum__deposit_contract_minimal",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1587,8 +4357,18 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 197115,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T003156-default-fair-minimax-minimax-m3-ethereum__deposit_contract_minimal",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "source": "full-240"
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "task_ref": "kleros/sortition_trees/draw_interval_matches_weights",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "total_tokens": 14368,
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1597,8 +4377,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 73536,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T042431-default-fair-minimax-minimax-m3-zodiac__roles_decoder_faithfulness",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1607,8 +4387,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 73536,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T042431-default-fair-minimax-minimax-m3-zodiac__roles_decoder_faithfulness",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1617,8 +4397,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 73536,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T042431-default-fair-minimax-minimax-m3-zodiac__roles_decoder_faithfulness",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1627,18 +4407,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 38743,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T210622-default-fair-minimax-minimax-m3-kleros__sortition_trees__draw_selects_valid_leaf",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
-    "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T215905-default-fair-anthropic-claude-opus-5-erc4337__entry_point_invariant__beneficiary_eq_total_prefund",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1647,8 +4417,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 144074,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T233206-default-fair-minimax-minimax-m3-nexus_mutual__ramm_price_band",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1657,8 +4427,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 144074,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T233206-default-fair-minimax-minimax-m3-nexus_mutual__ramm_price_band",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1667,8 +4437,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 144074,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T233206-default-fair-minimax-minimax-m3-nexus_mutual__ramm_price_band",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1677,18 +4447,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 144074,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T233206-default-fair-minimax-minimax-m3-nexus_mutual__ramm_price_band",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "cork/pool_solvency/solvency_preserved",
-    "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T023055-default-fair-anthropic-claude-opus-5-cork__pool_solvency__solvency_preserved",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1697,8 +4457,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 234955,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T011434-default-fair-minimax-minimax-m3-lido__vaulthub_locked",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1707,8 +4467,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 234955,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T011434-default-fair-minimax-minimax-m3-lido__vaulthub_locked",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1717,8 +4477,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 234955,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T011434-default-fair-minimax-minimax-m3-lido__vaulthub_locked",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1727,8 +4487,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 234955,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T011434-default-fair-minimax-minimax-m3-lido__vaulthub_locked",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1737,8 +4497,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1747,8 +4507,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1757,8 +4517,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1767,8 +4527,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1777,8 +4537,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1787,8 +4547,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1797,8 +4557,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1807,8 +4567,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1817,8 +4577,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1827,8 +4587,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1837,8 +4597,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1847,8 +4607,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1857,8 +4617,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1867,8 +4627,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1877,8 +4637,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1887,8 +4647,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1897,8 +4657,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1907,8 +4667,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1917,8 +4677,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1927,8 +4687,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1937,8 +4697,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1947,8 +4707,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1957,8 +4717,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1967,8 +4727,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1977,8 +4737,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1987,8 +4747,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -1997,8 +4757,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2007,8 +4767,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2017,8 +4777,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2027,8 +4787,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2037,38 +4797,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1038526,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T000207-default-fair-minimax-minimax-m3-erc4337__entry_point_invariant",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "minimax/MiniMax-M3",
-    "task_ref": "kleros/sortition_trees/draw_interval_matches_weights",
-    "passed": false,
-    "final_class": "GENUINE_FAIL",
-    "total_tokens": 38786,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T210346-default-fair-minimax-minimax-m3-kleros__sortition_trees__draw_interval_matches_weights",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
-    "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T023416-default-fair-anthropic-claude-opus-5-alchemix__earmark_conservation__redeem_preserves_invariant",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
-    "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T023755-default-fair-anthropic-claude-opus-5-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2077,8 +4807,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 117925,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025148-default-fair-minimax-minimax-m3-rootstock__flyover_quote_lifecycle",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2087,8 +4817,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 117925,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025148-default-fair-minimax-minimax-m3-rootstock__flyover_quote_lifecycle",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2097,8 +4827,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 117925,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T025148-default-fair-minimax-minimax-m3-rootstock__flyover_quote_lifecycle",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2107,8 +4837,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 229974,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012212-default-fair-minimax-minimax-m3-lifi__swap_atomicity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2117,8 +4847,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 229974,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012212-default-fair-minimax-minimax-m3-lifi__swap_atomicity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2127,8 +4857,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 229974,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012212-default-fair-minimax-minimax-m3-lifi__swap_atomicity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2137,8 +4867,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 229974,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012212-default-fair-minimax-minimax-m3-lifi__swap_atomicity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2147,8 +4877,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 229974,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012212-default-fair-minimax-minimax-m3-lifi__swap_atomicity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2157,8 +4887,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 39887,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040328-default-fair-minimax-minimax-m3-wildcat__borrow_liquidity_safety",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2167,8 +4897,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2177,8 +4907,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2187,8 +4917,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2197,8 +4927,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2207,8 +4937,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2217,8 +4947,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2227,8 +4957,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2237,8 +4967,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2247,8 +4977,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2257,8 +4987,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2267,8 +4997,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2277,8 +5007,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 387814,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T041508-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2287,8 +5017,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 41657,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T010834-default-fair-minimax-minimax-m3-kyberswap__partial_fill_price_floor",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2297,8 +5027,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 130631,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T235351-default-fair-minimax-minimax-m3-damn_vulnerable_defi__side_entrance",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2307,8 +5037,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 130631,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T235351-default-fair-minimax-minimax-m3-damn_vulnerable_defi__side_entrance",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2317,8 +5047,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 130631,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260807T235351-default-fair-minimax-minimax-m3-damn_vulnerable_defi__side_entrance",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2327,28 +5057,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 26600,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T034838-default-fair-minimax-minimax-m3-termmax__order_v2_buy_xt_single_segment",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "anthropic/claude-opus-5",
-    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
-    "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T014852-default-fair-anthropic-claude-opus-5-forgeyields__global_solvency__handle_preserves_global_solvency",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "openai/gpt-5.6",
-    "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
-    "passed": false,
-    "final_class": "INFRA_INVALID",
-    "total_tokens": 0,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260809T024714-default-fair-openai-gpt-5-6-damn_vulnerable_defi__side_entrance__exploit_trace_drains_pool",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2357,8 +5067,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 211385,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035039-default-fair-minimax-minimax-m3-uniswap_v2__pair_fee_adjusted_swap",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2367,8 +5077,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 211385,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035039-default-fair-minimax-minimax-m3-uniswap_v2__pair_fee_adjusted_swap",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2377,8 +5087,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 211385,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035039-default-fair-minimax-minimax-m3-uniswap_v2__pair_fee_adjusted_swap",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2387,8 +5097,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 211385,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035039-default-fair-minimax-minimax-m3-uniswap_v2__pair_fee_adjusted_swap",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2397,8 +5107,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 211385,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035039-default-fair-minimax-minimax-m3-uniswap_v2__pair_fee_adjusted_swap",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2407,8 +5117,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 211385,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T035039-default-fair-minimax-minimax-m3-uniswap_v2__pair_fee_adjusted_swap",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2417,8 +5127,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2427,8 +5137,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2437,8 +5147,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2447,8 +5157,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2457,8 +5167,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2467,8 +5177,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2477,8 +5187,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2487,8 +5197,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2497,8 +5207,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2507,8 +5217,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 352176,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T012801-default-fair-minimax-minimax-m3-onedelta__caller_address_integrity",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2517,8 +5227,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 335972,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T004028-default-fair-minimax-minimax-m3-forgeyields__global_solvency",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2527,8 +5237,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 335972,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T004028-default-fair-minimax-minimax-m3-forgeyields__global_solvency",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2537,18 +5247,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 335972,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T004028-default-fair-minimax-minimax-m3-forgeyields__global_solvency",
-    "profile": "full-240",
-    "source": "full-240"
-  },
-  {
-    "model": "minimax/MiniMax-M3",
-    "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency",
-    "passed": false,
-    "final_class": "GENUINE_FAIL",
-    "total_tokens": 335972,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T004028-default-fair-minimax-minimax-m3-forgeyields__global_solvency",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2557,8 +5257,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 335972,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T004028-default-fair-minimax-minimax-m3-forgeyields__global_solvency",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2567,8 +5267,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 335972,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T004028-default-fair-minimax-minimax-m3-forgeyields__global_solvency",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2577,8 +5277,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2587,8 +5287,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2597,8 +5297,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2607,8 +5307,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2617,8 +5317,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2627,8 +5327,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2637,8 +5337,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2647,8 +5347,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2657,8 +5357,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2667,8 +5367,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2677,8 +5377,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2687,8 +5387,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2697,8 +5397,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2707,8 +5407,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 511021,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T040527-default-fair-minimax-minimax-m3-yo_protocol__async_redemption_escrow",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2717,8 +5417,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2727,8 +5427,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2737,8 +5437,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2747,8 +5447,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2757,8 +5457,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2767,8 +5467,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2777,8 +5477,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2787,8 +5487,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2797,8 +5497,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2807,8 +5507,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2817,8 +5517,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2827,8 +5527,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2837,8 +5537,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2847,8 +5547,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2857,8 +5557,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2867,8 +5567,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2877,8 +5577,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2887,8 +5587,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2897,8 +5597,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2907,8 +5607,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2917,8 +5617,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2927,8 +5627,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2937,8 +5637,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2947,8 +5647,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2957,8 +5657,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2967,8 +5667,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 1267744,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T014320-default-fair-minimax-minimax-m3-paladin_votes__stream_recovery_claim_usdc",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2977,8 +5677,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 241973,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T010006-default-fair-minimax-minimax-m3-kleros__sortition_trees",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2987,8 +5687,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 241973,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T010006-default-fair-minimax-minimax-m3-kleros__sortition_trees",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -2997,8 +5697,8 @@
     "passed": true,
     "final_class": "SOLVED",
     "total_tokens": 241973,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T010006-default-fair-minimax-minimax-m3-kleros__sortition_trees",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   },
   {
@@ -3007,8 +5707,8 @@
     "passed": false,
     "final_class": "GENUINE_FAIL",
     "total_tokens": 241973,
-    "run_dir": "/tmp/minimax-v02-release/results/runs/20260808T010006-default-fair-minimax-minimax-m3-kleros__sortition_trees",
-    "profile": "full-240",
+    "panel": "FULL-240",
+    "profile": "p1_release",
     "source": "full-240"
   }
 ]
