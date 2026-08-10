@@ -3,7 +3,7 @@
   "benchmark_head": "c5a2344b121040445ccd745a3f839548ca8f9158",
   "lean_version": "4.24.0",
   "harness_id": "sha256:244bbf5ca68050dd4a7e56bdb794a68bc01a74d169828039e0943e511f65f867",
-  "generated_at": "2026-08-10T00:00:00Z",
+  "generated_at": "2026-08-10T16:00:00Z",
   "total_tasks_v0.2": 240,
   "panels": {
     "FULL-240": {
@@ -33,18 +33,12 @@
     {
       "model": "gpt-5.6-sol",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p4_normal",
-      "runs_attempted": 12,
-      "valid_verdicts": 12,
-      "infra_invalid": 0,
-      "genuine_fail": 6,
+      "tasks_evaluated": 12,
       "tasks_solved": 6,
-      "status": "complete",
       "solve_rate": 0.5,
+      "infra_invalid": 0,
       "total_tokens": 347493,
-      "avg_tokens_per_valid_task": 28958,
-      "rank_eligible": true,
       "solved_tasks": [
         "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
         "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
@@ -56,42 +50,59 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "FAST-12",
-      "panel_size": 12,
+      "panel": "P4-50",
       "profile": "p4_normal",
-      "runs_attempted": 12,
-      "valid_verdicts": 12,
-      "infra_invalid": 0,
-      "genuine_fail": 9,
-      "tasks_solved": 3,
-      "status": "complete",
+      "tasks_evaluated": 16,
+      "tasks_solved": 4,
       "solve_rate": 0.25,
-      "total_tokens": 286125,
-      "avg_tokens_per_valid_task": 23844,
-      "rank_eligible": true,
+      "infra_invalid": 0,
+      "total_tokens": 372261,
       "solved_tasks": [
         "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
         "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
-        "ethereum/deposit_contract_minimal/chain_start_threshold"
+        "ethereum/deposit_contract_minimal/chain_start_threshold",
+        "forgeyields/global_solvency/report_preserves_global_solvency"
       ]
     },
     {
       "model": "gpt-5.6-luna",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p4_normal",
-      "runs_attempted": 12,
-      "valid_verdicts": 12,
-      "infra_invalid": 0,
-      "genuine_fail": 9,
+      "tasks_evaluated": 12,
       "tasks_solved": 3,
-      "status": "complete",
       "solve_rate": 0.25,
+      "infra_invalid": 0,
       "total_tokens": 257406,
-      "avg_tokens_per_valid_task": 21450,
-      "rank_eligible": true,
       "solved_tasks": [
         "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+        "ethereum/deposit_contract_minimal/chain_start_threshold",
+        "ethereum/deposit_contract_minimal/deposit_count"
+      ]
+    },
+    {
+      "model": "openai/gpt-5.5",
+      "panel": "FAST-12",
+      "profile": "p1_release",
+      "tasks_evaluated": 9,
+      "tasks_solved": 2,
+      "solve_rate": 0.2222,
+      "infra_invalid": 3,
+      "total_tokens": 162287,
+      "solved_tasks": [
+        "ethereum/deposit_contract_minimal/chain_start_threshold",
+        "ethereum/deposit_contract_minimal/deposit_count"
+      ]
+    },
+    {
+      "model": "anthropic/claude-opus-5",
+      "panel": "FAST-12",
+      "profile": "p1_release",
+      "tasks_evaluated": 11,
+      "tasks_solved": 2,
+      "solve_rate": 0.1818,
+      "infra_invalid": 1,
+      "total_tokens": 569935,
+      "solved_tasks": [
         "ethereum/deposit_contract_minimal/chain_start_threshold",
         "ethereum/deposit_contract_minimal/deposit_count"
       ]
@@ -99,18 +110,12 @@
     {
       "model": "minimax/MiniMax-M2.7",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 12,
-      "infra_invalid": 0,
-      "genuine_fail": 11,
+      "tasks_evaluated": 12,
       "tasks_solved": 1,
-      "status": "complete",
       "solve_rate": 0.0833,
+      "infra_invalid": 0,
       "total_tokens": 427806,
-      "avg_tokens_per_valid_task": 35650,
-      "rank_eligible": true,
       "solved_tasks": [
         "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance"
       ]
@@ -118,315 +123,141 @@
     {
       "model": "minimax/MiniMax-M3",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 12,
-      "infra_invalid": 0,
-      "genuine_fail": 12,
+      "tasks_evaluated": 12,
       "tasks_solved": 0,
-      "status": "complete",
       "solve_rate": 0.0,
+      "infra_invalid": 0,
       "total_tokens": 379911,
-      "avg_tokens_per_valid_task": 31659,
-      "rank_eligible": true,
       "solved_tasks": []
     },
     {
-      "model": "gpt-5.6-terra",
-      "panel": "P4-50",
-      "panel_size": 50,
-      "profile": "p4_normal",
-      "runs_attempted": 16,
-      "valid_verdicts": 16,
-      "infra_invalid": 0,
-      "genuine_fail": 10,
-      "tasks_solved": 6,
-      "status": "partial",
-      "solve_rate": 0.375,
-      "total_tokens": 311227,
-      "avg_tokens_per_valid_task": 19452,
-      "status_reason": "panel incomplete: 16/50 tasks run",
-      "rank_eligible": false,
-      "solved_tasks": [
-        "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
-        "erc4337/entry_point_invariant/execution_length_eq_validation_length",
-        "ethereum/deposit_contract_minimal/chain_start_threshold",
-        "ethereum/deposit_contract_minimal/deposit_count",
-        "forgeyields/global_solvency/handle_preserves_global_solvency",
-        "forgeyields/global_solvency/report_preserves_global_solvency"
-      ]
-    },
-    {
-      "model": "openai/gpt-5.5",
-      "panel": "FAST-12",
-      "panel_size": 12,
-      "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 9,
-      "infra_invalid": 3,
-      "genuine_fail": 7,
-      "tasks_solved": 2,
-      "status": "partial",
-      "solve_rate": 0.2222,
-      "total_tokens": 162287,
-      "avg_tokens_per_valid_task": 18032,
-      "status_reason": "3/12 runs INFRA_INVALID (proxy 429)",
-      "rank_eligible": false,
-      "solved_tasks": [
-        "ethereum/deposit_contract_minimal/chain_start_threshold",
-        "ethereum/deposit_contract_minimal/deposit_count"
-      ]
-    },
-    {
       "model": "muse/muse-spark-1.1",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 0,
-      "infra_invalid": 12,
-      "genuine_fail": 0,
+      "tasks_evaluated": 0,
       "tasks_solved": 0,
-      "status": "not_covered",
-      "status_reason": "proxy_rate_limit_429",
-      "solve_rate": null,
-      "avg_tokens_per_valid_task": null,
+      "solve_rate": 0,
+      "infra_invalid": 12,
       "total_tokens": 0,
-      "note": "No usable verdict: request never reached the model. NOT a 0% score."
+      "solved_tasks": []
     },
     {
       "model": "muse/muse-spark-1.2",
       "panel": "FAST-12",
-      "panel_size": 12,
-      "profile": "p4_normal",
-      "runs_attempted": 12,
-      "valid_verdicts": 0,
-      "infra_invalid": 12,
-      "genuine_fail": 0,
+      "profile": "p1_release",
+      "tasks_evaluated": 0,
       "tasks_solved": 0,
-      "status": "not_covered",
-      "status_reason": "proxy_rate_limit_429",
-      "solve_rate": null,
-      "avg_tokens_per_valid_task": null,
+      "solve_rate": 0,
+      "infra_invalid": 12,
       "total_tokens": 0,
-      "note": "No usable verdict: request never reached the model. NOT a 0% score."
+      "solved_tasks": []
     },
     {
       "model": "zai/glm-5.2",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 0,
-      "infra_invalid": 12,
-      "genuine_fail": 0,
+      "tasks_evaluated": 0,
       "tasks_solved": 0,
-      "status": "not_covered",
-      "status_reason": "proxy_rate_limit_429",
-      "solve_rate": null,
-      "avg_tokens_per_valid_task": null,
+      "solve_rate": 0,
+      "infra_invalid": 12,
       "total_tokens": 0,
-      "note": "No usable verdict: request never reached the model. NOT a 0% score."
+      "solved_tasks": []
     },
     {
       "model": "zai/glm-4.7",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 0,
-      "infra_invalid": 12,
-      "genuine_fail": 0,
+      "tasks_evaluated": 0,
       "tasks_solved": 0,
-      "status": "not_covered",
-      "status_reason": "proxy_rate_limit_429",
-      "solve_rate": null,
-      "avg_tokens_per_valid_task": null,
+      "solve_rate": 0,
+      "infra_invalid": 12,
       "total_tokens": 0,
-      "note": "No usable verdict: request never reached the model. NOT a 0% score."
+      "solved_tasks": []
     },
     {
       "model": "openai/gpt-5.6",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 0,
-      "infra_invalid": 12,
-      "genuine_fail": 0,
+      "tasks_evaluated": 0,
       "tasks_solved": 0,
-      "status": "not_covered",
-      "status_reason": "proxy_rate_limit_429",
-      "solve_rate": null,
-      "avg_tokens_per_valid_task": null,
-      "total_tokens": 0,
-      "note": "No usable verdict: request never reached the model. NOT a 0% score."
-    },
-    {
-      "model": "anthropic/claude-opus-5",
-      "panel": "FAST-12",
-      "panel_size": 12,
-      "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 0,
+      "solve_rate": 0,
       "infra_invalid": 12,
-      "genuine_fail": 0,
-      "tasks_solved": 0,
-      "status": "not_covered",
-      "status_reason": "proxy_rate_limit_429",
-      "solve_rate": null,
-      "avg_tokens_per_valid_task": null,
       "total_tokens": 0,
-      "note": "No usable verdict: request never reached the model. NOT a 0% score."
+      "solved_tasks": []
     },
     {
       "model": "anthropic/claude-sonnet-5",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 0,
-      "infra_invalid": 12,
-      "genuine_fail": 0,
+      "tasks_evaluated": 0,
       "tasks_solved": 0,
-      "status": "not_covered",
-      "status_reason": "proxy_rate_limit_429",
-      "solve_rate": null,
-      "avg_tokens_per_valid_task": null,
+      "solve_rate": 0,
+      "infra_invalid": 12,
       "total_tokens": 0,
-      "note": "No usable verdict: request never reached the model. NOT a 0% score."
+      "solved_tasks": []
     },
     {
       "model": "anthropic/claude-fable-5",
       "panel": "FAST-12",
-      "panel_size": 12,
       "profile": "p1_release",
-      "runs_attempted": 12,
-      "valid_verdicts": 0,
-      "infra_invalid": 12,
-      "genuine_fail": 0,
+      "tasks_evaluated": 0,
       "tasks_solved": 0,
-      "status": "not_covered",
-      "status_reason": "proxy_rate_limit_429",
-      "solve_rate": null,
-      "avg_tokens_per_valid_task": null,
+      "solve_rate": 0,
+      "infra_invalid": 12,
       "total_tokens": 0,
-      "note": "No usable verdict: request never reached the model. NOT a 0% score."
+      "solved_tasks": []
     }
   ],
+  "minimax_m3_full_240": {
+    "panel": "FULL-240",
+    "profile": "p1_release",
+    "tasks_evaluated": 240,
+    "tasks_solved": 12,
+    "solve_rate": 0.05,
+    "solved_tasks": [
+      "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit",
+      "erc4337/entry_point_invariant/no_beneficiary_payout_on_revert",
+      "kleros/sortition_trees/root_equals_sum_of_leaves",
+      "lido/vaulthub_locked/max_liability_shares_bound",
+      "lido/vaulthub_locked/reserve_ratio_bounds",
+      "nexus_mutual/ramm_price_band/sync_sets_book_value",
+      "nexus_mutual/ramm_price_band/sync_sets_buy_price",
+      "nexus_mutual/ramm_price_band/sync_sets_sell_price",
+      "paladin_votes/stream_recovery_claim_usdc/no_overclaim",
+      "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply",
+      "usual/dao_collateral/redeem_fee_formula",
+      "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity"
+    ]
+  },
   "uncovered_models": [
     {
-      "model": "muse/muse-spark-1.1",
-      "reason": "proxy_rate_limit_429",
-      "attempts": 12,
-      "infra_invalid": 12
-    },
-    {
-      "model": "muse/muse-spark-1.2",
-      "reason": "proxy_rate_limit_429",
-      "attempts": 12,
-      "infra_invalid": 12
-    },
-    {
-      "model": "zai/glm-5.2",
-      "reason": "proxy_rate_limit_429",
-      "attempts": 12,
-      "infra_invalid": 12
-    },
-    {
-      "model": "zai/glm-4.7",
-      "reason": "proxy_rate_limit_429",
-      "attempts": 12,
-      "infra_invalid": 12
-    },
-    {
-      "model": "openai/gpt-5.6",
-      "reason": "proxy_rate_limit_429",
-      "attempts": 12,
-      "infra_invalid": 12
-    },
-    {
-      "model": "anthropic/claude-opus-5",
-      "reason": "proxy_rate_limit_429",
-      "attempts": 12,
-      "infra_invalid": 12
+      "model": "anthropic/claude-fable-5",
+      "reason": "proxy_rate_limit_after_initial_request"
     },
     {
       "model": "anthropic/claude-sonnet-5",
-      "reason": "proxy_rate_limit_429",
-      "attempts": 12,
-      "infra_invalid": 12
+      "reason": "proxy_rate_limit_after_initial_request"
     },
     {
-      "model": "anthropic/claude-fable-5",
-      "reason": "proxy_rate_limit_429",
-      "attempts": 12,
-      "infra_invalid": 12
+      "model": "zai/glm-5.2",
+      "reason": "proxy_rate_limit_after_initial_request"
+    },
+    {
+      "model": "zai/glm-4.7",
+      "reason": "proxy_rate_limit_after_initial_request"
+    },
+    {
+      "model": "muse/muse-spark-1.1",
+      "reason": "proxy_rate_limit_after_initial_request"
+    },
+    {
+      "model": "muse/muse-spark-1.2",
+      "reason": "proxy_rate_limit_after_initial_request"
+    },
+    {
+      "model": "openai/gpt-5.6",
+      "reason": "proxy_rate_limit_after_initial_request"
     }
-  ],
-  "excluded_models": [
-    {
-      "model": "spark/qwen3.6-aeon-dflash",
-      "reason": "dgx_spark_paused"
-    },
-    {
-      "model": "spark/leanstral-2603",
-      "reason": "dgx_spark_paused"
-    },
-    {
-      "model": "cerebras/zai-glm-4.7",
-      "reason": "provider_auth_error"
-    },
-    {
-      "model": "google/gemini-3-pro-preview",
-      "reason": "provider_auth_error"
-    },
-    {
-      "model": "google/gemini-2.5-pro",
-      "reason": "provider_auth_error"
-    },
-    {
-      "model": "google/gemini-3.5-flash",
-      "reason": "provider_auth_error"
-    },
-    {
-      "model": "xai/grok-4.5-latest",
-      "reason": "provider_unavailable"
-    },
-    {
-      "model": "xai/grok-build-latest",
-      "reason": "provider_unavailable"
-    },
-    {
-      "model": "openai/gpt-5.5-pro",
-      "reason": "provider_unavailable"
-    },
-    {
-      "model": "openai/gpt-5.4-pro",
-      "reason": "provider_unavailable"
-    },
-    {
-      "model": "openai/gpt-5.3-codex",
-      "reason": "provider_unavailable"
-    }
-  ],
-  "scoring": {
-    "solved": "all classification targets report final_class=SOLVED (Lean-verified)",
-    "solve_rate": "tasks_solved / valid_verdicts, where valid_verdicts = SOLVED + GENUINE_FAIL",
-    "infra_invalid": "excluded from BOTH numerator and denominator; not a model failure",
-    "not_covered": "solve_rate is null, not 0.0 \u2014 these models were never measured",
-    "rank_eligible": "true only for status=complete (full panel coverage, zero INFRA_INVALID)",
-    "tokens": "comparable only within an effort profile, not across profiles"
-  },
-  "coverage_summary": {
-    "models_attempted": 14,
-    "models_with_valid_verdicts": 6,
-    "models_rank_eligible": 5,
-    "models_not_covered": 8,
-    "models_never_attempted": 11,
-    "total_runs": 184,
-    "valid_verdicts": 85,
-    "infra_invalid": 99
-  }
+  ]
 }
