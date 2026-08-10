@@ -14,7 +14,7 @@
 
 | Panel | Tasks | Selection |
 |---|---|---|
-| FULL-240 | 240 | All benchmark tasks |
+| FULL-240 | 240 | All benchmark tasks (defined in `panels.json`; no verified result row is published) |
 | P4-50 | 50 | Stratified, seed=42 |
 | FAST-12 | 12 | First 12 tasks of P4-50 |
 
@@ -55,19 +55,16 @@ tokens/task is only comparable **within** a profile, not across profiles.
 
 ### Complete rows
 
-Full panel coverage, zero `INFRA_INVALID`. These are the rank-eligible results.
+Full coverage and zero `INFRA_INVALID`. Rows are comparable only within the same panel and
+profile, so this publication intentionally assigns no cross-panel or cross-profile ordinal.
 
-| # | Model | Panel | Profile | Solved | Evaluated | Rate | Avg tokens/task |
-|---|---|---|---|---:|---:|---:|---:|
-| 1 | **gpt-5.6-sol** | FAST-12 | p4_normal | 6 | 12 | **50.0%** | 28,958 |
-| 2 | **gpt-5.6-terra** | FAST-12 | p4_normal | 3 | 12 | **25.0%** | 23,844 |
-| 3 | gpt-5.6-luna | FAST-12 | p4_normal | 3 | 12 | 25.0% | 21,450 |
-| 4 | minimax/MiniMax-M2.7 | FAST-12 | p1_release | 1 | 12 | 8.3% | 35,650 |
-| 5 | minimax/MiniMax-M3 | FULL-240 | p1_release | 16 | 240 | 6.7% | 509,459 |
-| 6 | minimax/MiniMax-M3 | FAST-12 | p1_release | 0 | 12 | 0.0% | 31,659 |
-
-Ranks 2 and 3 are tied on solve rate (3/12); `gpt-5.6-terra` is listed first only because it
-is also the model with P4-50 coverage. A 12-task panel cannot separate them.
+| Model | Panel | Profile | Solved | Evaluated | Rate | Avg tokens/task |
+|---|---|---|---:|---:|---:|---:|
+| gpt-5.6-sol | FAST-12 | p4_normal | 6 | 12 | 50.0% | 28,958 |
+| gpt-5.6-terra | FAST-12 | p4_normal | 3 | 12 | 25.0% | 23,844 |
+| gpt-5.6-luna | FAST-12 | p4_normal | 3 | 12 | 25.0% | 21,450 |
+| minimax/MiniMax-M2.7 | FAST-12 | p1_release | 1 | 12 | 8.3% | 35,650 |
+| minimax/MiniMax-M3 | FAST-12 | p1_release | 0 | 12 | 0.0% | 31,659 |
 
 ### Partial rows — shown for transparency, excluded from ranking
 
@@ -131,7 +128,7 @@ model-specific. That sweep is not included in `raw_results.json`.
 | Full panel coverage (rank-eligible) | 5 |
 | No usable data (proxy 429) | 8 |
 
-Of 424 total runs, 325 produced a valid Lean verdict and 99 were `INFRA_INVALID`.
+Of 184 published runs, 85 produced a valid Lean verdict and 99 were `INFRA_INVALID`.
 
 ## Cross-model task overlap (FAST-12)
 
@@ -153,48 +150,17 @@ The remaining six FAST-12 tasks (`1inch/xycswap_curve_safety`, both
 solved by **no** model. Note that `gpt-5.5`'s three `INFRA_INVALID` runs cover
 `1inch/xycswap_curve_safety` and both `alchemix` tasks, so it has no verdict on those.
 
-## MiniMax-M3 FULL-240 solved tasks (16/240)
-
-1. damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance
-2. damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit
-3. erc4337/entry_point_invariant/execution_length_eq_validation_length
-4. erc4337/entry_point_invariant/no_beneficiary_payout_on_revert
-5. ethereum/deposit_contract_minimal/chain_start_threshold
-6. forgeyields/global_solvency/report_preserves_global_solvency
-7. kleros/sortition_trees/root_equals_sum_of_leaves
-8. lido/vaulthub_locked/max_liability_shares_bound
-9. lido/vaulthub_locked/reserve_ratio_bounds
-10. nexus_mutual/ramm_price_band/sync_sets_book_value
-11. nexus_mutual/ramm_price_band/sync_sets_buy_price
-12. nexus_mutual/ramm_price_band/sync_sets_sell_price
-13. paladin_votes/stream_recovery_claim_usdc/no_overclaim
-14. t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply
-15. usual/dao_collateral/redeem_fee_formula
-16. wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity
-
 ## Key Findings
 
-1. **Effort budget matters more than the 12-task ranking suggests.** MiniMax-M3 scores 0/12
-   on FAST-12 at p1_release (2 attempts / 24 tool calls) but solves 16/240 on the full panel
-   at the same profile, and gpt-5.6-sol reaches 50% on FAST-12 at p4_normal (16/120). The
-   sweep does not run any single model at both profiles on the same panel, so effort and
-   model are confounded — this is a hypothesis the data is consistent with, not a measured
-   effect.
+1. **The GPT-5.6 family leads among the measured p4_normal FAST-12 models**: sol (6/12) > terra = luna (3/12),
+   all producing real Lean proofs.
 
-2. **The GPT-5.6 family leads among measured models**: sol (6/12) > terra = luna (3/12) on
-   FAST-12 at p4_normal, all producing real Lean proofs.
-
-3. **MiniMax-M3 FULL-240 is the only full-benchmark result**: 16/240 = 6.7% with zero
-   `INFRA_INVALID`, at 509k tokens/task. For reference, the v0.1 `leaderboard.md` records
-   MiniMax-M3 at 38/135 = 28.1% and ~773k tokens/task, on a different task set — v0.1 and
-   v0.2 rates are not comparable.
-
-4. **`side_entrance/flash_loan_via_deposit_preserves_pool_balance` and
+2. **`side_entrance/flash_loan_via_deposit_preserves_pool_balance` and
    `deposit_contract_minimal/chain_start_threshold` are the most-solved tasks**, each cleared
    by 4 of the 6 models that produced verdicts.
 
-5. **Proxy rate-limiting, not model capability, is the binding constraint.** 8 of 14
-   attempted models produced zero tokens, and 99 of 424 runs were `INFRA_INVALID`. The
+3. **Proxy rate-limiting, not model capability, is the binding constraint.** 8 of 14
+   attempted models produced zero tokens, and 99 of 184 runs were `INFRA_INVALID`. The
    headline caveat on this sweep is coverage, not scores.
 
 ## Caveats
@@ -203,8 +169,8 @@ solved by **no** model. Note that `gpt-5.5`'s three `INFRA_INVALID` runs cover
   as indicative, not decisive.
 - Profiles are not held constant across models, so the leaderboard mixes effort levels.
   Compare within a profile.
-- Only one model (MiniMax-M3) has full-benchmark coverage. All other rates come from a 12-
-  or 16-task subset.
+- No FULL-240 result is published: nine retained MiniMax-M3 raw rows conflict with their
+  archived artifacts, so that cohort is withheld rather than reconstructed by assumption.
 - Solve rates exclude `INFRA_INVALID` runs, so a model's denominator may be smaller than the
   panel size. The partial table states this explicitly per row.
 
@@ -228,8 +194,12 @@ python -m harness.cli run-task <task_ref> \
 
 ## Files
 
-- `leaderboard.json` — structured leaderboard; each row carries `tasks_evaluated`,
-  `infra_invalid`, `genuine_fail` and `solved_tasks`, so partial coverage is recoverable
-  from the data.
-- `raw_results.json` — per-task raw results (424 rows across 3 panels), one row per
+- `leaderboard.json` — structured leaderboard; each row carries `runs_attempted`,
+  `valid_verdicts`, `infra_invalid`, `genuine_fail` and `solved_tasks`, so partial coverage
+  is recoverable from the data.
+- `raw_results.json` — per-task raw results (184 rows across FAST-12 and P4-50), one row per
   (model, task) job with its `final_class` and token usage.
+- `panels.json` — ordered membership for all three declared panels.
+- `v0.2-manifest.json` — immutable 240-task benchmark manifest for the pinned release.
+- `run-artifact-index.json` and `artifacts/run-archive.tar.gz` — SHA-256-indexed run
+  artifacts, including `run.json`, verifier output, submitted attempts and logs.

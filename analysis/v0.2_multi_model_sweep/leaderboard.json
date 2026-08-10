@@ -117,40 +117,6 @@
     },
     {
       "model": "minimax/MiniMax-M3",
-      "panel": "FULL-240",
-      "panel_size": 240,
-      "profile": "p1_release",
-      "runs_attempted": 240,
-      "valid_verdicts": 240,
-      "infra_invalid": 0,
-      "genuine_fail": 224,
-      "tasks_solved": 16,
-      "status": "complete",
-      "solve_rate": 0.0667,
-      "total_tokens": 122270246,
-      "avg_tokens_per_valid_task": 509459,
-      "rank_eligible": true,
-      "solved_tasks": [
-        "t3tris/hwm_performance_fee/fee_claim_preserves_unclaimed_le_supply",
-        "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
-        "erc4337/entry_point_invariant/execution_length_eq_validation_length",
-        "ethereum/deposit_contract_minimal/chain_start_threshold",
-        "usual/dao_collateral/redeem_fee_formula",
-        "forgeyields/global_solvency/report_preserves_global_solvency",
-        "nexus_mutual/ramm_price_band/sync_sets_book_value",
-        "nexus_mutual/ramm_price_band/sync_sets_buy_price",
-        "nexus_mutual/ramm_price_band/sync_sets_sell_price",
-        "lido/vaulthub_locked/max_liability_shares_bound",
-        "lido/vaulthub_locked/reserve_ratio_bounds",
-        "erc4337/entry_point_invariant/no_beneficiary_payout_on_revert",
-        "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity",
-        "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_sets_sender_credit",
-        "paladin_votes/stream_recovery_claim_usdc/no_overclaim",
-        "kleros/sortition_trees/root_equals_sum_of_leaves"
-      ]
-    },
-    {
-      "model": "minimax/MiniMax-M3",
       "panel": "FAST-12",
       "panel_size": 12,
       "profile": "p1_release",
@@ -459,8 +425,8 @@
     "models_rank_eligible": 5,
     "models_not_covered": 8,
     "models_never_attempted": 11,
-    "total_runs": 424,
-    "valid_verdicts": 325,
+    "total_runs": 184,
+    "valid_verdicts": 85,
     "infra_invalid": 99
   }
 }
