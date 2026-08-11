@@ -3518,5 +3518,37 @@
     "completion_tokens": 0,
     "total_tokens": 0,
     "requests": 0
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "kleros/sortition_trees/draw_selects_valid_leaf",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T190019-default-fair-gpt-5-6-luna-kleros__sortition_trees__draw_selects_valid_leaf",
+    "returncode": 1,
+    "elapsed_seconds": 257.3,
+    "prompt_tokens": 34278,
+    "completion_tokens": 5090,
+    "total_tokens": 39368,
+    "requests": 13
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T190321-default-fair-zai-glm-5-2-ipor__plasma_vault_redeem_split__fee_payout_bounded_by_fee_free",
+    "returncode": 1,
+    "elapsed_seconds": 83.9,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
   }
 ]
