@@ -10,9 +10,9 @@ translation_status: translated
 spec_status: frozen
 proof_status: complete
 upstream_repo: https://github.com/roycoprotocol/royco-day
-upstream_commit: 13f528821ccd233588c4bd63da9024fe454564ab
+upstream_commit: cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a
 original_contract_path: src/accountant/RoycoDayAccountant.sol
-source_ref: https://github.com/roycoprotocol/royco-day@13f528821ccd233588c4bd63da9024fe454564ab:src/accountant/RoycoDayAccountant.sol
+source_ref: https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol
 lean_target: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Compile
 spec_target: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Specs
 proof_target: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs
@@ -38,7 +38,7 @@ abstraction_tags:
   - balancer_oracle_slippage_floor_precomputed
   - erc20_balances_pruned
 abstraction_notes: >
-  Models the PR #20 head accountant state directly: collateral NAV, LPT raw NAV, ST/JT
+  Models the Royco Day v1.0.0 accountant state directly: collateral NAV, LPT raw NAV, ST/JT
   effective NAV, and JT impermanent loss. Collateral losses hit JT first and gains
   repay global JT impermanent loss before residual ST/JT allocation and premium or
   fee computation. The six post-operation checkpoints use current collateral and
@@ -56,9 +56,9 @@ unsupported_feature_codes:
   - balancer_oracle_slippage_valuation
   - erc20_share_mint_callbacks
 notes: >
-  Proves that Royco Day's source-head waterfall repays global JT impermanent loss
+  Proves that Royco Day's v1.0.0 waterfall repays global JT impermanent loss
   before any residual gain, premium, or protocol fee. LPT liquidity premium stays
   inside ST effective NAV and is coverage-neutral until its ownership shares are
-  minted. The prior independent-JT-fee counterexample was removed because PR #20 head
+  minted. The prior independent-JT-fee counterexample was removed because Royco Day v1.0.0
   eliminated independent tranche PnL inputs; a concrete partial-recovery regression
   now proves that remaining impermanent loss implies zero fees.

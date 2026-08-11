@@ -4,10 +4,9 @@ import Verity
 # Royco Day LPT liquidity-premium priority model
 
 Source: `roycoprotocol/royco-day` at
-`13f528821ccd233588c4bd63da9024fe454564ab` (PR #20 head), based on
-`23b1c993060e7a9db9618de53c36cef8632c0596` (`audit/remediations`).
+`cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a` (`v1.0.0`).
 
-This source-structured slice follows the head accountant waterfall, fee mint,
+This source-structured slice follows the v1.0.0 accountant waterfall, fee mint,
 six post-operation shapes, utilization, virtual-share valuation, and inner
 Balancer reinvestment state update. The historical module/case identifier keeps
 `LT` for benchmark compatibility; all modeled source identifiers use `LPT`.
@@ -22,9 +21,10 @@ Simplifications and refinement boundaries:
    elapsed premium window, and already-capped time-weighted accumulators. The
    source's same-block branch is represented by `elapsed = 1` and instantaneous
    capped shares as the accumulators.
-3. Fixed-term expiry is a supplied boolean. The transition itself is modeled:
-   duration zero, JT wipe, IL at/below dust, expiry, or liquidation-utilization
-   breach forces `PERPETUAL` and clears IL; otherwise the result is `FIXED_TERM`.
+3. Fixed-term expiry and the post-deployment grace period are supplied booleans.
+   The transition itself is modeled: duration zero, zero ST NAV, JT wipe, IL
+   at/below dust, expiry, liquidation-utilization breach, or an active grace
+   period forces `PERPETUAL` and clears IL; otherwise the result is `FIXED_TERM`.
    Timestamp writes and events are omitted.
 4. ERC20 callbacks and balances are omitted. Fee mint sizing preserves retained
    senior NAV, virtual shares/value, collapsed-price clamp, floor rounding,
@@ -123,6 +123,7 @@ structure SyncConfig where
   coverageLiquidationUtilizationWAD : Nat
   fixedTermDurationZero : Bool
   fixedTermExpired : Bool
+  fixedTermGracePeriodActive : Bool
   deriving Repr, DecidableEq
 
 structure YieldOutputs where
@@ -163,11 +164,13 @@ structure SyncResult where
 
 def shouldBePerpetual (state : AccountingState) (cfg : SyncConfig) : Bool :=
   cfg.fixedTermDurationZero ||
+    decide (state.stEffectiveNAV = 0) ||
     decide (state.jtEffectiveNAV = 0) ||
     decide (state.jtImpermanentLoss ≤ cfg.dustTolerance) ||
     (decide (state.marketState = .fixedTerm) && cfg.fixedTermExpired) ||
     decide (coverageUtilizationWAD state.collateralNAV cfg.minCoverageWAD
-      state.jtEffectiveNAV ≥ cfg.coverageLiquidationUtilizationWAD)
+      state.jtEffectiveNAV ≥ cfg.coverageLiquidationUtilizationWAD) ||
+    cfg.fixedTermGracePeriodActive
 
 def applyMarketTransition
     (provisional : SyncResult) (cfg : SyncConfig) : SyncResult :=

@@ -10,37 +10,37 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 41,
-    "implementation_count": 42,
-    "active_case_count": 41,
+    "family_count": 43,
+    "implementation_count": 44,
+    "active_case_count": 43,
     "backlog_case_count": 1,
-    "active_task_count": 263,
+    "active_task_count": 278,
     "backlog_task_count": 0,
-    "buildable_case_count": 41,
-    "runnable_task_count": 263,
+    "buildable_case_count": 43,
+    "runnable_task_count": 278,
     "case_stage_counts": {
-      "build_green": 32,
+      "build_green": 33,
       "candidate": 1,
-      "proof_complete": 9
+      "proof_complete": 10
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 41
+      "translated": 43
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 34,
+      "complete": 36,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 263
+      "proof-only": 278
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
       "accounting_bound": 18,
-      "accounting_conservation": 32,
+      "accounting_conservation": 40,
       "accounting_effect": 2,
       "accounting_invariant": 3,
       "accounting_invariant_break": 1,
@@ -48,6 +48,7 @@
       "additivity": 1,
       "all_or_nothing": 3,
       "arithmetic_rounding": 6,
+      "arithmetic_safety": 1,
       "atomic_finalization": 2,
       "authority_required": 2,
       "authorization_state": 9,
@@ -69,6 +70,7 @@
       "cross_contract_fee_accounting": 1,
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
+      "economic_safety": 5,
       "escrow_lower_bound": 3,
       "exploit_trace": 1,
       "failure_propagation": 3,
@@ -79,6 +81,7 @@
       "fee_rounding_and_aliasing": 1,
       "fee_trigger": 1,
       "frame_property": 2,
+      "functional_correctness": 1,
       "functional_property": 2,
       "guarded_solvency": 7,
       "independence_invariant": 1,
@@ -134,13 +137,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 42,
-      "functional_correctness": 60,
+      "functional_correctness": 72,
       "protocol_transition_correctness": 40,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 79
+      "state_preservation_local_effects": 82
     },
     "family_split_counts": {
-      "active": 40,
+      "active": 42,
       "mixed": 1
     }
   },
@@ -622,6 +625,23 @@
       "manifest_path": "families/rootstock/family.yaml"
     },
     {
+      "family_id": "royco_day",
+      "display_name": "Royco Day",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Royco Day's three-tranche fixed-yield markets. Covers ST/JT loss absorption, recovery priority, LPT premium accounting, fee-share ownership, post-operation checkpoints, and the inner LPT reinvestment leg.",
+      "implementation_ids": [
+        "day"
+      ],
+      "case_ids": [
+        "royco_day/lt_liquidity_premium_priority"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/royco_day/family.yaml"
+    },
+    {
       "family_id": "safe",
       "display_name": "Safe",
       "split": "active",
@@ -758,6 +778,23 @@
         "solidity"
       ],
       "manifest_path": "families/usual/family.yaml"
+    },
+    {
+      "family_id": "velora",
+      "display_name": "Velora",
+      "split": "active",
+      "status": "active",
+      "description": "Velora (formerly ParaSwap) BridgeStaking cross-chain staking accounting benchmarks.",
+      "implementation_ids": [
+        "bridge_staking"
+      ],
+      "case_ids": [
+        "velora/bridge_staking"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/velora/family.yaml"
     },
     {
       "family_id": "wildcat",
@@ -1295,6 +1332,22 @@
       "manifest_path": "families/rootstock/implementations/flyover-lbc/implementation.yaml"
     },
     {
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "display_name": "Royco Day",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/roycoprotocol/royco-day",
+      "upstream_commit": "cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a",
+      "source_language": "solidity",
+      "source_artifact_path": "src/accountant/RoycoDayAccountant.sol",
+      "case_ids": [
+        "royco_day/lt_liquidity_premium_priority"
+      ],
+      "notes": "Royco Day three-tranche accounting at the pinned v1.0.0 release. This is distinct from Royco Dawn, which has no liquidity tranche.",
+      "manifest_path": "families/royco_day/implementations/day/implementation.yaml"
+    },
+    {
       "family_id": "safe",
       "implementation_id": "smart_account",
       "display_name": "Safe Smart Account",
@@ -1437,6 +1490,22 @@
       ],
       "notes": "Source was taken from the verified Etherscan implementation behind the public DaoCollateral proxy at 0xde6e1F680C4816446C8D515989E2358636A38b04.",
       "manifest_path": "families/usual/implementations/verified_proxy/implementation.yaml"
+    },
+    {
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "display_name": "Velora BridgeStaking",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/VeloraDEX/velora-miro-contracts",
+      "upstream_commit": "bfb5f8093bc6f6db0f0840b83d22e803c2811fcb",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/BridgeStaking.sol",
+      "case_ids": [
+        "velora/bridge_staking"
+      ],
+      "notes": "BridgeStaking cross-chain staking accounting. Receives VLR/WETH via Across protocol two-leg delivery, allocates them to pending staking records, and either deposits them into seVLR or rescues them back to the beneficiary. Successful seVLR deposit is selected by an unconstrained branch abstraction and modeled with exact equal decrements to allocation and BridgeStaking balance for both tokens, under standard ERC-20 and atomic-call balance assumptions documented by the case. Storage is flattened semantically rather than preserving EVM layout; the exact beneficiary sentinel and post-initialization stored-amount check are preserved. Withdrawal, rescue, and handle-message conservation all have complete Lean proofs from the incoming invariant. Explicit Boolean outcomes model each SafeTransferLib call; a failed transfer atomically reverts the full modeled transaction, including earlier rescue writes. The handle proof composes source-faithful record-preparation, token-credit, and settlement lemmas; checked-arithmetic failures and explicit failed guards also revert to the incoming state.",
+      "manifest_path": "families/velora/implementations/bridge_staking/implementation.yaml"
     },
     {
       "family_id": "wildcat",
@@ -2852,6 +2921,62 @@
       "proof_target": "Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs"
     },
     {
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "project": "royco_day",
+      "case_name": "lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/case.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/roycoprotocol/royco-day",
+      "upstream_commit": "cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a",
+      "original_contract_path": "src/accountant/RoycoDayAccountant.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "selected_functions": [
+        "_previewSyncTrancheAccounting",
+        "postOpSyncTrancheAccounting",
+        "_processFeesAndLiquidityPremium",
+        "_computeSTFeeAndLiquidityPremiumSharesToMint",
+        "_convertToShares",
+        "_accruePremiumYieldShares",
+        "_computeCoverageUtilization",
+        "_computeLiquidityUtilization",
+        "attemptLiquidityPremiumReinvestment"
+      ],
+      "lean_target": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Compile",
+      "failure_reason": null,
+      "notes": "Proves that Royco Day's v1.0.0 waterfall repays global JT impermanent loss before any residual gain, premium, or protocol fee. LPT liquidity premium stays inside ST effective NAV and is coverage-neutral until its ownership shares are minted. The prior independent-JT-fee counterexample was removed because Royco Day v1.0.0 eliminated independent tranche PnL inputs; a concrete partial-recovery regression now proves that remaining impermanent loss implies zero fees.",
+      "buildable": true,
+      "verity_commit": "49105e54ceff6d66921572cc85583538c2c8497d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "source_head_accountant_state",
+        "global_collateral_delta_waterfall",
+        "ydm_time_weighted_accumulators_precomputed",
+        "market_transition_conditions_modeled",
+        "balancer_oracle_slippage_floor_precomputed",
+        "erc20_balances_pruned"
+      ],
+      "abstraction_notes": "Models the Royco Day v1.0.0 accountant state directly: collateral NAV, LPT raw NAV, ST/JT effective NAV, and JT impermanent loss. Collateral losses hit JT first and gains repay global JT impermanent loss before residual ST/JT allocation and premium or fee computation. The six post-operation checkpoints use current collateral and LPT values plus the ST self-liquidation bonus. Fee minting preserves the source's virtual-share conversion and dilution clamp. Utilization and market-transition conditions are recomputed from the resulting state. External YDM calls supply elapsed time and bounded uint128 accumulators. Balancer execution outputs remain explicit inputs with exact cap, no-op, success, and rollback branches. The Lean helpers `handleCollateralLoss` and `handleCollateralGain` name the two inline semantic blocks inside Solidity `_previewSyncTrancheAccounting`; they are not claimed as Solidity entry points.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations",
+        "external_ydm_rate_accrual",
+        "balancer_oracle_slippage_valuation",
+        "erc20_share_mint_callbacks"
+      ],
+      "spec_target": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Specs",
+      "proof_target": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs"
+    },
+    {
       "case_id": "safe/owner_manager_reach",
       "project": "safe",
       "case_name": "owner_manager_reach",
@@ -3254,6 +3379,56 @@
       ],
       "spec_target": "Benchmark.Cases.Usual.DaoCollateral.Specs",
       "proof_target": "Benchmark.Cases.Usual.DaoCollateral.Proofs"
+    },
+    {
+      "case_id": "velora/bridge_staking",
+      "project": "velora",
+      "case_name": "bridge_staking",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/velora/bridge_staking/case.yaml",
+      "split": "active",
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/VeloraDEX/velora-miro-contracts",
+      "upstream_commit": "bfb5f8093bc6f6db0f0840b83d22e803c2811fcb",
+      "original_contract_path": "contracts/BridgeStaking.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol",
+      "selected_functions": [
+        "handleV3AcrossMessage",
+        "rescuePendingFunds",
+        "withdrawUnallocatedTokens"
+      ],
+      "lean_target": "Benchmark.Cases.Velora.BridgeStaking.Compile",
+      "failure_reason": null,
+      "notes": "Proofs.lean contains complete proofs from the incoming conservation invariant alone for withdrawUnallocatedTokens, rescuePendingFunds, and handleV3AcrossMessage. The proofs cover checked arithmetic, explicit guards, partial rescue flags, successful equal debits, and SafeTransferLib failure outcomes that atomically restore the incoming state. `depositResult` remains the explicit seVLR boundary input. Generated tasks retain proof holes for benchmark agents; the reference proof module contains no proof holes or Velora-specific axioms. The exact beneficiary sentinel and external-call scope are documented in Contract.lean and Specs.lean.",
+      "buildable": true,
+      "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "erc20_balance_modeled_as_storage_slot",
+        "external_sevlr_deposit_modeled_as_unconstrained_branch",
+        "standard_erc20_exact_balance_debit_assumption",
+        "atomic_balance_perturbations_excluded",
+        "public_authorization_and_pause_boundaries_excluded",
+        "keccak256_key_abstracted_as_opaque_uint256",
+        "flattened_semantic_storage_not_evm_layout",
+        "events_omitted"
+      ],
+      "abstraction_notes": "The benchmark targets Velora BridgeStaking's accounting conservation invariant: allocatedTokens[token] <= tokenBalance[token] for both VLR and WETH. This proves the owner's withdrawUnallocatedTokens can never consume allocated pending staking funds. Token balances (token.getBalance() in Solidity, which calls IERC20(token).balanceOf(address(this))) are modeled as scalar storage slots in a flattened semantic storage model, not the upstream inherited and packed EVM layout. The seVLR depositVLRAndWeth external call is not invoked or linked: it is represented by the explicit `depositResult` input, where 1 selects success and every other value selects catch/rescue. Boolean transfer-result inputs model each SafeTransferLib call in catch/rescue, public rescue, and owner withdrawal; false atomically reverts the complete modeled transaction. Successful seVLR and transfer branches subtract exact amounts from modeled balances and allocations. Entry balances are assumed to include the Across delivery and faithfully represent balanceOf, with no fees, rebases, seizures, donations, reentrancy-induced accounting mutation, or unrelated atomic balance changes. Approval execution and `minBptAmount` behavior are outside scope. Public caller, authorization, pause checks, sourceChainId, ABI decoding, and events are scope exclusions. Callback handling exactly uses the VLR/WETH token domain; owner withdrawal is intentionally the VLR/WETH accounting slice even though Solidity accepts arbitrary token addresses. keccak256(updatedMessage) is abstracted as an opaque Uint256 argument. The Staking struct is flattened: each field becomes its own keyed mapping. The exact beneficiary sentinel is preserved, and callback amount validation reads the selected stored amount after conditional initialization.",
+      "unsupported_feature_codes": [
+        "erc20_external_balance_modeled_as_storage",
+        "external_call_success_modeled_as_parameter"
+      ],
+      "spec_target": "Benchmark.Cases.Velora.BridgeStaking.Specs",
+      "proof_target": "Benchmark.Cases.Velora.BridgeStaking.Proofs"
     },
     {
       "case_id": "wildcat/borrow_liquidity_safety",
@@ -11224,6 +11399,570 @@
       }
     },
     {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/combined_premium_bound",
+      "task_id": "combined_premium_bound",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/combined_premium_bound.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "economic_safety",
+      "category": "premium_bound",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._combined_premium_bound",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/CombinedPremiumBound.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/fees_require_full_recovery",
+      "task_id": "fees_require_full_recovery",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/fees_require_full_recovery.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "economic_safety",
+      "category": "fee_recovery_priority",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._fees_require_full_recovery",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/FeesRequireFullRecovery.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/inner_reinvestment_coverage_neutral",
+      "task_id": "inner_reinvestment_coverage_neutral",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/inner_reinvestment_coverage_neutral.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "economic_safety",
+      "category": "reinvestment_coverage_neutral",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._inner_reinvestment_coverage_neutral",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/InnerReinvestmentCoverageNeutral.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/lpt_premium_coverage_neutral",
+      "task_id": "lpt_premium_coverage_neutral",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/lpt_premium_coverage_neutral.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "lpt_premium_coverage_neutral",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._lpt_premium_coverage_neutral",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/LPTPremiumCoverageNeutral.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/lpt_premium_mint_split",
+      "task_id": "lpt_premium_mint_split",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/lpt_premium_mint_split.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "fee_mint_split",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._lpt_premium_mint_split",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/LPTPremiumMintSplit.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/nat_uint256_refinement",
+      "task_id": "nat_uint256_refinement",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/nat_uint256_refinement.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "arithmetic_safety",
+      "category": "nat_uint256_refinement",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._nat_uint256_refinement",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/NatUint256Refinement.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/partial_recovery_no_fee_regression",
+      "task_id": "partial_recovery_no_fee_regression",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/partial_recovery_no_fee_regression.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "economic_safety",
+      "category": "source_head_regression",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._partial_recovery_no_fee_regression",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/PartialRecoveryNoFeeRegression.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/post_op_conserves_nav",
+      "task_id": "post_op_conserves_nav",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/post_op_conserves_nav.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "post_operation_conservation",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._post_op_conserves_nav",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/PostOpConservesNAV.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/post_op_no_yield",
+      "task_id": "post_op_no_yield",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/post_op_no_yield.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "functional_correctness",
+      "category": "post_operation_checkpoint",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._post_op_no_yield",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/PostOpNoYield.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/recovery_before_yield",
+      "task_id": "recovery_before_yield",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/recovery_before_yield.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "accounting_waterfall_priority",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._recovery_before_yield",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/RecoveryBeforeYield.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/st_loss_coverage_priority",
+      "task_id": "st_loss_coverage_priority",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/st_loss_coverage_priority.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "economic_safety",
+      "category": "loss_waterfall_priority",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._st_loss_coverage_priority",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/STLossCoveragePriority.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "royco_day/lt_liquidity_premium_priority/sync_conserves_nav",
+      "task_id": "sync_conserves_nav",
+      "case_id": "royco_day/lt_liquidity_premium_priority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/royco_day/lt_liquidity_premium_priority/tasks/sync_conserves_nav.yaml",
+      "split": "active",
+      "family_id": "royco_day",
+      "implementation_id": "day",
+      "source_ref": "https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "sync_nav_conservation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._sync_conserves_nav",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean",
+        "Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/SyncConservesNAV.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact simplification ledger and Specs.lean for successful uint/int source domains.",
+      "unsupported_feature_codes": [
+        "automatic_checked_arithmetic_obligations"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "safe/owner_manager_reach/add_owner_acyclicity",
       "task_id": "add_owner_acyclicity",
       "case_id": "safe/owner_manager_reach",
@@ -14080,6 +14819,142 @@
       }
     },
     {
+      "task_ref": "velora/bridge_staking/handle_v3_across_message_preserves_allocated",
+      "task_id": "handle_v3_across_message_preserves_allocated",
+      "case_id": "velora/bridge_staking",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/velora/bridge_staking/tasks/handle_v3_across_message_preserves_allocated.yaml",
+      "split": "active",
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "source_ref": "https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Velora.BridgeStaking.handleV3AcrossMessage_preserves_allocated",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Contract.lean"
+      ],
+      "specification_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Velora/BridgeStaking/Tasks/handle_v3_across_message_preserves_allocated.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The target covers VLR and WETH receive, stake success, stake catch with inline rescue, SafeTransferLib success/failure, and every reverting guard or checked- arithmetic path. Its synchronized specification binds the actual transition and asks for conservation from the incoming invariant. After exact beneficiary- sentinel initialization, callback amount validation uses the selected stored amount for both new and existing records. `depositResult` explicitly selects the external seVLR success-versus-catch outcome; Boolean per-token transfer results select each inline rescue transfer outcome. No external call is invoked or linked. Successful deposit and inline rescue debit each modeled balance by the same amount as its allocation; transfer failure atomically restores the incoming state, including earlier rescue writes. The Solidity interpretation assumes entry balances include Across delivery, balanceOf is faithful, successful transfers debit exactly the requested amount, and no fee, rebase, seizure, donation, reentrancy-induced accounting mutation, or other atomic balance perturbation occurs. Public caller, authorization, pause checks, approvals, sourceChainId, ABI decoding, and events are scope exclusions. Storage is flattened semantic storage rather than upstream EVM layout. The reference module mechanically proves the transition by composing record-preparation, token-credit, and settlement lemmas; the generated task remains an open proof obligation for benchmark agents.",
+      "unsupported_feature_codes": [
+        "erc20_external_balance_modeled_as_storage",
+        "external_call_success_modeled_as_parameter"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Velora.BridgeStaking.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "velora/bridge_staking/rescue_pending_funds_preserves_allocated",
+      "task_id": "rescue_pending_funds_preserves_allocated",
+      "case_id": "velora/bridge_staking",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/velora/bridge_staking/tasks/rescue_pending_funds_preserves_allocated.yaml",
+      "split": "active",
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "source_ref": "https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Velora.BridgeStaking.rescuePendingFunds_preserves_allocated",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Contract.lean"
+      ],
+      "specification_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Velora/BridgeStaking/Tasks/rescue_pending_funds_preserves_allocated.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Fully proved from the incoming conservation invariant alone for every modeled receipt-flag combination, beneficiary/not-executed guard, checked underflow, successful equal debit, and explicit per-token SafeTransferLib outcome. If either transfer fails, Contract.run atomically restores the incoming state, including any earlier VLR rescue writes. Successful transfers assume faithful balanceOf, exact requested-amount debits, and no fees, rebases, seizures, donations, reentrancy-induced accounting mutation, or unrelated atomic perturbations. Beneficiary-or-owner authorization is a public-boundary scope exclusion.",
+      "unsupported_feature_codes": [
+        "erc20_external_balance_modeled_as_storage"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Velora.BridgeStaking.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "velora/bridge_staking/withdraw_unallocated_tokens_preserves_allocated",
+      "task_id": "withdraw_unallocated_tokens_preserves_allocated",
+      "case_id": "velora/bridge_staking",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/velora/bridge_staking/tasks/withdraw_unallocated_tokens_preserves_allocated.yaml",
+      "split": "active",
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "source_ref": "https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Velora.BridgeStaking.withdrawUnallocatedTokens_preserves_allocated",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Contract.lean"
+      ],
+      "specification_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Velora/BridgeStaking/Tasks/withdraw_unallocated_tokens_preserves_allocated.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Fully proved under the conservation invariant alone. Successful executions withdraw balance - allocated and leave balance equal to allocated; arithmetic, zero-amount, and explicit SafeTransferLib failure outcomes atomically revert to the unchanged state. The Boolean transfer result is an external-call outcome abstraction. Relating successful modeled debits to ERC-20 execution assumes faithful balanceOf, exact requested-amount debits, and no fees, rebases, seizures, donations, reentrancy-induced accounting mutation, or other atomic balance perturbations. Solidity accepts arbitrary token addresses; this task intentionally covers only the VLR/WETH accounting slice selected by `isVlr`. Owner authorization is a public-boundary scope exclusion.",
+      "unsupported_feature_codes": [
+        "erc20_external_balance_modeled_as_storage"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Velora.BridgeStaking.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity",
       "task_id": "positive_borrow_preserves_required_liquidity",
       "case_id": "wildcat/borrow_liquidity_safety",
@@ -15658,5 +16533,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-30T12:51:38.751230+00:00"
+  "generated_at": "2026-08-11T16:34:50.687379+00:00"
 }

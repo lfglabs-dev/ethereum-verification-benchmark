@@ -5,7 +5,7 @@ case_id: royco_day/lt_liquidity_premium_priority
 split: active
 family_id: royco_day
 implementation_id: day
-source_ref: https://github.com/roycoprotocol/royco-day@13f528821ccd233588c4bd63da9024fe454564ab:src/accountant/RoycoDayAccountant.sol
+source_ref: https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol
 task_interface_version: 2
 theorem_name: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._fees_require_full_recovery
 proof_family: functional_correctness
@@ -28,7 +28,7 @@ reference_solution_module: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.P
 reference_solution_declaration: Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._fees_require_full_recovery
 abstraction_level: protocol_slice
 abstraction_notes: >
-  Source-head model pinned to Royco Day PR #20 head. See Contract.lean for the exact
+  Source model pinned to Royco Day v1.0.0. See Contract.lean for the exact
   simplification ledger and Specs.lean for successful uint/int source domains.
 unsupported_feature_codes:
   - automatic_checked_arithmetic_obligations

@@ -6,11 +6,11 @@ display_name: Royco Day
 split: active
 status: translated
 upstream_repo: https://github.com/roycoprotocol/royco-day
-upstream_commit: 13f528821ccd233588c4bd63da9024fe454564ab
+upstream_commit: cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a
 source_language: solidity
 source_artifact_path: src/accountant/RoycoDayAccountant.sol
 case_ids:
   - royco_day/lt_liquidity_premium_priority
 notes: >
-  Royco Day three-tranche accounting at the pinned PR #20 head source head. This is
+  Royco Day three-tranche accounting at the pinned v1.0.0 release. This is
   distinct from Royco Dawn, which has no liquidity tranche.

@@ -327,7 +327,12 @@ theorem _sync_conserves_nav
     dsimp at hSafe ⊢
     omega
   · have hEqual : currentCollateralNAV = last.collateralNAV := by omega
-    simpa [hEqual, finalizePreviewSyncResult, finalizeSyncResult] using hLast
+    rw [hEqual]
+    unfold finalizePreviewSyncResult finalizeSyncResult applyMarketTransition
+    by_cases hPerpetual :
+        shouldBePerpetual { last with lptRawNAV := 0 } syncCfg = true
+    · simpa [hPerpetual, AccountingState.conserves] using hLast
+    · simpa [hPerpetual, AccountingState.conserves] using hLast
 
 theorem _fees_require_full_recovery
     (last : AccountingState)

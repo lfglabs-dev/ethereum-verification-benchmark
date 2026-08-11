@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 41
-- Implementations: 42
-- Active cases: 41
-- Buildable active cases: 41
-- Active tasks: 263
+- Families: 43
+- Implementations: 44
+- Active cases: 43
+- Buildable active cases: 43
+- Active tasks: 278
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -293,6 +293,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `src/PegOutContract.sol`
 - Notes: This case focuses on quote lifecycle conservation and single settlement for Rootstock Flyover / LBC peg-outs. The property proved here is not a Bitcoin proof verifier; it is the Rootstock-side accounting guarantee for the amount already registered by depositPegOut.
 
+### `royco_day/lt_liquidity_premium_priority`
+- Family / implementation: `royco_day` / `day`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Compile`
+- Source ref: `https://github.com/roycoprotocol/royco-day@cbda8c6dcae3fc3e425e7ced2b461e65fd961e0a:src/accountant/RoycoDayAccountant.sol`
+- Selected functions: `_previewSyncTrancheAccounting`, `postOpSyncTrancheAccounting`, `_processFeesAndLiquidityPremium`, `_computeSTFeeAndLiquidityPremiumSharesToMint`, `_convertToShares`, `_accruePremiumYieldShares`, `_computeCoverageUtilization`, `_computeLiquidityUtilization`, `attemptLiquidityPremiumReinvestment`
+- Upstream source artifact: `src/accountant/RoycoDayAccountant.sol`
+- Notes: Proves that Royco Day's v1.0.0 waterfall repays global JT impermanent loss before any residual gain, premium, or protocol fee. LPT liquidity premium stays inside ST effective NAV and is coverage-neutral until its ownership shares are minted. The prior independent-JT-fee counterexample was removed because Royco Day v1.0.0 eliminated independent tranche PnL inputs; a concrete partial-recovery regression now proves that remaining impermanent loss implies zero fees.
+
 ### `safe/owner_manager_reach`
 - Family / implementation: `safe` / `smart_account`
 - Stage: `build_green`
@@ -372,6 +382,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `swap`, `redeem`, `_calculateFee`, `_burnStableTokenAndTransferCollateral`, `_getTokenAmountForAmountInUSD`
 - Upstream source artifact: `src/daoCollateral/DaoCollateral.sol`
 - Notes: Usual USD0 DaoCollateral conservation case. It verifies that no direct swap/redeem transition can create unaccounted ghost USD0 supply or debit more ghost collateral than the contract's modeled accounting permits, modulo configured redeem fee, oracle price, CBR coefficient, token decimals, and floor rounding.
+
+### `velora/bridge_staking`
+- Family / implementation: `velora` / `bridge_staking`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Velora.BridgeStaking.Compile`
+- Source ref: `https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol`
+- Selected functions: `handleV3AcrossMessage`, `rescuePendingFunds`, `withdrawUnallocatedTokens`
+- Upstream source artifact: `contracts/BridgeStaking.sol`
+- Notes: Proofs.lean contains complete proofs from the incoming conservation invariant alone for withdrawUnallocatedTokens, rescuePendingFunds, and handleV3AcrossMessage. The proofs cover checked arithmetic, explicit guards, partial rescue flags, successful equal debits, and SafeTransferLib failure outcomes that atomically restore the incoming state. `depositResult` remains the explicit seVLR boundary input. Generated tasks retain proof holes for benchmark agents; the reference proof module contains no proof holes or Velora-specific axioms. The exact beneficiary sentinel and external-call scope are documented in Contract.lean and Specs.lean.
 
 ### `wildcat/borrow_liquidity_safety`
 - Family / implementation: `wildcat` / `v2_protocol`
@@ -2109,6 +2129,126 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Rootstock/FlyoverQuoteLifecycle/Tasks/RefundUserPegOutConservesQuoteAmount.lean`
 - Hidden reference solution: `Benchmark.Cases.Rootstock.FlyoverQuoteLifecycle.Proofs`
 
+### `royco_day/lt_liquidity_premium_priority/combined_premium_bound`
+- Track / property class / proof family: `proof-only` / `economic_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._combined_premium_bound`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/CombinedPremiumBound.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/fees_require_full_recovery`
+- Track / property class / proof family: `proof-only` / `economic_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._fees_require_full_recovery`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/FeesRequireFullRecovery.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/inner_reinvestment_coverage_neutral`
+- Track / property class / proof family: `proof-only` / `economic_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._inner_reinvestment_coverage_neutral`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/InnerReinvestmentCoverageNeutral.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/lpt_premium_coverage_neutral`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._lpt_premium_coverage_neutral`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/LPTPremiumCoverageNeutral.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/lpt_premium_mint_split`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._lpt_premium_mint_split`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/LPTPremiumMintSplit.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/nat_uint256_refinement`
+- Track / property class / proof family: `proof-only` / `arithmetic_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._nat_uint256_refinement`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/NatUint256Refinement.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/partial_recovery_no_fee_regression`
+- Track / property class / proof family: `proof-only` / `economic_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._partial_recovery_no_fee_regression`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/PartialRecoveryNoFeeRegression.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/post_op_conserves_nav`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._post_op_conserves_nav`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/PostOpConservesNAV.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/post_op_no_yield`
+- Track / property class / proof family: `proof-only` / `functional_correctness` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._post_op_no_yield`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/PostOpNoYield.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/recovery_before_yield`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._recovery_before_yield`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/RecoveryBeforeYield.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/st_loss_coverage_priority`
+- Track / property class / proof family: `proof-only` / `economic_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._st_loss_coverage_priority`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/STLossCoveragePriority.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
+### `royco_day/lt_liquidity_premium_priority/sync_conserves_nav`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority._sync_conserves_nav`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/royco_day/lt_liquidity_premium_priority/verity/Contract.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Contract.lean`
+- Specification files: `cases/royco_day/lt_liquidity_premium_priority/verity/Specs.lean`, `Benchmark/Cases/RoycoDay/LTLiquidityPremiumPriority/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RoycoDay/LTLiquidityPremiumPriority/Tasks/SyncConservesNAV.lean`
+- Hidden reference solution: `Benchmark.Cases.RoycoDay.LTLiquidityPremiumPriority.Proofs`
+
 ### `safe/owner_manager_reach/add_owner_acyclicity`
 - Track / property class / proof family: `proof-only` / `linked_list_acyclicity` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -2718,6 +2858,36 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/usual/dao_collateral/verity/Specs.lean`, `Benchmark/Cases/Usual/DaoCollateral/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapValueConservation.lean`
 - Hidden reference solution: `Benchmark.Cases.Usual.DaoCollateral.Proofs`
+
+### `velora/bridge_staking/handle_v3_across_message_preserves_allocated`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Velora.BridgeStaking.handleV3AcrossMessage_preserves_allocated`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `Benchmark/Cases/Velora/BridgeStaking/Contract.lean`
+- Specification files: `Benchmark/Cases/Velora/BridgeStaking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Velora/BridgeStaking/Tasks/handle_v3_across_message_preserves_allocated.lean`
+- Hidden reference solution: `Benchmark.Cases.Velora.BridgeStaking.Proofs`
+
+### `velora/bridge_staking/rescue_pending_funds_preserves_allocated`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Velora.BridgeStaking.rescuePendingFunds_preserves_allocated`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `Benchmark/Cases/Velora/BridgeStaking/Contract.lean`
+- Specification files: `Benchmark/Cases/Velora/BridgeStaking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Velora/BridgeStaking/Tasks/rescue_pending_funds_preserves_allocated.lean`
+- Hidden reference solution: `Benchmark.Cases.Velora.BridgeStaking.Proofs`
+
+### `velora/bridge_staking/withdraw_unallocated_tokens_preserves_allocated`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Velora.BridgeStaking.withdrawUnallocatedTokens_preserves_allocated`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `Benchmark/Cases/Velora/BridgeStaking/Contract.lean`
+- Specification files: `Benchmark/Cases/Velora/BridgeStaking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Velora/BridgeStaking/Tasks/withdraw_unallocated_tokens_preserves_allocated.lean`
+- Hidden reference solution: `Benchmark.Cases.Velora.BridgeStaking.Proofs`
 
 ### `wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`

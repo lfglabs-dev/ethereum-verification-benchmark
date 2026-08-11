@@ -454,6 +454,7 @@ def partialRecoverySyncConfig : SyncConfig := {
   coverageLiquidationUtilizationWAD := 2 * WAD
   fixedTermDurationZero := false
   fixedTermExpired := false
+  fixedTermGracePeriodActive := false
 }
 
 def PartialRecoveryNoFeeRegressionSpec : Prop :=
