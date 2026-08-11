@@ -4446,5 +4446,21 @@
     "completion_tokens": 750,
     "total_tokens": 30301,
     "requests": 9
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "openzeppelin/erc4626_virtual_offset_deposit/deposit_redeem_round_trip_bound",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T172222-default-fair-gpt-5-6-terra-openzeppelin__erc4626_virtual_offset_deposit__deposit_redeem_round_trip_bound",
+    "returncode": 1,
+    "elapsed_seconds": 113.4,
+    "prompt_tokens": 54348,
+    "completion_tokens": 1014,
+    "total_tokens": 55362,
+    "requests": 12
   }
 ]
