@@ -2686,5 +2686,21 @@
     "completion_tokens": 498,
     "total_tokens": 26525,
     "requests": 8
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "zama/erc7984_confidential_token/transferFrom_conservation",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T181731-default-fair-gpt-5-6-terra-zama__erc7984_confidential_token__transferFrom_conservation",
+    "returncode": 1,
+    "elapsed_seconds": 123.7,
+    "prompt_tokens": 33048,
+    "completion_tokens": 787,
+    "total_tokens": 33835,
+    "requests": 10
   }
 ]
