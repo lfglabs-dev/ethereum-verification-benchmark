@@ -4126,5 +4126,21 @@
     "completion_tokens": 479,
     "total_tokens": 22683,
     "requests": 8
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T164425-default-fair-gpt-5-6-terra-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 0,
+    "elapsed_seconds": 62.1,
+    "prompt_tokens": 12728,
+    "completion_tokens": 354,
+    "total_tokens": 13082,
+    "requests": 4
   }
 ]
