@@ -4414,5 +4414,21 @@
     "completion_tokens": 322,
     "total_tokens": 8616,
     "requests": 3
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T171911-default-fair-gpt-5-6-terra-onedelta__caller_address_integrity__transfers_erc20_transfer_from_uses_outer_caller",
+    "returncode": 1,
+    "elapsed_seconds": 101.6,
+    "prompt_tokens": 25650,
+    "completion_tokens": 1074,
+    "total_tokens": 26724,
+    "requests": 8
   }
 ]
