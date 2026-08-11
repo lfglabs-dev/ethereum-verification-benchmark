@@ -9,8 +9,8 @@
   "kimi/k3": {
     "solved": 0,
     "real": 0,
-    "infra": 24,
-    "skip": 0,
+    "infra": 25,
+    "skip": 34,
     "tokens": 0
   },
   "gpt-5.6-sol": {
@@ -30,14 +30,14 @@
   "muse/muse-spark-1.2": {
     "solved": 0,
     "real": 0,
-    "infra": 18,
+    "infra": 19,
     "skip": 0,
     "tokens": 0
   },
   "zai/glm-5.2": {
     "solved": 0,
     "real": 0,
-    "infra": 18,
+    "infra": 19,
     "skip": 0,
     "tokens": 0
   },
