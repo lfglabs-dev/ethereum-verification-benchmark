@@ -4590,5 +4590,21 @@
     "completion_tokens": 526,
     "total_tokens": 33191,
     "requests": 10
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "rootstock/flyover_quote_lifecycle/refund_peg_out_conserves_quote_amount",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T174700-default-fair-gpt-5-6-terra-rootstock__flyover_quote_lifecycle__refund_peg_out_conserves_quote_amount",
+    "returncode": 1,
+    "elapsed_seconds": 139.1,
+    "prompt_tokens": 34951,
+    "completion_tokens": 1522,
+    "total_tokens": 36473,
+    "requests": 13
   }
 ]
