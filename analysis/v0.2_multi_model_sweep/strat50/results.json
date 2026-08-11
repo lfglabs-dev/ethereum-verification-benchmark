@@ -5566,5 +5566,21 @@
     "completion_tokens": 1739,
     "total_tokens": 26686,
     "requests": 7
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T192954-default-fair-gpt-5-6-luna-pareto__redemption_backing__deposit_funds_preserves_closed_epoch_reserve_guard",
+    "returncode": 1,
+    "elapsed_seconds": 93.9,
+    "prompt_tokens": 15608,
+    "completion_tokens": 1954,
+    "total_tokens": 17562,
+    "requests": 6
   }
 ]
