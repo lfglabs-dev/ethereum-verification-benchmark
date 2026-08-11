@@ -1,15 +1,9 @@
 {
   "minimax/MiniMax-M3": {
-    "solved": 4,
-    "real": 25,
+    "solved": 5,
+    "real": 27,
     "infra": 0,
     "skip": 0,
-    "tokens": 1036098,
-    "solved_tasks": [
-      "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
-      "forgeyields/global_solvency/report_preserves_global_solvency",
-      "lido/vaulthub_locked/max_liability_shares_bound",
-      "nexus_mutual/ramm_price_band/sync_sets_buy_price"
-    ]
+    "tokens": 1112185
   }
 }
