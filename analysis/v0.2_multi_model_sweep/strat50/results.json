@@ -3454,5 +3454,21 @@
     "completion_tokens": 932,
     "total_tokens": 45636,
     "requests": 13
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve0",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T142508-default-fair-minimax-minimax-m3-uniswap_v2__pair_fee_adjusted_swap__swap_sets_reserve0",
+    "returncode": 1,
+    "elapsed_seconds": 62.6,
+    "prompt_tokens": 32878,
+    "completion_tokens": 858,
+    "total_tokens": 33736,
+    "requests": 9
   }
 ]
