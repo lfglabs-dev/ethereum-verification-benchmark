@@ -4622,5 +4622,21 @@
     "completion_tokens": 452,
     "total_tokens": 24893,
     "requests": 7
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "starkware/starkgate_escrow/withdraw_preserves_escrow_lower_bound",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T175042-default-fair-gpt-5-6-terra-starkware__starkgate_escrow__withdraw_preserves_escrow_lower_bound",
+    "returncode": 1,
+    "elapsed_seconds": 228.8,
+    "prompt_tokens": 45172,
+    "completion_tokens": 4537,
+    "total_tokens": 49709,
+    "requests": 18
   }
 ]
