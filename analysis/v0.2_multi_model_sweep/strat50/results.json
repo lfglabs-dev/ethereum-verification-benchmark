@@ -2990,5 +2990,21 @@
     "completion_tokens": 9646,
     "total_tokens": 52085,
     "requests": 18
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T132851-default-fair-minimax-minimax-m3-pareto__redemption_backing__deposit_funds_preserves_closed_epoch_reserve_guard",
+    "returncode": 1,
+    "elapsed_seconds": 1136.2,
+    "prompt_tokens": 101864,
+    "completion_tokens": 40025,
+    "total_tokens": 141889,
+    "requests": 20
   }
 ]
