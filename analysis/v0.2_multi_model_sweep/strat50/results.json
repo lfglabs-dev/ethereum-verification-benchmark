@@ -3454,5 +3454,21 @@
     "completion_tokens": 2346,
     "total_tokens": 22673,
     "requests": 9
+  },
+  {
+    "model": "kimi/k3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T190027-default-fair-kimi-k3-forgeyields__global_solvency__report_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 83.6,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
   }
 ]
