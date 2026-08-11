@@ -2,9 +2,7 @@
 
 ## What this benchmark measures
 
-The Ethereum Verification Benchmark evaluates how well LLMs can write **formal proofs in Lean 4** about Ethereum smart contract behavior. Each task gives the model a Solidity contract's specification and asks it to produce a machine-checkable Lean proof. A proof is only counted as solved if it passes the Lean verifier — no `sorry`, no axioms, no shortcuts.
-
-This sweep tests multiple frontier models side-by-side to compare their formal verification capabilities.
+The Ethereum Verification Benchmark evaluates how well LLMs can write **formal proofs in Lean 4** about Ethereum smart contract behavior. Each task gives the model a Solidity contract's specification and asks it to produce a machine-checkable Lean proof. A proof counts as solved only if it passes the Lean verifier — no `sorry`, no axioms, no shortcuts.
 
 ## Benchmark Configuration
 
@@ -18,7 +16,7 @@ This sweep tests multiple frontier models side-by-side to compare their formal v
 
 ## Panels
 
-Three nested panels balance coverage vs. cost. FAST-12 ⊂ STRAT-50 ⊂ FULL-240.
+Three nested panels balance coverage vs. cost. FAST-12 ⊂ STRAT-50 ⊂ FULL-240. Panel membership is published in `leaderboard.json`.
 
 | Panel | Tasks | Role |
 |---|---|---|
@@ -35,52 +33,58 @@ Three nested panels balance coverage vs. cost. FAST-12 ⊂ STRAT-50 ⊂ FULL-240
 
 ## Results
 
-### Models with real Lean verdicts
+### FAST-12 panel (ranked within panel)
 
-| # | Model | Panel | Solved | Evaluated | Rate | Profile |
-|---|---|---|---|---|---|---|
-| 1 | **gpt-5.6-sol** | FAST-12 | 6 | 12 | **50.0%** | p4_normal |
-| 2 | **gpt-5.6-terra** | FAST-12 | 4 | 16 | **25.0%** | p4_normal |
-| 3 | gpt-5.6-luna | FAST-12 | 3 | 12 | 25.0% | p4_normal |
-| 4 | openai/gpt-5.5 | FAST-12 | 2 | 9 | 22.2% | p1_release |
-| 5 | anthropic/claude-opus-5 | FAST-12 | 2 | 11 | 18.2% | p1_release |
-| 6 | minimax/MiniMax-M2.7 | FAST-12 | 1 | 12 | 8.3% | p1_release |
-| 7 | minimax/MiniMax-M3 | FULL-240 | 12 | 228 | 5.3% | p1_release |
+| Model | Solved | Valid | Rate | Profile | Infra |
+|---|---|---|---|---|---|
+| **gpt-5.6-sol** | 6 | 12 | **50.0%** | p4_normal | 0 |
+| **gpt-5.6-terra** | 6 | 12 | **50.0%** | p4_normal | 0 |
+| gpt-5.6-luna | 3 | 12 | 25.0% | p4_normal | 0 |
+| openai/gpt-5.5 | 2 | 9 | 22.2% | p1_release | 3 |
+| anthropic/claude-opus-5 | 2 | 11 | 18.2% | p1_release | 1 |
+| minimax/MiniMax-M3 | 2 | 12 | 16.7% | p1_release | 0 |
+| minimax/MiniMax-M2.7 | 1 | 12 | 8.3% | p1_release | 0 |
 
-**Coverage note**: STRAT-50 was partially tested (gpt-5.6-terra, 16/50 tasks) but never completed by any model. FULL-240 was completed only by MiniMax-M3.
+### STRAT-50 panel
 
-### MiniMax-M3 on all panels (from FULL-240 data, p1_release)
+| Model | Solved | Valid | Covered | Rate | Status |
+|---|---|---|---|---|---|
+| gpt-5.6-terra | 7 | 16 | 16/50 | 43.8% | **Partial** (16/50 tasks) |
+| minimax/MiniMax-M3 | 6 | 50 | 50/50 | 12.0% | Complete |
 
-| Panel | Solved | Evaluated | Rate |
-|---|---|---|---|
-| FULL-240 | 12 | 228 | 5.3% |
-| STRAT-50 | 5 | 50 | 10.0% |
-| FAST-12 | 0 | 12 | 0.0% |
+### FULL-240 panel
+
+| Model | Solved | Valid | Rate | Tokens (run-level) |
+|---|---|---|---|---|
+| minimax/MiniMax-M3 | 14 | 240 | 5.8% | 9,266,049 |
+
+**Token note**: FULL-240 tokens are aggregated at run granularity (each run directory counted once). Per-task token attribution is available in `raw_results.json`.
 
 ### Key findings
 
-1. **Effort dominates model choice**: GPT-5.6 at p4_normal (16/120) achieves 25–50%. MiniMax-M3 at p1_release (2/24) stays at 0–5%. The same model with 8× more attempts and 5× more tool calls would likely improve dramatically.
-2. **GPT-5.6 family is strongest**: sol (50%) > terra (25%) ≈ luna (25%), all producing valid Lean proofs.
-3. **Claude Opus-5 works through the harness** (18.2%) — the first Anthropic model to produce real Lean verdicts in this benchmark.
+1. **Effort dominates**: GPT-5.6 at p4_normal (16/120) reaches 50% on FAST-12. MiniMax-M3 at p1_release (2/24) reaches 16.7% on the same panel.
+2. **GPT-5.6 family strongest**: sol and terra tie at 50% on FAST-12, followed by luna at 25%.
+3. **STRAT-50 shows scaling**: MiniMax-M3 jumps from 16.7% (FAST-12) to 12.0% (STRAT-50) — different task mix. Terra's partial run (43.8%) suggests GPT-5.6 would score significantly higher on the full panel.
+4. **Cross-panel comparison requires caution**: solve rates are not comparable across panels due to different task populations.
 
 ## Models Not Covered
 
-These models were attempted but could not produce results. The proxy allows an initial request but enters a persistent cooldown after the first API call, blocking the harness which requires multiple round-trips per task.
+All attempted but produced 0 valid verdicts due to proxy infrastructure issues. The proxy allows an initial request but enters a persistent cooldown after the first API call.
 
-| Model | Pattern | Infra count |
-|---|---|---|
-| anthropic/claude-fable-5 | request 1 OK (~1.7k tokens), request 2 → 502→429 cooldown | 12/12 |
-| anthropic/claude-sonnet-5 | same pattern | 12/12 |
-| openai/gpt-5.6 | same pattern | 12/12 |
-| zai/glm-5.2 | same pattern | 12/12 |
-| zai/glm-4.7 | same pattern | 12/12 |
-| muse/muse-spark-1.1 | same pattern | 12/12 |
-| muse/muse-spark-1.2 | same pattern | 12/12 |
-| kimi/k3 | rate-limited (quota) | 12/12 |
+| Model | Failure type | Infra | Skipped |
+|---|---|---|---|
+| anthropic/claude-fable-5 | HTTP 429 after request 1 | 12 | 0 |
+| anthropic/claude-sonnet-5 | HTTP 429 after request 1 | 4 | 8 |
+| openai/gpt-5.6 | HTTP 502/429 preflight | 12 | 0 |
+| zai/glm-5.2 | HTTP 502 preflight | 4 | 8 |
+| zai/glm-4.7 | HTTP 502 preflight | 12 | 0 |
+| muse/muse-spark-1.1 | HTTP 429 preflight | 12 | 0 |
+| muse/muse-spark-1.2 | HTTP 429 preflight | 12 | 0 |
+| kimi/k3 | Rate-limited (quota) | 4 | 8 |
 
-**Root cause**: Per-provider cooldown in the sandboxed.sh proxy that triggers after 1–2 successive requests for non-MiniMax/non-GPT-5.6 providers. Once triggered, the cooldown persists for 1h+. This is an infrastructure limitation, not a model limitation.
+**Root cause**: Per-provider rate limits in the sandboxed.sh proxy. Non-MiniMax/non-GPT-5.6 providers trigger cooldown after 1–2 successive requests. This is an infrastructure limitation, not a model limitation.
 
 ## Files
 
-- `leaderboard.json` — structured leaderboard
-- `raw_results.json` — per-task raw results (deduplicated across all campaign phases)
+- `leaderboard.json` — structured leaderboard with panel membership
+- `raw_results.json` — per-task raw results (deduplicated)
