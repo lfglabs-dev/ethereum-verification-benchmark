@@ -22,10 +22,10 @@
   },
   "gpt-5.6-terra": {
     "solved": 9,
-    "real": 45,
+    "real": 46,
     "infra": 0,
     "skip": 0,
-    "tokens": 1173466
+    "tokens": 1212470
   },
   "muse/muse-spark-1.2": {
     "solved": 0,

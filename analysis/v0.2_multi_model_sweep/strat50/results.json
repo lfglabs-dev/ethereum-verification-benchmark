@@ -2590,5 +2590,21 @@
     "completion_tokens": 0,
     "total_tokens": 0,
     "requests": 0
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "usual/dao_collateral/redeem_return_formula",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T180847-default-fair-gpt-5-6-terra-usual__dao_collateral__redeem_return_formula",
+    "returncode": 1,
+    "elapsed_seconds": 162.0,
+    "prompt_tokens": 38551,
+    "completion_tokens": 453,
+    "total_tokens": 39004,
+    "requests": 11
   }
 ]
