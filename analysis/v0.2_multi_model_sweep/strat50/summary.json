@@ -9,7 +9,7 @@
   "kimi/k3": {
     "solved": 0,
     "real": 0,
-    "infra": 5,
+    "infra": 6,
     "skip": 0,
     "tokens": 0
   },
@@ -22,9 +22,23 @@
   },
   "gpt-5.6-terra": {
     "solved": 8,
-    "real": 42,
+    "real": 43,
     "infra": 0,
     "skip": 0,
-    "tokens": 1088652
+    "tokens": 1114894
+  },
+  "muse/muse-spark-1.2": {
+    "solved": 0,
+    "real": 0,
+    "infra": 1,
+    "skip": 0,
+    "tokens": 0
+  },
+  "zai/glm-5.2": {
+    "solved": 0,
+    "real": 0,
+    "infra": 1,
+    "skip": 0,
+    "tokens": 0
   }
 }
