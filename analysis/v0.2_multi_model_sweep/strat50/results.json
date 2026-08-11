@@ -2414,5 +2414,21 @@
     "completion_tokens": 0,
     "total_tokens": 0,
     "requests": 0
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "termmax/order_v2_buy_xt_single_segment/swap_debt_token_to_xt_updates_virtual_xt_reserve",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T180416-default-fair-gpt-5-6-terra-termmax__order_v2_buy_xt_single_segment__swap_debt_token_to_xt_updates_virtual_xt_reserve",
+    "returncode": 1,
+    "elapsed_seconds": 85.3,
+    "prompt_tokens": 33325,
+    "completion_tokens": 615,
+    "total_tokens": 33940,
+    "requests": 9
   }
 ]
