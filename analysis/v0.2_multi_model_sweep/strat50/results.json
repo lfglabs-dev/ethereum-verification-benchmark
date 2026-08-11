@@ -3118,5 +3118,21 @@
     "completion_tokens": 498,
     "total_tokens": 32918,
     "requests": 10
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T140215-default-fair-gpt-5-6-sol-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 0,
+    "elapsed_seconds": 91.4,
+    "prompt_tokens": 12535,
+    "completion_tokens": 336,
+    "total_tokens": 12871,
+    "requests": 4
   }
 ]
