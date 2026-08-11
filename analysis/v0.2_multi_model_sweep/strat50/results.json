@@ -3358,5 +3358,37 @@
     "completion_tokens": 0,
     "total_tokens": 0,
     "requests": 0
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T185010-default-fair-muse-muse-spark-1-2-forgeyields__global_solvency__report_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 120.2,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T185009-default-fair-gpt-5-6-luna-forgeyields__global_solvency__handle_preserves_global_solvency",
+    "returncode": 1,
+    "elapsed_seconds": 139.5,
+    "prompt_tokens": 16445,
+    "completion_tokens": 1329,
+    "total_tokens": 17774,
+    "requests": 6
   }
 ]

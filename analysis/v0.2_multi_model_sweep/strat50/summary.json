@@ -30,7 +30,7 @@
   "muse/muse-spark-1.2": {
     "solved": 0,
     "real": 0,
-    "infra": 14,
+    "infra": 15,
     "skip": 0,
     "tokens": 0
   },
@@ -43,9 +43,9 @@
   },
   "gpt-5.6-luna": {
     "solved": 1,
-    "real": 11,
+    "real": 12,
     "infra": 0,
     "skip": 0,
-    "tokens": 216992
+    "tokens": 234766
   }
 }
