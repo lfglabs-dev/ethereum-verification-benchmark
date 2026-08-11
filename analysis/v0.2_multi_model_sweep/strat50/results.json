@@ -3070,5 +3070,21 @@
     "completion_tokens": 0,
     "total_tokens": 0,
     "requests": 0
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T184022-default-fair-gpt-5-6-luna-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 1,
+    "elapsed_seconds": 183.7,
+    "prompt_tokens": 15143,
+    "completion_tokens": 1465,
+    "total_tokens": 16608,
+    "requests": 7
   }
 ]
