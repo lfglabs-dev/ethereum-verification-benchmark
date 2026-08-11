@@ -2022,7 +2022,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
       "final_class": "GENUINE_FAIL",
@@ -2034,7 +2034,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
       "final_class": "GENUINE_FAIL",
@@ -2046,7 +2046,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
       "final_class": "GENUINE_FAIL",
@@ -2058,7 +2058,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
       "final_class": "GENUINE_FAIL",
@@ -2070,7 +2070,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "cork/pool_solvency/solvency_preserved",
       "final_class": "GENUINE_FAIL",
@@ -2082,7 +2082,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
       "final_class": "GENUINE_FAIL",
@@ -2094,7 +2094,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
       "final_class": "SOLVED",
@@ -2106,7 +2106,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "erc4337/entry_point_invariant/beneficiary_eq_total_prefund",
       "final_class": "GENUINE_FAIL",
@@ -2118,7 +2118,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
       "final_class": "SOLVED",
@@ -2130,7 +2130,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
       "final_class": "SOLVED",
@@ -2142,7 +2142,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
       "final_class": "SOLVED",
@@ -2154,7 +2154,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "forgeyields/global_solvency/handle_preserves_global_solvency",
       "final_class": "SOLVED",
@@ -2166,7 +2166,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency",
       "final_class": "SOLVED",
@@ -2178,7 +2178,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free",
       "final_class": "GENUINE_FAIL",
@@ -2190,7 +2190,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "ipor/plasma_vault_redeem_split/redeem_preserves_pps",
       "final_class": "GENUINE_FAIL",
@@ -2202,7 +2202,7 @@
     },
     {
       "model": "gpt-5.6-terra",
-      "panel": "P4-50",
+      "panel": "STRAT-50",
       "profile": "p4_normal",
       "task_ref": "kleros/sortition_trees/draw_interval_matches_weights",
       "final_class": "GENUINE_FAIL",

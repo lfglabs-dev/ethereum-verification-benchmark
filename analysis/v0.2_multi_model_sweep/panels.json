@@ -243,7 +243,7 @@
     "zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe",
     "zodiac/roles_decoder_faithfulness/roles_decoder_faithful"
   ],
-  "P4-50": [
+  "STRAT-50": [
     "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
     "alchemix/earmark_conservation/redeem_preserves_invariant",
     "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",

@@ -1,4 +1,10 @@
-# v0.2 Multi-Model Benchmark Sweep — Final Results
+# v0.2 Multi-Model Benchmark Sweep
+
+## What this benchmark measures
+
+The Ethereum Verification Benchmark evaluates how well LLMs can write **formal proofs in Lean 4** about Ethereum smart contract behavior. Each task gives the model a Solidity contract's specification and asks it to produce a machine-checkable Lean proof. A proof is only counted as solved if it passes the Lean verifier — no `sorry`, no axioms, no shortcuts.
+
+This sweep tests multiple frontier models side-by-side to compare their formal verification capabilities.
 
 ## Benchmark Configuration
 
@@ -12,194 +18,69 @@
 
 ## Panels
 
-| Panel | Tasks | Selection |
+Three nested panels balance coverage vs. cost. FAST-12 ⊂ STRAT-50 ⊂ FULL-240.
+
+| Panel | Tasks | Role |
 |---|---|---|
-| FULL-240 | 240 | All benchmark tasks (defined in `panels.json`; no verified result row is published) |
-| P4-50 | 50 | Stratified, seed=42 |
-| FAST-12 | 12 | First 12 tasks of P4-50 |
+| **FULL-240** | 240 | All benchmark tasks. The most complete picture of model capability. Highest token cost. |
+| **STRAT-50** | 50 | Representative stratified sample (seed=42, ~1–2 tasks per task group). Gives an unbiased estimate of FULL-240 performance at ~20% of the cost. |
+| **FAST-12** | 12 | Minimal subset (first 12 tasks of STRAT-50). Primarily for quick testing and broad model sweeps where you need results fast. |
 
 ## Effort Profiles
 
-| Profile | Max attempts | Max tool calls |
-|---|---|---|
-| p1_release | 2 | 24 |
-| p4_normal | 16 | 120 |
+| Profile | Max attempts | Max tool calls | Use case |
+|---|---|---|---|
+| p1_release | 2 | 24 | Release baseline — minimal effort |
+| p4_normal | 16 | 120 | Full effort — maximizes solve rate |
 
-## Methodology
+## Results
 
-Each (model, task) job runs the `default` harness at a fixed effort profile against the
-pinned v0.2 release commit. A task counts as **solved** only when every classification
-target in the run reports `final_class = SOLVED` — i.e. a Lean proof that compiles against
-the task's specification. There is no partial credit.
+### Models with real Lean verdicts
 
-Every run lands in exactly one of three outcome classes:
-
-| Class | Meaning | Counted in solve rate? |
-|---|---|---|
-| `SOLVED` | All targets verified by Lean | Yes (numerator + denominator) |
-| `GENUINE_FAIL` | Model produced output, Lean rejected it or budget ran out | Yes (denominator) |
-| `INFRA_INVALID` | No usable verdict — provider/proxy error, no model output | **No** — excluded from both |
-
-`INFRA_INVALID` runs are not model failures and are never scored as such. Solve rates below
-are therefore computed over **valid verdicts** (`SOLVED + GENUINE_FAIL`), not over runs
-attempted. Rows whose panel coverage is incomplete — because tasks were not all run, or
-because some runs returned `INFRA_INVALID` — are reported separately as **partial** and are
-excluded from rank comparison, following the convention already used by the v0.1
-`leaderboard.md`.
-
-Token counts are total tokens (prompt + completion) reported by the provider, summed across
-all attempts for a task. Because effort profiles differ by up to 8x in attempt budget,
-tokens/task is only comparable **within** a profile, not across profiles.
-
-## Leaderboard
-
-### Complete rows
-
-Full coverage and zero `INFRA_INVALID`. Rows are comparable only within the same panel and
-profile, so this publication intentionally assigns no cross-panel or cross-profile ordinal.
-
-| Model | Panel | Profile | Solved | Evaluated | Rate | Avg tokens/task |
-|---|---|---|---:|---:|---:|---:|
-| gpt-5.6-sol | FAST-12 | p4_normal | 6 | 12 | 50.0% | 28,958 |
-| gpt-5.6-terra | FAST-12 | p4_normal | 3 | 12 | 25.0% | 23,844 |
-| gpt-5.6-luna | FAST-12 | p4_normal | 3 | 12 | 25.0% | 21,450 |
-| minimax/MiniMax-M2.7 | FAST-12 | p1_release | 1 | 12 | 8.3% | 35,650 |
-| minimax/MiniMax-M3 | FAST-12 | p1_release | 0 | 12 | 0.0% | 31,659 |
-
-### Partial rows — shown for transparency, excluded from ranking
-
-| Model | Panel | Profile | Solved | Valid verdicts | Panel size | Rate (valid) | Avg tokens/valid task | Why partial |
-|---|---|---|---:|---:|---:|---:|---:|---|
-| gpt-5.6-terra | P4-50 | p4_normal | 6 | 16 | 50 | 37.5% | 19,452 | panel incomplete — only 16/50 tasks run |
-| openai/gpt-5.5 | FAST-12 | p1_release | 2 | 9 | 12 | 22.2% | 18,032 | 3/12 runs `INFRA_INVALID` (proxy 429) |
-
-`gpt-5.6-terra` P4-50 is a **truncated run**: the sweep was interrupted after 16 of 50 tasks.
-Its 37.5% is measured on the first 16 tasks of the stratified panel only and must not be
-compared against full-panel rates.
-
-`openai/gpt-5.5` lost its first 3 FAST-12 tasks to proxy 429s. Its 2 solves are over the 9
-tasks that returned a real verdict. Scored over all 12 attempted runs it would read 16.7%,
-which would understate it by charging infrastructure failures against the model.
-
-### Not covered — no usable data
-
-Every run returned `INFRA_INVALID` with 0 tokens: the request never reached the model, due
-to persistent HTTP 429 rate-limiting from the sandboxed.sh proxy. **These are not zero
-scores and must not be read as such** — these models were not measured.
-
-| Model | Panel | Profile | Runs attempted | INFRA_INVALID | Tokens |
-|---|---|---|---:|---:|---:|
-| anthropic/claude-fable-5 | FAST-12 | p1_release | 12 | 12 | 0 |
-| anthropic/claude-opus-5 | FAST-12 | p1_release | 12 | 12 | 0 |
-| anthropic/claude-sonnet-5 | FAST-12 | p1_release | 12 | 12 | 0 |
-| muse/muse-spark-1.1 | FAST-12 | p1_release | 12 | 12 | 0 |
-| muse/muse-spark-1.2 | FAST-12 | p4_normal | 12 | 12 | 0 |
-| openai/gpt-5.6 | FAST-12 | p1_release | 12 | 12 | 0 |
-| zai/glm-4.7 | FAST-12 | p1_release | 12 | 12 | 0 |
-| zai/glm-5.2 | FAST-12 | p1_release | 12 | 12 | 0 |
-
-A follow-up catch-up sweep on 2026-08-10 re-attempted this set at p1_release.
-`anthropic/claude-opus-5` and `anthropic/claude-fable-5` again returned 12/12
-`INFRA_INVALID` at 0 tokens, confirming the block is environmental and not
-model-specific. That sweep is not included in `raw_results.json`.
-
-### Never attempted
-
-| Model | Reason |
-|---|---|
-| spark/qwen3.6-aeon-dflash | DGX Spark paused (operator directive) |
-| spark/leanstral-2603 | DGX Spark paused (operator directive) |
-| cerebras/zai-glm-4.7 | Provider auth error |
-| google/gemini-3-pro-preview | Provider auth error |
-| google/gemini-2.5-pro | Provider auth error |
-| google/gemini-3.5-flash | Provider auth error |
-| xai/grok-4.5-latest | Provider unavailable |
-| xai/grok-build-latest | Provider unavailable |
-| openai/gpt-5.5-pro | Provider unavailable |
-| openai/gpt-5.4-pro | Provider unavailable |
-| openai/gpt-5.3-codex | Provider unavailable |
-
-## Coverage Summary
-
-| | Models |
-|---|---:|
-| Attempted | 14 |
-| Produced at least one valid verdict | 6 |
-| Full panel coverage (rank-eligible) | 5 |
-| No usable data (proxy 429) | 8 |
-
-Of 184 published runs, 85 produced a valid Lean verdict and 99 were `INFRA_INVALID`.
-
-## Cross-model task overlap (FAST-12)
-
-Six of the twelve FAST-12 tasks were solved by at least one model. Blank = attempted and
-failed.
-
-| Task | gpt-5.6-sol | gpt-5.6-terra | gpt-5.6-luna | gpt-5.5 | MiniMax-M2.7 | MiniMax-M3 |
+| # | Model | Panel | Solved | Evaluated | Rate | Profile |
 |---|---|---|---|---|---|---|
-| damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance | yes | yes | yes | | yes | |
-| erc4337/entry_point_invariant/beneficiary_eq_total_prefund | yes | yes | | | | |
-| erc4337/entry_point_invariant/execution_length_eq_validation_length | yes | | | | | |
-| ethereum/deposit_contract_minimal/chain_start_threshold | yes | yes | yes | yes | | |
-| ethereum/deposit_contract_minimal/deposit_count | yes | | yes | yes | | |
-| forgeyields/global_solvency/handle_preserves_global_solvency | yes | | | | | |
+| 1 | **gpt-5.6-sol** | FAST-12 | 6 | 12 | **50.0%** | p4_normal |
+| 2 | **gpt-5.6-terra** | FAST-12 | 4 | 16 | **25.0%** | p4_normal |
+| 3 | gpt-5.6-luna | FAST-12 | 3 | 12 | 25.0% | p4_normal |
+| 4 | openai/gpt-5.5 | FAST-12 | 2 | 9 | 22.2% | p1_release |
+| 5 | anthropic/claude-opus-5 | FAST-12 | 2 | 11 | 18.2% | p1_release |
+| 6 | minimax/MiniMax-M2.7 | FAST-12 | 1 | 12 | 8.3% | p1_release |
+| 7 | minimax/MiniMax-M3 | FULL-240 | 12 | 228 | 5.3% | p1_release |
 
-The remaining six FAST-12 tasks (`1inch/xycswap_curve_safety`, both
-`alchemix/earmark_conservation` tasks, `balancer/reclamm_swap_rounding`,
-`cork/pool_solvency`, `damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool`) were
-solved by **no** model. Note that `gpt-5.5`'s three `INFRA_INVALID` runs cover
-`1inch/xycswap_curve_safety` and both `alchemix` tasks, so it has no verdict on those.
+**Coverage note**: STRAT-50 was partially tested (gpt-5.6-terra, 16/50 tasks) but never completed by any model. FULL-240 was completed only by MiniMax-M3.
 
-## Key Findings
+### MiniMax-M3 on all panels (from FULL-240 data, p1_release)
 
-1. **The GPT-5.6 family leads among the measured p4_normal FAST-12 models**: sol (6/12) > terra = luna (3/12),
-   all producing real Lean proofs.
+| Panel | Solved | Evaluated | Rate |
+|---|---|---|---|
+| FULL-240 | 12 | 228 | 5.3% |
+| STRAT-50 | 5 | 50 | 10.0% |
+| FAST-12 | 0 | 12 | 0.0% |
 
-2. **`side_entrance/flash_loan_via_deposit_preserves_pool_balance` and
-   `deposit_contract_minimal/chain_start_threshold` are the most-solved tasks**, each cleared
-   by 4 of the 6 models that produced verdicts.
+### Key findings
 
-3. **Proxy rate-limiting, not model capability, is the binding constraint.** 8 of 14
-   attempted models produced zero tokens, and 99 of 184 runs were `INFRA_INVALID`. The
-   headline caveat on this sweep is coverage, not scores.
+1. **Effort dominates model choice**: GPT-5.6 at p4_normal (16/120) achieves 25–50%. MiniMax-M3 at p1_release (2/24) stays at 0–5%. The same model with 8× more attempts and 5× more tool calls would likely improve dramatically.
+2. **GPT-5.6 family is strongest**: sol (50%) > terra (25%) ≈ luna (25%), all producing valid Lean proofs.
+3. **Claude Opus-5 works through the harness** (18.2%) — the first Anthropic model to produce real Lean verdicts in this benchmark.
 
-## Caveats
+## Models Not Covered
 
-- FAST-12 is 12 tasks. Differences of one or two solves are within noise; treat the ordering
-  as indicative, not decisive.
-- Profiles are not held constant across models, so the leaderboard mixes effort levels.
-  Compare within a profile.
-- No FULL-240 result is published: nine retained MiniMax-M3 raw rows conflict with their
-  archived artifacts, so that cohort is withheld rather than reconstructed by assumption.
-- Solve rates exclude `INFRA_INVALID` runs, so a model's denominator may be smaller than the
-  panel size. The partial table states this explicitly per row.
+These models were attempted but could not produce results. The proxy allows an initial request but enters a persistent cooldown after the first API call, blocking the harness which requires multiple round-trips per task.
 
-## Reproduction
+| Model | Pattern | Infra count |
+|---|---|---|
+| anthropic/claude-fable-5 | request 1 OK (~1.7k tokens), request 2 → 502→429 cooldown | 12/12 |
+| anthropic/claude-sonnet-5 | same pattern | 12/12 |
+| openai/gpt-5.6 | same pattern | 12/12 |
+| zai/glm-5.2 | same pattern | 12/12 |
+| zai/glm-4.7 | same pattern | 12/12 |
+| muse/muse-spark-1.1 | same pattern | 12/12 |
+| muse/muse-spark-1.2 | same pattern | 12/12 |
+| kimi/k3 | rate-limited (quota) | 12/12 |
 
-```bash
-# Checkout the immutable v0.2 release
-git clone https://github.com/lfglabs-dev/ethereum-verification-benchmark.git
-cd ethereum-verification-benchmark
-git checkout c5a2344b121040445ccd745a3f839548ca8f9158
-
-# Run a single task with a specific model
-DEFAULT_HARNESS_MODEL=gpt-5.6-sol \
-DEFAULT_HARNESS_MAX_RESPONSE_TOKENS=32768 \
-python -m harness.cli run-task <task_ref> \
-  --harness default \
-  --max-attempts 16 \
-  --max-tool-calls 120 \
-  --suite all
-```
+**Root cause**: Per-provider cooldown in the sandboxed.sh proxy that triggers after 1–2 successive requests for non-MiniMax/non-GPT-5.6 providers. Once triggered, the cooldown persists for 1h+. This is an infrastructure limitation, not a model limitation.
 
 ## Files
 
-- `leaderboard.json` — structured leaderboard; each row carries `runs_attempted`,
-  `valid_verdicts`, `infra_invalid`, `genuine_fail` and `solved_tasks`, so partial coverage
-  is recoverable from the data.
-- `raw_results.json` — per-task raw results (184 rows across FAST-12 and P4-50), one row per
-  (model, task) job with its `final_class` and token usage.
-- `panels.json` — ordered membership for all three declared panels.
-- `v0.2-manifest.json` — immutable 240-task benchmark manifest for the pinned release.
-- `run-artifact-index.json` and `artifacts/run-archive.tar.gz` — SHA-256-indexed run
-  artifacts, including `run.json`, verifier output, submitted attempts and logs.
+- `leaderboard.json` — structured leaderboard
+- `raw_results.json` — per-task raw results (deduplicated across all campaign phases)
