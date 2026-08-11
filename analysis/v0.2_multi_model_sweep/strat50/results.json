@@ -3982,5 +3982,21 @@
     "completion_tokens": 724,
     "total_tokens": 24876,
     "requests": 8
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "zodiac/roles_decoder_faithfulness/roles_decoder_bounds_safe",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T162519-default-fair-gpt-5-6-sol-zodiac__roles_decoder_faithfulness__roles_decoder_bounds_safe",
+    "returncode": 1,
+    "elapsed_seconds": 116.5,
+    "prompt_tokens": 23301,
+    "completion_tokens": 672,
+    "total_tokens": 23973,
+    "requests": 9
   }
 ]
