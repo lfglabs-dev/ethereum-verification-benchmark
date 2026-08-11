@@ -2942,5 +2942,21 @@
     "completion_tokens": 1267,
     "total_tokens": 58190,
     "requests": 11
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T132647-default-fair-gpt-5-6-sol-balancer__reclamm_swap_rounding__on_swap_fixed_virtual_balances_product_non_decreasing",
+    "returncode": 1,
+    "elapsed_seconds": 266.4,
+    "prompt_tokens": 46847,
+    "completion_tokens": 724,
+    "total_tokens": 47571,
+    "requests": 11
   }
 ]
