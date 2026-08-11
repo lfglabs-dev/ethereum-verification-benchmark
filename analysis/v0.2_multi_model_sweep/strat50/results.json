@@ -3390,5 +3390,37 @@
     "completion_tokens": 559,
     "total_tokens": 25362,
     "requests": 8
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "lido/vaulthub_locked/max_liability_shares_bound",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T142137-default-fair-gpt-5-6-sol-lido__vaulthub_locked__max_liability_shares_bound",
+    "returncode": 0,
+    "elapsed_seconds": 81.5,
+    "prompt_tokens": 8536,
+    "completion_tokens": 207,
+    "total_tokens": 8743,
+    "requests": 3
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "term_finance/term_auction_clearing/clearing_assignment_correct",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T142236-default-fair-minimax-minimax-m3-term_finance__term_auction_clearing__clearing_assignment_correct",
+    "returncode": 1,
+    "elapsed_seconds": 69.4,
+    "prompt_tokens": 31900,
+    "completion_tokens": 862,
+    "total_tokens": 32762,
+    "requests": 11
   }
 ]
