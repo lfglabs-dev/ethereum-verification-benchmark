@@ -2958,5 +2958,21 @@
     "completion_tokens": 724,
     "total_tokens": 47571,
     "requests": 11
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T133123-default-fair-gpt-5-6-sol-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 167.1,
+    "prompt_tokens": 29186,
+    "completion_tokens": 714,
+    "total_tokens": 29900,
+    "requests": 9
   }
 ]
