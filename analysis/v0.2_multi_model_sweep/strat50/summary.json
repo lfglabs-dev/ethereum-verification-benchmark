@@ -1,10 +1,10 @@
 {
   "minimax/MiniMax-M3": {
     "solved": 7,
-    "real": 49,
+    "real": 50,
     "infra": 0,
     "skip": 0,
-    "tokens": 2191004
+    "tokens": 2242130
   },
   "zai/glm-5.2": {
     "solved": 0,
@@ -29,9 +29,9 @@
   },
   "gpt-5.6-sol": {
     "solved": 11,
-    "real": 22,
+    "real": 23,
     "infra": 0,
     "skip": 0,
-    "tokens": 535392
+    "tokens": 589130
   }
 }
