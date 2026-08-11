@@ -9,7 +9,7 @@
   "kimi/k3": {
     "solved": 0,
     "real": 0,
-    "infra": 19,
+    "infra": 20,
     "skip": 0,
     "tokens": 0
   },
@@ -43,9 +43,9 @@
   },
   "gpt-5.6-luna": {
     "solved": 1,
-    "real": 10,
+    "real": 11,
     "infra": 0,
     "skip": 0,
-    "tokens": 203385
+    "tokens": 216992
   }
 }
