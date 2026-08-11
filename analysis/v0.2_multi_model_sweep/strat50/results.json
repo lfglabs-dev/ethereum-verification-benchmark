@@ -5550,5 +5550,21 @@
     "completion_tokens": 664,
     "total_tokens": 10167,
     "requests": 4
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "paladin_votes/stream_recovery_claim_usdc/both_claim_marks_both_claimed",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T192817-default-fair-gpt-5-6-luna-paladin_votes__stream_recovery_claim_usdc__both_claim_marks_both_claimed",
+    "returncode": 1,
+    "elapsed_seconds": 87.5,
+    "prompt_tokens": 24947,
+    "completion_tokens": 1739,
+    "total_tokens": 26686,
+    "requests": 7
   }
 ]
