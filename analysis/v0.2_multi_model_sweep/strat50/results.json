@@ -5422,5 +5422,21 @@
     "completion_tokens": 3247,
     "total_tokens": 24694,
     "requests": 7
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "lifi/swap_atomicity/final_transfer_implies_all_steps_succeeded",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T191651-default-fair-gpt-5-6-luna-lifi__swap_atomicity__final_transfer_implies_all_steps_succeeded",
+    "returncode": 1,
+    "elapsed_seconds": 74.2,
+    "prompt_tokens": 20076,
+    "completion_tokens": 648,
+    "total_tokens": 20724,
+    "requests": 7
   }
 ]
