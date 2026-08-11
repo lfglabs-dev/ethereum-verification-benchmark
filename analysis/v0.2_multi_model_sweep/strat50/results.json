@@ -430,5 +430,37 @@
     "completion_tokens": 1288,
     "total_tokens": 44361,
     "requests": 13
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T130803-default-fair-zai-glm-5-2-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 274.8,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T130808-default-fair-muse-muse-spark-1-2-1inch__xycswap_curve_safety__quote_exact_in_curve_safety",
+    "returncode": 1,
+    "elapsed_seconds": 313.5,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
   }
 ]

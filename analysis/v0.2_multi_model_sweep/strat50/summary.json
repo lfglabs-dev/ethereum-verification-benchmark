@@ -5,5 +5,19 @@
     "infra": 0,
     "skip": 0,
     "tokens": 1112185
+  },
+  "zai/glm-5.2": {
+    "solved": 0,
+    "real": 0,
+    "infra": 1,
+    "skip": 0,
+    "tokens": 0
+  },
+  "muse/muse-spark-1.2": {
+    "solved": 0,
+    "real": 0,
+    "infra": 1,
+    "skip": 0,
+    "tokens": 0
   }
 }
