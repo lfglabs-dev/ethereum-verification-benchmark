@@ -3854,5 +3854,21 @@
     "completion_tokens": 989,
     "total_tokens": 31698,
     "requests": 10
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "t3tris/hwm_performance_fee/gain_loss_recovery_no_double_charge",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T155720-default-fair-gpt-5-6-sol-t3tris__hwm_performance_fee__gain_loss_recovery_no_double_charge",
+    "returncode": 1,
+    "elapsed_seconds": 119.0,
+    "prompt_tokens": 29528,
+    "completion_tokens": 725,
+    "total_tokens": 30253,
+    "requests": 11
   }
 ]
