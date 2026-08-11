@@ -4254,5 +4254,21 @@
     "completion_tokens": 2351,
     "total_tokens": 26583,
     "requests": 9
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "kleros/sortition_trees/draw_selects_valid_leaf",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T170102-default-fair-gpt-5-6-terra-kleros__sortition_trees__draw_selects_valid_leaf",
+    "returncode": 0,
+    "elapsed_seconds": 160.0,
+    "prompt_tokens": 18313,
+    "completion_tokens": 2841,
+    "total_tokens": 21154,
+    "requests": 7
   }
 ]
