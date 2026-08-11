@@ -1,10 +1,10 @@
 {
   "minimax/MiniMax-M3": {
-    "solved": 5,
-    "real": 29,
+    "solved": 6,
+    "real": 30,
     "infra": 0,
     "skip": 0,
-    "tokens": 1205157
+    "tokens": 1229923
   },
   "zai/glm-5.2": {
     "solved": 0,
@@ -16,7 +16,7 @@
   "muse/muse-spark-1.2": {
     "solved": 0,
     "real": 0,
-    "infra": 3,
+    "infra": 4,
     "skip": 0,
     "tokens": 0
   },
