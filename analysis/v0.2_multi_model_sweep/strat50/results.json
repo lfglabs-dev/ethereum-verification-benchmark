@@ -3262,5 +3262,21 @@
     "completion_tokens": 1641,
     "total_tokens": 34555,
     "requests": 10
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "kleros/sortition_trees/draw_interval_matches_weights",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T141231-default-fair-gpt-5-6-sol-kleros__sortition_trees__draw_interval_matches_weights",
+    "returncode": 0,
+    "elapsed_seconds": 64.0,
+    "prompt_tokens": 12197,
+    "completion_tokens": 368,
+    "total_tokens": 12565,
+    "requests": 4
   }
 ]
