@@ -29,9 +29,9 @@
   },
   "gpt-5.6-sol": {
     "solved": 15,
-    "real": 30,
+    "real": 31,
     "infra": 0,
     "skip": 0,
-    "tokens": 740473
+    "tokens": 772671
   }
 }
