@@ -3294,5 +3294,21 @@
     "completion_tokens": 808,
     "total_tokens": 24320,
     "requests": 6
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T141524-default-fair-gpt-5-6-sol-kyberswap__partial_fill_price_floor__check_return_amount_partial_fill_price_floor",
+    "returncode": 0,
+    "elapsed_seconds": 169.4,
+    "prompt_tokens": 12808,
+    "completion_tokens": 3090,
+    "total_tokens": 15898,
+    "requests": 5
   }
 ]
