@@ -3246,5 +3246,21 @@
     "completion_tokens": 1138,
     "total_tokens": 36075,
     "requests": 10
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ipor/plasma_vault_redeem_split/redeem_preserves_pps",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T141030-default-fair-gpt-5-6-sol-ipor__plasma_vault_redeem_split__redeem_preserves_pps",
+    "returncode": 1,
+    "elapsed_seconds": 110.9,
+    "prompt_tokens": 32914,
+    "completion_tokens": 1641,
+    "total_tokens": 34555,
+    "requests": 10
   }
 ]
