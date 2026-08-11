@@ -3390,5 +3390,21 @@
     "completion_tokens": 1329,
     "total_tokens": 17774,
     "requests": 6
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "forgeyields/global_solvency/report_preserves_global_solvency",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T185238-default-fair-gpt-5-6-luna-forgeyields__global_solvency__report_preserves_global_solvency",
+    "returncode": 0,
+    "elapsed_seconds": 65.5,
+    "prompt_tokens": 8338,
+    "completion_tokens": 353,
+    "total_tokens": 8691,
+    "requests": 3
   }
 ]
