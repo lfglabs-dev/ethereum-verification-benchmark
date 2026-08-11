@@ -19,5 +19,12 @@
     "infra": 1,
     "skip": 0,
     "tokens": 0
+  },
+  "kimi/k3": {
+    "solved": 0,
+    "real": 0,
+    "infra": 1,
+    "skip": 0,
+    "tokens": 0
   }
 }
