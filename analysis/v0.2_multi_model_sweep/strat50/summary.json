@@ -30,8 +30,8 @@
   "muse/muse-spark-1.2": {
     "solved": 0,
     "real": 0,
-    "infra": 19,
-    "skip": 0,
+    "infra": 20,
+    "skip": 34,
     "tokens": 0
   },
   "zai/glm-5.2": {
