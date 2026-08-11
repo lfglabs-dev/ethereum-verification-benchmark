@@ -3166,5 +3166,53 @@
     "completion_tokens": 0,
     "total_tokens": 0,
     "requests": 0
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/chain_start_threshold",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T184420-default-fair-muse-muse-spark-1-2-ethereum__deposit_contract_minimal__chain_start_threshold",
+    "returncode": 1,
+    "elapsed_seconds": 86.3,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T184515-default-fair-gpt-5-6-luna-erc4337__entry_point_invariant__execution_length_eq_validation_length",
+    "returncode": 1,
+    "elapsed_seconds": 47.8,
+    "prompt_tokens": 14570,
+    "completion_tokens": 562,
+    "total_tokens": 15132,
+    "requests": 5
+  },
+  {
+    "model": "kimi/k3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ethereum/deposit_contract_minimal/deposit_count",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T184450-default-fair-kimi-k3-ethereum__deposit_contract_minimal__deposit_count",
+    "returncode": 1,
+    "elapsed_seconds": 77.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
   }
 ]
