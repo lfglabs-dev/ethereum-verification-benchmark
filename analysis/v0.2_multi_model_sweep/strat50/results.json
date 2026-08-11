@@ -2430,5 +2430,53 @@
     "completion_tokens": 615,
     "total_tokens": 33940,
     "requests": 9
+  },
+  {
+    "model": "muse/muse-spark-1.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T180433-default-fair-muse-muse-spark-1-2-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 77.0,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
+  },
+  {
+    "model": "kimi/k3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T180444-default-fair-kimi-k3-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 84.3,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
+  },
+  {
+    "model": "zai/glm-5.2",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/redeem_preserves_invariant",
+    "passed": false,
+    "final_class": "INFRA_INVALID",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T180453-default-fair-zai-glm-5-2-alchemix__earmark_conservation__redeem_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 91.1,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "requests": 0
   }
 ]

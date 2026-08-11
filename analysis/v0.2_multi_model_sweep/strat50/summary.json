@@ -9,7 +9,7 @@
   "kimi/k3": {
     "solved": 0,
     "real": 0,
-    "infra": 6,
+    "infra": 7,
     "skip": 0,
     "tokens": 0
   },
@@ -30,14 +30,14 @@
   "muse/muse-spark-1.2": {
     "solved": 0,
     "real": 0,
-    "infra": 1,
+    "infra": 2,
     "skip": 0,
     "tokens": 0
   },
   "zai/glm-5.2": {
     "solved": 0,
     "real": 0,
-    "infra": 1,
+    "infra": 2,
     "skip": 0,
     "tokens": 0
   }
