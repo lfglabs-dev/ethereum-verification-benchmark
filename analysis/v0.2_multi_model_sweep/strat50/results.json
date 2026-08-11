@@ -4318,5 +4318,21 @@
     "completion_tokens": 294,
     "total_tokens": 13638,
     "requests": 4
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "lido/vaulthub_locked/max_liability_shares_bound",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T170852-default-fair-gpt-5-6-terra-lido__vaulthub_locked__max_liability_shares_bound",
+    "returncode": 1,
+    "elapsed_seconds": 60.5,
+    "prompt_tokens": 10736,
+    "completion_tokens": 349,
+    "total_tokens": 11085,
+    "requests": 5
   }
 ]
