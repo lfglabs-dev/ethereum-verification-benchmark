@@ -3022,5 +3022,21 @@
     "completion_tokens": 655,
     "total_tokens": 21989,
     "requests": 6
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "cork/pool_solvency/solvency_preserved",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T183654-default-fair-gpt-5-6-luna-cork__pool_solvency__solvency_preserved",
+    "returncode": 1,
+    "elapsed_seconds": 62.5,
+    "prompt_tokens": 20386,
+    "completion_tokens": 629,
+    "total_tokens": 21015,
+    "requests": 6
   }
 ]
