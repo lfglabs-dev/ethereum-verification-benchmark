@@ -42,10 +42,10 @@
     "tokens": 0
   },
   "gpt-5.6-luna": {
-    "solved": 4,
-    "real": 24,
+    "solved": 5,
+    "real": 25,
     "infra": 0,
     "skip": 0,
-    "tokens": 487092
+    "tokens": 500886
   }
 }
