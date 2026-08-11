@@ -4030,5 +4030,21 @@
     "completion_tokens": 430,
     "total_tokens": 20310,
     "requests": 6
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "alchemix/earmark_conservation/sub_earmarked_debt_preserves_invariant",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T163025-default-fair-gpt-5-6-terra-alchemix__earmark_conservation__sub_earmarked_debt_preserves_invariant",
+    "returncode": 1,
+    "elapsed_seconds": 107.6,
+    "prompt_tokens": 26184,
+    "completion_tokens": 806,
+    "total_tokens": 26990,
+    "requests": 8
   }
 ]
