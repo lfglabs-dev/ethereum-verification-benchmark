@@ -1,12 +1,13 @@
 {
   "minimax/MiniMax-M3": {
-    "solved": 1,
-    "real": 10,
+    "solved": 2,
+    "real": 15,
     "infra": 0,
     "skip": 0,
-    "tokens": 357429,
+    "tokens": 624004,
     "solved_tasks": [
-      "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance"
+      "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+      "forgeyields/global_solvency/report_preserves_global_solvency"
     ]
   }
 }
