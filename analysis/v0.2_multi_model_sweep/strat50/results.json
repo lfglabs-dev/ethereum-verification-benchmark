@@ -3006,5 +3006,37 @@
     "completion_tokens": 40025,
     "total_tokens": 141889,
     "requests": 20
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+    "passed": true,
+    "final_class": "SOLVED",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T134705-default-fair-gpt-5-6-sol-damn_vulnerable_defi__side_entrance__flash_loan_via_deposit_preserves_pool_balance",
+    "returncode": 0,
+    "elapsed_seconds": 177.6,
+    "prompt_tokens": 9899,
+    "completion_tokens": 506,
+    "total_tokens": 10405,
+    "requests": 4
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "pendle/py_supply_pairing/redeem_py_pre_expiry_burns_equal_amount",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T134758-default-fair-minimax-minimax-m3-pendle__py_supply_pairing__redeem_py_pre_expiry_burns_equal_amount",
+    "returncode": 1,
+    "elapsed_seconds": 170.4,
+    "prompt_tokens": 56371,
+    "completion_tokens": 811,
+    "total_tokens": 57182,
+    "requests": 15
   }
 ]
