@@ -36,9 +36,9 @@
   },
   "gpt-5.6-terra": {
     "solved": 8,
-    "real": 35,
+    "real": 36,
     "infra": 0,
     "skip": 0,
-    "tokens": 823820
+    "tokens": 894278
   }
 }
