@@ -3070,5 +3070,21 @@
     "completion_tokens": 784,
     "total_tokens": 46532,
     "requests": 14
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "polaris/bonding_curve/floor_sell_and_burn_preserves_reserve_ratio_zero",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T135528-default-fair-minimax-minimax-m3-polaris__bonding_curve__floor_sell_and_burn_preserves_reserve_ratio_zero",
+    "returncode": 1,
+    "elapsed_seconds": 320.1,
+    "prompt_tokens": 46964,
+    "completion_tokens": 623,
+    "total_tokens": 47587,
+    "requests": 12
   }
 ]
