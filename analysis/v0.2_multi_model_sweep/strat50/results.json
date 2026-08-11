@@ -3518,5 +3518,21 @@
     "completion_tokens": 801,
     "total_tokens": 41108,
     "requests": 12
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "zama/erc7984_confidential_token/transferFrom_conservation",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T143126-default-fair-minimax-minimax-m3-zama__erc7984_confidential_token__transferFrom_conservation",
+    "returncode": 1,
+    "elapsed_seconds": 109.0,
+    "prompt_tokens": 37593,
+    "completion_tokens": 827,
+    "total_tokens": 38420,
+    "requests": 11
   }
 ]
