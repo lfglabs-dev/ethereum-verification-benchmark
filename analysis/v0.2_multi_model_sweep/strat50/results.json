@@ -4206,5 +4206,21 @@
     "completion_tokens": 263,
     "total_tokens": 7959,
     "requests": 3
+  },
+  {
+    "model": "gpt-5.6-terra",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T165256-default-fair-gpt-5-6-terra-ipor__plasma_vault_redeem_split__fee_payout_bounded_by_fee_free",
+    "returncode": 1,
+    "elapsed_seconds": 197.4,
+    "prompt_tokens": 30411,
+    "completion_tokens": 3429,
+    "total_tokens": 33840,
+    "requests": 13
   }
 ]
