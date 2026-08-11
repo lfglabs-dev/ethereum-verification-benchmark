@@ -3614,5 +3614,21 @@
     "completion_tokens": 321,
     "total_tokens": 8615,
     "requests": 3
+  },
+  {
+    "model": "gpt-5.6-sol",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "onedelta/caller_address_integrity/transfers_erc20_transfer_from_uses_outer_caller",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T144114-default-fair-gpt-5-6-sol-onedelta__caller_address_integrity__transfers_erc20_transfer_from_uses_outer_caller",
+    "returncode": 1,
+    "elapsed_seconds": 119.0,
+    "prompt_tokens": 25460,
+    "completion_tokens": 977,
+    "total_tokens": 26437,
+    "requests": 9
   }
 ]
