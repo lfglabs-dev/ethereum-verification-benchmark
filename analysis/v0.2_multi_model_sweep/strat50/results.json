@@ -5374,5 +5374,21 @@
     "completion_tokens": 0,
     "total_tokens": 0,
     "requests": 0
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "lagoon/guardrails/negative_variation_bounded",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T191012-default-fair-gpt-5-6-luna-lagoon__guardrails__negative_variation_bounded",
+    "returncode": 1,
+    "elapsed_seconds": 173.2,
+    "prompt_tokens": 15131,
+    "completion_tokens": 1844,
+    "total_tokens": 16975,
+    "requests": 6
   }
 ]
