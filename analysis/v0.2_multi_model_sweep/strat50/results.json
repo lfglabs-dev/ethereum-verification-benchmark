@@ -5710,5 +5710,21 @@
     "completion_tokens": 1064,
     "total_tokens": 31433,
     "requests": 8
+  },
+  {
+    "model": "gpt-5.6-luna",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "superfluid/realtime_balance_conservation/failed_nested_rolls_back_and_prevents_resume",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T194115-default-fair-gpt-5-6-luna-superfluid__realtime_balance_conservation__failed_nested_rolls_back_and_prevents_resume",
+    "returncode": 1,
+    "elapsed_seconds": 51.8,
+    "prompt_tokens": 19404,
+    "completion_tokens": 625,
+    "total_tokens": 20029,
+    "requests": 6
   }
 ]
