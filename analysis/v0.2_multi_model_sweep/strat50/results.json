@@ -3102,5 +3102,21 @@
     "completion_tokens": 387,
     "total_tokens": 14732,
     "requests": 4
+  },
+  {
+    "model": "minimax/MiniMax-M3",
+    "profile": "p4_normal",
+    "max_attempts": 16,
+    "max_tool_calls": 120,
+    "task_ref": "polygon/agglayer_bridge/claimMessage_valid_leaf_and_consumes_unique_nullifier",
+    "passed": false,
+    "final_class": "GENUINE_FAIL",
+    "run_dir": "/tmp/minimax-v02-release/results/runs/20260811T140059-default-fair-minimax-minimax-m3-polygon__agglayer_bridge__claimMessage_valid_leaf_and_consumes_unique_nullifier",
+    "returncode": 1,
+    "elapsed_seconds": 101.1,
+    "prompt_tokens": 32420,
+    "completion_tokens": 498,
+    "total_tokens": 32918,
+    "requests": 10
   }
 ]
