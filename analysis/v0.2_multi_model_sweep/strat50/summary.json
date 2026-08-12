@@ -1,51 +1,15 @@
 {
   "minimax/MiniMax-M3": {
-    "solved": 7,
-    "real": 50,
+    "solved": 4,
+    "real": 25,
     "infra": 0,
     "skip": 0,
-    "tokens": 2242130
-  },
-  "kimi/k3": {
-    "solved": 0,
-    "real": 0,
-    "infra": 25,
-    "skip": 34,
-    "tokens": 0
-  },
-  "gpt-5.6-sol": {
-    "solved": 17,
-    "real": 50,
-    "infra": 0,
-    "skip": 0,
-    "tokens": 1461614
-  },
-  "gpt-5.6-terra": {
-    "solved": 10,
-    "real": 50,
-    "infra": 0,
-    "skip": 0,
-    "tokens": 1362190
-  },
-  "muse/muse-spark-1.2": {
-    "solved": 0,
-    "real": 0,
-    "infra": 20,
-    "skip": 34,
-    "tokens": 0
-  },
-  "zai/glm-5.2": {
-    "solved": 0,
-    "real": 0,
-    "infra": 20,
-    "skip": 34,
-    "tokens": 0
-  },
-  "gpt-5.6-luna": {
-    "solved": 9,
-    "real": 49,
-    "infra": 0,
-    "skip": 0,
-    "tokens": 1002064
+    "tokens": 1036098,
+    "solved_tasks": [
+      "damn_vulnerable_defi/side_entrance/flash_loan_via_deposit_preserves_pool_balance",
+      "forgeyields/global_solvency/report_preserves_global_solvency",
+      "lido/vaulthub_locked/max_liability_shares_bound",
+      "nexus_mutual/ramm_price_band/sync_sets_buy_price"
+    ]
   }
 }
