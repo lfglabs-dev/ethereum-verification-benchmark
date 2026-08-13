@@ -21,15 +21,7 @@ from pathlib import Path
 VALID = {"SOLVED", "GENUINE_FAIL"}
 INFRA = {"INFRA_INVALID", "preflight_failed", "provider_setup_error"}
 STRAT50_PANEL_SHA256 = "ddb8459aa158d5a0271ba73046bc53bad6768cfff7cd4b3c3f7b0887ed9e3865"
-COHORT_ENV_KEYS = (
-    "DEFAULT_HARNESS_BASE_URL",
-    "DEFAULT_HARNESS_RESPONSES_BASE_URL",
-    "DEFAULT_HARNESS_WIRE_API",
-    "DEFAULT_HARNESS_STREAMING",
-    "DEFAULT_HARNESS_TEMPERATURE",
-    "DEFAULT_HARNESS_TOP_P",
-    "DEFAULT_HARNESS_PROTOCOL_PROBE_MAX_TOKENS",
-)
+SECRET_ENV_MARKERS = ("KEY", "TOKEN", "SECRET", "PASSWORD", "CREDENTIAL")
 
 
 def parse_args() -> argparse.Namespace:
@@ -112,7 +104,12 @@ def main() -> int:
     unknown_omit_stop_models = set(args.omit_stop_model) - set(args.models)
     if unknown_omit_stop_models:
         raise SystemExit(f"omit-stop configured for absent models: {sorted(unknown_omit_stop_models)}")
-    effective_env = {key: os.environ.get(key) for key in COHORT_ENV_KEYS}
+    effective_env = {
+        key: value
+        for key, value in sorted(os.environ.items())
+        if key.startswith("DEFAULT_HARNESS_")
+        and not any(marker in key for marker in SECRET_ENV_MARKERS)
+    }
     cohort = {
         "benchmark_head": args.benchmark_head,
         "panel_sha256": panel_sha256,

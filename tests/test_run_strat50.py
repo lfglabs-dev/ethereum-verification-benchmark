@@ -50,3 +50,16 @@ def test_rejects_dirty_checkout(tmp_path):
     ):
         with pytest.raises(SystemExit, match="clean"):
             RUNNER.main()
+
+
+def test_cohort_environment_filter_never_captures_secrets(monkeypatch):
+    monkeypatch.setenv("DEFAULT_HARNESS_STREAMING", "0")
+    monkeypatch.setenv("DEFAULT_HARNESS_API_KEY", "must-not-be-recorded")
+    captured = {
+        key: value
+        for key, value in sorted(RUNNER.os.environ.items())
+        if key.startswith("DEFAULT_HARNESS_")
+        and not any(marker in key for marker in RUNNER.SECRET_ENV_MARKERS)
+    }
+    assert captured["DEFAULT_HARNESS_STREAMING"] == "0"
+    assert "DEFAULT_HARNESS_API_KEY" not in captured
