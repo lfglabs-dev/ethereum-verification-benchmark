@@ -57,10 +57,16 @@ not sufficient.
 
 ## Muse Spark 1.2
 
-Direct Meta API and sandboxed.sh probes produce the same result for
-`muse-spark-1.2`: HTTP transport and usage accounting work, but native-tool and
-JSON-fallback probes return `content: null`, no `tool_calls`, and consume the
-completion budget as reasoning until `finish_reason: length`. This is an
-endpoint/model protocol incompatibility, not evidence that sandboxed.sh drops a
-valid tool call. Do not score Muse until an endpoint or model configuration
-passes the exact harness preflight.
+The original 64-token protocol probe falsely rejected `muse-spark-1.2`.
+Muse always reasons, and private reasoning counts against `max_tokens`; the
+probe exhausted its output budget before the model could emit a tool call.
+Direct Meta API tests with `reasoning_effort=minimal` produce a valid native
+tool call in 85–91 completion tokens, while `medium` used about 199 tokens for
+the same probe. The generic protocol-probe floor is therefore 256 tokens.
+
+For a scored Muse run, explicitly pin and publish `reasoning_effort` rather than
+using the provider-selected default. Run a same-task canary at `minimal` and
+`low` first, then keep one setting for all 50 tasks. For long multi-turn agents,
+Meta recommends the Responses API because Chat Completions cannot replay Muse's
+private reasoning between tool turns; this benchmark currently uses Chat
+Completions, so changing API protocol would be a separate harness cohort.
