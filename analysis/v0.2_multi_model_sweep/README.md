@@ -41,5 +41,6 @@ GPT-5.6 Sol leads this uniform-effort panel. MiniMax-M3 used the most tokens and
 - `strat50/summary.json` — per-model aggregates regenerated from those 200 rows.
 - `strat50/run-artifact-index.json` — task-to-run archive index with per-file SHA-256 checksums.
 - `strat50/run-archive.tar.gz` — submitted proofs, verifier outputs, conversations, and run metadata for all 200 evaluated tasks.
+- [`RUN.md`](./RUN.md) — concise, fail-closed instructions for running STRAT-50 at `p4_normal`, including provider request-shape compatibility.
 
 The `run_dir` fields in `strat50/results.json` are relative paths inside the published archive, not host-local paths.
