@@ -425,7 +425,13 @@ def _role_provider_preflight(base_url: str) -> dict[str, object]:
     ) -> dict[str, object]:
         try:
             if role == "driver" and DEFAULT_WIRE_API == "responses":
-                result = responses_preflight(model)
+                if not DEFAULT_NATIVE_TOOLS:
+                    raise ValueError("Responses wire API requires native tools in the default harness")
+                result = responses_preflight(
+                    model,
+                    base_url=role_base_url,
+                    api_key=api_key_override if api_key_override is not None else _api_key(),
+                )
             else:
                 result = generic_preflight(
                     role_base_url,
@@ -2570,6 +2576,8 @@ def _attempt_task_fair(
                     state=responses_state,
                     model=DEFAULT_DRIVER_MODEL,
                     tools=_fair_tools(mcp_tools) if native_tools else None,
+                    base_url=base_url,
+                    api_key=_api_key(),
                 )
             else:
                 response = chat_completion(
