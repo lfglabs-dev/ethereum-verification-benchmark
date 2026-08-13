@@ -26,6 +26,7 @@ python3 scripts/run_strat50.py \
   --output results/strat50-p4 \
   --model zai/glm-5.2 \
   --model kimi/k3 \
+  --model xai/grok-4.6 \
   --max-attempts 16 \
   --max-tool-calls 120 \
   --omit-stop \
@@ -37,6 +38,11 @@ Kimi endpoints. `--omit-sampling-model kimi/k3` removes `temperature`, `top_p`,
 and `reasoning_effort`; Kimi's coding endpoint rejects `top_p`. Both switches
 are request-shape compatibility settings and do not change task content,
 budgets, tools, or verifier policy.
+
+Use the pinned `xai/grok-4.6` model identifier for reproducible comparisons;
+do not publish runs made through the moving `xai/grok-4.6-latest` alias. Grok
+4.6 passes the unmodified exact-shape harness preflight and therefore needs no
+request-shape compatibility switch.
 
 The runner checkpoints `results.json` after every task and resumes from existing
 `SOLVED`/`GENUINE_FAIL` rows. Provider/preflight failures are classified as
