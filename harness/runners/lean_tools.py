@@ -18,6 +18,7 @@ from typing import Any
 
 try:
     from .. import transport
+    from ..responses_transport import DEFAULT_WIRE_API, ResponsesState, responses_completion, responses_preflight
     from ..classification import classify_run
     from ..lean_lsp_mcp_client import (
         LeanLspMcpError,
@@ -37,6 +38,7 @@ try:
     )
 except ImportError:
     import transport
+    from responses_transport import DEFAULT_WIRE_API, ResponsesState, responses_completion, responses_preflight
     from classification import classify_run
     from lean_lsp_mcp_client import (
         LeanLspMcpError,
@@ -422,11 +424,14 @@ def _role_provider_preflight(base_url: str) -> dict[str, object]:
         api_key_override: str | None = None,
     ) -> dict[str, object]:
         try:
-            result = generic_preflight(
-                role_base_url,
-                model,
-                api_key_override=api_key_override,
-            )
+            if role == "driver" and DEFAULT_WIRE_API == "responses":
+                result = responses_preflight(model)
+            else:
+                result = generic_preflight(
+                    role_base_url,
+                    model,
+                    api_key_override=api_key_override,
+                )
         except Exception as exc:  # noqa: BLE001 - normalize setup failures into artifacts
             result = {
                 "status": "failed",
@@ -589,9 +594,9 @@ def _tool_call_signature(name: str, args: dict[str, object]) -> str:
     return f"{name}:{encoded_args}"
 
 
-def _compact_fair_messages(messages: list[dict[str, Any]], *, system_prompt: str, user_prompt: str) -> None:
+def _compact_fair_messages(messages: list[dict[str, Any]], *, system_prompt: str, user_prompt: str) -> bool:
     if DEFAULT_MAX_FAIR_MESSAGES <= 0 or len(messages) <= DEFAULT_MAX_FAIR_MESSAGES:
-        return
+        return False
     snippets: list[str] = []
     for message in messages[-6:]:
         role = str(message.get("role") or "")
@@ -618,6 +623,7 @@ def _compact_fair_messages(messages: list[dict[str, Any]], *, system_prompt: str
             ),
         },
     ]
+    return True
 
 
 def _stuck_signature(first_error: object) -> str:
@@ -2412,6 +2418,7 @@ def _attempt_task_fair(
                 "content": f"{continuation_prompt}\n{content}\nReply with the next JSON tool call.",
             },
         ]
+        responses_state.reset("compact_user_context")
 
     def flush_pending_repetition_warning() -> None:
         nonlocal pending_repetition_warning
@@ -2542,6 +2549,7 @@ def _attempt_task_fair(
 
     token_budget_exhausted = False
     context_budget_exhausted = False
+    responses_state = ResponsesState()
     for request_index in range(1, request_limit + 1):
         if _proof_attempt_count(attempts) >= max_attempts:
             break
@@ -2551,15 +2559,23 @@ def _attempt_task_fair(
             token_budget_exhausted = True
             break
         try:
-            response = chat_completion(
-                messages,
-                base_url=base_url,
-                model=DEFAULT_DRIVER_MODEL,
-                tools=_fair_tools(mcp_tools) if native_tools else None,
-                tool_choice="auto" if native_tools else None,
-                request_log_path=conversation_log_path,
-                request_index=request_index,
-            )
+            if DEFAULT_WIRE_API == "responses":
+                response = responses_completion(
+                    messages,
+                    state=responses_state,
+                    model=DEFAULT_DRIVER_MODEL,
+                    tools=_fair_tools(mcp_tools) if native_tools else None,
+                )
+            else:
+                response = chat_completion(
+                    messages,
+                    base_url=base_url,
+                    model=DEFAULT_DRIVER_MODEL,
+                    tools=_fair_tools(mcp_tools) if native_tools else None,
+                    tool_choice="auto" if native_tools else None,
+                    request_log_path=conversation_log_path,
+                    request_index=request_index,
+                )
         except Exception as exc:
             error_payload = exc.to_dict() if isinstance(exc, ChatCompletionError) else {"message": str(exc)}
             status = "request_timeout" if isinstance(exc, ChatCompletionError) and exc.kind == "request_timeout" else "request_failed"
@@ -2659,7 +2675,8 @@ def _attempt_task_fair(
                     "content": "Tool call required. Reply only with compact JSON for one allowed tool.",
                 }
             )
-            _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+            if _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt):
+                responses_state.reset("message_compaction")
             continue
         for tool_call in tool_calls:
             if not isinstance(tool_call, dict):
@@ -3095,7 +3112,11 @@ def run_group(
             "max_tool_calls": max_tool_calls,
             **budgets,
         }
-    elif not _api_key() and not _local_no_auth_endpoint(base_url):
+    elif (
+        not _api_key()
+        and not (DEFAULT_WIRE_API == "responses" and os.environ.get("DEFAULT_HARNESS_RESPONSES_API_KEY"))
+        and not _local_no_auth_endpoint(base_url)
+    ):
         provider_key_hint = f", DEFAULT_HARNESS_{DEFAULT_PROVIDER.upper()}_API_KEY" if DEFAULT_PROVIDER else ""
         response = {
             "status": "missing_credentials",
