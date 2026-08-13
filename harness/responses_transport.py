@@ -78,4 +78,5 @@ def responses_preflight(model: str) -> dict[str,Any]:
     if not calls: return {"status":"failed","checks":{"responses":True,"tool_calls":False,"previous_response_id":False,"usage_accounting":bool(first.get("usage"))}}
     call=calls[0]; messages.extend([first["choices"][0]["message"],{"role":"tool","tool_call_id":call["id"],"content":'{"value":"ok"}'}]); second=responses_completion(messages,state=state,model=model,tools=tools)
     usage={k:int(first["usage"].get(k,0))+int(second["usage"].get(k,0)) for k in ("prompt_tokens","completion_tokens","total_tokens")}; usage["requests"]=2
-    return {"status":"passed","model":model,"wire_api":"responses","checks":{"responses":True,"tool_calls":True,"previous_response_id":second["responses_state"]["previous_response_id"]==first["id"],"usage_accounting":usage["total_tokens"]>0},"usage":usage}
+    checks={"responses":True,"tool_calls":True,"previous_response_id":second["responses_state"]["previous_response_id"]==first["id"],"usage_accounting":usage["total_tokens"]>0}
+    return {"status":"passed" if all(checks.values()) else "failed","model":model,"wire_api":"responses","checks":checks,"usage":usage}

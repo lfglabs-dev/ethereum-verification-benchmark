@@ -2941,11 +2941,12 @@ def _attempt_task_fair(
                 failed_attempt = _last_failed_proof_attempt(result)
                 if failed_attempt is not None and int(prover_state["repair_count"]) < int(prover_state["repair_limit"]):
                     messages.append({"role": "user", "content": STRICT_DRIVER_REPAIR_NUDGE})
-                    _compact_fair_messages(
+                    if _compact_fair_messages(
                         messages,
                         system_prompt=system_prompt,
                         user_prompt=continuation_prompt,
-                    )
+                    ):
+                        responses_state.reset("strict_repair_compaction")
                     repaired = True
             elif DIAGNOSTIC_RETRY_ENABLED and name in {"check_proof", "try_tactics"}:
                 failed_attempt = _last_failed_proof_attempt(result)
@@ -2969,13 +2970,15 @@ def _attempt_task_fair(
                         candidate=current_candidate,
                         attempt=failed_attempt,
                     )
+                    responses_state.reset("diagnostic_repair")
                     repaired = True
             if not repaired:
-                _compact_fair_messages(
+                if _compact_fair_messages(
                     messages,
                     system_prompt=system_prompt,
                     user_prompt=continuation_prompt,
-                )
+                ):
+                    responses_state.reset("post_tool_compaction")
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
     if context_budget_exhausted:
