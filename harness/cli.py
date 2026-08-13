@@ -3,6 +3,8 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import subprocess
+import sys
 import time
 from collections import Counter
 from datetime import datetime, timezone
@@ -46,9 +48,7 @@ try:
     )
     from .paths import RESULTS_DIR
     from .reports import compare_runs, write_run_report
-    from .runners.shell_agent import run_group as run_shell_group
     from .runners.lean_tools import _role_config as default_role_config
-    from .runners.lean_tools import run_group as run_lean_tools_group
     from .runners.lean_tools_mcp import run_group as run_lean_tools_mcp_group
     from .workspace_builder import warm_public_dependencies, warm_result_failed
 except ImportError:
@@ -68,9 +68,7 @@ except ImportError:
     )
     from paths import RESULTS_DIR
     from reports import compare_runs, write_run_report
-    from runners.shell_agent import run_group as run_shell_group
     from runners.lean_tools import _role_config as default_role_config
-    from runners.lean_tools import run_group as run_lean_tools_group
     from runners.lean_tools_mcp import run_group as run_lean_tools_mcp_group
     from workspace_builder import warm_public_dependencies, warm_result_failed
 
@@ -110,39 +108,27 @@ def run_group(
     shell_timeout_seconds: int,
     max_tool_calls: int,
     task_ref: str | None = None,
+    preflight_verified: bool = False,
 ) -> tuple[int, Path]:
-    if harness == "builtin-lean-lsp":
+    if suite == "v0.2" and not preflight_verified:
+        # This is intentionally before workspace creation, runner dispatch, or
+        # provider setup.  The validator is structural-only and process-cache
+        # free so direct API callers cannot bypass the release preflight.
+        from scripts.validate_v02_reference_contract import ensure_structural_contract
+
+        ensure_structural_contract()
+    if harness == "default":
         return run_lean_tools_mcp_group(
             group_id,
             suite=suite,
             keep_workspace=keep_workspace,
             dry_run=dry_run,
             max_attempts=max_attempts,
-            max_tool_calls=max_tool_calls,
-            task_ref=task_ref,
-        )
-    if harness != "default":
-        return run_shell_group(
-            group_id,
-            harness_id=harness,
-            model=os.environ.get("DEFAULT_HARNESS_MODEL", harness),
-            suite=suite,
-            keep_workspace=keep_workspace,
-            dry_run=dry_run,
-            timeout_seconds=shell_timeout_seconds,
             max_turns=max_turns,
-            task_ref=task_ref,
-        )
-    if harness == "default":
-        return run_lean_tools_group(
-            group_id,
-            suite=suite,
-            keep_workspace=keep_workspace,
-            dry_run=dry_run,
-            max_attempts=max_attempts,
             max_tool_calls=max_tool_calls,
             task_ref=task_ref,
         )
+    raise ValueError("only the canonical MCP-backed default harness is supported")
     
 
 def _load_child_run(run_dir: Path) -> dict:
@@ -173,9 +159,13 @@ def run_suite(
     shell_timeout_seconds: int,
     max_tool_calls: int,
 ) -> tuple[int, Path]:
+    if suite == "v0.2":
+        from scripts.validate_v02_reference_contract import ensure_structural_contract
+
+        ensure_structural_contract()
     start = time.time()
     started_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-    builtin_harness = harness in {"default", "builtin-lean-lsp"}
+    builtin_harness = harness == "default"
     mode_slug = "-fair" if builtin_harness else ""
     run_id = f"{started_at.replace(':', '').replace('-', '').replace('Z', '')}-{harness}{mode_slug}-suite-{suite}"
     run_dir = RESULTS_DIR / "runs" / run_id
@@ -188,7 +178,11 @@ def run_suite(
     total_groups = len(groups)
     for index, group in enumerate(groups, start=1):
         print(f"[{index}/{total_groups}] start {group.group_id}", flush=True)
-        code, child_dir = run_group(group.group_id, harness, suite, keep_workspace, dry_run, max_attempts, max_turns, shell_timeout_seconds, max_tool_calls)
+        code, child_dir = run_group(
+            group.group_id, harness, suite, keep_workspace, dry_run,
+            max_attempts, max_turns, shell_timeout_seconds, max_tool_calls,
+            preflight_verified=(suite == "v0.2"),
+        )
         child_run = _load_child_run(child_dir)
         score = child_run.get("verifier", {}).get("score", {})
         passed = score.get("passed_targets", 0)
@@ -370,14 +364,14 @@ def main() -> int:
     sub = parser.add_subparsers(dest="command", required=True)
 
     list_parser = sub.add_parser("list")
-    list_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
+    list_parser.add_argument("--suite", choices=["active", "backlog", "all", "v0.2"], default="active")
     list_parser.add_argument("--unit", choices=["group", "task"], default="group")
     list_parser.add_argument("--json", action="store_true")
 
     group_parser = sub.add_parser("run-group")
     group_parser.add_argument("group_id")
-    group_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    group_parser.add_argument("--harness", default="default", help="default, builtin-lean-lsp, or a shell agent profile id from harness/agents/ (e.g. vibe-lean-lsp, grok-build, opencode, codex)")
+    group_parser.add_argument("--suite", choices=["active", "backlog", "all", "v0.2"], default="active")
+    group_parser.add_argument("--harness", default="default", choices=["default"], help="canonical MCP-backed harness")
     group_parser.add_argument("--keep-workspace", action="store_true")
     group_parser.add_argument("--dry-run", action="store_true")
     group_parser.add_argument("--budget", choices=sorted(BUDGET_PROFILES), default="quick")
@@ -388,8 +382,8 @@ def main() -> int:
 
     task_parser = sub.add_parser("run-task")
     task_parser.add_argument("task_ref")
-    task_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    task_parser.add_argument("--harness", default="default", help="default, builtin-lean-lsp, or a shell agent profile id from harness/agents/ (e.g. vibe-lean-lsp, grok-build, opencode, codex)")
+    task_parser.add_argument("--suite", choices=["active", "backlog", "all", "v0.2"], default="active")
+    task_parser.add_argument("--harness", default="default", choices=["default"], help="canonical MCP-backed harness")
     task_parser.add_argument("--keep-workspace", action="store_true")
     task_parser.add_argument("--dry-run", action="store_true")
     task_parser.add_argument("--budget", choices=sorted(BUDGET_PROFILES), default="quick")
@@ -403,14 +397,14 @@ def main() -> int:
         help="warm public Lean dependencies outside the per-task model budget",
     )
     warm_parser.add_argument("task_ref")
-    warm_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
+    warm_parser.add_argument("--suite", choices=["active", "backlog", "all", "v0.2"], default="active")
     warm_parser.add_argument(
         "--timeout-seconds", type=int, default=dependency_warm_timeout_seconds()
     )
 
     suite_parser = sub.add_parser("run-suite")
-    suite_parser.add_argument("--suite", choices=["active", "backlog", "all"], default="active")
-    suite_parser.add_argument("--harness", default="default", help="default, builtin-lean-lsp, or a shell agent profile id from harness/agents/ (e.g. vibe-lean-lsp, grok-build, opencode, codex)")
+    suite_parser.add_argument("--suite", choices=["active", "backlog", "all", "v0.2"], default="active")
+    suite_parser.add_argument("--harness", default="default", choices=["default"], help="canonical MCP-backed harness")
     suite_parser.add_argument("--keep-workspace", action="store_true")
     suite_parser.add_argument("--dry-run", action="store_true")
     suite_parser.add_argument("--budget", choices=sorted(BUDGET_PROFILES), default="quick")
@@ -423,6 +417,16 @@ def main() -> int:
     compare_parser.add_argument("--runs", nargs="+", required=True)
 
     args = parser.parse_args()
+    if (
+        args.command != "list"
+        and getattr(args, "suite", None) == "v0.2"
+        and os.environ.get("VERITY_V02_PINNED_CHECKOUT") != "1"
+    ):
+        return subprocess.run(
+            [sys.executable, "scripts/run_in_v02_environment.py", "--", sys.executable, "-m", "harness.cli", *sys.argv[1:]],
+            cwd=Path(__file__).resolve().parent.parent,
+            check=False,
+        ).returncode
     if args.command == "list":
         groups = list_groups(args.suite)
         if args.json:
@@ -468,6 +472,9 @@ def main() -> int:
         print(run_dir)
         return code
     if args.command == "warm-task":
+        if args.suite == "v0.2":
+            from scripts.validate_v02_reference_contract import ensure_structural_contract
+            ensure_structural_contract()
         code, artifact_dir = warm_task_dependencies(
             args.task_ref,
             suite=args.suite,

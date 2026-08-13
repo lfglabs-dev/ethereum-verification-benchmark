@@ -1,0 +1,40 @@
+manifest_kind: task
+schema_version: 1
+task_id: valid_settled_payout_is_safe
+case_id: hypernova/settled_payout_safety
+split: active
+family_id: hypernova
+implementation_id: arbitrum-deployment
+source_ref: https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Hypernova.SettledPayoutSafety.validSettledPayout_is_safe
+proof_family: protocol_transition_correctness
+property_class: payout_safety
+difficulty: hard
+category: funded_trading_payout
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/hypernova/settled_payout_safety/verity/Contract.lean
+  - Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean
+specification_files:
+  - cases/hypernova/settled_payout_safety/verity/Specs.lean
+  - Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean
+editable_files:
+  - Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/ValidSettledPayoutIsSafe.lean
+reference_solution_module: Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs
+reference_solution_declaration: Benchmark.Cases.Hypernova.SettledPayoutSafety.validSettledPayout_is_safe
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Proves exact account equity reduction, one-shot settlement closure, one nonce
+  increment, and equal Vault debit plus trader credit for the split-adjusted USDC
+  amount on the valid deployed payout path. The at-most-gross split bound is derived
+  from the clamped basis-point formula rather than assumed. Signature authorization is an explicit
+  trusted equality hypothesis whose body-less operations take the source EIP-712 tuple,
+  consumed nonce, pinned domain separator, and parsed signature as arguments. Their
+  cryptographic semantics are not mechanically proved.
+unsupported_feature_codes:
+  - native_usdc_call_as_boolean_and_balance_projection
+  - composite_cross_contract_storage_namespace

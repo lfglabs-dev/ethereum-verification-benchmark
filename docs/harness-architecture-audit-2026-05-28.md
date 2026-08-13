@@ -26,7 +26,6 @@ Recommended comparisons:
 
 ```bash
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --budget normal
-VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget normal
 python3 -m harness.cli compare --runs results/runs/<default-fair-run> results/runs/<grok-build-run>
 ```
 

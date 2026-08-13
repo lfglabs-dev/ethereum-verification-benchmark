@@ -15,12 +15,12 @@ try:
     from .manifests import Group, Task, group_to_json
     from .paths import ROOT
     from .verify_lease import verify_lease
-    from .workspace_builder import setup_private_lake, sha256_file
+    from .workspace_builder import initialise_remote_git_checkout, setup_private_lake, sha256_file
 except ImportError:
     from manifests import Group, Task, group_to_json
     from paths import ROOT
     from verify_lease import verify_lease
-    from workspace_builder import setup_private_lake, sha256_file
+    from workspace_builder import initialise_remote_git_checkout, setup_private_lake, sha256_file
 
 FORBIDDEN_RE = re.compile(r"\b(sorry|admit|axiom)\b|\?_[A-Za-z0-9_']*")
 IMPORT_RE = re.compile(r"^\s*import\s+(.+)$", re.MULTILINE)
@@ -37,7 +37,12 @@ class TargetResult:
 
 def _run(command: list[str], cwd: Path, timeout: int, *, lease: bool = True) -> tuple[int, str]:
     if lease:
-        with verify_lease(label="verifier_build"):
+        with verify_lease(label="verifier_build") as lease_reason:
+            # Scored verification is the concurrency correctness boundary. A
+            # failed advisory acquisition must never widen the cap and run a
+            # second verifier concurrently.
+            if lease_reason not in {"acquired", "reentrant"}:
+                return 125, f"verifier lease unavailable: {lease_reason}"
             return _run(command, cwd, timeout, lease=False)
     try:
         completed = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=timeout, check=False)
@@ -158,6 +163,11 @@ def _copy_repo_for_verification() -> Path:
         return ignored
 
     shutil.copytree(ROOT, dst, ignore=ignore, symlinks=True, ignore_dangling_symlinks=True)
+    # The verifier runs `lake build` after applying the submitted proof.  In a
+    # remote_required sandbox this copy needs the same fetchable Git base and
+    # overlay semantics as the model workspace, otherwise check_proof fails
+    # before Lean starts with "not inside a git checkout".
+    initialise_remote_git_checkout(dst)
     # Private build dir (cheap clone): verification builds must not write
     # into the repo cache, and the workspace umbrella overlay below would
     # otherwise be rebuilt into the shared .lake. No pruning: the verifier
@@ -211,7 +221,7 @@ def verify_group(
             _run(["lake", "exe", "cache", "get"], verifier_repo, 600, lease=False)
             code, output = _run(["lake", "build", module], verifier_repo, timeout_seconds)
         if code != 0:
-            if "not up-to-date" in output:
+            if code == 125 or "not up-to-date" in output:
                 status = "verifier_infra_error"
             else:
                 status = "timeout" if code == 124 else "lean_check_failed"
@@ -224,7 +234,14 @@ def verify_group(
             code, check_output = _run(["lake", "env", "lean", str(check_path)], verifier_repo, timeout_seconds)
             check_path.unlink(missing_ok=True)
             if code != 0:
-                targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, "theorem_missing", _compact_output(check_output)))
+                status = (
+                    "verifier_infra_error"
+                    if code == 125
+                    else "timeout"
+                    if code == 124
+                    else "theorem_missing"
+                )
+                targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, status, _compact_output(check_output)))
                 continue
         targets.append(TargetResult(task.task_ref, task.theorem_name, task.points, "passed", _compact_output(output)))
 

@@ -17,16 +17,41 @@ The suite is strongest today on accounting, local state preservation, storage ef
 # All tasks in one case
 ./scripts/run_case.sh ethereum/deposit_contract_minimal
 
-# Full active suite
+# Current mutable full suite (includes later runnable tasks)
 ./scripts/run_all.sh
+
+# Frozen v0.2 release validation (the canonical 240-task selector)
+./scripts/run_all.sh --suite v0.2
 ```
+
+The frozen v0.2 source contract is first compared with the reviewed literals
+in `harness/v02_release.py`; candidate JSON never chooses the baseline commit.
+Its reference-closure validator was introduced after that source revision, so
+the reviewed trust-root, validator, and helper blob are the release TCB. The
+contract pins both that final-tree Git blob OID and its SHA-256; validation
+materializes only those verified bytes outside the candidate checkout. Every
+v0.2 harness run performs the structural reference/closure/hash preflight
+before any task execution or provider call (without re-running Lean proof
+validation per task). This deliberately does not depend on an intermediate PR
+commit, so squash merges and shallow clones remain reproducible.
+
+v0.2 has one intentional final pre-results environment migration: its frozen
+task/reference source remains rooted at its release source commit, while its
+declared execution environment is Lean 4.24.0 with Verity
+`49105e54ceff6d66921572cc85583538c2c8497d`. The preflight compares the live
+`lean-toolchain` text and the `verity` package's `rev` and `inputRev` in
+`lake-manifest.json` with that declaration. It does not derive v0.2's
+historical `environment_id` from the mutable `benchmark.toml` suite selector.
+No v0.2 results exist, so this is the last permitted environment revision
+before canaries.
 
 ## Harness Runs
 
-Two harness families are supported:
-
-- `default`: the built-in fair harness. It exposes Lean-native tools through an OpenAI-compatible loop and logs every tool call and conversation turn.
-- shell agent profiles: off-the-shelf coding agents from `harness/agents/*.json`, run in isolated workspaces behind a metering proxy.
+The canonical runnable harness is `default`: the built-in fair harness. It
+exposes Lean-native tools through an OpenAI-compatible loop and logs every tool
+call and conversation turn. Its canonical profile is
+`harness/agents/default.json`; `default` is the only supported `--harness`
+value.
 
 All harnesses get the same public files, generated `harness/TASK_SUMMARY.md`, and `./harness/check.sh`. Hidden reference proofs and private build artifacts are removed from the agent workspace. The verifier rebuilds submissions in a private copy and rejects hidden imports, placeholders, added assumptions, and theorem-statement changes.
 
@@ -52,8 +77,8 @@ python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count 
 # Full suite
 ./scripts/run_default_harness_suite.sh --suite active --max-attempts 1
 
-# Shell agent profile
-VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget deep
+# Another default-harness task
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --budget deep
 ```
 
 ### Parallel multi-provider runs and the verification lease
@@ -89,9 +114,8 @@ default, so the request shape is unchanged for every other provider.
 
 Set `DEFAULT_HARNESS_OMIT_SAMPLING=1` when a comparison contract requires the
 provider's own sampling defaults. It removes `temperature`, `top_p`, and
-`reasoning_effort` from builtin requests and at the metering-proxy boundary for
-shell harnesses, so a CLI profile cannot silently reintroduce those fields. The
-effective policy is persisted in run artifacts.
+`reasoning_effort` from requests. The effective policy is persisted in run
+artifacts.
 
 Budget profiles:
 
@@ -109,7 +133,8 @@ Benchmark versions live in `benchmark-versions/`. A version manifest records:
 - `task_fingerprint`: execution-relevant task files and manifest fields.
 - `task_interface_id`: public/editable files and fields visible to models.
 - `harness_id`: harness code, policies, prompts, runner scripts, and agent configs.
-- `environment_id`: Lean/Lake toolchain and runtime dependency pins.
+- `environment_id`: Lean/Lake toolchain and runtime dependency pins, excluding
+  mutable suite selectors such as `benchmark.toml`.
 
 Create or refresh a version manifest:
 

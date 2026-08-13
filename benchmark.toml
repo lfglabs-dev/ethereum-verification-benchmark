@@ -19,12 +19,15 @@ result_schema = "schemas/run-result.schema.json"
 active_cases = [
   "1inch/xycswap_curve_safety",
   "alchemix/earmark_conservation",
+  "aragon_osx/execute_authorization",
   "balancer/reclamm_swap_rounding",
   "cork/pool_solvency",
   "damn_vulnerable_defi/side_entrance",
+  "enzyme/onyx_fee_handler",
   "erc4337/entry_point_invariant",
   "ethereum/deposit_contract_minimal",
   "forgeyields/global_solvency",
+  "hypernova/settled_payout_safety",
   "ipor/plasma_vault_redeem_split",
   "kleros/sortition_trees",
   "kyberswap/partial_fill_price_floor",
@@ -50,10 +53,12 @@ active_cases = [
   "t3tris/hwm_performance_fee",
   "uniswap_v2/pair_fee_adjusted_swap",
   "usual/dao_collateral",
+  "velora/bridge_staking",
   "wildcat/borrow_liquidity_safety",
   "yo_protocol/async_redemption_escrow",
   "zodiac/roles_decoder_faithfulness",
   "zama/erc7984_confidential_token",
+  "zama_protocol_apps/erc7984_upgradeable_exact_source",
 ]
 backlog_cases = [
   "usual/placeholder",

@@ -42,6 +42,13 @@
       "description": "The submitted proof used a forbidden placeholder such as sorry/admit or was rejected by the harness policy before normal verification."
     },
     {
+      "id": "model_truncation",
+      "label": "Model truncation",
+      "is_pass": false,
+      "verifier_status": ["model_truncation"],
+      "description": "The verifier returned a non-pass verdict AND the harness captured a finish_reason='length' response from the model. Distinct from forbidden_placeholder: the model did not give up, it ran out of completion-token budget. Fix by raising DEFAULT_HARNESS_MAX_RESPONSE_TOKENS."
+    },
+    {
       "id": "hidden_import",
       "label": "Hidden import",
       "is_pass": false,

@@ -18,6 +18,7 @@ import argparse
 import json
 import re
 import sys
+import tempfile
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -228,6 +229,7 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
         run_id = artifact_run_id(artifact, run_file)
         model_id = artifact.get("model")
         run_dir = _artifact_run_dir(run_file)
+        response_meta = artifact.get("response_meta") if isinstance(artifact, dict) else None
         for target in iter_run_targets(artifact):
             result = classify(
                 target["status"],
@@ -243,6 +245,16 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
                 if reason:
                     row["outcome"] = "infra_invalid"
                     row["detail"] = reason
+                else:
+                    # When the harness captured a finish_reason="length" for a
+                    # non-passing target, the verdict is a model-truncation
+                    # rather than a deliberate sorry / missing theorem. This
+                    # matters because truncation is fixable by raising the
+                    # completion budget, whereas forbidden_placeholder would
+                    # suggest the model gave up.
+                    if _is_truncated_response(target, response_meta):
+                        row["outcome"] = "model_truncation"
+                        row["detail"] = "finish_reason=length recorded in response_meta"
             rows.append(
                 {
                     "run_id": run_id,
@@ -254,12 +266,107 @@ def classify_runs_dir(runs_dir: Path, *, taxonomy: dict[str, Any]) -> list[dict[
     return rows
 
 
+def _is_truncated_response(target: dict[str, Any], response_meta: Any) -> bool:
+    """Return True if the response meta for this target shows finish_reason=length.
+
+    The aggregate response_meta is keyed ``{task_ref}/{request_index}``; we scan
+    every recorded request and treat the target as truncated if at least one
+    non-empty request was clipped on length. We restrict to non-pass targets so
+    a passing proof with extra follow-up turns (also length-clipped) does not
+    trigger a false positive.
+    """
+    if not isinstance(response_meta, dict):
+        return False
+    task_ref = target.get("task_ref")
+    for key, value in response_meta.items():
+        if not isinstance(value, dict):
+            continue
+        if task_ref is not None and not str(key).startswith(f"{task_ref}/"):
+            continue
+        if value.get("finish_reason") == "length":
+            return True
+    return False
+
+
+def run_self_test() -> int:
+    """Exercise the CLI classifier's pass, genuine-failure, and infra paths offline."""
+    taxonomy = load_taxonomy()
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+
+        fixtures = (
+            ("passed", "passed", "", "passed"),
+            ("genuine", "lean_check_failed", "unsolved goals\n⊢ False", "lean_check_failed"),
+            ("infra", "no_submission", "", "infra_invalid"),
+        )
+        for run_id, status, output, _expected in fixtures:
+            run_dir = root / run_id
+            run_dir.mkdir()
+            artifact = {
+                "run_id": run_id,
+                "model": "self-test-model",
+                "harness_status": "completed",
+                "verifier": {
+                    "targets": [
+                        {"task_ref": f"self-test/{run_id}", "status": status, "output": output}
+                    ]
+                },
+            }
+            (run_dir / "run.json").write_text(json.dumps(artifact), encoding="utf-8")
+
+        infra_dir = root / "infra"
+        (infra_dir / "harness-response.json").write_text(
+            json.dumps(
+                {
+                    "status": "completed",
+                    "tasks": [
+                        {
+                            "task_ref": "self-test/infra",
+                            "status": "request_failed",
+                            "failure_class": "provider_or_context_failure",
+                        }
+                    ],
+                }
+            ),
+            encoding="utf-8",
+        )
+        conversations = infra_dir / "conversations"
+        conversations.mkdir()
+        (conversations / "infra.jsonl").write_text(
+            json.dumps(
+                {
+                    "status": "request_failed",
+                    "request_index": 1,
+                    "error": {"kind": "http_transient", "last_status": 524},
+                }
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+
+        rows = classify_runs_dir(root, taxonomy=taxonomy)
+
+    actual = {row["run_id"]: row["outcome"] for row in rows}
+    expected = {run_id: outcome for run_id, _status, _output, outcome in fixtures}
+    if actual != expected:
+        print(f"classifier self-test failed: expected {expected!r}, got {actual!r}", file=sys.stderr)
+        return 1
+    print("failure classifier self-test passed")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("runs_dir", type=Path, help="Directory of detailed run artifacts to classify")
+    parser.add_argument("runs_dir", type=Path, nargs="?", help="Directory of detailed run artifacts to classify")
     parser.add_argument("--taxonomy", type=Path, default=DEFAULT_TAXONOMY)
     parser.add_argument("--format", choices=("text", "json"), default="text")
+    parser.add_argument("--self-test", action="store_true", help="run deterministic offline sanity checks")
     args = parser.parse_args()
+
+    if args.self_test:
+        return run_self_test()
+    if args.runs_dir is None:
+        parser.error("provide runs_dir or --self-test")
 
     taxonomy = load_taxonomy(args.taxonomy)
     rows = classify_runs_dir(args.runs_dir, taxonomy=taxonomy)

@@ -1,0 +1,67 @@
+manifest_kind: case
+project: hypernova
+case_id: settled_payout_safety
+schema_version: 1
+split: active
+family_id: hypernova
+implementation_id: arbitrum-deployment
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: null
+upstream_commit: null
+original_contract_path: TradingAccounts.sol + Vault.sol
+source_ref: https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract
+lean_target: Benchmark.Cases.Hypernova.SettledPayoutSafety.Compile
+spec_target: Benchmark.Cases.Hypernova.SettledPayoutSafety.Specs
+proof_target: Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs
+selected_functions:
+  - requestPayout
+  - _executePayout
+  - processPayout
+source_language: solidity
+verity_version: 49105e54ceff6d66921572cc85583538c2c8497d
+lean_toolchain: leanprover/lean4:v4.24.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - deployed_proxy_and_vault_wiring_pinned
+  - composite_cross_contract_state
+  - nested_address_bytes32_funded_account_mapping
+  - packed_account_fields_with_source_word_offsets
+  - checked_solidity_arithmetic
+  - explicit_eip712_inputs_with_trusted_cryptography
+  - pinned_vault_trading_accounts_immutable
+  - native_usdc_transfer_as_boolean_and_balance_projection
+  - one_shot_can_withdraw_flag
+  - per_trader_nonce_consumption
+abstraction_notes: >
+  The model follows the deployed TradingAccounts requestPayout call through
+  _executePayout, Vault.processPayout, and native USDC safeTransfer. The two
+  contract states and token balance projection share one composite ContractState
+  so Contract.run preserves whole-transaction rollback. The proof-side authorization
+  hypothesis passes the source payout type hash, trader, funded-account ID, amount,
+  consumed nonce, deadline, pinned EIP-712 domain separator, and parsed (v,r,s) words
+  explicitly to narrow body-less trusted uninterpreted operations. Lean does not
+  establish their cryptographic semantics or input dependence. The compiler model
+  separately uses Verity's hashing and precompile ECMs for the source-shaped flow.
+  Native USDC safeTransfer is represented by a success Boolean and exact Vault and
+  trader balance updates. The funded account
+  keeps its address plus bytes32 nested key and the source word offsets for the modeled
+  status, initialEquity, equity, and canWithdraw fields. The whole-word canWithdraw
+  projection is scoped to canonical source-reachable states with zero unused upper
+  padding; arbitrary raw padding, assembly writes, and excluded upgrades are out of
+  scope. Events and unrelated struct fields are omitted.
+unsupported_feature_codes:
+  - deployed_proxy_upgrade_out_of_scope
+  - owner_vault_rewiring_out_of_scope
+  - native_usdc_call_as_boolean_and_balance_projection
+  - composite_cross_contract_storage_namespace
+  - admin_settlement_truth_assumed
+notes: >
+  The theorem proves on-chain accounting after canWithdraw is already true. It
+  does not independently model getMaxWithdrawable or updateEquityAndSettle, nor prove
+  off-chain P&L, flat-position detection, daily caps,
+  owner honesty, proxy immutability, or reserve sufficiency beyond the actual
+  trader transfer. Verified source SHA-256 values are recorded in the accompanying
+  case-study research artifacts.

@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: enzyme
+display_name: Enzyme
+split: active
+status: active
+description: Enzyme protocol accounting benchmarks, including the Onyx modular vault stack.
+implementation_ids:
+  - onyx_fee_handler
+case_ids:
+  - enzyme/onyx_fee_handler
+source_languages:
+  - solidity

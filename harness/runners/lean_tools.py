@@ -142,6 +142,12 @@ STRICT_ROLE_SEPARATION = (
 # Maximum number of proof_repairer (prover repair-mode) calls per task. 0 disables
 # prover repairs and leaves only the initial prover_writer draft.
 PROVER_REPAIR_ATTEMPTS = max(0, int(os.environ.get("DEFAULT_HARNESS_PROVER_REPAIR_ATTEMPTS", "2")))
+# Maximum number of automatic initial prover_writer calls per strict-hybrid task.
+# This is deliberately independent of the driver tool-call budget: an
+# unavailable or invalid writer must not be retried expensively for every driver
+# check_proof. Explicit draft_proof calls retain their existing workflow.
+# The default permits the required initial writer route exactly once.
+PROVER_WRITER_ATTEMPTS = max(1, int(os.environ.get("DEFAULT_HARNESS_PROVER_WRITER_ATTEMPTS", "1")))
 # Bounded, content-free public declaration index injected into prover prompts to
 # curb invented theorem names. Public declarations only (never hidden Proofs/
 # GeneratedPreview). 0 disables the index.
@@ -228,6 +234,7 @@ def _role_config() -> dict[str, object]:
         "driver_model": driver,
         "prover_model": prover,
         "prover_mode": DEFAULT_PROVER_MODE or None,
+        "prover_writer_attempts": PROVER_WRITER_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
         "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
         "sampling": {
             "driver": _effective_sampling(),
@@ -311,6 +318,8 @@ def _warm_target_modules(
 
 ROLE_METRIC_COUNTERS = (
     "prover_writer_calls",
+    "prover_writer_exhausted",
+    "strict_auto_writer_failures",
     "prover_repair_calls",
     "draft_valid_syntax_count",
     "draft_rejected_count",
@@ -425,7 +434,13 @@ def _role_provider_preflight(base_url: str) -> dict[str, object]:
     ) -> dict[str, object]:
         try:
             if role == "driver" and DEFAULT_WIRE_API == "responses":
-                result = responses_preflight(model)
+                if not DEFAULT_NATIVE_TOOLS:
+                    raise ValueError("Responses wire API requires native tools in the default harness")
+                result = responses_preflight(
+                    model,
+                    base_url=role_base_url,
+                    api_key=api_key_override if api_key_override is not None else _api_key(),
+                )
             else:
                 result = generic_preflight(
                     role_base_url,
@@ -1893,8 +1908,6 @@ def _execute_fair_tool(
                 elif role_metrics is not None:
                     # A rejected repair draft never reaches Lean = no submission.
                     role_metrics["repair_no_submission"] = int(role_metrics.get("repair_no_submission", 0)) + 1
-            else:
-                prover_state["write_count"] = int(prover_state.get("write_count", 0)) + 1
         return result
     if name in {"check_proof", "try_tactics"}:
         baseline_code, baseline_output = _run_lean_module_with_proof_content(
@@ -1935,6 +1948,27 @@ def _execute_fair_tool(
                     if latest_draft is None and DRAFT_PROOF_ENABLED:
                         if base_url is None:
                             return {"ok": False, "error": "base_url is required for strict auto writer"}
+                        writer_used = int(prover_state.get("auto_writer_count", 0))
+                        writer_limit = int(prover_state.get("auto_writer_limit", PROVER_WRITER_ATTEMPTS))
+                        if writer_used >= writer_limit:
+                            if role_metrics is not None:
+                                role_metrics["prover_writer_exhausted"] = int(role_metrics.get("prover_writer_exhausted", 0)) + 1
+                            return {
+                                "ok": False,
+                                "error": "strict_writer_exhausted",
+                                "failure_kind": "prover_writer_budget_exceeded",
+                                "stage": STAGE_WRITER,
+                                "prompt_kind": "write",
+                                "writer_calls_used": writer_used,
+                                "writer_calls_max": writer_limit,
+                                "message": (
+                                    "STRICT ROLE SEPARATION: the prover writer call cap is exhausted after no usable "
+                                    "prover draft was obtained; driver proof text was not submitted."
+                                ),
+                            }
+                        # Count before the request so a failed provider response
+                        # cannot leave the liveness bridge unbounded.
+                        prover_state["auto_writer_count"] = writer_used + 1
                         auto_result = _draft_proof_with_prover(
                             {"mode": "write", "task_context": _strict_auto_writer_context(task=task, workspace=workspace, original=original)},
                             task=task,
@@ -1957,16 +1991,29 @@ def _execute_fair_tool(
                             auto_writer_usage = auto_result.get("usage")
                             latest_draft = _normalize_proof_body(auto_proof)
                             prover_state["latest_draft"] = latest_draft
-                            prover_state["write_count"] = int(prover_state.get("write_count", 0)) + 1
                             proofs = [("auto_draft_proof", auto_proof)]
                             break
+                        if role_metrics is not None:
+                            role_metrics["strict_auto_writer_failures"] = int(role_metrics.get("strict_auto_writer_failures", 0)) + 1
+                        writer_calls_used = int(prover_state.get("auto_writer_count", 0))
+                        writer_exhausted = writer_calls_used >= writer_limit
+                        if writer_exhausted and role_metrics is not None:
+                            role_metrics["prover_writer_exhausted"] = int(role_metrics.get("prover_writer_exhausted", 0)) + 1
                         return {
                             "ok": False,
-                            "error": "strict_auto_writer_failed",
+                            "error": "strict_writer_exhausted" if writer_exhausted else "strict_auto_writer_failed",
+                            "failure_kind": "prover_writer_budget_exceeded" if writer_exhausted else None,
                             "stage": STAGE_WRITER,
                             "prompt_kind": "write",
                             "writer_error": auto_result.get("error"),
+                            "writer_calls_used": writer_calls_used,
+                            "writer_calls_max": writer_limit,
                             "message": (
+                                "STRICT ROLE SEPARATION: the driver attempted to submit before any prover draft. "
+                                "The harness ignored the driver proof and routed to the prover writer, but the writer "
+                                "did not return a usable draft; the writer call cap is now exhausted."
+                                if writer_exhausted
+                                else
                                 "STRICT ROLE SEPARATION: the driver attempted to submit before any prover draft. "
                                 "The harness ignored the driver proof and routed to the prover writer, but the writer "
                                 "did not return a usable draft."
@@ -2074,7 +2121,7 @@ def _execute_fair_tool(
                     "status": "rejected_forbidden_placeholder",
                     "exit_code": None,
                     "candidate_path": str(candidate_path),
-                    "output": "proof contains sorry, admit, axiom, or an unsolved placeholder",
+                    "output": "REJECTED: proof contains sorry, admit, axiom, or an unsolved placeholder. These tokens are always rejected. Replace with a real tactic: try omega, linarith, nlinarith, simp_arith, decide, native_decide, or grind [...] with contract function and storage field names. Do NOT submit sorry again.",
                     "failure_kind": "forbidden_placeholder",
                     "diagnostics": {
                         "changed_goal": False,
@@ -2122,6 +2169,7 @@ def _execute_fair_tool(
                 "diagnostics": diagnostics,
                 "duration_seconds": round(time.time() - lean_start, 3),
                 "response_usage": None,
+                "prover_derived": prover_derived,
             }
             if code != 0:
                 hint = _hint_for_failure(failure_kind, output)
@@ -2290,6 +2338,7 @@ def _attempt_task_fair(
     draft_log_path: Path | None = None,
     native_tools: bool | None = None,
     mcp_session: LeanLspMcpSession | None = None,
+    max_turns: int = 20,
 ) -> dict[str, object]:
     editable_files = task.get("editable_files")
     target_module = task.get("target_module")
@@ -2302,6 +2351,12 @@ def _attempt_task_fair(
     native_tools = DEFAULT_NATIVE_TOOLS if native_tools is None else native_tools
 
     mcp_tools = mcp_session.tools if mcp_session is not None else None
+    mcp_allowed_tool_names = {
+        str(function["name"])
+        for tool in _fair_tools(mcp_tools)
+        if isinstance((function := tool.get("function")), dict)
+        and isinstance(function.get("name"), str)
+    }
     if mcp_session is not None:
         mcp_names = ", ".join(
             str(tool.get("function", {}).get("name"))
@@ -2325,6 +2380,7 @@ def _attempt_task_fair(
             f"Available MCP tools: {mcp_names}. "
             "Use lean_local_search before guessing declaration names and lean_multi_attempt to compare small "
             "tactic snippets at a proof position. Iterate: submit, read the Lean error, fix, resubmit. "
+            "Submit early and iterate from Lean feedback rather than reading everything first. "
             "Do not use sorry, "
             "admit, axiom, hidden imports, Benchmark.GeneratedPreview, or reference Proofs modules. "
             "Do not assume a hardcoded solution from the task name."
@@ -2338,7 +2394,10 @@ def _attempt_task_fair(
             )
         user_prompt = (
             f"Solve the Lean task in editable file {editable}. Call show_task first, inspect the goal through "
-            "lean-lsp-mcp, then submit proof bodies with check_proof until Lean passes."
+            "lean-lsp-mcp, then submit proof bodies with check_proof until Lean passes. "
+            "CRITICAL: you must call check_proof within your first 3 tool calls after show_task. "
+            "Do not spend more than 3 tool calls reading files before submitting a proof attempt. "
+            "A failed proof with Lean feedback is better than no attempt."
         )
     elif native_tools:
         draft_tool_instruction = (
@@ -2359,13 +2418,17 @@ def _attempt_task_fair(
             "check_proof accepts either a tactic body to place under `:= by`, or a complete Lean file "
             "(with imports, namespace, helper lemmas, and the target theorem); the theorem statement must stay byte-identical. "
             "Iterate: submit, read the Lean error, fix, resubmit. "
+            "Submit early and iterate from Lean feedback rather than reading everything first. "
             "Do not use sorry, admit, axiom, hidden imports, "
             "Benchmark.GeneratedPreview, or reference Proofs modules. Do not assume a hardcoded solution from the task name. "
             "If native tool calling is unavailable, return JSON like {\"tool\":\"show_task\",\"arguments\":{}}."
         )
         user_prompt = (
             f"Solve the Lean task in editable file {editable}. "
-            "Call show_task first, then inspect the public files and check proof bodies until Lean passes."
+            "Call show_task first, then inspect the public files and check proof bodies until Lean passes. "
+            "CRITICAL: call check_proof within your first 3 tool calls after show_task. "
+            "Do not spend more than 3 tool calls reading files before submitting a proof attempt. "
+            "A failed proof with Lean feedback is better than no attempt."
         )
     else:
         draft_tool_instruction = (
@@ -2427,7 +2490,9 @@ def _attempt_task_fair(
             pending_repetition_warning = None
 
     no_tool_response_limit = max(3, min(20, max_tool_calls))
-    request_limit = max_tool_calls + max_attempts + no_tool_response_limit
+    # A turn is one driver interaction/request. Keep the existing safety bound
+    # as a secondary guard, but the declared benchmark cap is authoritative.
+    request_limit = min(max_turns, max_tool_calls + max_attempts + no_tool_response_limit)
     tool_calls_executed = 0
     non_proof_tool_calls = 0
     non_proof_tool_limit = min(
@@ -2437,7 +2502,8 @@ def _attempt_task_fair(
     no_tool_responses = 0
     sandbox_state = {"count": 0, "limit": min(DEFAULT_MAX_SANDBOX_CALLS, max(1, max_tool_calls // 4))}
     prover_state: dict[str, object] = {
-        "write_count": 0,
+        "auto_writer_count": 0,
+        "auto_writer_limit": PROVER_WRITER_ATTEMPTS,
         "repair_count": 0,
         "repair_limit": PROVER_REPAIR_ATTEMPTS,
         "pending_repair": False,
@@ -2446,6 +2512,8 @@ def _attempt_task_fair(
     role_metrics: dict[str, object] = {
         "role_config": _role_config(),
         "prover_writer_calls": 0,
+        "prover_writer_exhausted": 0,
+        "strict_auto_writer_failures": 0,
         "prover_repair_calls": 0,
         "draft_valid_syntax_count": 0,
         "draft_rejected_count": 0,
@@ -2462,6 +2530,7 @@ def _attempt_task_fair(
         "strict_context_blocked": 0,
     }
     usage_totals = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
+    response_meta_totals: dict[str, dict[str, object]] = {}
     corrective_protocol_sent = False
     repeated_signatures: dict[str, int] = {}
 
@@ -2484,7 +2553,16 @@ def _attempt_task_fair(
             )
             tool_call_id = detail.get("tool_call_id")
             tool_name = detail.get("tool")
-            if isinstance(tool_call_id, str) and isinstance(tool_name, str):
+            # A native assistant tool call must be answered by the matching
+            # tool result.  JSON-text fallback calls have synthetic ids, not
+            # an OpenAI tool-call lifecycle, so keep their correction as a
+            # user message instead.
+            if (
+                native_tools
+                and detail.get("text_protocol") is not True
+                and isinstance(tool_call_id, str)
+                and isinstance(tool_name, str)
+            ):
                 messages.append({"role": "tool", "tool_call_id": tool_call_id, "name": tool_name, "content": corrective})
             else:
                 messages.append({"role": "user", "content": corrective})
@@ -2514,10 +2592,21 @@ def _attempt_task_fair(
             )
             return None
         if count >= 3:
+            unresolved_writer_failure = bool(
+                STRICT_ROLE_SEPARATION
+                and not attempts
+                and not prover_state.get("latest_draft")
+                and int(role_metrics.get("strict_auto_writer_failures", 0)) > 0
+            )
+            status = "strict_writer_failed" if unresolved_writer_failure else "repetition_loop"
             return {
                 "task_ref": task.get("task_ref"),
-                "status": "repetition_loop",
-                "failure_class": _failure_taxonomy("repetition_loop", attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
+                "status": status,
+                "failure_class": (
+                    "provider_or_context_failure"
+                    if unresolved_writer_failure
+                    else _failure_taxonomy(status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses)
+                ),
                 "usage": usage_totals,
                 "attempts": attempts,
                 "tool_calls_executed": tool_calls_executed,
@@ -2547,14 +2636,29 @@ def _attempt_task_fair(
                 value = usage.get(key)
                 if isinstance(value, (int, float)):
                     usage_totals[key] += int(value)
+        # Capture transport-layer metadata for post-run analysis so a
+        # finish_reason="length" or non-200 status is observable per request
+        # rather than hidden inside an in-memory response object.
+        if isinstance(response, dict):
+            choices = response.get("choices")
+            finish_reason = None
+            returned_model = response.get("_returned_model") or response.get("model")
+            http_status = response.get("_transport_http_status")
+            if isinstance(choices, list) and choices and isinstance(choices[0], dict):
+                finish_reason = choices[0].get("finish_reason")
+            response_meta_totals[str(usage_totals["requests"])] = {
+                "finish_reason": finish_reason,
+                "returned_model": returned_model,
+                "http_status": http_status,
+            }
 
     token_budget_exhausted = False
     context_budget_exhausted = False
     responses_state = ResponsesState()
+    requests_consumed = 0
 
     def response_state_fields() -> dict[str, object]:
         return {"wire_api": DEFAULT_WIRE_API, "responses_state": responses_state.metadata() if DEFAULT_WIRE_API == "responses" else None}
-
     for request_index in range(1, request_limit + 1):
         if _proof_attempt_count(attempts) >= max_attempts:
             break
@@ -2564,12 +2668,15 @@ def _attempt_task_fair(
             token_budget_exhausted = True
             break
         try:
+            requests_consumed = request_index
             if DEFAULT_WIRE_API == "responses":
                 response = responses_completion(
                     messages,
                     state=responses_state,
                     model=DEFAULT_DRIVER_MODEL,
                     tools=_fair_tools(mcp_tools) if native_tools else None,
+                    base_url=base_url,
+                    api_key=_api_key(),
                 )
             else:
                 response = chat_completion(
@@ -2708,6 +2815,7 @@ def _attempt_task_fair(
                         "error": "malformed_tool_arguments",
                         "tool": name if isinstance(name, str) else None,
                         "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "text_protocol": tool_call.get("text_protocol") is True,
                         "message": str(exc),
                         "arguments_preview": str(raw_args)[:500],
                     },
@@ -2723,6 +2831,7 @@ def _attempt_task_fair(
                         "error": "malformed_tool_arguments",
                         "tool": name if isinstance(name, str) else None,
                         "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "text_protocol": tool_call.get("text_protocol") is True,
                         "message": "tool arguments must decode to an object",
                     },
                 )
@@ -2731,6 +2840,21 @@ def _attempt_task_fair(
                 continue
             if not isinstance(name, str):
                 failure = protocol_failure("invalid_tool_call", request_index, {"error": "tool call missing function name", "tool_call": _shrink_strings(tool_call, 300)})
+                if failure is not None:
+                    return failure
+                continue
+            if mcp_session is not None and name not in mcp_allowed_tool_names:
+                failure = protocol_failure(
+                    "invalid_tool_call",
+                    request_index,
+                    {
+                        "error": "unadvertised_mcp_tool",
+                        "tool": name,
+                        "tool_call_id": tool_call.get("id") if isinstance(tool_call.get("id"), str) else None,
+                        "text_protocol": tool_call.get("text_protocol") is True,
+                        "allowed_tools": sorted(mcp_allowed_tool_names),
+                    },
+                )
                 if failure is not None:
                     return failure
                 continue
@@ -2926,6 +3050,29 @@ def _attempt_task_fair(
                     "tool_log": str(tool_log_path),
                     "conversation_log": str(conversation_log_path),
                 }
+            if result.get("error") == "strict_writer_exhausted":
+                # The liveness bridge made at least one bounded writer attempt,
+                # but could not obtain a prover-owned proof to submit. This is a
+                # provider/writer-path failure, never a zero-writer model score.
+                return {
+                    "task_ref": task.get("task_ref"),
+                    "status": "strict_writer_exhausted",
+                    "failure_class": "provider_or_context_failure",
+                    "error": {
+                        "kind": "prover_writer_budget_exceeded",
+                        "writer_calls_used": result.get("writer_calls_used"),
+                        "writer_calls_max": result.get("writer_calls_max"),
+                    },
+                    "usage": usage_totals,
+                    "attempts": attempts,
+                    "tool_calls_executed": tool_calls_executed,
+                    "non_proof_tool_calls": non_proof_tool_calls,
+                    "non_proof_tool_limit": non_proof_tool_limit,
+                    "tactic_sandbox_calls": sandbox_state["count"],
+                    "role_metrics": role_metrics,
+                    "tool_log": str(tool_log_path),
+                    "conversation_log": str(conversation_log_path),
+                }
             if result.get("passed") is True:
                 return {
                     "task_ref": task.get("task_ref"),
@@ -2989,10 +3136,20 @@ def _attempt_task_fair(
                     responses_state.reset("post_tool_compaction")
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
-    if context_budget_exhausted:
+    strict_writer_failed = bool(
+        STRICT_ROLE_SEPARATION
+        and not attempts
+        and not prover_state.get("latest_draft")
+        and int(role_metrics.get("strict_auto_writer_failures", 0)) > 0
+    )
+    if strict_writer_failed:
+        final_status = "strict_writer_failed"
+    elif context_budget_exhausted:
         final_status = "context_budget_exhausted"
     elif tool_calls_executed >= max_tool_calls:
         final_status = "max_tool_calls_exceeded"
+    elif requests_consumed >= max_turns:
+        final_status = "max_turns_exceeded"
     elif _proof_attempt_count(attempts) >= max_attempts:
         final_status = "max_attempts_exceeded"
     elif no_tool_responses >= no_tool_response_limit:
@@ -3002,8 +3159,13 @@ def _attempt_task_fair(
     return {
         "task_ref": task.get("task_ref"),
         "status": final_status,
-        "failure_class": _failure_taxonomy(final_status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
+        "failure_class": (
+            "provider_or_context_failure"
+            if strict_writer_failed
+            else _failure_taxonomy(final_status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses)
+        ),
         "usage": usage_totals,
+        "response_meta": response_meta_totals,
         "token_budget_exhausted": token_budget_exhausted,
         "context_budget_exhausted": context_budget_exhausted,
         "attempts": attempts,
@@ -3026,12 +3188,13 @@ def run_group(
     keep_workspace: bool = False,
     dry_run: bool = False,
     max_attempts: int = 1,
+    max_turns: int = 20,
     max_tool_calls: int = DEFAULT_MAX_TOOL_CALLS,
     task_ref: str | None = None,
     harness_id: str = HARNESS_ID,
     run_slug: str = RUN_SLUG,
-    track: str = "group/lean_tools",
-    tool_backend: str = "builtin",
+    track: str = "group/lean_tools_mcp",
+    tool_backend: str = "lean-lsp-mcp",
 ) -> tuple[int, Path]:
     if max_attempts < 0:
         raise ValueError("max_attempts must be non-negative")
@@ -3066,11 +3229,11 @@ def run_group(
     benchmark_budget = {
         "max_attempts": max_attempts,
         "max_tool_calls": max_tool_calls,
-        "max_turns": None,
+        "max_turns": max_turns,
         "completion_token_budget": DEFAULT_TOKEN_BUDGET,
     }
-    if tool_backend not in {"builtin", "lean-lsp-mcp"}:
-        raise ValueError(f"unknown builtin tool backend: {tool_backend}")
+    if tool_backend not in {"lean-lsp-mcp"}:
+        raise ValueError(f"unsupported non-MCP tool backend: {tool_backend}")
     op_budget = operational_budget()
     budgets = {
         "benchmark_budget": benchmark_budget,
@@ -3106,6 +3269,24 @@ def run_group(
         else "infra_target_warm_timeout"
         if target_warm_timed_out
         else None
+    )
+    pre_mcp_reason = (
+        "dry_run"
+        if dry_run
+        else "missing_credentials"
+        if not credentials_available
+        else "dependency_warm_failed"
+        if dependency_warm_failed
+        else "target_warm_failed"
+        if target_warm_timed_out
+        else None
+    )
+    # This is an execution contract, rather than an inference from terminal
+    # status: only these four paths may finish before an MCP launch is tried.
+    mcp_lifecycle: dict[str, object] = (
+        {"status": "not_attempted", "reason": pre_mcp_reason}
+        if pre_mcp_reason is not None
+        else {"status": "started"}
     )
     if dry_run:
         response = {
@@ -3203,11 +3384,13 @@ def run_group(
         preflight: dict[str, object] | None = None
         mcp_session: LeanLspMcpSession | None = None
         mcp_metadata: dict[str, object] | None = None
+        mcp_started = False
         mcp_preflight_passed = tool_backend != "lean-lsp-mcp"
         try:
             if tool_backend == "lean-lsp-mcp":
                 mcp_session = LeanLspMcpSession(built.path)
                 mcp_session.start()
+                mcp_started = True
                 mcp_metadata = mcp_session.metadata()
                 mcp_preflight_passed = True
             preflight = _role_provider_preflight(base_url)
@@ -3227,6 +3410,7 @@ def run_group(
                             built.path,
                             base_url=base_url,
                             max_attempts=max_attempts,
+                            max_turns=max_turns,
                             max_tool_calls=max_tool_calls,
                             attempts_dir=run_dir / "attempts",
                             tool_log_path=run_dir / "tool-calls" / f"{str(task.get('task_id') or task.get('task_ref')).replace('/', '__')}.jsonl",
@@ -3239,6 +3423,7 @@ def run_group(
                     task_results[-1]["benchmark_budget"] = benchmark_budget
                     task_results[-1]["validity"] = row_validity(task_results[-1], expected_budget=benchmark_budget)
             aggregate_usage = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
+            aggregate_response_meta: dict[str, dict[str, object]] = {}
             for task_result in task_results:
                 task_usage = task_result.get("usage")
                 if isinstance(task_usage, dict):
@@ -3246,6 +3431,11 @@ def run_group(
                         value = task_usage.get(key)
                         if isinstance(value, (int, float)):
                             aggregate_usage[key] += int(value)
+                task_meta = task_result.get("response_meta")
+                if isinstance(task_meta, dict):
+                    for key, value in task_meta.items():
+                        if isinstance(value, dict):
+                            aggregate_response_meta[f"{task_result.get('task_ref') or key}/{key}"] = value
             aggregate_role_metrics = _aggregate_role_metrics(task_results)
             response = {
                 "status": "completed",
@@ -3270,6 +3460,7 @@ def run_group(
                 if tool_backend == "lean-lsp-mcp"
                 else None,
                 "usage": aggregate_usage,
+                "response_meta": aggregate_response_meta,
                 "preflight": preflight,
                 "dependency_warm_builds": dependency_warm_builds,
                 "warm_builds": warm_builds,
@@ -3354,8 +3545,12 @@ def run_group(
             if mcp_session is not None:
                 mcp_session.close()
                 mcp_metadata = mcp_session.metadata()
+            if mcp_started:
+                mcp_lifecycle["status"] = "completed"
         if mcp_metadata is not None:
             response["lean_lsp_mcp"] = mcp_metadata
+
+    response["mcp_lifecycle"] = mcp_lifecycle
 
     if response.get("provider_setup_error") and not response.get("tasks"):
         provider_error = str(response.get("error") or "provider setup failed before model execution")
@@ -3384,6 +3579,7 @@ def run_group(
                 "mode": "fair",
                 "tool_backend": tool_backend,
                 "max_attempts": max_attempts,
+                "max_turns": max_turns,
                 "max_tool_calls": max_tool_calls,
                 **budgets,
             },
@@ -3420,7 +3616,10 @@ def run_group(
     )
     classification = classify_run(verifier_result, response.get("tasks") if isinstance(response.get("tasks"), list) else [])
     run = {
-        "schema_version": 1,
+        # v2 identifies the canonical default as an MCP execution contract.
+        # v1 default/builtin records remain readable as historical artifacts.
+        "schema_version": 2,
+        "execution_contract": "default-mcp-v1",
         "run_id": run_id,
         "harness_id": effective_harness_id,
         "base_harness_id": harness_id,
@@ -3439,6 +3638,7 @@ def run_group(
         "track": track,
         "mode": "fair",
         "tool_backend": tool_backend,
+        "mcp_lifecycle": response.get("mcp_lifecycle"),
         "lean_lsp_mcp": response.get("lean_lsp_mcp"),
         "run_mode": "task" if task_ref else "group",
         "group_id": group_id,
@@ -3457,6 +3657,7 @@ def run_group(
         "mcp_preflight": response.get("mcp_preflight"),
         "provider_preflight": response.get("preflight"),
         "usage": response.get("usage"),
+        "response_meta": response.get("response_meta"),
         "benchmark_budget": benchmark_budget,
         "operational_budget": budgets["operational_budget"],
         "failure_counts": response.get("failure_counts") or ({str(response.get("failure_class")): 1} if response.get("failure_class") else {}),

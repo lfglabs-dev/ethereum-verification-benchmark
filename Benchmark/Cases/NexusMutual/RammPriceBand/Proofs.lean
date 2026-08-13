@@ -3,6 +3,8 @@ import Verity.Proofs.Stdlib.Automation
 
 namespace Benchmark.Cases.NexusMutual.RammPriceBand
 
+set_option maxRecDepth 1000000
+
 open Verity
 open Verity.EVM.Uint256
 

@@ -28,6 +28,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from harness.result_validity import failure_counts_from_tasks, row_validity  # noqa: E402
 from release_config import BENCHMARK_TITLE, HARNESS_USER_AGENT
 
+LEGACY_SHELL_HARNESSES = {"codex", "grok-build", "opencode", "shell", "vibe-lean-lsp"}
+
 
 def _slug(model: str) -> str:
     return "".join(ch if ch.isalnum() else "-" for ch in model).strip("-").lower()
@@ -183,6 +185,7 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
             {
                 "status": task_status or ("lean_passed" if verifier_passed else status),
                 "harness_status": status,
+                "failure_class": task_dicts[0].get("failure_class") if len(task_dicts) == 1 else None,
                 "provider_setup_error": run.get("provider_setup_error") or status in {"missing_credentials", "preflight_failed"},
                 "usage": usage,
                 "tool_calls": tool_calls,
@@ -208,11 +211,15 @@ def collect_runs(runs_dir: Path) -> list[dict[str, object]]:
             and score.get("passed_targets", 0) == score.get("total_targets", 0)
             and score.get("total_targets", 0) > 0
         )
+        harness = run.get("harness_id")
+        usage_source = run.get("usage_source")
+        if not isinstance(usage_source, str) or not usage_source.strip():
+            usage_source = "in-loop" if harness == "default" else "legacy-unknown"
         rows.append(
             {
                 "run_id": run.get("run_id"),
-                "harness": run.get("harness_id"),
-                "usage_source": run.get("usage_source", "in-loop"),
+                "harness": harness,
+                "usage_source": usage_source,
                 "model": run.get("model"),
                 "task_ref": run.get("task_ref") or run.get("group_id"),
                 "mode": run.get("mode"),
@@ -268,6 +275,7 @@ def _model_summary(rows: list[dict[str, object]]) -> dict[str, object]:
         "total_prompt_tokens": sum(int(row["prompt_tokens"]) for row in reusable_rows if isinstance(row["prompt_tokens"], (int, float))),
         "median_cost_to_pass_usd": round(statistics.median(costs), 4) if costs else None,
         "total_cost_usd": round(sum(all_costs), 4) if all_costs else None,
+        "usage_sources": dict(sorted(Counter(str(row.get("usage_source") or "legacy-unknown") for row in rows).items())),
         "failure_counts": dict(sorted(sum((Counter(row.get("failure_counts") or {}) for row in rows), Counter()).items())),
     }
 
@@ -304,6 +312,37 @@ def _harness_display(harness: str) -> str:
     return "builtin (fair)" if harness == "default" else harness
 
 
+def _usage_sources_display(summary: dict[str, object]) -> str:
+    sources = summary.get("usage_sources")
+    if not isinstance(sources, dict) or not sources:
+        return "legacy-unknown"
+    return ", ".join(
+        f"{source} ({count})" if len(sources) > 1 else str(source)
+        for source, count in sorted(sources.items())
+    )
+
+
+def _legacy_rows(rows: object) -> list[dict[str, object]]:
+    """Copy merge rows while making absent or stale provenance explicit."""
+    prepared: list[dict[str, object]] = []
+    if not isinstance(rows, list):
+        return prepared
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        copied = dict(row)
+        source = copied.get("usage_source")
+        harness = copied.get("harness")
+        if (
+            not isinstance(source, str)
+            or not source.strip()
+            or (source == "in-loop" and harness in LEGACY_SHELL_HARNESSES)
+        ):
+            copied["usage_source"] = "legacy-unknown"
+        prepared.append(copied)
+    return prepared
+
+
 def _leaderboard_markdown(
     summaries: dict[str, dict[str, object]],
     rows: list[dict[str, object]],
@@ -318,12 +357,12 @@ def _leaderboard_markdown(
         f"Generated {meta.get('date')} · commit `{meta.get('sha', 'unknown')[:9]}` · budget `{meta.get('budget', '?')}`",
         "",
         "**Ranked by total cost (cheapest first).** All combos run the same task set;",
-        "pass/fail is decided by the independent verifier; tokens are counted across the",
-        "whole agent loop (builtin: in-loop accounting; shell harnesses: metered at the API",
-        "boundary by the harness proxy).",
+        "pass/fail is decided by the independent verifier. Token-accounting provenance is",
+        "reported per harness/model family; `legacy-unknown` marks merged rows that did not",
+        "publish it.",
         "",
-        "| Harness | Model | Valid | Pass | Failure taxonomy | Median completion tok / pass | Median prompt tok / pass | Median cost / pass | Total completion tok | Total prompt tok | Total cost |",
-        "|---|---|---|---|---|---|---|---|---|---|---|",
+        "| Harness | Model | Accounting | Valid | Pass | Failure taxonomy | Median completion tok / pass | Median prompt tok / pass | Median cost / pass | Total completion tok | Total prompt tok | Total cost |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
 
     def sort_key(item: tuple[str, dict[str, object]]) -> tuple[float, float]:
@@ -354,7 +393,7 @@ def _leaderboard_markdown(
         if summary.get("infra_invalid"):
             pass_cell += f" · {summary['infra_invalid']} infra-invalid"
         lines.append(
-            f"| {_harness_display(harness)} | {display} | {summary['valid_tasks']}/{summary['tasks']} | {pass_cell} | {failures} | "
+            f"| {_harness_display(harness)} | {display} | {_usage_sources_display(summary)} | {summary['valid_tasks']}/{summary['tasks']} | {pass_cell} | {failures} | "
             f"{cell(_fmt_tokens(summary['median_completion_tokens_to_pass']), 'completion')} | "
             f"{cell(_fmt_tokens(summary['median_prompt_tokens_to_pass']), 'prompt')} | "
             f"{cell(_fmt_cost(summary.get('median_cost_to_pass_usd')), 'cost')} | "
@@ -403,8 +442,7 @@ def _leaderboard_markdown(
             "",
             "Notes: completion tokens are what the model generated (the main cost driver per",
             "Invalid/setup rows are shown with ⚠️ and excluded from valid/pass denominators.",
-            "provider pricing); prompt tokens show how context-hungry each harness is. Shell",
-            "harness rows have no attempt counts because iteration happens inside the CLI.",
+            "provider pricing); prompt tokens show how context-hungry the canonical harness is.",
             "Values marked *(est.)* are estimates, not measurements: grok-cli exposes no token",
             "telemetry at all (range derived from turn counts, run durations, and the same",
             "model's measured usage under the builtin harness); codex reports only an",
@@ -441,7 +479,7 @@ def main() -> int:
     if args.merge and args.merge.is_file():
         try:
             previous = json.loads(args.merge.read_text(encoding="utf-8")).get("runs", [])
-            collected = [row for row in previous if isinstance(row, dict)] + collected
+            collected = _legacy_rows(previous) + collected
         except (OSError, json.JSONDecodeError) as exc:
             print(f"warning: could not merge previous results ({exc})")
     rows = _dedupe_latest(collected)

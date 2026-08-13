@@ -774,6 +774,40 @@ def _prune_build_to_sources(workspace: Path) -> None:
                 pass
 
 
+def initialise_remote_git_checkout(workspace: Path) -> None:
+    """Make a reduced or copied workspace publishable to remote-lean-build.
+
+    The remote service fetches the repository HEAD and applies local changes as
+    an overlay.  It therefore needs a real, fetchable HEAD rather than a
+    synthetic snapshot commit.  This is deliberately best-effort because
+    local-allowed execution does not depend on Git metadata.
+    """
+    try:
+        subprocess.run(["git", "init", "-q"], cwd=workspace, check=True, timeout=10)
+        base_head = subprocess.check_output(
+            ["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True, timeout=10
+        ).strip()
+        subprocess.run(
+            ["git", "fetch", "-q", "--depth=1", str(ROOT), base_head],
+            cwd=workspace,
+            check=True,
+            timeout=30,
+        )
+        subprocess.run(["git", "update-ref", "refs/heads/harness-base", base_head], cwd=workspace, check=True, timeout=10)
+        subprocess.run(["git", "symbolic-ref", "HEAD", "refs/heads/harness-base"], cwd=workspace, check=True, timeout=10)
+        subprocess.run(["git", "read-tree", base_head], cwd=workspace, check=True, timeout=20)
+        origin_url = os.environ.get("BENCHMARK_ORIGIN_URL", "https://github.com/lfglabs-dev/ethereum-verification-benchmark.git")
+        subprocess.run(["git", "remote", "add", "origin", origin_url], cwd=workspace, check=True, timeout=10)
+        tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=workspace, timeout=20).decode().split("\0")
+        tracked = [path for path in tracked if path]
+        subprocess.run(["git", "update-index", "--assume-unchanged", "--", *tracked], cwd=workspace, check=True, timeout=30)
+        present = [path for path in tracked if (workspace / path).is_file()]
+        if present:
+            subprocess.run(["git", "update-index", "--no-assume-unchanged", "--", *present], cwd=workspace, check=True, timeout=30)
+    except Exception:
+        pass
+
+
 def build_group_workspace(
     group: Group,
     *,
@@ -854,6 +888,15 @@ def build_group_workspace(
     copied[".grok/sandbox.toml"] = sha256_file(grok_dir / "sandbox.toml")
 
     dependency_cache = setup_private_lake(workspace, prune_to_sources=True)
+
+    # When running under sandboxed.sh with compute_policy=remote_required, the
+    # lake shim routes builds to remote-lean-build, which requires a git
+    # checkout whose HEAD can be fetched from origin.  A synthetic snapshot
+    # commit is not fetchable by a remote node, so seed the temporary index
+    # with ROOT's real HEAD instead.  Files present in this reduced workspace
+    # are then ordinary overlays against that commit; absent files are marked
+    # assume-unchanged so they are not published as mass deletions.
+    initialise_remote_git_checkout(workspace)
 
     manifest = {
         "schema_version": 1,

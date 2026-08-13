@@ -11,10 +11,91 @@ from harness.classification import classify_run
 from harness.manifests import load_group
 from harness.result_validity import failure_taxonomy, row_validity
 from harness.runners.lean_tools import _provider_setup_task_rows, _warm_target_modules
+from harness.runners import lean_tools_mcp
+from harness import cli
 from scripts import aggregate_runs
+from scripts import validate_v02_reference_contract as validator
 
 
 class HarnessV02Tests(unittest.TestCase):
+    def test_frozen_run_preflight_blocks_before_runner_or_provider(self) -> None:
+        """Reference/proof drift must stop a v0.2 run before task execution."""
+        with patch(
+            "scripts.validate_v02_reference_contract.ensure_structural_contract",
+            side_effect=ValueError("reference proof hash drift"),
+        ), patch("harness.cli.run_lean_tools_mcp_group") as runner:
+            with self.assertRaisesRegex(ValueError, "reference proof hash drift"):
+                cli.run_group(
+                    "ethereum/deposit_contract_minimal", "default", "v0.2",
+                    False, True, 1, 1, 1, 1,
+                )
+        runner.assert_not_called()
+
+    def test_invalid_v02_contract_files_block_before_runner_or_provider(self) -> None:
+        cases = (
+            ("missing manifest", "manifest", None),
+            ("missing reference contract", "references", None),
+            ("malformed manifest", "manifest", "{"),
+            ("malformed reference contract", "references", "{"),
+        )
+        root = Path(__file__).resolve().parent.parent
+        good_manifest = (root / "benchmark-versions/v0.2.json").read_text(encoding="utf-8")
+        good_references = (root / "benchmark-versions/v0.2-references.json").read_text(encoding="utf-8")
+        for label, target, contents in cases:
+            with self.subTest(label=label), tempfile.TemporaryDirectory() as directory:
+                directory = Path(directory)
+                manifest = directory / "v0.2.json"
+                references = directory / "v0.2-references.json"
+                if target != "manifest":
+                    manifest.write_text(good_manifest, encoding="utf-8")
+                elif contents is not None:
+                    manifest.write_text(contents, encoding="utf-8")
+                if target != "references":
+                    references.write_text(good_references, encoding="utf-8")
+                elif contents is not None:
+                    references.write_text(contents, encoding="utf-8")
+                with patch.object(validator, "MANIFEST", manifest), patch.object(
+                    validator, "REFERENCES", references
+                ), patch("harness.cli.run_lean_tools_mcp_group") as runner, patch.object(
+                    validator, "run_lean"
+                ) as verifier:
+                    with self.assertRaisesRegex(ValueError, "v0.2 reference preflight failed"):
+                        cli.run_group(
+                            "ethereum/deposit_contract_minimal", "default", "v0.2",
+                            False, True, 1, 1, 1, 1,
+                        )
+                runner.assert_not_called()
+                verifier.assert_not_called()
+
+    def test_default_dispatches_only_to_mcp_runner_without_provider_setup(self) -> None:
+        """The canonical default dispatches only to its MCP runner."""
+        with patch("harness.cli.run_lean_tools_mcp_group", return_value=(0, Path("/tmp/mcp"))) as mcp:
+            code, run_dir = cli.run_group(
+                "ethereum/deposit_contract_minimal", "default", "active",
+                False, True, 1, 1, 1, 4,
+            )
+
+        self.assertEqual((code, run_dir), (0, Path("/tmp/mcp")))
+        mcp.assert_called_once()
+        self.assertEqual(mcp.call_args.kwargs["max_turns"], 1)
+        self.assertNotIn("run_lean_tools_group", cli.__dict__)
+        self.assertNotIn("run_shell_group", cli.__dict__)
+
+    def test_mcp_adapter_forwards_turn_cap(self) -> None:
+        with patch.object(lean_tools_mcp.lean_tools, "run_group", return_value=(0, Path("/tmp/run"))) as runner:
+            lean_tools_mcp.run_group("ethereum/deposit_contract_minimal", max_turns=7)
+        self.assertEqual(runner.call_args.kwargs["max_turns"], 7)
+
+    def test_default_profile_is_the_only_runnable_mcp_profile(self) -> None:
+        root = Path(__file__).resolve().parent.parent
+        profile = json.loads((root / "harness/agents/default.json").read_text(encoding="utf-8"))
+
+        self.assertEqual(profile["command"][:3], ["python3", "-m", "harness.runners.lean_tools_mcp"])
+        self.assertEqual(profile["track"], "group/lean_tools_mcp")
+        self.assertEqual(profile["lean_lsp_mcp_version"], "0.28.0")
+        for obsolete in ("builtin-lean-lsp.json", "codex.json", "grok-build.json", "vibe-lean-lsp.json", "opencode.json"):
+            self.assertFalse((root / "harness/agents" / obsolete).exists())
+
     def test_target_warming_stops_after_first_timeout(self) -> None:
         tasks = [
             {"task_ref": "case/one", "target_module": "Target.One"},
@@ -116,6 +197,21 @@ class HarnessV02Tests(unittest.TestCase):
         verifier_shell_pass = row_validity({"status": "lean_passed", "usage": {"requests": None}, "verifier_confirmed": True})
         self.assertTrue(verifier_shell_pass["valid"])
 
+    def test_strict_hybrid_validity_requires_writer_and_prover_submission(self) -> None:
+        row = {
+            "status": "lean_passed",
+            "usage": {"requests": 1, "total_tokens": 10},
+            "role_metrics": {"role_config": {"strict_role_separation": True}, "prover_writer_calls": 0},
+            "attempts": [{"status": "lean_passed", "prover_derived": False}],
+        }
+        invalid = row_validity(row)
+        self.assertFalse(invalid["valid"])
+        self.assertIn("strict-hybrid row has no prover writer routing", invalid["errors"])
+        self.assertIn("strict-hybrid row has no prover-derived accepted submission", invalid["errors"])
+        row["role_metrics"]["prover_writer_calls"] = 1
+        row["attempts"][0]["prover_derived"] = True
+        self.assertTrue(row_validity(row)["valid"])
+
     def test_budget_artifact_separates_benchmark_and_operational_limits(self) -> None:
         artifact = budget_artifact(BudgetProfile(max_attempts=4, max_tool_calls=40, max_turns=20, shell_timeout_seconds=900))
         self.assertEqual(artifact["benchmark_budget"]["max_attempts"], 4)
@@ -144,6 +240,43 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(summary["passed"], 1)
         self.assertEqual(summary["failure_counts"], {"provider_setup_error": 1})
 
+    def test_aggregate_summarizes_accounting_provenance_without_overwriting_it(self) -> None:
+        rows = [
+            {"valid": True, "reusable": True, "passed": True, "completion_tokens": 10, "prompt_tokens": 20, "usage_source": "proxy-metered", "failure_counts": {}},
+            {"valid": True, "reusable": True, "passed": False, "completion_tokens": 5, "prompt_tokens": 10, "usage_source": "estimated", "failure_counts": {}},
+        ]
+
+        summary = aggregate_runs._model_summary(rows)
+
+        self.assertEqual(summary["usage_sources"], {"estimated": 1, "proxy-metered": 1})
+        markdown = aggregate_runs._leaderboard_markdown(
+            {"shell:model": summary},
+            [{"harness": "shell", "model": "model", "task_ref": "task", **rows[0]}],
+            {},
+            {"date": "today"},
+        )
+        self.assertIn("| Accounting |", markdown)
+        self.assertIn("estimated (1), proxy-metered (1)", markdown)
+        self.assertNotIn("canonical harness's in-loop accounting", markdown)
+
+    def test_aggregate_marks_missing_or_stale_merged_provenance_as_legacy_unknown(self) -> None:
+        previous = [
+            {"run_id": "old-shell", "harness": "shell", "usage_source": "proxy-metered"},
+            {"run_id": "older-shell", "harness": "shell"},
+            {"run_id": "stale-shell", "harness": "shell", "usage_source": "in-loop"},
+            {"run_id": "builtin", "harness": "default", "usage_source": "in-loop"},
+            {"run_id": "legacy-builtin", "harness": "builtin-lean-lsp", "usage_source": "in-loop"},
+        ]
+
+        prepared = aggregate_runs._legacy_rows(previous)
+
+        self.assertEqual(prepared[0]["usage_source"], "proxy-metered")
+        self.assertEqual(prepared[1]["usage_source"], "legacy-unknown")
+        self.assertEqual(prepared[2]["usage_source"], "legacy-unknown")
+        self.assertEqual(prepared[3]["usage_source"], "in-loop")
+        self.assertEqual(prepared[4]["usage_source"], "in-loop")
+        self.assertNotIn("usage_source", previous[1])
+
     def test_aggregate_accepts_verifier_clean_shell_pass_without_requests(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             run_dir = Path(tmp) / "run"
@@ -166,6 +299,7 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertEqual(len(rows), 1)
         self.assertTrue(rows[0]["valid"])
         self.assertTrue(rows[0]["passed"])
+        self.assertEqual(rows[0]["usage_source"], "legacy-unknown")
 
     def test_aggregate_counts_suite_failures_as_valid_failures(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -245,6 +379,47 @@ class HarnessV02Tests(unittest.TestCase):
         self.assertFalse(rows[0]["reusable"])
         self.assertNotIn("provider setup error", rows[0]["validity_errors"])
         self.assertNotIn("benchmark budget does not match manifest", rows[0]["validity_errors"])
+
+    def test_aggregate_preserves_strict_writer_exhaustion_as_infra_invalid(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            run_dir = Path(tmp) / "run"
+            run_dir.mkdir()
+            (run_dir / "run.json").write_text(
+                json.dumps(
+                    {
+                        "run_id": "strict-writer-exhausted",
+                        "harness_id": "default",
+                        "model": "local",
+                        "task_ref": "case/task",
+                        "harness_status": "completed",
+                        "classification": {"run_class": "INFRA_INVALID", "reusable": False},
+                        "verifier": {"score": {"passed_targets": 0, "total_targets": 1}},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (run_dir / "harness-response.json").write_text(
+                json.dumps(
+                    {
+                        "tasks": [
+                            {
+                                "task_ref": "case/task",
+                                "status": "strict_writer_exhausted",
+                                "failure_class": "provider_or_context_failure",
+                                "validity": {"valid": True, "errors": []},
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            rows = aggregate_runs.collect_runs(Path(tmp))
+
+        self.assertEqual(len(rows), 1)
+        self.assertTrue(rows[0]["valid"], rows[0]["validity_errors"])
+        self.assertEqual(rows[0]["final_class"], "INFRA_INVALID")
+        self.assertFalse(rows[0]["reusable"])
 
     def test_aggregate_uses_all_child_task_validity(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

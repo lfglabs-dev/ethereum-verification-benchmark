@@ -95,11 +95,11 @@ def _decode_sse(response: Any) -> dict[str, Any]:
     return terminal
 
 
-def responses_completion(messages: list[dict[str, Any]], *, state: ResponsesState, model: str, tools: list[dict[str, Any]] | None = None) -> dict[str, Any]:
-    key = os.environ.get("DEFAULT_HARNESS_RESPONSES_API_KEY") or os.environ.get("DEFAULT_HARNESS_API_KEY")
+def responses_completion(messages: list[dict[str, Any]], *, state: ResponsesState, model: str, tools: list[dict[str, Any]] | None = None, base_url: str | None = None, api_key: str | None = None) -> dict[str, Any]:
+    key = api_key or os.environ.get("DEFAULT_HARNESS_RESPONSES_API_KEY") or os.environ.get("DEFAULT_HARNESS_API_KEY")
     if not key:
         raise ChatCompletionError("missing Responses API credential", kind="provider_setup_error", attempts=0, timeout_seconds=0, transient=False)
-    base = os.environ.get("DEFAULT_HARNESS_RESPONSES_BASE_URL") or os.environ.get("DEFAULT_HARNESS_BASE_URL", "https://api.meta.ai/v1")
+    base = base_url or os.environ.get("DEFAULT_HARNESS_RESPONSES_BASE_URL") or os.environ.get("DEFAULT_HARNESS_BASE_URL", "https://api.meta.ai/v1")
     inputs = _inputs(messages, state)
     payload: dict[str, Any] = {"model": model, "input": inputs, "tools": _flat_tools(tools), "tool_choice": "auto", "store": True}
     effort = os.environ.get("DEFAULT_HARNESS_REASONING_EFFORT", "").strip()
@@ -164,16 +164,16 @@ def responses_completion(messages: list[dict[str, Any]], *, state: ResponsesStat
     return {"id": response_id, "choices": [{"index": 0, "message": message, "finish_reason": "tool_calls" if calls else "stop"}], "usage": {"prompt_tokens": int(usage.get("input_tokens", 0) or 0), "completion_tokens": int(usage.get("output_tokens", 0) or 0), "total_tokens": int(usage.get("total_tokens", 0) or 0), **({"output_tokens_details": usage["output_tokens_details"]} if isinstance(usage.get("output_tokens_details"), dict) else {})}, "wire_api": "responses", "responses_state": {**state.metadata(), "previous_response_id": request_previous_id}}
 
 
-def responses_preflight(model: str) -> dict[str, Any]:
+def responses_preflight(model: str, *, base_url: str | None = None, api_key: str | None = None) -> dict[str, Any]:
     state = ResponsesState()
     tools = [{"type": "function", "function": {"name": "preflight_echo", "description": "Echo a value.", "parameters": {"type": "object", "properties": {"value": {"type": "string"}}, "required": ["value"], "additionalProperties": False}}}]
     messages = [{"role": "developer", "content": "You must call preflight_echo."}, {"role": "user", "content": "Call preflight_echo with value ok."}]
-    first = responses_completion(messages, state=state, model=model, tools=tools)
+    first = responses_completion(messages, state=state, model=model, tools=tools, base_url=base_url, api_key=api_key)
     calls = first["choices"][0]["message"].get("tool_calls") or []
     if not calls:
         return {"status": "failed", "checks": {"responses": True, "tool_calls": False, "previous_response_id": False, "usage_accounting": bool(first.get("usage"))}}
     messages += [first["choices"][0]["message"], {"role": "tool", "tool_call_id": calls[0]["id"], "content": '{"value":"ok"}'}]
-    second = responses_completion(messages, state=state, model=model, tools=tools)
+    second = responses_completion(messages, state=state, model=model, tools=tools, base_url=base_url, api_key=api_key)
     usage = {key: int(first["usage"].get(key, 0)) + int(second["usage"].get(key, 0)) for key in ("prompt_tokens", "completion_tokens", "total_tokens")}
     usage["requests"] = 2
     checks = {"responses": True, "tool_calls": True, "previous_response_id": second["responses_state"]["previous_response_id"] == first["id"], "usage_accounting": usage["total_tokens"] > 0}

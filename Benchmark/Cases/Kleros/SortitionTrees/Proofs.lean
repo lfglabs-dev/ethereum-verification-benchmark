@@ -56,8 +56,12 @@ theorem parent_equals_sum_of_children
             SortitionTrees.IDsToNodeIndexes, getStorage, setStorage, setMappingUint, Verity.require,
             Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
         · exfalso
-          have hLow' : (3 : Nat) ≤ nodeIndex.val := by simpa using hLow
-          have hHigh' : nodeIndex.val ≤ 6 := by simpa using hHigh
+          have hLow' : (3 : Nat) ≤ nodeIndex.val := by
+            change (3 : Nat) ≤ nodeIndex.val at hLow
+            exact hLow
+          have hHigh' : nodeIndex.val ≤ 6 := by
+            change nodeIndex.val ≤ 6 at hHigh
+            exact hHigh
           have h3ne : nodeIndex ≠ 3 := by simpa using h3
           have h4ne : nodeIndex ≠ 4 := by simpa using h4
           have h5ne : nodeIndex ≠ 5 := by simpa using h5
@@ -98,8 +102,12 @@ theorem root_equals_sum_of_leaves
               SortitionTrees.rightSum, hLow, hHigh, h3, h4, h5, h6, getStorage, setStorage,
               setMappingUint, Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
           · exfalso
-            have hLow' : (3 : Nat) ≤ nodeIndex.val := by simpa using hLow
-            have hHigh' : nodeIndex.val ≤ 6 := by simpa using hHigh
+            have hLow' : (3 : Nat) ≤ nodeIndex.val := by
+              change (3 : Nat) ≤ nodeIndex.val at hLow
+              exact hLow
+            have hHigh' : nodeIndex.val ≤ 6 := by
+              change nodeIndex.val ≤ 6 at hHigh
+              exact hHigh
             have h3ne : nodeIndex ≠ 3 := by simpa using h3
             have h4ne : nodeIndex ≠ 4 := by simpa using h4
             have h5ne : nodeIndex ≠ 5 := by simpa using h5
@@ -202,8 +210,12 @@ theorem node_id_bijection
             getStorage, setStorage, setMappingUint, Verity.require, Verity.bind, Bind.bind, Contract.run,
             ContractResult.snd]
         · exfalso
-          have hLow' : (3 : Nat) ≤ nodeIndex.val := by simpa using hLow
-          have hHigh' : nodeIndex.val ≤ 6 := by simpa using hHigh
+          have hLow' : (3 : Nat) ≤ nodeIndex.val := by
+            change (3 : Nat) ≤ nodeIndex.val at hLow
+            exact hLow
+          have hHigh' : nodeIndex.val ≤ 6 := by
+            change nodeIndex.val ≤ 6 at hHigh
+            exact hHigh
           have h3ne : nodeIndex ≠ 3 := by simpa using h3
           have h4ne : nodeIndex ≠ 4 := by simpa using h4
           have h5ne : nodeIndex ≠ 5 := by simpa using h5

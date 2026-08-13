@@ -1,0 +1,73 @@
+manifest_kind: case
+project: velora
+case_id: bridge_staking
+schema_version: 1
+split: active
+family_id: velora
+implementation_id: bridge_staking
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/VeloraDEX/velora-miro-contracts
+upstream_commit: bfb5f8093bc6f6db0f0840b83d22e803c2811fcb
+original_contract_path: contracts/BridgeStaking.sol
+source_ref: https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol
+lean_target: Benchmark.Cases.Velora.BridgeStaking.Compile
+spec_target: Benchmark.Cases.Velora.BridgeStaking.Specs
+proof_target: Benchmark.Cases.Velora.BridgeStaking.Proofs
+selected_functions:
+  - handleV3AcrossMessage
+  - rescuePendingFunds
+  - withdrawUnallocatedTokens
+source_language: solidity
+verity_version: 9eaf64218be14b59f6253219c111a5abf958e7b7
+lean_toolchain: leanprover/lean4:v4.22.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - erc20_balance_modeled_as_storage_slot
+  - external_sevlr_deposit_modeled_as_unconstrained_branch
+  - standard_erc20_exact_balance_debit_assumption
+  - atomic_balance_perturbations_excluded
+  - public_authorization_and_pause_boundaries_excluded
+  - keccak256_key_abstracted_as_opaque_uint256
+  - flattened_semantic_storage_not_evm_layout
+  - events_omitted
+abstraction_notes: >
+  The benchmark targets Velora BridgeStaking's accounting conservation invariant:
+  allocatedTokens[token] <= tokenBalance[token] for both VLR and WETH. This
+  proves the owner's withdrawUnallocatedTokens can never consume allocated
+  pending staking funds. Token balances (token.getBalance() in Solidity, which
+  calls IERC20(token).balanceOf(address(this))) are modeled as scalar storage
+  slots in a flattened semantic storage model, not the upstream inherited and
+  packed EVM layout. The seVLR depositVLRAndWeth external call is not invoked or
+  linked: it is represented by the explicit `depositResult` input, where 1 selects
+  success and every other value selects catch/rescue. Boolean transfer-result inputs
+  model each SafeTransferLib call in catch/rescue, public rescue, and owner withdrawal;
+  false atomically reverts the complete modeled transaction. Successful seVLR and
+  transfer branches subtract exact amounts from modeled balances and allocations.
+  Entry balances are assumed to include the Across delivery and faithfully represent
+  balanceOf, with no fees, rebases, seizures, donations, reentrancy-induced accounting
+  mutation, or unrelated atomic balance changes. Approval execution and `minBptAmount`
+  behavior are outside scope. Public caller, authorization, pause checks, sourceChainId,
+  ABI decoding, and events are scope exclusions. Callback handling exactly uses the
+  VLR/WETH token domain; owner withdrawal is intentionally the VLR/WETH accounting
+  slice even though Solidity accepts arbitrary token addresses. keccak256(updatedMessage)
+  is abstracted as an opaque Uint256
+  argument. The Staking struct is flattened: each field becomes its own keyed
+  mapping. The exact beneficiary sentinel is preserved, and callback amount
+  validation reads the selected stored amount after conditional initialization.
+unsupported_feature_codes:
+  - erc20_external_balance_modeled_as_storage
+  - external_call_success_modeled_as_parameter
+notes: >
+  Proofs.lean contains complete proofs from the incoming conservation invariant
+  alone for withdrawUnallocatedTokens, rescuePendingFunds, and
+  handleV3AcrossMessage. The proofs cover checked arithmetic, explicit guards,
+  partial rescue flags, successful equal debits, and SafeTransferLib failure
+  outcomes that atomically restore the incoming state. `depositResult` remains the
+  explicit seVLR boundary input. Generated tasks retain proof holes for benchmark
+  agents; the reference proof module contains no proof holes or Velora-specific
+  axioms.
+  The exact beneficiary sentinel and external-call scope are documented in
+  Contract.lean and Specs.lean.

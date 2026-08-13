@@ -420,9 +420,27 @@ def _execute_chat_request(base_url: str, payload: dict[str, Any], *, stream: boo
     request = build_chat_request(base_url, body, api_key_override=api_key_override)
     timeout = STREAM_IDLE_TIMEOUT_SECONDS if stream else REQUEST_TIMEOUT_SECONDS
     with urllib.request.urlopen(request, timeout=timeout) as response:
+        raw_status = getattr(response, "status", None)
+        if raw_status is None and hasattr(response, "getcode"):
+            try:
+                raw_status = response.getcode()
+            except Exception:
+                raw_status = None
+        http_status = raw_status
         if stream:
-            return _decode_sse_response(response)
-        return json.loads(response.read().decode("utf-8"))
+            decoded = _decode_sse_response(response)
+        else:
+            decoded = json.loads(response.read().decode("utf-8"))
+        # Persist transport-layer metadata so post-run analysis can distinguish
+        # truncation (finish_reason=length) from genuine model failure, and
+        # verify which upstream model actually answered. Keys are omitted when
+        # unavailable so mocked unit tests that return bare dicts keep working.
+        if isinstance(decoded, dict):
+            if http_status is not None:
+                decoded.setdefault("_transport_http_status", http_status)
+            if "model" in decoded:
+                decoded.setdefault("_returned_model", decoded.get("model"))
+        return decoded
 
 
 def chat_completion(

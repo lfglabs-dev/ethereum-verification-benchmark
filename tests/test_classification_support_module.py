@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 
 from harness.classification import classify_run, classify_target
+from harness import verifier
 from harness.verifier import _compact_output
 
 GRINDSET_COLLISION_OUTPUT = (
@@ -62,6 +63,26 @@ class SupportModuleClassificationTests(unittest.TestCase):
         }
         result = classify_target(target, _gradeable_task_result(target["task_ref"]))
         self.assertEqual(result["final_class"], "INFRA_INVALID")
+
+    def test_verifier_lease_loss_and_timeout_are_infra_invalid(self) -> None:
+        target = {"task_ref": "foo/bar/qux", "status": "verifier_infra_error", "output": "verifier lease unavailable: timeout"}
+        self.assertEqual(classify_target(target, _gradeable_task_result(target["task_ref"]))["final_class"], "INFRA_INVALID")
+        timeout = {"task_ref": "foo/bar/qux", "status": "timeout", "output": "timeout"}
+        self.assertEqual(classify_target(timeout, _gradeable_task_result(timeout["task_ref"]))["final_class"], "INFRA_INVALID")
+
+    def test_scored_verifier_never_runs_without_a_lease(self) -> None:
+        from contextlib import contextmanager
+        from pathlib import Path
+        from unittest.mock import patch
+
+        @contextmanager
+        def lost_lease(**_kwargs):
+            yield "timeout"
+
+        with patch.object(verifier, "verify_lease", lost_lease), patch.object(verifier.subprocess, "run") as run:
+            code, output = verifier._run(["lake", "build", "Target"], Path("."), 1)
+        self.assertEqual((code, output), (125, "verifier lease unavailable: timeout"))
+        run.assert_not_called()
 
     def test_mixed_failure_including_task_module_stays_genuine(self) -> None:
         # If Lake reports the agent's own module among the failures, the guard

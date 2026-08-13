@@ -7,18 +7,21 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 37 cases and 240 task manifests. Of those, 240 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 41 cases and 263 task manifests. Of those, 263 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
 | `1inch/xycswap_curve_safety` | 1 | `complete` |
 | `alchemix/earmark_conservation` | 5 | `complete` |
+| `aragon_osx/execute_authorization` | 16 | `complete` |
 | `balancer/reclamm_swap_rounding` | 1 | `complete` |
 | `cork/pool_solvency` | 1 | `partial` |
 | `damn_vulnerable_defi/side_entrance` | 5 | `partial` |
+| `enzyme/onyx_fee_handler` | 1 | `complete` |
 | `erc4337/entry_point_invariant` | 33 | `complete` |
 | `ethereum/deposit_contract_minimal` | 5 | `partial` |
 | `forgeyields/global_solvency` | 7 | `complete` |
+| `hypernova/settled_payout_safety` | 2 | `complete` |
 | `ipor/plasma_vault_redeem_split` | 2 | `complete` |
 | `kleros/sortition_trees` | 6 | `partial` |
 | `kyberswap/partial_fill_price_floor` | 1 | `complete` |
@@ -47,6 +50,7 @@ The active suite currently contains 37 cases and 240 task manifests. Of those, 2
 | `wildcat/borrow_liquidity_safety` | 1 | `complete` |
 | `yo_protocol/async_redemption_escrow` | 14 | `complete` |
 | `zama/erc7984_confidential_token` | 12 | `partial` |
+| `zama_protocol_apps/erc7984_upgradeable_exact_source` | 4 | `complete` |
 | `zodiac/roles_decoder_faithfulness` | 3 | `complete` |
 
 ## Backlog

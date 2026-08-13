@@ -3,12 +3,48 @@ import Verity.Proofs.Stdlib.Automation
 
 set_option linter.unnecessarySimpa false
 set_option linter.unusedSimpArgs false
+set_option maxRecDepth 100000
 
 namespace Benchmark.Cases.Midas.CustomFeedGrowthSafe
 
 open Contracts
 open Verity
 open Verity.EVM.Uint256
+
+@[simp] private theorem getStorage_apply_raw (sl : StorageSlot Uint256)
+    (s : ContractState) :
+    getStorage sl s = ContractResult.success (s.readSlot sl.slot) s := rfl
+@[simp] private theorem setStorage_apply_raw (sl : StorageSlot Uint256)
+    (value : Uint256) (s : ContractState) :
+    setStorage sl value s = ContractResult.success () (s.writeSlot sl.slot value) := rfl
+@[simp] private theorem getMappingUint_apply_raw (sl : StorageSlot (Uint256 → Uint256))
+    (key : Uint256) (s : ContractState) :
+    getMappingUint sl key s = ContractResult.success (s.readMapUint sl.slot key) s := rfl
+@[simp] private theorem setMappingUint_apply_raw (sl : StorageSlot (Uint256 → Uint256))
+    (key value : Uint256) (s : ContractState) :
+    setMappingUint sl key value s =
+      ContractResult.success () (s.writeMapUint sl.slot key value) := rfl
+
+@[simp] private theorem bind_getStorage_raw {α : Type} (sl : StorageSlot Uint256)
+    (f : Uint256 → Contract α) (s : ContractState) :
+    Verity.bind (getStorage sl) f s = f (s.readSlot sl.slot) s := rfl
+@[simp] private theorem bind_setStorage_raw {α : Type} (sl : StorageSlot Uint256)
+    (value : Uint256) (f : Unit → Contract α) (s : ContractState) :
+    Verity.bind (setStorage sl value) f s = f () (s.writeSlot sl.slot value) := rfl
+@[simp] private theorem bind_getMappingUint_raw {α : Type}
+    (sl : StorageSlot (Uint256 → Uint256)) (key : Uint256)
+    (f : Uint256 → Contract α) (s : ContractState) :
+    Verity.bind (getMappingUint sl key) f s = f (s.readMapUint sl.slot key) s := rfl
+@[simp] private theorem bind_setMappingUint_raw {α : Type}
+    (sl : StorageSlot (Uint256 → Uint256)) (key value : Uint256)
+    (f : Unit → Contract α) (s : ContractState) :
+    Verity.bind (setMappingUint sl key value) f s = f () (s.writeMapUint sl.slot key value) := rfl
+@[simp] private theorem bind_require_true_raw {α : Type} (message : String)
+    (f : PUnit → Contract α) (s : ContractState) :
+    Verity.bind (Verity.require true message) f s = f PUnit.unit s := rfl
+@[simp] private theorem bind_pure_raw {α β : Type} (value : α)
+    (f : α → Contract β) (s : ContractState) :
+    Verity.bind (Verity.pure value) f s = f value s := rfl
 
 private theorem latestRoundSlot : CustomFeedGrowthSafe.latestRound.slot = 5 := by native_decide
 private theorem onlyUpSlot : CustomFeedGrowthSafe.onlyUp.slot = 6 := by native_decide
@@ -21,6 +57,25 @@ private theorem roundAnswerSlot : CustomFeedGrowthSafe.roundAnswer.slot = 7 := b
 private theorem roundStartedAtSlot : CustomFeedGrowthSafe.roundStartedAt.slot = 8 := by native_decide
 private theorem roundUpdatedAtSlot : CustomFeedGrowthSafe.roundUpdatedAt.slot = 9 := by native_decide
 private theorem roundGrowthAprSlot : CustomFeedGrowthSafe.roundGrowthApr.slot = 10 := by native_decide
+
+private theorem oneNum : ONE = 100000000 := by native_decide
+private theorem hundredOneNum : HUNDRED_ONE = 10000000000 := by native_decide
+private theorem yearSecondsNum : YEAR_SECONDS = 31536000 := by native_decide
+private theorem growthDenominatorNum : GROWTH_DENOMINATOR = 315360000000000000 := by
+  native_decide
+private theorem lastStartedAtRaw (s : ContractState) :
+    lastStartedAtOf s = s.storageMapUint 8 (s.storage 5) := rfl
+private theorem maxAnswerDeviationRaw (s : ContractState) :
+    maxAnswerDeviationOf s = s.storage 0 := rfl
+private theorem hourVal : (3600 : Uint256).val = 3600 := by native_decide
+private theorem hundredOneVal : (10000000000 : Uint256).val = 10000000000 := by native_decide
+private theorem hundredOneMulVal : (mul 100 ONE).val = 10000000000 := by native_decide
+
+attribute [local simp] lastStartedAtRaw maxAnswerDeviationRaw latestRoundSlot roundAnswerSlot
+  roundStartedAtSlot roundUpdatedAtSlot roundGrowthAprSlot maxAnswerDeviationSlot
+  onlyUpSlot minAnswerSlot maxAnswerSlot minGrowthAprSlot maxGrowthAprSlot
+  hourVal hundredOneVal
+
 
 private def setRoundWrites
     (roundId data dataTimestamp growthApr blockTimestamp : Uint256) : Contract Unit := do
@@ -77,12 +132,15 @@ private theorem setRoundData_writes
   simp only [getStorage, getMappingUint, setStorage, setMappingUint, Verity.bind, Bind.bind, Pure.pure,
     Contract.run, ContractResult.snd]
   constructor
-  · simp [hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt]
-    simpa [writeStorageAfterRound] using
-      setRoundWrites_storage (nextRoundIdOf s) data dataTimestamp growthApr blockTimestamp s storageSlot
-  · simp [hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt]
-    simpa [writeMapUintAfterRound] using
-      setRoundWrites_storageMapUint (nextRoundIdOf s) data dataTimestamp growthApr blockTimestamp s mapSlot k
+  · simp_all [hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt,
+      Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, getStorage, getMappingUint, setStorage,
+      setMappingUint, writeStorageAfterRound, nextRoundIdOf, latestRoundOf,
+      latestRoundSlot, ContractState.writeSlot, ContractState.writeMapUint]
+  · simp_all [hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt,
+      Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, getStorage, getMappingUint, setStorage,
+      setMappingUint, writeMapUintAfterRound, nextRoundIdOf, latestRoundOf,
+      latestRoundSlot, roundGrowthAprSlot, roundUpdatedAtSlot, roundStartedAtSlot,
+      roundAnswerSlot, ContractState.writeSlot, ContractState.writeMapUint]
 
 private theorem applyGrowth_eval
     (answer growthApr timestampFrom blockTimestamp : Uint256) (s : ContractState)
@@ -90,21 +148,8 @@ private theorem applyGrowth_eval
     ((CustomFeedGrowthSafe.applyGrowth answer growthApr timestampFrom blockTimestamp).run s) =
       ContractResult.success (applyGrowthAtRaw answer growthApr timestampFrom blockTimestamp) s := by
   unfold CustomFeedGrowthSafe.applyGrowth CustomFeedGrowthSafe.applyGrowthAt Verity.require applyGrowthAtRaw
-  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, hTime]
-
-private theorem lastAnswer_eval
-    (blockTimestamp : Uint256) (s : ContractState)
-    (hTime : lastStartedAtOf s ≤ blockTimestamp) :
-    ((CustomFeedGrowthSafe.lastAnswer blockTimestamp).run s) =
-      ContractResult.success (lastAnswerOf s blockTimestamp) s := by
-  unfold CustomFeedGrowthSafe.lastAnswer
-  simp [CustomFeedGrowthSafe.lastRawAnswer, CustomFeedGrowthSafe.lastGrowthApr, CustomFeedGrowthSafe.lastStartedAt,
-    getStorage, getMappingUint, Verity.bind, Bind.bind, Contract.run]
-  simpa [lastAnswerOf, lastRawAnswerOf, lastGrowthAprOf, lastStartedAtOf, latestRoundOf, roundAnswerOf,
-    roundGrowthAprOf, roundStartedAtOf, applyGrowthNowRaw, applyGrowthAtRaw] using
-    (applyGrowth_eval (s.storageMapUint 7 (s.storage 5)) (s.storageMapUint 10 (s.storage 5))
-      (s.storageMapUint 8 (s.storage 5)) blockTimestamp s (by
-        simpa [lastStartedAtOf, roundStartedAtOf, latestRoundOf] using hTime))
+  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, hTime,
+    GROWTH_DENOMINATOR]
 
 private theorem lastTimestamp_eval
     (s : ContractState) :
@@ -138,6 +183,31 @@ private theorem lastRawAnswer_eval
   simp [lastRawAnswerOf, roundAnswerOf, latestRoundOf, getStorage, getMappingUint,
     Verity.bind, Bind.bind, Contract.run, latestRoundSlot, roundAnswerSlot]
 
+private theorem lastAnswer_eval
+    (blockTimestamp : Uint256) (s : ContractState)
+    (hTime : lastStartedAtOf s ≤ blockTimestamp) :
+    ((CustomFeedGrowthSafe.lastAnswer blockTimestamp).run s) =
+      ContractResult.success (lastAnswerOf s blockTimestamp) s := by
+  unfold CustomFeedGrowthSafe.lastAnswer
+  simp only [Verity.bind, Bind.bind, Contract.run]
+  have hRaw : CustomFeedGrowthSafe.lastRawAnswer s =
+      ContractResult.success (lastRawAnswerOf s) s := lastRawAnswer_eval s
+  have hGrowth : CustomFeedGrowthSafe.lastGrowthApr s =
+      ContractResult.success (lastGrowthAprOf s) s := lastGrowthApr_eval s
+  have hStarted : CustomFeedGrowthSafe.lastStartedAt s =
+      ContractResult.success (lastStartedAtOf s) s := lastStartedAt_eval s
+  rw [hRaw]
+  simp only
+  rw [hGrowth]
+  simp only
+  rw [hStarted]
+  simp only
+  have hApply := applyGrowth_eval (lastRawAnswerOf s) (lastGrowthAprOf s)
+      (lastStartedAtOf s) blockTimestamp s hTime
+  have hApplyRaw := Contract.eq_of_run_success hApply
+  rw [hApplyRaw]
+  simp [lastAnswerOf, applyGrowthNowRaw]
+
 private theorem getDeviation_eval_false_neg
     (lastPrice newPrice : Uint256) (s : ContractState)
     (hNewNZ : newPrice ≠ 0)
@@ -145,10 +215,10 @@ private theorem getDeviation_eval_false_neg
     (hNeg : slt (signedDeviationRaw lastPrice newPrice) 0 = true) :
     ((CustomFeedGrowthSafe._getDeviation lastPrice newPrice false).run s) =
       ContractResult.success (sub 0 (signedDeviationRaw lastPrice newPrice)) s := by
-  have hNeg' : slt (sdiv (mul (mul (sub newPrice lastPrice) ONE) 100) lastPrice) 0 = true := by
-    simpa [signedDeviationRaw] using hNeg
+  have hNeg' : slt (sdiv (mul (mul (sub newPrice lastPrice) 100000000) 100) lastPrice) 0 = true := by
+    simpa [signedDeviationRaw, oneNum] using hNeg
   unfold CustomFeedGrowthSafe._getDeviation Verity.require signedDeviationRaw
-  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, hNewNZ, hLastNZ, hNeg']
+  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, ONE, hNewNZ, hLastNZ, hNeg']
 
 private theorem getDeviation_eval_false_nonneg
     (lastPrice newPrice : Uint256) (s : ContractState)
@@ -157,10 +227,10 @@ private theorem getDeviation_eval_false_nonneg
     (hNeg : slt (signedDeviationRaw lastPrice newPrice) 0 = false) :
     ((CustomFeedGrowthSafe._getDeviation lastPrice newPrice false).run s) =
       ContractResult.success (signedDeviationRaw lastPrice newPrice) s := by
-  have hNeg' : slt (sdiv (mul (mul (sub newPrice lastPrice) ONE) 100) lastPrice) 0 = false := by
-    simpa [signedDeviationRaw] using hNeg
+  have hNeg' : slt (sdiv (mul (mul (sub newPrice lastPrice) 100000000) 100) lastPrice) 0 = false := by
+    simpa [signedDeviationRaw, oneNum] using hNeg
   unfold CustomFeedGrowthSafe._getDeviation Verity.require signedDeviationRaw
-  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, hNewNZ, hLastNZ, hNeg']
+  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, ONE, hNewNZ, hLastNZ, hNeg']
 
 private theorem getDeviation_eval_true_nonneg
     (lastPrice newPrice : Uint256) (s : ContractState)
@@ -169,10 +239,10 @@ private theorem getDeviation_eval_true_nonneg
     (hNeg : slt (signedDeviationRaw lastPrice newPrice) 0 = false) :
     ((CustomFeedGrowthSafe._getDeviation lastPrice newPrice true).run s) =
       ContractResult.success (signedDeviationRaw lastPrice newPrice) s := by
-  have hNeg' : slt (sdiv (mul (mul (sub newPrice lastPrice) ONE) 100) lastPrice) 0 = false := by
-    simpa [signedDeviationRaw] using hNeg
+  have hNeg' : slt (sdiv (mul (mul (sub newPrice lastPrice) 100000000) 100) lastPrice) 0 = false := by
+    simpa [signedDeviationRaw, oneNum] using hNeg
   unfold CustomFeedGrowthSafe._getDeviation Verity.require signedDeviationRaw
-  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, hNewNZ, hLastNZ, hNeg']
+  simpa [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, ONE, hNewNZ, hLastNZ, hNeg']
 
 private theorem getDeviation_revert_last_zero
     (newPrice : Uint256) (validateOnlyUp : Bool) (s : ContractState)
@@ -196,10 +266,10 @@ private theorem getDeviation_revert_true_neg
     (hNeg : slt (signedDeviationRaw lastPrice newPrice) 0 = true) :
     ((CustomFeedGrowthSafe._getDeviation lastPrice newPrice true).run s) =
       ContractResult.revert "CAG: deviation is negative" s := by
-  have hNeg' : slt (sdiv (mul (mul (sub newPrice lastPrice) ONE) 100) lastPrice) 0 = true := by
-    simpa [signedDeviationRaw] using hNeg
+  have hNeg' : slt (sdiv (mul (mul (sub newPrice lastPrice) 100000000) 100) lastPrice) 0 = true := by
+    simpa [signedDeviationRaw, oneNum] using hNeg
   unfold CustomFeedGrowthSafe._getDeviation Verity.require
-  simp [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, hNewNZ, hLastNZ, hNeg']
+  simp [Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run, ONE, hNewNZ, hLastNZ, hNeg']
 
 private theorem getDeviation_success_implies_specs
     (lastPrice newPrice : Uint256) (validateOnlyUp : Bool) (s s' : ContractState)
@@ -228,47 +298,47 @@ private theorem getDeviation_success_implies_specs
       · by_cases hNeg : slt (signedDeviationRaw lastPrice newPrice) 0 = true
         · unfold CustomFeedGrowthSafe._getDeviation Verity.require at hRun
           have hNegRaw :
-              slt (sdiv (mul (mul (sub newPrice lastPrice) ONE) 100) lastPrice) 0 = true := by
-            simpa [signedDeviationRaw] using hNeg
-          simp [hNewZero, hLastZero, hLastNZBool, hValidate, hNegRaw,
+              slt (sdiv (mul (mul (sub newPrice lastPrice) 100000000) 100) lastPrice) 0 = true := by
+            simpa [signedDeviationRaw, oneNum] using hNeg
+          simp [hNewZero, hLastZero, hLastNZBool, hValidate, hNegRaw, ONE,
             Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run] at hRun
           rcases hRun with ⟨hDev, hState⟩
           subst deviation
           subst s'
-          simp [deviationAbsRaw, absSignedWord, signedDeviationRaw, hNewZero, hNeg, hNegRaw,
+          simp [deviationAbsRaw, absSignedWord, signedDeviationRaw, oneNum, hNewZero, hNeg, hNegRaw,
             hLastNZBool]
         · have hNegFalse : slt (signedDeviationRaw lastPrice newPrice) 0 = false := by
             cases hBool : slt (signedDeviationRaw lastPrice newPrice) 0 <;> simp [hBool] at hNeg ⊢
           unfold CustomFeedGrowthSafe._getDeviation Verity.require at hRun
           have hNegRawFalse :
-              slt (sdiv (mul (mul (sub newPrice lastPrice) ONE) 100) lastPrice) 0 = false := by
-            simpa [signedDeviationRaw] using hNegFalse
-          simp [hNewZero, hLastZero, hLastNZBool, hValidate, hNegRawFalse,
+              slt (sdiv (mul (mul (sub newPrice lastPrice) 100000000) 100) lastPrice) 0 = false := by
+            simpa [signedDeviationRaw, oneNum] using hNegFalse
+          simp [hNewZero, hLastZero, hLastNZBool, hValidate, hNegRawFalse, ONE,
             Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run] at hRun
           rcases hRun with ⟨hDev, hState⟩
           subst deviation
           subst s'
-          simp [deviationAbsRaw, absSignedWord, signedDeviationRaw, hNewZero, hNegFalse,
+          simp [deviationAbsRaw, absSignedWord, signedDeviationRaw, oneNum, hNewZero, hNegFalse,
             hNegRawFalse, hLastNZBool]
       · by_cases hNeg : slt (signedDeviationRaw lastPrice newPrice) 0 = true
         · unfold CustomFeedGrowthSafe._getDeviation Verity.require at hRun
           have hNegRaw :
-              slt (sdiv (mul (mul (sub newPrice lastPrice) ONE) 100) lastPrice) 0 = true := by
-            simpa [signedDeviationRaw] using hNeg
-          simp [hNewZero, hLastZero, hLastNZBool, hValidate, hNegRaw,
+              slt (sdiv (mul (mul (sub newPrice lastPrice) 100000000) 100) lastPrice) 0 = true := by
+            simpa [signedDeviationRaw, oneNum] using hNeg
+          simp [hNewZero, hLastZero, hLastNZBool, hValidate, hNegRaw, ONE,
             Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run] at hRun
         · have hNegFalse : slt (signedDeviationRaw lastPrice newPrice) 0 = false := by
             cases hBool : slt (signedDeviationRaw lastPrice newPrice) 0 <;> simp [hBool] at hNeg ⊢
           unfold CustomFeedGrowthSafe._getDeviation Verity.require at hRun
           have hNegRawFalse :
-              slt (sdiv (mul (mul (sub newPrice lastPrice) ONE) 100) lastPrice) 0 = false := by
-            simpa [signedDeviationRaw] using hNegFalse
-          simp [hNewZero, hLastZero, hLastNZBool, hValidate, hNegRawFalse,
+              slt (sdiv (mul (mul (sub newPrice lastPrice) 100000000) 100) lastPrice) 0 = false := by
+            simpa [signedDeviationRaw, oneNum] using hNegFalse
+          simp [hNewZero, hLastZero, hLastNZBool, hValidate, hNegRawFalse, ONE,
             Verity.bind, Bind.bind, Verity.pure, Pure.pure, Contract.run] at hRun
           rcases hRun with ⟨hDev, hState⟩
           subst deviation
           subst s'
-          simp [deviationAbsRaw, absSignedWord, signedDeviationRaw, hNewZero, hNegFalse,
+          simp [deviationAbsRaw, absSignedWord, signedDeviationRaw, oneNum, hNewZero, hNegFalse,
             hNegRawFalse, hLastNZBool]
 
 private theorem bind_run_success_same_state
@@ -278,6 +348,9 @@ private theorem bind_run_success_same_state
   have hc : c s = ContractResult.success a s := Contract.eq_of_run_success h
   unfold Contract.run Verity.bind
   simp [hc]
+
+private theorem pureUnit_eval (s : ContractState) :
+    ((Pure.pure () : Contract Unit).run s) = ContractResult.success () s := rfl
 
 private theorem bind_isSuccess_right_same_state
     {α β : Type} (c : Contract α) (f : α → Contract β) (s : ContractState) (a : α)
@@ -348,6 +421,107 @@ private theorem setRoundDataSafe_eq_with_tail
       setRoundDataSafeWithTail data dataTimestamp growthApr blockTimestamp
         (fun _ => CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp) := by
   rfl
+
+private theorem setRoundDataSafeTimeTail_eval
+    {α : Type} (_lastUpdatedAt dataTimestamp blockTimestamp : Uint256)
+    (s : ContractState) (k : Unit → Contract α)
+    (hTimeOrder : _lastUpdatedAt <= blockTimestamp)
+    (hTimeGap : sub blockTimestamp _lastUpdatedAt > 3600)
+    (hStarted : dataTimestamp > lastStartedAtOf s) :
+    (setRoundDataSafeTimeTail _lastUpdatedAt dataTimestamp blockTimestamp k).run s =
+      (k ()).run s := by
+  have hFirst :
+      (require (decide (_lastUpdatedAt <= blockTimestamp)) "CAG: timestamp underflow").run s =
+        ContractResult.success () s := by
+    simp [Verity.require, hTimeOrder, Contract.run]
+  have hSecond :
+      (require (decide (sub blockTimestamp _lastUpdatedAt > 3600))
+        "CAG: not enough time passed").run s = ContractResult.success () s := by
+    simp [Verity.require, hTimeGap, Contract.run]
+  have hThird :
+      (require (decide (dataTimestamp > lastStartedAtOf s))
+        "CAG: timestamp <= last startedAt").run s = ContractResult.success () s := by
+    have hStartedVal : (s.storageMapUint 8 (s.storage 5)).val < dataTimestamp.val := by
+      simpa [lastStartedAtOf, roundStartedAtOf, latestRoundOf, latestRoundSlot,
+        roundStartedAtSlot] using hStarted
+    simp [Verity.require, hStartedVal, Contract.run, lastStartedAtOf, roundStartedAtOf,
+      latestRoundOf, latestRoundSlot, roundStartedAtSlot]
+  unfold setRoundDataSafeTimeTail
+  simp only [Bind.bind]
+  rw [bind_run_success_same_state _ _ _ _ hFirst]
+  rw [bind_run_success_same_state _ _ _ _ hSecond]
+  rw [bind_run_success_same_state _ _ _ _ (lastStartedAt_eval s)]
+  rw [bind_run_success_same_state _ _ _ _ hThird]
+
+private theorem setRoundDataSafeOnlyUpTail_eval_off
+    {α : Type} (_onlyUp _lastUpdatedAt dataTimestamp growthApr blockTimestamp : Uint256)
+    (s : ContractState) (k : Unit → Contract α) (hOnlyUp : _onlyUp = 0)
+    (hTimeOrder : _lastUpdatedAt <= blockTimestamp)
+    (hTimeGap : sub blockTimestamp _lastUpdatedAt > 3600)
+    (hStarted : dataTimestamp > lastStartedAtOf s) :
+    (setRoundDataSafeOnlyUpTail _onlyUp _lastUpdatedAt dataTimestamp growthApr blockTimestamp k).run s =
+      (k ()).run s := by
+  unfold setRoundDataSafeOnlyUpTail
+  simp only [hOnlyUp]
+  simp [Verity.instMonadContract]
+  exact setRoundDataSafeTimeTail_eval _lastUpdatedAt dataTimestamp blockTimestamp s k
+    hTimeOrder hTimeGap hStarted
+
+private theorem setRoundDataSafeOnlyUpTail_eval_on
+    {α : Type} (_onlyUp _lastUpdatedAt dataTimestamp growthApr blockTimestamp : Uint256)
+    (s : ContractState) (k : Unit → Contract α) (hOnlyUp : _onlyUp ≠ 0)
+    (hApr : slt growthApr 0 = false)
+    (hTimeOrder : _lastUpdatedAt <= blockTimestamp)
+    (hTimeGap : sub blockTimestamp _lastUpdatedAt > 3600)
+    (hStarted : dataTimestamp > lastStartedAtOf s) :
+    (setRoundDataSafeOnlyUpTail _onlyUp _lastUpdatedAt dataTimestamp growthApr blockTimestamp k).run s =
+      (k ()).run s := by
+  unfold setRoundDataSafeOnlyUpTail
+  have hOnlyUpBool : (_onlyUp != 0) = true := by simpa [hOnlyUp]
+  simp only [hOnlyUpBool, if_true, hApr, Bool.false_eq_true, if_false, Bind.bind]
+  rw [bind_run_success_same_state _ _ _ _ (pureUnit_eval s)]
+  exact setRoundDataSafeTimeTail_eval _lastUpdatedAt dataTimestamp blockTimestamp s k
+    hTimeOrder hTimeGap hStarted
+
+private theorem setRoundDataSafe_eval_history
+    (data dataTimestamp growthApr blockTimestamp deviation : Uint256) (s : ContractState)
+    (hHistory : (lastTimestampOf s != 0) = true)
+    (hLast : (CustomFeedGrowthSafe.lastAnswer blockTimestamp).run s =
+      ContractResult.success (lastAnswerOf s blockTimestamp) s)
+    (hCandidate : (CustomFeedGrowthSafe.applyGrowth data growthApr dataTimestamp blockTimestamp).run s =
+      ContractResult.success (candidateLivePrice data dataTimestamp growthApr blockTimestamp) s)
+    (hDeviation : (CustomFeedGrowthSafe._getDeviation (lastAnswerOf s blockTimestamp)
+      (candidateLivePrice data dataTimestamp growthApr blockTimestamp) (onlyUpWordOf s != 0)).run s =
+      ContractResult.success deviation s)
+    (hCap : deviation <= maxAnswerDeviationOf s)
+    (hTail : (setRoundDataSafeOnlyUpTail (onlyUpWordOf s) (lastTimestampOf s)
+      dataTimestamp growthApr blockTimestamp
+      (fun _ => CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp)).run s =
+      (CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s) :
+    (CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s =
+      (CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s := by
+  have hOnly : (getStorage CustomFeedGrowthSafe.onlyUp).run s =
+      ContractResult.success (onlyUpWordOf s) s := by simp [onlyUpWordOf, onlyUpSlot]
+  have hMax : (getStorage CustomFeedGrowthSafe.maxAnswerDeviation).run s =
+      ContractResult.success (maxAnswerDeviationOf s) s := by
+    simp [maxAnswerDeviationOf, maxAnswerDeviationSlot]
+  have hRequire : (require (decide (deviation <= maxAnswerDeviationOf s)) "CAG: !deviation").run s =
+      ContractResult.success () s := by
+    have hCapVal : deviation.val <= (s.storage 0).val := by
+      simpa [maxAnswerDeviationOf, maxAnswerDeviationSlot] using hCap
+    simp [Verity.require, hCapVal, Contract.run]
+  rw [setRoundDataSafe_eq_with_tail]
+  unfold setRoundDataSafeWithTail setRoundDataSafeHistoryTail
+  simp only [Bind.bind]
+  rw [bind_run_success_same_state _ _ _ _ hOnly]
+  rw [bind_run_success_same_state _ _ _ _ (lastTimestamp_eval s)]
+  rw [if_pos hHistory]
+  rw [bind_run_success_same_state _ _ _ _ hLast]
+  rw [bind_run_success_same_state _ _ _ _ hCandidate]
+  rw [bind_run_success_same_state _ _ _ _ hDeviation]
+  rw [bind_run_success_same_state _ _ _ _ hMax]
+  rw [bind_run_success_same_state _ _ _ _ hRequire]
+  exact hTail
 
 private theorem applyGrowth_revert
     (answer growthApr timestampFrom blockTimestamp : Uint256) (s : ContractState)
@@ -518,7 +692,11 @@ private theorem setRoundDataSafeTimeTail_success_implies
   have hThirdRun :
       (require (decide (dataTimestamp > lastStartedAtOf s)) "CAG: timestamp <= last startedAt").run s =
         ContractResult.success () s := by
-    simp [Verity.require, hStarted, Contract.run]
+    have hStartedVal : (s.storageMapUint 8 (s.storage 5)).val < dataTimestamp.val := by
+      simpa [lastStartedAtOf, roundStartedAtOf, latestRoundOf, latestRoundSlot,
+        roundStartedAtSlot] using hStarted
+    simp [Verity.require, hStartedVal, Contract.run, lastStartedAtOf, roundStartedAtOf,
+      latestRoundOf, latestRoundSlot, roundStartedAtSlot]
   have hAfterThird :
       ((k ()).run s).isSuccess = true :=
     bind_isSuccess_right_same_state
@@ -736,7 +914,10 @@ private theorem setRoundDataSafeHistoryTail_success_implies
         have hCapRun :
             (require (decide (deviation <= maxAnswerDeviationOf s)) "CAG: !deviation").run s =
               ContractResult.success () s := by
-          simp [Verity.require, hCap, Contract.run]
+          have hCapVal : deviation.val ≤ (s.storage 0).val := by
+            simpa [maxAnswerDeviationOf, maxAnswerDeviationSlot] using hCap
+          simp [Verity.require, hCapVal, Contract.run, maxAnswerDeviationOf,
+            maxAnswerDeviationSlot]
         have hOnlyUpTailSuccess :
             ((setRoundDataSafeOnlyUpTail (onlyUpWordOf s) (lastTimestampOf s)
                 dataTimestamp growthApr blockTimestamp k).run s).isSuccess =
@@ -865,16 +1046,19 @@ private theorem setRoundDataSafe_zero_history_onlyup_off_writes
   have hSafeEq :
       ((CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s).snd =
         ((CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s).snd := by
-    unfold CustomFeedGrowthSafe.setRoundDataSafe Verity.require
-    simp [Verity.require, getStorage, getMappingUint, setStorage, setMappingUint, Verity.bind, Bind.bind, Pure.pure, Contract.run,
-      ContractResult.snd, CustomFeedGrowthSafe.lastTimestamp, CustomFeedGrowthSafe.lastStartedAt,
-      CustomFeedGrowthSafe.lastRawAnswer, CustomFeedGrowthSafe.lastGrowthApr,
-      CustomFeedGrowthSafe.lastAnswer, CustomFeedGrowthSafe.applyGrowth,
-      CustomFeedGrowthSafe.applyGrowthAt, CustomFeedGrowthSafe._getDeviation,
-      CustomFeedGrowthSafe.setRoundData, hLastUpdatedBranch, hOnlyUpBranch, hDataLoBranch, hDataHiBranch,
-      hGrowthLoBranch, hGrowthHiBranch, hTimestampUnderflowProp, hTimestampUnderflowVal,
-      hTimestampUnderflowValProp, hTimeGapProp, hTimeGapVal, hTimeGapValProp, hStartedProp,
-      hStartedVal, hStartedValProp, hDataTsLt]
+    have hOnlyEval : (getStorage CustomFeedGrowthSafe.onlyUp).run s =
+        ContractResult.success (onlyUpWordOf s) s := by
+      simp [onlyUpWordOf, onlyUpSlot]
+    rw [setRoundDataSafe_eq_with_tail]
+    unfold setRoundDataSafeWithTail
+    simp only [Bind.bind]
+    rw [bind_run_success_same_state _ _ _ _ hOnlyEval]
+    rw [bind_run_success_same_state _ _ _ _ (lastTimestamp_eval s)]
+    unfold setRoundDataSafeHistoryTail
+    have hNoHistory : (lastTimestampOf s != 0) = false := by simpa [hLastUpdated0]
+    simp only [hNoHistory, Bool.false_eq_true, if_false, Bind.bind]
+    rw [bind_run_success_same_state _ _ _ _ (pureUnit_eval s)]
+    rw [setRoundDataSafeOnlyUpTail_eval_off _ _ _ _ _ s _ hOnlyUp0 hTimeOrder hTimeGap hStarted]
   constructor
   · rw [hSafeEq]
     simpa using
@@ -975,16 +1159,20 @@ private theorem setRoundDataSafe_zero_history_onlyup_on_writes
   have hSafeEq :
       ((CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s).snd =
         ((CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s).snd := by
-    unfold CustomFeedGrowthSafe.setRoundDataSafe Verity.require
-    simp [Verity.require, getStorage, getMappingUint, setStorage, setMappingUint, Verity.bind, Bind.bind, Pure.pure, Contract.run,
-      ContractResult.snd, CustomFeedGrowthSafe.lastTimestamp, CustomFeedGrowthSafe.lastStartedAt,
-      CustomFeedGrowthSafe.lastRawAnswer, CustomFeedGrowthSafe.lastGrowthApr,
-      CustomFeedGrowthSafe.lastAnswer, CustomFeedGrowthSafe.applyGrowth,
-      CustomFeedGrowthSafe.applyGrowthAt, CustomFeedGrowthSafe._getDeviation,
-      CustomFeedGrowthSafe.setRoundData, hLastUpdatedBranch, hOnlyUpBranch, hOnlyUpAprBranch, hDataLoBranch,
-      hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hTimestampUnderflowProp, hTimestampUnderflowVal,
-      hTimestampUnderflowValProp, hTimeGapProp, hTimeGapVal, hTimeGapValProp, hStartedProp, hStartedVal,
-      hStartedValProp, hDataTsLt]
+    have hOnlyEval : (getStorage CustomFeedGrowthSafe.onlyUp).run s =
+        ContractResult.success (onlyUpWordOf s) s := by
+      simp [onlyUpWordOf, onlyUpSlot]
+    rw [setRoundDataSafe_eq_with_tail]
+    unfold setRoundDataSafeWithTail
+    simp only [Bind.bind]
+    rw [bind_run_success_same_state _ _ _ _ hOnlyEval]
+    rw [bind_run_success_same_state _ _ _ _ (lastTimestamp_eval s)]
+    unfold setRoundDataSafeHistoryTail
+    have hNoHistory : (lastTimestampOf s != 0) = false := by simpa [hLastUpdated0]
+    simp only [hNoHistory, Bool.false_eq_true, if_false, Bind.bind]
+    rw [bind_run_success_same_state _ _ _ _ (pureUnit_eval s)]
+    rw [setRoundDataSafeOnlyUpTail_eval_on _ _ _ _ _ s _ hOnlyUp0 hOnlyUpApr
+      hTimeOrder hTimeGap hStarted]
   constructor
   · rw [hSafeEq]
     simpa using
@@ -1021,10 +1209,11 @@ private theorem setRoundDataSafe_candidate_zero_onlyup_off_writes
       hLastUpdated0
   have hCandidateZeroNum :
       add data (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) 315360000000000000) = 0 := by
-    simpa [candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw] using hCandidateZero
+    simpa [candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw, growthDenominatorNum]
+      using hCandidateZero
   have hCandidateZeroDenom :
       add data (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) GROWTH_DENOMINATOR) = 0 := by
-    simpa [GROWTH_DENOMINATOR, HUNDRED_ONE, ONE, YEAR_SECONDS] using hCandidateZeroNum
+    simpa [growthDenominatorNum] using hCandidateZeroNum
   have hZeroDeviationCapNum : 10000000000 <= s.storage 0 := by
     have hZeroDeviationCapRaw :
         (if
@@ -1037,8 +1226,9 @@ private theorem setRoundDataSafe_candidate_zero_onlyup_off_writes
                     (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) GROWTH_DENOMINATOR)))).val) ≤
           (s.storage 0).val := by
       simpa [deviationOfSafeCall, candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw,
-        deviationAbsRaw, maxAnswerDeviationOf] using hDeviationCap
-    simpa [HUNDRED_ONE, ONE, hCandidateZeroDenom] using hZeroDeviationCapRaw
+        deviationAbsRaw, maxAnswerDeviationOf, hundredOneNum, hundredOneMulVal]
+        using hDeviationCap
+    simpa [hundredOneMulVal, hCandidateZeroDenom] using hZeroDeviationCapRaw
   have hOnlyUp0Num : s.storage 6 = 0 := by simpa [onlyUpWordOf, onlyUpSlot] using hOnlyUp0
   have hDataLoNum : slt data (s.storage 1) = false := by simpa [minAnswerOf, minAnswerSlot] using hDataLo
   have hDataHiNum : sgt data (s.storage 2) = false := by simpa [maxAnswerOf, maxAnswerSlot] using hDataHi
@@ -1087,7 +1277,7 @@ private theorem setRoundDataSafe_candidate_zero_onlyup_off_writes
     simpa [maxAnswerDeviationSlot] using hZeroDeviationCapNum
   have hZeroDeviationCapVal :
       HUNDRED_ONE.val ≤ (s.storage CustomFeedGrowthSafe.maxAnswerDeviation.slot).val := by
-    simpa [HUNDRED_ONE, ONE, maxAnswerDeviationSlot] using hZeroDeviationCapNum
+    simpa [hundredOneNum, maxAnswerDeviationSlot] using hZeroDeviationCapNum
   have hTimestampUnderflowProp :
       s.storageMapUint CustomFeedGrowthSafe.roundUpdatedAt.slot
           (s.storage CustomFeedGrowthSafe.latestRound.slot) ≤
@@ -1135,18 +1325,39 @@ private theorem setRoundDataSafe_candidate_zero_onlyup_off_writes
   have hSafeEq :
       ((CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s).snd =
         ((CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s).snd := by
-    unfold CustomFeedGrowthSafe.setRoundDataSafe Verity.require
-    simp [Verity.require, getStorage, getMappingUint, setStorage, setMappingUint, Verity.bind, Bind.bind, Pure.pure, Contract.run,
-      ContractResult.snd, CustomFeedGrowthSafe.lastTimestamp, CustomFeedGrowthSafe.lastStartedAt,
-      CustomFeedGrowthSafe.lastRawAnswer, CustomFeedGrowthSafe.lastGrowthApr,
-      CustomFeedGrowthSafe.lastAnswer, CustomFeedGrowthSafe.applyGrowth,
-      CustomFeedGrowthSafe.applyGrowthAt, CustomFeedGrowthSafe._getDeviation,
-      CustomFeedGrowthSafe.setRoundData, hLastUpdatedBranch, hCandidateZeroBranch, hCandidateZeroDenom,
-      hOnlyUpBranch, hPrevStartedProp, hPrevStartedVal, hDataTsLe, hDataTsLeVal, hZeroDeviationCapProp,
-      hZeroDeviationCapVal,
-      hTimestampUnderflowProp, hTimestampUnderflowVal, hTimestampUnderflowValProp, hTimeGapProp, hTimeGapVal,
-      hTimeGapValProp, hStartedProp, hStartedVal, hStartedValProp, hDataLoBranch, hDataHiBranch,
-      hGrowthLoBranch, hGrowthHiBranch, hDataTsLt]
+    have hOnlyEval : (getStorage CustomFeedGrowthSafe.onlyUp).run s =
+        ContractResult.success (onlyUpWordOf s) s := by
+      simp [onlyUpWordOf, onlyUpSlot]
+    have hCandidateEval := applyGrowth_eval data growthApr dataTimestamp blockTimestamp s hDataTsLe
+    have hDeviationEval := getDeviation_eval_zero_price (lastAnswerOf s blockTimestamp)
+      (onlyUpWordOf s != 0) s
+    have hMaxEval : (getStorage CustomFeedGrowthSafe.maxAnswerDeviation).run s =
+        ContractResult.success (maxAnswerDeviationOf s) s := by
+      simp [maxAnswerDeviationOf, maxAnswerDeviationSlot]
+    have hHasHistory : (lastTimestampOf s != 0) = true := by
+      simpa [hLastUpdated0]
+    rw [setRoundDataSafe_eq_with_tail]
+    unfold setRoundDataSafeWithTail
+    simp only [Bind.bind]
+    rw [bind_run_success_same_state _ _ _ _ hOnlyEval]
+    rw [bind_run_success_same_state _ _ _ _ (lastTimestamp_eval s)]
+    unfold setRoundDataSafeHistoryTail
+    simp only [hHasHistory, if_true, Bind.bind]
+    rw [bind_run_success_same_state _ _ _ _ (lastAnswer_eval blockTimestamp s hPrevStarted)]
+    rw [bind_run_success_same_state _ _ _ _ hCandidateEval]
+    have hCandidateRaw : applyGrowthAtRaw data growthApr dataTimestamp blockTimestamp = 0 := by
+      simpa [candidateLivePrice, applyGrowthNowRaw] using hCandidateZero
+    rw [hCandidateRaw]
+    rw [bind_run_success_same_state _ _ _ _ hDeviationEval]
+    rw [bind_run_success_same_state _ _ _ _ hMaxEval]
+    have hCapRun :
+        (require (decide (HUNDRED_ONE <= maxAnswerDeviationOf s)) "CAG: !deviation").run s =
+          ContractResult.success () s := by
+      have hCap : HUNDRED_ONE.val <= (s.storage 0).val := by
+        simpa [maxAnswerDeviationSlot] using hZeroDeviationCapVal
+      simp [Verity.require, hCap, Contract.run]
+    rw [bind_run_success_same_state _ _ _ _ hCapRun]
+    rw [setRoundDataSafeOnlyUpTail_eval_off _ _ _ _ _ s _ hOnlyUp0 hTimeOrder hTimeGap hStarted]
   constructor
   · rw [hSafeEq]
     simpa using
@@ -1184,10 +1395,11 @@ private theorem setRoundDataSafe_candidate_zero_onlyup_on_writes
       hLastUpdated0
   have hCandidateZeroNum :
       add data (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) 315360000000000000) = 0 := by
-    simpa [candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw] using hCandidateZero
+    simpa [candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw, growthDenominatorNum]
+      using hCandidateZero
   have hCandidateZeroDenom :
       add data (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) GROWTH_DENOMINATOR) = 0 := by
-    simpa [GROWTH_DENOMINATOR, HUNDRED_ONE, ONE, YEAR_SECONDS] using hCandidateZeroNum
+    simpa [growthDenominatorNum] using hCandidateZeroNum
   have hZeroDeviationCapNum : 10000000000 <= s.storage 0 := by
     have hZeroDeviationCapRaw :
         (if
@@ -1200,8 +1412,9 @@ private theorem setRoundDataSafe_candidate_zero_onlyup_on_writes
                     (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) GROWTH_DENOMINATOR)))).val) ≤
           (s.storage 0).val := by
       simpa [deviationOfSafeCall, candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw,
-        deviationAbsRaw, maxAnswerDeviationOf] using hDeviationCap
-    simpa [HUNDRED_ONE, ONE, hCandidateZeroDenom] using hZeroDeviationCapRaw
+        deviationAbsRaw, maxAnswerDeviationOf, hundredOneNum, hundredOneMulVal]
+        using hDeviationCap
+    simpa [hundredOneMulVal, hCandidateZeroDenom] using hZeroDeviationCapRaw
   have hOnlyUp0Num : s.storage 6 ≠ 0 := by simpa [onlyUpWordOf, onlyUpSlot] using hOnlyUp0
   have hDataLoNum : slt data (s.storage 1) = false := by simpa [minAnswerOf, minAnswerSlot] using hDataLo
   have hDataHiNum : sgt data (s.storage 2) = false := by simpa [maxAnswerOf, maxAnswerSlot] using hDataHi
@@ -1251,7 +1464,7 @@ private theorem setRoundDataSafe_candidate_zero_onlyup_on_writes
     simpa [maxAnswerDeviationSlot] using hZeroDeviationCapNum
   have hZeroDeviationCapVal :
       HUNDRED_ONE.val ≤ (s.storage CustomFeedGrowthSafe.maxAnswerDeviation.slot).val := by
-    simpa [HUNDRED_ONE, ONE, maxAnswerDeviationSlot] using hZeroDeviationCapNum
+    simpa [hundredOneNum, maxAnswerDeviationSlot] using hZeroDeviationCapNum
   have hTimestampUnderflowProp :
       s.storageMapUint CustomFeedGrowthSafe.roundUpdatedAt.slot
           (s.storage CustomFeedGrowthSafe.latestRound.slot) ≤
@@ -1299,18 +1512,40 @@ private theorem setRoundDataSafe_candidate_zero_onlyup_on_writes
   have hSafeEq :
       ((CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s).snd =
         ((CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s).snd := by
-    unfold CustomFeedGrowthSafe.setRoundDataSafe Verity.require
-    simp [Verity.require, getStorage, getMappingUint, setStorage, setMappingUint, Verity.bind, Bind.bind, Pure.pure, Contract.run,
-      ContractResult.snd, CustomFeedGrowthSafe.lastTimestamp, CustomFeedGrowthSafe.lastStartedAt,
-      CustomFeedGrowthSafe.lastRawAnswer, CustomFeedGrowthSafe.lastGrowthApr,
-      CustomFeedGrowthSafe.lastAnswer, CustomFeedGrowthSafe.applyGrowth,
-      CustomFeedGrowthSafe.applyGrowthAt, CustomFeedGrowthSafe._getDeviation,
-      CustomFeedGrowthSafe.setRoundData, hLastUpdatedBranch, hCandidateZeroBranch, hCandidateZeroDenom,
-      hOnlyUpBranch, hOnlyUpAprBranch, hPrevStartedProp, hPrevStartedVal, hDataTsLe, hDataTsLeVal,
-      hZeroDeviationCapProp, hZeroDeviationCapVal,
-      hTimestampUnderflowProp, hTimestampUnderflowVal, hTimestampUnderflowValProp, hTimeGapProp, hTimeGapVal,
-      hTimeGapValProp, hStartedProp, hStartedVal, hStartedValProp, hDataLoBranch, hDataHiBranch,
-      hGrowthLoBranch, hGrowthHiBranch, hDataTsLt]
+    have hOnlyEval : (getStorage CustomFeedGrowthSafe.onlyUp).run s =
+        ContractResult.success (onlyUpWordOf s) s := by
+      simp [onlyUpWordOf, onlyUpSlot]
+    have hCandidateEval := applyGrowth_eval data growthApr dataTimestamp blockTimestamp s hDataTsLe
+    have hDeviationEval := getDeviation_eval_zero_price (lastAnswerOf s blockTimestamp)
+      (onlyUpWordOf s != 0) s
+    have hMaxEval : (getStorage CustomFeedGrowthSafe.maxAnswerDeviation).run s =
+        ContractResult.success (maxAnswerDeviationOf s) s := by
+      simp [maxAnswerDeviationOf, maxAnswerDeviationSlot]
+    have hHasHistory : (lastTimestampOf s != 0) = true := by
+      simpa [hLastUpdated0]
+    rw [setRoundDataSafe_eq_with_tail]
+    unfold setRoundDataSafeWithTail
+    simp only [Bind.bind]
+    rw [bind_run_success_same_state _ _ _ _ hOnlyEval]
+    rw [bind_run_success_same_state _ _ _ _ (lastTimestamp_eval s)]
+    unfold setRoundDataSafeHistoryTail
+    simp only [hHasHistory, if_true, Bind.bind]
+    rw [bind_run_success_same_state _ _ _ _ (lastAnswer_eval blockTimestamp s hPrevStarted)]
+    rw [bind_run_success_same_state _ _ _ _ hCandidateEval]
+    have hCandidateRaw : applyGrowthAtRaw data growthApr dataTimestamp blockTimestamp = 0 := by
+      simpa [candidateLivePrice, applyGrowthNowRaw] using hCandidateZero
+    rw [hCandidateRaw]
+    rw [bind_run_success_same_state _ _ _ _ hDeviationEval]
+    rw [bind_run_success_same_state _ _ _ _ hMaxEval]
+    have hCapRun :
+        (require (decide (HUNDRED_ONE <= maxAnswerDeviationOf s)) "CAG: !deviation").run s =
+          ContractResult.success () s := by
+      have hCap : HUNDRED_ONE.val <= (s.storage 0).val := by
+        simpa [maxAnswerDeviationSlot] using hZeroDeviationCapVal
+      simp [Verity.require, hCap, Contract.run]
+    rw [bind_run_success_same_state _ _ _ _ hCapRun]
+    rw [setRoundDataSafeOnlyUpTail_eval_on _ _ _ _ _ s _ hOnlyUp0 hOnlyUpApr
+      hTimeOrder hTimeGap hStarted]
   constructor
   · rw [hSafeEq]
     simpa using
@@ -1355,10 +1590,11 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
     simpa [maxGrowthAprOf, maxGrowthAprSlot] using hGrowthHi
   have hCandidateNZNum :
       add data (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) 315360000000000000) ≠ 0 := by
-    simpa [candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw] using hCandidateZero
+    simpa [candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw, growthDenominatorNum]
+      using hCandidateZero
   have hCandidateNZDenom :
       add data (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) GROWTH_DENOMINATOR) ≠ 0 := by
-    simpa [GROWTH_DENOMINATOR, HUNDRED_ONE, ONE, YEAR_SECONDS] using hCandidateNZNum
+    simpa [growthDenominatorNum] using hCandidateNZNum
   have hLastAnswerNZNum :
       add (s.storageMapUint 7 (s.storage 5))
           (sdiv
@@ -1370,7 +1606,8 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
     simpa [lastAnswerOf, applyGrowthNowRaw, applyGrowthAtRaw,
       lastRawAnswerOf, lastStartedAtOf, lastGrowthAprOf,
       roundAnswerOf, roundStartedAtOf, roundGrowthAprOf, latestRoundOf,
-      latestRoundSlot, roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot] using hLastAnswerNZ
+      latestRoundSlot, roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot,
+      growthDenominatorNum] using hLastAnswerNZ
   have hLastUpdatedBranch :
       ((s.storageMapUint CustomFeedGrowthSafe.roundUpdatedAt.slot
             (s.storage CustomFeedGrowthSafe.latestRound.slot) != 0) =
@@ -1509,8 +1746,7 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
       simpa [signedDeviationOfSafeCall, signedDeviationRaw, candidateLivePrice, applyGrowthNowRaw,
         applyGrowthAtRaw, lastAnswerOf, lastRawAnswerOf, lastStartedAtOf, lastGrowthAprOf,
         roundAnswerOf, roundStartedAtOf, roundGrowthAprOf, latestRoundOf, latestRoundSlot,
-        roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, GROWTH_DENOMINATOR,
-        HUNDRED_ONE, ONE, YEAR_SECONDS] using hNeg
+        roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, growthDenominatorNum, oneNum] using hNeg
     have hNegCapProp :
         sub 0 (signedDeviationOfSafeCall data dataTimestamp growthApr blockTimestamp s) ≤
           s.storage CustomFeedGrowthSafe.maxAnswerDeviation.slot := by
@@ -1546,8 +1782,7 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
       simpa [signedDeviationOfSafeCall, signedDeviationRaw, candidateLivePrice, applyGrowthNowRaw,
         applyGrowthAtRaw, lastAnswerOf, lastRawAnswerOf, lastStartedAtOf, lastGrowthAprOf,
         roundAnswerOf, roundStartedAtOf, roundGrowthAprOf, latestRoundOf, latestRoundSlot,
-        roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, GROWTH_DENOMINATOR,
-        HUNDRED_ONE, ONE, YEAR_SECONDS] using hNegCapProp
+        roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, growthDenominatorNum, oneNum] using hNegCapProp
     have hSafeRun :
         (CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s =
           (CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s := by
@@ -1600,6 +1835,12 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
           ((lastTimestampOf s != 0) = true) := by
         simpa [lastTimestampOf, roundUpdatedAtOf, latestRoundOf, latestRoundSlot, roundUpdatedAtSlot] using
           hLastUpdatedBranch
+      exact setRoundDataSafe_eval_history data dataTimestamp growthApr blockTimestamp
+        (sub 0 (signedDeviationRaw (lastAnswerOf s blockTimestamp)
+          (candidateLivePrice data dataTimestamp growthApr blockTimestamp))) s
+        hLastUpdatedNZBranch hLastAnswerEval hCandidateEval hDeviationEval hNegCapProp
+        (setRoundDataSafeOnlyUpTail_eval_off _ _ _ _ _ s _ hOnlyUp0 hTimeOrder hTimeGap hStarted)
+      /-
       unfold CustomFeedGrowthSafe.setRoundDataSafe Verity.require
       simp only [Bind.bind]
       rw [bind_run_success_same_state _ _ _ _ hOnlyUpEval]
@@ -1653,6 +1894,7 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
       simp [CustomFeedGrowthSafe.setRoundData, Verity.require, Verity.pure, Pure.pure, Contract.run, getStorage,
         getMappingUint, setStorage, setMappingUint, Verity.bind, Bind.bind, hStartedCheckEvalNum,
         hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt]
+      -/
     have hSafeEq :
         ((CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s).snd =
           ((CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s).snd := by
@@ -1703,8 +1945,7 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
       simpa [signedDeviationOfSafeCall, signedDeviationRaw, candidateLivePrice, applyGrowthNowRaw,
         applyGrowthAtRaw, lastAnswerOf, lastRawAnswerOf, lastStartedAtOf, lastGrowthAprOf,
         roundAnswerOf, roundStartedAtOf, roundGrowthAprOf, latestRoundOf, latestRoundSlot,
-        roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, GROWTH_DENOMINATOR,
-        HUNDRED_ONE, ONE, YEAR_SECONDS] using hNeg
+        roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, growthDenominatorNum, oneNum] using hNeg
     have hPosCapProp :
         signedDeviationOfSafeCall data dataTimestamp growthApr blockTimestamp s ≤
           s.storage CustomFeedGrowthSafe.maxAnswerDeviation.slot := by
@@ -1739,8 +1980,7 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
       simpa [signedDeviationOfSafeCall, signedDeviationRaw, candidateLivePrice, applyGrowthNowRaw,
         applyGrowthAtRaw, lastAnswerOf, lastRawAnswerOf, lastStartedAtOf, lastGrowthAprOf,
         roundAnswerOf, roundStartedAtOf, roundGrowthAprOf, latestRoundOf, latestRoundSlot,
-        roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, GROWTH_DENOMINATOR,
-        HUNDRED_ONE, ONE, YEAR_SECONDS] using hPosCapProp
+        roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, growthDenominatorNum, oneNum] using hPosCapProp
     have hSafeRun :
         (CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s =
           (CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s := by
@@ -1778,7 +2018,8 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
             ContractResult.success
               (signedDeviationRaw (lastAnswerOf s blockTimestamp)
                 (candidateLivePrice data dataTimestamp growthApr blockTimestamp)) s := by
-        simpa only [onlyUpWordOf, onlyUpSlot, hOnlyUp0Num] using hDeviationEvalBase
+        have hOnlyUpBool : (onlyUpWordOf s != 0) = false := by simpa [hOnlyUp0]
+        simpa [hOnlyUpBool] using hDeviationEvalBase
       have hMaxDeviationEval :
           (getStorage CustomFeedGrowthSafe.maxAnswerDeviation).run s =
             ContractResult.success (maxAnswerDeviationOf s) s := by
@@ -1791,6 +2032,12 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
           ((lastTimestampOf s != 0) = true) := by
         simpa [lastTimestampOf, roundUpdatedAtOf, latestRoundOf, latestRoundSlot, roundUpdatedAtSlot] using
           hLastUpdatedBranch
+      exact setRoundDataSafe_eval_history data dataTimestamp growthApr blockTimestamp
+        (signedDeviationRaw (lastAnswerOf s blockTimestamp)
+          (candidateLivePrice data dataTimestamp growthApr blockTimestamp)) s
+        hLastUpdatedNZBranch hLastAnswerEval hCandidateEval hDeviationEval hPosCapProp
+        (setRoundDataSafeOnlyUpTail_eval_off _ _ _ _ _ s _ hOnlyUp0 hTimeOrder hTimeGap hStarted)
+      /-
       unfold CustomFeedGrowthSafe.setRoundDataSafe Verity.require
       simp only [Bind.bind]
       rw [bind_run_success_same_state _ _ _ _ hOnlyUpEval]
@@ -1843,6 +2090,7 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_off_writes
       simp [CustomFeedGrowthSafe.setRoundData, Verity.require, Verity.pure, Pure.pure, Contract.run, getStorage,
         getMappingUint, setStorage, setMappingUint, Verity.bind, Bind.bind, hStartedCheckEvalNum,
         hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt]
+      -/
     have hSafeEq :
         ((CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s).snd =
           ((CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s).snd := by
@@ -1894,10 +2142,11 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_on_writes
     simpa [maxGrowthAprOf, maxGrowthAprSlot] using hGrowthHi
   have hCandidateNZNum :
       add data (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) 315360000000000000) ≠ 0 := by
-    simpa [candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw] using hCandidateZero
+    simpa [candidateLivePrice, applyGrowthNowRaw, applyGrowthAtRaw, growthDenominatorNum]
+      using hCandidateZero
   have hCandidateNZDenom :
       add data (sdiv (mul (mul data (sub blockTimestamp dataTimestamp)) growthApr) GROWTH_DENOMINATOR) ≠ 0 := by
-    simpa [GROWTH_DENOMINATOR, HUNDRED_ONE, ONE, YEAR_SECONDS] using hCandidateNZNum
+    simpa [growthDenominatorNum] using hCandidateNZNum
   have hLastAnswerNZNum :
       add (s.storageMapUint 7 (s.storage 5))
           (sdiv
@@ -1909,7 +2158,8 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_on_writes
     simpa [lastAnswerOf, applyGrowthNowRaw, applyGrowthAtRaw,
       lastRawAnswerOf, lastStartedAtOf, lastGrowthAprOf,
       roundAnswerOf, roundStartedAtOf, roundGrowthAprOf, latestRoundOf,
-      latestRoundSlot, roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot] using hLastAnswerNZ
+      latestRoundSlot, roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot,
+      growthDenominatorNum] using hLastAnswerNZ
   have hLastUpdatedBranch :
       ((s.storageMapUint CustomFeedGrowthSafe.roundUpdatedAt.slot
             (s.storage CustomFeedGrowthSafe.latestRound.slot) != 0) =
@@ -2049,8 +2299,8 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_on_writes
     simpa [signedDeviationOfSafeCall, signedDeviationRaw, candidateLivePrice, applyGrowthNowRaw,
       applyGrowthAtRaw, lastAnswerOf, lastRawAnswerOf, lastStartedAtOf, lastGrowthAprOf,
       roundAnswerOf, roundStartedAtOf, roundGrowthAprOf, latestRoundOf, latestRoundSlot,
-      roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, GROWTH_DENOMINATOR,
-      HUNDRED_ONE, ONE, YEAR_SECONDS] using hOnlyUpDeviation
+      roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, growthDenominatorNum,
+      oneNum] using hOnlyUpDeviation
   have hPosCapProp :
       signedDeviationOfSafeCall data dataTimestamp growthApr blockTimestamp s ≤
         s.storage CustomFeedGrowthSafe.maxAnswerDeviation.slot := by
@@ -2085,8 +2335,8 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_on_writes
     simpa [signedDeviationOfSafeCall, signedDeviationRaw, candidateLivePrice, applyGrowthNowRaw,
       applyGrowthAtRaw, lastAnswerOf, lastRawAnswerOf, lastStartedAtOf, lastGrowthAprOf,
       roundAnswerOf, roundStartedAtOf, roundGrowthAprOf, latestRoundOf, latestRoundSlot,
-      roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, GROWTH_DENOMINATOR,
-      HUNDRED_ONE, ONE, YEAR_SECONDS] using hPosCapProp
+      roundAnswerSlot, roundStartedAtSlot, roundGrowthAprSlot, growthDenominatorNum,
+      oneNum] using hPosCapProp
   have hSafeRun :
       (CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s =
         (CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s := by
@@ -2133,6 +2383,13 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_on_writes
         ((lastTimestampOf s != 0) = true) := by
       simpa [lastTimestampOf, roundUpdatedAtOf, latestRoundOf, latestRoundSlot, roundUpdatedAtSlot] using
         hLastUpdatedBranch
+    exact setRoundDataSafe_eval_history data dataTimestamp growthApr blockTimestamp
+      (signedDeviationRaw (lastAnswerOf s blockTimestamp)
+        (candidateLivePrice data dataTimestamp growthApr blockTimestamp)) s
+      hLastUpdatedNZBranch hLastAnswerEval hCandidateEval hDeviationEval hPosCapProp
+      (setRoundDataSafeOnlyUpTail_eval_on _ _ _ _ _ s _ hOnlyUp0 hOnlyUpApr
+        hTimeOrder hTimeGap hStarted)
+    /-
     unfold CustomFeedGrowthSafe.setRoundDataSafe Verity.require
     simp only [Bind.bind]
     rw [bind_run_success_same_state _ _ _ _ hOnlyUpEval]
@@ -2186,6 +2443,7 @@ private theorem setRoundDataSafe_candidate_nonzero_onlyup_on_writes
     simp [CustomFeedGrowthSafe.setRoundData, Verity.require, Verity.pure, Pure.pure, Contract.run, getStorage,
       getMappingUint, setStorage, setMappingUint, Verity.bind, Bind.bind, hStartedCheckEvalNum,
       hDataLoBranch, hDataHiBranch, hGrowthLoBranch, hGrowthHiBranch, hDataTsLt]
+    -/
   have hSafeEq :
       ((CustomFeedGrowthSafe.setRoundDataSafe data dataTimestamp growthApr blockTimestamp).run s).snd =
         ((CustomFeedGrowthSafe.setRoundData data dataTimestamp growthApr blockTimestamp).run s).snd := by
@@ -2408,7 +2666,7 @@ private theorem setRoundDataSafe_rejects_zero_price_prev_started_data_ts_le
     native_decide
   have hZeroPriceNumDenom :
       add 0 (sdiv (mul (mul 0 (sub blockTimestamp dataTimestamp)) growthApr) GROWTH_DENOMINATOR) = 0 := by
-    simpa [GROWTH_DENOMINATOR, HUNDRED_ONE, ONE, YEAR_SECONDS] using hZeroPriceNum
+    simpa [growthDenominatorNum] using hZeroPriceNum
   have hOnlyUpEval :
       (getStorage CustomFeedGrowthSafe.onlyUp).run s =
         ContractResult.success (onlyUpWordOf s) s := by
@@ -2420,7 +2678,7 @@ private theorem setRoundDataSafe_rejects_zero_price_prev_started_data_ts_le
   have hLastUpdatedNZBranch : ((lastTimestampOf s != 0) = true) := by
     simpa using hLastUpdated
   have hNoCap : ¬ 10000000000 <= maxAnswerDeviationOf s := by
-    simpa [HUNDRED_ONE] using hMaxDev
+    simpa [hundredOneNum] using hMaxDev
   have hLastAnswerEval :
       ((CustomFeedGrowthSafe.lastAnswer blockTimestamp).run s) =
         ContractResult.success (lastAnswerOf s blockTimestamp) s := by
@@ -2444,7 +2702,7 @@ private theorem setRoundDataSafe_rejects_zero_price_prev_started_data_ts_le
         ContractResult.success (maxAnswerDeviationOf s) s := by
     simp [maxAnswerDeviationOf, maxAnswerDeviationSlot, getStorage, Contract.run]
   have hNoCapBranch : decide (HUNDRED_ONE ≤ maxAnswerDeviationOf s) = false := by
-    simpa [HUNDRED_ONE] using hNoCap
+    simpa [hundredOneNum] using hNoCap
   unfold CustomFeedGrowthSafe.setRoundDataSafe Verity.require
   simp only [Bind.bind]
   rw [bind_run_success_same_state _ _ _ _ hOnlyUpEval]
@@ -2849,7 +3107,8 @@ private theorem setRoundData_success_implies_inputs
         simpa using hLt
       have hCondFalse : decide (dataTimestamp.val < blockTimestamp.val) = false := by
         simp [hLtVal]
-      simp [hCondFalse, Verity.bind, Bind.bind, Verity.pure, Pure.pure, Verity.require, Contract.run] at hBranch
+      simp [hCondFalse, hLtVal, Verity.bind, Bind.bind, Verity.pure, Pure.pure, Verity.require,
+        Contract.run, getStorage, getMappingUint, setStorage, setMappingUint] at hBranch
 
   unfold answerInRange aprInRange submittedTimestampBeforeCurrentTime
   exact ⟨⟨hDataLo, hDataHi⟩, ⟨⟨hGrowthLo, hGrowthHi⟩, hDataTsLt⟩⟩
@@ -2925,7 +3184,7 @@ private theorem setRoundDataSafe_projected_writes_of_safe_inputs
   have hGrowthLo : slt growthApr (minGrowthAprOf s) = false := hAprRange.1
   have hGrowthHi : sgt growthApr (maxGrowthAprOf s) = false := hAprRange.2
   have hTimeOrderNat : (lastTimestampOf s : Nat) ≤ (blockTimestamp : Nat) := by
-    simpa using hTimeOrder
+    simpa [currentTimeAfterLastUpdate] using hTimeOrder
   have hTimeGap :
       sub blockTimestamp (lastTimestampOf s) > 3600 := by
     have hGapNat :

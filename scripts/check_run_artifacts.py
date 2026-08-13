@@ -15,7 +15,17 @@ REQUIRED_FILES = [
     "verifier/verifier.json",
     "report.md",
 ]
-BUILTIN_FAIR_HARNESSES = {"default", "builtin-lean-lsp"}
+BUILTIN_FAIR_HARNESSES = {"default", "builtin-lean-lsp"}  # legacy artifacts remain readable
+DEFAULT_MCP_EXECUTION_CONTRACT = "default-mcp-v1"
+LEGACY_DEFAULT_IDENTITY = (1, "group/lean_tools", "builtin")
+LEGACY_BUILTIN_MCP_IDENTITY = (1, "group/lean_tools_mcp", "lean-lsp-mcp")
+PRE_MCP_REASONS = frozenset(
+    {"dry_run", "missing_credentials", "dependency_warm_failed", "target_warm_failed"}
+)
+LEGACY_WARM_SETUP_FAILURE_CLASSES = frozenset(
+    {"infra_dependency_warm_failed", "infra_target_warm_failed", "infra_target_warm_timeout"}
+)
+MCP_LIFECYCLE_STATUSES = frozenset({"not_attempted", "started", "completed", "impossible", "fallback"})
 
 
 def _load_json(path: Path, errors: list[str]) -> object | None:
@@ -26,6 +36,105 @@ def _load_json(path: Path, errors: list[str]) -> object | None:
     except OSError as exc:
         errors.append(f"{path.parent}: cannot read {path.name}: {exc}")
     return None
+
+
+def _has_model_or_tool_activity(value: object) -> bool:
+    """Return true for durable evidence that execution passed the pre-MCP gate."""
+    if isinstance(value, dict):
+        for key, item in value.items():
+            if key in {"requests", "tool_calls_executed", "tool_call_count", "initialization_count"}:
+                if isinstance(item, (int, float)) and item > 0:
+                    return True
+            if key == "attempts" and isinstance(item, list) and item:
+                return True
+            if _has_model_or_tool_activity(item):
+                return True
+    elif isinstance(value, list):
+        return any(_has_model_or_tool_activity(item) for item in value)
+    return False
+
+
+def _default_execution_identity(run: dict[str, object]) -> str:
+    """Classify a default artifact from its recorded, not inferred, identity.
+
+    The old bespoke default is readable only under its complete v1 identity.
+    A current schema/contract, or any MCP identity, is always MCP-backed.  This
+    intentionally leaves partial and contradictory identities untrusted.
+    """
+    if run.get("harness_id") != "default":
+        return "not_default"
+    identity = (run.get("schema_version"), run.get("track"), run.get("tool_backend"))
+    if identity == LEGACY_DEFAULT_IDENTITY and "execution_contract" not in run:
+        return "legacy_bespoke"
+    if (
+        "execution_contract" in run
+        or run.get("schema_version") != 1
+        or run.get("track") == "group/lean_tools_mcp"
+        or run.get("tool_backend") == "lean-lsp-mcp"
+    ):
+        return "mcp"
+    return "ambiguous"
+
+
+def _is_legacy_default_suite_aggregate(run: dict[str, object]) -> bool:
+    """Recognize historical default suite summaries without a child backend.
+
+    Legacy suite aggregates predate per-run backend recording: their suite
+    identity is the recorded legacy schema/track prefix, while child runs carry
+    the complete backend identity.  Keep this exception strictly suite-only.
+    """
+    return (
+        run.get("run_mode") == "suite"
+        and run.get("harness_id") == "default"
+        and (run.get("schema_version"), run.get("track")) == LEGACY_DEFAULT_IDENTITY[:2]
+        and "tool_backend" not in run
+        and "execution_contract" not in run
+    )
+
+
+def _is_legacy_pre_mcp_builtin_artifact(run: dict[str, object]) -> bool:
+    """Recognize only the complete recorded identity of pre-lifecycle runs.
+
+    This narrow historical form predates the canonical default execution
+    contract.  It is intentionally unavailable to default artifacts and to
+    records with a current schema/contract or any partial identity.
+    """
+    return (
+        run.get("harness_id") == "builtin-lean-lsp"
+        and (run.get("schema_version"), run.get("track"), run.get("tool_backend"))
+        == LEGACY_BUILTIN_MCP_IDENTITY
+        and "execution_contract" not in run
+    )
+
+
+def _has_valid_legacy_pre_mcp_exit(run: dict[str, object], response: dict[str, object]) -> bool:
+    """Recognize the only historical lifecycle which predates MCP fields.
+
+    Old builtin artifacts that deliberately stopped before MCP startup recorded
+    the terminal run/response status, but not the later lifecycle fields.  Do
+    not extend this exception to records which claim to have started MCP: any
+    setup metadata or preflight record must still be complete and valid.
+    """
+    status = run.get("harness_status")
+    legacy_warm_setup_failure = (
+        status == "completed_with_failures"
+        and response.get("status") == status
+        and (
+            run.get("failure_class") in LEGACY_WARM_SETUP_FAILURE_CLASSES
+            or response.get("failure_class") in LEGACY_WARM_SETUP_FAILURE_CLASSES
+        )
+    )
+    return (
+        _is_legacy_pre_mcp_builtin_artifact(run)
+        and (status in {"dry_run", "missing_credentials"} or legacy_warm_setup_failure)
+        and (legacy_warm_setup_failure or response.get("status") == status)
+        and run.get("mcp_lifecycle") is None
+        and response.get("mcp_lifecycle") is None
+        and run.get("lean_lsp_mcp") is None
+        and run.get("mcp_preflight") is None
+        and run.get("provider_preflight") is None
+        and not _has_model_or_tool_activity([run, response])
+    )
 
 
 def check_run(run_dir: Path) -> list[str]:
@@ -40,6 +149,7 @@ def check_run(run_dir: Path) -> list[str]:
     run = _load_json(run_dir / "run.json", errors)
     manifest = _load_json(run_dir / "workspace-manifest.json", errors)
     request = _load_json(run_dir / "harness-request.json", errors)
+    response = _load_json(run_dir / "harness-response.json", errors)
     verifier = _load_json(run_dir / "verifier" / "verifier.json", errors)
     if errors:
         return errors
@@ -52,6 +162,9 @@ def check_run(run_dir: Path) -> list[str]:
     if not isinstance(request, dict):
         errors.append(f"{run_dir}: harness-request.json is not an object")
         request = {}
+    if not isinstance(response, dict):
+        errors.append(f"{run_dir}: harness-response.json is not an object")
+        response = {}
     if not isinstance(verifier, dict):
         errors.append(f"{run_dir}: verifier/verifier.json is not an object")
         verifier = {}
@@ -100,7 +213,6 @@ def check_run(run_dir: Path) -> list[str]:
             errors.append(f"{run_dir}: builtin fair run must record generic_grindset_only=true")
         if "max_tool_calls" not in request:
             errors.append(f"{run_dir}: builtin fair request missing max_tool_calls")
-        response = _load_json(run_dir / "harness-response.json", errors)
         if isinstance(response, dict) and response.get("status") == "completed":
             if "failure_counts" not in response:
                 errors.append(f"{run_dir}: builtin fair response missing failure_counts")
@@ -109,30 +221,74 @@ def check_run(run_dir: Path) -> list[str]:
                 for task in tasks:
                     if isinstance(task, dict) and "validity" not in task:
                         errors.append(f"{run_dir}: builtin fair task missing validity metadata")
+    default_identity = _default_execution_identity(run)
+    if default_identity == "ambiguous" and not _is_legacy_default_suite_aggregate(run):
+        errors.append(f"{run_dir}: default artifact has no recognized recorded execution identity")
     if (
-        run.get("harness_id") == "builtin-lean-lsp"
+        default_identity == "mcp"
         and run.get("run_mode") in {"task", "group"}
-        and run.get("harness_status") != "dry_run"
-        and isinstance(run.get("mcp_preflight"), dict)
+        and run.get("execution_contract") != DEFAULT_MCP_EXECUTION_CONTRACT
     ):
-        metadata = run.get("lean_lsp_mcp")
-        if not isinstance(metadata, dict):
-            errors.append(f"{run_dir}: builtin-lean-lsp run missing MCP lifecycle metadata")
+        errors.append(f"{run_dir}: current default MCP artifact missing execution_contract {DEFAULT_MCP_EXECUTION_CONTRACT!r}")
+    is_mcp_backed = (
+        run.get("track") == "group/lean_tools_mcp"
+        or run.get("tool_backend") == "lean-lsp-mcp"
+        or default_identity in {"mcp", "ambiguous"}
+    )
+    if (
+        is_mcp_backed
+        and run.get("run_mode") in {"task", "group"}
+    ):
+        legacy_pre_mcp_builtin = _is_legacy_pre_mcp_builtin_artifact(run)
+        if run.get("tool_backend") != "lean-lsp-mcp":
+            errors.append(f"{run_dir}: canonical MCP run used non-MCP backend {run.get('tool_backend')!r}")
+        valid_pre_mcp_exit = False
+        if legacy_pre_mcp_builtin:
+            valid_pre_mcp_exit = _has_valid_legacy_pre_mcp_exit(run, response)
         else:
-            for key in (
-                "package_version",
-                "minimum_lean_version",
-                "workspace_lean_version",
-                "initialization_count",
-                "tool_call_count",
-                "tool_call_counts",
-                "tool_call_duration_seconds",
-                "clean_shutdown",
-            ):
-                if key not in metadata:
-                    errors.append(f"{run_dir}: MCP lifecycle metadata missing {key}")
-        if not isinstance(run.get("mcp_preflight"), dict):
-            errors.append(f"{run_dir}: builtin-lean-lsp run missing MCP preflight result")
+            lifecycle = run.get("mcp_lifecycle")
+            if not isinstance(lifecycle, dict):
+                errors.append(f"{run_dir}: MCP-backed fair run missing MCP lifecycle state")
+            else:
+                lifecycle_status = lifecycle.get("status")
+                if lifecycle_status not in MCP_LIFECYCLE_STATUSES:
+                    errors.append(f"{run_dir}: invalid MCP lifecycle status {lifecycle_status!r}")
+                elif lifecycle_status == "not_attempted":
+                    reason = lifecycle.get("reason")
+                    if reason not in PRE_MCP_REASONS:
+                        errors.append(f"{run_dir}: invalid pre-MCP reason {reason!r}")
+                    elif (
+                        run.get("lean_lsp_mcp") is not None
+                        or run.get("mcp_preflight") is not None
+                        or run.get("provider_preflight") is not None
+                        or _has_model_or_tool_activity([run, response])
+                    ):
+                        errors.append(f"{run_dir}: pre-MCP lifecycle claim has model or tool activity")
+                    else:
+                        valid_pre_mcp_exit = True
+                elif lifecycle_status in {"impossible", "fallback"}:
+                    errors.append(f"{run_dir}: MCP {lifecycle_status} lifecycle state is not valid for canonical runs")
+        if not valid_pre_mcp_exit:
+            # An MCP launch was attempted (or the artifact cannot prove a
+            # legitimate pre-launch exit), so require full lifecycle evidence.
+            metadata = run.get("lean_lsp_mcp")
+            if not isinstance(metadata, dict):
+                errors.append(f"{run_dir}: MCP-backed fair run missing MCP lifecycle metadata")
+            else:
+                for key in (
+                    "package_version",
+                    "minimum_lean_version",
+                    "workspace_lean_version",
+                    "initialization_count",
+                    "tool_call_count",
+                    "tool_call_counts",
+                    "tool_call_duration_seconds",
+                    "clean_shutdown",
+                ):
+                    if key not in metadata:
+                        errors.append(f"{run_dir}: MCP lifecycle metadata missing {key}")
+            if not isinstance(run.get("mcp_preflight"), dict):
+                errors.append(f"{run_dir}: MCP-backed fair run missing MCP preflight result")
     if run.get("harness_id") == "grok-build" and run.get("run_mode") in {"task", "group"}:
         for key in ("max_turns", "auth_mode", "timeout_seconds"):
             if key not in request:

@@ -1,0 +1,50 @@
+manifest_kind: task
+schema_version: 1
+task_id: handle_v3_across_message_preserves_allocated
+case_id: velora/bridge_staking
+split: active
+family_id: velora
+implementation_id: bridge_staking
+source_ref: https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Velora.BridgeStaking.handleV3AcrossMessage_preserves_allocated
+proof_family: state_preservation_local_effects
+property_class: accounting_conservation
+difficulty: hard
+category: invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - Benchmark/Cases/Velora/BridgeStaking/Contract.lean
+specification_files:
+  - Benchmark/Cases/Velora/BridgeStaking/Specs.lean
+editable_files:
+  - Benchmark/Generated/Velora/BridgeStaking/Tasks/handle_v3_across_message_preserves_allocated.lean
+reference_solution_module: Benchmark.Cases.Velora.BridgeStaking.Proofs
+reference_solution_declaration: Benchmark.Cases.Velora.BridgeStaking.handleV3AcrossMessage_preserves_allocated
+abstraction_level: protocol_slice
+abstraction_notes: >
+  The target covers VLR and WETH receive, stake success, stake catch with inline
+  rescue, SafeTransferLib success/failure, and every reverting guard or checked-
+  arithmetic path. Its synchronized specification binds the actual transition and
+  asks for conservation from the incoming invariant. After exact beneficiary-
+  sentinel initialization, callback amount validation uses the selected stored
+  amount for both new and existing records. `depositResult` explicitly selects the
+  external seVLR success-versus-catch outcome; Boolean per-token transfer results
+  select each inline rescue transfer outcome. No external call is invoked or linked.
+  Successful deposit and inline rescue debit each modeled balance by the same amount
+  as its allocation; transfer failure atomically restores the incoming state,
+  including earlier rescue writes. The Solidity interpretation assumes entry
+  balances include Across delivery, balanceOf is faithful, successful transfers
+  debit exactly the requested amount, and no fee, rebase, seizure, donation,
+  reentrancy-induced accounting mutation, or other atomic balance perturbation
+  occurs. Public caller, authorization, pause checks, approvals, sourceChainId,
+  ABI decoding, and events are scope exclusions. Storage is flattened semantic
+  storage rather than upstream EVM layout. The reference module mechanically proves
+  the transition by composing record-preparation, token-credit, and settlement
+  lemmas; the generated task remains an open proof obligation for benchmark agents.
+unsupported_feature_codes:
+  - erc20_external_balance_modeled_as_storage
+  - external_call_success_modeled_as_parameter

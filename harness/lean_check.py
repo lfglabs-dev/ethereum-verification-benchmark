@@ -28,9 +28,19 @@ def _run_lean_command(workspace: Path, command: list[str], timeout_seconds: int)
 def _run_lean_command_unleased(workspace: Path, command: list[str], timeout_seconds: int) -> tuple[int, str]:
     process: subprocess.Popen[str] | None = None
     try:
+        # ``lake env lean`` is a verification command, rather than a normal
+        # Lake build.  Under sandboxed.sh's remote_required policy the Lake
+        # shim deliberately keeps that verb local unless this capability flag
+        # is set.  check_proof is the harness's verifier, so opt it into the
+        # expanded remote protocol here instead of silently failing before
+        # Lean is invoked.
+        child_env = os.environ.copy()
+        if child_env.get("SANDBOXED_COMPUTE_POLICY") == "remote_required":
+            child_env["SANDBOXED_REMOTE_LAKE_VERIFY"] = "1"
         process = subprocess.Popen(
             command,
             cwd=workspace,
+            env=child_env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -88,6 +98,12 @@ def _first_meaningful_lean_error(output: str) -> str:
 
 def _classify_lean_failure(output: str) -> str:
     lowered = output.lower()
+    # Infrastructure failures must be checked first: they are not proof
+    # failures and should not be attributed to the model.
+    if "remote-lean-build" in lowered or "sandboxed lake shim" in lowered or "local execution is blocked" in lowered:
+        return "infra_lean_execution_blocked"
+    if "remote build" in lowered and ("unavailable" in lowered or "failed" in lowered or "not configured" in lowered):
+        return "infra_lean_execution_blocked"
     # Order matters: goal/identifier outputs routinely contain the substring
     # "expected" (e.g. "expected to have type"), so the parse-error pattern
     # must come after the more specific classes.

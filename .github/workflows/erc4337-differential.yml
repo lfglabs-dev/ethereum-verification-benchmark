@@ -23,7 +23,10 @@ env:
 
 jobs:
   differential:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    # nippur-verity-bench-1 (db2.starknet.id) — replaces former
+    # blacksmith-4vcpu-ubuntu-2404. Labels pin this job to that runner
+    # only, so it can never land on verity/fastlane/build/ocr.
+    runs-on: [self-hosted, Linux, X64, nippur, verity, benchmark]
     timeout-minutes: 60
 
     steps:

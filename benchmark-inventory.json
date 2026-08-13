@@ -10,32 +10,33 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 37,
-    "implementation_count": 38,
-    "active_case_count": 37,
+    "family_count": 41,
+    "implementation_count": 42,
+    "active_case_count": 41,
     "backlog_case_count": 1,
-    "active_task_count": 240,
+    "active_task_count": 263,
     "backlog_task_count": 0,
-    "buildable_case_count": 37,
-    "runnable_task_count": 240,
+    "buildable_case_count": 41,
+    "runnable_task_count": 263,
     "case_stage_counts": {
-      "build_green": 30,
+      "build_green": 32,
       "candidate": 1,
-      "proof_complete": 7
+      "proof_complete": 9
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 37
+      "translated": 41
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 30,
+      "complete": 34,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 240
+      "proof-only": 263
     },
     "task_property_class_counts": {
+      "access_control_authorization": 16,
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
       "accounting_bound": 18,
@@ -50,7 +51,7 @@
       "atomic_finalization": 2,
       "authority_required": 2,
       "authorization_state": 9,
-      "balance_conservation": 2,
+      "balance_conservation": 3,
       "balance_credit_update": 2,
       "balance_update": 1,
       "base_case_invariant": 1,
@@ -65,6 +66,7 @@
       "composition_invariant": 3,
       "configuration_safety": 2,
       "counting_invariant": 1,
+      "cross_contract_fee_accounting": 1,
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
       "escrow_lower_bound": 3,
@@ -80,6 +82,7 @@
       "functional_property": 2,
       "guarded_solvency": 7,
       "independence_invariant": 1,
+      "insufficient_balance_zero_transfer": 1,
       "isOwner_effect": 3,
       "length_invariant": 1,
       "lifecycle_accounting": 3,
@@ -92,11 +95,13 @@
       "monotonic_counter": 2,
       "no_partial_success": 1,
       "non_leakage": 1,
+      "non_reversion": 1,
       "nonce_monotonicity": 1,
       "noninterference": 1,
       "output_range": 2,
       "overflow_safety": 1,
       "owner_fallback_and_authority_order": 1,
+      "payout_safety": 2,
       "per_receiver_isolation": 1,
       "pps_nondecrease": 1,
       "price_band": 2,
@@ -108,6 +113,7 @@
       "replay_protection": 2,
       "reserve_state_transition": 5,
       "revert_atomicity": 1,
+      "revert_rollback": 1,
       "revert_safety": 2,
       "safety_invariant": 2,
       "scope_invariant": 1,
@@ -127,14 +133,14 @@
       "wrapper_delegation_and_pause": 1
     },
     "task_proof_family_counts": {
-      "authorization_enablement": 26,
-      "functional_correctness": 57,
-      "protocol_transition_correctness": 39,
+      "authorization_enablement": 42,
+      "functional_correctness": 60,
+      "protocol_transition_correctness": 40,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 76
+      "state_preservation_local_effects": 79
     },
     "family_split_counts": {
-      "active": 36,
+      "active": 40,
       "mixed": 1
     }
   },
@@ -172,6 +178,23 @@
         "solidity"
       ],
       "manifest_path": "families/alchemix/family.yaml"
+    },
+    {
+      "family_id": "aragon_osx",
+      "display_name": "Aragon OSx",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Aragon OSx DAO authorization and permission-management invariants. The initial case targets DAO.execute admission, exact wildcard fallback ordering, ROOT-gated direct mutations, and restricted-permission wildcard rejection.",
+      "implementation_ids": [
+        "osx-dao"
+      ],
+      "case_ids": [
+        "aragon_osx/execute_authorization"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/aragon_osx/family.yaml"
     },
     {
       "family_id": "balancer",
@@ -225,6 +248,23 @@
       "manifest_path": "families/damn_vulnerable_defi/family.yaml"
     },
     {
+      "family_id": "enzyme",
+      "display_name": "Enzyme",
+      "split": "active",
+      "status": "active",
+      "description": "Enzyme protocol accounting benchmarks, including the Onyx modular vault stack.",
+      "implementation_ids": [
+        "onyx_fee_handler"
+      ],
+      "case_ids": [
+        "enzyme/onyx_fee_handler"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/enzyme/family.yaml"
+    },
+    {
       "family_id": "erc4337",
       "display_name": "ERC-4337",
       "split": "active",
@@ -274,6 +314,23 @@
         "solidity"
       ],
       "manifest_path": "families/forgeyields/family.yaml"
+    },
+    {
+      "family_id": "hypernova",
+      "display_name": "Hypernova",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Hypernova funded-trading account settlement and payout accounting invariants on Arbitrum.",
+      "implementation_ids": [
+        "arbitrum-deployment"
+      ],
+      "case_ids": [
+        "hypernova/settled_payout_safety"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/hypernova/family.yaml"
     },
     {
       "family_id": "ipor",
@@ -754,6 +811,23 @@
       "manifest_path": "families/zama/family.yaml"
     },
     {
+      "family_id": "zama_protocol_apps",
+      "display_name": "Zama Protocol Apps",
+      "split": "active",
+      "status": "active",
+      "description": "Exact-source verification benchmarks for Zama protocol applications and confidential wrapper contracts.",
+      "implementation_ids": [
+        "protocol_apps_confidential_wrapper"
+      ],
+      "case_ids": [
+        "zama_protocol_apps/erc7984_upgradeable_exact_source"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/zama_protocol_apps/family.yaml"
+    },
+    {
       "family_id": "zodiac",
       "display_name": "Zodiac Roles",
       "split": "active",
@@ -805,6 +879,22 @@
       "manifest_path": "families/alchemix/implementations/v3/implementation.yaml"
     },
     {
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "display_name": "Aragon OSx DAO",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/aragon/osx",
+      "upstream_commit": "daf4fbb06b89ab0a05516bccb70b625a1a38303b",
+      "source_language": "solidity",
+      "source_artifact_path": "src/core/dao/DAO.sol",
+      "case_ids": [
+        "aragon_osx/execute_authorization"
+      ],
+      "notes": "Aragon OSx DAO authorization slice pinned to the cited upstream commit. The implementation entry covers DAO.execute and the inherited PermissionManager authorization, direct grant, conditional grant, and revoke surfaces relevant to EXECUTE_PERMISSION_ID and ROOT_PERMISSION_ID.",
+      "manifest_path": "families/aragon_osx/implementations/osx-dao/implementation.yaml"
+    },
+    {
       "family_id": "balancer",
       "implementation_id": "reclamm",
       "display_name": "Balancer ReClamm",
@@ -853,6 +943,22 @@
       "manifest_path": "families/damn_vulnerable_defi/implementations/v2/implementation.yaml"
     },
     {
+      "family_id": "enzyme",
+      "implementation_id": "onyx_fee_handler",
+      "display_name": "Enzyme Onyx FeeHandler",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/enzymefinance/protocol-onyx",
+      "upstream_commit": "8ae6f589b13a19d8390eb0956836c6a9f48fadab",
+      "source_language": "solidity",
+      "source_artifact_path": "src/components/fees/FeeHandler.sol",
+      "case_ids": [
+        "enzyme/onyx_fee_handler"
+      ],
+      "notes": "Dynamic management/performance fee ordering and aggregate/per-recipient owed-value accounting.",
+      "manifest_path": "families/enzyme/implementations/onyx_fee_handler/implementation.yaml"
+    },
+    {
       "family_id": "erc4337",
       "implementation_id": "erc4337_v09",
       "display_name": "ERC-4337 EntryPoint v0.9",
@@ -899,6 +1005,22 @@
       ],
       "notes": "Focused TokenGateway accounting implementation entry for the guarded global-solvency benchmark.",
       "manifest_path": "families/forgeyields/implementations/contracts/implementation.yaml"
+    },
+    {
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "display_name": "Hypernova Arbitrum Payout Deployment",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "source_language": "solidity",
+      "source_artifact_path": "TradingAccounts.sol and Vault.sol, verified on Arbitrum Blockscout",
+      "case_ids": [
+        "hypernova/settled_payout_safety"
+      ],
+      "notes": "This implementation pins TradingAccounts proxy 0x429d8f223acb622e5e748f6a7bdf1235b2334fcb, verified implementation 0x8Ed9f54425c53ABE68AfE3fBD936e703C8775a5B, and Vault 0x920973eebffd3bf7da14dd9fb52bd3bea1664c67 on Arbitrum One. The selected path is requestPayout through _executePayout and processPayout.",
+      "manifest_path": "families/hypernova/implementations/arbitrum-deployment/implementation.yaml"
     },
     {
       "family_id": "ipor",
@@ -1365,6 +1487,22 @@
       "manifest_path": "families/zama/implementations/confidential_contracts/implementation.yaml"
     },
     {
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "display_name": "Zama Protocol Apps Confidential Wrapper",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/zama-ai/protocol-apps",
+      "upstream_commit": "2f88eef1d0b545438b1f74e21cdff7ea771805da",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "case_ids": [
+        "zama_protocol_apps/erc7984_upgradeable_exact_source"
+      ],
+      "notes": "Exact-source implementation entry for the upgradeable ERC-7984 base used by Zama protocol-apps ConfidentialWrapper. The retained source and base transfer-slice proofs are scoped separately from the derived wrapper gates and from the existing OpenZeppelin reference case.",
+      "manifest_path": "families/zama_protocol_apps/implementations/protocol_apps_confidential_wrapper/implementation.yaml"
+    },
+    {
       "family_id": "zodiac",
       "implementation_id": "roles-v3",
       "display_name": "Zodiac Roles v3 ABI Decoder",
@@ -1477,6 +1615,53 @@
       ],
       "spec_target": "Benchmark.Cases.Alchemix.EarmarkConservation.Specs",
       "proof_target": "Benchmark.Cases.Alchemix.EarmarkConservation.Proofs"
+    },
+    {
+      "case_id": "aragon_osx/execute_authorization",
+      "project": "aragon_osx",
+      "case_name": "execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/case.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/aragon/osx",
+      "upstream_commit": "daf4fbb06b89ab0a05516bccb70b625a1a38303b",
+      "original_contract_path": "src/core/dao/DAO.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "selected_functions": [
+        "DAO.execute",
+        "PermissionManager.isGranted",
+        "PermissionManager._auth",
+        "PermissionManager.grant",
+        "PermissionManager.grantWithCondition",
+        "PermissionManager.revoke"
+      ],
+      "lean_target": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Compile",
+      "failure_reason": null,
+      "notes": "This is an authorization benchmark, not an action-execution correctness benchmark. A successful execute reaches the modeled execute-body boundary only after exact permission resolution. Action calldata, native-value transfers, allowFailureMap handling, result hashing, events, and reentrancy are outside the theorem scope. DAO.sol is the primary case source. Its inherited authorization path is pinned at src/core/permission/PermissionManager.sol in the same upstream commit and is the source for isGranted, _auth, grant, grantWithCondition, and revoke.",
+      "buildable": true,
+      "verity_commit": "1fffe16c4fc910a7316d1dddc59dab5ab7fb1c8e",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "fixed_dao_permission_domains",
+        "condition_callbacks_as_boolean_outcomes",
+        "execute_body_entry_boundary",
+        "omitted_action_payloads_and_external_calls",
+        "target_class_projection"
+      ],
+      "abstraction_notes": "The model preserves caller-specific, ANY_ADDR caller, and ANY_ADDR target lookup order for the DAO target; ALLOW_FLAG and condition semantics; the terminal behavior of a present specific condition; ROOT checks before direct mutations; and wildcard rejection for EXECUTE_PERMISSION_ID and ROOT_PERMISSION_ID. Grant targets are projected into DAO, ANY_ADDR, and other classes. Grants to other non-wildcard targets succeed without changing the modeled DAO-target slice. Condition callbacks are boolean outcomes, with false covering both false returns and caught reverts.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Specs",
+      "proof_target": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs"
     },
     {
       "case_id": "balancer/reclamm_swap_rounding",
@@ -1614,6 +1799,64 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Specs",
       "proof_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs"
+    },
+    {
+      "case_id": "enzyme/onyx_fee_handler",
+      "project": "enzyme",
+      "case_name": "onyx_fee_handler",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/enzyme/onyx_fee_handler/case.yaml",
+      "split": "active",
+      "family_id": "enzyme",
+      "implementation_id": "onyx_fee_handler",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/enzymefinance/protocol-onyx",
+      "upstream_commit": "8ae6f589b13a19d8390eb0956836c6a9f48fadab",
+      "original_contract_path": "src/components/fees/FeeHandler.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol",
+      "selected_functions": [
+        "settleDynamicFeesGivenPositionsValue",
+        "__increaseValueOwed",
+        "__updateValueOwed",
+        "settleManagementFee",
+        "settlePerformanceFee"
+      ],
+      "lean_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Compile",
+      "failure_reason": null,
+      "notes": "Proves with no custom axioms and no sorry/admit that a successful settlement with both dynamic trackers enabled uses the configured targets and exact management-then-performance calldata, increases total fees owed by exactly both arbitrary returned amounts, credits the configured recipients, handles recipient aliasing, and frames the selected dynamic-fee configuration projection. The arbitrary reentry hook may mutate all other state. The pinned FeeHandler has no reentrancy guard, so the projection-stability condition is an explicit deployment/callee rely condition, not a proved runtime source property. Separate theorems cover successful management-only, performance-only, and both-disabled branches plus transactional rollback for every modeled raw revert. Official onyx-sdk metadata independently identifies LIVE Ethereum v1 implementation addresses; it does not establish bytecode equivalence to the pinned protocol source commit.",
+      "buildable": true,
+      "verity_commit": "49105e54ceff6d66921572cc85583538c2c8497d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "parametric_verity_env_call_oracle",
+        "dynamic_target_selector_calldata_constraints",
+        "exact_management_then_performance_order",
+        "aggregate_and_per_recipient_accounting",
+        "shared_recipient_aliasing",
+        "checked_uint256_arithmetic_preconditions",
+        "abi_address_decode_overapproximation",
+        "external_failure_rollback",
+        "static_valuation_handler_lookup",
+        "projection_stable_tracker_reentry",
+        "registered_reentry_schedule",
+        "selected_dynamic_fee_projection_frame"
+      ],
+      "abstraction_notes": "Models the source function boundary, valuation-handler authorization, optional tracker branches, management-before-performance ordering, checked arithmetic, and aggregate plus per-recipient owed-value updates. Each external boundary queries the universally quantified Verity.Env call oracle with the separate dynamic target, exact ABI selector, and exact calldata words. A second oracle response controls success, and returndata remains arbitrary. Successful tracker calls apply Env.reenter. Accounting theorems require that hook to preserve only the six observed dynamic-fee projections: both tracker addresses, both recipient addresses, aggregate fees owed, and every per-user owed balance. Unrelated state may change. A conditional Verity ReentrancySpec schedule-closure lemma discharges this condition when Env.reenter is explicitly equated to a registered schedule whose entrypoint transitions each satisfy that projection frame. Pinned Verity supports ABI-faithful runtime-target static-word calls; this case deliberately uses Env.callOracle because executable EDSL call semantics do not provide arbitrary parametric return outcomes for this theorem. The Shares valuation-handler view lookup is modeled as a static call and therefore cannot mutate FeeHandler state or invoke the reentry hook, matching Solidity STATICCALL. Valuation-handler returndata is projected to its low 160 address bits, so the model conservatively admits non-canonical words rejected by Solidity ABI decoding. A successful oracle branch supplies one full return word; returndata-length and ABI-decode failures are folded into the call-failure outcome. External callee formulas, callee state, and event logs are not executed. uint256 arithmetic, and theorem hypotheses cover every successful checked add. Event emission and unrelated configuration/claim functions are omitted.",
+      "unsupported_feature_codes": [
+        "stateful_external_callee_execution_omitted",
+        "source_complete_reentry_registry_omitted",
+        "cross_contract_reentry_reachability_omitted",
+        "event_emission_omitted"
+      ],
+      "spec_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Specs",
+      "proof_target": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs"
     },
     {
       "case_id": "erc4337/entry_point_invariant",
@@ -1759,6 +2002,61 @@
       ],
       "spec_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Specs",
       "proof_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs"
+    },
+    {
+      "case_id": "hypernova/settled_payout_safety",
+      "project": "hypernova",
+      "case_name": "settled_payout_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/hypernova/settled_payout_safety/case.yaml",
+      "split": "active",
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "original_contract_path": "TradingAccounts.sol + Vault.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract",
+      "selected_functions": [
+        "requestPayout",
+        "_executePayout",
+        "processPayout"
+      ],
+      "lean_target": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Compile",
+      "failure_reason": null,
+      "notes": "The theorem proves on-chain accounting after canWithdraw is already true. It does not independently model getMaxWithdrawable or updateEquityAndSettle, nor prove off-chain P&L, flat-position detection, daily caps, owner honesty, proxy immutability, or reserve sufficiency beyond the actual trader transfer. Verified source SHA-256 values are recorded in the accompanying case-study research artifacts.",
+      "buildable": true,
+      "verity_commit": "49105e54ceff6d66921572cc85583538c2c8497d",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "deployed_proxy_and_vault_wiring_pinned",
+        "composite_cross_contract_state",
+        "nested_address_bytes32_funded_account_mapping",
+        "packed_account_fields_with_source_word_offsets",
+        "checked_solidity_arithmetic",
+        "explicit_eip712_inputs_with_trusted_cryptography",
+        "pinned_vault_trading_accounts_immutable",
+        "native_usdc_transfer_as_boolean_and_balance_projection",
+        "one_shot_can_withdraw_flag",
+        "per_trader_nonce_consumption"
+      ],
+      "abstraction_notes": "The model follows the deployed TradingAccounts requestPayout call through _executePayout, Vault.processPayout, and native USDC safeTransfer. The two contract states and token balance projection share one composite ContractState so Contract.run preserves whole-transaction rollback. The proof-side authorization hypothesis passes the source payout type hash, trader, funded-account ID, amount, consumed nonce, deadline, pinned EIP-712 domain separator, and parsed (v,r,s) words explicitly to narrow body-less trusted uninterpreted operations. Lean does not establish their cryptographic semantics or input dependence. The compiler model separately uses Verity's hashing and precompile ECMs for the source-shaped flow. Native USDC safeTransfer is represented by a success Boolean and exact Vault and trader balance updates. The funded account keeps its address plus bytes32 nested key and the source word offsets for the modeled status, initialEquity, equity, and canWithdraw fields. The whole-word canWithdraw projection is scoped to canonical source-reachable states with zero unused upper padding; arbitrary raw padding, assembly writes, and excluded upgrades are out of scope. Events and unrelated struct fields are omitted.",
+      "unsupported_feature_codes": [
+        "deployed_proxy_upgrade_out_of_scope",
+        "owner_vault_rewiring_out_of_scope",
+        "native_usdc_call_as_boolean_and_balance_projection",
+        "composite_cross_contract_storage_namespace",
+        "admin_settlement_truth_assumed"
+      ],
+      "spec_target": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Specs",
+      "proof_target": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs"
     },
     {
       "case_id": "ipor/plasma_vault_redeem_split",
@@ -3114,6 +3412,56 @@
       "proof_target": "Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs"
     },
     {
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "project": "zama_protocol_apps",
+      "case_name": "erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/case.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/zama-ai/protocol-apps",
+      "upstream_commit": "2f88eef1d0b545438b1f74e21cdff7ea771805da",
+      "original_contract_path": "contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "selected_functions": [
+        "_update",
+        "_transfer",
+        "confidentialTransfer"
+      ],
+      "lean_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile",
+      "failure_reason": null,
+      "notes": "Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish, under explicit euint64-domain hypotheses: uninitialized senders return the modeled ERC7984ZeroBalance error class with unchanged modeled accounting state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. The revert proof does not model custom-error payload/returndata or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.",
+      "buildable": true,
+      "verity_commit": "4ebe4931d25e5a1594fcd3f43ff040ecc3c4225a",
+      "lean_toolchain": "leanprover/lean4:v4.24.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "exact_source_retained",
+        "fhe_homomorphic_plaintext_equivalence",
+        "initialization_state_explicit",
+        "wrapper_preconditions_assumed",
+        "acl_elided",
+        "callbacks_elided",
+        "erc7201_slot_derivation_elided"
+      ],
+      "abstraction_notes": "The exact selected Solidity file is retained byte-for-byte under upstream/ with commit, blob, and SHA-256 provenance. The Lean model preserves the transfer-relevant control flow of `_update`, including the pre-write FHE.isInitialized(fromBalance) guard, tryDecrease selection, source and destination balance writes, and zero-address checks. Encrypted euint64 values use plaintext-equivalent Uint256 values with explicit theorem hypotheses constraining amounts and relevant initialized balances below 2^64, plus modulo-2^64 destination arithmetic. A trusted Boolean represents successful input-proof or ACL validation. The transfer-slice caller input represents source-level msg.sender and is not an independent `from` ABI argument. FHE cryptography and permissions, ERC-7201 physical slot derivation, events, transfer callbacks/refunds, ConfidentialWrapper denylist/staticcall gates, wrap/unwrap conversion and underlying ERC-20 settlement, gateway/signature behavior, and other public functions are outside the model.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "spec_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Specs",
+      "proof_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs"
+    },
+    {
       "case_id": "zodiac/roles_decoder_faithfulness",
       "project": "zodiac",
       "case_name": "roles_decoder_faithfulness",
@@ -3492,6 +3840,726 @@
       }
     },
     {
+      "task_ref": "aragon_osx/execute_authorization/execute_success_implies_authorized",
+      "task_id": "execute_success_implies_authorized",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/execute_success_implies_authorized.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.execute_success_implies_authorized",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/ExecuteSuccessImpliesAuthorized.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_caller",
+      "task_id": "grant_execute_condition_rejects_wildcard_caller",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_condition_rejects_wildcard_caller.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_condition_rejects_wildcard_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteConditionRejectsWildcardCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_target",
+      "task_id": "grant_execute_condition_rejects_wildcard_target",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_condition_rejects_wildcard_target.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_condition_rejects_wildcard_target",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteConditionRejectsWildcardTarget.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_rejects_wildcard_caller",
+      "task_id": "grant_execute_rejects_wildcard_caller",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_rejects_wildcard_caller.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_rejects_wildcard_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRejectsWildcardCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_rejects_wildcard_target",
+      "task_id": "grant_execute_rejects_wildcard_target",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_rejects_wildcard_target.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_rejects_wildcard_target",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRejectsWildcardTarget.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_requires_root",
+      "task_id": "grant_execute_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_execute_with_condition_requires_root",
+      "task_id": "grant_execute_with_condition_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_execute_with_condition_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_with_condition_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteWithConditionRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_caller",
+      "task_id": "grant_root_condition_rejects_wildcard_caller",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_condition_rejects_wildcard_caller.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_condition_rejects_wildcard_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootConditionRejectsWildcardCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_target",
+      "task_id": "grant_root_condition_rejects_wildcard_target",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_condition_rejects_wildcard_target.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_condition_rejects_wildcard_target",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootConditionRejectsWildcardTarget.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_rejects_wildcard_caller",
+      "task_id": "grant_root_rejects_wildcard_caller",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_rejects_wildcard_caller.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_rejects_wildcard_caller",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRejectsWildcardCaller.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_rejects_wildcard_target",
+      "task_id": "grant_root_rejects_wildcard_target",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_rejects_wildcard_target.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_rejects_wildcard_target",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRejectsWildcardTarget.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_requires_root",
+      "task_id": "grant_root_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/grant_root_with_condition_requires_root",
+      "task_id": "grant_root_with_condition_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/grant_root_with_condition_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_with_condition_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootWithConditionRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/revoke_execute_requires_root",
+      "task_id": "revoke_execute_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/revoke_execute_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.revoke_execute_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/RevokeExecuteRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/revoke_root_requires_root",
+      "task_id": "revoke_root_requires_root",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/revoke_root_requires_root.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.revoke_root_requires_root",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/RevokeRootRequiresRoot.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aragon_osx/execute_authorization/specific_condition_denial_is_terminal",
+      "task_id": "specific_condition_denial_is_terminal",
+      "case_id": "aragon_osx/execute_authorization",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aragon_osx/execute_authorization/tasks/specific_condition_denial_is_terminal.yaml",
+      "split": "active",
+      "family_id": "aragon_osx",
+      "implementation_id": "osx-dao",
+      "source_ref": "https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "access_control_authorization",
+      "category": "access_control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.specific_condition_denial_is_terminal",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aragon_osx/execute_authorization/verity/Contract.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aragon_osx/execute_authorization/verity/Specs.lean",
+        "Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/SpecificConditionDenialIsTerminal.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the modeled Aragon OSx permission-resolution or ROOT-guard property for the fixed DAO slice.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
       "task_id": "on_swap_fixed_virtual_balances_product_non_decreasing",
       "case_id": "balancer/reclamm_swap_rounding",
@@ -3801,6 +4869,56 @@
       "abstraction_notes": "This task captures the hidden liability-side effect of the summarized flash loan path: apparent repayment leaves pool ETH unchanged while still minting withdrawable caller credit.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "enzyme/onyx_fee_handler/settle_dynamic_fees_exact_accounting",
+      "task_id": "settle_dynamic_fees_exact_accounting",
+      "case_id": "enzyme/onyx_fee_handler",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/enzyme/onyx_fee_handler/tasks/settle_dynamic_fees_exact_accounting.yaml",
+      "split": "active",
+      "family_id": "enzyme",
+      "implementation_id": "onyx_fee_handler",
+      "source_ref": "https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "cross_contract_fee_accounting",
+      "category": "invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Enzyme.OnyxFeeHandler.settleDynamicFeesGivenPositionsValue_exact_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/enzyme/onyx_fee_handler/verity/Contract.lean",
+        "Benchmark/Cases/Enzyme/OnyxFeeHandler/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/enzyme/onyx_fee_handler/verity/Specs.lean",
+        "Benchmark/Cases/Enzyme/OnyxFeeHandler/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Enzyme/OnyxFeeHandler/Tasks/settle_dynamic_fees_exact_accounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Quantifies over Verity.Env oracle responses keyed by the dynamic target, exact selector, and exact management-then-performance calldata. Proves successful aggregate/per-recipient accounting for arbitrary tracker return words, including the same-recipient alias case and a frame for the selected dynamic-fee configuration projection. Pinned Verity supports ABI-faithful runtime-target static-word calls, but this protocol slice deliberately uses Env.callOracle to keep return outcomes arbitrary. A successful oracle branch supplies one full return word; short-return and ABI-decode failures are folded into the call-failure outcome. The Shares valuation lookup is modeled as STATICCALL and does not apply reentry. Tracker calls apply Env.reenter under a narrow rely condition preserving both tracker addresses, both recipient addresses, total fees owed, and every per-user owed balance; unrelated state may change. A conditional ReentrancySpec schedule-closure lemma discharges the condition when Env.reenter is explicitly equated to a registered schedule of projection-preserving transitions. The source-complete cross-contract reachability proof is out of scope because the pinned FeeHandler has no reentrancy guard and the slice omits Shares role state plus six projection-mutating external entrypoints. External callee state is not executed.",
+      "unsupported_feature_codes": [
+        "stateful_external_callee_execution_omitted",
+        "source_complete_reentry_registry_omitted",
+        "cross_contract_reentry_reachability_omitted",
+        "event_emission_omitted"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -5854,6 +6972,101 @@
         "bytes_report_parsing_decoded"
       ],
       "reference_solution_module": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "hypernova/settled_payout_safety/successful_payout_never_overpays",
+      "task_id": "successful_payout_never_overpays",
+      "case_id": "hypernova/settled_payout_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/hypernova/settled_payout_safety/tasks/successful_payout_never_overpays.yaml",
+      "split": "active",
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "source_ref": "https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "payout_safety",
+      "category": "funded_trading_payout",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Hypernova.SettledPayoutSafety.successfulPayout_never_overpays",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/hypernova/settled_payout_safety/verity/Contract.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/hypernova/settled_payout_safety/verity/Specs.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/SuccessfulPayoutNeverOverpays.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves the stronger arithmetic fact that the split-adjusted trader amount cannot exceed the authorized gross request because the split is clamped to 10,000 basis points. The public implication remains scoped to pinned bidirectional deployment wiring.",
+      "unsupported_feature_codes": [
+        "native_usdc_call_as_boolean_and_balance_projection"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "hypernova/settled_payout_safety/valid_settled_payout_is_safe",
+      "task_id": "valid_settled_payout_is_safe",
+      "case_id": "hypernova/settled_payout_safety",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/hypernova/settled_payout_safety/tasks/valid_settled_payout_is_safe.yaml",
+      "split": "active",
+      "family_id": "hypernova",
+      "implementation_id": "arbitrum-deployment",
+      "source_ref": "https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "payout_safety",
+      "category": "funded_trading_payout",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Hypernova.SettledPayoutSafety.validSettledPayout_is_safe",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/hypernova/settled_payout_safety/verity/Contract.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/hypernova/settled_payout_safety/verity/Specs.lean",
+        "Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/ValidSettledPayoutIsSafe.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Proves exact account equity reduction, one-shot settlement closure, one nonce increment, and equal Vault debit plus trader credit for the split-adjusted USDC amount on the valid deployed payout path. The at-most-gross split bound is derived from the clamped basis-point formula rather than assumed. Signature authorization is an explicit trusted equality hypothesis whose body-less operations take the source EIP-712 tuple, consumed nonce, pinned domain separator, and parsed signature as arguments. Their cryptographic semantics are not mechanically proved.",
+      "unsupported_feature_codes": [
+        "native_usdc_call_as_boolean_and_balance_projection",
+        "composite_cross_contract_storage_namespace"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -14106,6 +15319,202 @@
       }
     },
     {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero",
+      "task_id": "initialized_insufficient_transfer_zero",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_insufficient_transfer_zero.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "insufficient_balance_zero_transfer",
+      "category": "arithmetic",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_insufficient_transfer_zero",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert",
+      "task_id": "initialized_transfer_no_balance_revert",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_transfer_no_balance_revert.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "non_reversion",
+      "category": "control_flow",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_no_balance_revert",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferNoBalanceRevert.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation",
+      "task_id": "initialized_transfer_pair_conservation",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/initialized_transfer_pair_conservation.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "balance_conservation",
+      "category": "accounting",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_pair_conservation",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferPairConservation.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zama_protocol_apps/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes",
+      "task_id": "uninitialized_sender_reverts_without_writes",
+      "case_id": "zama_protocol_apps/erc7984_upgradeable_exact_source",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/tasks/uninitialized_sender_reverts_without_writes.yaml",
+      "split": "active",
+      "family_id": "zama_protocol_apps",
+      "implementation_id": "protocol_apps_confidential_wrapper",
+      "source_ref": "https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "revert_rollback",
+      "category": "edge_cases",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.uninitialized_sender_reverts_without_writes",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean",
+        "Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task uses retained Zama source provenance and a base transfer-slice Lean model whose caller input represents msg.sender. Explicit hypotheses constrain modeled euint64 amounts and relevant initialized balances below 2^64. FHE ACL/cryptography, callbacks, derived-wrapper denylist/staticcall gates, wrap/unwrap settlement, signatures/gateway behavior, and ERC-7201 physical slot derivation are outside the proof boundary.",
+      "unsupported_feature_codes": [
+        "external_contract_call",
+        "off_chain_interaction",
+        "fhe_cryptographic_layer"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge",
       "task_id": "metadata_bridge",
       "case_id": "zodiac/roles_decoder_faithfulness",
@@ -14249,5 +15658,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-17T09:57:54.228539+00:00"
+  "generated_at": "2026-07-30T12:51:38.751230+00:00"
 }

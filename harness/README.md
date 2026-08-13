@@ -1,13 +1,10 @@
 # Harness
 
-The benchmark has two kinds of harness, both running in isolated generated
-workspaces and verified by the same independent verifier:
+The benchmark has one canonical harness, running in isolated generated
+workspaces and verified by the independent verifier:
 
-- `default`: the built-in fair Lean-tools harness (OpenAI-compatible tool loop).
-- `builtin-lean-lsp`: the same built-in fair loop, budgets, metering, and
-  verifier, with its Lean IDE surface supplied by a pinned `lean-lsp-mcp`
-  subprocess.
-- shell agent profiles from `harness/agents/*.json` (`grok-build`, `opencode`, `codex`, ...): off-the-shelf coding-agent CLIs metered through a local proxy.
+- `default`: the canonical fair harness (OpenAI-compatible tool loop) with its
+  Lean IDE surface supplied by a pinned `lean-lsp-mcp` subprocess.
 
 Task contract:
 - fixed implementation files
@@ -19,9 +16,7 @@ Main entrypoints:
 - `python3 -m harness.cli list --suite active --unit group`
 - `python3 -m harness.cli run-task <project/case/task> --harness default`
 - `python3 -m harness.cli run-group <project/case> --harness default`
-- `python3 -m harness.cli run-group <project/case> --harness builtin-lean-lsp`
 - `python3 -m harness.cli run-suite --suite active --harness default`
-- `python3 -m harness.cli run-group <project/case> --harness grok-build` (any profile id works)
 - `python3 -m harness.cli compare --runs results/runs/*`
 - `scripts/run_default_harness_group.sh <project/case>`
 - `scripts/run_default_harness_suite.sh --suite active`
@@ -31,11 +26,9 @@ Core files:
 - `harness/workspace_builder.py`: generated group workspaces and file manifests
 - `harness/verifier.py`: independent policy and Lean verifier
 - `harness/cli.py`: group list/run-task/run-group/run-suite/compare CLI
-- `harness/runners/lean_tools.py`: default fair harness (tool loop + run orchestration)
 - `harness/runners/lean_tools_mcp.py` + `harness/lean_lsp_mcp_client.py`:
-  builtin fair-loop entrypoint and pinned MCP stdio bridge
+  canonical fair-loop entrypoint and pinned MCP stdio bridge
 - `harness/transport.py`, `harness/lean_check.py`, `harness/proof_patch.py`, `harness/symbols.py`: chat transport, Lean checking/diagnostics, proof patching, public-symbol parsing
-- `harness/runners/shell_agent.py` + `harness/agents/*.json`: shell coding-agent adapter and profiles
 
 The default harness is agent-first: no hardcoded proof candidates and no
 theorem/task-name dispatch. The model works through Lean-native tools
@@ -48,8 +41,7 @@ in `harness-response.json`. Missing remote API credentials produce a
 `missing_credentials` artifact instead of accidentally comparing against a
 non-agent path.
 
-`builtin-lean-lsp` is the controlled middle point between `default` and
-`vibe-lean-lsp`: it retains the default harness's chat loop, provider preflight,
+`default` retains the fair loop's chat loop, provider preflight,
 completion-token accounting, attempt/tool budgets, artifact format, editable-file
 guards, and independent verifier, but replaces the bespoke Lean inspection tools
 with the native schemas and implementations returned by `lean-lsp-mcp`.
@@ -62,7 +54,7 @@ access, and metered final submissions. Network search, arbitrary Lean snippets,
 builds, widgets, profiling, and verifier-like MCP tools are disabled. Every MCP
 file argument is checked against the isolated public workspace before dispatch.
 
-The builtin profile targets `lean-lsp-mcp==0.28.0`, whose client requires Lean
+The default profile targets `lean-lsp-mcp==0.28.0`, whose client requires Lean
 4.24 or newer. The runner checks the workspace `lean-toolchain` before starting
 MCP and records both required and observed versions. Until the separately
 audited benchmark/Verity Lean 4.24 migration lands, the current Lean 4.22 checkout
@@ -76,8 +68,8 @@ incompatible or broken MCP installation cannot consume a billed model request.
 
 Task briefing:
 - Every task/group workspace contains `harness/TASK_SUMMARY.md`.
-- The summary is shared by fair default and Grok Build and includes target theorem names, editable files, implementation/specification files, the exact `./harness/check.sh` command, policy, and current editable theorem skeletons.
-- Grok Build appends the initial check result to the summary before the shell agent starts. The fair default agent receives the same summary through `show_task`.
+- The summary includes target theorem names, editable files, implementation/specification files, the exact `./harness/check.sh` command, policy, and current editable theorem skeletons.
+- The fair default agent receives the summary through `show_task`.
 - `definition_outline`, `search_declarations`, and `read_file` can inspect public Lean dependency files under `.lake` and the generic Grindset modules; hidden proof files and `.env` are absent and blocked.
 - Fair task results include `failure_class`, distinguishing provider/context failures, no-tool loops, context loops, proof parse errors, unknown names, unsolved goals, Lean timeouts, and other Lean failures.
 
@@ -117,8 +109,7 @@ Default harness API env:
 - `DEFAULT_HARNESS_MAX_TOOL_CALLS`
 - `DEFAULT_HARNESS_MAX_RESPONSE_TOKENS`
 - `DEFAULT_HARNESS_OMIT_SAMPLING` (`0` default; set `1` to omit
-  `temperature`, `top_p`, and `reasoning_effort` for builtin and proxied shell
-  harnesses)
+  `temperature`, `top_p`, and `reasoning_effort` from requests)
 - `DEFAULT_HARNESS_NATIVE_TOOLS`
 - `DEFAULT_HARNESS_TOOL_RESULT_CHARS`
 - `DEFAULT_HARNESS_TASK_SUMMARY_CHARS`
@@ -165,6 +156,13 @@ Fair-mode behavior notes:
   single-endpoint hybrid runs are unaffected. The resolved `prover_base_url` is
   recorded in the run manifest (`harness-response.json`) and in each draft audit
   log entry; API keys are never logged.
+- In strict hybrid mode, a `check_proof` before any `draft_proof` is routed once
+  through a trusted, metadata-derived writer prompt; the driver proof body is
+  neither forwarded nor checked. `DEFAULT_HARNESS_PROVER_WRITER_ATTEMPTS`
+  bounds automatically routed initial writer calls per task independently of the
+  driver tool-call budget. Exhaustion after writer failure is recorded as
+  `strict_writer_exhausted` / `provider_or_context_failure`, never a scoreable
+  zero-writer proof failure.
 
 Local runtime configuration:
 - Copy `.env.example` to `.env`.
@@ -183,19 +181,14 @@ Compatibility env still accepted by the default harness:
 - `GAZELLA_API_KEY`
 - `OPENAI_API_KEY`
 
-Grok auth:
-- CI/local automation should set `GROK_CODE_XAI_API_KEY`.
-- Host `~/.grok/auth.json` is not copied unless `VERITY_ALLOW_HOST_GROK_AUTH=1`.
-- Without usable auth, the Grok runner writes a `harness_error` artifact instead of blocking on an interactive login prompt. It preflights `grok models` inside the isolated run home so stale copied host auth fails quickly.
-
 Useful commands:
 
 ```bash
 python3 -m harness.cli list --suite active --unit group
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --keep-workspace
-python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness builtin-lean-lsp --max-attempts 2 --max-tool-calls 24 --keep-workspace
+python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --max-tool-calls 24 --keep-workspace
 # On a Lean 4.24 checkout: initialize, tools/list, and one real lean_local_search call.
-python3 scripts/smoke_builtin_lean_lsp_mcp.py
+python3 scripts/smoke_default_mcp.py
 DEFAULT_HARNESS_DRIVER_MODEL=minimax/minimax-m3 DEFAULT_HARNESS_PROVER_MODEL=mistralai/Leanstral-2603 DEFAULT_HARNESS_PROVER_MODE=draft_proof python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --max-attempts 2 --max-tool-calls 12 --keep-workspace
 # Cross-provider hybrid: MiniMax driver controls tools on the default endpoint,
 # Leanstral prover drafts proof bodies on a separate provider endpoint.
@@ -205,11 +198,6 @@ DEFAULT_HARNESS_DRIVER_MODEL=minimax/minimax-m3 DEFAULT_HARNESS_PROVER_MODEL=mis
 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --budget deep
 python3 -m harness.cli run-group ethereum/deposit_contract_minimal --harness default --max-attempts 2 --keep-workspace
 python3 -m harness.cli run-suite --suite active --harness default --max-attempts 1
-VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --max-turns 20
-VERITY_ALLOW_HOST_GROK_AUTH=1 python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness grok-build --budget deep
-python3 -m harness.cli run-group ethereum/deposit_contract_minimal --harness grok-build --dry-run --max-turns 20 --keep-workspace
-python3 -m harness.cli run-suite --suite active --harness grok-build --dry-run
-python3 -m harness.cli compare --runs results/runs/<default-fair-run> results/runs/<grok-build-run>
 python3 scripts/check_run_artifacts.py results/runs/<run_id>
 python3 scripts/check_group_workspaces.py ethereum/deposit_contract_minimal
 ```

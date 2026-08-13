@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 37
-- Implementations: 38
-- Active cases: 37
-- Buildable active cases: 37
-- Active tasks: 240
+- Families: 41
+- Implementations: 42
+- Active cases: 41
+- Buildable active cases: 41
+- Active tasks: 263
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -32,6 +32,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_earmark`, `_sync`, `_computeUnrealizedAccount`, `redeem`, `_subEarmarkedDebt`, `_subDebt`
 - Upstream source artifact: `src/AlchemistV3.sol`
 - Notes: Earmark conservation invariant for Alchemix V3 lazy-accrual debt accounting. The literal "sum of stored account.earmarked equals cumulativeEarmarked" is provably false on the deployed code (see AlchemistV3.sol:1014 comment "Global can lag local by rounding") because per-account earmarked is updated lazily inside _sync(tokenId). The lazy-projected version proven here is the property the design actually maintains and that downstream consumers (redemption math, collateral debit) rely on.
+
+### `aragon_osx/execute_authorization`
+- Family / implementation: `aragon_osx` / `osx-dao`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Compile`
+- Source ref: `https://github.com/aragon/osx@daf4fbb06b89ab0a05516bccb70b625a1a38303b:src/core/dao/DAO.sol`
+- Selected functions: `DAO.execute`, `PermissionManager.isGranted`, `PermissionManager._auth`, `PermissionManager.grant`, `PermissionManager.grantWithCondition`, `PermissionManager.revoke`
+- Upstream source artifact: `src/core/dao/DAO.sol`
+- Notes: This is an authorization benchmark, not an action-execution correctness benchmark. A successful execute reaches the modeled execute-body boundary only after exact permission resolution. Action calldata, native-value transfers, allowFailureMap handling, result hashing, events, and reentrancy are outside the theorem scope. DAO.sol is the primary case source. Its inherited authorization path is pinned at src/core/permission/PermissionManager.sol in the same upstream commit and is the source for isGranted, _auth, grant, grantWithCondition, and revoke.
 
 ### `balancer/reclamm_swap_rounding`
 - Family / implementation: `balancer` / `reclamm`
@@ -63,6 +73,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/side-entrance/SideEntranceLenderPool.sol`
 - Notes: Compact Side Entrance benchmark focused on the broken coherence between pool assets and withdrawable credit when flash-loan repayment is routed through the deposit path.
 
+### `enzyme/onyx_fee_handler`
+- Family / implementation: `enzyme` / `onyx_fee_handler`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Enzyme.OnyxFeeHandler.Compile`
+- Source ref: `https://github.com/enzymefinance/protocol-onyx@8ae6f589b13a19d8390eb0956836c6a9f48fadab:src/components/fees/FeeHandler.sol`
+- Selected functions: `settleDynamicFeesGivenPositionsValue`, `__increaseValueOwed`, `__updateValueOwed`, `settleManagementFee`, `settlePerformanceFee`
+- Upstream source artifact: `src/components/fees/FeeHandler.sol`
+- Notes: Proves with no custom axioms and no sorry/admit that a successful settlement with both dynamic trackers enabled uses the configured targets and exact management-then-performance calldata, increases total fees owed by exactly both arbitrary returned amounts, credits the configured recipients, handles recipient aliasing, and frames the selected dynamic-fee configuration projection. The arbitrary reentry hook may mutate all other state. The pinned FeeHandler has no reentrancy guard, so the projection-stability condition is an explicit deployment/callee rely condition, not a proved runtime source property. Separate theorems cover successful management-only, performance-only, and both-disabled branches plus transactional rollback for every modeled raw revert. Official onyx-sdk metadata independently identifies LIVE Ethereum v1 implementation addresses; it does not establish bytecode equivalence to the pinned protocol source commit.
+
 ### `erc4337/entry_point_invariant`
 - Family / implementation: `erc4337` / `erc4337_v09`
 - Stage: `build_green`
@@ -92,6 +112,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `deposit`, `requestRedeem`, `claimRedeem`, `redeemTokenGatewayDepreciated`, `transferRemote`, `handle`, `report`
 - Upstream source artifact: `TokenGateway.sol`
 - Notes: Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.
+
+### `hypernova/settled_payout_safety`
+- Family / implementation: `hypernova` / `arbitrum-deployment`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Compile`
+- Source ref: `https://arbitrum.blockscout.com/address/0x429d8f223acb622e5e748f6a7bdf1235b2334fcb?tab=contract`
+- Selected functions: `requestPayout`, `_executePayout`, `processPayout`
+- Upstream source artifact: `TradingAccounts.sol + Vault.sol`
+- Notes: The theorem proves on-chain accounting after canWithdraw is already true. It does not independently model getMaxWithdrawable or updateEquityAndSettle, nor prove off-chain P&L, flat-position detection, daily caps, owner honesty, proxy immutability, or reserve sufficiency beyond the actual trader transfer. Verified source SHA-256 values are recorded in the accompanying case-study research artifacts.
 
 ### `ipor/plasma_vault_redeem_split`
 - Family / implementation: `ipor` / `ipor_fusion`
@@ -373,6 +403,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/token/ERC7984/ERC7984.sol`
 - Notes: ERC-7984 is the confidential fungible token standard co-developed by Zama and OpenZeppelin for the fhEVM. The key verification targets are balance conservation (no tokens created/destroyed by transfers), correctness of the FHE.select pattern (insufficient balance → silent 0-transfer instead of revert), mint/burn accounting, overflow protection via FHESafeMath.tryIncrease, operator-gated transferFrom, functional correctness of setOperator, and the exact match between successful deposits and credited confidential tokens. Twelve proof tasks cover the 5 modeled functions.
 
+### `zama_protocol_apps/erc7984_upgradeable_exact_source`
+- Family / implementation: `zama_protocol_apps` / `protocol_apps_confidential_wrapper`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Compile`
+- Source ref: `https://github.com/zama-ai/protocol-apps@2f88eef1d0b545438b1f74e21cdff7ea771805da:contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol`
+- Selected functions: `_update`, `_transfer`, `confidentialTransfer`
+- Upstream source artifact: `contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol`
+- Notes: Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish, under explicit euint64-domain hypotheses: uninitialized senders return the modeled ERC7984ZeroBalance error class with unchanged modeled accounting state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. The revert proof does not model custom-error payload/returndata or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.
+
 ### `zodiac/roles_decoder_faithfulness`
 - Family / implementation: `zodiac` / `roles-v3`
 - Stage: `build_green`
@@ -449,6 +489,166 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Alchemix/EarmarkConservation/Tasks/SyncAccountPreservesInvariant.lean`
 - Hidden reference solution: `Benchmark.Cases.Alchemix.EarmarkConservation.Proofs`
 
+### `aragon_osx/execute_authorization/execute_success_implies_authorized`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.execute_success_implies_authorized`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/ExecuteSuccessImpliesAuthorized.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_caller`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_condition_rejects_wildcard_caller`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteConditionRejectsWildcardCaller.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_target`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_condition_rejects_wildcard_target`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteConditionRejectsWildcardTarget.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_rejects_wildcard_caller`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_rejects_wildcard_caller`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRejectsWildcardCaller.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_rejects_wildcard_target`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_rejects_wildcard_target`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRejectsWildcardTarget.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_execute_with_condition_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_execute_with_condition_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantExecuteWithConditionRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_caller`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_condition_rejects_wildcard_caller`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootConditionRejectsWildcardCaller.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_target`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_condition_rejects_wildcard_target`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootConditionRejectsWildcardTarget.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_rejects_wildcard_caller`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_rejects_wildcard_caller`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRejectsWildcardCaller.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_rejects_wildcard_target`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_rejects_wildcard_target`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRejectsWildcardTarget.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/grant_root_with_condition_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.grant_root_with_condition_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/GrantRootWithConditionRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/revoke_execute_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.revoke_execute_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/RevokeExecuteRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/revoke_root_requires_root`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.revoke_root_requires_root`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/RevokeRootRequiresRoot.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
+### `aragon_osx/execute_authorization/specific_condition_denial_is_terminal`
+- Track / property class / proof family: `proof-only` / `access_control_authorization` / `authorization_enablement`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.specific_condition_denial_is_terminal`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aragon_osx/execute_authorization/verity/Contract.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Contract.lean`
+- Specification files: `cases/aragon_osx/execute_authorization/verity/Specs.lean`, `Benchmark/Cases/AragonOSx/ExecuteAuthorization/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AragonOSx/ExecuteAuthorization/Tasks/SpecificConditionDenialIsTerminal.lean`
+- Hidden reference solution: `Benchmark.Cases.AragonOSx.ExecuteAuthorization.Proofs`
+
 ### `balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing`
 - Track / property class / proof family: `proof-only` / `arithmetic_rounding` / `state_preservation_local_effects`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -518,6 +718,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean`
 - Editable proof file: `Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/FlashLoanViaDepositSetsSenderCredit.lean`
 - Hidden reference solution: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs`
+
+### `enzyme/onyx_fee_handler/settle_dynamic_fees_exact_accounting`
+- Track / property class / proof family: `proof-only` / `cross_contract_fee_accounting` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Enzyme.OnyxFeeHandler.settleDynamicFeesGivenPositionsValue_exact_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/enzyme/onyx_fee_handler/verity/Contract.lean`, `Benchmark/Cases/Enzyme/OnyxFeeHandler/Contract.lean`
+- Specification files: `cases/enzyme/onyx_fee_handler/verity/Specs.lean`, `Benchmark/Cases/Enzyme/OnyxFeeHandler/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Enzyme/OnyxFeeHandler/Tasks/settle_dynamic_fees_exact_accounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Enzyme.OnyxFeeHandler.Proofs`
 
 ### `erc4337/entry_point_invariant/account_rejection_reverts`
 - Track / property class / proof family: `proof-only` / `authority_required` / `refinement_equivalence`
@@ -968,6 +1178,26 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/forgeyields/global_solvency/verity/Specs.lean`, `Benchmark/Cases/ForgeYields/GlobalSolvency/Specs.lean`
 - Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean`
 - Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
+
+### `hypernova/settled_payout_safety/successful_payout_never_overpays`
+- Track / property class / proof family: `proof-only` / `payout_safety` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.successfulPayout_never_overpays`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/hypernova/settled_payout_safety/verity/Contract.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean`
+- Specification files: `cases/hypernova/settled_payout_safety/verity/Specs.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/SuccessfulPayoutNeverOverpays.lean`
+- Hidden reference solution: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs`
+
+### `hypernova/settled_payout_safety/valid_settled_payout_is_safe`
+- Track / property class / proof family: `proof-only` / `payout_safety` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Hypernova.SettledPayoutSafety.validSettledPayout_is_safe`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/hypernova/settled_payout_safety/verity/Contract.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Contract.lean`
+- Specification files: `cases/hypernova/settled_payout_safety/verity/Specs.lean`, `Benchmark/Cases/Hypernova/SettledPayoutSafety/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Hypernova/SettledPayoutSafety/Tasks/ValidSettledPayoutIsSafe.lean`
+- Hidden reference solution: `Benchmark.Cases.Hypernova.SettledPayoutSafety.Proofs`
 
 ### `ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free`
 - Track / property class / proof family: `proof-only` / `fee_payout_bound` / `functional_correctness`
@@ -2759,6 +2989,46 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984ConfidentialToken/Tasks/TransferSufficient.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984ConfidentialToken.Proofs`
 
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_insufficient_transfer_zero`
+- Track / property class / proof family: `proof-only` / `insufficient_balance_zero_transfer` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_insufficient_transfer_zero`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedInsufficientTransferZero.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_no_balance_revert`
+- Track / property class / proof family: `proof-only` / `non_reversion` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_no_balance_revert`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferNoBalanceRevert.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/initialized_transfer_pair_conservation`
+- Track / property class / proof family: `proof-only` / `balance_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.initialized_transfer_pair_conservation`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/InitializedTransferPairConservation.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zama_protocol_apps/erc7984_upgradeable_exact_source/uninitialized_sender_reverts_without_writes`
+- Track / property class / proof family: `proof-only` / `revert_rollback` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.uninitialized_sender_reverts_without_writes`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Contract.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Contract.lean`
+- Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean`
+- Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
 ### `zodiac/roles_decoder_faithfulness/metadata_bridge`
 - Track / property class / proof family: `proof-only` / `calldata_decoder_metadata` / `refinement_equivalence`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -2806,5 +3076,6 @@ This report is generated from the benchmark manifests.
 - Regenerate metadata: `python3 scripts/generate_metadata.py`
 - Run one task: `./scripts/run_task.sh <project/case_id/task_id>`
 - Run one case: `./scripts/run_case.sh <project/case_id>`
-- Run active suite: `./scripts/run_all.sh`
+- Run mutable full suite: `./scripts/run_all.sh`
+- Run frozen v0.2 suite: `./scripts/run_all.sh --suite v0.2`
 - Run repo check: `./scripts/check.sh`

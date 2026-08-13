@@ -75,7 +75,7 @@ def lean_toolchain_version(workspace: Path) -> tuple[int, int, int]:
         raw = toolchain_path.read_text(encoding="utf-8").strip()
     except OSError as exc:
         raise LeanLspMcpCompatibilityError(
-            "builtin-lean-lsp requires a readable lean-toolchain file"
+            "the canonical MCP harness requires a readable lean-toolchain file"
         ) from exc
     match = re.search(r"(?:^|:)v?(\d+)\.(\d+)\.(\d+)(?:$|[-+])", raw)
     if match is None:
@@ -94,7 +94,7 @@ def assert_compatible_lean_toolchain(workspace: Path) -> tuple[int, int, int]:
         raise LeanLspMcpCompatibilityError(
             f"lean-lsp-mcp=={LEAN_LSP_MCP_VERSION} requires Lean >= {required}; "
             f"workspace pins Lean {found}. Migrate the benchmark and Verity dependency "
-            "before running builtin-lean-lsp."
+            "before running the canonical MCP harness."
         )
     return version
 

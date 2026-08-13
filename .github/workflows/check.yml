@@ -13,7 +13,14 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # `github.ref` differs between the two events that fire for the same commit:
+  # a push to `codex/**` gives `refs/heads/codex/...` while its pull_request
+  # gives `refs/pull/N/merge`. The groups never matched, so both ran — and on
+  # this repo's single self-hosted runner they serialise, doubling time-to-green
+  # (PR #158: check passed in 1h56, its duplicate then queued for another).
+  # `head_ref` is the PR's source branch, so a PR now shares a group with the
+  # push that created it and cancel-in-progress keeps only the newer run.
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
 
 env:
@@ -23,11 +30,17 @@ env:
 
 jobs:
   check:
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    # nippur-verity-bench-1 (db2.starknet.id) — replaces former
+    # blacksmith-4vcpu-ubuntu-2404. Labels pin this job to that runner
+    # only, so it can never land on verity/fastlane/build/ocr.
+    runs-on: [self-hosted, Linux, X64, nippur, verity, benchmark]
     env:
       DOTENV_PRIVATE_KEY: ${{ secrets.DOTENV_PRIVATE_KEY }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The v0.2 contract validates hashes against its pinned base commit.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:

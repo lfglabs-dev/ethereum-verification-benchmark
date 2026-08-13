@@ -3,8 +3,42 @@ import Verity.Proofs.Stdlib.Automation
 
 namespace Benchmark.Cases.Polaris.BondingCurve
 
+set_option maxRecDepth 10000
+set_option maxHeartbeats 2000000
+
 open Verity
 open Verity.EVM.Uint256
+
+@[simp] private theorem getStorage_apply_raw (sl : StorageSlot Uint256)
+    (s : ContractState) :
+    getStorage sl s = ContractResult.success (s.readSlot sl.slot) s := rfl
+
+@[simp] private theorem setStorage_apply_raw (sl : StorageSlot Uint256)
+    (value : Uint256) (s : ContractState) :
+    setStorage sl value s = ContractResult.success () (s.writeSlot sl.slot value) := rfl
+
+@[simp] private theorem bind_getStorage_raw {α : Type} (sl : StorageSlot Uint256)
+    (f : Uint256 → Contract α) (s : ContractState) :
+    Verity.bind (getStorage sl) f s = f (s.readSlot sl.slot) s := rfl
+
+@[simp] private theorem bind_setStorage_raw {α : Type} (sl : StorageSlot Uint256)
+    (value : Uint256) (f : Unit → Contract α) (s : ContractState) :
+    Verity.bind (setStorage sl value) f s = f () (s.writeSlot sl.slot value) := rfl
+
+@[simp] private theorem bind_require_true_raw {α : Type} (message : String)
+    (f : PUnit → Contract α) (s : ContractState) :
+    Verity.bind (Verity.require true message) f s = f PUnit.unit s := rfl
+
+private theorem virtualBalanceSlot : BaseBondingCurve.virtualBalance.slot = 0 := by native_decide
+private theorem floorSupplySlot : BaseBondingCurve.floorSupply.slot = 1 := by native_decide
+private theorem floorBalanceSlot : BaseBondingCurve.floorBalance.slot = 2 := by native_decide
+private theorem totalSupplySlot : BaseBondingCurve.totalSupply.slot = 3 := by native_decide
+private theorem initializedSlot : BaseBondingCurve.initialized.slot = 5 := by native_decide
+private theorem alphaSlot : BaseBondingCurve.alpha.slot = 6 := by native_decide
+private theorem bPlusOneSlot : BaseBondingCurve.bPlusOne.slot = 7 := by native_decide
+
+attribute [local simp] virtualBalanceSlot floorSupplySlot floorBalanceSlot totalSupplySlot
+  initializedSlot alphaSlot bPlusOneSlot
 
 private theorem virtual_supply_after_sell_net_burn
     (floor total net : Uint256)
@@ -121,9 +155,8 @@ private theorem init_slot_writes
       BaseBondingCurve.initialized, BaseBondingCurve.alpha, BaseBondingCurve.bPlusOne,
       alphaOf, bPlusOneOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision,
       curvePow, Contracts.ExternalArg.toWord,
-      hFloorNeZero, hFloorLeVirtualVal,
-      setStorage, Verity.require, Verity.bind, Bind.bind,
-      getStorage, Contract.run, ContractResult.snd]
+      hFloorNonZero, hFloorLeVirtualVal,
+      Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
 
 private theorem buy_slot_writes
     (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount : Uint256)
