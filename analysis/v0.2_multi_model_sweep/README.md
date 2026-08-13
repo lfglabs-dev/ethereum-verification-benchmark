@@ -32,7 +32,7 @@ GPT-5.6 Sol leads this uniform-effort panel. MiniMax-M3 used the most tokens and
 
 ## Providers without a score
 
-`zai/glm-5.2`, `muse/muse-spark-1.2`, and `kimi/k3` did not produce a complete verifier-backed STRAT-50 cohort. Their retries, cooldowns, and skipped tasks are retained in controller diagnostics but deliberately excluded from the public leaderboard and its denominator. They must be rerun after the inference path is repaired; absence of a score is not a zero score.
+`zai/glm-5.2`, `muse/muse-spark-1.2`, and `kimi/k3` did not produce a complete verifier-backed STRAT-50 cohort. They are deliberately excluded from the public leaderboard and its denominator and must be rerun after the inference path is repaired; absence of a score is not a zero score.
 
 ## Published evidence
 
