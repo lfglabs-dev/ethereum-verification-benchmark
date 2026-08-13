@@ -10,6 +10,7 @@ class Resp:
 
 def test_two_turn_previous_response_id(monkeypatch):
  monkeypatch.setenv('DEFAULT_HARNESS_RESPONSES_API_KEY','x')
+ monkeypatch.setenv('DEFAULT_HARNESS_STREAMING','0')
  payloads=[]; replies=[
   {'id':'resp1','output':[{'type':'function_call','call_id':'call1','name':'echo','arguments':'{"value":"ok"}'}],'usage':{'input_tokens':1,'output_tokens':2,'total_tokens':3}},
   {'id':'resp2','output':[{'type':'message','content':[{'type':'output_text','text':'done'}]}],'usage':{'input_tokens':1,'output_tokens':1,'total_tokens':2}}]
