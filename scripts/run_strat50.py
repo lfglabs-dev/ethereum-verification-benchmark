@@ -35,6 +35,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--infra-threshold", type=int, default=5)
     p.add_argument("--omit-stop", action="store_true")
     p.add_argument("--omit-sampling-model", action="append", default=[])
+    p.add_argument(
+        "--reasoning-effort",
+        action="append",
+        default=[],
+        metavar="MODEL=EFFORT",
+        help="pin provider reasoning effort for one model",
+    )
     return p.parse_args()
 
 
@@ -65,6 +72,10 @@ def classify(path: str | None) -> tuple[str, dict[str, int]]:
 
 def main() -> int:
     args = parse_args()
+    reasoning_efforts = dict(item.split("=", 1) for item in args.reasoning_effort)
+    unknown_effort_models = set(reasoning_efforts) - set(args.models)
+    if unknown_effort_models:
+        raise SystemExit(f"reasoning effort configured for absent models: {sorted(unknown_effort_models)}")
     actual_head = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=args.workdir, text=True
     ).strip()
@@ -87,6 +98,7 @@ def main() -> int:
         "max_tool_calls": args.max_tool_calls,
         "omit_stop": args.omit_stop,
         "omit_sampling_models": sorted(args.omit_sampling_model),
+        "reasoning_efforts": dict(sorted(reasoning_efforts.items())),
         "models": sorted(args.models),
     }
     if state_path.is_file() and json.loads(state_path.read_text()) != cohort:
@@ -115,6 +127,8 @@ def main() -> int:
                     env["DEFAULT_HARNESS_STOP_SEQUENCES"] = ""
                 if model in args.omit_sampling_model:
                     env["DEFAULT_HARNESS_OMIT_SAMPLING"] = "1"
+                if model in reasoning_efforts:
+                    env["DEFAULT_HARNESS_REASONING_EFFORT"] = reasoning_efforts[model]
                 cmd = [sys.executable, "-m", "harness.cli", "run-task", task, "--harness", "default", "--suite", "all", "--max-attempts", str(args.max_attempts), "--max-tool-calls", str(args.max_tool_calls)]
                 started = time.time()
                 try:
