@@ -62,13 +62,14 @@ Three nested panels balance coverage vs. cost. FAST-12 ⊂ STRAT-50 ⊂ FULL-240
 
 ## Cross-Panel Findings
 
-### Cross-effort comparison (MiniMax-M3)
+### Same-panel effort comparison (MiniMax-M3)
 
 | Effort | Panel | Rate |
 |---|---|---|
-| p1_release (2/24) | FULL-240 | 5,8% |
 | p1_release (2/24) | STRAT-50 | 12,0% |
 | p4_normal (16/120) | STRAT-50 | **14,0%** |
+
+On the same STRAT-50 tasks, increasing the budget from p1 to p4 improves the observed solve rate by 2 percentage points (6/50 to 7/50). The separate FULL-240 p1 result is 14/240 (5,8%), but it is not an effort-controlled comparison because the panel also changes.
 
 ### Cross-model comparison (STRAT-50 at p4_normal)
 
@@ -77,7 +78,7 @@ GPT-5.6 dominates: sol (34%) > terra (20%) ≈ luna (18%). MiniMax-M3 trails at 
 ### Key findings
 
 1. **GPT-5.6 strongest**: All three GPT-5.6 variants produce valid Lean proofs on STRAT-50, with sol leading at 34%.
-2. **Effort matters**: MiniMax-M3 nearly triples its rate (5,8% → 14%) when effort increases from p1 to p4.
+2. **Effort has a modest same-panel effect for MiniMax-M3**: on STRAT-50, p4 solves 7/50 versus 6/50 at p1 (14,0% versus 12,0%).
 3. **Cross-panel comparison requires caution**: STRAT-50 has different task distribution than FAST-12 — sol drops from 50% to 34%.
 
 ## Models Not Covered (infrastructure limitation)
