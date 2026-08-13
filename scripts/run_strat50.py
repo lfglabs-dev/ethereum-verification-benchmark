@@ -20,6 +20,16 @@ from pathlib import Path
 
 VALID = {"SOLVED", "GENUINE_FAIL"}
 INFRA = {"INFRA_INVALID", "preflight_failed", "provider_setup_error"}
+STRAT50_PANEL_SHA256 = "ddb8459aa158d5a0271ba73046bc53bad6768cfff7cd4b3c3f7b0887ed9e3865"
+COHORT_ENV_KEYS = (
+    "DEFAULT_HARNESS_BASE_URL",
+    "DEFAULT_HARNESS_RESPONSES_BASE_URL",
+    "DEFAULT_HARNESS_WIRE_API",
+    "DEFAULT_HARNESS_STREAMING",
+    "DEFAULT_HARNESS_TEMPERATURE",
+    "DEFAULT_HARNESS_TOP_P",
+    "DEFAULT_HARNESS_PROTOCOL_PROBE_MAX_TOKENS",
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,7 +43,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--max-tool-calls", type=int, default=120)
     p.add_argument("--recovery-delay", type=int, default=600)
     p.add_argument("--infra-threshold", type=int, default=5)
-    p.add_argument("--omit-stop", action="store_true")
+    p.add_argument("--max-recovery-cycles", type=int, default=3)
+    p.add_argument("--omit-stop-model", action="append", default=[])
     p.add_argument("--omit-sampling-model", action="append", default=[])
     p.add_argument(
         "--reasoning-effort",
@@ -72,6 +83,10 @@ def classify(path: str | None) -> tuple[str, dict[str, int]]:
 
 def main() -> int:
     args = parse_args()
+    if len(args.models) != len(set(args.models)):
+        raise SystemExit("duplicate --model values are not allowed")
+    if (args.max_attempts, args.max_tool_calls) != (16, 120):
+        raise SystemExit("STRAT-50 p4_normal requires --max-attempts 16 and --max-tool-calls 120")
     reasoning_efforts = dict(item.split("=", 1) for item in args.reasoning_effort)
     unknown_effort_models = set(reasoning_efforts) - set(args.models)
     if unknown_effort_models:
@@ -83,6 +98,8 @@ def main() -> int:
         raise SystemExit(
             f"benchmark checkout mismatch: expected {args.benchmark_head}, got {actual_head}"
         )
+    if subprocess.check_output(["git", "status", "--porcelain"], cwd=args.workdir, text=True).strip():
+        raise SystemExit("benchmark checkout must be clean")
     tasks = json.loads(args.panel.read_text())
     if not isinstance(tasks, list) or len(tasks) != 50 or len(set(tasks)) != 50:
         raise SystemExit("panel must contain exactly 50 unique ordered task refs")
@@ -90,16 +107,24 @@ def main() -> int:
     results_path = args.output / "results.json"
     state_path = args.output / "cohort.json"
     panel_sha256 = hashlib.sha256(args.panel.read_bytes()).hexdigest()
+    if panel_sha256 != STRAT50_PANEL_SHA256:
+        raise SystemExit(f"panel does not match frozen STRAT-50 identity: {panel_sha256}")
+    unknown_omit_stop_models = set(args.omit_stop_model) - set(args.models)
+    if unknown_omit_stop_models:
+        raise SystemExit(f"omit-stop configured for absent models: {sorted(unknown_omit_stop_models)}")
+    effective_env = {key: os.environ.get(key) for key in COHORT_ENV_KEYS}
     cohort = {
         "benchmark_head": args.benchmark_head,
         "panel_sha256": panel_sha256,
         "profile": "p4_normal",
         "max_attempts": args.max_attempts,
         "max_tool_calls": args.max_tool_calls,
-        "omit_stop": args.omit_stop,
+        "omit_stop_models": sorted(args.omit_stop_model),
         "omit_sampling_models": sorted(args.omit_sampling_model),
         "reasoning_efforts": dict(sorted(reasoning_efforts.items())),
         "models": sorted(args.models),
+        "max_recovery_cycles": args.max_recovery_cycles,
+        "effective_transport_env": effective_env,
     }
     if state_path.is_file() and json.loads(state_path.read_text()) != cohort:
         raise SystemExit("output directory belongs to an incompatible cohort")
@@ -119,11 +144,12 @@ def main() -> int:
             done = {r["task_ref"] for r in rows if r.get("model") == model and r.get("final_class") in VALID}
         pending = [task for task in tasks if task not in done]
         streak = 0
+        recovery_cycles = 0
         for index, task in enumerate(pending, 1):
             while True:
                 env = os.environ.copy()
                 env["DEFAULT_HARNESS_MODEL"] = model
-                if args.omit_stop:
+                if model in args.omit_stop_model:
                     env["DEFAULT_HARNESS_STOP_SEQUENCES"] = ""
                 if model in args.omit_sampling_model:
                     env["DEFAULT_HARNESS_OMIT_SAMPLING"] = "1"
@@ -151,12 +177,16 @@ def main() -> int:
                 print(f"[{model}] {index}/{len(pending)} {task} {final_class}", flush=True)
                 if final_class not in INFRA:
                     streak = 0
+                    recovery_cycles = 0
                     break
                 streak += 1
                 if streak < args.infra_threshold:
                     time.sleep(30)
                     continue
                 print(f"[{model}] circuit open; re-probing in {args.recovery_delay}s", flush=True)
+                recovery_cycles += 1
+                if recovery_cycles >= args.max_recovery_cycles:
+                    raise RuntimeError(f"infrastructure remained unavailable after {recovery_cycles} recovery cycles for {task}")
                 time.sleep(args.recovery_delay)
                 streak = 0
 

@@ -29,12 +29,14 @@ python3 scripts/run_strat50.py \
   --model xai/grok-4.6 \
   --max-attempts 16 \
   --max-tool-calls 120 \
-  --omit-stop \
+  --omit-stop-model zai/glm-5.2 \
+  --omit-stop-model kimi/k3 \
   --omit-sampling-model kimi/k3
 ```
 
-`--omit-stop` removes local-ChatML stop sentinels rejected by ZAI, Muse, and
-Kimi endpoints. `--omit-sampling-model kimi/k3` removes `temperature`, `top_p`,
+`--omit-stop-model` removes local-ChatML stop sentinels only for the named
+compatible lane; the Grok lane retains its unmodified request shape.
+`--omit-sampling-model kimi/k3` removes `temperature`, `top_p`,
 and `reasoning_effort`; Kimi's coding endpoint rejects `top_p`. Both switches
 are request-shape compatibility settings and do not change task content,
 budgets, tools, or verifier policy.
