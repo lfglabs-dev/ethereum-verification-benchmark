@@ -9,6 +9,7 @@ as model failures.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import subprocess
@@ -76,6 +77,23 @@ def main() -> int:
         raise SystemExit("panel must contain exactly 50 unique ordered task refs")
     args.output.mkdir(parents=True, exist_ok=True)
     results_path = args.output / "results.json"
+    state_path = args.output / "cohort.json"
+    panel_sha256 = hashlib.sha256(args.panel.read_bytes()).hexdigest()
+    cohort = {
+        "benchmark_head": args.benchmark_head,
+        "panel_sha256": panel_sha256,
+        "profile": "p4_normal",
+        "max_attempts": args.max_attempts,
+        "max_tool_calls": args.max_tool_calls,
+        "omit_stop": args.omit_stop,
+        "omit_sampling_models": sorted(args.omit_sampling_model),
+        "models": sorted(args.models),
+    }
+    if state_path.is_file() and json.loads(state_path.read_text()) != cohort:
+        raise SystemExit("output directory belongs to an incompatible cohort")
+    if results_path.is_file() and not state_path.is_file():
+        raise SystemExit("refusing to resume results without cohort metadata")
+    atomic_json(state_path, cohort)
     rows = json.loads(results_path.read_text()) if results_path.is_file() else []
     lock = threading.Lock()
 
@@ -128,11 +146,24 @@ def main() -> int:
                 time.sleep(args.recovery_delay)
                 streak = 0
 
-    threads = [threading.Thread(target=lane, args=(m,), name=m) for m in args.models]
+    lane_errors: list[tuple[str, BaseException]] = []
+
+    def guarded_lane(model: str) -> None:
+        try:
+            lane(model)
+        except BaseException as exc:
+            with lock:
+                lane_errors.append((model, exc))
+
+    threads = [threading.Thread(target=guarded_lane, args=(m,), name=m) for m in args.models]
     for thread in threads:
         thread.start()
     for thread in threads:
         thread.join()
+    if lane_errors:
+        for model, exc in lane_errors:
+            print(f"[{model}] lane failed: {type(exc).__name__}: {exc}", file=sys.stderr)
+        return 1
     print("STRAT50_COMPLETE", flush=True)
     return 0
 
