@@ -72,9 +72,10 @@ def responses_completion(messages: list[dict[str,Any]], *, state: ResponsesState
 
 def responses_preflight(model: str) -> dict[str,Any]:
     state=ResponsesState(); tools=[{"type":"function","function":{"name":"preflight_echo","description":"Echo a value; call this tool when requested.","parameters":{"type":"object","properties":{"value":{"type":"string"}},"required":["value"],"additionalProperties":False}}}]
-    first=responses_completion([{"role":"developer","content":"You must call preflight_echo; do not answer in text."},{"role":"user","content":"Call preflight_echo now with value ok."}],state=state,model=model,tools=tools)
+    messages=[{"role":"developer","content":"You must call preflight_echo; do not answer in text."},{"role":"user","content":"Call preflight_echo now with value ok."}]
+    first=responses_completion(messages,state=state,model=model,tools=tools)
     calls=first["choices"][0]["message"].get("tool_calls") or []
     if not calls: return {"status":"failed","checks":{"responses":True,"tool_calls":False,"previous_response_id":False,"usage_accounting":bool(first.get("usage"))}}
-    call=calls[0]; second=responses_completion([first["choices"][0]["message"],{"role":"tool","tool_call_id":call["id"],"content":'{"value":"ok"}'}],state=state,model=model,tools=tools)
+    call=calls[0]; messages.extend([first["choices"][0]["message"],{"role":"tool","tool_call_id":call["id"],"content":'{"value":"ok"}'}]); second=responses_completion(messages,state=state,model=model,tools=tools)
     usage={k:int(first["usage"].get(k,0))+int(second["usage"].get(k,0)) for k in ("prompt_tokens","completion_tokens","total_tokens")}; usage["requests"]=2
     return {"status":"passed","model":model,"wire_api":"responses","checks":{"responses":True,"tool_calls":True,"previous_response_id":second["responses_state"]["previous_response_id"]==first["id"],"usage_accounting":usage["total_tokens"]>0},"usage":usage}
