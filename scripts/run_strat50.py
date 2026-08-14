@@ -20,7 +20,6 @@ from pathlib import Path
 
 VALID = {"SOLVED", "GENUINE_FAIL"}
 INFRA = {"INFRA_INVALID", "preflight_failed", "provider_setup_error"}
-STRAT50_PANEL_SHA256 = "ddb8459aa158d5a0271ba73046bc53bad6768cfff7cd4b3c3f7b0887ed9e3865"
 SECRET_ENV_MARKERS = ("KEY", "TOKEN", "SECRET", "PASSWORD", "CREDENTIAL")
 
 
@@ -28,7 +27,18 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser()
     p.add_argument("--panel", type=Path, required=True, help="JSON array of ordered task refs")
     p.add_argument("--workdir", type=Path, required=True, help="immutable benchmark checkout")
-    p.add_argument("--benchmark-head", default="c5a2344b121040445ccd745a3f839548ca8f9158")
+    p.add_argument("--benchmark-head", required=True)
+    p.add_argument(
+        "--benchmark-manifest",
+        type=Path,
+        required=True,
+        help="version manifest whose commit and task set define this cohort",
+    )
+    p.add_argument(
+        "--panel-sha256",
+        required=True,
+        help="expected lowercase SHA-256 of the exact panel JSON bytes",
+    )
     p.add_argument("--model", action="append", required=True, dest="models")
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--max-attempts", type=int, default=16)
@@ -56,6 +66,44 @@ def atomic_json(path: Path, value: object) -> None:
 
 def run_dir(stdout: str) -> str | None:
     return next((s for s in reversed(stdout.splitlines()) if s.startswith("/") and "/results/runs/" in s), None)
+
+
+def validate_panel_identity(path: Path, expected_sha256: str) -> str:
+    actual_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+    if actual_sha256 != expected_sha256:
+        raise SystemExit(
+            f"panel does not match frozen STRAT-50 identity: {actual_sha256}"
+        )
+    return actual_sha256
+
+
+def benchmark_identity(
+    manifest_path: Path, benchmark_head: str, panel_tasks: list[str]
+) -> dict[str, object]:
+    manifest_bytes = manifest_path.read_bytes()
+    manifest = json.loads(manifest_bytes)
+    if manifest.get("git_sha") != benchmark_head:
+        raise SystemExit(
+            "benchmark manifest commit mismatch: "
+            f"expected {benchmark_head}, got {manifest.get('git_sha')}"
+        )
+    manifest_tasks = {
+        task.get("task_ref") for task in manifest.get("tasks", []) if isinstance(task, dict)
+    }
+    unknown = sorted(set(panel_tasks) - manifest_tasks)
+    if unknown:
+        raise SystemExit(f"panel contains tasks absent from benchmark manifest: {unknown}")
+    required = ("benchmark_version", "task_set_id", "environment_id", "harness_id")
+    missing = [key for key in required if not manifest.get(key)]
+    if missing:
+        raise SystemExit(f"benchmark manifest is missing identity fields: {missing}")
+    return {
+        "benchmark_version": manifest["benchmark_version"],
+        "benchmark_manifest_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
+        "task_set_id": manifest["task_set_id"],
+        "environment_id": manifest["environment_id"],
+        "harness_id": manifest["harness_id"],
+    }
 
 
 def classify(path: str | None) -> tuple[str, dict[str, int]]:
@@ -95,12 +143,13 @@ def main() -> int:
     tasks = json.loads(args.panel.read_text())
     if not isinstance(tasks, list) or len(tasks) != 50 or len(set(tasks)) != 50:
         raise SystemExit("panel must contain exactly 50 unique ordered task refs")
+    manifest_identity = benchmark_identity(
+        args.benchmark_manifest, args.benchmark_head, tasks
+    )
     args.output.mkdir(parents=True, exist_ok=True)
     results_path = args.output / "results.json"
     state_path = args.output / "cohort.json"
-    panel_sha256 = hashlib.sha256(args.panel.read_bytes()).hexdigest()
-    if panel_sha256 != STRAT50_PANEL_SHA256:
-        raise SystemExit(f"panel does not match frozen STRAT-50 identity: {panel_sha256}")
+    panel_sha256 = validate_panel_identity(args.panel, args.panel_sha256)
     unknown_omit_stop_models = set(args.omit_stop_model) - set(args.models)
     if unknown_omit_stop_models:
         raise SystemExit(f"omit-stop configured for absent models: {sorted(unknown_omit_stop_models)}")
@@ -112,6 +161,7 @@ def main() -> int:
     }
     cohort = {
         "benchmark_head": args.benchmark_head,
+        **manifest_identity,
         "panel_sha256": panel_sha256,
         "profile": "p4_normal",
         "max_attempts": args.max_attempts,

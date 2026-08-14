@@ -53,7 +53,7 @@ Committed result data lives in:
 - [results/manifests/](./results/manifests/)
 - [results/summaries/](./results/summaries/)
 
-Version `0.1` is the current published baseline: 135 active tasks drawn from production protocols, standards, bridges, auctions, vaults, and security challenge contracts. Complete model rows are rankable; partial rows are retained for transparency.
+Version `0.3` is the current benchmark environment: 263 frozen tasks on Lean 4.31. New comparable model campaigns should use the reproducible [v0.3 STRAT-50 panel](./analysis/v0.3_strat50/README.md). Version `0.1` remains the older public-dashboard baseline, while v0.2/Lean 4.24 artifacts remain frozen for historical reproduction only. Results from different benchmark versions or inference protocols are separate cohorts and must not be combined.
 
 ## Quick Start
 
@@ -93,6 +93,7 @@ python3 scripts/check.py
 ## Docs
 
 - [Run and publish benchmark results](./docs/running-benchmark.md)
+- [v0.3 STRAT-50 panel and campaign guide](./analysis/v0.3_strat50/README.md)
 - [Harness internals](./harness/README.md)
 - [Task API](./docs/architecture/task-api.md)
 - [Results publication model](./docs/architecture/results-publication.md)

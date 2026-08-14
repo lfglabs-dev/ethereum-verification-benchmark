@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import os
 from pathlib import Path
 import tempfile
@@ -17,6 +18,8 @@ def args(tmp_path: Path, **overrides):
         panel=tmp_path / "panel.json",
         workdir=tmp_path,
         benchmark_head="head",
+        benchmark_manifest=tmp_path / "manifest.json",
+        panel_sha256="panel-sha256",
         models=["model-a"],
         output=tmp_path / "out",
         max_attempts=16,
@@ -33,6 +36,45 @@ def args(tmp_path: Path, **overrides):
 
 
 class RunStrat50Tests(unittest.TestCase):
+    def test_benchmark_identity_records_manifest_and_rejects_unknown_tasks(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = Path(directory) / "v0.3.json"
+            manifest.write_text(
+                '{"benchmark_version":"0.3","git_sha":"head",'
+                '"task_set_id":"tasks","environment_id":"env",'
+                '"harness_id":"harness","tasks":[{"task_ref":"known"}]}\n'
+            )
+            identity = RUNNER.benchmark_identity(manifest, "head", ["known"])
+            self.assertEqual(identity["benchmark_version"], "0.3")
+            self.assertEqual(identity["task_set_id"], "tasks")
+            with self.assertRaisesRegex(SystemExit, "absent"):
+                RUNNER.benchmark_identity(manifest, "head", ["unknown"])
+
+    def test_benchmark_identity_rejects_commit_mismatch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            manifest = Path(directory) / "v0.3.json"
+            manifest.write_text(
+                '{"benchmark_version":"0.3","git_sha":"other",'
+                '"task_set_id":"tasks","environment_id":"env",'
+                '"harness_id":"harness","tasks":[]}\n'
+            )
+            with self.assertRaisesRegex(SystemExit, "commit mismatch"):
+                RUNNER.benchmark_identity(manifest, "head", [])
+
+    def test_panel_identity_accepts_explicit_non_v02_hash(self):
+        with tempfile.TemporaryDirectory() as directory:
+            panel = Path(directory) / "panel.json"
+            panel.write_text('["v0.3/task"]\n')
+            expected = hashlib.sha256(panel.read_bytes()).hexdigest()
+            self.assertEqual(RUNNER.validate_panel_identity(panel, expected), expected)
+
+    def test_panel_identity_rejects_mismatch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            panel = Path(directory) / "panel.json"
+            panel.write_text('["v0.3/task"]\n')
+            with self.assertRaisesRegex(SystemExit, "frozen STRAT-50 identity"):
+                RUNNER.validate_panel_identity(panel, "0" * 64)
+
     def test_rejects_duplicate_models(self):
         with tempfile.TemporaryDirectory() as directory:
             tmp_path = Path(directory)
