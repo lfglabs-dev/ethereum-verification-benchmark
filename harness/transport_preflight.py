@@ -22,6 +22,12 @@ from harness.transport_request import (
 PROTOCOL_PROBE_ATTEMPTS = max(
     1, int(os.environ.get("DEFAULT_HARNESS_PROTOCOL_PROBE_ATTEMPTS", "3"))
 )
+# Reasoning tokens count against the same output limit as visible text and tool
+# arguments. A 64-token probe can therefore truncate a valid reasoning model
+# before its first tool call and misclassify it as protocol-incompatible.
+PROTOCOL_PROBE_MAX_TOKENS = max(
+    256, int(os.environ.get("DEFAULT_HARNESS_PROTOCOL_PROBE_MAX_TOKENS", "256"))
+)
 
 
 def endpoint_smoke(base_url: str = DEFAULT_BASE_URL, model: str = DEFAULT_MODEL) -> dict[str, object]:
@@ -140,7 +146,7 @@ def generic_preflight(
             [{"role": "user", "content": "Call preflight_echo with value ok."}],
             base_url=base_url,
             model=model,
-            max_tokens=64,
+            max_tokens=PROTOCOL_PROBE_MAX_TOKENS,
             tools=probe_tools,
             tool_choice="auto",
             api_key_override=api_key_override,
@@ -177,7 +183,7 @@ def generic_preflight(
                     ],
                     base_url=base_url,
                     model=model,
-                    max_tokens=96,
+                    max_tokens=PROTOCOL_PROBE_MAX_TOKENS,
                     api_key_override=api_key_override,
                 )
                 record_usage(fallback_response)

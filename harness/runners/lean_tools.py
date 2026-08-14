@@ -18,6 +18,7 @@ from typing import Any
 
 try:
     from .. import transport
+    from ..responses_transport import DEFAULT_WIRE_API, ResponsesState, responses_completion, responses_preflight
     from ..classification import classify_run
     from ..lean_lsp_mcp_client import (
         LeanLspMcpError,
@@ -37,6 +38,7 @@ try:
     )
 except ImportError:
     import transport
+    from responses_transport import DEFAULT_WIRE_API, ResponsesState, responses_completion, responses_preflight
     from classification import classify_run
     from lean_lsp_mcp_client import (
         LeanLspMcpError,
@@ -431,11 +433,20 @@ def _role_provider_preflight(base_url: str) -> dict[str, object]:
         api_key_override: str | None = None,
     ) -> dict[str, object]:
         try:
-            result = generic_preflight(
-                role_base_url,
-                model,
-                api_key_override=api_key_override,
-            )
+            if role == "driver" and DEFAULT_WIRE_API == "responses":
+                if not DEFAULT_NATIVE_TOOLS:
+                    raise ValueError("Responses wire API requires native tools in the default harness")
+                result = responses_preflight(
+                    model,
+                    base_url=role_base_url,
+                    api_key=api_key_override if api_key_override is not None else _api_key(),
+                )
+            else:
+                result = generic_preflight(
+                    role_base_url,
+                    model,
+                    api_key_override=api_key_override,
+                )
         except Exception as exc:  # noqa: BLE001 - normalize setup failures into artifacts
             result = {
                 "status": "failed",
@@ -598,9 +609,9 @@ def _tool_call_signature(name: str, args: dict[str, object]) -> str:
     return f"{name}:{encoded_args}"
 
 
-def _compact_fair_messages(messages: list[dict[str, Any]], *, system_prompt: str, user_prompt: str) -> None:
+def _compact_fair_messages(messages: list[dict[str, Any]], *, system_prompt: str, user_prompt: str) -> bool:
     if DEFAULT_MAX_FAIR_MESSAGES <= 0 or len(messages) <= DEFAULT_MAX_FAIR_MESSAGES:
-        return
+        return False
     snippets: list[str] = []
     for message in messages[-6:]:
         role = str(message.get("role") or "")
@@ -627,6 +638,7 @@ def _compact_fair_messages(messages: list[dict[str, Any]], *, system_prompt: str
             ),
         },
     ]
+    return True
 
 
 def _stuck_signature(first_error: object) -> str:
@@ -2469,6 +2481,7 @@ def _attempt_task_fair(
                 "content": f"{continuation_prompt}\n{content}\nReply with the next JSON tool call.",
             },
         ]
+        responses_state.reset("compact_user_context")
 
     def flush_pending_repetition_warning() -> None:
         nonlocal pending_repetition_warning
@@ -2604,6 +2617,7 @@ def _attempt_task_fair(
                 "conversation_log": str(conversation_log_path),
                 "loop_signature": signature,
                 "role_metrics": role_metrics,
+                **response_state_fields(),
             }
         return None
 
@@ -2640,7 +2654,11 @@ def _attempt_task_fair(
 
     token_budget_exhausted = False
     context_budget_exhausted = False
+    responses_state = ResponsesState()
     requests_consumed = 0
+
+    def response_state_fields() -> dict[str, object]:
+        return {"wire_api": DEFAULT_WIRE_API, "responses_state": responses_state.metadata() if DEFAULT_WIRE_API == "responses" else None}
     for request_index in range(1, request_limit + 1):
         if _proof_attempt_count(attempts) >= max_attempts:
             break
@@ -2651,15 +2669,25 @@ def _attempt_task_fair(
             break
         try:
             requests_consumed = request_index
-            response = chat_completion(
-                messages,
-                base_url=base_url,
-                model=DEFAULT_DRIVER_MODEL,
-                tools=_fair_tools(mcp_tools) if native_tools else None,
-                tool_choice="auto" if native_tools else None,
-                request_log_path=conversation_log_path,
-                request_index=request_index,
-            )
+            if DEFAULT_WIRE_API == "responses":
+                response = responses_completion(
+                    messages,
+                    state=responses_state,
+                    model=DEFAULT_DRIVER_MODEL,
+                    tools=_fair_tools(mcp_tools) if native_tools else None,
+                    base_url=base_url,
+                    api_key=_api_key(),
+                )
+            else:
+                response = chat_completion(
+                    messages,
+                    base_url=base_url,
+                    model=DEFAULT_DRIVER_MODEL,
+                    tools=_fair_tools(mcp_tools) if native_tools else None,
+                    tool_choice="auto" if native_tools else None,
+                    request_log_path=conversation_log_path,
+                    request_index=request_index,
+                )
         except Exception as exc:
             error_payload = exc.to_dict() if isinstance(exc, ChatCompletionError) else {"message": str(exc)}
             status = "request_timeout" if isinstance(exc, ChatCompletionError) and exc.kind == "request_timeout" else "request_failed"
@@ -2685,6 +2713,7 @@ def _attempt_task_fair(
                 "conversation_log": str(conversation_log_path),
                 "failure_class": _failure_taxonomy(status, attempts, tool_calls=tool_calls_executed, no_tool_responses=no_tool_responses),
                 "role_metrics": role_metrics,
+                **response_state_fields(),
             }
         _accumulate_usage(response)
         usage = response.get("usage") if isinstance(response, dict) else None
@@ -2759,7 +2788,8 @@ def _attempt_task_fair(
                     "content": "Tool call required. Reply only with compact JSON for one allowed tool.",
                 }
             )
-            _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt)
+            if _compact_fair_messages(messages, system_prompt=system_prompt, user_prompt=user_prompt):
+                responses_state.reset("message_compaction")
             continue
         for tool_call in tool_calls:
             if not isinstance(tool_call, dict):
@@ -3016,6 +3046,7 @@ def _attempt_task_fair(
                     "non_proof_tool_limit": non_proof_tool_limit,
                     "tactic_sandbox_calls": sandbox_state["count"],
                     "role_metrics": role_metrics,
+                    **response_state_fields(),
                     "tool_log": str(tool_log_path),
                     "conversation_log": str(conversation_log_path),
                 }
@@ -3054,6 +3085,7 @@ def _attempt_task_fair(
                     "non_proof_tool_limit": non_proof_tool_limit,
                     "tactic_sandbox_calls": sandbox_state["count"],
                     "role_metrics": role_metrics,
+                    **response_state_fields(),
                     "tool_log": str(tool_log_path),
                     "conversation_log": str(conversation_log_path),
                 }
@@ -3064,11 +3096,12 @@ def _attempt_task_fair(
                 failed_attempt = _last_failed_proof_attempt(result)
                 if failed_attempt is not None and int(prover_state["repair_count"]) < int(prover_state["repair_limit"]):
                     messages.append({"role": "user", "content": STRICT_DRIVER_REPAIR_NUDGE})
-                    _compact_fair_messages(
+                    if _compact_fair_messages(
                         messages,
                         system_prompt=system_prompt,
                         user_prompt=continuation_prompt,
-                    )
+                    ):
+                        responses_state.reset("strict_repair_compaction")
                     repaired = True
             elif DIAGNOSTIC_RETRY_ENABLED and name in {"check_proof", "try_tactics"}:
                 failed_attempt = _last_failed_proof_attempt(result)
@@ -3092,13 +3125,15 @@ def _attempt_task_fair(
                         candidate=current_candidate,
                         attempt=failed_attempt,
                     )
+                    responses_state.reset("diagnostic_repair")
                     repaired = True
             if not repaired:
-                _compact_fair_messages(
+                if _compact_fair_messages(
                     messages,
                     system_prompt=system_prompt,
                     user_prompt=continuation_prompt,
-                )
+                ):
+                    responses_state.reset("post_tool_compaction")
     if not attempts:
         proof_path.write_text(original, encoding="utf-8")
     strict_writer_failed = bool(
@@ -3140,6 +3175,7 @@ def _attempt_task_fair(
         "no_tool_responses": no_tool_responses,
         "tactic_sandbox_calls": sandbox_state["count"],
         "role_metrics": role_metrics,
+        **response_state_fields(),
         "tool_log": str(tool_log_path),
         "conversation_log": str(conversation_log_path),
     }
@@ -3175,7 +3211,10 @@ def run_group(
     if task_ref:
         group = filter_group_to_task(group, task_ref)
     base_url = DEFAULT_BASE_URL
-    credentials_available = bool(_api_key()) or _local_no_auth_endpoint(base_url)
+    responses_api_key = os.environ.get("DEFAULT_HARNESS_RESPONSES_API_KEY")
+    effective_base_url = (os.environ.get("DEFAULT_HARNESS_RESPONSES_BASE_URL") or base_url) if DEFAULT_WIRE_API == "responses" else base_url
+    effective_harness_id = f"{harness_id}-responses" if DEFAULT_WIRE_API == "responses" else harness_id
+    credentials_available = bool(responses_api_key or _api_key()) or _local_no_auth_endpoint(effective_base_url)
     dependency_warm_builds: list[dict[str, object]] = []
     if not dry_run and credentials_available:
         dependency_warm_builds = warm_public_dependencies(
@@ -3253,7 +3292,7 @@ def run_group(
         response = {
             "status": "dry_run",
             "provider": _active_provider(),
-            "base_url": base_url,
+            "base_url": effective_base_url,
             "model": DEFAULT_DRIVER_MODEL,
             "driver_model": DEFAULT_DRIVER_MODEL,
             "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
@@ -3263,23 +3302,29 @@ def run_group(
             "prover_repair_attempts": PROVER_REPAIR_ATTEMPTS if STRICT_ROLE_SEPARATION else 0,
             "role_config": role_config,
             "transport_mode": _transport_mode(),
+            "wire_api": DEFAULT_WIRE_API,
             "mode": "fair",
             "tool_backend": tool_backend,
             "max_attempts": max_attempts,
             "max_tool_calls": max_tool_calls,
             **budgets,
         }
-    elif not _api_key() and not _local_no_auth_endpoint(base_url):
+    elif (
+        not _api_key()
+        and not (DEFAULT_WIRE_API == "responses" and os.environ.get("DEFAULT_HARNESS_RESPONSES_API_KEY"))
+        and not _local_no_auth_endpoint(base_url)
+    ):
         provider_key_hint = f", DEFAULT_HARNESS_{DEFAULT_PROVIDER.upper()}_API_KEY" if DEFAULT_PROVIDER else ""
         response = {
             "status": "missing_credentials",
             "provider": _active_provider(),
-            "base_url": base_url,
+            "base_url": effective_base_url,
             "model": DEFAULT_DRIVER_MODEL,
             "driver_model": DEFAULT_DRIVER_MODEL,
             "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
             "prover_mode": DEFAULT_PROVER_MODE if DRAFT_PROOF_ENABLED else None,
             "transport_mode": _transport_mode(),
+            "wire_api": DEFAULT_WIRE_API,
             "mode": "fair",
             "tool_backend": tool_backend,
             "error": f"fair mode requires DEFAULT_HARNESS_API_KEY{provider_key_hint}, GAZELLA_API_KEY, OPENAI_API_KEY, or a localhost-compatible no-auth endpoint",
@@ -3313,7 +3358,7 @@ def run_group(
             "status": "completed_with_failures",
             "error": "Lean setup failed; no model request attempted",
             "provider": _active_provider(),
-            "base_url": base_url,
+            "base_url": effective_base_url,
             "model": DEFAULT_DRIVER_MODEL,
             "driver_model": DEFAULT_DRIVER_MODEL,
             "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
@@ -3321,6 +3366,7 @@ def run_group(
             "strict_role_separation": STRICT_ROLE_SEPARATION,
             "role_config": role_config,
             "transport_mode": _transport_mode(),
+            "wire_api": DEFAULT_WIRE_API,
             "mode": "fair",
             "tool_backend": tool_backend,
             "provider_setup_error": False,
@@ -3394,7 +3440,7 @@ def run_group(
             response = {
                 "status": "completed",
                 "provider": _active_provider(),
-                "base_url": base_url,
+                "base_url": effective_base_url,
                 "model": DEFAULT_DRIVER_MODEL,
                 "driver_model": DEFAULT_DRIVER_MODEL,
                 "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
@@ -3459,7 +3505,7 @@ def run_group(
                 "status": status,
                 "error": str(exc),
                 "provider": _active_provider(),
-                "base_url": base_url,
+                "base_url": effective_base_url,
                 "model": DEFAULT_DRIVER_MODEL,
                 "driver_model": DEFAULT_DRIVER_MODEL,
                 "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
@@ -3467,6 +3513,7 @@ def run_group(
                 "strict_role_separation": STRICT_ROLE_SEPARATION,
                 "role_config": role_config,
                 "transport_mode": _transport_mode(),
+                "wire_api": DEFAULT_WIRE_API,
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
                 "tool_backend": tool_backend,
@@ -3517,7 +3564,7 @@ def run_group(
             {
                 "group": agent_group_to_json(group),
                 "provider": _active_provider(),
-                "base_url": base_url,
+                "base_url": effective_base_url,
                 "model": DEFAULT_DRIVER_MODEL,
                 "driver_model": DEFAULT_DRIVER_MODEL,
                 "prover_model": DEFAULT_PROVER_MODEL if DRAFT_PROOF_ENABLED else None,
@@ -3527,6 +3574,7 @@ def run_group(
                 "role_config": role_config,
                 "dependency_warm_builds": dependency_warm_builds,
                 "transport_mode": _transport_mode(),
+                "wire_api": DEFAULT_WIRE_API,
                 "streaming_fallback_reason": _streaming_fallback_reason(),
                 "mode": "fair",
                 "tool_backend": tool_backend,
@@ -3573,7 +3621,9 @@ def run_group(
         "schema_version": 2,
         "execution_contract": "default-mcp-v1",
         "run_id": run_id,
-        "harness_id": harness_id,
+        "harness_id": effective_harness_id,
+        "base_harness_id": harness_id,
+        "wire_api": DEFAULT_WIRE_API,
         "provider": _active_provider(),
         "model": DEFAULT_DRIVER_MODEL,
         "driver_model": DEFAULT_DRIVER_MODEL,
@@ -3595,10 +3645,10 @@ def run_group(
         "task_ref": task_ref,
         "suite": suite,
         "started_at": started_at,
-        "base_url": base_url,
-        "transport_mode": _transport_mode(),
+        "base_url": effective_base_url,
+        "transport_mode": "responses_streaming" if DEFAULT_WIRE_API == "responses" and os.environ.get("DEFAULT_HARNESS_STREAMING", "1").lower() not in {"0", "false", "no"} else "responses_non_streaming" if DEFAULT_WIRE_API == "responses" else _transport_mode(),
         "streaming_fallback_reason": _streaming_fallback_reason(),
-        "auth_mode": "env" if _api_key() else "none",
+        "auth_mode": "env" if responses_api_key or _api_key() else "none",
         "duration_seconds": round(time.time() - start, 3),
         "harness_status": response["status"],
         "failure_class": response.get("failure_class"),
