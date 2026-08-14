@@ -54,9 +54,16 @@ The command must reproduce the frozen panel hash above with no diff.
 Create an immutable execution checkout at the manifest's declared source commit:
 
 ```bash
+# Required for shallow or single-branch clones: fetch the frozen commit explicitly.
+git fetch origin d46684dcaf04a8d24dabee3330df1aea517c3a54
+git cat-file -e d46684dcaf04a8d24dabee3330df1aea517c3a54^{commit}
 git worktree add --detach /tmp/benchmark-v0.3 \
   d46684dcaf04a8d24dabee3330df1aea517c3a54
 ```
+
+Do not substitute the current `main` head: it may contain a different task set,
+environment, or harness identity. The explicit fetch was verified from a fresh
+`--single-branch` clone, where the commit is otherwise absent.
 
 Run the controller from a checkout containing the v0.3 panel and current runner:
 
