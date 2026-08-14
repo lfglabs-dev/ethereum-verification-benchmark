@@ -19,7 +19,6 @@ def args(tmp_path: Path, **overrides):
         workdir=tmp_path,
         benchmark_head="head",
         benchmark_manifest=tmp_path / "manifest.json",
-        panel_sha256="panel-sha256",
         models=["model-a"],
         output=tmp_path / "out",
         max_attempts=16,
@@ -44,11 +43,26 @@ class RunStrat50Tests(unittest.TestCase):
                 '"task_set_id":"tasks","environment_id":"env",'
                 '"harness_id":"harness","tasks":[{"task_ref":"known"}]}\n'
             )
-            identity = RUNNER.benchmark_identity(manifest, "head", ["known"])
+            canonical = {
+                "0.3": {
+                    "benchmark_head": "head",
+                    "benchmark_manifest_sha256": hashlib.sha256(manifest.read_bytes()).hexdigest(),
+                    "panel_sha256": "panel",
+                    "task_set_id": "tasks",
+                    "environment_id": "env",
+                    "harness_id": "harness",
+                }
+            }
+            identity = RUNNER.benchmark_identity(
+                manifest, "head", ["known"], canonical
+            )
             self.assertEqual(identity["benchmark_version"], "0.3")
             self.assertEqual(identity["task_set_id"], "tasks")
+            self.assertEqual(identity["canonical_panel_sha256"], "panel")
             with self.assertRaisesRegex(SystemExit, "absent"):
-                RUNNER.benchmark_identity(manifest, "head", ["unknown"])
+                RUNNER.benchmark_identity(manifest, "head", ["unknown"], canonical)
+            with self.assertRaisesRegex(SystemExit, "not canonical"):
+                RUNNER.benchmark_identity(manifest, "head", ["known"])
 
     def test_benchmark_identity_rejects_commit_mismatch(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -61,7 +75,7 @@ class RunStrat50Tests(unittest.TestCase):
             with self.assertRaisesRegex(SystemExit, "commit mismatch"):
                 RUNNER.benchmark_identity(manifest, "head", [])
 
-    def test_panel_identity_accepts_explicit_non_v02_hash(self):
+    def test_panel_identity_accepts_canonical_expected_hash(self):
         with tempfile.TemporaryDirectory() as directory:
             panel = Path(directory) / "panel.json"
             panel.write_text('["v0.3/task"]\n')

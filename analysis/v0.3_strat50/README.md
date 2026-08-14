@@ -73,7 +73,6 @@ python3 scripts/run_strat50.py \
   --benchmark-head d46684dcaf04a8d24dabee3330df1aea517c3a54 \
   --benchmark-manifest benchmark-versions/v0.3.json \
   --panel analysis/v0.3_strat50/panel.json \
-  --panel-sha256 6921cc27d522ecbfd0798e9bca9251526f10923855cc28dde4b22507f92eaf25 \
   --output results/v0.3-strat50/<cohort-id> \
   --model <exact-model-id> \
   --max-attempts 16 \

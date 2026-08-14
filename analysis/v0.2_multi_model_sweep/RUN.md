@@ -25,7 +25,6 @@ python3 scripts/run_strat50.py \
   --benchmark-head c5a2344b121040445ccd745a3f839548ca8f9158 \
   --benchmark-manifest benchmark-versions/v0.2.json \
   --panel analysis/v0.2_multi_model_sweep/strat50/panel.json \
-  --panel-sha256 ddb8459aa158d5a0271ba73046bc53bad6768cfff7cd4b3c3f7b0887ed9e3865 \
   --output results/strat50-p4 \
   --model zai/glm-5.2 \
   --model kimi/k3 \

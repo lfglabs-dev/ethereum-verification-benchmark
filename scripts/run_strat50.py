@@ -21,6 +21,24 @@ from pathlib import Path
 VALID = {"SOLVED", "GENUINE_FAIL"}
 INFRA = {"INFRA_INVALID", "preflight_failed", "provider_setup_error"}
 SECRET_ENV_MARKERS = ("KEY", "TOKEN", "SECRET", "PASSWORD", "CREDENTIAL")
+CANONICAL_STRAT50 = {
+    "0.2": {
+        "benchmark_head": "c5a2344b121040445ccd745a3f839548ca8f9158",
+        "benchmark_manifest_sha256": "04552f2fb5ea7b743c9ed8b09019878d4758efca0bec8e9b3031ccc1d65fcc5b",
+        "panel_sha256": "ddb8459aa158d5a0271ba73046bc53bad6768cfff7cd4b3c3f7b0887ed9e3865",
+        "task_set_id": "sha256:ddfd5ad518a6cb840be16a04651f6d5db81690023dda9953250a70e6da8009fe",
+        "environment_id": "sha256:63ba1672d2c275905329bcd2b7188d7a75eb3431492debccb5953ce4742ff41e",
+        "harness_id": "sha256:244bbf5ca68050dd4a7e56bdb794a68bc01a74d169828039e0943e511f65f867",
+    },
+    "0.3": {
+        "benchmark_head": "d46684dcaf04a8d24dabee3330df1aea517c3a54",
+        "benchmark_manifest_sha256": "98961c8ab23a4855d9eb4422b3a0d87517249ea4c8c98cc6f717cdb8ad7c942e",
+        "panel_sha256": "6921cc27d522ecbfd0798e9bca9251526f10923855cc28dde4b22507f92eaf25",
+        "task_set_id": "sha256:ad4a77b5d7176edf532b7baab1a376df92416dee9ecd973eaffe3525bd88072b",
+        "environment_id": "sha256:c2b6593676b790a2ce3e0ba258b70438e286b809ff26811fe4099ff6d8dd897a",
+        "harness_id": "sha256:98bbe897aa65ec83d32d577a183cea1a21ba6122851048d4c591f3f55c10c729",
+    },
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -34,11 +52,7 @@ def parse_args() -> argparse.Namespace:
         required=True,
         help="version manifest whose commit and task set define this cohort",
     )
-    p.add_argument(
-        "--panel-sha256",
-        required=True,
-        help="expected lowercase SHA-256 of the exact panel JSON bytes",
-    )
+
     p.add_argument("--model", action="append", required=True, dest="models")
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--max-attempts", type=int, default=16)
@@ -78,7 +92,10 @@ def validate_panel_identity(path: Path, expected_sha256: str) -> str:
 
 
 def benchmark_identity(
-    manifest_path: Path, benchmark_head: str, panel_tasks: list[str]
+    manifest_path: Path,
+    benchmark_head: str,
+    panel_tasks: list[str],
+    canonical_panels: dict[str, dict[str, str]] = CANONICAL_STRAT50,
 ) -> dict[str, object]:
     manifest_bytes = manifest_path.read_bytes()
     manifest = json.loads(manifest_bytes)
@@ -97,12 +114,28 @@ def benchmark_identity(
     missing = [key for key in required if not manifest.get(key)]
     if missing:
         raise SystemExit(f"benchmark manifest is missing identity fields: {missing}")
-    return {
-        "benchmark_version": manifest["benchmark_version"],
+    version = manifest["benchmark_version"]
+    canonical = canonical_panels.get(version)
+    if not canonical:
+        raise SystemExit(f"no canonical STRAT-50 identity registered for v{version}")
+    actual_identity = {
+        "benchmark_head": benchmark_head,
         "benchmark_manifest_sha256": hashlib.sha256(manifest_bytes).hexdigest(),
         "task_set_id": manifest["task_set_id"],
         "environment_id": manifest["environment_id"],
         "harness_id": manifest["harness_id"],
+    }
+    mismatches = {
+        key: {"expected": canonical[key], "actual": actual_identity[key]}
+        for key in actual_identity
+        if actual_identity[key] != canonical[key]
+    }
+    if mismatches:
+        raise SystemExit(f"benchmark identity is not canonical STRAT-50 v{version}: {mismatches}")
+    return {
+        "benchmark_version": version,
+        **actual_identity,
+        "canonical_panel_sha256": canonical["panel_sha256"],
     }
 
 
@@ -149,7 +182,9 @@ def main() -> int:
     args.output.mkdir(parents=True, exist_ok=True)
     results_path = args.output / "results.json"
     state_path = args.output / "cohort.json"
-    panel_sha256 = validate_panel_identity(args.panel, args.panel_sha256)
+    panel_sha256 = validate_panel_identity(
+        args.panel, str(manifest_identity.pop("canonical_panel_sha256"))
+    )
     unknown_omit_stop_models = set(args.omit_stop_model) - set(args.models)
     if unknown_omit_stop_models:
         raise SystemExit(f"omit-stop configured for absent models: {sorted(unknown_omit_stop_models)}")
