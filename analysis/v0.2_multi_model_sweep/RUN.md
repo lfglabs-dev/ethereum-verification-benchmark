@@ -22,6 +22,8 @@ checkout. The controller fails closed if the execution HEAD differs:
 ```bash
 python3 scripts/run_strat50.py \
   --workdir /tmp/benchmark-v0.2 \
+  --benchmark-head c5a2344b121040445ccd745a3f839548ca8f9158 \
+  --benchmark-manifest benchmark-versions/v0.2.json \
   --panel analysis/v0.2_multi_model_sweep/strat50/panel.json \
   --output results/strat50-p4 \
   --model zai/glm-5.2 \
