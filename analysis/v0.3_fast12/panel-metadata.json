@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "panel_id": "FAST-12",
+  "benchmark_version": "0.3",
+  "benchmark_git_sha": "d46684dcaf04a8d24dabee3330df1aea517c3a54",
+  "manifest_task_count": 263,
+  "task_set_id": "sha256:ad4a77b5d7176edf532b7baab1a376df92416dee9ecd973eaffe3525bd88072b",
+  "environment_id": "sha256:c2b6593676b790a2ce3e0ba258b70438e286b809ff26811fe4099ff6d8dd897a",
+  "harness_id": "sha256:98bbe897aa65ec83d32d577a183cea1a21ba6122851048d4c591f3f55c10c729",
+  "selection": {
+    "algorithm": "prefix-of-strat50-v1",
+    "seed": 42,
+    "panel_size": 12,
+    "case_count": 41,
+    "case_coverage": 9,
+    "source_panel": "STRAT-50",
+    "source_panel_sha256": "sha256:6921cc27d522ecbfd0798e9bca9251526f10923855cc28dde4b22507f92eaf25",
+    "note": "Deterministic prefix (lexicographic) of the canonical STRAT-50 panel for fast canary/preflight. Not independently stratified; strictly subset of STRAT-50."
+  },
+  "dimensions": {
+    "difficulty": {
+      "easy": 4,
+      "hard": 4,
+      "medium": 4
+    },
+    "category": {
+      "access_control": 2,
+      "accounting": 1,
+      "arithmetic-invariant": 2,
+      "control-flow": 2,
+      "flash-loan": 1,
+      "invariant": 1,
+      "lazy_accrual_invariant": 1,
+      "state-transition": 1,
+      "swap_rounding_invariant": 1
+    },
+    "proof_family": {
+      "authorization_enablement": 2,
+      "functional_correctness": 2,
+      "refinement_equivalence": 4,
+      "state_preservation_local_effects": 4
+    },
+    "property_class": {
+      "access_control_authorization": 2,
+      "accounting_bound": 2,
+      "accounting_conservation": 1,
+      "arithmetic_rounding": 1,
+      "batch_completeness": 1,
+      "cross_contract_fee_accounting": 1,
+      "exploit_trace": 1,
+      "fee_conservation": 1,
+      "length_invariant": 1,
+      "monotonic_counter": 1
+    }
+  },
+  "tasks": [
+    "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+    "alchemix/earmark_conservation/earmark_preserves_invariant",
+    "aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_target",
+    "aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_caller",
+    "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+    "cork/pool_solvency/solvency_preserved",
+    "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+    "enzyme/onyx_fee_handler/settle_dynamic_fees_exact_accounting",
+    "erc4337/entry_point_invariant/all_validated_on_success",
+    "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+    "erc4337/entry_point_invariant/no_beneficiary_payout_on_revert",
+    "ethereum/deposit_contract_minimal/deposit_count"
+  ],
+  "manifest_sha256": "sha256:98961c8ab23a4855d9eb4422b3a0d87517249ea4c8c98cc6f717cdb8ad7c942e",
+  "panel_sha256": "sha256:9d0e598eef246aad4717015489568a53f983333eef05b69c05c357de017b867d"
+}

@@ -1,0 +1,14 @@
+[
+  "1inch/xycswap_curve_safety/quote_exact_in_curve_safety",
+  "alchemix/earmark_conservation/earmark_preserves_invariant",
+  "aragon_osx/execute_authorization/grant_execute_condition_rejects_wildcard_target",
+  "aragon_osx/execute_authorization/grant_root_condition_rejects_wildcard_caller",
+  "balancer/reclamm_swap_rounding/on_swap_fixed_virtual_balances_product_non_decreasing",
+  "cork/pool_solvency/solvency_preserved",
+  "damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool",
+  "enzyme/onyx_fee_handler/settle_dynamic_fees_exact_accounting",
+  "erc4337/entry_point_invariant/all_validated_on_success",
+  "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+  "erc4337/entry_point_invariant/no_beneficiary_payout_on_revert",
+  "ethereum/deposit_contract_minimal/deposit_count"
+]
