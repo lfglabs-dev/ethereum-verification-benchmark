@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: callback_y_then_compound_sell_x_old_snapshot_preserves_accounting
+case_id: doppler/multicurve_fee_conservation
+split: active
+family_id: doppler
+implementation_id: damm_multicurve_full_range_rehype
+source_ref: https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackYThenCompoundSellXOldSnapshot_preserves_accounting
+proof_family: state_preservation_local_effects
+property_class: accounting_conservation
+difficulty: hard
+category: snapshot_callback_composition
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/doppler/multicurve_fee_conservation/verity/Contract.lean
+  - Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean
+specification_files:
+  - cases/doppler/multicurve_fee_conservation/verity/Specs.lean
+  - Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean
+editable_files:
+  - Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackYThenCompoundSellXOldSnapshotPreservesAccounting.lean
+reference_solution_module: Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs
+reference_solution_declaration: Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackYThenCompoundSellXOldSnapshot_preserves_accounting
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Bounds old processing against pre-callback carry so next-carry additions cannot be consumed by the old snapshot.
+unsupported_feature_codes:
+  - external_damm_calls_abstracted
+  - checked_uint_arithmetic_as_nat
+  - proof_ghost_terminal_counters

@@ -1,0 +1,15 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: doppler
+implementation_id: damm_multicurve_full_range_rehype
+display_name: DAMM Multicurve FullRangeFeeRehype
+split: active
+status: translated
+upstream_repo: https://github.com/whetstoneresearch/damm
+upstream_commit: 6424187967f93df1185f435f3adbcac0ce8fc7ec
+source_language: solidity
+source_artifact_path: src/supported/grid-full-range/FullRangeFeeRehype.sol
+case_ids:
+  - doppler/multicurve_fee_conservation
+notes: >
+  Multicurve full-range LP fee manager accounting and deferred carry transitions.

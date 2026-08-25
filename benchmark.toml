@@ -23,6 +23,7 @@ active_cases = [
   "balancer/reclamm_swap_rounding",
   "cork/pool_solvency",
   "damn_vulnerable_defi/side_entrance",
+  "doppler/multicurve_fee_conservation",
   "enzyme/onyx_fee_handler",
   "erc4337/entry_point_invariant",
   "ethereum/deposit_contract_minimal",
