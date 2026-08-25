@@ -20,6 +20,7 @@ active_cases = [
   "1inch/xycswap_curve_safety",
   "alchemix/earmark_conservation",
   "aragon_osx/execute_authorization",
+  "ascnt/dynamic_fee_path_additivity",
   "balancer/reclamm_swap_rounding",
   "cork/pool_solvency",
   "damn_vulnerable_defi/side_entrance",

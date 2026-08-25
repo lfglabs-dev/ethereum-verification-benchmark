@@ -1,0 +1,47 @@
+manifest_kind: case
+project: ascnt
+case_id: dynamic_fee_path_additivity
+schema_version: 1
+split: active
+family_id: ascnt
+implementation_id: simhook_v1
+stage: build_green
+translation_status: translated
+spec_status: draft
+proof_status: complete
+upstream_repo: https://github.com/ascntlabs/v1-core-audit
+upstream_commit: 87ddf6ba464f00548c449681755050343df89322
+original_contract_path: src/SimHook.sol
+source_ref: https://github.com/ascntlabs/v1-core-audit@87ddf6ba464f00548c449681755050343df89322:src/SimHook.sol
+lean_target: Benchmark.Cases.Ascnt.DynamicFeePathAdditivity.Compile
+spec_target: Benchmark.Cases.Ascnt.DynamicFeePathAdditivity.Specs
+proof_target: Benchmark.Cases.Ascnt.DynamicFeePathAdditivity.Proofs
+selected_functions:
+  - calculateDynamicFee
+  - addSaturating
+  - addSaturatingUint
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - pure_fee_arithmetic
+  - signed_accumulator_as_int
+  - source_bounds_explicit
+  - same_block_realized_equals_simulated
+abstraction_notes: >
+  Preserves every calculateDynamicFee branch, source floor division, saturating
+  accumulator transition, midpoint cap, and final clamps. Callback plumbing is
+  reduced to the exact same-block accumulator transition under the scoped normal
+  execution assumption that realized and simulated impacts agree. The exact
+  equality/no-cheaper claim is false for configurePool-admissible weights:
+  kPips=1000000, cPips=1000000, cum=-1, and two impact-1 toxic-flow legs
+  yield split amount 3 versus one-shot amount 4, with every raw rate strictly
+  between the effective-minimum and maximum clamps.
+unsupported_feature_codes:
+  - solidity_word_types_bounded_by_explicit_scope
+  - swap_callback_plumbing_reduced_to_accumulator_transition
+notes: >
+  Terminal status is COUNTEREXAMPLE, machine-checked in Proofs.lean without
+  sorry or axioms. The reference task proves the concrete negation rather than
+  weakening the requested invariant with rounding slack.

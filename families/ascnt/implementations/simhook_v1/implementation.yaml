@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: ascnt
+implementation_id: simhook_v1
+display_name: Ascnt SimHook v1
+split: active
+status: translated
+upstream_repo: https://github.com/ascntlabs/v1-core-audit
+upstream_commit: 87ddf6ba464f00548c449681755050343df89322
+source_language: solidity
+source_artifact_path: src/SimHook.sol
+case_ids:
+  - ascnt/dynamic_fee_path_additivity
+notes: >
+  Models the dynamic midpoint-fee arithmetic in SimHook.calculateDynamicFee and
+  its HookMath saturating accumulator helpers.
