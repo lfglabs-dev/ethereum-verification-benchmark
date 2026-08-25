@@ -25,7 +25,7 @@ selected_functions:
   - releaseClosedMarketCredit
 source_language: solidity
 verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
-lean_toolchain: leanprover/lean4:v4.24.0
+lean_toolchain: leanprover/lean4:v4.31.0
 abstraction_level: protocol_slice
 abstraction_tags:
   - checked_uint_arithmetic_as_nat
@@ -33,12 +33,18 @@ abstraction_tags:
   - beneficiary_iteration_aggregated
   - proof_ghost_terminal_counters
   - single_market_projection
+  - global_other_market_reservation_summary
 abstraction_notes: >
   Models both halves of INV-REH-1: reservation/carry equality and live manager-credit
   coverage, plus the stronger terminal partition across carry, beneficiary payments,
-  and LP compounding. Successful DAMM calls provide checked spent/received/provided
-  amounts; reverting legs are identity deferrals. Callback-during-processing theorems
-  preserve snapshot isolation by bounding old processing against the pre-callback row.
+  and LP compounding. The modeled market's reservation remains equal to its carry;
+  unchanged other-market reservations are summarized so manager-credit coverage is
+  checked against the token-wide reservation total. Successful DAMM calls provide
+  checked spent/received/provided amounts. An individual reverting leg is an identity,
+  while prior successful conversion or balancing deltas remain represented by their
+  non-identity transitions even if processFees ultimately returns false.
+  Callback-during-processing theorems preserve snapshot isolation by bounding old
+  processing against the pre-callback row.
   Price execution and unrelated Multicurve invariants are excluded.
 unsupported_feature_codes:
   - external_damm_calls_abstracted

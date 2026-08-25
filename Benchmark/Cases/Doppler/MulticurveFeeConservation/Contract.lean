@@ -16,10 +16,11 @@ Register match: `INV-REH-1 — Reservations are complete and covered`.
   uses checked casts, checked additions/subtractions, and reverts on overflow or
   underflow. Each modeled transition takes the corresponding ordering/equality
   preconditions, so the successful arithmetic branch is exact and unbounded.
-* One registered market and its two token denominations are modeled. The global
-  `reservedCredit[token] == Σ market carry` equation reduces to equality with
-  this market's carry. Market isolation makes the per-market preservation
-  lemmas compositional under summation across registered markets.
+* One registered market and its two token denominations are modeled directly.
+  `otherReservedX/otherReservedY` summarize the unchanged carry reservations of
+  every other registered market sharing those tokens. This keeps INV-REH-1's
+  manager-credit coverage check global rather than incorrectly inferring a
+  token-wide bound from one market's pointwise bound.
 * DAMM calls are represented by their successful returned `spent`, `received`,
   and provided amounts. Reverting swap/provide legs are the identity/deferred
   transition, matching the Solidity `try/catch` behavior. Price execution is
@@ -56,8 +57,12 @@ structure FeeRouteCarry where
 
 structure RehypeAccounting where
   carry : FeeRouteCarry
+  /-- Reservation contributed by the modeled market; equal to its carry. -/
   reservedX : Nat
   reservedY : Nat
+  /-- Aggregate reservations of all other registered markets sharing X/Y. -/
+  otherReservedX : Nat
+  otherReservedY : Nat
   /-- DAMM credit owned by the fee manager in token X/Y at settled boundaries. -/
   managerCreditX : Nat
   managerCreditY : Nat
@@ -78,6 +83,12 @@ def carryX (s : RehypeAccounting) : Nat :=
 
 def carryY (s : RehypeAccounting) : Nat :=
   s.carry.toX.y + s.carry.toY.y + s.carry.lp.y
+
+def totalReservedX (s : RehypeAccounting) : Nat :=
+  s.reservedX + s.otherReservedX
+
+def totalReservedY (s : RehypeAccounting) : Nat :=
+  s.reservedY + s.otherReservedY
 
 /-- Source `_onSwapFeeReceived`, token-X branch after exact WAD routing. -/
 def _onSwapFeeReceivedX
@@ -103,7 +114,9 @@ def _onSwapFeeReceivedY
     managerCreditY := s.managerCreditY + fee
     originY := s.originY + fee }
 
-/-- `processFees` terminal branch when every leg defers. -/
+/-- `processFees` terminal branch when no external leg succeeds and every carry
+cell is unchanged. A `false` result after a successful conversion or balancing
+swap is represented by the corresponding non-identity transition below. -/
 def processFeesDeferred (s : RehypeAccounting) : RehypeAccounting := s
 
 /--

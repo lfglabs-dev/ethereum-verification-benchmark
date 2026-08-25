@@ -6,9 +6,9 @@ namespace Benchmark.Cases.Doppler.MulticurveFeeConservation
 def reservationMatchesCarry (s : RehypeAccounting) : Prop :=
   s.reservedX = carryX s ∧ s.reservedY = carryY s
 
-/-- INV-REH-1's live-credit coverage at settled boundaries. -/
+/-- INV-REH-1's token-wide live-credit coverage at settled boundaries. -/
 def creditCoversReservations (s : RehypeAccounting) : Prop :=
-  s.reservedX ≤ s.managerCreditX ∧ s.reservedY ≤ s.managerCreditY
+  totalReservedX s ≤ s.managerCreditX ∧ totalReservedY s ≤ s.managerCreditY
 
 /--
 Fee conservation by current denomination: every credited fee unit is either

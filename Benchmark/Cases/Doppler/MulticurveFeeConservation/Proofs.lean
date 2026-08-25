@@ -7,7 +7,7 @@ set_option autoImplicit false
 private theorem unpackInvariant {s : RehypeAccounting}
     (h : rehypeFeeAccountingInvariant s) :
     s.reservedX = carryX s ∧ s.reservedY = carryY s ∧
-    s.reservedX ≤ s.managerCreditX ∧ s.reservedY ≤ s.managerCreditY ∧
+    totalReservedX s ≤ s.managerCreditX ∧ totalReservedY s ≤ s.managerCreditY ∧
     s.originX = carryX s + s.paidX + s.compoundedX ∧
     s.originY = carryY s + s.paidY + s.compoundedY := by
   rcases h with ⟨⟨hrx, hry⟩, ⟨hcx, hcy⟩, hox, hoy⟩
@@ -20,7 +20,7 @@ theorem onSwapFeeReceivedX_preserves_accounting
     rehypeFeeAccountingInvariant (_onSwapFeeReceivedX s fee stay convert lp) := by
   rcases unpackInvariant hInv with ⟨hrx, hry, hcx, hcy, hox, hoy⟩
   simp [rehypeFeeAccountingInvariant, reservationMatchesCarry, creditCoversReservations, feeConservation,
-    _onSwapFeeReceivedX, carryX, carryY] at *
+    _onSwapFeeReceivedX, carryX, carryY, totalReservedX, totalReservedY] at *
   omega
 
 theorem onSwapFeeReceivedY_preserves_accounting
@@ -30,7 +30,7 @@ theorem onSwapFeeReceivedY_preserves_accounting
     rehypeFeeAccountingInvariant (_onSwapFeeReceivedY s fee stay convert lp) := by
   rcases unpackInvariant hInv with ⟨hrx, hry, hcx, hcy, hox, hoy⟩
   simp [rehypeFeeAccountingInvariant, reservationMatchesCarry, creditCoversReservations, feeConservation,
-    _onSwapFeeReceivedY, carryX, carryY] at *
+    _onSwapFeeReceivedY, carryX, carryY, totalReservedX, totalReservedY] at *
   omega
 
 theorem processFees_fullyDeferred_preserves_accounting
@@ -45,7 +45,7 @@ theorem convertForwardXToY_partial_preserves_accounting
     rehypeFeeAccountingInvariant (convertForwardXToYAndSettle s spent received) := by
   rcases unpackInvariant hInv with ⟨hrx, hry, hcx, hcy, hox, hoy⟩
   simp [rehypeFeeAccountingInvariant, reservationMatchesCarry, creditCoversReservations, feeConservation,
-    convertForwardXToYAndSettle, carryX, carryY] at *
+    convertForwardXToYAndSettle, carryX, carryY, totalReservedX, totalReservedY] at *
   omega
 
 theorem convertForwardYToX_partial_preserves_accounting
@@ -55,7 +55,7 @@ theorem convertForwardYToX_partial_preserves_accounting
     rehypeFeeAccountingInvariant (convertForwardYToXAndSettle s spent received) := by
   rcases unpackInvariant hInv with ⟨hrx, hry, hcx, hcy, hox, hoy⟩
   simp [rehypeFeeAccountingInvariant, reservationMatchesCarry, creditCoversReservations, feeConservation,
-    convertForwardYToXAndSettle, carryX, carryY] at *
+    convertForwardYToXAndSettle, carryX, carryY, totalReservedX, totalReservedY] at *
   omega
 
 /-- A callback that arrives during processing is written into next carry before
@@ -96,7 +96,7 @@ theorem settleMarketForwards_preserves_accounting
     rehypeFeeAccountingInvariant (_settleMarketForwards s forwardedX forwardedY) := by
   rcases unpackInvariant hInv with ⟨hrx, hry, hcx, hcy, hox, hoy⟩
   simp [rehypeFeeAccountingInvariant, reservationMatchesCarry, creditCoversReservations, feeConservation,
-    _settleMarketForwards, carryX, carryY] at *
+    _settleMarketForwards, carryX, carryY, totalReservedX, totalReservedY] at *
   omega
 
 theorem compoundLiquiditySellX_partial_preserves_accounting
@@ -109,7 +109,7 @@ theorem compoundLiquiditySellX_partial_preserves_accounting
       (_compoundLiquiditySellX s spent received providedX providedY) := by
   rcases unpackInvariant hInv with ⟨hrx, hry, hcx, hcy, hox, hoy⟩
   simp [rehypeFeeAccountingInvariant, reservationMatchesCarry, creditCoversReservations, feeConservation,
-    _compoundLiquiditySellX, carryX, carryY] at *
+    _compoundLiquiditySellX, carryX, carryY, totalReservedX, totalReservedY] at *
   omega
 
 theorem compoundLiquiditySellY_partial_preserves_accounting
@@ -122,7 +122,7 @@ theorem compoundLiquiditySellY_partial_preserves_accounting
       (_compoundLiquiditySellY s spent received providedX providedY) := by
   rcases unpackInvariant hInv with ⟨hrx, hry, hcx, hcy, hox, hoy⟩
   simp [rehypeFeeAccountingInvariant, reservationMatchesCarry, creditCoversReservations, feeConservation,
-    _compoundLiquiditySellY, carryX, carryY] at *
+    _compoundLiquiditySellY, carryX, carryY, totalReservedX, totalReservedY] at *
   omega
 
 /-- An X callback written into next carry cannot be consumed by the old
@@ -250,7 +250,7 @@ theorem releaseClosedMarketCredit_preserves_accounting
     rehypeFeeAccountingInvariant (releaseClosedMarketCredit s) := by
   rcases unpackInvariant hInv with ⟨hrx, hry, hcx, hcy, hox, hoy⟩
   simp [rehypeFeeAccountingInvariant, reservationMatchesCarry, creditCoversReservations, feeConservation,
-    releaseClosedMarketCredit, carryX, carryY] at *
+    releaseClosedMarketCredit, carryX, carryY, totalReservedX, totalReservedY] at *
   omega
 
 end Benchmark.Cases.Doppler.MulticurveFeeConservation
