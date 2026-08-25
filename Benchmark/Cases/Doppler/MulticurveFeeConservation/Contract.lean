@@ -21,6 +21,8 @@ Register match: `INV-REH-1 — Reservations are complete and covered`.
   every other registered market sharing those tokens. This keeps INV-REH-1's
   manager-credit coverage check global rather than incorrectly inferring a
   token-wide bound from one market's pointwise bound.
+* `tokenX` and `tokenY` are represented as distinct token denominations.
+  Same-address token-pair aliasing is outside this accounting projection.
 * DAMM calls are represented by their successful returned `spent`, `received`,
   and provided amounts. Reverting swap/provide legs are the identity/deferred
   transition, matching the Solidity `try/catch` behavior. Price execution is

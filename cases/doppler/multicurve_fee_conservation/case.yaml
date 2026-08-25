@@ -34,6 +34,7 @@ abstraction_tags:
   - proof_ghost_terminal_counters
   - single_market_projection
   - global_other_market_reservation_summary
+  - distinct_token_denominations
 abstraction_notes: >
   Models both halves of INV-REH-1: reservation/carry equality and live manager-credit
   coverage, plus the stronger terminal partition across carry, beneficiary payments,
@@ -45,6 +46,8 @@ abstraction_notes: >
   non-identity transitions even if processFees ultimately returns false.
   Callback-during-processing theorems preserve snapshot isolation by bounding old
   processing against the pre-callback row.
+  Token X and token Y are represented as distinct denominations; same-address
+  token-pair aliasing is excluded.
   Price execution and unrelated Multicurve invariants are excluded.
 unsupported_feature_codes:
   - external_damm_calls_abstracted
