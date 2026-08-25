@@ -1,0 +1,49 @@
+manifest_kind: case
+project: doppler
+case_id: multicurve_fee_conservation
+schema_version: 1
+split: active
+family_id: doppler
+implementation_id: damm_multicurve_full_range_rehype
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/whetstoneresearch/damm
+upstream_commit: 6424187967f93df1185f435f3adbcac0ce8fc7ec
+original_contract_path: src/supported/grid-full-range/FullRangeFeeRehype.sol
+source_ref: https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol
+lean_target: Benchmark.Cases.Doppler.MulticurveFeeConservation.Compile
+spec_target: Benchmark.Cases.Doppler.MulticurveFeeConservation.Specs
+proof_target: Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs
+selected_functions:
+  - _onSwapFeeReceived
+  - processFees
+  - _convertForwardBudget
+  - _compoundLiquidity
+  - _settleMarketForwards
+  - releaseClosedMarketCredit
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.24.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - checked_uint_arithmetic_as_nat
+  - external_damm_calls_abstracted
+  - beneficiary_iteration_aggregated
+  - proof_ghost_terminal_counters
+  - single_market_projection
+abstraction_notes: >
+  Models both halves of INV-REH-1: reservation/carry equality and live manager-credit
+  coverage, plus the stronger terminal partition across carry, beneficiary payments,
+  and LP compounding. Successful DAMM calls provide checked spent/received/provided
+  amounts; reverting legs are identity deferrals. Callback-during-processing theorems
+  preserve snapshot isolation by bounding old processing against the pre-callback row.
+  Price execution and unrelated Multicurve invariants are excluded.
+unsupported_feature_codes:
+  - external_damm_calls_abstracted
+  - checked_uint_arithmetic_as_nat
+  - proof_ghost_terminal_counters
+notes: >
+  FullRangeFeeRehype fee conservation: routed fee credit cannot disappear or be
+  consumed twice; unspent or failed-leg value remains in carry.

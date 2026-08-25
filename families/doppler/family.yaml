@@ -1,0 +1,14 @@
+manifest_kind: family
+schema_version: 1
+family_id: doppler
+display_name: Doppler
+split: active
+status: active
+description: >
+  Doppler DAMM Multicurve accounting benchmarks.
+implementation_ids:
+  - damm_multicurve_full_range_rehype
+case_ids:
+  - doppler/multicurve_fee_conservation
+source_languages:
+  - solidity
