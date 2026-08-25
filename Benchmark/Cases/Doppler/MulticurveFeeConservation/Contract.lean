@@ -24,8 +24,9 @@ Register match: `INV-REH-1 — Reservations are complete and covered`.
 * `tokenX` and `tokenY` are represented as distinct token denominations.
   Same-address token-pair aliasing is outside this accounting projection.
 * DAMM calls are represented by their successful returned `spent`, `received`,
-  and provided amounts. Reverting swap/provide legs are the identity/deferred
-  transition, matching the Solidity `try/catch` behavior. Price execution is
+  and provided amounts. Swap/provide failures caught by the source `try/catch`
+  are the identity/deferred transition for that leg. Uncaught failures have no
+  successful successor state because the invocation reverts atomically. Price execution is
   intentionally out of scope; the contract itself states that it guarantees
   credit accounting, not execution price.
 * `originX/originY`, `paidX/paidY`, and `compoundedX/compoundedY` are proof-only
@@ -41,9 +42,10 @@ Register match: `INV-REH-1 — Reservations are complete and covered`.
   the aggregate forwarded amount on every successful call.
 
 The model preserves source function/helper boundaries for the scoped accounting
-transitions: `_onSwapFeeReceived`, `processFees`' fully deferred result,
-`_convertForwardBudget` followed by `_settleMarketForwards`,
-`_compoundLiquidity`, and `releaseClosedMarketCredit`.
+transitions: `_onSwapFeeReceived`, the strict fully deferred branch and complete
+finite accounting-outcome composition for `processFees`, `_convertForwardBudget`
+followed by `_settleMarketForwards`, `_compoundLiquidity`, and
+`releaseClosedMarketCredit`.
 -/
 
 structure TokenAmounts where
@@ -275,13 +277,13 @@ def processFeesProcessed (s : RehypeAccounting) (p : ProcessFeesPlan) : Bool :=
     lpLiquidityAdded p.lp != 0)
 
 /--
-Settled-boundary effect of one complete `processFees` invocation. Same-token
+Settled-boundary accounting-outcome abstraction for one `processFees` invocation. Same-token
 snapshot settlement is normalized first, followed by the two independent
 forward-conversion outcomes and the optional LP outcome. Aggregate nested
 callback additions are normalized to the end because the source writes them to
 next carry and old-snapshot processing may not consume them. This retains every
 independent success/defer combination, including `false` after a successful
-conversion or balancing swap.
+conversion or balancing swap. It does not encode or prove source-branch reachability.
 -/
 def processFeesStep (s : RehypeAccounting) (p : ProcessFeesPlan) : Bool × RehypeAccounting :=
   let s0 := _settleMarketForwards s s.carry.toX.x s.carry.toY.y

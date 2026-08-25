@@ -41,7 +41,7 @@ abstraction_notes: >
   and LP compounding. The modeled market's reservation remains equal to its carry;
   unchanged other-market reservations are summarized so manager-credit coverage is
   checked against the token-wide reservation total. Successful DAMM calls provide
-  checked spent/received/provided amounts. An individual reverting leg is an identity,
+  checked spent/received/provided amounts. An individual caught swap/provide failure is an identity,
   while prior successful conversion or balancing deltas remain represented by their
   non-identity transitions even if processFees ultimately returns false.
   Callback-during-processing theorems preserve snapshot isolation by bounding old

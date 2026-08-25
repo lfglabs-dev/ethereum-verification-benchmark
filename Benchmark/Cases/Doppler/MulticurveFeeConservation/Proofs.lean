@@ -316,8 +316,9 @@ private theorem processFeesProcessed_false_after_balancing_swap
     processFeesProcessed s p = false := by
   simp [processFeesProcessed, forwardReceived, lpLiquidityAdded, hSameX, hSameY]
 
-/-- Complete finite `processFees` branch product, including independent forward
-success/defer outcomes, all LP outcomes, callback merge, and both Boolean results. -/
+/-- Finite modeled `processFees` accounting-outcome composition, including
+independent forward success/defer outcomes, all LP outcomes, callback merge,
+and both Boolean results. This does not prove source-branch reachability. -/
 theorem processFeesStep_preserves_accounting
     (s : RehypeAccounting) (p : ProcessFeesPlan)
     (hInv : rehypeFeeAccountingInvariant s)

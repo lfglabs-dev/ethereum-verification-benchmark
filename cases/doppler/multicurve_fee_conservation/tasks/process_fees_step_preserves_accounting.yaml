@@ -30,8 +30,9 @@ abstraction_level: protocol_slice
 abstraction_notes: >
   Mechanically composes both independently succeeding/deferred forward conversions,
   all LP balancing/provide outcomes, same-token settlement, and aggregate callback
-  merge into one complete processFees settled-boundary transition. The Boolean result
-  includes false-after-successful-swap paths.
+  merge into one finite modeled processFees accounting-outcome composition. The
+  Boolean result includes false-after-successful-swap paths. Source-branch
+  reachability and control-flow equivalence are not proved.
 unsupported_feature_codes:
   - external_damm_calls_abstracted
   - checked_uint_arithmetic_as_nat

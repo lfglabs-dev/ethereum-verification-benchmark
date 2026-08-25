@@ -28,8 +28,9 @@ reference_solution_module: Benchmark.Cases.Doppler.MulticurveFeeConservation.Pro
 reference_solution_declaration: Benchmark.Cases.Doppler.MulticurveFeeConservation.processFees_fullyDeferred_preserves_accounting
 abstraction_level: protocol_slice
 abstraction_notes: >
-  Successful arithmetic transition for FullRangeFeeRehype INV-REH-1; external
-  DAMM execution is represented by checked spent, received, and provided amounts.
+  Models only the strict no-success terminal branch in which every carry cell is
+  unchanged. False-after-successful-swap outcomes are covered by the separate
+  processFeesStep composition task.
 unsupported_feature_codes:
   - external_damm_calls_abstracted
   - checked_uint_arithmetic_as_nat
