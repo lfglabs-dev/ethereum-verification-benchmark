@@ -210,4 +210,84 @@ def releaseClosedMarketCredit (s : RehypeAccounting) : RehypeAccounting :=
     paidX := s.paidX + x
     paidY := s.paidY + y }
 
+/-- One independently succeeding or deferred forward-conversion leg. -/
+inductive ForwardLegOutcome where
+  | deferred
+  | converted (spent received : Nat)
+  deriving Repr, DecidableEq
+
+/-- The LP leg either fully defers or records one balancing direction and the
+exact successful swap/provide results. `liquidityAdded` is used only for the
+source-compatible `processFees` Boolean result. -/
+inductive LpLegOutcome where
+  | deferred
+  | sellX (spent received providedX providedY liquidityAdded : Nat)
+  | sellY (spent received providedX providedY liquidityAdded : Nat)
+  deriving Repr, DecidableEq
+
+/-- Finite process plan for both forward legs, the optional LP branch, and the
+aggregate nested callbacks that must merge into next carry. -/
+structure ProcessFeesPlan where
+  callbackFeeX : Nat
+  callbackStayX : Nat
+  callbackConvertX : Nat
+  callbackLpX : Nat
+  callbackFeeY : Nat
+  callbackStayY : Nat
+  callbackConvertY : Nat
+  callbackLpY : Nat
+  forwardToX : ForwardLegOutcome
+  forwardToY : ForwardLegOutcome
+  lp : LpLegOutcome
+  deriving Repr, DecidableEq
+
+def applyForwardToX (s : RehypeAccounting) : ForwardLegOutcome → RehypeAccounting
+  | .deferred => s
+  | .converted spent received => convertForwardYToXAndSettle s spent received
+
+def applyForwardToY (s : RehypeAccounting) : ForwardLegOutcome → RehypeAccounting
+  | .deferred => s
+  | .converted spent received => convertForwardXToYAndSettle s spent received
+
+def applyLpLeg (s : RehypeAccounting) : LpLegOutcome → RehypeAccounting
+  | .deferred => s
+  | .sellX spent received providedX providedY _ =>
+      _compoundLiquiditySellX s spent received providedX providedY
+  | .sellY spent received providedX providedY _ =>
+      _compoundLiquiditySellY s spent received providedX providedY
+
+def forwardReceived : ForwardLegOutcome → Nat
+  | .deferred => 0
+  | .converted _ received => received
+
+def lpLiquidityAdded : LpLegOutcome → Nat
+  | .deferred => 0
+  | .sellX _ _ _ _ liquidityAdded => liquidityAdded
+  | .sellY _ _ _ _ liquidityAdded => liquidityAdded
+
+/-- Source-compatible `processFees` return value. Successful swaps may occur
+while this is false when neither forwarding nor liquidity provision succeeds. -/
+def processFeesProcessed (s : RehypeAccounting) (p : ProcessFeesPlan) : Bool :=
+  decide (s.carry.toX.x + forwardReceived p.forwardToX != 0 ∨
+    s.carry.toY.y + forwardReceived p.forwardToY != 0 ∨
+    lpLiquidityAdded p.lp != 0)
+
+/--
+Settled-boundary effect of one complete `processFees` invocation. Same-token
+snapshot settlement is normalized first, followed by the two independent
+forward-conversion outcomes and the optional LP outcome. Aggregate nested
+callback additions are normalized to the end because the source writes them to
+next carry and old-snapshot processing may not consume them. This retains every
+independent success/defer combination, including `false` after a successful
+conversion or balancing swap.
+-/
+def processFeesStep (s : RehypeAccounting) (p : ProcessFeesPlan) : Bool × RehypeAccounting :=
+  let s0 := _settleMarketForwards s s.carry.toX.x s.carry.toY.y
+  let s1 := applyForwardToX s0 p.forwardToX
+  let s2 := applyForwardToY s1 p.forwardToY
+  let s3 := applyLpLeg s2 p.lp
+  let s4 := _onSwapFeeReceivedX s3 p.callbackFeeX p.callbackStayX p.callbackConvertX p.callbackLpX
+  let s5 := _onSwapFeeReceivedY s4 p.callbackFeeY p.callbackStayY p.callbackConvertY p.callbackLpY
+  (processFeesProcessed s p, s5)
+
 end Benchmark.Cases.Doppler.MulticurveFeeConservation
