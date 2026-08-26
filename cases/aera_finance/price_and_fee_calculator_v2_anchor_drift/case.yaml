@@ -1,0 +1,48 @@
+manifest_kind: case
+project: aera_finance
+case_id: price_and_fee_calculator_v2_anchor_drift
+schema_version: 1
+split: active
+family_id: aera_finance
+implementation_id: aera_contracts_v3
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/aera-finance/aera-contracts-public
+upstream_commit: f0ebc15985b2f19d1e599b604370fdbaeb314180
+audit_target_commit: f0ebc15985b2f19d1e599b604370fdbaeb314180
+original_contract_path: v3/src/core/PriceAndFeeCalculatorV2.sol
+source_ref: https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/PriceAndFeeCalculatorV2.sol
+lean_target: Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Compile
+spec_target: Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Specs
+proof_target: Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Proofs
+selected_functions:
+  - PriceAndFeeCalculatorV2.setAnchorPrice
+  - PriceAndFeeCalculatorV2.setDriftPrice
+  - PriceAndFeeCalculatorV2._isPriceWithinAnchorBand
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - anchor_band_arithmetic_preserved
+  - source_integer_width_no_overflow_explicit
+  - accrual_lag_pause_branch_preserved
+  - timestamp_validation_explicit_input
+  - fee_accrual_explicit_outcome
+  - evm_revert_atomicity
+abstraction_notes: >
+  Secondary control-flow slice preserving the anchor-band arithmetic and fail-safe
+  pause/revert branches, including the bad-anchor pause branch's accrual-lag write.
+  Source uint128/uint16 no-overflow facts are explicit proof premises. Timestamp
+  validity, update delay, and fee accrual are explicit boundaries.
+unsupported_feature_codes:
+  - timestamp_validation_arithmetic_not_modeled
+  - fee_accrual_not_modeled
+notes: >
+  Three reference theorems are proof-complete with no sorry and no project-defined
+  axioms; `#print axioms` reports only Lean's foundational `propext` and `Quot.sound`: successful drift
+  stays in the anchor band without mutating the anchor tuple, bad anchors pause in
+  fail-safe mode with the source accrual-lag update, and bad anchors revert atomically
+  when fail-safe mode is disabled.

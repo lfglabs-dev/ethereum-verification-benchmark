@@ -1,0 +1,61 @@
+manifest_kind: case
+project: aera_finance
+case_id: provisioner_v2_async_settlement
+schema_version: 1
+split: active
+family_id: aera_finance
+implementation_id: aera_contracts_v3
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/aera-finance/aera-contracts-public
+upstream_commit: f0ebc15985b2f19d1e599b604370fdbaeb314180
+audit_target_commit: f0ebc15985b2f19d1e599b604370fdbaeb314180
+original_contract_path: v3/src/core/ProvisionerV2.sol
+source_ref: https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/ProvisionerV2.sol
+lean_target: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Compile
+spec_target: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Specs
+proof_target: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs
+selected_functions:
+  - ProvisionerV2.requestDeposit
+  - ProvisionerV2.requestRedeem
+  - ProvisionerV2.solveRequestsVault
+  - ProvisionerV2.solveRequestsDirect
+  - ProvisionerV2.refundRequest
+  - ProvisionerV2.cancelRequest
+  - ProvisionerV2._solveDepositVaultAutoPrice
+  - ProvisionerV2._solveDepositVaultFixedPrice
+  - ProvisionerV2._solveRedeemVaultAutoPrice
+  - ProvisionerV2._solveRedeemVaultFixedPrice
+  - ProvisionerV2._solveRequestDirect
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - request_hash_collision_resistance_assumed
+  - hash_committed_fields_ghost_decomposition
+  - direct_fixed_price_gate_preserved
+  - external_erc20_balances_abstracted
+  - two_request_minimal_batch
+  - explicit_external_call_outcomes
+  - evm_revert_atomicity
+abstraction_notes: >
+  Source-structured model of async request activation and all four terminal paths.
+  Request hashes use collision-free Address keys; request fields and aggregate token/unit
+  custody are ghost or external-balance abstractions. A two-request loop is the minimum
+  batch proving that a guarded failure remains active while a later request settles.
+  The hash-committed fixed-price bit and the direct-settlement fixed-price gate are
+  explicit. External interaction failure executes whole-call rollback.
+unsupported_feature_codes:
+  - keccak_collision_resistance_not_proved
+  - external_erc20_balance_state_not_modeled
+  - unbounded_batch_induction_not_modeled
+notes: >
+  Nine reference theorems are proof-complete with no sorry and no project-defined
+  axioms; `#print axioms` reports only Lean's foundational `propext` and `Quot.sound`:
+  request creation establishes active escrow; terminal exclusivity for live vault
+  solve, live fixed-price direct solve, expired vault/direct solve-triggered refund,
+  authorized refund, and cancellation; guarded batch-failure escrow preservation;
+  and whole-batch revert rollback.

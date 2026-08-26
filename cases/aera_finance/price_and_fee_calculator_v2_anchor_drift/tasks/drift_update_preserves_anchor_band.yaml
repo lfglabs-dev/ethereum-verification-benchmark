@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: drift_update_preserves_anchor_band
+case_id: aera_finance/price_and_fee_calculator_v2_anchor_drift
+split: active
+family_id: aera_finance
+implementation_id: aera_contracts_v3
+source_ref: https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/PriceAndFeeCalculatorV2.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.drift_update_preserves_anchor_band
+proof_family: protocol_transition_correctness
+property_class: price_band_safety
+difficulty: medium
+category: price-policy
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Contract.lean
+  - Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Contract.lean
+specification_files:
+  - cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Specs.lean
+  - Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Specs.lean
+editable_files:
+  - Benchmark/Generated/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Tasks/DriftUpdatePreservesAnchorBand.lean
+reference_solution_module: Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Proofs
+reference_solution_declaration: Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.drift_update_preserves_anchor_band
+abstraction_level: protocol_slice
+abstraction_notes: >
+  See the case manifest and Contract.lean simplification table for exact boundaries.
+unsupported_feature_codes:
+  - timestamp_validation_arithmetic_not_modeled
+  - fee_accrual_not_modeled

@@ -18,6 +18,8 @@ backlog_task_glob = "backlog/*/*/tasks/*.yaml"
 result_schema = "schemas/run-result.schema.json"
 active_cases = [
   "1inch/xycswap_curve_safety",
+  "aera_finance/price_and_fee_calculator_v2_anchor_drift",
+  "aera_finance/provisioner_v2_async_settlement",
   "alchemix/earmark_conservation",
   "aragon_osx/execute_authorization",
   "balancer/reclamm_swap_rounding",

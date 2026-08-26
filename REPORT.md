@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 41
-- Implementations: 42
-- Active cases: 41
-- Buildable active cases: 41
-- Active tasks: 263
+- Families: 44
+- Implementations: 45
+- Active cases: 45
+- Buildable active cases: 45
+- Active tasks: 296
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -22,6 +22,26 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_quoteExactIn`, `swapExactIn`
 - Upstream source artifact: `examples/apps/XYCSwap.sol`
 - Notes: Benchmark case proving the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The theorem states that the output amount computed by _quoteExactIn satisfies the integer-division rounding bound: output * denominator <= feeAdjustedInput * balanceOut. This is the direct analog of the Uniswap V2 K invariant, adapted to XYCSwap's basis-points fee structure.
+
+### `aera_finance/price_and_fee_calculator_v2_anchor_drift`
+- Family / implementation: `aera_finance` / `aera_contracts_v3`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Compile`
+- Source ref: `https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/PriceAndFeeCalculatorV2.sol`
+- Selected functions: `PriceAndFeeCalculatorV2.setAnchorPrice`, `PriceAndFeeCalculatorV2.setDriftPrice`, `PriceAndFeeCalculatorV2._isPriceWithinAnchorBand`
+- Upstream source artifact: `v3/src/core/PriceAndFeeCalculatorV2.sol`
+- Notes: Three reference theorems are proof-complete with no sorry and no project-defined axioms; `#print axioms` reports only Lean's foundational `propext` and `Quot.sound`: successful drift stays in the anchor band without mutating the anchor tuple, bad anchors pause in fail-safe mode with the source accrual-lag update, and bad anchors revert atomically when fail-safe mode is disabled.
+
+### `aera_finance/provisioner_v2_async_settlement`
+- Family / implementation: `aera_finance` / `aera_contracts_v3`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Compile`
+- Source ref: `https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/ProvisionerV2.sol`
+- Selected functions: `ProvisionerV2.requestDeposit`, `ProvisionerV2.requestRedeem`, `ProvisionerV2.solveRequestsVault`, `ProvisionerV2.solveRequestsDirect`, `ProvisionerV2.refundRequest`, `ProvisionerV2.cancelRequest`, `ProvisionerV2._solveDepositVaultAutoPrice`, `ProvisionerV2._solveDepositVaultFixedPrice`, `ProvisionerV2._solveRedeemVaultAutoPrice`, `ProvisionerV2._solveRedeemVaultFixedPrice`, `ProvisionerV2._solveRequestDirect`
+- Upstream source artifact: `v3/src/core/ProvisionerV2.sol`
+- Notes: Nine reference theorems are proof-complete with no sorry and no project-defined axioms; `#print axioms` reports only Lean's foundational `propext` and `Quot.sound`: request creation establishes active escrow; terminal exclusivity for live vault solve, live fixed-price direct solve, expired vault/direct solve-triggered refund, authorized refund, and cancellation; guarded batch-failure escrow preservation; and whole-batch revert rollback.
 
 ### `alchemix/earmark_conservation`
 - Family / implementation: `alchemix` / `v3`
@@ -72,6 +92,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `deposit`, `flashLoan`, `withdraw`
 - Upstream source artifact: `contracts/side-entrance/SideEntranceLenderPool.sol`
 - Notes: Compact Side Entrance benchmark focused on the broken coherence between pool assets and withdrawable credit when flash-loan repayment is routed through the deposit path.
+
+### `doppler/multicurve_fee_conservation`
+- Family / implementation: `doppler` / `damm_multicurve_full_range_rehype`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Compile`
+- Source ref: `https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol`
+- Selected functions: `_onSwapFeeReceived`, `processFees`, `_convertForwardBudget`, `_compoundLiquidity`, `_settleMarketForwards`, `releaseClosedMarketCredit`
+- Upstream source artifact: `src/supported/grid-full-range/FullRangeFeeRehype.sol`
+- Notes: FullRangeFeeRehype fee conservation: routed fee credit cannot disappear or be consumed twice; unspent or failed-leg value remains in carry.
 
 ### `enzyme/onyx_fee_handler`
 - Family / implementation: `enzyme` / `onyx_fee_handler`
@@ -373,6 +403,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `src/daoCollateral/DaoCollateral.sol`
 - Notes: Usual USD0 DaoCollateral conservation case. It verifies that no direct swap/redeem transition can create unaccounted ghost USD0 supply or debit more ghost collateral than the contract's modeled accounting permits, modulo configured redeem fee, oracle price, CBR coefficient, token decimals, and floor rounding.
 
+### `velora/bridge_staking`
+- Family / implementation: `velora` / `bridge_staking`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Velora.BridgeStaking.Compile`
+- Source ref: `https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol`
+- Selected functions: `handleV3AcrossMessage`, `rescuePendingFunds`, `withdrawUnallocatedTokens`
+- Upstream source artifact: `contracts/BridgeStaking.sol`
+- Notes: Proofs.lean contains complete proofs from the incoming conservation invariant alone for withdrawUnallocatedTokens, rescuePendingFunds, and handleV3AcrossMessage. The proofs cover checked arithmetic, explicit guards, partial rescue flags, successful equal debits, and SafeTransferLib failure outcomes that atomically restore the incoming state. `depositResult` remains the explicit seVLR boundary input. Generated tasks retain proof holes for benchmark agents; the reference proof module contains no proof holes or Velora-specific axioms. The exact beneficiary sentinel and external-call scope are documented in Contract.lean and Specs.lean.
+
 ### `wildcat/borrow_liquidity_safety`
 - Family / implementation: `wildcat` / `v2_protocol`
 - Stage: `build_green`
@@ -438,6 +478,126 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/1inch/xycswap_curve_safety/verity/Specs.lean`, `Benchmark/Cases/OneInch/XYCSwapCurveSafety/Specs.lean`
 - Editable proof file: `Benchmark/Generated/OneInch/XYCSwapCurveSafety/Tasks/QuoteExactInCurveSafety.lean`
 - Hidden reference solution: `Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs`
+
+### `aera_finance/price_and_fee_calculator_v2_anchor_drift/bad_anchor_pause_mode`
+- Track / property class / proof family: `proof-only` / `fail_safe_pause` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.bad_anchor_pause_mode`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Contract.lean`
+- Specification files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Tasks/BadAnchorPauseMode.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Proofs`
+
+### `aera_finance/price_and_fee_calculator_v2_anchor_drift/bad_anchor_revert_mode`
+- Track / property class / proof family: `proof-only` / `rollback_safety` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.bad_anchor_revert_mode`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Contract.lean`
+- Specification files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Tasks/BadAnchorRevertMode.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Proofs`
+
+### `aera_finance/price_and_fee_calculator_v2_anchor_drift/drift_update_preserves_anchor_band`
+- Track / property class / proof family: `proof-only` / `price_band_safety` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.drift_update_preserves_anchor_band`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Contract.lean`
+- Specification files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Tasks/DriftUpdatePreservesAnchorBand.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Proofs`
+
+### `aera_finance/provisioner_v2_async_settlement/cancellation_terminal_exclusivity`
+- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.cancellation_terminal_exclusivity`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
+- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/CancellationTerminalExclusivity.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
+
+### `aera_finance/provisioner_v2_async_settlement/create_request_establishes_active_escrow`
+- Track / property class / proof family: `proof-only` / `escrow_conservation` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.create_request_establishes_active_escrow`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
+- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/CreateRequestEstablishesActiveEscrow.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
+
+### `aera_finance/provisioner_v2_async_settlement/direct_solve_terminal_exclusivity`
+- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.direct_solve_terminal_exclusivity`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
+- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/DirectSolveTerminalExclusivity.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
+
+### `aera_finance/provisioner_v2_async_settlement/expired_direct_solve_refund_terminal_exclusivity`
+- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.expired_direct_solve_refund_terminal_exclusivity`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
+- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/ExpiredDirectSolveRefundTerminalExclusivity.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
+
+### `aera_finance/provisioner_v2_async_settlement/expired_vault_solve_refund_terminal_exclusivity`
+- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.expired_vault_solve_refund_terminal_exclusivity`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
+- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/ExpiredVaultSolveRefundTerminalExclusivity.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
+
+### `aera_finance/provisioner_v2_async_settlement/guarded_batch_failure_preserves_active_escrow`
+- Track / property class / proof family: `proof-only` / `escrow_preservation` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.guarded_batch_failure_preserves_active_escrow`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
+- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/GuardedBatchFailurePreservesActiveEscrow.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
+
+### `aera_finance/provisioner_v2_async_settlement/refund_terminal_exclusivity`
+- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.refund_terminal_exclusivity`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
+- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/RefundTerminalExclusivity.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
+
+### `aera_finance/provisioner_v2_async_settlement/reverting_batch_preserves_active_escrow`
+- Track / property class / proof family: `proof-only` / `rollback_safety` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.reverting_batch_preserves_active_escrow`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
+- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/RevertingBatchPreservesActiveEscrow.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
+
+### `aera_finance/provisioner_v2_async_settlement/vault_solve_terminal_exclusivity`
+- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.vault_solve_terminal_exclusivity`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
+- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/VaultSolveTerminalExclusivity.lean`
+- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
 
 ### `alchemix/earmark_conservation/earmark_preserves_invariant`
 - Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
@@ -718,6 +878,186 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/damn_vulnerable_defi/side_entrance/verity/Specs.lean`, `Benchmark/Cases/DamnVulnerableDeFi/SideEntrance/Specs.lean`
 - Editable proof file: `Benchmark/Generated/DamnVulnerableDeFi/SideEntrance/Tasks/FlashLoanViaDepositSetsSenderCredit.lean`
 - Hidden reference solution: `Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs`
+
+### `doppler/multicurve_fee_conservation/callback_during_process_x_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackDuringProcessX_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackDuringProcessXPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/callback_during_process_y_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackDuringProcessY_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackDuringProcessYPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/callback_x_then_compound_sell_x_old_snapshot_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackXThenCompoundSellXOldSnapshot_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackXThenCompoundSellXOldSnapshotPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/callback_x_then_compound_sell_y_old_snapshot_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackXThenCompoundSellYOldSnapshot_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackXThenCompoundSellYOldSnapshotPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/callback_x_then_settle_old_snapshot_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackXThenSettleOldSnapshot_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackXThenSettleOldSnapshotPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/callback_y_then_compound_sell_x_old_snapshot_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackYThenCompoundSellXOldSnapshot_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackYThenCompoundSellXOldSnapshotPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/callback_y_then_compound_sell_y_old_snapshot_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackYThenCompoundSellYOldSnapshot_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackYThenCompoundSellYOldSnapshotPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/callback_y_then_settle_old_snapshot_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackYThenSettleOldSnapshot_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackYThenSettleOldSnapshotPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/compound_liquidity_sell_x_partial_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.compoundLiquiditySellX_partial_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CompoundLiquiditySellXPartialPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/compound_liquidity_sell_y_partial_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.compoundLiquiditySellY_partial_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CompoundLiquiditySellYPartialPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/convert_forward_x_to_y_partial_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.convertForwardXToY_partial_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ConvertForwardXToYPartialPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/convert_forward_y_to_x_partial_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.convertForwardYToX_partial_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ConvertForwardYToXPartialPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/on_swap_fee_received_x_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.onSwapFeeReceivedX_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/OnSwapFeeReceivedXPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/on_swap_fee_received_y_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.onSwapFeeReceivedY_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/OnSwapFeeReceivedYPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/process_fees_fully_deferred_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.processFees_fullyDeferred_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ProcessFeesFullyDeferredPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/process_fees_step_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.processFeesStep_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ProcessFeesStepPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/release_closed_market_credit_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.releaseClosedMarketCredit_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ReleaseClosedMarketCreditPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
+
+### `doppler/multicurve_fee_conservation/settle_market_forwards_preserves_accounting`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Doppler.MulticurveFeeConservation.settleMarketForwards_preserves_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/doppler/multicurve_fee_conservation/verity/Contract.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean`
+- Specification files: `cases/doppler/multicurve_fee_conservation/verity/Specs.lean`, `Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/SettleMarketForwardsPreservesAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs`
 
 ### `enzyme/onyx_fee_handler/settle_dynamic_fees_exact_accounting`
 - Track / property class / proof family: `proof-only` / `cross_contract_fee_accounting` / `state_preservation_local_effects`
@@ -2718,6 +3058,36 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/usual/dao_collateral/verity/Specs.lean`, `Benchmark/Cases/Usual/DaoCollateral/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Usual/DaoCollateral/Tasks/SwapValueConservation.lean`
 - Hidden reference solution: `Benchmark.Cases.Usual.DaoCollateral.Proofs`
+
+### `velora/bridge_staking/handle_v3_across_message_preserves_allocated`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Velora.BridgeStaking.handleV3AcrossMessage_preserves_allocated`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `Benchmark/Cases/Velora/BridgeStaking/Contract.lean`
+- Specification files: `Benchmark/Cases/Velora/BridgeStaking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Velora/BridgeStaking/Tasks/handle_v3_across_message_preserves_allocated.lean`
+- Hidden reference solution: `Benchmark.Cases.Velora.BridgeStaking.Proofs`
+
+### `velora/bridge_staking/rescue_pending_funds_preserves_allocated`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Velora.BridgeStaking.rescuePendingFunds_preserves_allocated`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `Benchmark/Cases/Velora/BridgeStaking/Contract.lean`
+- Specification files: `Benchmark/Cases/Velora/BridgeStaking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Velora/BridgeStaking/Tasks/rescue_pending_funds_preserves_allocated.lean`
+- Hidden reference solution: `Benchmark.Cases.Velora.BridgeStaking.Proofs`
+
+### `velora/bridge_staking/withdraw_unallocated_tokens_preserves_allocated`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Velora.BridgeStaking.withdrawUnallocatedTokens_preserves_allocated`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `Benchmark/Cases/Velora/BridgeStaking/Contract.lean`
+- Specification files: `Benchmark/Cases/Velora/BridgeStaking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Velora/BridgeStaking/Tasks/withdraw_unallocated_tokens_preserves_allocated.lean`
+- Hidden reference solution: `Benchmark.Cases.Velora.BridgeStaking.Proofs`
 
 ### `wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity`
 - Track / property class / proof family: `proof-only` / `accounting_bound` / `functional_correctness`

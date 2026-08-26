@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: aera_finance
+implementation_id: aera_contracts_v3
+display_name: Aera Finance Contracts V3
+split: active
+status: translated
+upstream_repo: https://github.com/aera-finance/aera-contracts-public
+upstream_commit: f0ebc15985b2f19d1e599b604370fdbaeb314180
+source_language: solidity
+source_artifact_path: v3/src/core
+case_ids:
+  - aera_finance/provisioner_v2_async_settlement
+  - aera_finance/price_and_fee_calculator_v2_anchor_drift
+notes: >
+  Pinned public V3 implementation containing ProvisionerV2 and PriceAndFeeCalculatorV2.
