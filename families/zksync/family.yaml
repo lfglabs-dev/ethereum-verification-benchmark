@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: zksync
+display_name: zkSync Era
+split: active
+status: active
+description: >
+  Benchmark family for Matter Labs zkSync Era contracts, starting with the
+  atomic-interop Indexed Merkle Tree linked-list order invariant.
+implementation_ids:
+  - era_contracts
+case_ids:
+  - zksync/interop_commitment_tree_order
+source_languages:
+  - solidity

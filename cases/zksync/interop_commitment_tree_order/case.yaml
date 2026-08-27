@@ -1,0 +1,40 @@
+manifest_kind: case
+project: zksync
+case_id: interop_commitment_tree_order
+schema_version: 1
+split: active
+family_id: zksync
+implementation_id: era_contracts
+stage: proof_partial
+translation_status: translated
+spec_status: frozen
+proof_status: partial
+upstream_repo: https://github.com/matter-labs/era-contracts
+upstream_commit: e5f6e004a09f667c6109e44c4fe1f81658127631
+original_contract_path: l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol
+source_ref: https://github.com/matter-labs/era-contracts@e5f6e004a09f667c6109e44c4fe1f81658127631:l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol
+lean_target: Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Compile
+spec_target: Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Specs
+proof_target: Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Proofs
+selected_functions:
+  - setup
+  - insert
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - linked_list_order_slice
+  - merkle_hashing_elided
+  - while_as_well_founded_helper
+abstraction_notes: >
+  Models IndexedMerkleTree.setup and insert. IMTLeaf is flattened into three
+  Uint256 maps. FullMerkle hashing and verifyNonInclusion are out of scope.
+  The Solidity while-walk is a fuel-bounded recursive helper because pinned
+  Verity has no Stmt.while. The selected invariant is linked-list order
+  (IMTOrder), not physical-array sorting and not Merkle-authenticated
+  non-inclusion. setup establishment requires fresh-zero mappings.
+unsupported_feature_codes: []
+notes: >
+  zkSync Era atomic-interop IMT linked-list order. Physical indices are
+  append order; ordering is the nextIndex chain from sentinel 0.

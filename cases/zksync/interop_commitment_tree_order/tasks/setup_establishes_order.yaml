@@ -1,0 +1,32 @@
+manifest_kind: task
+schema_version: 1
+task_id: setup_establishes_order
+case_id: zksync/interop_commitment_tree_order
+split: active
+family_id: zksync
+implementation_id: era_contracts
+source_ref: https://github.com/matter-labs/era-contracts@e5f6e004a09f667c6109e44c4fe1f81658127631:l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.setup_establishes_order
+proof_family: state_preservation_local_effects
+property_class: linked_list_order
+difficulty: medium
+category: state-transition
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/zksync/interop_commitment_tree_order/verity/Contract.lean
+  - Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Contract.lean
+specification_files:
+  - cases/zksync/interop_commitment_tree_order/verity/Specs.lean
+  - Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Specs.lean
+editable_files:
+  - Benchmark/Generated/ZkSync/InteropCommitmentTreeOrder/Tasks/SetupEstablishesOrder.lean
+reference_solution_module: Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Proofs
+reference_solution_declaration: Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.setup_establishes_order
+abstraction_level: protocol_slice
+abstraction_notes: >
+  setup on fresh-zero storage writes the sentinel leaf and leafNumber = 1.
+unsupported_feature_codes: []

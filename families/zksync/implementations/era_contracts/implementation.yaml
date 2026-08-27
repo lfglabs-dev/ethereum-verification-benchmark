@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: zksync
+implementation_id: era_contracts
+display_name: zkSync Era Contracts
+split: active
+status: translated
+upstream_repo: https://github.com/matter-labs/era-contracts
+upstream_commit: e5f6e004a09f667c6109e44c4fe1f81658127631
+source_language: solidity
+source_artifact_path: l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol
+case_ids:
+  - zksync/interop_commitment_tree_order
+notes: >
+  Implementation entry for Matter Labs era-contracts IMT engine used by
+  L2InteropCommitmentTree.
