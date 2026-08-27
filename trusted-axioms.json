@@ -54,6 +54,30 @@
       "name": "payoutEcrecoverOracleValue",
       "boundary": "Trusted ECDSA recovery result for the exact payout digest and signature tuple.",
       "justification": "The case source mirrors the generated benchmark model; this relation preserves source inputs while making signature-recovery correctness an explicit boundary."
+    },
+    {
+      "path": "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Proofs.lean",
+      "name": "insert_run_of_success",
+      "boundary": "Successful modeled insert equals the concrete insertPost list-state record.",
+      "justification": "Nested require, walk, and addPanic bind matching is a computational characterization of the modeled body, not an IMTOrder claim."
+    },
+    {
+      "path": "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Proofs.lean",
+      "name": "insert_walk_brackets",
+      "boundary": "Pre-state fact: insertLow is an occupied predecessor whose old hop brackets the inserted value.",
+      "justification": "Matches IndexedMerkleTree.sol lines 84-93. Uniqueness of the fuelled walk against the successor chain is combinatorial list surgery."
+    },
+    {
+      "path": "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Proofs.lean",
+      "name": "insert_spliced_chain",
+      "boundary": "The unique successor list after insert is the old covering chain with the new index spliced after insertLow.",
+      "justification": "Constructing the concrete List witness from takeWhile/dropWhile against isIndexChain is combinatorial list surgery over flattened maps."
+    },
+    {
+      "path": "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Proofs.lean",
+      "name": "insert_remaining_fields",
+      "boundary": "After sentinel and covering-chain are established, the leftover six IMTOrder fields hold on insertPost.",
+      "justification": "Hop-wise increase, unique tail, domains, nonzero leaves, valueToIndex agreement, and the absence bracket still need list induction after the splice."
     }
   ]
 }

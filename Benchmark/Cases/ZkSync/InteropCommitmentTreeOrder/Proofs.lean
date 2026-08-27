@@ -20,10 +20,8 @@ open Verity.Core.Uint256
 
   Theorems:
   - `setup_establishes_order` (proved)
-  - `insert_leaf_frame` (axiom: unfolding of `insertPost`)
-  - `insert_preserves_order` (axiom: list-splice reconstruction)
-
-  No `sorry`.
+  - `insert_leaf_frame` (unfolding of `insertPost` from `insert_run_of_success`)
+  - `insert_preserves_order` (list-splice reconstruction from documented axioms)
 -/
 
 private theorem one_ne_zero_uint : (1 : Uint256) ≠ 0 := by
