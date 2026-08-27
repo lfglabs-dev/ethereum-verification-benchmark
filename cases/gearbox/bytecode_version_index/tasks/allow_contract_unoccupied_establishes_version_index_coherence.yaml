@@ -1,0 +1,37 @@
+manifest_kind: task
+schema_version: 1
+task_id: allow_contract_unoccupied_establishes_version_index_coherence
+case_id: gearbox/bytecode_version_index
+split: active
+family_id: gearbox
+implementation_id: permissionless_b1b5e5b
+source_ref: https://github.com/Gearbox-protocol/permissionless@b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769:contracts/global/BytecodeRepository.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Gearbox.BytecodeVersionIndex.allowContract_unoccupied_establishes_versionIndexCoherence
+proof_family: protocol_transition_correctness
+property_class: exact_storage_transition
+difficulty: medium
+category: state-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/gearbox/bytecode_version_index/verity/Contract.lean
+  - Benchmark/Cases/Gearbox/BytecodeVersionIndex/Contract.lean
+specification_files:
+  - cases/gearbox/bytecode_version_index/verity/Specs.lean
+  - Benchmark/Cases/Gearbox/BytecodeVersionIndex/Specs.lean
+editable_files:
+  - Benchmark/Generated/Gearbox/BytecodeVersionIndex/Tasks/AllowContractUnoccupiedEstablishesVersionIndexCoherence.lean
+reference_solution_module: Benchmark.Cases.Gearbox.BytecodeVersionIndex.Proofs
+reference_solution_declaration: Benchmark.Cases.Gearbox.BytecodeVersionIndex.allowContract_unoccupied_establishes_versionIndexCoherence
+abstraction_level: protocol_slice
+abstraction_notes: >
+  The task covers an empty `(contractType, version)` slot receiving a nonzero
+  hash. It requires equality to an independently written full expected state,
+  preserving every unselected modeled hash, contract type, set membership,
+  owner, and index key, plus the explicit hash, membership, and exact global,
+  major, and minor `max(ver, old)` equations. The source slice is pinned at
+  BytecodeRepository.sol lines 421-430 and 590-609.
+unsupported_feature_codes: []
