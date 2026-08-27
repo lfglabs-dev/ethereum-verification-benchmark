@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: gearbox
+display_name: Gearbox
+split: active
+status: active
+description: >
+  Benchmark family for Gearbox protocol components, including permissionless
+  bytecode registration and exact version-index maintenance.
+implementation_ids:
+  - permissionless_b1b5e5b
+case_ids:
+  - gearbox/bytecode_version_index
+source_languages:
+  - solidity

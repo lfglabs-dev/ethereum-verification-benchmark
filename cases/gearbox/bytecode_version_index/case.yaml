@@ -1,0 +1,49 @@
+manifest_kind: case
+project: gearbox
+case_id: bytecode_version_index
+schema_version: 1
+split: active
+family_id: gearbox
+implementation_id: permissionless_b1b5e5b
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/Gearbox-protocol/permissionless
+upstream_commit: b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769
+original_contract_path: contracts/global/BytecodeRepository.sol
+source_ref: https://github.com/Gearbox-protocol/permissionless@b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769:contracts/global/BytecodeRepository.sol
+lean_target: Benchmark.Cases.Gearbox.BytecodeVersionIndex.Compile
+spec_target: Benchmark.Cases.Gearbox.BytecodeVersionIndex.Specs
+proof_target: Benchmark.Cases.Gearbox.BytecodeVersionIndex.Proofs
+selected_functions:
+  - BytecodeRepository._allowContract
+  - BytecodeRepository._updateVersionInfo
+  - BytecodeRepository._getMajorVersion
+  - BytecodeRepository._getMinorVersion
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - internal_allowance_transition
+  - version_index_exactness
+  - enumerable_set_membership_only
+  - events_elided
+  - successful_and_revert_branches
+abstraction_notes: >
+  The model preserves the three `_allowContract` branches and the exact writes
+  made by `_updateVersionInfo`. Solidity bytes32 and uint256 values are modeled
+  as natural numbers, mappings as total functions, and EnumerableSet as a
+  membership function. Events, authorization/upload/audit caller guards, and
+  unrelated repository storage are outside this internal-function slice.
+unsupported_feature_codes: []
+notes: >
+  Proves the exact fresh-insertion transition, including `max(old, ver)` for
+  latest, major, and minor indexes. It also proves the same-hash no-op and the
+  different occupied-hash revert as reference coverage, while exposing only the
+  fresh-insertion theorem as the benchmark task. Immutable source ranges:
+  https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L34-L40,
+  https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L66-L88,
+  https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L421-L430,
+  and https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L590-L609.

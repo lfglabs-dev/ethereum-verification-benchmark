@@ -1,0 +1,16 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: gearbox
+implementation_id: permissionless_b1b5e5b
+display_name: Gearbox Permissionless
+split: active
+status: translated
+upstream_repo: https://github.com/Gearbox-protocol/permissionless
+upstream_commit: b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769
+source_language: solidity
+source_artifact_path: contracts/global/BytecodeRepository.sol
+case_ids:
+  - gearbox/bytecode_version_index
+notes: >
+  Implementation entry pinned to the Gearbox Permissionless BytecodeRepository
+  revision used for the exact version-index transition benchmark.
