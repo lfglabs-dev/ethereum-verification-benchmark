@@ -1,9 +1,0 @@
-import Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Contract
-import Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Specs
-import Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Proofs
-
-namespace Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift
-
-def caseReady : Bool := true
-
-end Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift

@@ -5,11 +5,10 @@ display_name: Aera Finance
 split: active
 status: active
 description: >
-  Benchmark family for Aera Finance V3 user-fund settlement and price-policy safety.
+  Benchmark family for Aera Finance V3 async-request terminal safety.
 implementation_ids:
   - aera_contracts_v3
 case_ids:
   - aera_finance/provisioner_v2_async_settlement
-  - aera_finance/price_and_fee_calculator_v2_anchor_drift
 source_languages:
   - solidity

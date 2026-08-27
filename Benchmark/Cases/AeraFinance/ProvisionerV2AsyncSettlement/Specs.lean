@@ -38,21 +38,6 @@ def activeEscrowCovered (s : ContractState) (requestKey : Address) : Prop :=
   activeOf s requestKey = 1 ∧
     escrowAmountOf s requestKey <= escrowBalanceOf s (requestKindOf s requestKey)
 
-/-- Successful request creation establishes the active escrow state consumed by
-    the terminal exclusivity theorems below. -/
-def create_request_establishes_active_escrow_spec
-    (requestKey : Address) (kind amount : Uint256) (isFixedPrice : Bool)
-    (s : ContractState) : Prop :=
-  let result :=
-    (AeraProvisionerV2.createRequest requestKey kind amount isFixedPrice true).run s
-  let s' := result.snd
-  result = ContractResult.success () s' ∧
-    activeOf s' requestKey = 1 ∧
-    requestKindOf s' requestKey = kind ∧
-    escrowAmountOf s' requestKey = amount ∧
-    fixedPriceOf s' requestKey = (if isFixedPrice then 1 else 0) ∧
-    activeEscrowCovered s' requestKey
-
 /-- A direct replay is rejected either by the fixed-price gate or by the cleared
     active request marker. -/
 def directReplayRejected (result : ContractResult Uint256) (s : ContractState) : Prop :=
@@ -160,32 +145,19 @@ def cancellation_terminal_exclusivity_spec
     refundReplay = ContractResult.revert "HashNotFound" settled ∧
     cancelReplay = ContractResult.revert "HashNotFound" settled
 
-/-- In a two-request vault batch, a guarded failure preserves the first active
-    deposit and its committed amount while a distinct second request settles. -/
-def guarded_batch_failure_preserves_active_escrow_spec
-    (firstKey secondKey : Address) (firstAmount secondAmount : Uint256)
-    (s : ContractState) : Prop :=
-  let result :=
-    (AeraProvisionerV2.solveRequestsVaultTwo
-      firstKey secondKey false true true true true true).run s
-  let s' := result.snd
-  result = ContractResult.success vaultSolveOutcome s' ∧
-    activeOf s' firstKey = 1 ∧
-    activeOf s' secondKey = 0 ∧
-    requestKindOf s' firstKey = requestKindOf s firstKey ∧
-    escrowAmountOf s' firstKey = firstAmount ∧
-    escrowBalanceOf s' (requestKindOf s firstKey) =
-      sub (escrowBalanceOf s (requestKindOf s firstKey)) secondAmount ∧
-    firstAmount <= escrowBalanceOf s' (requestKindOf s firstKey) ∧
-    activeEscrowCovered s' firstKey ∧
-    escrowAmountOf s secondKey = secondAmount
-
-/-- If an external interaction makes the vault batch revert after the source has
-    tentatively cleared a hash, EVM atomicity restores the full input state. -/
-def reverting_batch_preserves_active_escrow_spec
-    (requestKey otherKey : Address) (s : ContractState) : Prop :=
-  (AeraProvisionerV2.solveRequestsVaultTwo
-      requestKey otherKey true true true true true false).run s =
-    ContractResult.revert "ExternalInteractionFailed" s
+/-- One reader-facing invariant over every modeled terminal route. Live vault
+    solve, refund, and cancellation apply to active deposit or redemption
+    requests. Direct routes additionally require the hash-committed fixed-price
+    bit. Each route consumes the active marker and excludes every later terminal
+    route for the same activation. -/
+def active_request_cannot_be_consumed_twice_spec
+    (requestKey : Address) (s : ContractState) : Prop :=
+  vault_solve_terminal_exclusivity_spec requestKey s ∧
+    expired_vault_solve_refund_terminal_exclusivity_spec requestKey s ∧
+    refund_terminal_exclusivity_spec requestKey s ∧
+    cancellation_terminal_exclusivity_spec requestKey s ∧
+    (fixedPriceOf s requestKey = 1 →
+      direct_solve_terminal_exclusivity_spec requestKey s ∧
+      expired_direct_solve_refund_terminal_exclusivity_spec requestKey s)
 
 end Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement

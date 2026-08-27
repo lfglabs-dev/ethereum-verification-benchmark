@@ -6,13 +6,13 @@ namespace Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement
 open Verity
 open Verity.EVM.Uint256
 
-theorem refund_terminal_exclusivity
+theorem active_request_cannot_be_consumed_twice
     (requestKey : Address) (s : ContractState)
     (hActive : activeOf s requestKey = 1)
     (hKind : requestKindOf s requestKey = depositKind ∨
       requestKindOf s requestKey = redeemKind)
     (hCovered : activeEscrowCovered s requestKey) :
-    refund_terminal_exclusivity_spec requestKey s := by
+    active_request_cannot_be_consumed_twice_spec requestKey s := by
   exact ?_
 
 end Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement

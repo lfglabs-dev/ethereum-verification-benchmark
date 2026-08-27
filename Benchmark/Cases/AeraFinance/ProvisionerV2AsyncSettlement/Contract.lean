@@ -13,23 +13,22 @@ Simplifications and boundaries:
   does not prove Keccak collision resistance.
 * `asyncRequestHashes[key]` is represented exactly by `active[key]`. The request
   kind, escrow amount, and fixed-price bit are ghost decompositions of fields
-  committed by the
-  hash. Solidity receives those fields again in calldata rather than storing
-  them separately.
+  committed by the hash. Solidity receives those fields again in calldata rather
+  than storing them separately. The theorem starts from one active activation;
+  request creation and later reactivation are outside the model, so it does not
+  claim lifetime uniqueness for a reusable request hash.
 * Deposit-token and vault-unit escrow balances are modeled as local aggregate
-  counters. In Solidity they are balances in two external ERC-20 contracts.
-  The model assumes successful ERC-20 calls move the requested amount exactly,
-  with no fee-on-transfer, rebasing, callback, or false-success behavior.
+  counters. Aggregate coverage is an execution premise, not a proof of
+  per-request escrow provenance. In Solidity these balances live in two external
+  ERC-20 contracts. The model assumes successful ERC-20 calls move the requested
+  amount exactly, with no fee-on-transfer, rebasing, callback, or false-success
+  behavior.
 * Price conversion, deposit-cap calculation, cancellation-fee calculation,
-  authorization, deadlines, token enablement, and fixed/auto-price selection
-  are represented by explicit booleans. The primary invariant depends on their
-  pass/fail control flow, not their arithmetic. PriceAndFeeCalculatorV2
-  anchor/drift arithmetic is secondary scope and is not claimed here.
-* A vault batch is represented by two ordered requests. This is the minimum
-  non-trivial batch that proves a guarded failure can coexist with a later
-  successful settlement. The same helper is called by every source loop
-  iteration, so larger batches require induction over the list but add no new
-  per-request branch.
+  authorization, deadlines, token enablement, and other policy checks are not
+  recomputed. Vault eligibility is summarized by `guardsPass`; refund and
+  cancellation gates are explicit booleans; direct-route eligibility is limited
+  by the hash-committed fixed-price bit and the theorem premises. The invariant
+  concerns terminal consumption after those source gates permit the route.
 * Events, approvals, solver-tip aggregation, receivers, and exact payout routing
   are omitted. `requestIsLive` preserves the source deadline branch: live
   requests solve and expired requests refund. Terminal outcome codes are return
@@ -85,28 +84,6 @@ verity_contract AeraProvisionerV2 where
     else
       setStorage unitEscrow amount
 
-  -- Shared source shape of `requestDeposit` and `requestRedeem`: transfer the
-  -- escrow, reject a live hash collision, then activate the request.
-  function createRequest
-      (requestKey : Address, kind : Uint256, amount : Uint256,
-       isFixedPrice : Bool,
-       transferFromSucceeds : Bool) : Unit := do
-    require (kind == 0 || kind == 1) "InvalidRequestType"
-    require transferFromSucceeds "SafeERC20FailedOperation"
-    let oldActive ← getMapping active requestKey
-    require (oldActive == 0) "HashCollision"
-    let oldEscrow ← _escrowBalance kind
-    let newEscrow := add oldEscrow amount
-    require (newEscrow >= oldEscrow) "EscrowOverflow"
-    _setEscrowBalance kind newEscrow
-    setMapping requestKind requestKey kind
-    setMapping escrowAmount requestKey amount
-    if isFixedPrice then
-      setMapping fixedPrice requestKey 1
-    else
-      setMapping fixedPrice requestKey 0
-    setMapping active requestKey 1
-
   -- One `_solveRequestsVault` loop iteration. Source guard failures return
   -- without clearing the hash. An invalid hash also returns without effect.
   function internal _solveRequestVault
@@ -133,19 +110,6 @@ verity_contract AeraProvisionerV2 where
        interactionSucceeds : Bool) : Uint256 := do
     let outcome ← _solveRequestVault requestKey guardsPass requestIsLive interactionSucceeds
     return outcome
-
-  -- Minimal non-trivial source loop: a guarded failure does not revert the
-  -- batch and a later request can still settle.
-  function solveRequestsVaultTwo
-      (firstKey : Address, secondKey : Address,
-       firstGuardsPass : Bool, firstRequestIsLive : Bool,
-       firstInteractionSucceeds : Bool, secondGuardsPass : Bool,
-       secondRequestIsLive : Bool, secondInteractionSucceeds : Bool) : Uint256 := do
-    let firstOutcome ←
-      _solveRequestVault firstKey firstGuardsPass firstRequestIsLive firstInteractionSucceeds
-    let secondOutcome ←
-      _solveRequestVault secondKey secondGuardsPass secondRequestIsLive secondInteractionSucceeds
-    return add firstOutcome secondOutcome
 
   -- Source `_solveRequestDirect`: an invalid hash returns; otherwise the hash
   -- is cleared before the external exchange, whose failure reverts the call.

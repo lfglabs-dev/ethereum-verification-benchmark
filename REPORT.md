@@ -6,9 +6,9 @@ This report is generated from the benchmark manifests.
 
 - Families: 44
 - Implementations: 45
-- Active cases: 45
-- Buildable active cases: 45
-- Active tasks: 296
+- Active cases: 44
+- Buildable active cases: 44
+- Active tasks: 285
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -23,25 +23,15 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `examples/apps/XYCSwap.sol`
 - Notes: Benchmark case proving the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The theorem states that the output amount computed by _quoteExactIn satisfies the integer-division rounding bound: output * denominator <= feeAdjustedInput * balanceOut. This is the direct analog of the Uniswap V2 K invariant, adapted to XYCSwap's basis-points fee structure.
 
-### `aera_finance/price_and_fee_calculator_v2_anchor_drift`
-- Family / implementation: `aera_finance` / `aera_contracts_v3`
-- Stage: `build_green`
-- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
-- Lean target: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Compile`
-- Source ref: `https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/PriceAndFeeCalculatorV2.sol`
-- Selected functions: `PriceAndFeeCalculatorV2.setAnchorPrice`, `PriceAndFeeCalculatorV2.setDriftPrice`, `PriceAndFeeCalculatorV2._isPriceWithinAnchorBand`
-- Upstream source artifact: `v3/src/core/PriceAndFeeCalculatorV2.sol`
-- Notes: Three reference theorems are proof-complete with no sorry and no project-defined axioms; `#print axioms` reports only Lean's foundational `propext` and `Quot.sound`: successful drift stays in the anchor band without mutating the anchor tuple, bad anchors pause in fail-safe mode with the source accrual-lag update, and bad anchors revert atomically when fail-safe mode is disabled.
-
 ### `aera_finance/provisioner_v2_async_settlement`
 - Family / implementation: `aera_finance` / `aera_contracts_v3`
 - Stage: `build_green`
 - Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
 - Lean target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Compile`
 - Source ref: `https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/ProvisionerV2.sol`
-- Selected functions: `ProvisionerV2.requestDeposit`, `ProvisionerV2.requestRedeem`, `ProvisionerV2.solveRequestsVault`, `ProvisionerV2.solveRequestsDirect`, `ProvisionerV2.refundRequest`, `ProvisionerV2.cancelRequest`, `ProvisionerV2._solveDepositVaultAutoPrice`, `ProvisionerV2._solveDepositVaultFixedPrice`, `ProvisionerV2._solveRedeemVaultAutoPrice`, `ProvisionerV2._solveRedeemVaultFixedPrice`, `ProvisionerV2._solveRequestDirect`
+- Selected functions: `ProvisionerV2.solveRequestsVault`, `ProvisionerV2.solveRequestsDirect`, `ProvisionerV2.refundRequest`, `ProvisionerV2.cancelRequest`, `ProvisionerV2._solveDepositVaultAutoPrice`, `ProvisionerV2._solveDepositVaultFixedPrice`, `ProvisionerV2._solveRedeemVaultAutoPrice`, `ProvisionerV2._solveRedeemVaultFixedPrice`, `ProvisionerV2._solveRequestDirect`
 - Upstream source artifact: `v3/src/core/ProvisionerV2.sol`
-- Notes: Nine reference theorems are proof-complete with no sorry and no project-defined axioms; `#print axioms` reports only Lean's foundational `propext` and `Quot.sound`: request creation establishes active escrow; terminal exclusivity for live vault solve, live fixed-price direct solve, expired vault/direct solve-triggered refund, authorized refund, and cancellation; guarded batch-failure escrow preservation; and whole-batch revert rollback.
+- Notes: One public invariant is proof-complete with no sorry and no project-defined axioms: an active request activation cannot produce two terminal outcomes. Six route lemmas cover live vault solve, live fixed-price direct solve, expired vault/direct solve-triggered refund, authorized refund, and cancellation.
 
 ### `alchemix/earmark_conservation`
 - Family / implementation: `alchemix` / `v3`
@@ -479,124 +469,14 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/OneInch/XYCSwapCurveSafety/Tasks/QuoteExactInCurveSafety.lean`
 - Hidden reference solution: `Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs`
 
-### `aera_finance/price_and_fee_calculator_v2_anchor_drift/bad_anchor_pause_mode`
-- Track / property class / proof family: `proof-only` / `fail_safe_pause` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.bad_anchor_pause_mode`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Contract.lean`
-- Specification files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Tasks/BadAnchorPauseMode.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Proofs`
-
-### `aera_finance/price_and_fee_calculator_v2_anchor_drift/bad_anchor_revert_mode`
-- Track / property class / proof family: `proof-only` / `rollback_safety` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.bad_anchor_revert_mode`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Contract.lean`
-- Specification files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Tasks/BadAnchorRevertMode.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Proofs`
-
-### `aera_finance/price_and_fee_calculator_v2_anchor_drift/drift_update_preserves_anchor_band`
-- Track / property class / proof family: `proof-only` / `price_band_safety` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.drift_update_preserves_anchor_band`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Contract.lean`
-- Specification files: `cases/aera_finance/price_and_fee_calculator_v2_anchor_drift/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/PriceAndFeeCalculatorV2AnchorDrift/Tasks/DriftUpdatePreservesAnchorBand.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.PriceAndFeeCalculatorV2AnchorDrift.Proofs`
-
-### `aera_finance/provisioner_v2_async_settlement/cancellation_terminal_exclusivity`
+### `aera_finance/provisioner_v2_async_settlement/active_request_cannot_be_consumed_twice`
 - Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.cancellation_terminal_exclusivity`
+- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.active_request_cannot_be_consumed_twice`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
 - Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
 - Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/CancellationTerminalExclusivity.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
-
-### `aera_finance/provisioner_v2_async_settlement/create_request_establishes_active_escrow`
-- Track / property class / proof family: `proof-only` / `escrow_conservation` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.create_request_establishes_active_escrow`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
-- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/CreateRequestEstablishesActiveEscrow.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
-
-### `aera_finance/provisioner_v2_async_settlement/direct_solve_terminal_exclusivity`
-- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.direct_solve_terminal_exclusivity`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
-- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/DirectSolveTerminalExclusivity.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
-
-### `aera_finance/provisioner_v2_async_settlement/expired_direct_solve_refund_terminal_exclusivity`
-- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.expired_direct_solve_refund_terminal_exclusivity`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
-- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/ExpiredDirectSolveRefundTerminalExclusivity.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
-
-### `aera_finance/provisioner_v2_async_settlement/expired_vault_solve_refund_terminal_exclusivity`
-- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.expired_vault_solve_refund_terminal_exclusivity`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
-- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/ExpiredVaultSolveRefundTerminalExclusivity.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
-
-### `aera_finance/provisioner_v2_async_settlement/guarded_batch_failure_preserves_active_escrow`
-- Track / property class / proof family: `proof-only` / `escrow_preservation` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.guarded_batch_failure_preserves_active_escrow`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
-- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/GuardedBatchFailurePreservesActiveEscrow.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
-
-### `aera_finance/provisioner_v2_async_settlement/refund_terminal_exclusivity`
-- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.refund_terminal_exclusivity`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
-- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/RefundTerminalExclusivity.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
-
-### `aera_finance/provisioner_v2_async_settlement/reverting_batch_preserves_active_escrow`
-- Track / property class / proof family: `proof-only` / `rollback_safety` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.reverting_batch_preserves_active_escrow`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
-- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/RevertingBatchPreservesActiveEscrow.lean`
-- Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
-
-### `aera_finance/provisioner_v2_async_settlement/vault_solve_terminal_exclusivity`
-- Track / property class / proof family: `proof-only` / `replay_protection` / `protocol_transition_correctness`
-- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
-- Theorem target: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.vault_solve_terminal_exclusivity`
-- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean`
-- Specification files: `cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean`, `Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean`
-- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/VaultSolveTerminalExclusivity.lean`
+- Editable proof file: `Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/ActiveRequestCannotBeConsumedTwice.lean`
 - Hidden reference solution: `Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs`
 
 ### `alchemix/earmark_conservation/earmark_preserves_invariant`

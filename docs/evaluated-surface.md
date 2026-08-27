@@ -7,13 +7,12 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 45 cases and 296 task manifests. Of those, 296 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 44 cases and 285 task manifests. Of those, 285 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
 | `1inch/xycswap_curve_safety` | 1 | `complete` |
-| `aera_finance/price_and_fee_calculator_v2_anchor_drift` | 3 | `complete` |
-| `aera_finance/provisioner_v2_async_settlement` | 9 | `complete` |
+| `aera_finance/provisioner_v2_async_settlement` | 1 | `complete` |
 | `alchemix/earmark_conservation` | 5 | `complete` |
 | `aragon_osx/execute_authorization` | 16 | `complete` |
 | `balancer/reclamm_swap_rounding` | 1 | `complete` |

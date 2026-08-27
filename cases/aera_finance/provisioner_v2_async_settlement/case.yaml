@@ -18,8 +18,6 @@ lean_target: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Compile
 spec_target: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Specs
 proof_target: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs
 selected_functions:
-  - ProvisionerV2.requestDeposit
-  - ProvisionerV2.requestRedeem
   - ProvisionerV2.solveRequestsVault
   - ProvisionerV2.solveRequestsDirect
   - ProvisionerV2.refundRequest
@@ -38,24 +36,18 @@ abstraction_tags:
   - hash_committed_fields_ghost_decomposition
   - direct_fixed_price_gate_preserved
   - external_erc20_balances_abstracted
-  - two_request_minimal_batch
   - explicit_external_call_outcomes
-  - evm_revert_atomicity
 abstraction_notes: >
-  Source-structured model of async request activation and all four terminal paths.
+  Source-structured model of one active request and all four terminal outcomes.
   Request hashes use collision-free Address keys; request fields and aggregate token/unit
-  custody are ghost or external-balance abstractions. A two-request loop is the minimum
-  batch proving that a guarded failure remains active while a later request settles.
+  custody are ghost or external-balance abstractions.
   The hash-committed fixed-price bit and the direct-settlement fixed-price gate are
-  explicit. External interaction failure executes whole-call rollback.
+  explicit. Reverting external interactions do not count as terminal outcomes.
 unsupported_feature_codes:
   - keccak_collision_resistance_not_proved
   - external_erc20_balance_state_not_modeled
-  - unbounded_batch_induction_not_modeled
 notes: >
-  Nine reference theorems are proof-complete with no sorry and no project-defined
-  axioms; `#print axioms` reports only Lean's foundational `propext` and `Quot.sound`:
-  request creation establishes active escrow; terminal exclusivity for live vault
-  solve, live fixed-price direct solve, expired vault/direct solve-triggered refund,
-  authorized refund, and cancellation; guarded batch-failure escrow preservation;
-  and whole-batch revert rollback.
+  One public invariant is proof-complete with no sorry and no project-defined axioms:
+  an active request activation cannot produce two terminal outcomes. Six route lemmas
+  cover live vault solve, live fixed-price direct solve, expired vault/direct
+  solve-triggered refund, authorized refund, and cancellation.

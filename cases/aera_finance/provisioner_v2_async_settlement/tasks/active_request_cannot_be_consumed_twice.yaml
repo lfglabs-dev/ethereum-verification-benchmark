@@ -1,13 +1,13 @@
 manifest_kind: task
 schema_version: 1
-task_id: refund_terminal_exclusivity
+task_id: active_request_cannot_be_consumed_twice
 case_id: aera_finance/provisioner_v2_async_settlement
 split: active
 family_id: aera_finance
 implementation_id: aera_contracts_v3
 source_ref: https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/ProvisionerV2.sol
 task_interface_version: 2
-theorem_name: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.refund_terminal_exclusivity
+theorem_name: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.active_request_cannot_be_consumed_twice
 proof_family: protocol_transition_correctness
 property_class: replay_protection
 difficulty: hard
@@ -23,13 +23,13 @@ specification_files:
   - cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean
   - Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean
 editable_files:
-  - Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/RefundTerminalExclusivity.lean
+  - Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/ActiveRequestCannotBeConsumedTwice.lean
 reference_solution_module: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs
-reference_solution_declaration: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.refund_terminal_exclusivity
+reference_solution_declaration: Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.active_request_cannot_be_consumed_twice
 abstraction_level: protocol_slice
 abstraction_notes: >
-  See the case manifest and Contract.lean simplification table for exact boundaries.
+  One invariant covers every modeled terminal route for one active request lifecycle.
+  See the case manifest and Contract.lean for exact source and external-system boundaries.
 unsupported_feature_codes:
   - keccak_collision_resistance_not_proved
   - external_erc20_balance_state_not_modeled
-  - unbounded_batch_induction_not_modeled
