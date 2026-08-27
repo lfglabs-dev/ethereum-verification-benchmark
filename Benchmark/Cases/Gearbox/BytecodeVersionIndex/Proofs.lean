@@ -24,8 +24,8 @@ theorem allowContract_unoccupied_establishes_versionIndexCoherence
       cType ver, ?_, ?_⟩
   · have hZeroNeHash : 0 ≠ bytecodeHash := Ne.symm hHash
     simp [_allowContract, hEmpty, hZeroNeHash]
-  · simp [freshAllowanceUpdatesVersionIndexesExactly, freshVersionIsRecorded,
-      latestVersionShortcutsAdvanceExactly, unrelatedModeledStateIsUnchanged,
+  · simp [freshAllowanceUpdatesVersionIndexesExactly, versionIsRecorded,
+      latestShortcutsAdvance, onlyExpectedStateChanges,
       expectedFreshAllowance, _updateVersionInfo]
 
 /-- The first source branch is a storage no-op when the exact hash is already

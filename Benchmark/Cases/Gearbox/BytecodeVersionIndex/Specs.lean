@@ -35,7 +35,7 @@ def expectedFreshAllowance
   }
 
 /-- The new hash is stored and the inserted version is present in the version set. -/
-def freshVersionIsRecorded
+def versionIsRecorded
     (after : BytecodeRepository) (bytecodeHash : BytecodeHash)
     (cType : ContractType) (ver : Version) : Prop :=
   after._allowedBytecodeHashes cType ver = bytecodeHash ∧
@@ -43,7 +43,7 @@ def freshVersionIsRecorded
 
 /-- All three latest-version shortcuts move to the inserted version exactly when
 it is newer. These are version numbers, not weights or scores. -/
-def latestVersionShortcutsAdvanceExactly
+def latestShortcutsAdvance
     (before after : BytecodeRepository) (cType : ContractType)
     (ver : Version) : Prop :=
   (after._versionInfo cType).latest =
@@ -55,7 +55,7 @@ def latestVersionShortcutsAdvanceExactly
 
 /-- The complete post-state is the independently specified expected state. This
 is what guarantees that every unrelated modeled field and key stays unchanged. -/
-def unrelatedModeledStateIsUnchanged
+def onlyExpectedStateChanges
     (before after : BytecodeRepository) (bytecodeHash : BytecodeHash)
     (cType : ContractType) (ver : Version) : Prop :=
   after = expectedFreshAllowance before bytecodeHash cType ver
@@ -68,8 +68,8 @@ unrelated modeled state changes.
 def freshAllowanceUpdatesVersionIndexesExactly
     (before after : BytecodeRepository) (bytecodeHash : BytecodeHash)
     (cType : ContractType) (ver : Version) : Prop :=
-  freshVersionIsRecorded after bytecodeHash cType ver ∧
-    latestVersionShortcutsAdvanceExactly before after cType ver ∧
-    unrelatedModeledStateIsUnchanged before after bytecodeHash cType ver
+  versionIsRecorded after bytecodeHash cType ver ∧
+    latestShortcutsAdvance before after cType ver ∧
+    onlyExpectedStateChanges before after bytecodeHash cType ver
 
 end Benchmark.Cases.Gearbox.BytecodeVersionIndex
