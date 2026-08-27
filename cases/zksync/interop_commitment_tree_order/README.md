@@ -8,9 +8,10 @@ Source:
 Focus:
 - `setup`
 - `insert`
-- linked-list order from sentinel 0 (`IMTOrder`)
-- nonzero-domain `valueToIndex`
+- one covering ordered chain from sentinel 0 (`IMTOrder`)
+- physical append order is not sorted order
 - leaves-only append frame
+- `valueToIndex` is a separate map fact, not in the public theorem
 
 Out of scope:
 - FullMerkle hashing and root bytes

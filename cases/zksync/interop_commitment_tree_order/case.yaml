@@ -5,10 +5,10 @@ schema_version: 1
 split: active
 family_id: zksync
 implementation_id: era_contracts
-stage: proof_partial
+stage: proof_complete
 translation_status: translated
 spec_status: frozen
-proof_status: partial
+proof_status: complete
 upstream_repo: https://github.com/matter-labs/era-contracts
 upstream_commit: e5f6e004a09f667c6109e44c4fe1f81658127631
 original_contract_path: l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol
@@ -31,9 +31,12 @@ abstraction_notes: >
   Models IndexedMerkleTree.setup and insert. IMTLeaf is flattened into three
   Uint256 maps. FullMerkle hashing and verifyNonInclusion are out of scope.
   The Solidity while-walk is a fuel-bounded recursive helper because pinned
-  Verity has no Stmt.while. The selected invariant is linked-list order
-  (IMTOrder), not physical-array sorting and not Merkle-authenticated
-  non-inclusion. setup establishment requires fresh-zero mappings.
+  Verity has no Stmt.while. The selected invariant is one covering ordered
+  chain from sentinel 0 (IMTOrder), not physical-array sorting and not
+  Merkle-authenticated non-inclusion. Unique tail, successor domain, absence
+  bracketing, nonzero leaves, and valueToIndex agreement are corollaries or a
+  separate map fact, not extra public theorem fields. setup establishment
+  requires fresh-zero mappings.
 unsupported_feature_codes: []
 notes: >
   zkSync Era atomic-interop IMT linked-list order. Physical indices are

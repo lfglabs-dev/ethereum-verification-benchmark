@@ -14,7 +14,7 @@ difficulty: hard
 category: state-transition
 track: proof-only
 translation_status: translated
-proof_status: partial
+proof_status: complete
 evaluation_engine: lean_proof_generation
 implementation_files:
   - cases/zksync/interop_commitment_tree_order/verity/Contract.lean
@@ -28,5 +28,9 @@ reference_solution_module: Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Pro
 reference_solution_declaration: Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.insert_preserves_order
 abstraction_level: protocol_slice
 abstraction_notes: >
-  Successful insert preserves IMTOrder, including the fuel-bounded low-leaf walk.
+  Successful insert preserves IMTOrder: sentinel value 0 plus one
+  covering ordered chain (head 0, exact occupied coverage, coherent
+  nextIndex/nextValue hops, strictly increasing leaf values, tail
+  nextIndex = nextValue = 0). Requires explicit valueNotStored.
+  valueToIndex is not in this theorem.
 unsupported_feature_codes: []

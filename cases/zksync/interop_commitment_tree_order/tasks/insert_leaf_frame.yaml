@@ -14,7 +14,7 @@ difficulty: medium
 category: state-transition
 track: proof-only
 translation_status: translated
-proof_status: partial
+proof_status: complete
 evaluation_engine: lean_proof_generation
 implementation_files:
   - cases/zksync/interop_commitment_tree_order/verity/Contract.lean
