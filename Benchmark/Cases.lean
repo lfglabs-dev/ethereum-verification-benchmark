@@ -1,3 +1,4 @@
+import Benchmark.Cases.AeraFinance
 import Benchmark.Cases.PaladinVotes
 import Benchmark.Cases.Ethereum
 import Benchmark.Cases.NexusMutual

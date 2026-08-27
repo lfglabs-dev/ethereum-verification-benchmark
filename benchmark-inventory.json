@@ -10,37 +10,37 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 41,
-    "implementation_count": 42,
-    "active_case_count": 41,
+    "family_count": 44,
+    "implementation_count": 45,
+    "active_case_count": 44,
     "backlog_case_count": 1,
-    "active_task_count": 263,
+    "active_task_count": 285,
     "backlog_task_count": 0,
-    "buildable_case_count": 41,
-    "runnable_task_count": 263,
+    "buildable_case_count": 44,
+    "runnable_task_count": 285,
     "case_stage_counts": {
-      "build_green": 32,
+      "build_green": 35,
       "candidate": 1,
       "proof_complete": 9
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 41
+      "translated": 44
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 34,
+      "complete": 37,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 263
+      "proof-only": 285
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
       "accounting_bound": 18,
-      "accounting_conservation": 32,
+      "accounting_conservation": 53,
       "accounting_effect": 2,
       "accounting_invariant": 3,
       "accounting_invariant_break": 1,
@@ -110,7 +110,7 @@
       "receiver_aggregation": 1,
       "redemption_reserve_guard": 1,
       "replay_lifecycle": 1,
-      "replay_protection": 2,
+      "replay_protection": 3,
       "reserve_state_transition": 5,
       "revert_atomicity": 1,
       "revert_rollback": 1,
@@ -135,12 +135,12 @@
     "task_proof_family_counts": {
       "authorization_enablement": 42,
       "functional_correctness": 60,
-      "protocol_transition_correctness": 40,
+      "protocol_transition_correctness": 41,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 79
+      "state_preservation_local_effects": 100
     },
     "family_split_counts": {
-      "active": 40,
+      "active": 43,
       "mixed": 1
     }
   },
@@ -161,6 +161,23 @@
         "solidity"
       ],
       "manifest_path": "families/1inch/family.yaml"
+    },
+    {
+      "family_id": "aera_finance",
+      "display_name": "Aera Finance",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Aera Finance V3 async-request terminal safety.",
+      "implementation_ids": [
+        "aera_contracts_v3"
+      ],
+      "case_ids": [
+        "aera_finance/provisioner_v2_async_settlement"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/aera_finance/family.yaml"
     },
     {
       "family_id": "alchemix",
@@ -246,6 +263,23 @@
         "solidity"
       ],
       "manifest_path": "families/damn_vulnerable_defi/family.yaml"
+    },
+    {
+      "family_id": "doppler",
+      "display_name": "Doppler",
+      "split": "active",
+      "status": "active",
+      "description": "Doppler DAMM Multicurve accounting benchmarks.",
+      "implementation_ids": [
+        "damm_multicurve_full_range_rehype"
+      ],
+      "case_ids": [
+        "doppler/multicurve_fee_conservation"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/doppler/family.yaml"
     },
     {
       "family_id": "enzyme",
@@ -760,6 +794,23 @@
       "manifest_path": "families/usual/family.yaml"
     },
     {
+      "family_id": "velora",
+      "display_name": "Velora",
+      "split": "active",
+      "status": "active",
+      "description": "Velora (formerly ParaSwap) BridgeStaking cross-chain staking accounting benchmarks.",
+      "implementation_ids": [
+        "bridge_staking"
+      ],
+      "case_ids": [
+        "velora/bridge_staking"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/velora/family.yaml"
+    },
+    {
       "family_id": "wildcat",
       "display_name": "Wildcat",
       "split": "active",
@@ -863,6 +914,22 @@
       "manifest_path": "families/1inch/implementations/aqua_xycswap/implementation.yaml"
     },
     {
+      "family_id": "aera_finance",
+      "implementation_id": "aera_contracts_v3",
+      "display_name": "Aera Finance Contracts V3",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/aera-finance/aera-contracts-public",
+      "upstream_commit": "f0ebc15985b2f19d1e599b604370fdbaeb314180",
+      "source_language": "solidity",
+      "source_artifact_path": "v3/src/core",
+      "case_ids": [
+        "aera_finance/provisioner_v2_async_settlement"
+      ],
+      "notes": "Pinned public V3 implementation of ProvisionerV2 async-request settlement.",
+      "manifest_path": "families/aera_finance/implementations/aera_contracts_v3/implementation.yaml"
+    },
+    {
       "family_id": "alchemix",
       "implementation_id": "v3",
       "display_name": "Alchemix V3",
@@ -941,6 +1008,22 @@
       ],
       "notes": "Active implementation entry for the Damn Vulnerable DeFi challenge set, starting with the Side Entrance flash-loan repayment bug modeled as a compact pool-balance versus credited-liability slice.",
       "manifest_path": "families/damn_vulnerable_defi/implementations/v2/implementation.yaml"
+    },
+    {
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "display_name": "DAMM Multicurve FullRangeFeeRehype",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/whetstoneresearch/damm",
+      "upstream_commit": "6424187967f93df1185f435f3adbcac0ce8fc7ec",
+      "source_language": "solidity",
+      "source_artifact_path": "src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "case_ids": [
+        "doppler/multicurve_fee_conservation"
+      ],
+      "notes": "Multicurve full-range LP fee manager accounting and deferred carry transitions.",
+      "manifest_path": "families/doppler/implementations/damm_multicurve_full_range_rehype/implementation.yaml"
     },
     {
       "family_id": "enzyme",
@@ -1439,6 +1522,22 @@
       "manifest_path": "families/usual/implementations/verified_proxy/implementation.yaml"
     },
     {
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "display_name": "Velora BridgeStaking",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/VeloraDEX/velora-miro-contracts",
+      "upstream_commit": "bfb5f8093bc6f6db0f0840b83d22e803c2811fcb",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/BridgeStaking.sol",
+      "case_ids": [
+        "velora/bridge_staking"
+      ],
+      "notes": "BridgeStaking cross-chain staking accounting. Receives VLR/WETH via Across protocol two-leg delivery, allocates them to pending staking records, and either deposits them into seVLR or rescues them back to the beneficiary. Successful seVLR deposit is selected by an unconstrained branch abstraction and modeled with exact equal decrements to allocation and BridgeStaking balance for both tokens, under standard ERC-20 and atomic-call balance assumptions documented by the case. Storage is flattened semantically rather than preserving EVM layout; the exact beneficiary sentinel and post-initialization stored-amount check are preserved. Withdrawal, rescue, and handle-message conservation all have complete Lean proofs from the incoming invariant. Explicit Boolean outcomes model each SafeTransferLib call; a failed transfer atomically reverts the full modeled transaction, including earlier rescue writes. The handle proof composes source-faithful record-preparation, token-credit, and settlement lemmas; checked-arithmetic failures and explicit failed guards also revert to the incoming state.",
+      "manifest_path": "families/velora/implementations/bridge_staking/implementation.yaml"
+    },
+    {
       "family_id": "wildcat",
       "implementation_id": "v2_protocol",
       "display_name": "Wildcat V2 Protocol",
@@ -1563,6 +1662,59 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Specs",
       "proof_target": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs"
+    },
+    {
+      "case_id": "aera_finance/provisioner_v2_async_settlement",
+      "project": "aera_finance",
+      "case_name": "provisioner_v2_async_settlement",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aera_finance/provisioner_v2_async_settlement/case.yaml",
+      "split": "active",
+      "family_id": "aera_finance",
+      "implementation_id": "aera_contracts_v3",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/aera-finance/aera-contracts-public",
+      "upstream_commit": "f0ebc15985b2f19d1e599b604370fdbaeb314180",
+      "original_contract_path": "v3/src/core/ProvisionerV2.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/ProvisionerV2.sol",
+      "selected_functions": [
+        "ProvisionerV2.solveRequestsVault",
+        "ProvisionerV2.solveRequestsDirect",
+        "ProvisionerV2.refundRequest",
+        "ProvisionerV2.cancelRequest",
+        "ProvisionerV2._solveDepositVaultAutoPrice",
+        "ProvisionerV2._solveDepositVaultFixedPrice",
+        "ProvisionerV2._solveRedeemVaultAutoPrice",
+        "ProvisionerV2._solveRedeemVaultFixedPrice",
+        "ProvisionerV2._solveRequestDirect"
+      ],
+      "lean_target": "Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Compile",
+      "failure_reason": null,
+      "notes": "One public invariant is proof-complete with no sorry and no project-defined axioms: an active request activation cannot produce two terminal outcomes. Six route lemmas cover live vault solve, live fixed-price direct solve, expired vault/direct solve-triggered refund, authorized refund, and cancellation.",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "request_hash_collision_resistance_assumed",
+        "hash_committed_fields_ghost_decomposition",
+        "direct_fixed_price_gate_preserved",
+        "external_erc20_balances_abstracted",
+        "explicit_external_call_outcomes"
+      ],
+      "abstraction_notes": "Source-structured model of one active request and all four terminal outcomes. Request hashes use collision-free Address keys; request fields and aggregate token/unit custody are ghost or external-balance abstractions. The hash-committed fixed-price bit and the direct-settlement fixed-price gate are explicit. Reverting external interactions do not count as terminal outcomes.",
+      "unsupported_feature_codes": [
+        "keccak_collision_resistance_not_proved",
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "spec_target": "Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Specs",
+      "proof_target": "Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs"
     },
     {
       "case_id": "alchemix/earmark_conservation",
@@ -1799,6 +1951,59 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Specs",
       "proof_target": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs"
+    },
+    {
+      "case_id": "doppler/multicurve_fee_conservation",
+      "project": "doppler",
+      "case_name": "multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/case.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/whetstoneresearch/damm",
+      "upstream_commit": "6424187967f93df1185f435f3adbcac0ce8fc7ec",
+      "original_contract_path": "src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "selected_functions": [
+        "_onSwapFeeReceived",
+        "processFees",
+        "_convertForwardBudget",
+        "_compoundLiquidity",
+        "_settleMarketForwards",
+        "releaseClosedMarketCredit"
+      ],
+      "lean_target": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Compile",
+      "failure_reason": null,
+      "notes": "FullRangeFeeRehype fee conservation: routed fee credit cannot disappear or be consumed twice; unspent or failed-leg value remains in carry.",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "checked_uint_arithmetic_as_nat",
+        "external_damm_calls_abstracted",
+        "beneficiary_iteration_aggregated",
+        "proof_ghost_terminal_counters",
+        "single_market_projection",
+        "global_other_market_reservation_summary",
+        "distinct_token_denominations"
+      ],
+      "abstraction_notes": "Models both halves of INV-REH-1: reservation/carry equality and live manager-credit coverage, plus the stronger terminal partition across carry, beneficiary payments, and LP compounding. The modeled market's reservation remains equal to its carry; unchanged other-market reservations are summarized so manager-credit coverage is checked against the token-wide reservation total. Successful DAMM calls provide checked spent/received/provided amounts. An individual caught swap/provide failure is an identity, while prior successful conversion or balancing deltas remain represented by their non-identity transitions even if processFees ultimately returns false. Callback-during-processing theorems preserve snapshot isolation by bounding old processing against the pre-callback row. Token X and token Y are represented as distinct denominations; same-address token-pair aliasing is excluded. Price execution and unrelated Multicurve invariants are excluded.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "spec_target": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Specs",
+      "proof_target": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs"
     },
     {
       "case_id": "enzyme/onyx_fee_handler",
@@ -3256,6 +3461,56 @@
       "proof_target": "Benchmark.Cases.Usual.DaoCollateral.Proofs"
     },
     {
+      "case_id": "velora/bridge_staking",
+      "project": "velora",
+      "case_name": "bridge_staking",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/velora/bridge_staking/case.yaml",
+      "split": "active",
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/VeloraDEX/velora-miro-contracts",
+      "upstream_commit": "bfb5f8093bc6f6db0f0840b83d22e803c2811fcb",
+      "original_contract_path": "contracts/BridgeStaking.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol",
+      "selected_functions": [
+        "handleV3AcrossMessage",
+        "rescuePendingFunds",
+        "withdrawUnallocatedTokens"
+      ],
+      "lean_target": "Benchmark.Cases.Velora.BridgeStaking.Compile",
+      "failure_reason": null,
+      "notes": "Proofs.lean contains complete proofs from the incoming conservation invariant alone for withdrawUnallocatedTokens, rescuePendingFunds, and handleV3AcrossMessage. The proofs cover checked arithmetic, explicit guards, partial rescue flags, successful equal debits, and SafeTransferLib failure outcomes that atomically restore the incoming state. `depositResult` remains the explicit seVLR boundary input. Generated tasks retain proof holes for benchmark agents; the reference proof module contains no proof holes or Velora-specific axioms. The exact beneficiary sentinel and external-call scope are documented in Contract.lean and Specs.lean.",
+      "buildable": true,
+      "verity_commit": "9eaf64218be14b59f6253219c111a5abf958e7b7",
+      "lean_toolchain": "leanprover/lean4:v4.22.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "erc20_balance_modeled_as_storage_slot",
+        "external_sevlr_deposit_modeled_as_unconstrained_branch",
+        "standard_erc20_exact_balance_debit_assumption",
+        "atomic_balance_perturbations_excluded",
+        "public_authorization_and_pause_boundaries_excluded",
+        "keccak256_key_abstracted_as_opaque_uint256",
+        "flattened_semantic_storage_not_evm_layout",
+        "events_omitted"
+      ],
+      "abstraction_notes": "The benchmark targets Velora BridgeStaking's accounting conservation invariant: allocatedTokens[token] <= tokenBalance[token] for both VLR and WETH. This proves the owner's withdrawUnallocatedTokens can never consume allocated pending staking funds. Token balances (token.getBalance() in Solidity, which calls IERC20(token).balanceOf(address(this))) are modeled as scalar storage slots in a flattened semantic storage model, not the upstream inherited and packed EVM layout. The seVLR depositVLRAndWeth external call is not invoked or linked: it is represented by the explicit `depositResult` input, where 1 selects success and every other value selects catch/rescue. Boolean transfer-result inputs model each SafeTransferLib call in catch/rescue, public rescue, and owner withdrawal; false atomically reverts the complete modeled transaction. Successful seVLR and transfer branches subtract exact amounts from modeled balances and allocations. Entry balances are assumed to include the Across delivery and faithfully represent balanceOf, with no fees, rebases, seizures, donations, reentrancy-induced accounting mutation, or unrelated atomic balance changes. Approval execution and `minBptAmount` behavior are outside scope. Public caller, authorization, pause checks, sourceChainId, ABI decoding, and events are scope exclusions. Callback handling exactly uses the VLR/WETH token domain; owner withdrawal is intentionally the VLR/WETH accounting slice even though Solidity accepts arbitrary token addresses. keccak256(updatedMessage) is abstracted as an opaque Uint256 argument. The Staking struct is flattened: each field becomes its own keyed mapping. The exact beneficiary sentinel is preserved, and callback amount validation reads the selected stored amount after conditional initialization.",
+      "unsupported_feature_codes": [
+        "erc20_external_balance_modeled_as_storage",
+        "external_call_success_modeled_as_parameter"
+      ],
+      "spec_target": "Benchmark.Cases.Velora.BridgeStaking.Specs",
+      "proof_target": "Benchmark.Cases.Velora.BridgeStaking.Proofs"
+    },
+    {
       "case_id": "wildcat/borrow_liquidity_safety",
       "project": "wildcat",
       "case_name": "borrow_liquidity_safety",
@@ -3589,6 +3844,54 @@
       "abstraction_notes": "This task captures the fee-adjusted constant-product curve safety invariant for 1inch Aqua XYCSwap. The output of _quoteExactIn satisfies the integer division rounding bound that prevents over-extraction of maker reserves.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.OneInch.XYCSwapCurveSafety.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "aera_finance/provisioner_v2_async_settlement/active_request_cannot_be_consumed_twice",
+      "task_id": "active_request_cannot_be_consumed_twice",
+      "case_id": "aera_finance/provisioner_v2_async_settlement",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/aera_finance/provisioner_v2_async_settlement/tasks/active_request_cannot_be_consumed_twice.yaml",
+      "split": "active",
+      "family_id": "aera_finance",
+      "implementation_id": "aera_contracts_v3",
+      "source_ref": "https://github.com/aera-finance/aera-contracts-public@f0ebc15985b2f19d1e599b604370fdbaeb314180:v3/src/core/ProvisionerV2.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "replay_protection",
+      "category": "settlement-lifecycle",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.active_request_cannot_be_consumed_twice",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/aera_finance/provisioner_v2_async_settlement/verity/Contract.lean",
+        "Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/aera_finance/provisioner_v2_async_settlement/verity/Specs.lean",
+        "Benchmark/Cases/AeraFinance/ProvisionerV2AsyncSettlement/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/AeraFinance/ProvisionerV2AsyncSettlement/Tasks/ActiveRequestCannotBeConsumedTwice.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "One invariant covers every modeled terminal route for one active request lifecycle. See the case manifest and Contract.lean for exact source and external-system boundaries.",
+      "unsupported_feature_codes": [
+        "keccak_collision_resistance_not_proved",
+        "external_erc20_balance_state_not_modeled"
+      ],
+      "reference_solution_module": "Benchmark.Cases.AeraFinance.ProvisionerV2AsyncSettlement.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -4869,6 +5172,888 @@
       "abstraction_notes": "This task captures the hidden liability-side effect of the summarized flash loan path: apparent repayment leaves pool ETH unchanged while still minting withdrawable caller credit.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.DamnVulnerableDeFi.SideEntrance.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/callback_during_process_x_preserves_accounting",
+      "task_id": "callback_during_process_x_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/callback_during_process_x_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "snapshot_callback_composition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackDuringProcessX_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackDuringProcessXPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Composes a callback into next carry with a pre-callback snapshotted processing budget.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/callback_during_process_y_preserves_accounting",
+      "task_id": "callback_during_process_y_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/callback_during_process_y_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "snapshot_callback_composition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackDuringProcessY_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackDuringProcessYPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Composes a callback into next carry with a pre-callback snapshotted processing budget.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/callback_x_then_compound_sell_x_old_snapshot_preserves_accounting",
+      "task_id": "callback_x_then_compound_sell_x_old_snapshot_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/callback_x_then_compound_sell_x_old_snapshot_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "snapshot_callback_composition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackXThenCompoundSellXOldSnapshot_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackXThenCompoundSellXOldSnapshotPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Bounds old processing against pre-callback carry so next-carry additions cannot be consumed by the old snapshot.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/callback_x_then_compound_sell_y_old_snapshot_preserves_accounting",
+      "task_id": "callback_x_then_compound_sell_y_old_snapshot_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/callback_x_then_compound_sell_y_old_snapshot_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "snapshot_callback_composition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackXThenCompoundSellYOldSnapshot_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackXThenCompoundSellYOldSnapshotPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Bounds old processing against pre-callback carry so next-carry additions cannot be consumed by the old snapshot.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/callback_x_then_settle_old_snapshot_preserves_accounting",
+      "task_id": "callback_x_then_settle_old_snapshot_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/callback_x_then_settle_old_snapshot_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "snapshot_callback_composition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackXThenSettleOldSnapshot_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackXThenSettleOldSnapshotPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Bounds old processing against pre-callback carry so next-carry additions cannot be consumed by the old snapshot.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/callback_y_then_compound_sell_x_old_snapshot_preserves_accounting",
+      "task_id": "callback_y_then_compound_sell_x_old_snapshot_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/callback_y_then_compound_sell_x_old_snapshot_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "snapshot_callback_composition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackYThenCompoundSellXOldSnapshot_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackYThenCompoundSellXOldSnapshotPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Bounds old processing against pre-callback carry so next-carry additions cannot be consumed by the old snapshot.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/callback_y_then_compound_sell_y_old_snapshot_preserves_accounting",
+      "task_id": "callback_y_then_compound_sell_y_old_snapshot_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/callback_y_then_compound_sell_y_old_snapshot_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "snapshot_callback_composition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackYThenCompoundSellYOldSnapshot_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackYThenCompoundSellYOldSnapshotPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Bounds old processing against pre-callback carry so next-carry additions cannot be consumed by the old snapshot.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/callback_y_then_settle_old_snapshot_preserves_accounting",
+      "task_id": "callback_y_then_settle_old_snapshot_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/callback_y_then_settle_old_snapshot_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "snapshot_callback_composition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.callbackYThenSettleOldSnapshot_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CallbackYThenSettleOldSnapshotPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Bounds old processing against pre-callback carry so next-carry additions cannot be consumed by the old snapshot.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/compound_liquidity_sell_x_partial_preserves_accounting",
+      "task_id": "compound_liquidity_sell_x_partial_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/compound_liquidity_sell_x_partial_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "partial_compounding",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.compoundLiquiditySellX_partial_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CompoundLiquiditySellXPartialPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful arithmetic transition for FullRangeFeeRehype INV-REH-1; external DAMM execution is represented by checked spent, received, and provided amounts.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/compound_liquidity_sell_y_partial_preserves_accounting",
+      "task_id": "compound_liquidity_sell_y_partial_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/compound_liquidity_sell_y_partial_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "partial_compounding",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.compoundLiquiditySellY_partial_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/CompoundLiquiditySellYPartialPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful arithmetic transition for FullRangeFeeRehype INV-REH-1; external DAMM execution is represented by checked spent, received, and provided amounts.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/convert_forward_x_to_y_partial_preserves_accounting",
+      "task_id": "convert_forward_x_to_y_partial_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/convert_forward_x_to_y_partial_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "partial_conversion",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.convertForwardXToY_partial_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ConvertForwardXToYPartialPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful arithmetic transition for FullRangeFeeRehype INV-REH-1; external DAMM execution is represented by checked spent, received, and provided amounts.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/convert_forward_y_to_x_partial_preserves_accounting",
+      "task_id": "convert_forward_y_to_x_partial_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/convert_forward_y_to_x_partial_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "partial_conversion",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.convertForwardYToX_partial_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ConvertForwardYToXPartialPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful arithmetic transition for FullRangeFeeRehype INV-REH-1; external DAMM execution is represented by checked spent, received, and provided amounts.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/on_swap_fee_received_x_preserves_accounting",
+      "task_id": "on_swap_fee_received_x_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/on_swap_fee_received_x_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "fee_callback_split",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.onSwapFeeReceivedX_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/OnSwapFeeReceivedXPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful arithmetic transition for FullRangeFeeRehype INV-REH-1; external DAMM execution is represented by checked spent, received, and provided amounts.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/on_swap_fee_received_y_preserves_accounting",
+      "task_id": "on_swap_fee_received_y_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/on_swap_fee_received_y_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "fee_callback_split",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.onSwapFeeReceivedY_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/OnSwapFeeReceivedYPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful arithmetic transition for FullRangeFeeRehype INV-REH-1; external DAMM execution is represented by checked spent, received, and provided amounts.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/process_fees_fully_deferred_preserves_accounting",
+      "task_id": "process_fees_fully_deferred_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/process_fees_fully_deferred_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "deferred_carry",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.processFees_fullyDeferred_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ProcessFeesFullyDeferredPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Models only the strict no-success terminal branch in which every carry cell is unchanged. False-after-successful-swap outcomes are covered by the separate processFeesStep composition task.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/process_fees_step_preserves_accounting",
+      "task_id": "process_fees_step_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/process_fees_step_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "process_branch_composition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.processFeesStep_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ProcessFeesStepPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Mechanically composes both independently succeeding/deferred forward conversions, all LP balancing/provide outcomes, same-token settlement, and aggregate callback merge into one finite modeled processFees accounting-outcome composition. The Boolean result includes false-after-successful-swap paths. Source-branch reachability and control-flow equivalence are not proved.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/release_closed_market_credit_preserves_accounting",
+      "task_id": "release_closed_market_credit_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/release_closed_market_credit_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "closed_market_release",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.releaseClosedMarketCredit_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/ReleaseClosedMarketCreditPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful arithmetic transition for FullRangeFeeRehype INV-REH-1; external DAMM execution is represented by checked spent, received, and provided amounts.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "doppler/multicurve_fee_conservation/settle_market_forwards_preserves_accounting",
+      "task_id": "settle_market_forwards_preserves_accounting",
+      "case_id": "doppler/multicurve_fee_conservation",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/doppler/multicurve_fee_conservation/tasks/settle_market_forwards_preserves_accounting.yaml",
+      "split": "active",
+      "family_id": "doppler",
+      "implementation_id": "damm_multicurve_full_range_rehype",
+      "source_ref": "https://github.com/whetstoneresearch/damm@6424187967f93df1185f435f3adbcac0ce8fc7ec:src/supported/grid-full-range/FullRangeFeeRehype.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "beneficiary_settlement",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Doppler.MulticurveFeeConservation.settleMarketForwards_preserves_accounting",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Contract.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/doppler/multicurve_fee_conservation/verity/Specs.lean",
+        "Benchmark/Cases/Doppler/MulticurveFeeConservation/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Doppler/MulticurveFeeConservation/Tasks/SettleMarketForwardsPreservesAccounting.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful arithmetic transition for FullRangeFeeRehype INV-REH-1; external DAMM execution is represented by checked spent, received, and provided amounts.",
+      "unsupported_feature_codes": [
+        "external_damm_calls_abstracted",
+        "checked_uint_arithmetic_as_nat",
+        "proof_ghost_terminal_counters"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Doppler.MulticurveFeeConservation.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -14080,6 +15265,142 @@
       }
     },
     {
+      "task_ref": "velora/bridge_staking/handle_v3_across_message_preserves_allocated",
+      "task_id": "handle_v3_across_message_preserves_allocated",
+      "case_id": "velora/bridge_staking",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/velora/bridge_staking/tasks/handle_v3_across_message_preserves_allocated.yaml",
+      "split": "active",
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "source_ref": "https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Velora.BridgeStaking.handleV3AcrossMessage_preserves_allocated",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Contract.lean"
+      ],
+      "specification_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Velora/BridgeStaking/Tasks/handle_v3_across_message_preserves_allocated.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The target covers VLR and WETH receive, stake success, stake catch with inline rescue, SafeTransferLib success/failure, and every reverting guard or checked- arithmetic path. Its synchronized specification binds the actual transition and asks for conservation from the incoming invariant. After exact beneficiary- sentinel initialization, callback amount validation uses the selected stored amount for both new and existing records. `depositResult` explicitly selects the external seVLR success-versus-catch outcome; Boolean per-token transfer results select each inline rescue transfer outcome. No external call is invoked or linked. Successful deposit and inline rescue debit each modeled balance by the same amount as its allocation; transfer failure atomically restores the incoming state, including earlier rescue writes. The Solidity interpretation assumes entry balances include Across delivery, balanceOf is faithful, successful transfers debit exactly the requested amount, and no fee, rebase, seizure, donation, reentrancy-induced accounting mutation, or other atomic balance perturbation occurs. Public caller, authorization, pause checks, approvals, sourceChainId, ABI decoding, and events are scope exclusions. Storage is flattened semantic storage rather than upstream EVM layout. The reference module mechanically proves the transition by composing record-preparation, token-credit, and settlement lemmas; the generated task remains an open proof obligation for benchmark agents.",
+      "unsupported_feature_codes": [
+        "erc20_external_balance_modeled_as_storage",
+        "external_call_success_modeled_as_parameter"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Velora.BridgeStaking.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "velora/bridge_staking/rescue_pending_funds_preserves_allocated",
+      "task_id": "rescue_pending_funds_preserves_allocated",
+      "case_id": "velora/bridge_staking",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/velora/bridge_staking/tasks/rescue_pending_funds_preserves_allocated.yaml",
+      "split": "active",
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "source_ref": "https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Velora.BridgeStaking.rescuePendingFunds_preserves_allocated",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Contract.lean"
+      ],
+      "specification_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Velora/BridgeStaking/Tasks/rescue_pending_funds_preserves_allocated.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Fully proved from the incoming conservation invariant alone for every modeled receipt-flag combination, beneficiary/not-executed guard, checked underflow, successful equal debit, and explicit per-token SafeTransferLib outcome. If either transfer fails, Contract.run atomically restores the incoming state, including any earlier VLR rescue writes. Successful transfers assume faithful balanceOf, exact requested-amount debits, and no fees, rebases, seizures, donations, reentrancy-induced accounting mutation, or unrelated atomic perturbations. Beneficiary-or-owner authorization is a public-boundary scope exclusion.",
+      "unsupported_feature_codes": [
+        "erc20_external_balance_modeled_as_storage"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Velora.BridgeStaking.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "velora/bridge_staking/withdraw_unallocated_tokens_preserves_allocated",
+      "task_id": "withdraw_unallocated_tokens_preserves_allocated",
+      "case_id": "velora/bridge_staking",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/velora/bridge_staking/tasks/withdraw_unallocated_tokens_preserves_allocated.yaml",
+      "split": "active",
+      "family_id": "velora",
+      "implementation_id": "bridge_staking",
+      "source_ref": "https://github.com/VeloraDEX/velora-miro-contracts@bfb5f8093bc6f6db0f0840b83d22e803c2811fcb:contracts/BridgeStaking.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "invariant",
+      "difficulty": "easy",
+      "theorem_name": "Benchmark.Cases.Velora.BridgeStaking.withdrawUnallocatedTokens_preserves_allocated",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Contract.lean"
+      ],
+      "specification_files": [
+        "Benchmark/Cases/Velora/BridgeStaking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Velora/BridgeStaking/Tasks/withdraw_unallocated_tokens_preserves_allocated.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Fully proved under the conservation invariant alone. Successful executions withdraw balance - allocated and leave balance equal to allocated; arithmetic, zero-amount, and explicit SafeTransferLib failure outcomes atomically revert to the unchanged state. The Boolean transfer result is an external-call outcome abstraction. Relating successful modeled debits to ERC-20 execution assumes faithful balanceOf, exact requested-amount debits, and no fees, rebases, seizures, donations, reentrancy-induced accounting mutation, or other atomic balance perturbations. Solidity accepts arbitrary token addresses; this task intentionally covers only the VLR/WETH accounting slice selected by `isVlr`. Owner authorization is a public-boundary scope exclusion.",
+      "unsupported_feature_codes": [
+        "erc20_external_balance_modeled_as_storage"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Velora.BridgeStaking.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "wildcat/borrow_liquidity_safety/positive_borrow_preserves_required_liquidity",
       "task_id": "positive_borrow_preserves_required_liquidity",
       "case_id": "wildcat/borrow_liquidity_safety",
@@ -15658,5 +16979,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-07-30T12:51:38.751230+00:00"
+  "generated_at": "2026-08-27T10:01:34.369815+00:00"
 }

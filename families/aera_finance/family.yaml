@@ -1,0 +1,14 @@
+manifest_kind: family
+schema_version: 1
+family_id: aera_finance
+display_name: Aera Finance
+split: active
+status: active
+description: >
+  Benchmark family for Aera Finance V3 async-request terminal safety.
+implementation_ids:
+  - aera_contracts_v3
+case_ids:
+  - aera_finance/provisioner_v2_async_settlement
+source_languages:
+  - solidity
