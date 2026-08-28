@@ -1,0 +1,14 @@
+manifest_kind: family
+schema_version: 1
+family_id: ascnt
+display_name: Ascnt
+split: active
+status: active
+description: >
+  Benchmark family for Ascnt v1 dynamic-fee hook arithmetic and accounting.
+implementation_ids:
+  - simhook_v1
+case_ids:
+  - ascnt/dynamic_fee_path_additivity
+source_languages:
+  - solidity
