@@ -62,6 +62,7 @@ active_cases = [
   "zodiac/roles_decoder_faithfulness",
   "zama/erc7984_confidential_token",
   "zama_protocol_apps/erc7984_upgradeable_exact_source",
+  "zksync/interop_commitment_tree_order",
 ]
 backlog_cases = [
   "usual/placeholder",
