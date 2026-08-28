@@ -11,7 +11,8 @@ Focus:
 - one covering ordered chain from sentinel 0 (`IMTOrder`)
 - physical append order is not sorted order
 - leaves-only append frame
-- `valueToIndex` is a separate map fact, not in the public theorem
+- `IMTValidState` combines central `IMTOrder` with the minimal `valueToIndex`
+  relation needed for its exact duplicate guard to derive real leaf-value absence
 
 Out of scope:
 - FullMerkle hashing and root bytes

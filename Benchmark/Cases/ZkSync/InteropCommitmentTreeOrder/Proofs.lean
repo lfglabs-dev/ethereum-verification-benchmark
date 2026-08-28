@@ -20,9 +20,9 @@ open Verity.Core.Uint256
   Reference proofs for IMT linked-list order.
 
   Theorems:
-  - `setup_establishes_order` (proved)
+  - `setup_establishes_valid_state` (ordered chain + map consistency)
   - `insert_leaf_frame` (unfolding of `insertPost` from `insert_run_of_success`)
-  - `insert_preserves_order` (covering-chain splice; no custom axioms)
+  - `insert_preserves_order` (covering-chain splice + map preservation; no custom axioms)
 -/
 
 private theorem one_ne_zero_uint : (1 : Uint256) ≠ 0 := by
@@ -77,6 +77,15 @@ private theorem valueToIndex_setupPost (s : ContractState)
     simpa [valueToIndexOf] using hFresh.2.2 v
   simp [valueToIndexOf, setupPost, hz]
 
+/-- The fresh setup writes no nonzero `valueToIndex` entry and its only
+    occupied leaf is the zero-valued sentinel, so the modeled map is
+    consistent with the occupied leaf records. -/
+private theorem valueToIndexConsistent_setupPost (s : ContractState)
+    (hFresh : freshZeroStorage s) : valueToIndexConsistent (setupPost s) := by
+  intro i hOccupied hIndexNeZero
+  have hIndexZero : i = 0 := (occupied_setupPost s i).1 hOccupied
+  exact False.elim (hIndexNeZero hIndexZero)
+
 private theorem setup_run_of_fresh (s : ContractState)
     (hFresh : freshZeroStorage s) :
     IndexedMerkleTree.setup.run s = ContractResult.success () (setupPost s) := by
@@ -121,10 +130,22 @@ theorem setup_establishes_order (s : ContractState)
     subst ht0
     exact ⟨nextIndex_setupPost_zero s, nextValue_setupPost_zero s⟩
 
-theorem setup_establishes_IMTOrder (s s' : ContractState) :
+/-- `setup` on fresh-zero storage establishes the ordered chain together with
+    the value-to-index consistency relation required by `insert`. -/
+theorem setup_establishes_valid_state (s : ContractState)
+    (hFresh : freshZeroStorage s) :
+    IMTValidState (IndexedMerkleTree.setup.run s).snd := by
+  have hRun := setup_run_of_fresh s hFresh
+  rw [hRun]
+  exact {
+    order := by simpa [hRun] using setup_establishes_order s hFresh
+    mapConsistency := valueToIndexConsistent_setupPost s hFresh
+  }
+
+theorem setup_establishes_valid_state_spec (s s' : ContractState) :
     setup_establishes_spec s s' := by
   intro hFresh hEq
-  simpa [hEq] using setup_establishes_order s hFresh
+  simpa [hEq] using setup_establishes_valid_state s hFresh
 
 
 def insertLow (s : ContractState) (value lowHint : Uint256) : Uint256 :=
@@ -455,6 +476,35 @@ private theorem insert_success_guards
       (eq_false_of_ne_true hln)
     simp [Contract.run, hrev] at hOk
 
+/-- The source duplicate guard plus valid-state map consistency derives real
+    absence from occupied leaf values. This is an internal proof helper, not
+    a public caller-supplied premise. -/
+private theorem insert_success_value_not_stored
+    (value lowHint : Uint256) (s : ContractState)
+    (hValid : IMTValidState s)
+    (hOk : insert_succeeds value lowHint s) :
+    valueNotStored s value := by
+  intro j hOcc hLeaf
+  have hGuards := insert_success_guards value lowHint s hOk
+  rcases hGuards with ⟨_hln, hValue, hMap, _hhint, _hval, _hAdd⟩
+  have hValueNeZero : value ≠ 0 := by
+    intro hZero
+    have hFalse : (value != 0) = false := by simp [hZero]
+    simp [hFalse] at hValue
+  have hMapZero : valueToIndexOf s value = 0 := by
+    simpa [valueToIndexOf] using hMap
+  have hIndexNeZero : j ≠ 0 := by
+    intro hIndexZero
+    subst hIndexZero
+    have hSentinel : leafValue s 0 = 0 := hValid.order.sentinelValue
+    have hValueZero : value = 0 := by simpa [hSentinel] using hLeaf.symm
+    exact hValueNeZero hValueZero
+  have hMapAtLeaf : valueToIndexOf s (leafValue s j) = j :=
+    hValid.mapConsistency j hOcc hIndexNeZero
+  have hMapAtValue : valueToIndexOf s value = j := by
+    simpa [hLeaf] using hMapAtLeaf
+  exact hIndexNeZero (hMapAtValue.symm.trans hMapZero)
+
 private theorem chain_index_cons
     (s : ContractState) (a b : Uint256) (rest : List Uint256)
     (h : isIndexChain s (a :: b :: rest)) :
@@ -692,7 +742,8 @@ private theorem covering_walk
     Premise: modeled success and `IMTOrder`.
     Conclusion: `insertLow` is occupied, its stored value is `< value`,
     and the walk has stopped (`nextValue = 0` or `¬ nextValue < value`).
-    Combined with `valueNotStored`, that predecessor is the splice point. -/
+    The internally derived `valueNotStored` fact then makes that predecessor
+    the splice point. -/
 theorem insert_walk_brackets
     (value lowHint : Uint256) (s : ContractState)
     (hInv : IMTOrder s)
@@ -1101,6 +1152,37 @@ private theorem insertPost_occupied
       have : (leafNumber s).val < (leafNumber s).val + 1 := Nat.lt_succ_self _
       simpa [occupied, hln, lt_def] using this
 
+/-- The successful insert writes exactly the fresh `valueToIndex[value]` entry
+    and frames every other entry, so it preserves the minimal map consistency
+    relation without assuming that preservation as an axiom. -/
+private theorem insertPost_valueToIndexConsistent
+    (value lowHint : Uint256) (s : ContractState)
+    (hValid : IMTValidState s)
+    (hOk : insert_succeeds value lowHint s) :
+    valueToIndexConsistent (insertPost s value lowHint) := by
+  have hGuards := insert_success_guards value lowHint s hOk
+  rcases hGuards with ⟨_hLeafNumber, _hValue, _hMap, _hHint, _hHintValue, hAdd⟩
+  have hAddBound : (leafNumber s).val + 1 ≤ MAX_UINT256 :=
+    (Verity.Proofs.Stdlib.Math.CheckedArithmetic.safeAdd_isSome_iff_addNoOverflow
+      (s.storage 0) 1).mp (by simpa [leafNumber] using hAdd)
+  have hAbsent := insert_success_value_not_stored value lowHint s hValid hOk
+  intro i hOccupied hIndexNeZero
+  rcases (insertPost_occupied s value lowHint i hAddBound).1 hOccupied with hOld | hNew
+  · have hIndexNeNew : i ≠ leafNumber s := ne_of_lt_uint hOld
+    have hLeafFrame : leafValue (insertPost s value lowHint) i = leafValue s i :=
+      insertPost_leafValue_old s value lowHint i hIndexNeNew
+    have hLeafNeValue : leafValue s i ≠ value := hAbsent i hOld
+    calc
+      valueToIndexOf (insertPost s value lowHint)
+          (leafValue (insertPost s value lowHint) i) =
+          valueToIndexOf (insertPost s value lowHint) (leafValue s i) := by
+            rw [hLeafFrame]
+      _ = valueToIndexOf s (leafValue s i) :=
+            insertPost_valueToIndex_old s value lowHint (leafValue s i) hLeafNeValue
+      _ = i := hValid.mapConsistency i hOld hIndexNeZero
+  · subst hNew
+    rw [insertPost_leafValue_new, insertPost_valueToIndex_new]
+
 /-- Sentinel leaf value is unchanged: index 0 is never the fresh index. -/
 private theorem insertPost_sentinelValue
     (value lowHint : Uint256) (s : ContractState)
@@ -1420,7 +1502,7 @@ private theorem chainValuesIncrease_splice
           simpa [hleafA, hleafC] using hlt
 
 /-- Successful insert splices the fresh index after the walk predecessor. -/
-theorem insert_spliced_chain
+private theorem insert_spliced_chain
     (value lowHint : Uint256) (s : ContractState)
     (hInv : IMTOrder s)
     (hOk : insert_succeeds value lowHint s)
@@ -1703,7 +1785,7 @@ private theorem insertPost_covers
   have hSplice := insert_spliced_chain value lowHint s hInv hOk hAbs hWalk old hOld
   exact ⟨_, hSplice⟩
 
-theorem insert_preserves_order_of_frame
+private theorem insert_preserves_order_of_frame
     (value lowHint : Uint256) (s : ContractState)
     (hInv : IMTOrder s)
     (hOk : insert_succeeds value lowHint s)
@@ -1714,15 +1796,31 @@ theorem insert_preserves_order_of_frame
     covering := insertPost_covers value lowHint s hInv hOk hAbs
   }
 
-/-- A successful `insert` preserves `IMTOrder`. -/
+/-- Internal valid-state preservation: the chain proof receives its absence
+    helper from the modeled duplicate guard, while the map relation follows
+    from the concrete insert writes and their frame behavior. -/
+private theorem insert_preserves_valid_state_of_frame
+    (value lowHint : Uint256) (s : ContractState)
+    (hValid : IMTValidState s)
+    (hOk : insert_succeeds value lowHint s) :
+    IMTValidState (insertPost s value lowHint) := by
+  have hAbsent := insert_success_value_not_stored value lowHint s hValid hOk
+  exact {
+    order := insert_preserves_order_of_frame value lowHint s hValid.order hOk hAbsent
+    mapConsistency := insertPost_valueToIndexConsistent value lowHint s hValid hOk
+  }
+
+/-- A successful `insert` preserves the central ordered covering chain and the
+    value-to-index consistency that makes its exact Solidity duplicate guard
+    imply genuine value absence. No caller-supplied absence premise remains. -/
 theorem insert_preserves_order
     (value lowHint : Uint256) (s : ContractState) :
     insert_preserves_spec value lowHint s := by
-  intro hInv hOk hAbs
+  intro hValid hOk
   have hchar := insert_run_of_success value lowHint s hOk
   have _hFrame := insert_leaf_frame value lowHint s
       ((IndexedMerkleTree.insert value lowHint).run s).snd
   rw [hchar]
-  exact insert_preserves_order_of_frame value lowHint s hInv hOk hAbs
+  exact insert_preserves_valid_state_of_frame value lowHint s hValid hOk
 
 end Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder

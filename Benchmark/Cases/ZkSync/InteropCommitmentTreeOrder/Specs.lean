@@ -14,11 +14,15 @@ open Verity.EVM.Uint256
   strictly increasing `value`s. See IndexedMerkleTree.t.sol:116-135
   (insert 10, 20, 15 at indices 1, 2, 3; traversal 0 -> 10 -> 15 -> 20).
 
-  The public invariant is one concrete chain witness. It is not a bundle
-  of independent post-state fields. Unique tail, successor domain,
-  absence bracketing, and nonzero non-sentinel leaves are intended
-  corollaries of that witness plus `leafValue 0 = 0`. `valueToIndex`
-  agreement is a separate map fact, not part of the central theorem.
+  `IMTOrder` is the central linked-list invariant: one concrete covering
+  chain witness, not a bundle of independent post-state fields. Unique tail,
+  successor domain, absence bracketing, and nonzero non-sentinel leaves are
+  intended corollaries of that witness plus `leafValue 0 = 0`.
+
+  `IMTValidState` adds the minimal value-to-index consistency needed to turn
+  Solidity's `valueToIndex[value] == 0` guard into absence from occupied leaf
+  values. The map fact is intentionally separate from `IMTOrder` so the
+  sorted covering-chain theorem remains the central order invariant.
 
   Abstract semantic channels (not EVM / source slots; no bytecode refinement):
     channel 0: modeled leaf count (source FullTree._leafNumber, relative slot 1)
@@ -135,12 +139,22 @@ def uniqueTail (s : ContractState) : Prop :=
 def nonzeroLeaves (s : ContractState) : Prop :=
   ∀ i : Uint256, occupied s i → i ≠ 0 → leafValue s i ≠ 0
 
-/-- For v ≠ 0, valueToIndex[v] = i > 0 iff i is occupied, holds that value,
-    and is reachable from sentinel 0. Separate map fact; not in `IMTOrder`. -/
-def valueToIndexAgreement (s : ContractState) : Prop :=
-  ∀ v : Uint256, v ≠ 0 →
-    let i := valueToIndexOf s v
-    (i ≠ 0 ↔ (occupied s i ∧ leafValue s i = v ∧ reachableIndex s 0 i))
+/-- Every occupied non-sentinel leaf is named by `valueToIndex` at its stored
+    value. This is the minimal modeled map consistency fact needed by
+    `insert`: its exact Solidity guard `valueToIndex[value] == 0` then entails
+    that no occupied leaf stores the nonzero `value`. `IMTOrder` supplies the
+    sentinel fact and covering-chain order; this predicate does not duplicate
+    either. -/
+def valueToIndexConsistent (s : ContractState) : Prop :=
+  ∀ i : Uint256, occupied s i → i ≠ 0 →
+    valueToIndexOf s (leafValue s i) = i
+
+/-- Valid modeled IMT state: the central ordered covering-chain invariant plus
+    the `valueToIndex` relation that makes the source duplicate guard sound
+    for occupied leaf values. -/
+structure IMTValidState (s : ContractState) : Prop where
+  order : IMTOrder s
+  mapConsistency : valueToIndexConsistent s
 
 /-- Absence from the modeled linked-list value set (not Merkle-authenticated
     non-inclusion). Corollary of a covering strictly increasing chain. -/
@@ -162,33 +176,31 @@ def freshZeroStorage (s : ContractState) : Prop :=
   (∀ i : Uint256, leafValue s i = 0 ∧ nextIndex s i = 0 ∧ nextValue s i = 0) ∧
   (∀ v : Uint256, valueToIndexOf s v = 0)
 
-/-- `setup` establishes `IMTOrder` from fresh-zero storage. -/
+/-- `setup` establishes the ordered chain and value-to-index consistency from
+    fresh-zero storage. -/
 def setup_establishes_spec (s s' : ContractState) : Prop :=
   freshZeroStorage s →
   ((IndexedMerkleTree.setup.run s).snd = s') →
-  IMTOrder s'
+  IMTValidState s'
 
 def insert_succeeds (value lowHint : Uint256) (s : ContractState) : Prop :=
   match (IndexedMerkleTree.insert value lowHint).run s with
   | .success _ _ => True
   | .revert _ _ => False
 
-/-- The inserted value is absent from stored leaf values. Required as an
-    explicit premise for order preservation: without it, inserting a value
-    equal to an existing leaf value would break strict increase along the
-    chain. The `valueToIndex == 0` guard only implies this when the map
-    agrees with stored values, which `IMTOrder` deliberately does not
-    assume. -/
+/-- Absence from stored leaf values. `insert` derives this internal helper
+    from its modeled `valueToIndex[value] == 0` guard and `IMTValidState`; it
+    is deliberately not a caller-supplied premise of the public spec. -/
 def valueNotStored (s : ContractState) (v : Uint256) : Prop :=
   ∀ j : Uint256, occupied s j → leafValue s j ≠ v
 
-/-- Successful `insert` preserves `IMTOrder`. -/
+/-- Successful `insert` preserves both the central ordered covering chain and
+    the value-to-index consistency relation. -/
 def insert_preserves_spec
     (value lowHint : Uint256) (s : ContractState) : Prop :=
-  IMTOrder s →
+  IMTValidState s →
   insert_succeeds value lowHint s →
-  valueNotStored s value →
-  IMTOrder ((IndexedMerkleTree.insert value lowHint).run s).snd
+  IMTValidState ((IndexedMerkleTree.insert value lowHint).run s).snd
 
 /-- Leaf-record frame of a successful insert: occupied values at indices
     `< old leafNumber` are unchanged; the only leaf-record mutation is the
