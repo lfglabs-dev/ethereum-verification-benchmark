@@ -11,4 +11,3 @@ def caseReady : Bool := true
 #print axioms directDeposit_preservesNonnegativeBacking
 
 end Benchmark.Cases.Paraclear.DirectDepositBacking
-
