@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: tydro
+display_name: Tydro
+split: active
+status: active
+description: >
+  Benchmark family for Tydro position-account lifecycle risk floors and the
+  distinct owner, relayer, and Aave Pool callback authority boundaries on Ink.
+implementation_ids:
+  - ink-position-account
+case_ids:
+  - tydro/position_account_floor_authority
+source_languages:
+  - solidity

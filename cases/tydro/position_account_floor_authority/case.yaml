@@ -1,0 +1,73 @@
+manifest_kind: case
+project: tydro
+case_id: position_account_floor_authority
+schema_version: 1
+split: active
+family_id: tydro
+implementation_id: ink-position-account
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: null
+upstream_commit: null
+original_contract_path: >
+  src/accounts/TydroPositionAccount.sol plus TydroPositionAccountValidation.sol,
+  TydroPositionIntentHashing.sol, and TydroPositionTypes.sol
+source_ref: https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract
+lean_target: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Compile
+spec_target: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Specs
+proof_target: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs
+selected_functions:
+  - open
+  - close
+  - _assertOpenPostconditions
+  - _assertClosePostconditions
+  - _validateAndConsumeTypedLifecycleIntent
+  - executeOperation
+  - setEModeCategory
+  - claimATokens
+  - claimRawAssets
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - explorer_verified_source_bundle
+  - signed_health_factor_and_output_floors
+  - supplied_and_debt_postcondition_bounds
+  - exact_clone_identity_and_nonce_binding
+  - owner_recovery_as_trusted_input
+  - pool_initiator_asset_and_context_binding
+  - one_shot_callback_context_consumption
+  - direct_owner_recovery_authority
+  - transaction_atomicity_via_contract_run
+  - signed_floor_authority_stage_composition
+abstraction_notes: >
+  The model isolates successful-return checks from TydroPositionAccount. Open and
+  close consume externally measured swap, Aave, and token outcomes and prove the
+  inequalities enforced by source guards; it does not establish that Aave health
+  factors, oracle prices, or token outcomes are economically correct. Lifecycle
+  authority exposes the exact account, immutable identity, expiry, optional relayer,
+  nonce, and recovered owner checks, while EIP-712 hashing and ECDSA recovery remain
+  trusted inputs. Callback authority separately pins Pool caller, account initiator,
+  borrow asset, and matching nonzero context, consuming the modeled EIP-1153 slot
+  before external effects. Direct eMode and recovery paths remain owner-only, with
+  recovery recipients fixed to the immutable owner. Clone construction, multihop
+  routing, events, and unrelated registry policy are outside scope. The composed signed-open
+  and signed-close theorems connect the modeled lifecycle-authority and floor-check stages
+  under trusted digest/recovery inputs; they are not public-call or bytecode refinements.
+unsupported_feature_codes:
+  - external_aave_and_token_results_as_inputs
+  - eip712_and_ecdsa_recovery_as_inputs
+  - clone_immutable_argument_decoding_out_of_scope
+  - eip1153_as_explicit_transaction_local_state
+  - multihop_route_execution_out_of_scope
+notes: >
+  Public source was verified on 2026-08-31 with Solidity 0.8.24. SHA-256:
+  TydroPositionAccount.sol 4946fc1dd0adf444fe0bde6b831e27a63c3c5deae0141caf39528d1866f11ec4;
+  TydroPositionAccountValidation.sol 66fc1b68fafe9c2e646fba82b0ac52e1ddcb702d18e3413f88030d6311ee9807;
+  TydroPositionIntentHashing.sol 5065ed00f02b9ddc4a4612ef12cf8cd6cf3feede716ffda17e91d132a15f57c0;
+  TydroPositionTypes.sol c139b9602dbffc72bfeeb083184a7728260dac3fa1dfb455b1bf348c0cfcc2aa.
+  The suite proves ten successful-return implications, including two stage-composition
+  theorems, and does not assert an upstream commit for the explorer-verified source bundle.

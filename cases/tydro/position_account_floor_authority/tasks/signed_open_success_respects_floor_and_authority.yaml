@@ -1,0 +1,36 @@
+manifest_kind: task
+schema_version: 1
+task_id: signed_open_success_respects_floor_and_authority
+case_id: tydro/position_account_floor_authority
+split: active
+family_id: tydro
+implementation_id: ink-position-account
+source_ref: https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.signed_open_success_respects_floor_and_authority
+proof_family: protocol_transition_correctness
+property_class: composition_invariant
+difficulty: hard
+category: position-risk
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/tydro/position_account_floor_authority/verity/Contract.lean
+  - Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean
+specification_files:
+  - cases/tydro/position_account_floor_authority/verity/Specs.lean
+  - Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean
+editable_files:
+  - Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/SignedOpenSuccessRespectsFloorAndAuthority.lean
+reference_solution_module: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs
+reference_solution_declaration: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.signed_open_success_respects_floor_and_authority
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Composes the modeled open source-typing, lifecycle-authority, and successful-open floor stages, deriving the uint8 eMode-category bound and preserving digest and recovery premises, identity and nonce authority, and every open floor or ceiling. Digest construction and signer recovery are trusted abstractions; this is not public-call or deployed-bytecode refinement.
+unsupported_feature_codes:
+  - external_aave_and_token_results_as_inputs
+  - eip712_and_ecdsa_recovery_as_inputs
+  - clone_immutable_argument_decoding_out_of_scope
+  - multihop_route_execution_out_of_scope

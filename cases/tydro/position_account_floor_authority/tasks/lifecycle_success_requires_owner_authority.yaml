@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: lifecycle_success_requires_owner_authority
+case_id: tydro/position_account_floor_authority
+split: active
+family_id: tydro
+implementation_id: ink-position-account
+source_ref: https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.lifecycle_success_requires_owner_authority
+proof_family: authorization_enablement
+property_class: lifecycle_authorization
+difficulty: hard
+category: access-control
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/tydro/position_account_floor_authority/verity/Contract.lean
+  - Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean
+specification_files:
+  - cases/tydro/position_account_floor_authority/verity/Specs.lean
+  - Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean
+editable_files:
+  - Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/LifecycleSuccessRequiresOwnerAuthority.lean
+reference_solution_module: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs
+reference_solution_declaration: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.lifecycle_success_requires_owner_authority
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Successful lifecycle authorization binds the exact account and immutable owner, Pool, supply asset, and borrow asset; enforces expiry and optional relayer policy; consumes the current nonce; and requires owner recovery. Cryptographic recovery is an explicit trusted input.
+unsupported_feature_codes:
+  - eip712_and_ecdsa_recovery_as_inputs
+  - clone_immutable_argument_decoding_out_of_scope

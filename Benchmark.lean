@@ -8,3 +8,4 @@ import Benchmark.Cases.Zama.ERC7984ConfidentialToken.Compile
 import Benchmark.Cases.TermFinance.TermAuctionClearing.Compile
 import Benchmark.Cases.ERC4337.EntryPointInvariant.Compile
 import Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Compile
+import Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Compile

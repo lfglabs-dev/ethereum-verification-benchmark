@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 44 cases and 285 task manifests. Of those, 285 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 47 cases and 299 task manifests. Of those, 299 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -23,6 +23,7 @@ The active suite currently contains 44 cases and 285 task manifests. Of those, 2
 | `erc4337/entry_point_invariant` | 33 | `complete` |
 | `ethereum/deposit_contract_minimal` | 5 | `partial` |
 | `forgeyields/global_solvency` | 7 | `complete` |
+| `gearbox/bytecode_version_index` | 1 | `complete` |
 | `hypernova/settled_payout_safety` | 2 | `complete` |
 | `ipor/plasma_vault_redeem_split` | 2 | `complete` |
 | `kleros/sortition_trees` | 6 | `partial` |
@@ -47,6 +48,7 @@ The active suite currently contains 44 cases and 285 task manifests. Of those, 2
 | `t3tris/hwm_performance_fee` | 8 | `complete` |
 | `term_finance/term_auction_clearing` | 1 | `complete` |
 | `termmax/order_v2_buy_xt_single_segment` | 1 | `complete` |
+| `tydro/position_account_floor_authority` | 10 | `complete` |
 | `uniswap_v2/pair_fee_adjusted_swap` | 6 | `complete` |
 | `usual/dao_collateral` | 5 | `complete` |
 | `velora/bridge_staking` | 3 | `complete` |
@@ -54,6 +56,7 @@ The active suite currently contains 44 cases and 285 task manifests. Of those, 2
 | `yo_protocol/async_redemption_escrow` | 14 | `complete` |
 | `zama/erc7984_confidential_token` | 12 | `partial` |
 | `zama_protocol_apps/erc7984_upgradeable_exact_source` | 4 | `complete` |
+| `zksync/interop_commitment_tree_order` | 3 | `complete` |
 | `zodiac/roles_decoder_faithfulness` | 3 | `complete` |
 
 ## Backlog
