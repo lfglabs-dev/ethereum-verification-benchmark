@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 44 cases and 285 task manifests. Of those, 285 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 47 cases and 290 task manifests. Of those, 290 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -23,6 +23,7 @@ The active suite currently contains 44 cases and 285 task manifests. Of those, 2
 | `erc4337/entry_point_invariant` | 33 | `complete` |
 | `ethereum/deposit_contract_minimal` | 5 | `partial` |
 | `forgeyields/global_solvency` | 7 | `complete` |
+| `gearbox/bytecode_version_index` | 1 | `complete` |
 | `hypernova/settled_payout_safety` | 2 | `complete` |
 | `ipor/plasma_vault_redeem_split` | 2 | `complete` |
 | `kleros/sortition_trees` | 6 | `partial` |
@@ -34,6 +35,7 @@ The active suite currently contains 44 cases and 285 task manifests. Of those, 2
 | `onedelta/caller_address_integrity` | 10 | `complete` |
 | `openzeppelin/erc4626_virtual_offset_deposit` | 6 | `complete` |
 | `paladin_votes/stream_recovery_claim_usdc` | 26 | `complete` |
+| `paraclear/direct_deposit_backing` | 1 | `complete` |
 | `pareto/redemption_backing` | 1 | `complete` |
 | `pendle/py_supply_pairing` | 4 | `complete` |
 | `piku/fund_conservation` | 4 | `complete` |
@@ -54,6 +56,7 @@ The active suite currently contains 44 cases and 285 task manifests. Of those, 2
 | `yo_protocol/async_redemption_escrow` | 14 | `complete` |
 | `zama/erc7984_confidential_token` | 12 | `partial` |
 | `zama_protocol_apps/erc7984_upgradeable_exact_source` | 4 | `complete` |
+| `zksync/interop_commitment_tree_order` | 3 | `complete` |
 | `zodiac/roles_decoder_faithfulness` | 3 | `complete` |
 
 ## Backlog

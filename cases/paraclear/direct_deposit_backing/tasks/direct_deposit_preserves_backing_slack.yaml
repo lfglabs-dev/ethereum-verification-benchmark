@@ -1,0 +1,41 @@
+manifest_kind: task
+schema_version: 1
+task_id: direct_deposit_preserves_backing_slack
+case_id: paraclear/direct_deposit_backing
+split: active
+family_id: paraclear
+implementation_id: client_cairo_extraction
+source_ref: client-supplied:paraclear-cairo-extraction:2026-09-07
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack
+proof_family: state_preservation_local_effects
+property_class: accounting_bound
+difficulty: medium
+category: arithmetic-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/paraclear/direct_deposit_backing/verity/Contract.lean
+  - Benchmark/Cases/Paraclear/DirectDepositBacking/CairoInt.lean
+  - Benchmark/Cases/Paraclear/DirectDepositBacking/Contract.lean
+specification_files:
+  - cases/paraclear/direct_deposit_backing/verity/Specs.lean
+  - Benchmark/Cases/Paraclear/DirectDepositBacking/Specs.lean
+editable_files:
+  - Benchmark/Generated/Paraclear/DirectDepositBacking/Tasks/DirectDepositPreservesBackingSlack.lean
+reference_solution_module: Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs
+reference_solution_declaration: Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack
+abstraction_level: source_aligned_state_machine
+abstraction_notes: >
+  Prove that every successful transition of the hand-written source-aligned Cairo
+  deposit model leaves per-token backing slack unchanged or greater. The key steps
+  are exact additive normalization of a deposit-shaped raw custody increment and a
+  bound showing that crediting one signed balance raises the sum of positive balances
+  by no more than the normalized credit. The task deliberately makes no compiled-Cairo
+  correspondence claim.
+unsupported_feature_codes:
+  - cairo_source_correspondence_missing
+  - external_dispatcher_callbacks_elided
+  - erc20_metadata_stability_assumed

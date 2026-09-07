@@ -10,36 +10,36 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 44,
-    "implementation_count": 45,
-    "active_case_count": 44,
+    "family_count": 47,
+    "implementation_count": 48,
+    "active_case_count": 47,
     "backlog_case_count": 1,
-    "active_task_count": 285,
+    "active_task_count": 290,
     "backlog_task_count": 0,
-    "buildable_case_count": 44,
-    "runnable_task_count": 285,
+    "buildable_case_count": 47,
+    "runnable_task_count": 290,
     "case_stage_counts": {
       "build_green": 35,
       "candidate": 1,
-      "proof_complete": 9
+      "proof_complete": 12
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 44
+      "translated": 47
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 37,
+      "complete": 40,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 285
+      "proof-only": 290
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
-      "accounting_bound": 18,
+      "accounting_bound": 19,
       "accounting_conservation": 53,
       "accounting_effect": 2,
       "accounting_invariant": 3,
@@ -70,6 +70,7 @@
       "deposit_mint_exactness": 1,
       "economic_no_double_charge": 1,
       "escrow_lower_bound": 3,
+      "exact_storage_transition": 1,
       "exploit_trace": 1,
       "failure_propagation": 3,
       "fee_accounting_bounds": 2,
@@ -78,6 +79,7 @@
       "fee_payout_bound": 1,
       "fee_rounding_and_aliasing": 1,
       "fee_trigger": 1,
+      "frame_condition": 1,
       "frame_property": 2,
       "functional_property": 2,
       "guarded_solvency": 7,
@@ -88,6 +90,8 @@
       "lifecycle_accounting": 3,
       "linked_list_acyclicity": 4,
       "linked_list_invariant": 8,
+      "linked_list_order": 1,
+      "linked_list_order_and_map_consistency": 1,
       "liveness_invariant": 1,
       "malformed_record_behavior": 1,
       "mapping_consistency": 1,
@@ -135,12 +139,12 @@
     "task_proof_family_counts": {
       "authorization_enablement": 42,
       "functional_correctness": 60,
-      "protocol_transition_correctness": 41,
+      "protocol_transition_correctness": 42,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 100
+      "state_preservation_local_effects": 104
     },
     "family_split_counts": {
-      "active": 43,
+      "active": 46,
       "mixed": 1
     }
   },
@@ -350,6 +354,23 @@
       "manifest_path": "families/forgeyields/family.yaml"
     },
     {
+      "family_id": "gearbox",
+      "display_name": "Gearbox",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Gearbox protocol components, including permissionless bytecode registration and exact version-index maintenance.",
+      "implementation_ids": [
+        "permissionless_b1b5e5b"
+      ],
+      "case_ids": [
+        "gearbox/bytecode_version_index"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/gearbox/family.yaml"
+    },
+    {
       "family_id": "hypernova",
       "display_name": "Hypernova",
       "split": "active",
@@ -535,6 +556,23 @@
         "solidity"
       ],
       "manifest_path": "families/paladin_votes/family.yaml"
+    },
+    {
+      "family_id": "paraclear",
+      "display_name": "Paraclear",
+      "split": "active",
+      "status": "active",
+      "description": "Source-aligned Lean benchmark cases for the Cairo Paraclear clearing contract used by Paradex, with explicit separation between model proofs and compiled Cairo.",
+      "implementation_ids": [
+        "client_cairo_extraction"
+      ],
+      "case_ids": [
+        "paraclear/direct_deposit_backing"
+      ],
+      "source_languages": [
+        "cairo"
+      ],
+      "manifest_path": "families/paraclear/family.yaml"
     },
     {
       "family_id": "pareto",
@@ -879,6 +917,23 @@
       "manifest_path": "families/zama_protocol_apps/family.yaml"
     },
     {
+      "family_id": "zksync",
+      "display_name": "zkSync Era",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Matter Labs zkSync Era contracts, starting with the atomic-interop Indexed Merkle Tree linked-list order invariant.",
+      "implementation_ids": [
+        "era_contracts"
+      ],
+      "case_ids": [
+        "zksync/interop_commitment_tree_order"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/zksync/family.yaml"
+    },
+    {
       "family_id": "zodiac",
       "display_name": "Zodiac Roles",
       "split": "active",
@@ -1090,6 +1145,22 @@
       "manifest_path": "families/forgeyields/implementations/contracts/implementation.yaml"
     },
     {
+      "family_id": "gearbox",
+      "implementation_id": "permissionless_b1b5e5b",
+      "display_name": "Gearbox Permissionless",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/Gearbox-protocol/permissionless",
+      "upstream_commit": "b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769",
+      "source_language": "solidity",
+      "source_artifact_path": "contracts/global/BytecodeRepository.sol",
+      "case_ids": [
+        "gearbox/bytecode_version_index"
+      ],
+      "notes": "Implementation entry pinned to the Gearbox Permissionless BytecodeRepository revision used for the exact version-index transition benchmark.",
+      "manifest_path": "families/gearbox/implementations/permissionless_b1b5e5b/implementation.yaml"
+    },
+    {
       "family_id": "hypernova",
       "implementation_id": "arbitrum-deployment",
       "display_name": "Hypernova Arbitrum Payout Deployment",
@@ -1264,6 +1335,22 @@
       ],
       "notes": "Claim accounting contract translated as a single-round slice with Merkle verification abstracted away from the benchmark.",
       "manifest_path": "families/paladin_votes/implementations/stream_recovery_claim/implementation.yaml"
+    },
+    {
+      "family_id": "paraclear",
+      "implementation_id": "client_cairo_extraction",
+      "display_name": "Paraclear client-supplied Cairo extraction",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "source_language": "cairo",
+      "source_artifact_path": "src/paraclear/paraclear.cairo",
+      "case_ids": [
+        "paraclear/direct_deposit_backing"
+      ],
+      "notes": "Private Cairo extraction reviewed on 2026-09-07. The public benchmark retains file hashes and source ranges but does not publish the supplied source. The Lean case is a hand-written state-machine model without Cairo/Sierra/CASM correspondence. Canonical source paths keep the original src/ prefix; the supplied extraction root held the hash-matching files at paraclear/paraclear.cairo and token/token.cairo.",
+      "manifest_path": "families/paraclear/implementations/client_cairo_extraction/implementation.yaml"
     },
     {
       "family_id": "pareto",
@@ -1600,6 +1687,22 @@
       ],
       "notes": "Exact-source implementation entry for the upgradeable ERC-7984 base used by Zama protocol-apps ConfidentialWrapper. The retained source and base transfer-slice proofs are scoped separately from the derived wrapper gates and from the existing OpenZeppelin reference case.",
       "manifest_path": "families/zama_protocol_apps/implementations/protocol_apps_confidential_wrapper/implementation.yaml"
+    },
+    {
+      "family_id": "zksync",
+      "implementation_id": "era_contracts",
+      "display_name": "zkSync Era Contracts",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/matter-labs/era-contracts",
+      "upstream_commit": "e5f6e004a09f667c6109e44c4fe1f81658127631",
+      "source_language": "solidity",
+      "source_artifact_path": "l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol",
+      "case_ids": [
+        "zksync/interop_commitment_tree_order"
+      ],
+      "notes": "Implementation entry for Matter Labs era-contracts IMT engine used by L2InteropCommitmentTree.",
+      "manifest_path": "families/zksync/implementations/era_contracts/implementation.yaml"
     },
     {
       "family_id": "zodiac",
@@ -2209,6 +2312,51 @@
       "proof_target": "Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs"
     },
     {
+      "case_id": "gearbox/bytecode_version_index",
+      "project": "gearbox",
+      "case_name": "bytecode_version_index",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/gearbox/bytecode_version_index/case.yaml",
+      "split": "active",
+      "family_id": "gearbox",
+      "implementation_id": "permissionless_b1b5e5b",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/Gearbox-protocol/permissionless",
+      "upstream_commit": "b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769",
+      "original_contract_path": "contracts/global/BytecodeRepository.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/Gearbox-protocol/permissionless@b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769:contracts/global/BytecodeRepository.sol",
+      "selected_functions": [
+        "BytecodeRepository._allowContract",
+        "BytecodeRepository._updateVersionInfo",
+        "BytecodeRepository._getMajorVersion",
+        "BytecodeRepository._getMinorVersion"
+      ],
+      "lean_target": "Benchmark.Cases.Gearbox.BytecodeVersionIndex.Compile",
+      "failure_reason": null,
+      "notes": "Proves the exact fresh-insertion transition, including `max(old, ver)` for latest, major, and minor indexes. It also proves the same-hash no-op and the different occupied-hash revert as reference coverage, while exposing only the fresh-insertion theorem as the benchmark task. Immutable source ranges: https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L34-L40, https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L66-L88, https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L421-L430, and https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L590-L609.",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "internal_allowance_transition",
+        "version_index_exactness",
+        "enumerable_set_membership_only",
+        "events_elided",
+        "successful_and_revert_branches"
+      ],
+      "abstraction_notes": "The model preserves the three `_allowContract` branches and the exact writes made by `_updateVersionInfo`. Solidity bytes32 and uint256 values are modeled as natural numbers, mappings as total functions, and EnumerableSet as a membership function. Events, authorization/upload/audit caller guards, and unrelated repository storage are outside this internal-function slice.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.Gearbox.BytecodeVersionIndex.Specs",
+      "proof_target": "Benchmark.Cases.Gearbox.BytecodeVersionIndex.Proofs"
+    },
+    {
       "case_id": "hypernova/settled_payout_safety",
       "project": "hypernova",
       "case_name": "settled_payout_safety",
@@ -2706,6 +2854,58 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Specs",
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
+    },
+    {
+      "case_id": "paraclear/direct_deposit_backing",
+      "project": "paraclear",
+      "case_name": "direct_deposit_backing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paraclear/direct_deposit_backing/case.yaml",
+      "split": "active",
+      "family_id": "paraclear",
+      "implementation_id": "client_cairo_extraction",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "cairo",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "original_contract_path": "src/paraclear/paraclear.cairo",
+      "generated_artifact_path": null,
+      "source_ref": "client-supplied:paraclear-cairo-extraction:2026-09-07",
+      "selected_functions": [
+        "deposit",
+        "deposit_on_behalf_of",
+        "_deposit",
+        "upsert_asset_balance",
+        "_scale_from_paraclear_decimals",
+        "_scale_to_paraclear_decimals"
+      ],
+      "lean_target": "Benchmark.Cases.Paraclear.DirectDepositBacking.Compile",
+      "failure_reason": null,
+      "notes": "A successful modeled deposit or deposit_on_behalf_of cannot reduce the deposited token's backing slack, defined as normalized raw ERC20 custody minus the sum of positive posted internal balances. This is one local preservation step toward exchange solvency, not a proof of global Paraclear solvency.",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "source_aligned_state_machine",
+      "abstraction_tags": [
+        "pure_lean_cairo_model",
+        "direct_deposits_only",
+        "external_dispatchers_atomic",
+        "stable_erc20_decimals",
+        "linked_list_pointers_elided",
+        "no_cairo_correspondence"
+      ],
+      "abstraction_notes": "This case packages a hand-written Lean state machine aligned to the selected Paraclear Cairo deposit paths. It models both public direct-deposit wrappers, public and internal guards, account creation, ERC20 allowance/transfer/balance observations, exact received-amount enforcement, i128/u256 bounds, decimal flooring, raw custody, signed balances, and the observable one-key effect of upsert_asset_balance. All external dispatcher calls are atomic observations and ERC20 decimals are stable across the transition. Linked-list pointers, events, returned felts, callbacks, bridge deposits, withdrawals, settlement, fees, liquidations, pending transfers, socialized-loss application, later rebases, and arbitrary later ERC20 behavior are outside the model. There is no mechanized Cairo-to-Lean, Sierra-to-Lean, CASM, or deployed-class correspondence. Canonical source paths retain the original repository's src/ prefix; in the reviewed supplied extraction, the hash-matching files were rooted at paraclear/paraclear.cairo and token/token.cairo.",
+      "unsupported_feature_codes": [
+        "cairo_source_correspondence_missing",
+        "external_dispatcher_callbacks_elided",
+        "erc20_metadata_stability_assumed"
+      ],
+      "spec_target": "Benchmark.Cases.Paraclear.DirectDepositBacking.Specs",
+      "proof_target": "Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs"
     },
     {
       "case_id": "pareto/redemption_backing",
@@ -3715,6 +3915,47 @@
       ],
       "spec_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Specs",
       "proof_target": "Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs"
+    },
+    {
+      "case_id": "zksync/interop_commitment_tree_order",
+      "project": "zksync",
+      "case_name": "interop_commitment_tree_order",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zksync/interop_commitment_tree_order/case.yaml",
+      "split": "active",
+      "family_id": "zksync",
+      "implementation_id": "era_contracts",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/matter-labs/era-contracts",
+      "upstream_commit": "e5f6e004a09f667c6109e44c4fe1f81658127631",
+      "original_contract_path": "l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/matter-labs/era-contracts@e5f6e004a09f667c6109e44c4fe1f81658127631:l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol",
+      "selected_functions": [
+        "setup",
+        "insert"
+      ],
+      "lean_target": "Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Compile",
+      "failure_reason": null,
+      "notes": "zkSync Era atomic-interop IMT linked-list order. Physical indices are append order; ordering is the nextIndex chain from sentinel 0.",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "linked_list_order_slice",
+        "merkle_hashing_elided",
+        "while_as_well_founded_helper"
+      ],
+      "abstraction_notes": "Models IndexedMerkleTree.setup and insert. IMTLeaf is flattened into three Uint256 maps. FullMerkle hashing and verifyNonInclusion are out of scope. The Solidity while-walk is a fuel-bounded recursive helper because pinned Verity has no Stmt.while. The selected invariant is one covering ordered chain from sentinel 0 (IMTOrder), not physical-array sorting and not Merkle-authenticated non-inclusion. IMTValidState preserves that central order theorem and adds the minimal valueToIndex consistency relation: every occupied non-sentinel leaf is named by valueToIndex at its value. This makes the modeled valueToIndex[value] == 0 guard derive genuine leaf-value absence, without a caller-supplied valueNotStored premise. setup establishment requires fresh-zero mappings.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Specs",
+      "proof_target": "Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Proofs"
     },
     {
       "case_id": "zodiac/roles_decoder_faithfulness",
@@ -8168,6 +8409,51 @@
       }
     },
     {
+      "task_ref": "gearbox/bytecode_version_index/allow_contract_unoccupied_establishes_version_index_coherence",
+      "task_id": "allow_contract_unoccupied_establishes_version_index_coherence",
+      "case_id": "gearbox/bytecode_version_index",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/gearbox/bytecode_version_index/tasks/allow_contract_unoccupied_establishes_version_index_coherence.yaml",
+      "split": "active",
+      "family_id": "gearbox",
+      "implementation_id": "permissionless_b1b5e5b",
+      "source_ref": "https://github.com/Gearbox-protocol/permissionless@b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769:contracts/global/BytecodeRepository.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "exact_storage_transition",
+      "category": "state-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Gearbox.BytecodeVersionIndex.allowContract_unoccupied_establishes_versionIndexCoherence",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/gearbox/bytecode_version_index/verity/Contract.lean",
+        "Benchmark/Cases/Gearbox/BytecodeVersionIndex/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/gearbox/bytecode_version_index/verity/Specs.lean",
+        "Benchmark/Cases/Gearbox/BytecodeVersionIndex/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Gearbox/BytecodeVersionIndex/Tasks/AllowContractUnoccupiedEstablishesVersionIndexCoherence.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "The task covers an empty `(contractType, version)` slot receiving a nonzero hash. It requires equality to an independently written full expected state, preserving every unselected modeled hash, contract type, set membership, owner, and index key, plus the explicit hash, membership, and exact global, major, and minor `max(ver, old)` equations. The source slice is pinned at BytecodeRepository.sol lines 421-430 and 590-609.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.Gearbox.BytecodeVersionIndex.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "hypernova/settled_payout_safety/successful_payout_never_overpays",
       "task_id": "successful_payout_never_overpays",
       "case_id": "hypernova/settled_payout_safety",
@@ -11365,6 +11651,56 @@
       "abstraction_notes": "This task isolates the frame condition for the WETH claim path and shows that the USDC accounting slice remains untouched.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "paraclear/direct_deposit_backing/direct_deposit_preserves_backing_slack",
+      "task_id": "direct_deposit_preserves_backing_slack",
+      "case_id": "paraclear/direct_deposit_backing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paraclear/direct_deposit_backing/tasks/direct_deposit_preserves_backing_slack.yaml",
+      "split": "active",
+      "family_id": "paraclear",
+      "implementation_id": "client_cairo_extraction",
+      "source_ref": "client-supplied:paraclear-cairo-extraction:2026-09-07",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paraclear/direct_deposit_backing/verity/Contract.lean",
+        "Benchmark/Cases/Paraclear/DirectDepositBacking/CairoInt.lean",
+        "Benchmark/Cases/Paraclear/DirectDepositBacking/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paraclear/direct_deposit_backing/verity/Specs.lean",
+        "Benchmark/Cases/Paraclear/DirectDepositBacking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Paraclear/DirectDepositBacking/Tasks/DirectDepositPreservesBackingSlack.lean"
+      ],
+      "abstraction_level": "source_aligned_state_machine",
+      "abstraction_notes": "Prove that every successful transition of the hand-written source-aligned Cairo deposit model leaves per-token backing slack unchanged or greater. The key steps are exact additive normalization of a deposit-shaped raw custody increment and a bound showing that crediting one signed balance raises the sum of positive balances by no more than the normalized credit. The task deliberately makes no compiled-Cairo correspondence claim.",
+      "unsupported_feature_codes": [
+        "cairo_source_correspondence_missing",
+        "external_dispatcher_callbacks_elided",
+        "erc20_metadata_stability_assumed"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -16836,6 +17172,141 @@
       }
     },
     {
+      "task_ref": "zksync/interop_commitment_tree_order/insert_leaf_frame",
+      "task_id": "insert_leaf_frame",
+      "case_id": "zksync/interop_commitment_tree_order",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zksync/interop_commitment_tree_order/tasks/insert_leaf_frame.yaml",
+      "split": "active",
+      "family_id": "zksync",
+      "implementation_id": "era_contracts",
+      "source_ref": "https://github.com/matter-labs/era-contracts@e5f6e004a09f667c6109e44c4fe1f81658127631:l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "frame_condition",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.insert_leaf_frame",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zksync/interop_commitment_tree_order/verity/Contract.lean",
+        "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zksync/interop_commitment_tree_order/verity/Specs.lean",
+        "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ZkSync/InteropCommitmentTreeOrder/Tasks/InsertLeafFrame.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Leaf-record frame plus separate leafNumber and valueToIndex effects.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zksync/interop_commitment_tree_order/insert_preserves_order",
+      "task_id": "insert_preserves_order",
+      "case_id": "zksync/interop_commitment_tree_order",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zksync/interop_commitment_tree_order/tasks/insert_preserves_order.yaml",
+      "split": "active",
+      "family_id": "zksync",
+      "implementation_id": "era_contracts",
+      "source_ref": "https://github.com/matter-labs/era-contracts@e5f6e004a09f667c6109e44c4fe1f81658127631:l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "linked_list_order_and_map_consistency",
+      "category": "state-transition",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.insert_preserves_order",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zksync/interop_commitment_tree_order/verity/Contract.lean",
+        "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zksync/interop_commitment_tree_order/verity/Specs.lean",
+        "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ZkSync/InteropCommitmentTreeOrder/Tasks/InsertPreservesOrder.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful insert preserves IMTValidState: IMTOrder's sentinel value 0 plus one covering ordered chain (head 0, exact occupied coverage, coherent nextIndex/nextValue hops, strictly increasing leaf values, tail nextIndex = nextValue = 0), together with the minimal valueToIndex consistency relation for every occupied non-sentinel leaf. The exact modeled valueToIndex[value] == 0 guard and that relation derive leaf-value absence; valueNotStored is not a caller-supplied premise.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "zksync/interop_commitment_tree_order/setup_establishes_order",
+      "task_id": "setup_establishes_order",
+      "case_id": "zksync/interop_commitment_tree_order",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/zksync/interop_commitment_tree_order/tasks/setup_establishes_order.yaml",
+      "split": "active",
+      "family_id": "zksync",
+      "implementation_id": "era_contracts",
+      "source_ref": "https://github.com/matter-labs/era-contracts@e5f6e004a09f667c6109e44c4fe1f81658127631:l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "linked_list_order",
+      "category": "state-transition",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.setup_establishes_valid_state",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/zksync/interop_commitment_tree_order/verity/Contract.lean",
+        "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/zksync/interop_commitment_tree_order/verity/Specs.lean",
+        "Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/ZkSync/InteropCommitmentTreeOrder/Tasks/SetupEstablishesOrder.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "setup on fresh-zero storage writes the sentinel leaf and leafNumber = 1, establishing both IMTOrder and the vacuously true non-sentinel valueToIndex consistency relation.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "zodiac/roles_decoder_faithfulness/metadata_bridge",
       "task_id": "metadata_bridge",
       "case_id": "zodiac/roles_decoder_faithfulness",
@@ -16979,5 +17450,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-08-27T10:01:34.369815+00:00"
+  "generated_at": "2026-09-07T19:02:29.005439+00:00"
 }

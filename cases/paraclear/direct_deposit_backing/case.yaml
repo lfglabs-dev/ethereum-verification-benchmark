@@ -1,0 +1,60 @@
+manifest_kind: case
+project: paraclear
+case_id: direct_deposit_backing
+schema_version: 1
+split: active
+family_id: paraclear
+implementation_id: client_cairo_extraction
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: null
+upstream_commit: null
+original_contract_path: src/paraclear/paraclear.cairo
+source_ref: client-supplied:paraclear-cairo-extraction:2026-09-07
+lean_target: Benchmark.Cases.Paraclear.DirectDepositBacking.Compile
+spec_target: Benchmark.Cases.Paraclear.DirectDepositBacking.Specs
+proof_target: Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs
+selected_functions:
+  - deposit
+  - deposit_on_behalf_of
+  - _deposit
+  - upsert_asset_balance
+  - _scale_from_paraclear_decimals
+  - _scale_to_paraclear_decimals
+source_language: cairo
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: source_aligned_state_machine
+abstraction_tags:
+  - pure_lean_cairo_model
+  - direct_deposits_only
+  - external_dispatchers_atomic
+  - stable_erc20_decimals
+  - linked_list_pointers_elided
+  - no_cairo_correspondence
+abstraction_notes: >
+  This case packages a hand-written Lean state machine aligned to the selected
+  Paraclear Cairo deposit paths. It models both public direct-deposit wrappers,
+  public and internal guards, account creation, ERC20 allowance/transfer/balance
+  observations, exact received-amount enforcement, i128/u256 bounds, decimal
+  flooring, raw custody, signed balances, and the observable one-key effect of
+  upsert_asset_balance. All external dispatcher calls are atomic observations and
+  ERC20 decimals are stable across the transition. Linked-list pointers, events,
+  returned felts, callbacks, bridge deposits, withdrawals, settlement, fees,
+  liquidations, pending transfers, socialized-loss application, later rebases,
+  and arbitrary later ERC20 behavior are outside the model. There is no mechanized
+  Cairo-to-Lean, Sierra-to-Lean, CASM, or deployed-class correspondence. Canonical
+  source paths retain the original repository's src/ prefix; in the reviewed supplied
+  extraction, the hash-matching files were rooted at paraclear/paraclear.cairo and
+  token/token.cairo.
+unsupported_feature_codes:
+  - cairo_source_correspondence_missing
+  - external_dispatcher_callbacks_elided
+  - erc20_metadata_stability_assumed
+notes: >
+  A successful modeled deposit or deposit_on_behalf_of cannot reduce the deposited
+  token's backing slack, defined as normalized raw ERC20 custody minus the sum of
+  positive posted internal balances. This is one local preservation step toward
+  exchange solvency, not a proof of global Paraclear solvency.

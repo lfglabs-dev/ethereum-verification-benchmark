@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 44
-- Implementations: 45
-- Active cases: 44
-- Buildable active cases: 44
-- Active tasks: 285
+- Families: 47
+- Implementations: 48
+- Active cases: 47
+- Buildable active cases: 47
+- Active tasks: 290
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -133,6 +133,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `TokenGateway.sol`
 - Notes: Reference proofs are complete for the guarded invariant across the modeled successful paths. Arithmetic hypotheses expose Solidity checked-arithmetic obligations needed by the focused model.
 
+### `gearbox/bytecode_version_index`
+- Family / implementation: `gearbox` / `permissionless_b1b5e5b`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Gearbox.BytecodeVersionIndex.Compile`
+- Source ref: `https://github.com/Gearbox-protocol/permissionless@b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769:contracts/global/BytecodeRepository.sol`
+- Selected functions: `BytecodeRepository._allowContract`, `BytecodeRepository._updateVersionInfo`, `BytecodeRepository._getMajorVersion`, `BytecodeRepository._getMinorVersion`
+- Upstream source artifact: `contracts/global/BytecodeRepository.sol`
+- Notes: Proves the exact fresh-insertion transition, including `max(old, ver)` for latest, major, and minor indexes. It also proves the same-hash no-op and the different occupied-hash revert as reference coverage, while exposing only the fresh-insertion theorem as the benchmark task. Immutable source ranges: https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L34-L40, https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L66-L88, https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L421-L430, and https://github.com/Gearbox-protocol/permissionless/blob/b1b5e5bac7d2183a1f10c4bcc3d4bbf88c8b7769/contracts/global/BytecodeRepository.sol#L590-L609.
+
 ### `hypernova/settled_payout_safety`
 - Family / implementation: `hypernova` / `arbitrum-deployment`
 - Stage: `proof_complete`
@@ -242,6 +252,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `claimUsdc`, `_claimUsdc`, `claimWeth`, `_claimWeth`, `claimBoth`
 - Upstream source artifact: `src/StreamRecoveryClaim.sol`
 - Notes: Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
+
+### `paraclear/direct_deposit_backing`
+- Family / implementation: `paraclear` / `client_cairo_extraction`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Paraclear.DirectDepositBacking.Compile`
+- Source ref: `client-supplied:paraclear-cairo-extraction:2026-09-07`
+- Selected functions: `deposit`, `deposit_on_behalf_of`, `_deposit`, `upsert_asset_balance`, `_scale_from_paraclear_decimals`, `_scale_to_paraclear_decimals`
+- Upstream source artifact: `src/paraclear/paraclear.cairo`
+- Notes: A successful modeled deposit or deposit_on_behalf_of cannot reduce the deposited token's backing slack, defined as normalized raw ERC20 custody minus the sum of positive posted internal balances. This is one local preservation step toward exchange solvency, not a proof of global Paraclear solvency.
 
 ### `pareto/redemption_backing`
 - Family / implementation: `pareto` / `usp`
@@ -442,6 +462,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `_update`, `_transfer`, `confidentialTransfer`
 - Upstream source artifact: `contracts/confidential-wrapper/contracts/token/ERC7984Upgradeable.sol`
 - Notes: Distinct exact-source Zama protocol-apps case. Four complete reference proofs establish, under explicit euint64-domain hypotheses: uninitialized senders return the modeled ERC7984ZeroBalance error class with unchanged modeled accounting state even for amount zero; initialized senders do not balance-revert after explicit wrapper and plaintext guards pass; insufficient initialized transfers return zero and preserve the two distinct parties' plaintext-equivalent balances; and distinct-party pair accounting is conserved when destination addition cannot wrap for the amount actually transferred. The revert proof does not model custom-error payload/returndata or full EVM/FHE/global state. Generated task modules keep explicit `exact ?_` placeholders for benchmark evaluation. The separate retained OpenZeppelin case `zama/erc7984_confidential_token` at commit 83364738f0d2b1655c60627588e3493099c359f7 remains unchanged.
+
+### `zksync/interop_commitment_tree_order`
+- Family / implementation: `zksync` / `era_contracts`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Compile`
+- Source ref: `https://github.com/matter-labs/era-contracts@e5f6e004a09f667c6109e44c4fe1f81658127631:l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol`
+- Selected functions: `setup`, `insert`
+- Upstream source artifact: `l1-contracts/contracts/common/libraries/IndexedMerkleTree.sol`
+- Notes: zkSync Era atomic-interop IMT linked-list order. Physical indices are append order; ordering is the nextIndex chain from sentinel 0.
 
 ### `zodiac/roles_decoder_faithfulness`
 - Family / implementation: `zodiac` / `roles-v3`
@@ -1399,6 +1429,16 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/ForgeYields/GlobalSolvency/Tasks/TransferRemotePreservesGlobalSolvency.lean`
 - Hidden reference solution: `Benchmark.Cases.ForgeYields.GlobalSolvency.Proofs`
 
+### `gearbox/bytecode_version_index/allow_contract_unoccupied_establishes_version_index_coherence`
+- Track / property class / proof family: `proof-only` / `exact_storage_transition` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Gearbox.BytecodeVersionIndex.allowContract_unoccupied_establishes_versionIndexCoherence`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/gearbox/bytecode_version_index/verity/Contract.lean`, `Benchmark/Cases/Gearbox/BytecodeVersionIndex/Contract.lean`
+- Specification files: `cases/gearbox/bytecode_version_index/verity/Specs.lean`, `Benchmark/Cases/Gearbox/BytecodeVersionIndex/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Gearbox/BytecodeVersionIndex/Tasks/AllowContractUnoccupiedEstablishesVersionIndexCoherence.lean`
+- Hidden reference solution: `Benchmark.Cases.Gearbox.BytecodeVersionIndex.Proofs`
+
 ### `hypernova/settled_payout_safety/successful_payout_never_overpays`
 - Track / property class / proof family: `proof-only` / `payout_safety` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -2108,6 +2148,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paraclear/direct_deposit_backing/direct_deposit_preserves_backing_slack`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paraclear/direct_deposit_backing/verity/Contract.lean`, `Benchmark/Cases/Paraclear/DirectDepositBacking/CairoInt.lean`, `Benchmark/Cases/Paraclear/DirectDepositBacking/Contract.lean`
+- Specification files: `cases/paraclear/direct_deposit_backing/verity/Specs.lean`, `Benchmark/Cases/Paraclear/DirectDepositBacking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Paraclear/DirectDepositBacking/Tasks/DirectDepositPreservesBackingSlack.lean`
+- Hidden reference solution: `Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs`
 
 ### `pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard`
 - Track / property class / proof family: `proof-only` / `redemption_reserve_guard` / `protocol_transition_correctness`
@@ -3278,6 +3328,36 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/zama_protocol_apps/erc7984_upgradeable_exact_source/verity/Specs.lean`, `Benchmark/Cases/Zama/ERC7984UpgradeableExactSource/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Zama/ERC7984UpgradeableExactSource/Tasks/UninitializedSenderRevertsWithoutWrites.lean`
 - Hidden reference solution: `Benchmark.Cases.Zama.ERC7984UpgradeableExactSource.Proofs`
+
+### `zksync/interop_commitment_tree_order/insert_leaf_frame`
+- Track / property class / proof family: `proof-only` / `frame_condition` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.insert_leaf_frame`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zksync/interop_commitment_tree_order/verity/Contract.lean`, `Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Contract.lean`
+- Specification files: `cases/zksync/interop_commitment_tree_order/verity/Specs.lean`, `Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ZkSync/InteropCommitmentTreeOrder/Tasks/InsertLeafFrame.lean`
+- Hidden reference solution: `Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Proofs`
+
+### `zksync/interop_commitment_tree_order/insert_preserves_order`
+- Track / property class / proof family: `proof-only` / `linked_list_order_and_map_consistency` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.insert_preserves_order`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zksync/interop_commitment_tree_order/verity/Contract.lean`, `Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Contract.lean`
+- Specification files: `cases/zksync/interop_commitment_tree_order/verity/Specs.lean`, `Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ZkSync/InteropCommitmentTreeOrder/Tasks/InsertPreservesOrder.lean`
+- Hidden reference solution: `Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Proofs`
+
+### `zksync/interop_commitment_tree_order/setup_establishes_order`
+- Track / property class / proof family: `proof-only` / `linked_list_order` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.setup_establishes_valid_state`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/zksync/interop_commitment_tree_order/verity/Contract.lean`, `Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Contract.lean`
+- Specification files: `cases/zksync/interop_commitment_tree_order/verity/Specs.lean`, `Benchmark/Cases/ZkSync/InteropCommitmentTreeOrder/Specs.lean`
+- Editable proof file: `Benchmark/Generated/ZkSync/InteropCommitmentTreeOrder/Tasks/SetupEstablishesOrder.lean`
+- Hidden reference solution: `Benchmark.Cases.ZkSync.InteropCommitmentTreeOrder.Proofs`
 
 ### `zodiac/roles_decoder_faithfulness/metadata_bridge`
 - Track / property class / proof family: `proof-only` / `calldata_decoder_metadata` / `refinement_equivalence`
