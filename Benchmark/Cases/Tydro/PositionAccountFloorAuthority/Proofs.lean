@@ -118,6 +118,7 @@ theorem signed_open_success_respects_floor_and_authority
       healthFactor finalPoolSettlementSucceeds s := by
   unfold signed_open_floor_authority_spec
   dsimp only
+  unfold openStagesSucceed
   rintro ⟨hdigest, hrecovery, htypedFields, hlifecycle, hfloors⟩
   have heModeWidthProof := open_typed_fields_are_source_bounded eModeCategory s
   unfold open_typed_fields_spec at heModeWidthProof
@@ -136,8 +137,10 @@ theorem signed_open_success_respects_floor_and_authority
       authorizedCaller intentNonce intentDeadline recoveredSigner).run s).snd)
   unfold open_floor_spec at hfloor
   rcases hfloor hfloors with ⟨hout, hsupplied, hborrowed, hhealth⟩
-  exact ⟨hdigest, hrecovery, heModeWidth, haccount, howner, hpool, hsupply, hborrow, hdeadline, hcaller,
-    hnonce, hsigner, hnoncePost, hout, hsupplied, hborrowed, hhealth⟩
+  unfold signedOpenBoundaryHolds lifecycleAuthorityHolds openFloorBoundsHold
+  exact ⟨hdigest, hrecovery, heModeWidth,
+    ⟨haccount, howner, hpool, hsupply, hborrow, hdeadline, hcaller, hnonce, hsigner, hnoncePost⟩,
+    ⟨hout, hsupplied, hborrowed, hhealth⟩⟩
 
 theorem signed_close_success_respects_floor_and_authority
     (account owner pool supplyAsset borrowAsset authorizedCaller : Address)
@@ -161,6 +164,7 @@ theorem signed_close_success_respects_floor_and_authority
       finalPoolSettlementSucceeds s := by
   unfold signed_close_floor_authority_spec
   dsimp only
+  unfold closeStagesSucceed
   rintro ⟨hdigest, hrecovery, hlifecycle, hfloors⟩
   have hauthority := lifecycle_success_requires_owner_authority account owner pool supplyAsset
     borrowAsset authorizedCaller intentNonce intentDeadline recoveredSigner s
@@ -176,8 +180,10 @@ theorem signed_close_success_respects_floor_and_authority
       authorizedCaller intentNonce intentDeadline recoveredSigner).run s).snd)
   unfold close_floor_spec at hfloor
   rcases hfloor hfloors with ⟨hwithdrawn, hout, hdebt, hhealth, hcollateral⟩
-  exact ⟨hdigest, hrecovery, haccount, howner, hpool, hsupply, hborrow, hdeadline, hcaller,
-    hnonce, hsigner, hnoncePost, hwithdrawn, hout, hdebt, hhealth, hcollateral⟩
+  unfold signedCloseBoundaryHolds lifecycleAuthorityHolds closeFloorBoundsHold
+  exact ⟨hdigest, hrecovery,
+    ⟨haccount, howner, hpool, hsupply, hborrow, hdeadline, hcaller, hnonce, hsigner, hnoncePost⟩,
+    ⟨hwithdrawn, hout, hdebt, hhealth, hcollateral⟩⟩
 
  theorem callback_success_requires_bound_context
     (initiator asset : Address) (paramsHash : Uint256) (effectsSucceed : Bool)

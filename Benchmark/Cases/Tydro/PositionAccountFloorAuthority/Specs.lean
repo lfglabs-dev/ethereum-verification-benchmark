@@ -57,6 +57,49 @@ def open_typed_fields_spec (eModeCategory : Uint256) (s : ContractState) : Prop 
   ((TydroPositionAccount.checkOpenTypedFields eModeCategory).run s).isSuccess = true →
     eModeCategory.val ≤ (255 : Uint256).val
 
+def openStagesSucceed
+    (trustedDigest trustedRecovery typedFields lifecycle floors : Prop) : Prop :=
+  trustedDigest ∧ trustedRecovery ∧ typedFields ∧ lifecycle ∧ floors
+
+def closeStagesSucceed
+    (trustedDigest trustedRecovery lifecycle floors : Prop) : Prop :=
+  trustedDigest ∧ trustedRecovery ∧ lifecycle ∧ floors
+
+def lifecycleAuthorityHolds
+    (account owner pool supplyAsset borrowAsset authorizedCaller : Address)
+    (intentNonce intentDeadline : Uint256) (recoveredSigner : Address)
+    (post s : ContractState) : Prop :=
+  account = s.thisAddress ∧ owner = ownerOf s ∧ pool = poolOf s ∧
+  supplyAsset = supplyAssetOf s ∧ borrowAsset = borrowAssetOf s ∧
+  s.blockTimestamp <= intentDeadline ∧
+  (authorizedCaller = zeroAddress ∨ authorizedCaller = s.sender) ∧
+  intentNonce = nonceOf s ∧ recoveredSigner = ownerOf s ∧
+  nonceOf post = add (nonceOf s) 1
+
+def openFloorBoundsHold
+    (minAmountOut measuredAmountOut minSuppliedTokenAmount suppliedTokenAmount
+      maxBorrowedTokenAmount borrowedTokenAmount minHealthFactor healthFactor : Uint256) : Prop :=
+  measuredAmountOut >= minAmountOut ∧
+  suppliedTokenAmount >= minSuppliedTokenAmount ∧
+  borrowedTokenAmount <= maxBorrowedTokenAmount ∧
+  healthFactor >= minHealthFactor
+
+def closeFloorBoundsHold
+    (minWithdrawAmount withdrawnAmount minAmountOut measuredAmountOut maxRemainingDebt
+      remainingDebt minHealthFactor healthFactor maxRemainingCollateral
+      remainingCollateral : Uint256) : Prop :=
+  withdrawnAmount >= minWithdrawAmount ∧ measuredAmountOut >= minAmountOut ∧
+  remainingDebt <= maxRemainingDebt ∧ healthFactor >= minHealthFactor ∧
+  remainingCollateral <= maxRemainingCollateral
+
+def signedOpenBoundaryHolds
+    (trustedDigest trustedRecovery typedFieldBound lifecycleAuthority floorBounds : Prop) : Prop :=
+  trustedDigest ∧ trustedRecovery ∧ typedFieldBound ∧ lifecycleAuthority ∧ floorBounds
+
+def signedCloseBoundaryHolds
+    (trustedDigest trustedRecovery lifecycleAuthority floorBounds : Prop) : Prop :=
+  trustedDigest ∧ trustedRecovery ∧ lifecycleAuthority ∧ floorBounds
+
 def signed_open_floor_authority_spec
     (account owner pool supplyAsset borrowAsset authorizedCaller : Address)
     (intentNonce intentDeadline : Uint256)
@@ -76,30 +119,22 @@ def signed_open_floor_authority_spec
   let floors := TydroPositionAccount.checkOpenFloors minAmountOut measuredAmountOut
     minSuppliedTokenAmount suppliedTokenAmount maxBorrowedTokenAmount borrowedTokenAmount
     minHealthFactor healthFactor finalPoolSettlementSucceeds
-  (digest = trustedOpenIntentDigest account owner pool supplyAsset borrowAsset authorizedCaller
-      intentNonce intentDeadline route routeConfigHash assetIn amountIn maxAmountIn assetOut
-      minAmountOut recipient conversionDeadline routeDataHash debtToken initialCollateralAmount
-      eModeCategory flashLoanAmount minSuppliedTokenAmount maxBorrowedTokenAmount minHealthFactor ∧
-    recoveredSigner = trustedRecover digest signature ∧
-    (typedFields.run s).isSuccess = true ∧
-    (lifecycle.run s).isSuccess = true ∧
-    (floors.run post).isSuccess = true) →
-    digest = trustedOpenIntentDigest account owner pool supplyAsset borrowAsset authorizedCaller
-      intentNonce intentDeadline route routeConfigHash assetIn amountIn maxAmountIn assetOut
-      minAmountOut recipient conversionDeadline routeDataHash debtToken initialCollateralAmount
-      eModeCategory flashLoanAmount minSuppliedTokenAmount maxBorrowedTokenAmount minHealthFactor ∧
-    recoveredSigner = trustedRecover digest signature ∧
-    eModeCategory.val ≤ (255 : Uint256).val ∧
-    account = s.thisAddress ∧ owner = ownerOf s ∧ pool = poolOf s ∧
-    supplyAsset = supplyAssetOf s ∧ borrowAsset = borrowAssetOf s ∧
-    s.blockTimestamp <= intentDeadline ∧
-    (authorizedCaller = zeroAddress ∨ authorizedCaller = s.sender) ∧
-    intentNonce = nonceOf s ∧ recoveredSigner = ownerOf s ∧
-    nonceOf post = add (nonceOf s) 1 ∧
-    measuredAmountOut >= minAmountOut ∧
-    suppliedTokenAmount >= minSuppliedTokenAmount ∧
-    borrowedTokenAmount <= maxBorrowedTokenAmount ∧
-    healthFactor >= minHealthFactor
+  let trustedDigest := digest = trustedOpenIntentDigest account owner pool supplyAsset borrowAsset
+    authorizedCaller intentNonce intentDeadline route routeConfigHash assetIn amountIn maxAmountIn
+    assetOut minAmountOut recipient conversionDeadline routeDataHash debtToken
+    initialCollateralAmount eModeCategory flashLoanAmount minSuppliedTokenAmount
+    maxBorrowedTokenAmount minHealthFactor
+  let trustedRecovery := recoveredSigner = trustedRecover digest signature
+  openStagesSucceed trustedDigest trustedRecovery
+      ((typedFields.run s).isSuccess = true)
+      ((lifecycle.run s).isSuccess = true)
+      ((floors.run post).isSuccess = true) →
+    signedOpenBoundaryHolds trustedDigest trustedRecovery
+      (eModeCategory.val ≤ (255 : Uint256).val)
+      (lifecycleAuthorityHolds account owner pool supplyAsset borrowAsset authorizedCaller
+        intentNonce intentDeadline recoveredSigner post s)
+      (openFloorBoundsHold minAmountOut measuredAmountOut minSuppliedTokenAmount
+        suppliedTokenAmount maxBorrowedTokenAmount borrowedTokenAmount minHealthFactor healthFactor)
 
 def signed_close_floor_authority_spec
     (account owner pool supplyAsset borrowAsset authorizedCaller : Address)
@@ -120,29 +155,21 @@ def signed_close_floor_authority_spec
   let floors := TydroPositionAccount.checkCloseFloors minWithdrawAmount withdrawnAmount
     minAmountOut measuredAmountOut maxRemainingDebt remainingDebt maxRemainingCollateral
     remainingCollateral minHealthFactor healthFactor finalPoolSettlementSucceeds
-  (digest = trustedCloseIntentDigest account owner pool supplyAsset borrowAsset authorizedCaller
-      intentNonce intentDeadline route routeConfigHash assetIn amountIn maxAmountIn assetOut
-      minAmountOut recipient conversionDeadline routeDataHash debtToken maxRepayAmount
-      maxFlashLoanRepayment minWithdrawAmount maxRemainingDebt maxRemainingCollateral
-      minHealthFactor residualReceiver ∧
-    recoveredSigner = trustedRecover digest signature ∧
-    (lifecycle.run s).isSuccess = true ∧
-    (floors.run post).isSuccess = true) →
-    digest = trustedCloseIntentDigest account owner pool supplyAsset borrowAsset authorizedCaller
-      intentNonce intentDeadline route routeConfigHash assetIn amountIn maxAmountIn assetOut
-      minAmountOut recipient conversionDeadline routeDataHash debtToken maxRepayAmount
-      maxFlashLoanRepayment minWithdrawAmount maxRemainingDebt maxRemainingCollateral
-      minHealthFactor residualReceiver ∧
-    recoveredSigner = trustedRecover digest signature ∧
-    account = s.thisAddress ∧ owner = ownerOf s ∧ pool = poolOf s ∧
-    supplyAsset = supplyAssetOf s ∧ borrowAsset = borrowAssetOf s ∧
-    s.blockTimestamp <= intentDeadline ∧
-    (authorizedCaller = zeroAddress ∨ authorizedCaller = s.sender) ∧
-    intentNonce = nonceOf s ∧ recoveredSigner = ownerOf s ∧
-    nonceOf post = add (nonceOf s) 1 ∧
-    withdrawnAmount >= minWithdrawAmount ∧ measuredAmountOut >= minAmountOut ∧
-    remainingDebt <= maxRemainingDebt ∧ healthFactor >= minHealthFactor ∧
-    remainingCollateral <= maxRemainingCollateral
+  let trustedDigest := digest = trustedCloseIntentDigest account owner pool supplyAsset borrowAsset
+    authorizedCaller intentNonce intentDeadline route routeConfigHash assetIn amountIn maxAmountIn
+    assetOut minAmountOut recipient conversionDeadline routeDataHash debtToken maxRepayAmount
+    maxFlashLoanRepayment minWithdrawAmount maxRemainingDebt maxRemainingCollateral
+    minHealthFactor residualReceiver
+  let trustedRecovery := recoveredSigner = trustedRecover digest signature
+  closeStagesSucceed trustedDigest trustedRecovery
+      ((lifecycle.run s).isSuccess = true)
+      ((floors.run post).isSuccess = true) →
+    signedCloseBoundaryHolds trustedDigest trustedRecovery
+      (lifecycleAuthorityHolds account owner pool supplyAsset borrowAsset authorizedCaller
+        intentNonce intentDeadline recoveredSigner post s)
+      (closeFloorBoundsHold minWithdrawAmount withdrawnAmount minAmountOut measuredAmountOut
+        maxRemainingDebt remainingDebt minHealthFactor healthFactor maxRemainingCollateral
+        remainingCollateral)
 
 def callback_authority_spec
     (initiator asset : Address) (paramsHash : Uint256) (effectsSucceed : Bool)
