@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: atoken_recovery_requires_owner
+case_id: tydro/position_account_floor_authority
+split: active
+family_id: tydro
+implementation_id: ink-position-account
+source_ref: https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.atoken_recovery_requires_owner
+proof_family: authorization_enablement
+property_class: owner_only_recovery
+difficulty: medium
+category: asset-recovery
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/tydro/position_account_floor_authority/verity/Contract.lean
+  - Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean
+specification_files:
+  - cases/tydro/position_account_floor_authority/verity/Specs.lean
+  - Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean
+editable_files:
+  - Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/AtokenRecoveryRequiresOwner.lean
+reference_solution_module: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs
+reference_solution_declaration: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.atoken_recovery_requires_owner
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Successful aToken recovery requires the immutable owner and fixes the recovery recipient to that owner. Token transfer success and recovered amount are environmental inputs.
+unsupported_feature_codes:
+  - external_token_transfer_as_boolean
