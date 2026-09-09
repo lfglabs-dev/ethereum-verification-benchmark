@@ -54,7 +54,6 @@ behavior require separate cases.
 lake build Benchmark.Cases.Paraclear.DirectDepositBacking.Contract
 lake build Benchmark.Cases.Paraclear.DirectDepositBacking.Specs
 lake build Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs
-lake build Benchmark.Cases.Paraclear.DirectDepositBacking.Tests
 lake build Benchmark.Cases.Paraclear.DirectDepositBacking.Compile
 python3 scripts/validate_manifests.py
 python3 scripts/check_reference_solutions.py

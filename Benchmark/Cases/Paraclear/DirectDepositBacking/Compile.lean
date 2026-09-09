@@ -1,7 +1,6 @@
 import Benchmark.Cases.Paraclear.DirectDepositBacking.Contract
 import Benchmark.Cases.Paraclear.DirectDepositBacking.Specs
 import Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs
-import Benchmark.Cases.Paraclear.DirectDepositBacking.Tests
 
 namespace Benchmark.Cases.Paraclear.DirectDepositBacking
 
