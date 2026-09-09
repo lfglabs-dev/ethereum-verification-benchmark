@@ -1,0 +1,22 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: tydro
+implementation_id: ink-position-account
+display_name: Tydro Position Account on Ink
+split: active
+status: translated
+upstream_repo: null
+upstream_commit: null
+source_language: solidity
+source_artifact_path: >
+  Ink Blockscout verified TydroPositionAccountFactory compilation bundle,
+  including src/accounts/TydroPositionAccount.sol and its imported helpers
+case_ids:
+  - tydro/position_account_floor_authority
+notes: >
+  Public verified source dated 2026-08-31 (Solidity 0.8.24). SHA-256:
+  TydroPositionAccount.sol 4946fc1dd0adf444fe0bde6b831e27a63c3c5deae0141caf39528d1866f11ec4;
+  TydroPositionAccountValidation.sol 66fc1b68fafe9c2e646fba82b0ac52e1ddcb702d18e3413f88030d6311ee9807;
+  TydroPositionIntentHashing.sol 5065ed00f02b9ddc4a4612ef12cf8cd6cf3feede716ffda17e91d132a15f57c0;
+  TydroPositionTypes.sol c139b9602dbffc72bfeeb083184a7728260dac3fa1dfb455b1bf348c0cfcc2aa.
+  No upstream repository or commit is asserted for this explorer-verified bundle.

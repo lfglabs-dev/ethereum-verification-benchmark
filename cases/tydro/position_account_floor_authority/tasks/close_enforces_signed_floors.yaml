@@ -1,0 +1,34 @@
+manifest_kind: task
+schema_version: 1
+task_id: close_enforces_signed_floors
+case_id: tydro/position_account_floor_authority
+split: active
+family_id: tydro
+implementation_id: ink-position-account
+source_ref: https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.close_enforces_signed_floors
+proof_family: functional_correctness
+property_class: signed_risk_floor
+difficulty: hard
+category: position-risk
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/tydro/position_account_floor_authority/verity/Contract.lean
+  - Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean
+specification_files:
+  - cases/tydro/position_account_floor_authority/verity/Specs.lean
+  - Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean
+editable_files:
+  - Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/CloseEnforcesSignedFloors.lean
+reference_solution_module: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs
+reference_solution_declaration: Benchmark.Cases.Tydro.PositionAccountFloorAuthority.close_enforces_signed_floors
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Successful close exposes the signed withdrawal and measured swap-output floors, debt and collateral ceilings, and the source-unconditional health-factor floor. External post-state correctness is not claimed.
+unsupported_feature_codes:
+  - external_aave_and_token_results_as_inputs
+  - multihop_route_execution_out_of_scope

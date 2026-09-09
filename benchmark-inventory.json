@@ -10,30 +10,30 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 47,
-    "implementation_count": 48,
-    "active_case_count": 47,
+    "family_count": 48,
+    "implementation_count": 49,
+    "active_case_count": 48,
     "backlog_case_count": 1,
-    "active_task_count": 290,
+    "active_task_count": 300,
     "backlog_task_count": 0,
-    "buildable_case_count": 47,
-    "runnable_task_count": 290,
+    "buildable_case_count": 48,
+    "runnable_task_count": 300,
     "case_stage_counts": {
       "build_green": 35,
       "candidate": 1,
-      "proof_complete": 12
+      "proof_complete": 13
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 47
+      "translated": 48
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 40,
+      "complete": 41,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 290
+      "proof-only": 300
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
@@ -59,11 +59,12 @@
       "biconditional_invariant": 3,
       "bounds_invariant": 1,
       "branch_correctness": 1,
+      "callback_authorization": 1,
       "calldata_decoder_bounds": 1,
       "calldata_decoder_faithfulness": 1,
       "calldata_decoder_metadata": 1,
       "compliance_boundary": 3,
-      "composition_invariant": 3,
+      "composition_invariant": 5,
       "configuration_safety": 2,
       "counting_invariant": 1,
       "cross_contract_fee_accounting": 1,
@@ -88,6 +89,7 @@
       "isOwner_effect": 3,
       "length_invariant": 1,
       "lifecycle_accounting": 3,
+      "lifecycle_authorization": 1,
       "linked_list_acyclicity": 4,
       "linked_list_invariant": 8,
       "linked_list_order": 1,
@@ -105,6 +107,8 @@
       "output_range": 2,
       "overflow_safety": 1,
       "owner_fallback_and_authority_order": 1,
+      "owner_only_mutation": 1,
+      "owner_only_recovery": 3,
       "payout_safety": 2,
       "per_receiver_isolation": 1,
       "pps_nondecrease": 1,
@@ -121,6 +125,7 @@
       "revert_safety": 2,
       "safety_invariant": 2,
       "scope_invariant": 1,
+      "signed_risk_floor": 2,
       "silent_failure": 2,
       "source_permitted_noop": 1,
       "source_reachable_counterexample_coverage": 1,
@@ -137,14 +142,14 @@
       "wrapper_delegation_and_pause": 1
     },
     "task_proof_family_counts": {
-      "authorization_enablement": 42,
-      "functional_correctness": 60,
-      "protocol_transition_correctness": 42,
+      "authorization_enablement": 48,
+      "functional_correctness": 62,
+      "protocol_transition_correctness": 44,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 104
     },
     "family_split_counts": {
-      "active": 46,
+      "active": 47,
       "mixed": 1
     }
   },
@@ -794,6 +799,23 @@
         "solidity"
       ],
       "manifest_path": "families/termmax/family.yaml"
+    },
+    {
+      "family_id": "tydro",
+      "display_name": "Tydro",
+      "split": "active",
+      "status": "active",
+      "description": "Benchmark family for Tydro position-account lifecycle risk floors and the distinct owner, relayer, and Aave Pool callback authority boundaries on Ink.",
+      "implementation_ids": [
+        "ink-position-account"
+      ],
+      "case_ids": [
+        "tydro/position_account_floor_authority"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/tydro/family.yaml"
     },
     {
       "family_id": "uniswap_v2",
@@ -1559,6 +1581,22 @@
       ],
       "notes": "Active implementation entry for the TermMax V2 contracts repository, currently benchmarking the single-segment `debtToken -> XT` pricing-state transition slice of `TermMaxOrderV2`.",
       "manifest_path": "families/termmax/implementations/contracts_v2/implementation.yaml"
+    },
+    {
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "display_name": "Tydro Position Account on Ink",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "source_language": "solidity",
+      "source_artifact_path": "Ink Blockscout verified TydroPositionAccountFactory compilation bundle, including src/accounts/TydroPositionAccount.sol and its imported helpers",
+      "case_ids": [
+        "tydro/position_account_floor_authority"
+      ],
+      "notes": "Public verified source dated 2026-08-31 (Solidity 0.8.24). SHA-256: TydroPositionAccount.sol 4946fc1dd0adf444fe0bde6b831e27a63c3c5deae0141caf39528d1866f11ec4; TydroPositionAccountValidation.sol 66fc1b68fafe9c2e646fba82b0ac52e1ddcb702d18e3413f88030d6311ee9807; TydroPositionIntentHashing.sol 5065ed00f02b9ddc4a4612ef12cf8cd6cf3feede716ffda17e91d132a15f57c0; TydroPositionTypes.sol c139b9602dbffc72bfeeb083184a7728260dac3fa1dfb455b1bf348c0cfcc2aa. No upstream repository or commit is asserted for this explorer-verified bundle.",
+      "manifest_path": "families/tydro/implementations/ink-position-account/implementation.yaml"
     },
     {
       "family_id": "uniswap_v2",
@@ -3561,6 +3599,67 @@
       ],
       "spec_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Specs",
       "proof_target": "Benchmark.Cases.TermMax.OrderV2BuyXtSingleSegment.Proofs"
+    },
+    {
+      "case_id": "tydro/position_account_floor_authority",
+      "project": "tydro",
+      "case_name": "position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/case.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "original_contract_path": "src/accounts/TydroPositionAccount.sol plus TydroPositionAccountValidation.sol, TydroPositionIntentHashing.sol, and TydroPositionTypes.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "selected_functions": [
+        "open",
+        "close",
+        "_assertOpenPostconditions",
+        "_assertClosePostconditions",
+        "_validateAndConsumeTypedLifecycleIntent",
+        "executeOperation",
+        "setEModeCategory",
+        "claimATokens",
+        "claimRawAssets"
+      ],
+      "lean_target": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Compile",
+      "failure_reason": null,
+      "notes": "Public source was verified on 2026-08-31 with Solidity 0.8.24. SHA-256: TydroPositionAccount.sol 4946fc1dd0adf444fe0bde6b831e27a63c3c5deae0141caf39528d1866f11ec4; TydroPositionAccountValidation.sol 66fc1b68fafe9c2e646fba82b0ac52e1ddcb702d18e3413f88030d6311ee9807; TydroPositionIntentHashing.sol 5065ed00f02b9ddc4a4612ef12cf8cd6cf3feede716ffda17e91d132a15f57c0; TydroPositionTypes.sol c139b9602dbffc72bfeeb083184a7728260dac3fa1dfb455b1bf348c0cfcc2aa. The suite proves ten successful-return implications, including two stage-composition theorems, and does not assert an upstream commit for the explorer-verified source bundle.",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "explorer_verified_source_bundle",
+        "signed_health_factor_and_output_floors",
+        "supplied_and_debt_postcondition_bounds",
+        "exact_clone_identity_and_nonce_binding",
+        "owner_recovery_as_trusted_input",
+        "pool_initiator_asset_and_context_binding",
+        "one_shot_callback_context_consumption",
+        "direct_owner_recovery_authority",
+        "transaction_atomicity_via_contract_run",
+        "signed_floor_authority_stage_composition"
+      ],
+      "abstraction_notes": "The model isolates successful-return checks from TydroPositionAccount. Open and close consume externally measured swap, Aave, and token outcomes and prove the inequalities enforced by source guards; it does not establish that Aave health factors, oracle prices, or token outcomes are economically correct. Lifecycle authority exposes the exact account, immutable identity, expiry, optional relayer, nonce, and recovered owner checks, while EIP-712 hashing and ECDSA recovery remain trusted inputs. Callback authority separately pins Pool caller, account initiator, borrow asset, and matching nonzero context, consuming the modeled EIP-1153 slot before external effects. Direct eMode and recovery paths remain owner-only, with recovery recipients fixed to the immutable owner. Clone construction, multihop routing, events, and unrelated registry policy are outside scope. The composed signed-open and signed-close theorems connect the modeled lifecycle-authority and floor-check stages under trusted digest/recovery inputs; they are not public-call or bytecode refinements.",
+      "unsupported_feature_codes": [
+        "external_aave_and_token_results_as_inputs",
+        "eip712_and_ecdsa_recovery_as_inputs",
+        "clone_immutable_argument_decoding_out_of_scope",
+        "eip1153_as_explicit_transaction_local_state",
+        "multihop_route_execution_out_of_scope"
+      ],
+      "spec_target": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Specs",
+      "proof_target": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs"
     },
     {
       "case_id": "uniswap_v2/pair_fee_adjusted_swap",
@@ -15081,6 +15180,486 @@
       }
     },
     {
+      "task_ref": "tydro/position_account_floor_authority/atoken_recovery_requires_owner",
+      "task_id": "atoken_recovery_requires_owner",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/atoken_recovery_requires_owner.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "owner_only_recovery",
+      "category": "asset-recovery",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.atoken_recovery_requires_owner",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/AtokenRecoveryRequiresOwner.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful aToken recovery requires the immutable owner and fixes the recovery recipient to that owner. Token transfer success and recovered amount are environmental inputs.",
+      "unsupported_feature_codes": [
+        "external_token_transfer_as_boolean"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "tydro/position_account_floor_authority/callback_success_requires_bound_context",
+      "task_id": "callback_success_requires_bound_context",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/callback_success_requires_bound_context.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "callback_authorization",
+      "category": "access-control",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.callback_success_requires_bound_context",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/CallbackSuccessRequiresBoundContext.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful callback execution requires the immutable Pool caller, the account as initiator, the immutable borrow asset, and a matching nonzero open-or-close context. The context is cleared before modeled effects and completion records its consumed kind.",
+      "unsupported_feature_codes": [
+        "eip1153_as_explicit_transaction_local_state",
+        "external_callback_effects_as_boolean"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "tydro/position_account_floor_authority/close_enforces_signed_floors",
+      "task_id": "close_enforces_signed_floors",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/close_enforces_signed_floors.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "signed_risk_floor",
+      "category": "position-risk",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.close_enforces_signed_floors",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/CloseEnforcesSignedFloors.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful close exposes the signed withdrawal and measured swap-output floors, debt and collateral ceilings, and the source-unconditional health-factor floor. External post-state correctness is not claimed.",
+      "unsupported_feature_codes": [
+        "external_aave_and_token_results_as_inputs",
+        "multihop_route_execution_out_of_scope"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "tydro/position_account_floor_authority/emode_success_requires_owner",
+      "task_id": "emode_success_requires_owner",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/emode_success_requires_owner.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "owner_only_mutation",
+      "category": "access-control",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.emode_success_requires_owner",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/EmodeSuccessRequiresOwner.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "A successful direct eMode mutation requires the immutable owner and records the requested category after the modeled Pool call succeeds.",
+      "unsupported_feature_codes": [
+        "external_aave_call_as_boolean"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "tydro/position_account_floor_authority/lifecycle_success_requires_owner_authority",
+      "task_id": "lifecycle_success_requires_owner_authority",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/lifecycle_success_requires_owner_authority.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "lifecycle_authorization",
+      "category": "access-control",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.lifecycle_success_requires_owner_authority",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/LifecycleSuccessRequiresOwnerAuthority.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful lifecycle authorization binds the exact account and immutable owner, Pool, supply asset, and borrow asset; enforces expiry and optional relayer policy; consumes the current nonce; and requires owner recovery. Cryptographic recovery is an explicit trusted input.",
+      "unsupported_feature_codes": [
+        "eip712_and_ecdsa_recovery_as_inputs",
+        "clone_immutable_argument_decoding_out_of_scope"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "tydro/position_account_floor_authority/open_enforces_signed_floors",
+      "task_id": "open_enforces_signed_floors",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/open_enforces_signed_floors.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "signed_risk_floor",
+      "category": "position-risk",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.open_enforces_signed_floors",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/OpenEnforcesSignedFloors.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful open exposes every independently meaningful signed postcondition: measured swap output and supplied amount meet their floors, while borrowing stays under its ceiling and health factor meets its floor. Values reported by external systems remain environment inputs.",
+      "unsupported_feature_codes": [
+        "external_aave_and_token_results_as_inputs",
+        "multihop_route_execution_out_of_scope"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "tydro/position_account_floor_authority/raw_borrow_recovery_requires_owner",
+      "task_id": "raw_borrow_recovery_requires_owner",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/raw_borrow_recovery_requires_owner.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "owner_only_recovery",
+      "category": "asset-recovery",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.raw_borrow_recovery_requires_owner",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/RawBorrowRecoveryRequiresOwner.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful raw borrow-asset recovery requires the immutable owner and fixes the recovery recipient to that owner. Token transfer success and amount are environmental inputs.",
+      "unsupported_feature_codes": [
+        "external_token_transfer_as_boolean"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "tydro/position_account_floor_authority/raw_supply_recovery_requires_owner",
+      "task_id": "raw_supply_recovery_requires_owner",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/raw_supply_recovery_requires_owner.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "owner_only_recovery",
+      "category": "asset-recovery",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.raw_supply_recovery_requires_owner",
+      "proof_family": "authorization_enablement",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/RawSupplyRecoveryRequiresOwner.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Successful raw supply-asset recovery requires the immutable owner and fixes the recovery recipient to that owner. Token transfer success and amount are environmental inputs.",
+      "unsupported_feature_codes": [
+        "external_token_transfer_as_boolean"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "tydro/position_account_floor_authority/signed_close_success_respects_floor_and_authority",
+      "task_id": "signed_close_success_respects_floor_and_authority",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/signed_close_success_respects_floor_and_authority.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "composition_invariant",
+      "category": "position-risk",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.signed_close_success_respects_floor_and_authority",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/SignedCloseSuccessRespectsFloorAndAuthority.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Composes the modeled lifecycle-authority stage with the modeled successful-close floor stage, preserving digest and recovery premises, identity and nonce authority, and every close floor or ceiling. Digest construction and signer recovery are trusted abstractions; this is not public-call or deployed-bytecode refinement.",
+      "unsupported_feature_codes": [
+        "external_aave_and_token_results_as_inputs",
+        "eip712_and_ecdsa_recovery_as_inputs",
+        "clone_immutable_argument_decoding_out_of_scope",
+        "multihop_route_execution_out_of_scope"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "tydro/position_account_floor_authority/signed_open_success_respects_floor_and_authority",
+      "task_id": "signed_open_success_respects_floor_and_authority",
+      "case_id": "tydro/position_account_floor_authority",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/tydro/position_account_floor_authority/tasks/signed_open_success_respects_floor_and_authority.yaml",
+      "split": "active",
+      "family_id": "tydro",
+      "implementation_id": "ink-position-account",
+      "source_ref": "https://explorer.inkonchain.com/address/0xc3cd1e023a596066270E43Eb5399B1DB445D0286?tab=contract",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "composition_invariant",
+      "category": "position-risk",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.signed_open_success_respects_floor_and_authority",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/tydro/position_account_floor_authority/verity/Contract.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/tydro/position_account_floor_authority/verity/Specs.lean",
+        "Benchmark/Cases/Tydro/PositionAccountFloorAuthority/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Tydro/PositionAccountFloorAuthority/Tasks/SignedOpenSuccessRespectsFloorAndAuthority.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Composes the modeled open source-typing, lifecycle-authority, and successful-open floor stages, deriving the uint8 eMode-category bound and preserving digest and recovery premises, identity and nonce authority, and every open floor or ceiling. Digest construction and signer recovery are trusted abstractions; this is not public-call or deployed-bytecode refinement.",
+      "unsupported_feature_codes": [
+        "external_aave_and_token_results_as_inputs",
+        "eip712_and_ecdsa_recovery_as_inputs",
+        "clone_immutable_argument_decoding_out_of_scope",
+        "multihop_route_execution_out_of_scope"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Tydro.PositionAccountFloorAuthority.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_enforces_fee_adjusted_invariant",
       "task_id": "swap_enforces_fee_adjusted_invariant",
       "case_id": "uniswap_v2/pair_fee_adjusted_swap",
@@ -17450,5 +18029,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-09-07T19:02:29.005439+00:00"
+  "generated_at": "2026-09-09T11:24:46.794718+00:00"
 }
