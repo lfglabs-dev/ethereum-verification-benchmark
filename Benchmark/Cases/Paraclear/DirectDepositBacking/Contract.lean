@@ -15,21 +15,21 @@ Documented abstraction boundaries:
 * ERC20 calls are explicit observations supplied in `TransferObservation`. The model
   checks the same allowance, return value, and before/after balance relationship as the
   Cairo source, but does not prove ERC20 implementation behavior.
-* Token metadata is stable across the modeled transition: `decimals()` is represented
-  by one unchanged `tokenDecimals` state value.
+* Cairo reads `decimals()` once and reuses that local value for both conversions.
+  One unchanged `tokenDecimals` value also fixes the normalization precision at both
+  model boundaries; relating it to live metadata requires endpoint consistency.
 * Every external dispatcher call (Assets Manager, registry, and ERC20 metadata,
   allowance, balance, and transfer calls) is an atomic observation. Callback traces
   into other Paraclear entrypoints are outside this POC.
-* The linked-list pointers used by `upsert_asset_balance` are omitted. The modeled
-  balance map has the same observable amount behavior, including a zero delta leaving
-  a zero balance unchanged.
+* Linked-list pointers are omitted. Amount correspondence requires well-formed
+  records: absent records have amount zero, present records identify their key, and
+  amounts decode as i128. `Storage.lean` makes the amount-level relation explicit.
 * The reentrancy guard is modeled with explicit enter/exit state updates around the
   successful deposit body. Reversion is represented by `none`. No external token
   state is returned on failure;
   this does not independently prove Starknet transaction atomicity.
-* `decimals ≤ 32` is restated in the deposit checks as a supported-asset state
-  invariant. The Cairo contract enforces it when a supported token is created or
-  updated, rather than rechecking it inside `_deposit`.
+* `decimals ≤ 32` captures the scaling helper's runtime exponent limit of 24.
+  Asset creation/update also checks this bound explicitly.
 * `assetsManagerConfigured` makes the Cairo no-op pause branch explicit: per-token
   pause is enforced only when an Assets Manager is configured.
 * Events and the returned felt balance are omitted because they do not affect backing.
@@ -67,6 +67,8 @@ structure State (Account Token : Type) where
   assetsManagerConfigured : Bool
   tokenDepositsPaused : Token → Bool
   assetSupported : Token → Bool
+  registryConfigured : Bool
+  /-- A completed registry dispatch returned restriction code zero. -/
   registryAllows : Account → Account → Nat → Bool
   tokenDecimals : Token → Nat
 
@@ -105,6 +107,7 @@ def internalDepositChecks
     inI128 (oldBalance + (credit : Int)) &&
     decide (input.transfer.allowance ≤ u256Max) &&
     decide (input.transfer.allowance ≥ rawAmount) &&
+    state.registryConfigured &&
     state.registryAllows input.caller recipient rawAmount &&
     input.transfer.transferSucceeded &&
     decide (input.transfer.balanceBefore = state.custodyRaw input.token) &&

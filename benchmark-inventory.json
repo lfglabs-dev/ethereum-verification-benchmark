@@ -2934,9 +2934,11 @@
         "external_dispatchers_atomic",
         "stable_erc20_decimals",
         "linked_list_pointers_elided",
-        "no_cairo_correspondence"
+        "no_cairo_correspondence",
+        "lean_transition_refinement",
+        "decoded_record_representation"
       ],
-      "abstraction_notes": "This case packages a hand-written Lean state machine aligned to the selected Paraclear Cairo deposit paths. It models both public direct-deposit wrappers, public and internal guards, account creation, ERC20 allowance/transfer/balance observations, exact received-amount enforcement, i128/u256 bounds, decimal flooring, raw custody, signed balances, and the observable one-key effect of upsert_asset_balance. All external dispatcher calls are atomic observations and ERC20 decimals are stable across the transition. Linked-list pointers, events, returned felts, callbacks, bridge deposits, withdrawals, settlement, fees, liquidations, pending transfers, socialized-loss application, later rebases, and arbitrary later ERC20 behavior are outside the model. There is no mechanized Cairo-to-Lean, Sierra-to-Lean, CASM, or deployed-class correspondence. Canonical source paths retain the original repository's src/ prefix; in the reviewed supplied extraction, the hash-matching files were rooted at paraclear/paraclear.cairo and token/token.cairo.",
+      "abstraction_notes": "This case packages a hand-written Lean state machine aligned to the selected Paraclear Cairo deposit paths. It models both public direct-deposit wrappers, public and internal guards, account creation, ERC20 allowance/transfer/balance observations, exact received-amount enforcement, i128/u256 bounds, decimal flooring, raw custody, signed balances, and the observable one-key effect of upsert_asset_balance. All external dispatcher calls are atomic observations and ERC20 decimals are stable across the transition. Linked-list pointers, events, returned felts, callbacks, bridge deposits, withdrawals, settlement, fees, liquidations, pending transfers, socialized-loss application, later rebases, and arbitrary later ERC20 behavior are outside the model. SourceExecution checks source-ordered predicates and proves refinement between two handwritten Lean models. Storage proves decoded amount-record correspondence under an explicit well-formedness relation. Registry configuration is modeled explicitly. There is no mechanized Cairo-to-Lean, Sierra-to-Lean, CASM, or deployed-class correspondence. Canonical source paths retain the original repository's src/ prefix; in the reviewed supplied extraction, the hash-matching files were rooted at paraclear/paraclear.cairo and token/token.cairo.",
       "unsupported_feature_codes": [
         "cairo_source_correspondence_missing",
         "external_dispatcher_callbacks_elided",
@@ -18029,5 +18031,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-09-09T11:24:46.794718+00:00"
+  "generated_at": "2026-09-09T15:49:45.956413+00:00"
 }
