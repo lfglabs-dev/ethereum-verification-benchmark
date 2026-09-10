@@ -4,8 +4,10 @@ import Benchmark.Grindset
 namespace Benchmark.Cases.Paraclear.DirectDepositBacking
 
 /--
-A successful modeled Paraclear direct deposit cannot reduce backing slack for the
-deposited token. Replace the placeholder with a complete proof.
+A successful run of the single step-by-step Paraclear deposit executor cannot
+reduce backing slack for the deposited token. Derive receipt and state effects
+from execution, then prove the accounting bound. Replace the placeholder with a
+complete proof.
 -/
 theorem directDeposit_preservesBackingSlack
     {Account Token : Type}

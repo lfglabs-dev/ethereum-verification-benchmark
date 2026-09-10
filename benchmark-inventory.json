@@ -2935,10 +2935,10 @@
         "stable_erc20_decimals",
         "linked_list_pointers_elided",
         "no_cairo_correspondence",
-        "lean_transition_refinement",
+        "single_stepwise_model",
         "decoded_record_representation"
       ],
-      "abstraction_notes": "This case packages a hand-written Lean state machine aligned to the selected Paraclear Cairo deposit paths. It models both public direct-deposit wrappers, public and internal guards, account creation, ERC20 allowance/transfer/balance observations, exact received-amount enforcement, i128/u256 bounds, decimal flooring, raw custody, signed balances, and the observable one-key effect of upsert_asset_balance. All external dispatcher calls are atomic observations and ERC20 decimals are stable across the transition. Linked-list pointers, events, returned felts, callbacks, bridge deposits, withdrawals, settlement, fees, liquidations, pending transfers, socialized-loss application, later rebases, and arbitrary later ERC20 behavior are outside the model. The ordered model checks source-ordered predicates and proves refinement between two handwritten Lean models. The reference proofs establish decoded amount-record correspondence under an explicit well-formedness relation. Registry configuration is modeled explicitly. There is no mechanized Cairo-to-Lean, Sierra-to-Lean, CASM, or deployed-class correspondence. Canonical source paths retain the original repository's src/ prefix; in the reviewed supplied extraction, the hash-matching files were rooted at paraclear/paraclear.cairo and token/token.cairo.",
+      "abstraction_notes": "This case packages a hand-written Lean state machine aligned to the selected Paraclear Cairo deposit paths. It models both public direct-deposit wrappers, public and internal guards, account creation, ERC20 allowance/transfer/balance observations, exact received-amount enforcement, i128/u256 bounds, decimal flooring, raw custody, signed balances, and the observable one-key effect of upsert_asset_balance. All external dispatcher calls are atomic observations and ERC20 decimals are stable across the transition. Linked-list pointers, events, returned felts, callbacks, bridge deposits, withdrawals, settlement, fees, liquidations, pending transfers, socialized-loss application, later rebases, and arbitrary later ERC20 behavior are outside the model. One executor applies source-ordered checks and phase effects. The backing theorem is proved directly from successful execution, observed custody, and arithmetic helper lemmas; there is no separate net or endpoint deposit model. Dispatch statuses are part of the input. Entry custody must match the supplied before-read; inconsistent inputs are rejected as observationMatch, a model condition rather than a Cairo runtime check. The reference proofs establish decoded amount-record correspondence under an explicit well-formedness relation. Registry configuration is modeled explicitly. There is no mechanized Cairo-to-Lean, Sierra-to-Lean, CASM, or deployed-class correspondence. Canonical source paths retain the original repository's src/ prefix; in the reviewed supplied extraction, the hash-matching files were rooted at paraclear/paraclear.cairo and token/token.cairo.",
       "unsupported_feature_codes": [
         "cairo_source_correspondence_missing",
         "external_dispatcher_callbacks_elided",
@@ -11777,7 +11777,7 @@
       "track": "proof-only",
       "property_class": "accounting_bound",
       "category": "arithmetic-invariant",
-      "difficulty": "medium",
+      "difficulty": "hard",
       "theorem_name": "Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack",
       "proof_family": "state_preservation_local_effects",
       "translation_status": "translated",
@@ -11794,7 +11794,7 @@
         "Benchmark/Generated/Paraclear/DirectDepositBacking/Tasks/DirectDepositPreservesBackingSlack.lean"
       ],
       "abstraction_level": "source_aligned_state_machine",
-      "abstraction_notes": "Prove that every successful transition of the hand-written source-aligned Cairo deposit model leaves per-token backing slack unchanged or greater. The key steps are exact additive normalization of a deposit-shaped raw custody increment and a bound showing that crediting one signed balance raises the sum of positive balances by no more than the normalized credit. The task deliberately makes no compiled-Cairo correspondence claim.",
+      "abstraction_notes": "Prove that every successful run of the single step-by-step deposit executor leaves per-token backing slack unchanged or greater. Derive passed checks and state effects from executeChecks, use the observed receipt and entry consistency to establish custody growth, then apply decimal normalization and the signed positive-balance bound. Dispatch statuses are part of the input. Success is Except.ok, and no net deposit or endpoint model is available. This task makes no compiled-Cairo correspondence claim.",
       "unsupported_feature_codes": [
         "cairo_source_correspondence_missing",
         "external_dispatcher_callbacks_elided",
@@ -18030,5 +18030,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-09-10T11:28:38.353883+00:00"
+  "generated_at": "2026-09-10T14:31:42.456677+00:00"
 }

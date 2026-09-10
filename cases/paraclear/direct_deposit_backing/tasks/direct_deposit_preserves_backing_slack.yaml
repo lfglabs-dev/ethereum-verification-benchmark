@@ -10,7 +10,7 @@ task_interface_version: 2
 theorem_name: Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack
 proof_family: state_preservation_local_effects
 property_class: accounting_bound
-difficulty: medium
+difficulty: hard
 category: arithmetic-invariant
 track: proof-only
 translation_status: translated
@@ -28,11 +28,12 @@ reference_solution_module: Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs
 reference_solution_declaration: Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack
 abstraction_level: source_aligned_state_machine
 abstraction_notes: >
-  Prove that every successful transition of the hand-written source-aligned Cairo
-  deposit model leaves per-token backing slack unchanged or greater. The key steps
-  are exact additive normalization of a deposit-shaped raw custody increment and a
-  bound showing that crediting one signed balance raises the sum of positive balances
-  by no more than the normalized credit. The task deliberately makes no compiled-Cairo
+  Prove that every successful run of the single step-by-step deposit executor leaves
+  per-token backing slack unchanged or greater. Derive passed checks and state effects
+  from executeChecks, use the observed receipt and entry consistency to establish
+  custody growth, then apply decimal normalization and the signed positive-balance
+  bound. Dispatch statuses are part of the input. Success is Except.ok, and no net
+  deposit or endpoint model is available. This task makes no compiled-Cairo
   correspondence claim.
 unsupported_feature_codes:
   - cairo_source_correspondence_missing

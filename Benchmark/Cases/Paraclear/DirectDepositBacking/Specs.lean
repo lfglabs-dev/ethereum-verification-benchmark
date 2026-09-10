@@ -18,8 +18,8 @@ initial solvency nor covers all future protocol operations.
 
 The remaining relations document the implementation boundary:
 WellFormed / StorageRepresents relate already-decoded balance records to numbers;
-ReachableRecord only covers empty records followed by checked local updates;
-ObservationsMatch couples entry custody to the supplied ERC20 before-read.
+ReachableRecord only covers empty records followed by checked local updates.
+Entry custody must match the before-read for runDirectDeposit to accept its input.
 None is a mechanized connection to physical Cairo storage or concrete token calls.
 -/
 
@@ -44,12 +44,14 @@ def backingSlack (state : State Account Token) (token : Token) : Int :=
   normalizedCustody state token - postedPositiveBalances state token
 
 /--
-A successful public direct deposit cannot reduce the deposited token's backing slack.
+A successful run of the single step-by-step deposit executor cannot reduce the
+ deposited token's backing slack. Input dispatch statuses cover external-call failures;
+ entry-observation consistency is already part of runDirectDeposit acceptance.
 -/
 def DirectDepositPreservesBackingSlack
     (state state' : State Account Token)
     (input : DirectDepositInput Account Token) : Prop :=
-  runDirectDeposit state input = some state' →
+  runDirectDeposit state input = .ok state' →
     backingSlack state' input.token ≥ backingSlack state input.token
 
 end Spec
@@ -80,18 +82,5 @@ inductive ReachableRecord (key : Token) : BalanceRecord Token → Prop where
       ReachableRecord key (upsertRecord key record delta)
 
 end Storage
-
-section SourceExecution
-
-variable {Account Token : Type}
-variable [DecidableEq Account] [DecidableEq Token] [Zero Account] [Zero Token]
-
-/-- Coupling to external custody at the *entry* boundary, not a Cairo assertion.
-External calls must additionally frame represented storage and normalization metadata
-to instantiate this snapshot model from a concrete execution. -/
-def ObservationsMatch (state : State Account Token) (input : DirectDepositInput Account Token) : Prop :=
-  input.transfer.balanceBefore = state.custodyRaw input.token
-
-end SourceExecution
 
 end Benchmark.Cases.Paraclear.DirectDepositBacking

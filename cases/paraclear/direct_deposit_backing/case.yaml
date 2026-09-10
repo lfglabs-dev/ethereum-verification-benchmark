@@ -34,7 +34,7 @@ abstraction_tags:
   - stable_erc20_decimals
   - linked_list_pointers_elided
   - no_cairo_correspondence
-  - lean_transition_refinement
+  - single_stepwise_model
   - decoded_record_representation
 abstraction_notes: >
   This case packages a hand-written Lean state machine aligned to the selected
@@ -46,9 +46,13 @@ abstraction_notes: >
   ERC20 decimals are stable across the transition. Linked-list pointers, events,
   returned felts, callbacks, bridge deposits, withdrawals, settlement, fees,
   liquidations, pending transfers, socialized-loss application, later rebases,
-  and arbitrary later ERC20 behavior are outside the model. The ordered model checks
-  source-ordered predicates and proves refinement between two handwritten Lean
-  models. The reference proofs establish decoded amount-record correspondence under an explicit
+  and arbitrary later ERC20 behavior are outside the model. One executor applies
+  source-ordered checks and phase effects. The backing theorem is proved directly
+  from successful execution, observed custody, and arithmetic helper lemmas; there
+  is no separate net or endpoint deposit model. Dispatch statuses are part of the
+  input. Entry custody must match the supplied before-read; inconsistent inputs are
+  rejected as observationMatch, a model condition rather than a Cairo runtime check.
+  The reference proofs establish decoded amount-record correspondence under an explicit
   well-formedness relation. Registry configuration is modeled explicitly. There is no mechanized
   Cairo-to-Lean, Sierra-to-Lean, CASM, or deployed-class correspondence. Canonical
   source paths retain the original repository's src/ prefix; in the reviewed supplied

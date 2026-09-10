@@ -8,14 +8,12 @@ def caseReady : Bool := true
 
 #print axioms directDeposit_preservesBackingSlack
 #print axioms directDeposit_preservesNonnegativeBacking
-#print axioms source_success_refines
-#print axioms source_success_preservesBackingSlack
-#print axioms updateRecord_represents
-#print axioms rejected_source_preserves_projection
-#print axioms ordered_eq_source
-#print axioms ordered_success_preservesBackingSlack
+#print axioms successful_deposit_receipt
+#print axioms successful_deposit_state
+#print axioms directDeposit_storage_represents
 #print axioms reachableRecord_wellFormed
-#print axioms ordered_success_storage_represents
+#print axioms rejected_deposit_preserves_projection
+
 
 end Benchmark.Cases.Paraclear.DirectDepositBacking
 
@@ -46,11 +44,13 @@ def request (d : Nat := 8) (amount : Nat := 1) (custody : Nat := 100) :
 
 def failedAt (s : State (Fin 3) (Fin 3)) (i : DirectDepositInput (Fin 3) (Fin 3))
     (phase : DepositPhase) (calls := Dispatches.completed) : Bool :=
-  firstFailure (sourceChecks s i calls) == some phase
+  match runDirectDeposit s { i with dispatches := calls } with
+  | .error actual => actual == phase
+  | .ok _ => false
 
 def credited (s : State (Fin 3) (Fin 3)) (i : DirectDepositInput (Fin 3) (Fin 3))
     (expected : Int) : Bool :=
-  match runOrderedDeposit s i .completed with
+  match runDirectDeposit s i with
   | .error _ => false
   | .ok s' => s'.internalBalance 1 1 == expected && s'.custodyRaw 1 == i.transfer.balanceAfter
       && s'.internalBalance 2 1 == s.internalBalance 2 1
@@ -69,8 +69,8 @@ def checks : List (String × Bool) :=
    ("registry reverts", failedAt (initial) (request) .registry { Dispatches.completed with registry := .reverted }),
    ("metadata malformed", failedAt (initial) (request) .decimals { Dispatches.completed with decimals := .malformed }),
    ("unconfigured manager not called", credited (initial) (request) 1 &&
-     (firstFailure (sourceChecks (initial) (request)
-       { Dispatches.completed with pause := .reverted }) == none)),
+     credited (initial)
+       { request with dispatches := { Dispatches.completed with pause := .reverted } } 1),
    ("configured manager reverts", failedAt { initial with assetsManagerConfigured := true }
      (request) .pause { Dispatches.completed with pause := .reverted }),
    ("paused", failedAt { initial with globalDepositsAllowed := false } (request) .globalPause),
@@ -95,6 +95,17 @@ def checks : List (String × Bool) :=
      { request with kind := .onBehalf, caller := 2 } 1),
    ("insufficient allowance", failedAt (initial)
      { request with transfer := ⟨0, true, 100, 101⟩ } .allowance),
+   ("entry observation mismatch", failedAt (initial 8 0 500) (request) .observationMatch),
+   ("before read reverts", failedAt (initial) (request) .beforeBalance
+     { Dispatches.completed with beforeBalance := .reverted }),
+   ("transfer dispatch reverts", failedAt (initial) (request) .transfer
+     { Dispatches.completed with transfer := .reverted }),
+   ("after read malformed", failedAt (initial) (request) .afterBalance
+     { Dispatches.completed with afterBalance := .malformed }),
+   ("before balance overflow", failedAt (initial 8 0 (u256Max + 1))
+     (request 8 0 (u256Max + 1)) .beforeBalance),
+   ("after balance overflow", failedAt (initial 8 0 u256Max)
+     (request 8 1 u256Max) .afterBalance),
    ("record create", (upsertRecord (1 : Fin 3) ⟨0, 0⟩ 7).amount == 7),
    ("record remove", (upsertRecord (1 : Fin 3) ⟨1, -7⟩ 7).tokenAddress == 0),
    ("malformed record witness", (upsertRecord (1 : Fin 3) ⟨0, 5⟩ 1).amount == 1)] ++

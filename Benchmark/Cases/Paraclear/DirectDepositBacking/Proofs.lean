@@ -1,28 +1,23 @@
 import Benchmark.Cases.Paraclear.DirectDepositBacking.Specs
 
 /-!
-# Proof guide: which connection is proved?
+# Direct proof about the single deposit executor
 
-1. Arithmetic: a deposit-shaped custody increment normalizes to exactly the credit;
-   adding that credit to a signed balance increases its positive part by at most
-   the credit. Subtracting the two proves directDeposit_preservesBackingSlack.
-2. Storage: the source-shaped create/update/remove record branches have the same
-   numeric effect as addition, provided the decoded record is well formed. Local
-   update histories preserve this validity; arbitrary Cairo histories are not proved.
-3. SourceExecution: ordered predicates and observed final custody refine the net
-   deposit under ObservationsMatch. This assumption is not a source runtime check.
-4. Execution: applying the modeled phase effects gives the source-shaped endpoint,
-   including the same first rejection. Composing these results transfers the backing
-   property and decoded-record relation to the ordered Lean execution.
+1. Induction on executeChecks derives passed checks and the actual phase effects.
+   The final state below is a theorem about execution, not a second deposit function.
+2. Successful receipt checks and entry consistency establish the custody increment.
+3. Decimal arithmetic and the positive-part bound show that custody growth covers
+   any increase in positive customer balances.
+4. Decoded record lemmas justify the numeric balance update for valid records.
 
-All four are Lean-to-Lean results. The missing implementation theorem would connect
-an actual Cairo execution and its external calls to these observations and records.
-Callbacks, physical storage/ABI decoding, and runtime atomicity are not proved here.
+The main theorem needs only successful modeled execution. Record validity is a
+premise of the supporting storage theorem, not an extra premise of the backing rule.
 -/
 
 namespace Benchmark.Cases.Paraclear.DirectDepositBacking
 
-section Accounting
+/-! ## Arithmetic helpers -/
+section
 
 /-- A deposit-sized raw increment normalizes additively at every token precision. -/
 theorem toInternal_add_toRaw
@@ -76,124 +71,10 @@ theorem postedPositiveBalances_update_le
       rw [Finset.sum_add_distrib]
       simp [postedPositiveBalances]
 
-omit [Fintype Account] in
-theorem successful_run_eq_apply
-    (state state' : State Account Token)
-    (input : DirectDepositInput Account Token)
-    (success : runDirectDeposit state input = some state') :
-    state' = applySuccessfulDirectDeposit state input := by
-  unfold runDirectDeposit at success
-  split at success
-  · exact Option.some.inj success.symm
-  · contradiction
+end
 
-omit [Fintype Account] [Zero Account] [Zero Token] in
-theorem custodyRaw_after_successful_apply
-    (state : State Account Token)
-    (input : DirectDepositInput Account Token) :
-    (applySuccessfulDirectDeposit state input).custodyRaw input.token =
-      state.custodyRaw input.token +
-        toRaw input.amount8 (state.tokenDecimals input.token) := by
-  simp [applySuccessfulDirectDeposit, enterReentrancyGuard, exitReentrancyGuard]
-
-omit [Fintype Account] [Zero Account] [Zero Token] in
-theorem recipientBalance_after_successful_apply
-    (state : State Account Token)
-    (input : DirectDepositInput Account Token) :
-    (applySuccessfulDirectDeposit state input).internalBalance
-        input.recipient input.token =
-      state.internalBalance input.recipient input.token +
-        depositCredit input.amount8 (state.tokenDecimals input.token) := by
-  simp [applySuccessfulDirectDeposit, enterReentrancyGuard, exitReentrancyGuard,
-    upsertAssetBalance, updateInternalBalance, Function.update]
-
-omit [Fintype Account] [Zero Account] [Zero Token] in
-theorem unrelatedBalance_after_successful_apply
-    (state : State Account Token)
-    (input : DirectDepositInput Account Token)
-    (account : Account)
-    (token : Token)
-    (unrelated : account ≠ input.recipient ∨ token ≠ input.token) :
-    (applySuccessfulDirectDeposit state input).internalBalance account token =
-      state.internalBalance account token := by
-  rcases unrelated with account_ne | token_ne
-  · simp [applySuccessfulDirectDeposit, enterReentrancyGuard, exitReentrancyGuard,
-      upsertAssetBalance, updateInternalBalance, Function.update, account_ne]
-  · by_cases account_eq : account = input.recipient
-    · subst account
-      simp [applySuccessfulDirectDeposit, enterReentrancyGuard, exitReentrancyGuard,
-        upsertAssetBalance, updateInternalBalance, Function.update, token_ne]
-    · simp [applySuccessfulDirectDeposit, enterReentrancyGuard, exitReentrancyGuard,
-        upsertAssetBalance, updateInternalBalance, Function.update, account_eq]
-
-omit [Fintype Account] [Zero Account] [Zero Token] in
-theorem unrelatedCustody_after_successful_apply
-    (state : State Account Token)
-    (input : DirectDepositInput Account Token)
-    (token : Token)
-    (token_ne : token ≠ input.token) :
-    (applySuccessfulDirectDeposit state input).custodyRaw token =
-      state.custodyRaw token := by
-  simp [applySuccessfulDirectDeposit, enterReentrancyGuard, exitReentrancyGuard,
-    Function.update, token_ne]
-
-omit [Fintype Account] [Zero Account] [Zero Token] in
-theorem normalizedCustody_after_successful_apply
-    (state : State Account Token)
-    (input : DirectDepositInput Account Token) :
-    normalizedCustody (applySuccessfulDirectDeposit state input) input.token =
-      normalizedCustody state input.token +
-        depositCredit input.amount8 (state.tokenDecimals input.token) := by
-  simp [normalizedCustody, applySuccessfulDirectDeposit, enterReentrancyGuard,
-    exitReentrancyGuard, upsertAssetBalance, toInternal_add_toRaw]
-
-omit [Zero Account] [Zero Token] in
-theorem postedPositiveBalances_after_successful_apply_le
-    (state : State Account Token)
-    (input : DirectDepositInput Account Token) :
-    postedPositiveBalances (applySuccessfulDirectDeposit state input) input.token ≤
-      postedPositiveBalances state input.token +
-        depositCredit input.amount8 (state.tokenDecimals input.token) := by
-  change
-    postedPositiveBalances
-        (upsertAssetBalance state input.recipient input.token
-          (depositCredit input.amount8 (state.tokenDecimals input.token) : Int))
-        input.token ≤
-      postedPositiveBalances state input.token +
-        depositCredit input.amount8 (state.tokenDecimals input.token)
-  exact postedPositiveBalances_update_le state input.recipient input.token
-    (depositCredit input.amount8 (state.tokenDecimals input.token))
-
-/--
-The one public preservation theorem for this POC.
-
-It covers both values of `DepositKind`, hence both `deposit` and
-`deposit_on_behalf_of`. The theorem is about the source-aligned Lean model only.
--/
-theorem directDeposit_preservesBackingSlack
-    (state state' : State Account Token)
-    (input : DirectDepositInput Account Token) :
-    DirectDepositPreservesBackingSlack state state' input := by
-  intro success
-  rw [successful_run_eq_apply state state' input success]
-  unfold backingSlack
-  have hCustody := normalizedCustody_after_successful_apply state input
-  have hBalances := postedPositiveBalances_after_successful_apply_le state input
-  omega
-
-/-- Immediate corollary: nonnegative backing remains nonnegative. -/
-theorem directDeposit_preservesNonnegativeBacking
-    (state state' : State Account Token)
-    (input : DirectDepositInput Account Token)
-    (success : runDirectDeposit state input = some state')
-    (backedBefore : 0 ≤ backingSlack state input.token) :
-    0 ≤ backingSlack state' input.token := by
-  have h := directDeposit_preservesBackingSlack state state' input success
-  omega
-
-end Accounting
-
-section Storage
+/-! ## Decoded record updates -/
+section
 
 variable {Account Token : Type} [DecidableEq Token] [Zero Token]
 
@@ -256,166 +137,180 @@ theorem reachableRecord_wellFormed (key : Token) (key_ne : key ≠ 0)
   | credit record delta _ bounded ih =>
     exact upsertRecord_wellFormed key record delta key_ne ih bounded
 
-end Storage
+end
 
-section SourceExecution
-
-theorem firstFailure_none_iff (checks : List DepositCheck) :
-    firstFailure checks = none ↔ ∀ check ∈ checks, check.passes = true := by
-  induction checks with
-  | nil => simp [firstFailure]
-  | cons check rest ih =>
-    cases h : check.passes <;> simp [firstFailure, h, ih]
+/-! ## Direct execution proof -/
+section
 
 variable {Account Token : Type}
 variable [DecidableEq Account] [DecidableEq Token] [Zero Account] [Zero Token]
 
-theorem sourceChecks_imply_modelChecks (state : State Account Token)
-    (input : DirectDepositInput Account Token) (calls : Dispatches)
-    (accepted : firstFailure (sourceChecks state input calls) = none)
-    (coupled : ObservationsMatch state input) :
-    (publicDepositChecks state input && internalDepositChecks state input) = true := by
-  rw [firstFailure_none_iff] at accepted
+/-- Induct on the actual interpreter, retaining both acceptance and state effects. -/
+theorem executeChecks_success (input : DirectDepositInput Account Token) (d : Nat)
+    (checks : List DepositCheck) (state state' : State Account Token)
+    (success : executeChecks input d checks state = .ok state') :
+    (∀ check ∈ checks, check.passes = true) ∧
+      state' = checks.foldl (fun s check => phaseEffect input d check.phase s) state := by
+  induction checks generalizing state with
+  | nil =>
+    simp only [executeChecks, Except.ok.injEq] at success
+    subst state'
+    simp
+  | cons check rest ih =>
+    simp only [executeChecks] at success
+    split at success
+    · rename_i passed
+      obtain ⟨accepted, effects⟩ := ih _ success
+      constructor
+      · simp only [List.mem_cons, forall_eq_or_imp]
+        exact ⟨passed, accepted⟩
+      · simpa only [List.foldl_cons] using effects
+    · contradiction
+
+theorem successful_deposit_observation (state state' : State Account Token)
+    (input : DirectDepositInput Account Token)
+    (success : runDirectDeposit state input = .ok state') :
+    input.transfer.balanceBefore = state.custodyRaw input.token := by
+  unfold runDirectDeposit at success
+  split at success
+  · assumption
+  · contradiction
+
+theorem successful_deposit_checks (state state' : State Account Token)
+    (input : DirectDepositInput Account Token)
+    (success : runDirectDeposit state input = .ok state') :
+    ∀ check ∈ sourceChecks state input, check.passes = true := by
+  unfold runDirectDeposit at success
+  split at success
+  · exact (executeChecks_success input _ _ state state' success).1
+  · contradiction
+
+/-- Derive the observed final state by executing the phases. No endpoint model is
+defined or assumed, and custody remains the observed after-balance. -/
+theorem successful_deposit_state (state state' : State Account Token)
+    (input : DirectDepositInput Account Token)
+    (success : runDirectDeposit state input = .ok state') :
+    state' = { state with
+      internalBalance := updateInternalBalance state.internalBalance input.recipient input.token
+        (state.internalBalance input.recipient input.token +
+          (depositCredit input.amount8 (state.tokenDecimals input.token) : Int))
+      custodyRaw := Function.update state.custodyRaw input.token input.transfer.balanceAfter
+      registeredAccounts := insert input.recipient state.registeredAccounts
+      reentrancyEntered := false } := by
+  unfold runDirectDeposit at success
+  split at success
+  · have effects := (executeChecks_success input _ _ state state' success).2
+    simpa [sourceChecks, List.foldl, phaseEffect, upsertAssetBalance] using effects
+  · contradiction
+
+/-- Exact receipt is extracted from the successful execution's checks, not assumed
+as the conclusion of the business theorem. Removing that check breaks this argument. -/
+theorem successful_deposit_receipt (state state' : State Account Token)
+    (input : DirectDepositInput Account Token)
+    (success : runDirectDeposit state input = .ok state') :
+    input.transfer.balanceAfter = state.custodyRaw input.token +
+      toRaw input.amount8 (state.tokenDecimals input.token) := by
+  have accepted := successful_deposit_checks state state' input success
   simp only [sourceChecks, List.mem_cons, List.not_mem_nil, or_false,
     forall_eq_or_imp, Bool.and_eq_true, decide_eq_true_eq] at accepted
-  simp only [publicDepositChecks, internalDepositChecks, Bool.and_eq_true,
-    decide_eq_true_eq]
-  have receipt : input.transfer.balanceAfter = input.transfer.balanceBefore +
-      toRaw input.amount8 (state.tokenDecimals input.token) := by omega
-  have pause : (!state.assetsManagerConfigured || !state.tokenDepositsPaused input.token) = true := by
-    have hp := accepted.2.2.2.1
-    cases h : state.assetsManagerConfigured <;> simp_all
-  change input.transfer.balanceBefore = state.custodyRaw input.token at coupled
-  tauto
+  have coupled := successful_deposit_observation state state' input success
+  omega
 
-theorem sourcePostState_eq_apply (state : State Account Token)
+theorem recipientBalance_after_success (state state' : State Account Token)
     (input : DirectDepositInput Account Token)
-    (receipt : input.transfer.balanceAfter = state.custodyRaw input.token +
-      toRaw input.amount8 (state.tokenDecimals input.token)) :
-    sourcePostState state input = applySuccessfulDirectDeposit state input := by
-  simp [sourcePostState, applySuccessfulDirectDeposit, enterReentrancyGuard,
-    exitReentrancyGuard, upsertAssetBalance, receipt]
+    (success : runDirectDeposit state input = .ok state') :
+    state'.internalBalance input.recipient input.token =
+      state.internalBalance input.recipient input.token +
+        depositCredit input.amount8 (state.tokenDecimals input.token) := by
+  rw [successful_deposit_state state state' input success]
+  simp [updateInternalBalance]
 
-/-- Refinement between two handwritten Lean models, NOT a Cairo semantics theorem. -/
-theorem source_success_refines (state state' : State Account Token)
-    (input : DirectDepositInput Account Token) (calls : Dispatches)
-    (coupled : ObservationsMatch state input)
-    (success : runSourceDeposit state input calls = .ok state') :
-    runDirectDeposit state input = some state' := by
-  unfold runSourceDeposit at success
-  cases h : firstFailure (sourceChecks state input calls) with
-  | some phase => simp [h] at success
-  | none =>
-    simp only [h, Except.ok.injEq] at success
-    subst state'
-    have checks := sourceChecks_imply_modelChecks state input calls h coupled
-    have receipt : input.transfer.balanceAfter = state.custodyRaw input.token +
-        toRaw input.amount8 (state.tokenDecimals input.token) := by
-      have hc := checks
-      simp only [Bool.and_eq_true, internalDepositChecks, decide_eq_true_eq] at hc
-      change input.transfer.balanceBefore = state.custodyRaw input.token at coupled
-      omega
-    simp [runDirectDeposit, checks, sourcePostState_eq_apply state input receipt]
+theorem unrelatedBalance_after_success (state state' : State Account Token)
+    (input : DirectDepositInput Account Token) (account : Account) (token : Token)
+    (success : runDirectDeposit state input = .ok state')
+    (unrelated : account ≠ input.recipient ∨ token ≠ input.token) :
+    state'.internalBalance account token = state.internalBalance account token := by
+  rw [successful_deposit_state state state' input success]
+  rcases unrelated with ha | ht
+  · simp [updateInternalBalance, Function.update, ha]
+  · by_cases ha : account = input.recipient
+    · subst account
+      simp [updateInternalBalance, Function.update, ht]
+    · simp [updateInternalBalance, Function.update, ha]
 
-theorem rejected_source_preserves_projection (state : State Account Token)
-    (input : DirectDepositInput Account Token) (calls : Dispatches) (phase : DepositPhase)
-    (failed : runSourceDeposit state input calls = .error phase) :
-    committedSourceState state input calls = state := by
-  simp [committedSourceState, failed]
+theorem unrelatedCustody_after_success (state state' : State Account Token)
+    (input : DirectDepositInput Account Token) (token : Token)
+    (success : runDirectDeposit state input = .ok state') (token_ne : token ≠ input.token) :
+    state'.custodyRaw token = state.custodyRaw token := by
+  rw [successful_deposit_state state state' input success]
+  simp [Function.update, token_ne]
 
-variable [Fintype Account]
-
-theorem source_success_preservesBackingSlack (state state' : State Account Token)
-    (input : DirectDepositInput Account Token) (calls : Dispatches)
-    (coupled : ObservationsMatch state input)
-    (success : runSourceDeposit state input calls = .ok state') :
-    backingSlack state' input.token ≥ backingSlack state input.token :=
-  directDeposit_preservesBackingSlack state state' input
-    (source_success_refines state state' input calls coupled success)
-
-end SourceExecution
-
-section Execution
-
-variable {Account Token : Type}
-variable [DecidableEq Account] [DecidableEq Token] [Zero Account] [Zero Token]
-
-theorem executeChecks_eq (input : DirectDepositInput Account Token) (d : Nat)
-    (checks : List DepositCheck) (state : State Account Token) :
-    executeChecks input d checks state =
-      match firstFailure checks with
-      | some phase => .error phase
-      | none => .ok (uncheckedEffects input d checks state) := by
-  induction checks generalizing state with
-  | nil => rfl
-  | cons check rest ih =>
-    cases h : check.passes <;>
-      simp [executeChecks, firstFailure, h, ih, uncheckedEffects, List.foldl_cons]
-
-theorem sourceEffects_eq_postState (state : State Account Token)
-    (input : DirectDepositInput Account Token) (calls : Dispatches) :
-    uncheckedEffects input (state.tokenDecimals input.token) (sourceChecks state input calls) state =
-      sourcePostState state input := by
-  simp [uncheckedEffects, sourceChecks, phaseEffect, sourcePostState, upsertAssetBalance]
-
-/-- Exact equivalence of ordered projection execution and the source-shaped endpoint
-model, including rejection phase. This is still a Lean-to-Lean equivalence. -/
-theorem ordered_eq_source (state : State Account Token)
-    (input : DirectDepositInput Account Token) (calls : Dispatches) :
-    runOrderedDeposit state input calls = runSourceDeposit state input calls := by
-  unfold runOrderedDeposit runSourceDeposit
-  rw [executeChecks_eq]
-  cases firstFailure (sourceChecks state input calls) <;>
-    simp [sourceEffects_eq_postState]
-
-theorem ordered_success_refines (state state' : State Account Token)
-    (input : DirectDepositInput Account Token) (calls : Dispatches)
-    (coupled : ObservationsMatch state input)
-    (success : runOrderedDeposit state input calls = .ok state') :
-    runDirectDeposit state input = some state' := by
-  rw [ordered_eq_source] at success
-  exact source_success_refines state state' input calls coupled success
-
-/-- Composes ordered execution with the existence-aware record update theorem.
-This relates decoded amount records, not physical Cairo storage or its pointers. -/
-theorem ordered_success_storage_represents (state state' : State Account Token)
+/-- Relates decoded records to the successful executor's numeric balances. -/
+theorem directDeposit_storage_represents (state state' : State Account Token)
     (records : Account → Token → BalanceRecord Token)
-    (input : DirectDepositInput Account Token) (calls : Dispatches)
-    (rep : StorageRepresents records state) (coupled : ObservationsMatch state input)
-    (success : runOrderedDeposit state input calls = .ok state') :
+    (input : DirectDepositInput Account Token)
+    (rep : StorageRepresents records state)
+    (success : runDirectDeposit state input = .ok state') :
     StorageRepresents
       (updateRecord records input.recipient input.token
         (depositCredit input.amount8 (state.tokenDecimals input.token) : Int)) state' := by
-  have net := ordered_success_refines state state' input calls coupled success
-  have checks : (publicDepositChecks state input && internalDepositChecks state input) = true := by
-    unfold runDirectDeposit at net
-    split at net
-    · assumption
-    · contradiction
-  have token_ne : input.token ≠ 0 := by
-    have h := checks
-    simp only [Bool.and_eq_true, publicDepositChecks, decide_eq_true_eq] at h
-    tauto
+  have accepted := successful_deposit_checks state state' input success
+  simp only [sourceChecks, List.mem_cons, List.not_mem_nil, or_false,
+    forall_eq_or_imp, Bool.and_eq_true, decide_eq_true_eq] at accepted
+  have token_ne : input.token ≠ 0 := by tauto
   have bounded : inI128 (state.internalBalance input.recipient input.token +
-      (depositCredit input.amount8 (state.tokenDecimals input.token) : Int)) = true := by
-    have h := checks
-    simp only [Bool.and_eq_true, internalDepositChecks, decide_eq_true_eq] at h
-    tauto
-  rw [successful_run_eq_apply state state' input net]
+      (depositCredit input.amount8 (state.tokenDecimals input.token) : Int)) = true := by tauto
+  rw [successful_deposit_state state state' input success]
   change StorageRepresents _ (upsertAssetBalance state input.recipient input.token
     (depositCredit input.amount8 (state.tokenDecimals input.token) : Int))
   exact updateRecord_represents records state input.recipient input.token _ rep token_ne bounded
 
+theorem rejected_deposit_preserves_projection (state : State Account Token)
+    (input : DirectDepositInput Account Token) (phase : DepositPhase)
+    (failed : runDirectDeposit state input = .error phase) :
+    committedDepositState state input = state := by
+  simp [committedDepositState, failed]
+
 variable [Fintype Account]
 
-theorem ordered_success_preservesBackingSlack (state state' : State Account Token)
-    (input : DirectDepositInput Account Token) (calls : Dispatches)
-    (coupled : ObservationsMatch state input)
-    (success : runOrderedDeposit state input calls = .ok state') :
-    backingSlack state' input.token ≥ backingSlack state input.token :=
-  directDeposit_preservesBackingSlack state state' input
-    (ordered_success_refines state state' input calls coupled success)
+theorem normalizedCustody_after_success (state state' : State Account Token)
+    (input : DirectDepositInput Account Token)
+    (success : runDirectDeposit state input = .ok state') :
+    normalizedCustody state' input.token = normalizedCustody state input.token +
+      depositCredit input.amount8 (state.tokenDecimals input.token) := by
+  have receipt := successful_deposit_receipt state state' input success
+  rw [successful_deposit_state state state' input success]
+  simp [normalizedCustody, receipt, toInternal_add_toRaw]
 
-end Execution
+theorem postedPositiveBalances_after_success_le (state state' : State Account Token)
+    (input : DirectDepositInput Account Token)
+    (success : runDirectDeposit state input = .ok state') :
+    postedPositiveBalances state' input.token ≤ postedPositiveBalances state input.token +
+      depositCredit input.amount8 (state.tokenDecimals input.token) := by
+  rw [successful_deposit_state state state' input success]
+  change postedPositiveBalances
+    (upsertAssetBalance state input.recipient input.token
+      (depositCredit input.amount8 (state.tokenDecimals input.token) : Int)) input.token ≤ _
+  exact postedPositiveBalances_update_le state input.recipient input.token _
+
+/-- The business theorem is proved directly about the sole step-by-step executor. -/
+theorem directDeposit_preservesBackingSlack (state state' : State Account Token)
+    (input : DirectDepositInput Account Token) :
+    DirectDepositPreservesBackingSlack state state' input := by
+  intro success
+  have custody := normalizedCustody_after_success state state' input success
+  have claims := postedPositiveBalances_after_success_le state state' input success
+  unfold backingSlack
+  omega
+
+theorem directDeposit_preservesNonnegativeBacking (state state' : State Account Token)
+    (input : DirectDepositInput Account Token)
+    (success : runDirectDeposit state input = .ok state')
+    (backedBefore : 0 ≤ backingSlack state input.token) :
+    0 ≤ backingSlack state' input.token := by
+  have preserved := directDeposit_preservesBackingSlack state state' input success
+  omega
+
+end
 
 end Benchmark.Cases.Paraclear.DirectDepositBacking
