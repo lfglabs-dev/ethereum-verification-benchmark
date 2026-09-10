@@ -18,7 +18,6 @@ proof_status: complete
 evaluation_engine: lean_proof_generation
 implementation_files:
   - cases/paraclear/direct_deposit_backing/verity/Contract.lean
-  - Benchmark/Cases/Paraclear/DirectDepositBacking/CairoInt.lean
   - Benchmark/Cases/Paraclear/DirectDepositBacking/Contract.lean
 specification_files:
   - cases/paraclear/direct_deposit_backing/verity/Specs.lean

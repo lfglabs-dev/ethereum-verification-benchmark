@@ -46,9 +46,9 @@ abstraction_notes: >
   ERC20 decimals are stable across the transition. Linked-list pointers, events,
   returned felts, callbacks, bridge deposits, withdrawals, settlement, fees,
   liquidations, pending transfers, socialized-loss application, later rebases,
-  and arbitrary later ERC20 behavior are outside the model. SourceExecution checks
+  and arbitrary later ERC20 behavior are outside the model. The ordered model checks
   source-ordered predicates and proves refinement between two handwritten Lean
-  models. Storage proves decoded amount-record correspondence under an explicit
+  models. The reference proofs establish decoded amount-record correspondence under an explicit
   well-formedness relation. Registry configuration is modeled explicitly. There is no mechanized
   Cairo-to-Lean, Sierra-to-Lean, CASM, or deployed-class correspondence. Canonical
   source paths retain the original repository's src/ prefix; in the reviewed supplied

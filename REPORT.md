@@ -2164,7 +2164,7 @@ This report is generated from the benchmark manifests.
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
 - Theorem target: `Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack`
 - Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
-- Implementation files: `cases/paraclear/direct_deposit_backing/verity/Contract.lean`, `Benchmark/Cases/Paraclear/DirectDepositBacking/CairoInt.lean`, `Benchmark/Cases/Paraclear/DirectDepositBacking/Contract.lean`
+- Implementation files: `cases/paraclear/direct_deposit_backing/verity/Contract.lean`, `Benchmark/Cases/Paraclear/DirectDepositBacking/Contract.lean`
 - Specification files: `cases/paraclear/direct_deposit_backing/verity/Specs.lean`, `Benchmark/Cases/Paraclear/DirectDepositBacking/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Paraclear/DirectDepositBacking/Tasks/DirectDepositPreservesBackingSlack.lean`
 - Hidden reference solution: `Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs`
