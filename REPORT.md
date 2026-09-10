@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 47
-- Implementations: 48
-- Active cases: 47
-- Buildable active cases: 47
-- Active tasks: 299
+- Families: 48
+- Implementations: 49
+- Active cases: 48
+- Buildable active cases: 48
+- Active tasks: 300
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -252,6 +252,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `claimUsdc`, `_claimUsdc`, `claimWeth`, `_claimWeth`, `claimBoth`
 - Upstream source artifact: `src/StreamRecoveryClaim.sol`
 - Notes: Single-round accounting slice of the full USDC/WETH claim surface, including `claimBoth`. Merkle verification is abstracted as a boolean witness and token transfer side effects are omitted.
+
+### `paraclear/direct_deposit_backing`
+- Family / implementation: `paraclear` / `client_cairo_extraction`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.Paraclear.DirectDepositBacking.Compile`
+- Source ref: `client-supplied:paraclear-cairo-extraction:2026-09-07`
+- Selected functions: `deposit`, `deposit_on_behalf_of`, `_deposit`, `upsert_asset_balance`, `_scale_from_paraclear_decimals`, `_scale_to_paraclear_decimals`
+- Upstream source artifact: `src/paraclear/paraclear.cairo`
+- Notes: A successful modeled deposit or deposit_on_behalf_of cannot reduce the deposited token's backing slack, defined as normalized raw ERC20 custody minus the sum of positive posted internal balances. This is one local preservation step toward exchange solvency, not a proof of global Paraclear solvency.
 
 ### `pareto/redemption_backing`
 - Family / implementation: `pareto` / `usp`
@@ -2148,6 +2158,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/paladin_votes/stream_recovery_claim_usdc/verity/Specs.lean`, `Benchmark/Cases/PaladinVotes/StreamRecoveryClaimUsdc/Specs.lean`
 - Editable proof file: `Benchmark/Generated/PaladinVotes/StreamRecoveryClaimUsdc/Tasks/WethPreservesUsdcState.lean`
 - Hidden reference solution: `Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs`
+
+### `paraclear/direct_deposit_backing/direct_deposit_preserves_backing_slack`
+- Track / property class / proof family: `proof-only` / `accounting_bound` / `state_preservation_local_effects`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/paraclear/direct_deposit_backing/verity/Contract.lean`, `Benchmark/Cases/Paraclear/DirectDepositBacking/Contract.lean`
+- Specification files: `cases/paraclear/direct_deposit_backing/verity/Specs.lean`, `Benchmark/Cases/Paraclear/DirectDepositBacking/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Paraclear/DirectDepositBacking/Tasks/DirectDepositPreservesBackingSlack.lean`
+- Hidden reference solution: `Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs`
 
 ### `pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard`
 - Track / property class / proof family: `proof-only` / `redemption_reserve_guard` / `protocol_transition_correctness`

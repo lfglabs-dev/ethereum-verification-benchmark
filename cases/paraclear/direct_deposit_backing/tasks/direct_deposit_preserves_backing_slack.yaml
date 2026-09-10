@@ -1,0 +1,41 @@
+manifest_kind: task
+schema_version: 1
+task_id: direct_deposit_preserves_backing_slack
+case_id: paraclear/direct_deposit_backing
+split: active
+family_id: paraclear
+implementation_id: client_cairo_extraction
+source_ref: client-supplied:paraclear-cairo-extraction:2026-09-07
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack
+proof_family: state_preservation_local_effects
+property_class: accounting_bound
+difficulty: hard
+category: arithmetic-invariant
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/paraclear/direct_deposit_backing/verity/Contract.lean
+  - Benchmark/Cases/Paraclear/DirectDepositBacking/Contract.lean
+specification_files:
+  - cases/paraclear/direct_deposit_backing/verity/Specs.lean
+  - Benchmark/Cases/Paraclear/DirectDepositBacking/Specs.lean
+editable_files:
+  - Benchmark/Generated/Paraclear/DirectDepositBacking/Tasks/DirectDepositPreservesBackingSlack.lean
+reference_solution_module: Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs
+reference_solution_declaration: Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack
+abstraction_level: source_aligned_state_machine
+abstraction_notes: >
+  Prove that every successful run of the single step-by-step deposit executor leaves
+  per-token backing slack unchanged or greater. Derive passed checks and state effects
+  from executeChecks, use the observed receipt and entry consistency to establish
+  custody growth, then apply decimal normalization and the signed positive-balance
+  bound. Dispatch statuses are part of the input. Success is Except.ok, and no net
+  deposit or endpoint model is available. This task makes no compiled-Cairo
+  correspondence claim.
+unsupported_feature_codes:
+  - cairo_source_correspondence_missing
+  - external_dispatcher_callbacks_elided
+  - erc20_metadata_stability_assumed

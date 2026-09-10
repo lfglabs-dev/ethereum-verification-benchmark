@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: paraclear
+display_name: Paraclear
+split: active
+status: active
+description: >
+  Source-aligned Lean benchmark cases for the Cairo Paraclear clearing contract used
+  by Paradex, with explicit separation between model proofs and compiled Cairo.
+implementation_ids:
+  - client_cairo_extraction
+case_ids:
+  - paraclear/direct_deposit_backing
+source_languages:
+  - cairo

@@ -1,0 +1,19 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: paraclear
+implementation_id: client_cairo_extraction
+display_name: Paraclear client-supplied Cairo extraction
+split: active
+status: translated
+upstream_repo: null
+upstream_commit: null
+source_language: cairo
+source_artifact_path: src/paraclear/paraclear.cairo
+case_ids:
+  - paraclear/direct_deposit_backing
+notes: >
+  Private Cairo extraction reviewed on 2026-09-07. The public benchmark retains file
+  hashes and source ranges but does not publish the supplied source. The Lean case is a
+  hand-written state-machine model without Cairo/Sierra/CASM correspondence. Canonical
+  source paths keep the original src/ prefix; the supplied extraction root held the
+  hash-matching files at paraclear/paraclear.cairo and token/token.cairo.

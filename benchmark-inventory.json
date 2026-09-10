@@ -10,36 +10,36 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 47,
-    "implementation_count": 48,
-    "active_case_count": 47,
+    "family_count": 48,
+    "implementation_count": 49,
+    "active_case_count": 48,
     "backlog_case_count": 1,
-    "active_task_count": 299,
+    "active_task_count": 300,
     "backlog_task_count": 0,
-    "buildable_case_count": 47,
-    "runnable_task_count": 299,
+    "buildable_case_count": 48,
+    "runnable_task_count": 300,
     "case_stage_counts": {
       "build_green": 35,
       "candidate": 1,
-      "proof_complete": 12
+      "proof_complete": 13
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 47
+      "translated": 48
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 40,
+      "complete": 41,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 299
+      "proof-only": 300
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
-      "accounting_bound": 18,
+      "accounting_bound": 19,
       "accounting_conservation": 53,
       "accounting_effect": 2,
       "accounting_invariant": 3,
@@ -146,10 +146,10 @@
       "functional_correctness": 62,
       "protocol_transition_correctness": 44,
       "refinement_equivalence": 42,
-      "state_preservation_local_effects": 103
+      "state_preservation_local_effects": 104
     },
     "family_split_counts": {
-      "active": 46,
+      "active": 47,
       "mixed": 1
     }
   },
@@ -561,6 +561,23 @@
         "solidity"
       ],
       "manifest_path": "families/paladin_votes/family.yaml"
+    },
+    {
+      "family_id": "paraclear",
+      "display_name": "Paraclear",
+      "split": "active",
+      "status": "active",
+      "description": "Source-aligned Lean benchmark cases for the Cairo Paraclear clearing contract used by Paradex, with explicit separation between model proofs and compiled Cairo.",
+      "implementation_ids": [
+        "client_cairo_extraction"
+      ],
+      "case_ids": [
+        "paraclear/direct_deposit_backing"
+      ],
+      "source_languages": [
+        "cairo"
+      ],
+      "manifest_path": "families/paraclear/family.yaml"
     },
     {
       "family_id": "pareto",
@@ -1340,6 +1357,22 @@
       ],
       "notes": "Claim accounting contract translated as a single-round slice with Merkle verification abstracted away from the benchmark.",
       "manifest_path": "families/paladin_votes/implementations/stream_recovery_claim/implementation.yaml"
+    },
+    {
+      "family_id": "paraclear",
+      "implementation_id": "client_cairo_extraction",
+      "display_name": "Paraclear client-supplied Cairo extraction",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "source_language": "cairo",
+      "source_artifact_path": "src/paraclear/paraclear.cairo",
+      "case_ids": [
+        "paraclear/direct_deposit_backing"
+      ],
+      "notes": "Private Cairo extraction reviewed on 2026-09-07. The public benchmark retains file hashes and source ranges but does not publish the supplied source. The Lean case is a hand-written state-machine model without Cairo/Sierra/CASM correspondence. Canonical source paths keep the original src/ prefix; the supplied extraction root held the hash-matching files at paraclear/paraclear.cairo and token/token.cairo.",
+      "manifest_path": "families/paraclear/implementations/client_cairo_extraction/implementation.yaml"
     },
     {
       "family_id": "pareto",
@@ -2859,6 +2892,60 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Specs",
       "proof_target": "Benchmark.Cases.PaladinVotes.StreamRecoveryClaimUsdc.Proofs"
+    },
+    {
+      "case_id": "paraclear/direct_deposit_backing",
+      "project": "paraclear",
+      "case_name": "direct_deposit_backing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paraclear/direct_deposit_backing/case.yaml",
+      "split": "active",
+      "family_id": "paraclear",
+      "implementation_id": "client_cairo_extraction",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "cairo",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "original_contract_path": "src/paraclear/paraclear.cairo",
+      "generated_artifact_path": null,
+      "source_ref": "client-supplied:paraclear-cairo-extraction:2026-09-07",
+      "selected_functions": [
+        "deposit",
+        "deposit_on_behalf_of",
+        "_deposit",
+        "upsert_asset_balance",
+        "_scale_from_paraclear_decimals",
+        "_scale_to_paraclear_decimals"
+      ],
+      "lean_target": "Benchmark.Cases.Paraclear.DirectDepositBacking.Compile",
+      "failure_reason": null,
+      "notes": "A successful modeled deposit or deposit_on_behalf_of cannot reduce the deposited token's backing slack, defined as normalized raw ERC20 custody minus the sum of positive posted internal balances. This is one local preservation step toward exchange solvency, not a proof of global Paraclear solvency.",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "source_aligned_state_machine",
+      "abstraction_tags": [
+        "pure_lean_cairo_model",
+        "direct_deposits_only",
+        "external_dispatchers_atomic",
+        "stable_erc20_decimals",
+        "linked_list_pointers_elided",
+        "no_cairo_correspondence",
+        "single_stepwise_model",
+        "decoded_record_representation"
+      ],
+      "abstraction_notes": "This case packages a hand-written Lean state machine aligned to the selected Paraclear Cairo deposit paths. It models both public direct-deposit wrappers, public and internal guards, account creation, ERC20 allowance/transfer/balance observations, exact received-amount enforcement, i128/u256 bounds, decimal flooring, raw custody, signed balances, and the observable one-key effect of upsert_asset_balance. All external dispatcher calls are atomic observations and ERC20 decimals are stable across the transition. Linked-list pointers, events, returned felts, callbacks, bridge deposits, withdrawals, settlement, fees, liquidations, pending transfers, socialized-loss application, later rebases, and arbitrary later ERC20 behavior are outside the model. One executor applies source-ordered checks and phase effects. The backing theorem is proved directly from successful execution, observed custody, and arithmetic helper lemmas; there is no separate net or endpoint deposit model. Dispatch statuses are part of the input. Entry custody must match the supplied before-read; inconsistent inputs are rejected as observationMatch, a model condition rather than a Cairo runtime check. The reference proofs establish decoded amount-record correspondence under an explicit well-formedness relation. Registry configuration is modeled explicitly. There is no mechanized Cairo-to-Lean, Sierra-to-Lean, CASM, or deployed-class correspondence. Canonical source paths retain the original repository's src/ prefix; in the reviewed supplied extraction, the hash-matching files were rooted at paraclear/paraclear.cairo and token/token.cairo.",
+      "unsupported_feature_codes": [
+        "cairo_source_correspondence_missing",
+        "external_dispatcher_callbacks_elided",
+        "erc20_metadata_stability_assumed"
+      ],
+      "spec_target": "Benchmark.Cases.Paraclear.DirectDepositBacking.Specs",
+      "proof_target": "Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs"
     },
     {
       "case_id": "pareto/redemption_backing",
@@ -11676,6 +11763,55 @@
       }
     },
     {
+      "task_ref": "paraclear/direct_deposit_backing/direct_deposit_preserves_backing_slack",
+      "task_id": "direct_deposit_preserves_backing_slack",
+      "case_id": "paraclear/direct_deposit_backing",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/paraclear/direct_deposit_backing/tasks/direct_deposit_preserves_backing_slack.yaml",
+      "split": "active",
+      "family_id": "paraclear",
+      "implementation_id": "client_cairo_extraction",
+      "source_ref": "client-supplied:paraclear-cairo-extraction:2026-09-07",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "arithmetic-invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Paraclear.DirectDepositBacking.directDeposit_preservesBackingSlack",
+      "proof_family": "state_preservation_local_effects",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/paraclear/direct_deposit_backing/verity/Contract.lean",
+        "Benchmark/Cases/Paraclear/DirectDepositBacking/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/paraclear/direct_deposit_backing/verity/Specs.lean",
+        "Benchmark/Cases/Paraclear/DirectDepositBacking/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Paraclear/DirectDepositBacking/Tasks/DirectDepositPreservesBackingSlack.lean"
+      ],
+      "abstraction_level": "source_aligned_state_machine",
+      "abstraction_notes": "Prove that every successful run of the single step-by-step deposit executor leaves per-token backing slack unchanged or greater. Derive passed checks and state effects from executeChecks, use the observed receipt and entry consistency to establish custody growth, then apply decimal normalization and the signed positive-balance bound. Dispatch statuses are part of the input. Success is Except.ok, and no net deposit or endpoint model is available. This task makes no compiled-Cairo correspondence claim.",
+      "unsupported_feature_codes": [
+        "cairo_source_correspondence_missing",
+        "external_dispatcher_callbacks_elided",
+        "erc20_metadata_stability_assumed"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Paraclear.DirectDepositBacking.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard",
       "task_id": "deposit_funds_preserves_closed_epoch_reserve_guard",
       "case_id": "pareto/redemption_backing",
@@ -17894,5 +18030,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-09-07T11:41:21.708141+00:00"
+  "generated_at": "2026-09-10T14:31:42.456677+00:00"
 }

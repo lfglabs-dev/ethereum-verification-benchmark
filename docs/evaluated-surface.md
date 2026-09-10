@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 47 cases and 299 task manifests. Of those, 299 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 48 cases and 300 task manifests. Of those, 300 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -35,6 +35,7 @@ The active suite currently contains 47 cases and 299 task manifests. Of those, 2
 | `onedelta/caller_address_integrity` | 10 | `complete` |
 | `openzeppelin/erc4626_virtual_offset_deposit` | 6 | `complete` |
 | `paladin_votes/stream_recovery_claim_usdc` | 26 | `complete` |
+| `paraclear/direct_deposit_backing` | 1 | `complete` |
 | `pareto/redemption_backing` | 1 | `complete` |
 | `pendle/py_supply_pairing` | 4 | `complete` |
 | `piku/fund_conservation` | 4 | `complete` |
