@@ -58,8 +58,10 @@ jobs:
 
   check:
     needs: plan
-    # The repository/unit checks do not invoke Lean.  Keep them off the single
-    # benchmark runner, so a queued full sweep cannot delay an ordinary PR.
+    # check_fair_harness_policy.py invokes `lake env lean` directly even in
+    # --quick mode, so this job still needs Lean. It stays off the single
+    # self-hosted benchmark runner (GitHub-hosted cache instead of sticky
+    # disks) so a queued full sweep there cannot delay an ordinary PR.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -70,6 +72,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - uses: ./.github/actions/setup-lean
+        with:
+          use-sticky-disks: "false"
 
       - name: Report deferred full validation
         if: needs.plan.outputs.full == 'true' && (github.event_name == 'pull_request' || github.event_name == 'push')
