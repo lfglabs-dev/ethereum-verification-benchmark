@@ -17,6 +17,8 @@ Workflow:
 1. Edit the manifest or task files.
 2. Run `python3 scripts/generate_metadata.py`.
 3. Run `./scripts/run_case.sh <project/case>` if the case is runnable.
-4. Run `./scripts/check.sh`.
+4. Run `./scripts/check.sh --quick` while iterating. Use `./scripts/check.sh`
+   for the frozen release validation before a release or when changing shared
+   runtime/CI infrastructure.
 
 Do not edit `benchmark-inventory.json` or `REPORT.md` by hand.

@@ -24,6 +24,16 @@ The suite is strongest today on accounting, local state preservation, storage ef
 ./scripts/run_all.sh --suite v0.2
 ```
 
+## CI Validation Scope
+
+Pull requests run the repository's quick checks and compile only active cases
+selected from the Git diff. Changes to shared Lean/runtime surfaces, CI,
+schemas, or an unrecognised benchmark source are flagged for a manual full
+run. The exhaustive frozen v0.2 reference validation runs nightly and is
+available through the **Full validation** workflow or locally with
+`./scripts/check.sh`. For ordinary local iteration, use
+`./scripts/check.sh --quick` followed by `./scripts/run_case.sh <project/case>`.
+
 The frozen v0.2 source contract is first compared with the reviewed literals
 in `harness/v02_release.py`; candidate JSON never chooses the baseline commit.
 Its reference-closure validator was introduced after that source revision, so

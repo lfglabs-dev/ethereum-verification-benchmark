@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+run_frozen_v02=true
+if [[ "${1:-}" == "--quick" ]]; then
+  run_frozen_v02=false
+  shift
+fi
+if [[ "$#" -ne 0 ]]; then
+  echo "usage: ./scripts/check.sh [--quick]" >&2
+  exit 2
+fi
+
 cd "$(dirname "$0")/.."
 source scripts/load_env.sh
 
@@ -36,10 +46,12 @@ python3 scripts/check_reference_solutions.py
 python3 scripts/check_axiom_ledger.py
 python3 scripts/check_verity_pin_staleness.py --warn-only
 python3 scripts/validate_manifests.py
-v02_audit="$(mktemp -t verity-v02-reference-validation.XXXXXX.json)"
-trap 'rm -f "$v02_audit"' EXIT
-python3 scripts/run_in_v02_environment.py -- \
-  python3 scripts/validate_v02_reference_contract.py --audit "$v02_audit"
+if [[ "$run_frozen_v02" == "true" ]]; then
+  v02_audit="$(mktemp -t verity-v02-reference-validation.XXXXXX.json)"
+  trap 'rm -f "$v02_audit"' EXIT
+  python3 scripts/run_in_v02_environment.py -- \
+    python3 scripts/validate_v02_reference_contract.py --audit "$v02_audit"
+fi
 python3 scripts/generate_metadata.py
 if [[ "${VERITY_RUN_FULL_TASK_SWEEP:-0}" == "1" ]]; then
   if ! ./scripts/run_all.sh; then

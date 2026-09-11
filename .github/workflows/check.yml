@@ -29,7 +29,68 @@ env:
   USE_STICKY_DISKS: "true"
 
 jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      cases: ${{ steps.select.outputs.cases }}
+      full: ${{ steps.select.outputs.full }}
+      reason: ${{ steps.select.outputs.reason }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Select validation scope
+        id: select
+        env:
+          BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          if [ -n "$BASE_SHA" ] && [ "$BASE_SHA" != "0000000000000000000000000000000000000000" ]; then
+            python3 scripts/select_ci_cases.py \
+              --base "$BASE_SHA" \
+              --head "$HEAD_SHA" \
+              --github-output "$GITHUB_OUTPUT"
+          else
+            python3 scripts/select_ci_cases.py \
+              --force-full \
+              --github-output "$GITHUB_OUTPUT"
+          fi
+
   check:
+    needs: plan
+    # check_fair_harness_policy.py invokes `lake env lean` directly even in
+    # --quick mode, so this job still needs Lean. It stays off the single
+    # self-hosted benchmark runner (GitHub-hosted cache instead of sticky
+    # disks) so a queued full sweep there cannot delay an ordinary PR.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Unit tests exercise history-sensitive v0.2 contract behavior.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: ./.github/actions/setup-lean
+        with:
+          use-sticky-disks: "false"
+
+      - name: Report deferred full validation
+        if: needs.plan.outputs.full == 'true' && (github.event_name == 'pull_request' || github.event_name == 'push')
+        env:
+          VALIDATION_REASON: ${{ needs.plan.outputs.reason }}
+        run: |
+          echo "::notice::Full validation is deferred to the nightly/manual workflow: $VALIDATION_REASON"
+
+      - name: Run quick repo check
+        if: github.event_name == 'pull_request' || github.event_name == 'push'
+        run: ./scripts/check.sh --quick
+
+  compile-changed-cases:
+    needs: plan
+    if: (github.event_name == 'pull_request' || github.event_name == 'push') && needs.plan.outputs.cases != '[]'
     # nippur-verity-bench-1 (db2.starknet.id) — replaces former
     # blacksmith-4vcpu-ubuntu-2404. Labels pin this job to that runner
     # only, so it can never land on verity/fastlane/build/ocr.
@@ -39,7 +100,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # The v0.2 contract validates hashes against its pinned base commit.
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
@@ -60,5 +120,56 @@ jobs:
       - name: Install dotenvx
         run: npm install -g @dotenvx/dotenvx@1.57.0
 
-      - name: Run repo check
-        run: ./scripts/check.sh
+      - name: Compile changed active cases
+        env:
+          CHANGED_CASES_JSON: ${{ needs.plan.outputs.cases }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+
+          cases = json.loads(os.environ["CHANGED_CASES_JSON"])
+          for case in cases:
+              print(f"::group::{case}")
+              try:
+                  subprocess.run(["./scripts/run_case.sh", case], check=True)
+              finally:
+                  print("::endgroup::")
+          PY
+
+  full-check:
+    needs: plan
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'repository_dispatch'
+    runs-on: [self-hosted, Linux, X64, nippur, verity, benchmark]
+    env:
+      DOTENV_PRIVATE_KEY: ${{ secrets.DOTENV_PRIVATE_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: ./.github/actions/setup-lean
+        with:
+          use-sticky-disks: ${{ env.USE_STICKY_DISKS }}
+          cache-bucket: ${{ env.CACHE_BUCKET }}
+          main-cache-bucket: ${{ env.MAIN_CACHE_BUCKET }}
+          use-build-sticky-disk: "true"
+
+      - name: Install dotenvx
+        run: npm install -g @dotenvx/dotenvx@1.57.0
+
+      - name: Run manually requested full repo check
+        env:
+          VALIDATION_REASON: ${{ needs.plan.outputs.reason }}
+        run: |
+          echo "Running full validation: $VALIDATION_REASON"
+          ./scripts/check.sh
