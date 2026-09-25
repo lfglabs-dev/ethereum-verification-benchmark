@@ -1,0 +1,58 @@
+manifest_kind: case
+project: cow
+case_id: gpv2_settlement
+schema_version: 1
+split: active
+family_id: cow
+implementation_id: gpv2_settlement
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/cowprotocol/contracts
+upstream_commit: c07a93e3596194c5e3cf331c755a3f9f0e4a17d8
+original_contract_path: src/contracts/GPv2Settlement.sol
+source_ref: https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol
+lean_target: Benchmark.Cases.Cow.GPv2Settlement.Compile
+spec_target: Benchmark.Cases.Cow.GPv2Settlement.Specs
+proof_target: Benchmark.Cases.Cow.GPv2Settlement.Proofs
+selected_functions:
+  - computeTradeExecution
+  - invalidateOrder
+  - freeFilledAmountStorage
+  - swap
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - bytes_keyed_mapping_as_word_key
+  - memory_structs_flattened
+  - transfer_structs_reduced_to_amounts
+  - events_omitted
+  - uid_decoding_as_explicit_arguments
+  - order_recovery_and_signatures_external
+  - token_transfers_external
+  - balancer_swap_path_excluded
+abstraction_notes: >
+  Models GPv2Settlement.computeTradeExecution (the per-trade check on the settle
+  path) with exact SafeMath mul/div/ceilDiv/add revert semantics, plus the two
+  other writers of filledAmount: invalidateOrder, one iteration of
+  freeFilledAmountStorage, and the filledAmount bookkeeping of swap (no price
+  claim for swap). The bytes-keyed filledAmount mapping (slot 2) is a
+  word-keyed mapping. Order recovery, signature schemes, Vault/ERC20 transfers,
+  interactions and the price logic of the Balancer swap() path are not modeled. The lifecycle
+  relation fixes one signed order per uid and lets the environment do anything
+  that leaves filledAmount[uid] unchanged and keeps time monotone. The deployed
+  mainnet source (Sourcify exact match of 0x9008D19f58AAbD9eD0D60971565AA8510560ab41)
+  differs from the pinned commit only by semantics-neutral syntax.
+unsupported_feature_codes:
+  - bytes_keyed_mapping_as_word_key
+notes: >
+  CoW Protocol settle path never violates a signed limit order: computed
+  executed amounts respect the limit price after rounding; over a tracked order
+  lifecycle, cumulative settle-path fills since tracking began never exceed the
+  signed amount and fees stay pro rata. swap() price, deadline and fee transfer
+  are excluded (only its filledAmount bookkeeping is modeled, and swap fills are
+  not counted). The fee cap excludes CoW's documented zero-amount replay
+  (reproduced as a witness theorem).

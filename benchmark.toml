@@ -23,6 +23,7 @@ active_cases = [
   "aragon_osx/execute_authorization",
   "balancer/reclamm_swap_rounding",
   "cork/pool_solvency",
+  "cow/gpv2_settlement",
   "damn_vulnerable_defi/side_entrance",
   "doppler/multicurve_fee_conservation",
   "enzyme/onyx_fee_handler",

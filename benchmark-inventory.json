@@ -10,36 +10,36 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 48,
-    "implementation_count": 49,
-    "active_case_count": 48,
+    "family_count": 49,
+    "implementation_count": 50,
+    "active_case_count": 49,
     "backlog_case_count": 1,
-    "active_task_count": 300,
+    "active_task_count": 305,
     "backlog_task_count": 0,
-    "buildable_case_count": 48,
-    "runnable_task_count": 300,
+    "buildable_case_count": 49,
+    "runnable_task_count": 305,
     "case_stage_counts": {
       "build_green": 35,
       "candidate": 1,
-      "proof_complete": 13
+      "proof_complete": 14
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 48
+      "translated": 49
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 41,
+      "complete": 42,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 300
+      "proof-only": 305
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
-      "accounting_bound": 19,
+      "accounting_bound": 22,
       "accounting_conservation": 53,
       "accounting_effect": 2,
       "accounting_invariant": 3,
@@ -113,7 +113,7 @@
       "per_receiver_isolation": 1,
       "pps_nondecrease": 1,
       "price_band": 2,
-      "price_computation": 5,
+      "price_computation": 7,
       "price_floor": 1,
       "receiver_aggregation": 1,
       "redemption_reserve_guard": 1,
@@ -143,13 +143,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 48,
-      "functional_correctness": 62,
-      "protocol_transition_correctness": 44,
+      "functional_correctness": 64,
+      "protocol_transition_correctness": 47,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 104
     },
     "family_split_counts": {
-      "active": 47,
+      "active": 48,
       "mixed": 1
     }
   },
@@ -255,6 +255,23 @@
         "solidity"
       ],
       "manifest_path": "families/cork/family.yaml"
+    },
+    {
+      "family_id": "cow",
+      "display_name": "CoW Protocol",
+      "split": "active",
+      "status": "active",
+      "description": "CoW Protocol (GPv2) batch-auction settlement benchmarks.",
+      "implementation_ids": [
+        "gpv2_settlement"
+      ],
+      "case_ids": [
+        "cow/gpv2_settlement"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/cow/family.yaml"
     },
     {
       "family_id": "damn_vulnerable_defi",
@@ -1069,6 +1086,22 @@
       ],
       "notes": "Implementation entry for Cork Protocol Phoenix version (v1.1.2), benchmarking the pool solvency invariant (Certora P-02) for the unwindExerciseOther function path.",
       "manifest_path": "families/cork/implementations/phoenix/implementation.yaml"
+    },
+    {
+      "family_id": "cow",
+      "implementation_id": "gpv2_settlement",
+      "display_name": "CoW Protocol GPv2Settlement",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/cowprotocol/contracts",
+      "upstream_commit": "c07a93e3596194c5e3cf331c755a3f9f0e4a17d8",
+      "source_language": "solidity",
+      "source_artifact_path": "src/contracts/GPv2Settlement.sol",
+      "case_ids": [
+        "cow/gpv2_settlement"
+      ],
+      "notes": "Settle-path trade execution, limit price, and filledAmount order ledger.",
+      "manifest_path": "families/cow/implementations/gpv2_settlement/implementation.yaml"
     },
     {
       "family_id": "damn_vulnerable_defi",
@@ -2048,6 +2081,56 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Cork.PoolSolvency.Specs",
       "proof_target": "Benchmark.Cases.Cork.PoolSolvency.Proofs"
+    },
+    {
+      "case_id": "cow/gpv2_settlement",
+      "project": "cow",
+      "case_name": "gpv2_settlement",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/cow/gpv2_settlement/case.yaml",
+      "split": "active",
+      "family_id": "cow",
+      "implementation_id": "gpv2_settlement",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/cowprotocol/contracts",
+      "upstream_commit": "c07a93e3596194c5e3cf331c755a3f9f0e4a17d8",
+      "original_contract_path": "src/contracts/GPv2Settlement.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol",
+      "selected_functions": [
+        "computeTradeExecution",
+        "invalidateOrder",
+        "freeFilledAmountStorage",
+        "swap"
+      ],
+      "lean_target": "Benchmark.Cases.Cow.GPv2Settlement.Compile",
+      "failure_reason": null,
+      "notes": "CoW Protocol settle path never violates a signed limit order: computed executed amounts respect the limit price after rounding; over a tracked order lifecycle, cumulative settle-path fills since tracking began never exceed the signed amount and fees stay pro rata. swap() price, deadline and fee transfer are excluded (only its filledAmount bookkeeping is modeled, and swap fills are not counted). The fee cap excludes CoW's documented zero-amount replay (reproduced as a witness theorem).",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "protocol_slice",
+      "abstraction_tags": [
+        "bytes_keyed_mapping_as_word_key",
+        "memory_structs_flattened",
+        "transfer_structs_reduced_to_amounts",
+        "events_omitted",
+        "uid_decoding_as_explicit_arguments",
+        "order_recovery_and_signatures_external",
+        "token_transfers_external",
+        "balancer_swap_path_excluded"
+      ],
+      "abstraction_notes": "Models GPv2Settlement.computeTradeExecution (the per-trade check on the settle path) with exact SafeMath mul/div/ceilDiv/add revert semantics, plus the two other writers of filledAmount: invalidateOrder, one iteration of freeFilledAmountStorage, and the filledAmount bookkeeping of swap (no price claim for swap). The bytes-keyed filledAmount mapping (slot 2) is a word-keyed mapping. Order recovery, signature schemes, Vault/ERC20 transfers, interactions and the price logic of the Balancer swap() path are not modeled. The lifecycle relation fixes one signed order per uid and lets the environment do anything that leaves filledAmount[uid] unchanged and keeps time monotone. The deployed mainnet source (Sourcify exact match of 0x9008D19f58AAbD9eD0D60971565AA8510560ab41) differs from the pinned commit only by semantics-neutral syntax.",
+      "unsupported_feature_codes": [
+        "bytes_keyed_mapping_as_word_key"
+      ],
+      "spec_target": "Benchmark.Cases.Cow.GPv2Settlement.Specs",
+      "proof_target": "Benchmark.Cases.Cow.GPv2Settlement.Proofs"
     },
     {
       "case_id": "damn_vulnerable_defi/side_entrance",
@@ -5289,6 +5372,241 @@
       "abstraction_notes": "Certora P-02 solvency invariant for unwindExerciseOther. After the operation, locked collateral normalized to 18 decimals must still cover the outstanding swap share supply. Requires showing that ceiling-rounded collateral added is at least the floor-rounded shares released, via the ceilDiv sandwich bound. Certora timed out on this function and restricted rate/decimals; this proof covers arbitrary parameters.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.Cork.PoolSolvency.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "cow/gpv2_settlement/compute_trade_execution_respects_limit_order",
+      "task_id": "compute_trade_execution_respects_limit_order",
+      "case_id": "cow/gpv2_settlement",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/cow/gpv2_settlement/tasks/compute_trade_execution_respects_limit_order.yaml",
+      "split": "active",
+      "family_id": "cow",
+      "implementation_id": "gpv2_settlement",
+      "source_ref": "https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_computation",
+      "category": "rounding_branch_analysis",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Cow.GPv2Settlement.computeTradeExecution_respects_limit_order",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/cow/gpv2_settlement/verity/Contract.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/cow/gpv2_settlement/verity/Specs.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Cow/GPv2Settlement/Tasks/ComputeTradeExecutionRespectsLimitOrder.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Per-trade guarantee over all four branches (sell/buy, partial/fill-or-kill) with exact SafeMath revert conditions.",
+      "unsupported_feature_codes": [
+        "bytes_keyed_mapping_as_word_key"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Cow.GPv2Settlement.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "cow/gpv2_settlement/order_lifecycle_fee_cap",
+      "task_id": "order_lifecycle_fee_cap",
+      "case_id": "cow/gpv2_settlement",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/cow/gpv2_settlement/tasks/order_lifecycle_fee_cap.yaml",
+      "split": "active",
+      "family_id": "cow",
+      "implementation_id": "gpv2_settlement",
+      "source_ref": "https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "lifecycle_invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Cow.GPv2Settlement.order_lifecycle_fee_cap",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/cow/gpv2_settlement/verity/Contract.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/cow/gpv2_settlement/verity/Specs.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Cow/GPv2Settlement/Tasks/OrderLifecycleFeeCap.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Fee cap corollary for settle-path trades since tracking began; excludes zero-limit orders documented as replayable by CoW.",
+      "unsupported_feature_codes": [
+        "bytes_keyed_mapping_as_word_key"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Cow.GPv2Settlement.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "cow/gpv2_settlement/order_lifecycle_safety",
+      "task_id": "order_lifecycle_safety",
+      "case_id": "cow/gpv2_settlement",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/cow/gpv2_settlement/tasks/order_lifecycle_safety.yaml",
+      "split": "active",
+      "family_id": "cow",
+      "implementation_id": "gpv2_settlement",
+      "source_ref": "https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_computation",
+      "category": "lifecycle_invariant",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.Cow.GPv2Settlement.order_lifecycle_safety",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/cow/gpv2_settlement/verity/Contract.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/cow/gpv2_settlement/verity/Specs.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Cow/GPv2Settlement/Tasks/OrderLifecycleSafety.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Cumulative guarantee for settle-path trades since tracking began (swap fills not counted) by induction on OrderLifecycle; needs a strengthened invariant tying filledAmount to totals or expiry.",
+      "unsupported_feature_codes": [
+        "bytes_keyed_mapping_as_word_key"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Cow.GPv2Settlement.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "cow/gpv2_settlement/order_lifecycle_zero_fee",
+      "task_id": "order_lifecycle_zero_fee",
+      "case_id": "cow/gpv2_settlement",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/cow/gpv2_settlement/tasks/order_lifecycle_zero_fee.yaml",
+      "split": "active",
+      "family_id": "cow",
+      "implementation_id": "gpv2_settlement",
+      "source_ref": "https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "lifecycle_invariant",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Cow.GPv2Settlement.order_lifecycle_zero_fee",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/cow/gpv2_settlement/verity/Contract.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/cow/gpv2_settlement/verity/Specs.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Cow/GPv2Settlement/Tasks/OrderLifecycleZeroFee.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Zero-fee corollary for settle-path trades since tracking began, for orders signed with feeAmount = 0 (the off-chain-enforced production convention). Swap fee transfers are not modeled.",
+      "unsupported_feature_codes": [
+        "bytes_keyed_mapping_as_word_key"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Cow.GPv2Settlement.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "cow/gpv2_settlement/zero_amount_order_replay",
+      "task_id": "zero_amount_order_replay",
+      "case_id": "cow/gpv2_settlement",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/cow/gpv2_settlement/tasks/zero_amount_order_replay.yaml",
+      "split": "active",
+      "family_id": "cow",
+      "implementation_id": "gpv2_settlement",
+      "source_ref": "https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_bound",
+      "category": "concrete_witness",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Cow.GPv2Settlement.zero_amount_order_replay",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/cow/gpv2_settlement/verity/Contract.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/cow/gpv2_settlement/verity/Specs.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Cow/GPv2Settlement/Tasks/ZeroAmountOrderReplay.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Concrete execution witness reproducing README \"Known issues\"; shows the fee-cap exclusion is necessary.",
+      "unsupported_feature_codes": [
+        "bytes_keyed_mapping_as_word_key"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Cow.GPv2Settlement.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -18030,5 +18348,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-09-10T14:31:42.456677+00:00"
+  "generated_at": "2026-09-25T12:44:48.286086+00:00"
 }
