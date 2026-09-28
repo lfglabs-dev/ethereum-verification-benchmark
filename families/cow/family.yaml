@@ -1,0 +1,14 @@
+manifest_kind: family
+schema_version: 1
+family_id: cow
+display_name: CoW Protocol
+split: active
+status: active
+description: >
+  CoW Protocol (GPv2) batch-auction settlement benchmarks.
+implementation_ids:
+  - gpv2_settlement
+case_ids:
+  - cow/gpv2_settlement
+source_languages:
+  - solidity

@@ -1,0 +1,15 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: cow
+implementation_id: gpv2_settlement
+display_name: CoW Protocol GPv2Settlement
+split: active
+status: translated
+upstream_repo: https://github.com/cowprotocol/contracts
+upstream_commit: c07a93e3596194c5e3cf331c755a3f9f0e4a17d8
+source_language: solidity
+source_artifact_path: src/contracts/GPv2Settlement.sol
+case_ids:
+  - cow/gpv2_settlement
+notes: >
+  Settle-path trade execution, limit price, and filledAmount order ledger.

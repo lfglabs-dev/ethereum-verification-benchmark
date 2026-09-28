@@ -1,0 +1,36 @@
+manifest_kind: task
+schema_version: 1
+task_id: settle_trade_respects_limit_order_in_balances
+case_id: cow/gpv2_settlement
+split: active
+family_id: cow
+implementation_id: gpv2_settlement
+source_ref: https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Cow.GPv2Settlement.settle_trade_respects_limit_order_in_balances
+proof_family: functional_correctness
+property_class: price_computation
+difficulty: medium
+category: rounding_branch_analysis
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/cow/gpv2_settlement/verity/Contract.lean
+  - Benchmark/Cases/Cow/GPv2Settlement/Contract.lean
+specification_files:
+  - cases/cow/gpv2_settlement/verity/Specs.lean
+  - Benchmark/Cases/Cow/GPv2Settlement/Specs.lean
+editable_files:
+  - Benchmark/Generated/Cow/GPv2Settlement/Tasks/SettleTradeRespectsLimitOrderInBalances.lean
+reference_solution_module: Benchmark.Cases.Cow.GPv2Settlement.Proofs
+reference_solution_declaration: Benchmark.Cases.Cow.GPv2Settlement.settle_trade_respects_limit_order_in_balances
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Balance-level corollary of the per-trade guarantee. The token/Vault/ETH transfers are not modeled;
+  the pull is assumed to take exactly the computed sell amount from the owner (DebitedExactly) and the
+  payout to give exactly the computed buy amount to the receiver (CreditedExactly). Fee-on-transfer
+  and rebasing tokens violate these hypotheses.
+unsupported_feature_codes:
+  - bytes_keyed_mapping_as_word_key
