@@ -52,7 +52,10 @@ notes: >
   CoW Protocol settle path never violates a signed limit order: computed
   executed amounts respect the limit price after rounding; over a tracked order
   lifecycle, cumulative settle-path fills since tracking began never exceed the
-  signed amount and fees stay pro rata. swap() price, deadline and fee transfer
+  signed amount and fees stay pro rata. Under the explicit token hypothesis
+  MovesExactly (each transfer moves exactly the amount settle passes to it),
+  the owner's and receiver's balance changes respect the same limit price and
+  fee bound. swap() price, deadline and fee transfer
   are excluded (only its filledAmount bookkeeping is modeled, and swap fills are
   not counted). The fee cap excludes CoW's documented zero-amount replay
   (reproduced as a witness theorem).

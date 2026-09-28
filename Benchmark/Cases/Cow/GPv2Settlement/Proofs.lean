@@ -18,6 +18,9 @@ Main results:
 
 * `computeTradeExecution_respects_limit_order`: one successful trade satisfies
   `trade_execution_spec`.
+* `settle_trade_respects_limit_order_in_balances`: under the token hypothesis
+  `MovesExactly` for the trade's two transfers, the owner's and receiver's
+  balance changes satisfy `trade_balance_spec`.
 * `order_lifecycle_safety`: in every tracked `OrderLifecycle`, the totals of
   the settle-path trades since tracking began satisfy
   `cumulative_order_safety_spec`. Swap fills are not counted.
@@ -306,6 +309,34 @@ theorem computeTradeExecution_respects_limit_order
   · rw [hread]; exact hf.filled_eq
   · rw [hread]; exact hf.filled_le
   · subst hs'; simp [ContractState.writeMapUint]
+
+/-! ## Balance-level theorem -/
+
+/-- If the two transfers of a successful trade move exactly the amounts that
+`settle` hands to them (`MovesExactly`, the token hypothesis), the owner's and
+receiver's balance changes respect the signed limit price and fee. -/
+theorem settle_trade_respects_limit_order_in_balances
+    (orderUid : Uint256) (o : SignedOrder)
+    (sellPrice buyPrice executedAmount inAmount outAmount fee : Uint256)
+    (s s' : ContractState)
+    (owner receiver settlement : Address)
+    (sellBefore sellAfter buyBefore buyAfter : Balances)
+    (hRun : (tradeCall orderUid o sellPrice buyPrice executedAmount).run s =
+      ContractResult.success (inAmount, outAmount, fee) s')
+    (hPull : MovesExactly sellBefore sellAfter owner settlement inAmount.val)
+    (hPay : MovesExactly buyBefore buyAfter settlement receiver outAmount.val) :
+    trade_balance_spec o owner receiver sellBefore sellAfter buyBefore buyAfter fee.val := by
+  have h := computeTradeExecution_respects_limit_order orderUid o sellPrice buyPrice
+    executedAmount inAmount outAmount fee s s' hRun
+  dsimp only [trade_execution_spec] at h
+  obtain ⟨hFee, hLimit, _, _, hFeeRate, _⟩ := h
+  obtain ⟨hDebit, _⟩ := hPull
+  obtain ⟨_, hCredit⟩ := hPay
+  have hPaid : sellBefore owner - sellAfter owner = inAmount.val := by omega
+  have hReceived : buyAfter receiver - buyBefore receiver = outAmount.val := by omega
+  unfold trade_balance_spec
+  rw [hPaid, hReceived]
+  exact ⟨hFee, hLimit, hFeeRate⟩
 
 /-! ## Lifecycle invariant -/
 

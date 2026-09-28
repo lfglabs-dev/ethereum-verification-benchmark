@@ -99,6 +99,54 @@ def trade_execution_spec (orderUid : Uint256) (o : SignedOrder)
   s' = s.writeMapUint GPv2Settlement.filledAmount.slot orderUid
         (s'.storageMapUint GPv2Settlement.filledAmount.slot orderUid)
 
+/-!
+## Token movements
+
+`settle` passes the two computed amounts, unchanged, to `GPv2Transfer`
+(`GPv2Settlement.sol` L134 and L138; `GPv2Transfer.sol` L91-L180). There they
+go to the token's `transferFrom`/`transfer`, to a Balancer Vault balance
+operation, or to a native ETH send. The model does not contain that code or
+the token's code. The balance-level guarantee below takes their behaviour as
+an explicit hypothesis, `MovesExactly`, one for each of the two transfers of
+the trade.
+-/
+
+/-- Balances of one asset (an ERC-20 token, a Balancer Vault internal balance,
+or native ETH), by account. -/
+abbrev Balances := Address → Nat
+
+/-- **Token hypothesis.** A transfer of `amount` from `src` to `dst` took
+exactly `amount` from `src` and gave exactly `amount` to `dst`. `before` and
+`after` are the balances of the transferred asset immediately before and after
+that transfer. Standard ERC-20 tokens, the Balancer Vault and native ETH behave
+this way. Tokens that charge a fee on transfer or rebase do not. -/
+def MovesExactly (before after : Balances) (src dst : Address) (amount : Nat) : Prop :=
+  after src + amount = before src ∧ after dst = before dst + amount
+
+/--
+Balance-level guarantee for one trade settled through `settle`.
+
+* `paid` = what the owner's sell-token balance dropped by in the transfer that
+  pulls this trade's sell amount.
+* `received` = what the receiver's buy-token balance rose by in the transfer
+  that pays this trade's proceeds.
+
+Then:
+
+1. the owner paid at least the fee: `fee ≤ paid`,
+2. the receiver got at least the signed rate:
+   `(paid - fee) * B ≤ received * S`,
+3. the fee is at most `F` pro rata to the filled part.
+-/
+def trade_balance_spec (o : SignedOrder) (owner receiver : Address)
+    (sellBefore sellAfter buyBefore buyAfter : Balances) (fee : Nat) : Prop :=
+  fee ≤ sellBefore owner - sellAfter owner ∧
+  respectsLimitPrice o (sellBefore owner - sellAfter owner - fee)
+    (buyAfter receiver - buyBefore receiver) ∧
+  feeWithinSignedFee o fee
+    (filledPart o (sellBefore owner - sellAfter owner - fee)
+      (buyAfter receiver - buyBefore receiver))
+
 /-- Running totals over every trade of one order since tracking started. -/
 structure OrderTotals where
   sold : Nat

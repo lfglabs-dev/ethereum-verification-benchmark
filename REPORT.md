@@ -8,7 +8,7 @@ This report is generated from the benchmark manifests.
 - Implementations: 50
 - Active cases: 49
 - Buildable active cases: 49
-- Active tasks: 305
+- Active tasks: 306
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -81,7 +81,7 @@ This report is generated from the benchmark manifests.
 - Source ref: `https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol`
 - Selected functions: `computeTradeExecution`, `invalidateOrder`, `freeFilledAmountStorage`, `swap`
 - Upstream source artifact: `src/contracts/GPv2Settlement.sol`
-- Notes: CoW Protocol settle path never violates a signed limit order: computed executed amounts respect the limit price after rounding; over a tracked order lifecycle, cumulative settle-path fills since tracking began never exceed the signed amount and fees stay pro rata. swap() price, deadline and fee transfer are excluded (only its filledAmount bookkeeping is modeled, and swap fills are not counted). The fee cap excludes CoW's documented zero-amount replay (reproduced as a witness theorem).
+- Notes: CoW Protocol settle path never violates a signed limit order: computed executed amounts respect the limit price after rounding; over a tracked order lifecycle, cumulative settle-path fills since tracking began never exceed the signed amount and fees stay pro rata. Under the explicit token hypothesis MovesExactly (each transfer moves exactly the amount settle passes to it), the owner's and receiver's balance changes respect the same limit price and fee bound. swap() price, deadline and fee transfer are excluded (only its filledAmount bookkeeping is modeled, and swap fills are not counted). The fee cap excludes CoW's documented zero-amount replay (reproduced as a witness theorem).
 
 ### `damn_vulnerable_defi/side_entrance`
 - Family / implementation: `damn_vulnerable_defi` / `v2`
@@ -797,6 +797,16 @@ This report is generated from the benchmark manifests.
 - Implementation files: `cases/cow/gpv2_settlement/verity/Contract.lean`, `Benchmark/Cases/Cow/GPv2Settlement/Contract.lean`
 - Specification files: `cases/cow/gpv2_settlement/verity/Specs.lean`, `Benchmark/Cases/Cow/GPv2Settlement/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Cow/GPv2Settlement/Tasks/OrderLifecycleZeroFee.lean`
+- Hidden reference solution: `Benchmark.Cases.Cow.GPv2Settlement.Proofs`
+
+### `cow/gpv2_settlement/settle_trade_respects_limit_order_in_balances`
+- Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.Cow.GPv2Settlement.settle_trade_respects_limit_order_in_balances`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/cow/gpv2_settlement/verity/Contract.lean`, `Benchmark/Cases/Cow/GPv2Settlement/Contract.lean`
+- Specification files: `cases/cow/gpv2_settlement/verity/Specs.lean`, `Benchmark/Cases/Cow/GPv2Settlement/Specs.lean`
+- Editable proof file: `Benchmark/Generated/Cow/GPv2Settlement/Tasks/SettleTradeRespectsLimitOrderInBalances.lean`
 - Hidden reference solution: `Benchmark.Cases.Cow.GPv2Settlement.Proofs`
 
 ### `cow/gpv2_settlement/zero_amount_order_replay`

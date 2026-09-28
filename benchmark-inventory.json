@@ -14,10 +14,10 @@
     "implementation_count": 50,
     "active_case_count": 49,
     "backlog_case_count": 1,
-    "active_task_count": 305,
+    "active_task_count": 306,
     "backlog_task_count": 0,
     "buildable_case_count": 49,
-    "runnable_task_count": 305,
+    "runnable_task_count": 306,
     "case_stage_counts": {
       "build_green": 35,
       "candidate": 1,
@@ -33,7 +33,7 @@
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 305
+      "proof-only": 306
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
@@ -113,7 +113,7 @@
       "per_receiver_isolation": 1,
       "pps_nondecrease": 1,
       "price_band": 2,
-      "price_computation": 7,
+      "price_computation": 8,
       "price_floor": 1,
       "receiver_aggregation": 1,
       "redemption_reserve_guard": 1,
@@ -143,7 +143,7 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 48,
-      "functional_correctness": 64,
+      "functional_correctness": 65,
       "protocol_transition_correctness": 47,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 104
@@ -2110,7 +2110,7 @@
       ],
       "lean_target": "Benchmark.Cases.Cow.GPv2Settlement.Compile",
       "failure_reason": null,
-      "notes": "CoW Protocol settle path never violates a signed limit order: computed executed amounts respect the limit price after rounding; over a tracked order lifecycle, cumulative settle-path fills since tracking began never exceed the signed amount and fees stay pro rata. swap() price, deadline and fee transfer are excluded (only its filledAmount bookkeeping is modeled, and swap fills are not counted). The fee cap excludes CoW's documented zero-amount replay (reproduced as a witness theorem).",
+      "notes": "CoW Protocol settle path never violates a signed limit order: computed executed amounts respect the limit price after rounding; over a tracked order lifecycle, cumulative settle-path fills since tracking began never exceed the signed amount and fees stay pro rata. Under the explicit token hypothesis MovesExactly (each transfer moves exactly the amount settle passes to it), the owner's and receiver's balance changes respect the same limit price and fee bound. swap() price, deadline and fee transfer are excluded (only its filledAmount bookkeeping is modeled, and swap fills are not counted). The fee cap excludes CoW's documented zero-amount replay (reproduced as a witness theorem).",
       "buildable": true,
       "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
       "lean_toolchain": "leanprover/lean4:v4.31.0",
@@ -5556,6 +5556,53 @@
       ],
       "abstraction_level": "protocol_slice",
       "abstraction_notes": "Zero-fee corollary for settle-path trades since tracking began, for orders signed with feeAmount = 0 (the off-chain-enforced production convention). Swap fee transfers are not modeled.",
+      "unsupported_feature_codes": [
+        "bytes_keyed_mapping_as_word_key"
+      ],
+      "reference_solution_module": "Benchmark.Cases.Cow.GPv2Settlement.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "cow/gpv2_settlement/settle_trade_respects_limit_order_in_balances",
+      "task_id": "settle_trade_respects_limit_order_in_balances",
+      "case_id": "cow/gpv2_settlement",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/cow/gpv2_settlement/tasks/settle_trade_respects_limit_order_in_balances.yaml",
+      "split": "active",
+      "family_id": "cow",
+      "implementation_id": "gpv2_settlement",
+      "source_ref": "https://github.com/cowprotocol/contracts@c07a93e3596194c5e3cf331c755a3f9f0e4a17d8:src/contracts/GPv2Settlement.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "price_computation",
+      "category": "rounding_branch_analysis",
+      "difficulty": "medium",
+      "theorem_name": "Benchmark.Cases.Cow.GPv2Settlement.settle_trade_respects_limit_order_in_balances",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/cow/gpv2_settlement/verity/Contract.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/cow/gpv2_settlement/verity/Specs.lean",
+        "Benchmark/Cases/Cow/GPv2Settlement/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/Cow/GPv2Settlement/Tasks/SettleTradeRespectsLimitOrderInBalances.lean"
+      ],
+      "abstraction_level": "protocol_slice",
+      "abstraction_notes": "Balance-level corollary of the per-trade guarantee. The token/Vault/ETH transfers are not modeled; each of the trade's two transfers is assumed to move exactly the amount settle passes to it (MovesExactly, the token hypothesis). Fee-on-transfer and rebasing tokens violate it.",
       "unsupported_feature_codes": [
         "bytes_keyed_mapping_as_word_key"
       ],
@@ -18348,5 +18395,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-09-25T12:44:48.286086+00:00"
+  "generated_at": "2026-09-28T12:10:12.676237+00:00"
 }
