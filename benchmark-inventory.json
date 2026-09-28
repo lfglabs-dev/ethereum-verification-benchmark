@@ -2110,7 +2110,7 @@
       ],
       "lean_target": "Benchmark.Cases.Cow.GPv2Settlement.Compile",
       "failure_reason": null,
-      "notes": "CoW Protocol settle path never violates a signed limit order: computed executed amounts respect the limit price after rounding; over a tracked order lifecycle, cumulative settle-path fills since tracking began never exceed the signed amount and fees stay pro rata. Under the explicit token hypothesis MovesExactly (each transfer moves exactly the amount settle passes to it), the owner's and receiver's balance changes respect the same limit price and fee bound. swap() price, deadline and fee transfer are excluded (only its filledAmount bookkeeping is modeled, and swap fills are not counted). The fee cap excludes CoW's documented zero-amount replay (reproduced as a witness theorem).",
+      "notes": "CoW Protocol settle path never violates a signed limit order: computed executed amounts respect the limit price after rounding; over a tracked order lifecycle, cumulative settle-path fills since tracking began never exceed the signed amount and fees stay pro rata. Under explicit token hypotheses (the pull takes exactly the computed amount from the owner, the payout gives exactly the computed amount to the receiver), the owner's and receiver's balance changes respect the same limit price and fee bound. swap() price, deadline and fee transfer are excluded (only its filledAmount bookkeeping is modeled, and swap fills are not counted). The fee cap excludes CoW's documented zero-amount replay (reproduced as a witness theorem).",
       "buildable": true,
       "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
       "lean_toolchain": "leanprover/lean4:v4.31.0",
@@ -5602,7 +5602,7 @@
         "Benchmark/Generated/Cow/GPv2Settlement/Tasks/SettleTradeRespectsLimitOrderInBalances.lean"
       ],
       "abstraction_level": "protocol_slice",
-      "abstraction_notes": "Balance-level corollary of the per-trade guarantee. The token/Vault/ETH transfers are not modeled; each of the trade's two transfers is assumed to move exactly the amount settle passes to it (MovesExactly, the token hypothesis). Fee-on-transfer and rebasing tokens violate it.",
+      "abstraction_notes": "Balance-level corollary of the per-trade guarantee. The token/Vault/ETH transfers are not modeled; the pull is assumed to take exactly the computed sell amount from the owner (DebitedExactly) and the payout to give exactly the computed buy amount to the receiver (CreditedExactly). Fee-on-transfer and rebasing tokens violate these hypotheses.",
       "unsupported_feature_codes": [
         "bytes_keyed_mapping_as_word_key"
       ],
@@ -18395,5 +18395,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-09-28T12:10:12.676237+00:00"
+  "generated_at": "2026-09-28T12:14:23.337125+00:00"
 }

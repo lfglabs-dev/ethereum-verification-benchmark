@@ -107,21 +107,29 @@ def trade_execution_spec (orderUid : Uint256) (o : SignedOrder)
 go to the token's `transferFrom`/`transfer`, to a Balancer Vault balance
 operation, or to a native ETH send. The model does not contain that code or
 the token's code. The balance-level guarantee below takes their behaviour as
-an explicit hypothesis, `MovesExactly`, one for each of the two transfers of
-the trade.
+two explicit hypotheses, one for each transfer of the trade: the pull takes
+exactly the amount from the owner (`DebitedExactly`) and the payout gives
+exactly the amount to the receiver (`CreditedExactly`). Only the side the
+guarantee talks about is assumed, so the hypotheses stay satisfiable when the
+owner or receiver is the settlement contract itself.
 -/
 
 /-- Balances of one asset (an ERC-20 token, a Balancer Vault internal balance,
 or native ETH), by account. -/
 abbrev Balances := Address → Nat
 
-/-- **Token hypothesis.** A transfer of `amount` from `src` to `dst` took
-exactly `amount` from `src` and gave exactly `amount` to `dst`. `before` and
-`after` are the balances of the transferred asset immediately before and after
-that transfer. Standard ERC-20 tokens, the Balancer Vault and native ETH behave
-this way. Tokens that charge a fee on transfer or rebase do not. -/
-def MovesExactly (before after : Balances) (src dst : Address) (amount : Nat) : Prop :=
-  after src + amount = before src ∧ after dst = before dst + amount
+/-- **Token hypothesis (pull).** The transfer that pulls `amount` took exactly
+`amount` from `acct`. `before` and `after` are balances of the transferred
+asset immediately before and after that transfer. -/
+def DebitedExactly (before after : Balances) (acct : Address) (amount : Nat) : Prop :=
+  after acct + amount = before acct
+
+/-- **Token hypothesis (payout).** The transfer that pays `amount` gave exactly
+`amount` to `acct`, with the same before/after convention. Standard ERC-20
+tokens, the Balancer Vault and native ETH behave this way; tokens that charge
+a fee on transfer or rebase do not. -/
+def CreditedExactly (before after : Balances) (acct : Address) (amount : Nat) : Prop :=
+  after acct = before acct + amount
 
 /--
 Balance-level guarantee for one trade settled through `settle`.

@@ -18,9 +18,9 @@ Main results:
 
 * `computeTradeExecution_respects_limit_order`: one successful trade satisfies
   `trade_execution_spec`.
-* `settle_trade_respects_limit_order_in_balances`: under the token hypothesis
-  `MovesExactly` for the trade's two transfers, the owner's and receiver's
-  balance changes satisfy `trade_balance_spec`.
+* `settle_trade_respects_limit_order_in_balances`: under the token hypotheses
+  `DebitedExactly` (pull) and `CreditedExactly` (payout), the owner's and
+  receiver's balance changes satisfy `trade_balance_spec`.
 * `order_lifecycle_safety`: in every tracked `OrderLifecycle`, the totals of
   the settle-path trades since tracking began satisfy
   `cumulative_order_safety_spec`. Swap fills are not counted.
@@ -312,26 +312,27 @@ theorem computeTradeExecution_respects_limit_order
 
 /-! ## Balance-level theorem -/
 
-/-- If the two transfers of a successful trade move exactly the amounts that
-`settle` hands to them (`MovesExactly`, the token hypothesis), the owner's and
-receiver's balance changes respect the signed limit price and fee. -/
+/-- If the pull takes exactly the computed sell amount from the owner and the
+payout gives exactly the computed buy amount to the receiver (the token
+hypotheses), the owner's and receiver's balance changes respect the signed
+limit price and fee. -/
 theorem settle_trade_respects_limit_order_in_balances
     (orderUid : Uint256) (o : SignedOrder)
     (sellPrice buyPrice executedAmount inAmount outAmount fee : Uint256)
     (s s' : ContractState)
-    (owner receiver settlement : Address)
+    (owner receiver : Address)
     (sellBefore sellAfter buyBefore buyAfter : Balances)
     (hRun : (tradeCall orderUid o sellPrice buyPrice executedAmount).run s =
       ContractResult.success (inAmount, outAmount, fee) s')
-    (hPull : MovesExactly sellBefore sellAfter owner settlement inAmount.val)
-    (hPay : MovesExactly buyBefore buyAfter settlement receiver outAmount.val) :
+    (hPull : DebitedExactly sellBefore sellAfter owner inAmount.val)
+    (hPay : CreditedExactly buyBefore buyAfter receiver outAmount.val) :
     trade_balance_spec o owner receiver sellBefore sellAfter buyBefore buyAfter fee.val := by
   have h := computeTradeExecution_respects_limit_order orderUid o sellPrice buyPrice
     executedAmount inAmount outAmount fee s s' hRun
   dsimp only [trade_execution_spec] at h
   obtain ⟨hFee, hLimit, _, _, hFeeRate, _⟩ := h
-  obtain ⟨hDebit, _⟩ := hPull
-  obtain ⟨_, hCredit⟩ := hPay
+  unfold DebitedExactly at hPull
+  unfold CreditedExactly at hPay
   have hPaid : sellBefore owner - sellAfter owner = inAmount.val := by omega
   have hReceived : buyAfter receiver - buyBefore receiver = outAmount.val := by omega
   unfold trade_balance_spec
