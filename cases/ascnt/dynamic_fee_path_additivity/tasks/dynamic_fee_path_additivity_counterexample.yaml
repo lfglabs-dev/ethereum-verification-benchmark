@@ -1,0 +1,37 @@
+manifest_kind: task
+schema_version: 1
+task_id: dynamic_fee_path_additivity_counterexample
+case_id: ascnt/dynamic_fee_path_additivity
+split: active
+family_id: ascnt
+implementation_id: simhook_v1
+source_ref: https://github.com/ascntlabs/v1-core-audit@87ddf6ba464f00548c449681755050343df89322:src/SimHook.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Ascnt.DynamicFeePathAdditivity.dynamicFeePathAdditivity_counterexample_certificate
+proof_family: functional_correctness
+property_class: source_admissible_counterexample
+difficulty: medium
+category: dynamic_fee_path_additivity
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/ascnt/dynamic_fee_path_additivity/verity/Contract.lean
+  - Benchmark/Cases/Ascnt/DynamicFeePathAdditivity/Contract.lean
+specification_files:
+  - cases/ascnt/dynamic_fee_path_additivity/verity/Specs.lean
+  - Benchmark/Cases/Ascnt/DynamicFeePathAdditivity/Specs.lean
+editable_files:
+  - Benchmark/Generated/Ascnt/DynamicFeePathAdditivity/Tasks/DynamicFeePathAdditivityCounterexample.lean
+reference_solution_module: Benchmark.Cases.Ascnt.DynamicFeePathAdditivity.Proofs
+reference_solution_declaration: Benchmark.Cases.Ascnt.DynamicFeePathAdditivity.dynamicFeePathAdditivity_counterexample_certificate
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Establishes a concrete configurePool-admissible normal same-block,
+  same-direction and unclamped split for which floor rounding makes the split
+  strictly cheaper than the one-shot execution. The exact requested claim is
+  refuted, not replaced by a tolerance claim.
+unsupported_feature_codes:
+  - solidity_word_types_bounded_by_explicit_scope
+  - swap_callback_plumbing_reduced_to_accumulator_transition
