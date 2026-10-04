@@ -1,0 +1,57 @@
+manifest_kind: case
+project: railnet-query-redeem-queue-v2
+case_id: query_redeem_queue
+schema_version: 1
+split: active
+family_id: railnet-query-redeem-queue-v2
+implementation_id: base-staging-52085313
+stage: build_green
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: null
+upstream_commit: null
+original_contract_path: src/vehicles/multi/QueryRedeemQueue.sol
+source_ref: https://base.blockscout.com/api/v2/smart-contracts/0xfebd3ca7e01285e27299c7001307a3d64186aa49
+lean_target: Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Compile
+spec_target: Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Specs
+proof_target: Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Proofs
+selected_functions:
+  - initialize
+  - demand
+  - fulfill
+  - redeem
+  - _redeemDemandWithFulfillments
+  - _lookupFulfillment
+  - resolve
+  - retrieve
+  - redeemable
+  - pending
+  - lookup
+  - unredeemable
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: source_structured_transition
+abstraction_tags:
+  - nominal_accounting
+  - callback_interleaving_projection
+  - external_tokens_opaque
+  - proof_only_verity_storage_adapter
+abstraction_notes: >
+  Executable source-structured Lean semantics with checked uint256 operations,
+  full-precision floor mulDiv, exact 32 iterations per redeem call and unbounded
+  successful operation histories. A Verity.Contract monad adapter executes those
+  transitions in proof-only storage lanes; this is NOT an EDSL/Yul/ERC-7201
+  refinement. ERC20 calls are recorded at publication boundaries and callbacks
+  may interleave before subsequent calls; no nonReentrant assumption.
+unsupported_feature_codes:
+  - erc7201_source_to_verity_refinement_pending
+  - nested_evm_callback_refinement_pending
+notes: >
+  Railnet Luca specification dated 2026-09-30: any finite history, arbitrary
+  redeem order and repeated partial redeems, cumulative nominal payouts <=
+  cumulative nominal fulfill amountOutProvided. Phase 3 source-transition
+  induction proved arbitrary finite histories, reachable states and recursive
+  callback schedules; proof-only storage and bytecode refinement remain outside
+  scope. The agent-facing generated task retains its exact ?_ placeholder.

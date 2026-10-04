@@ -1,0 +1,15 @@
+manifest_kind: family
+schema_version: 1
+family_id: railnet-query-redeem-queue-v2
+display_name: Railnet Query Redeem Queue V2
+split: active
+status: active
+description: >
+  Publicly verified Base staging Queue implementation; arbitrary finite queued
+  demand, fulfillment, partial redeem, resolve and retrieve histories.
+implementation_ids:
+  - base-staging-52085313
+case_ids:
+  - railnet-query-redeem-queue-v2/query_redeem_queue
+source_languages:
+  - solidity

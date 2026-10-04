@@ -1,0 +1,18 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: railnet-query-redeem-queue-v2
+implementation_id: base-staging-52085313
+display_name: Railnet Base staging QueryRedeemQueue at block 52085313
+split: active
+status: translated
+upstream_repo: null
+upstream_commit: null
+source_language: solidity
+source_artifact_path: src/vehicles/multi/QueryRedeemQueue.sol
+case_ids:
+  - railnet-query-redeem-queue-v2/query_redeem_queue
+notes: >
+  Blockscout-verified implementation 0xfebd3ca7e01285e27299c7001307a3d64186aa49
+  behind queue 0x387d9d519ad7a0147f27ba460fbc1323d6846f77 on Base.
+  Source SHA-256 6fb63f25a4af6a64e287291f7a664f265c2b90efe521990e1ccd444a295ab0de.
+  Independent compilation matched executable bytes but not CBOR metadata.
