@@ -35,7 +35,7 @@ theorem withdrawUnallocatedTokens_preserves_allocated
   | true =>
     have hSafe : safeSub (s.storage 0) (s.storage 2) =
         some (sub (s.storage 0) (s.storage 2)) := by
-      simpa using Verity.Proofs.Stdlib.Math.safeSub_some
+      exact Verity.Proofs.Stdlib.Math.safeSub_some
         (s.storage 0) (s.storage 2) hInv.left
     let unallocated := sub (s.storage 0) (s.storage 2)
     have hUnallocLe : unallocated.val ≤ (s.storage 0).val := by
@@ -44,7 +44,7 @@ theorem withdrawUnallocatedTokens_preserves_allocated
       omega
     have hSafeOuter : safeSub (s.storage 0) unallocated =
         some (sub (s.storage 0) unallocated) := by
-      simpa using Verity.Proofs.Stdlib.Math.safeSub_some
+      exact Verity.Proofs.Stdlib.Math.safeSub_some
         (s.storage 0) unallocated hUnallocLe
     by_cases hGt0 : unallocated > 0
     · change 0 < unallocated.val at hGt0
@@ -86,7 +86,7 @@ theorem withdrawUnallocatedTokens_preserves_allocated
   | false =>
     have hSafe : safeSub (s.storage 1) (s.storage 3) =
         some (sub (s.storage 1) (s.storage 3)) := by
-      simpa using Verity.Proofs.Stdlib.Math.safeSub_some
+      exact Verity.Proofs.Stdlib.Math.safeSub_some
         (s.storage 1) (s.storage 3) hInv.right
     let unallocated := sub (s.storage 1) (s.storage 3)
     have hUnallocLe : unallocated.val ≤ (s.storage 1).val := by
@@ -95,7 +95,7 @@ theorem withdrawUnallocatedTokens_preserves_allocated
       omega
     have hSafeOuter : safeSub (s.storage 1) unallocated =
         some (sub (s.storage 1) unallocated) := by
-      simpa using Verity.Proofs.Stdlib.Math.safeSub_some
+      exact Verity.Proofs.Stdlib.Math.safeSub_some
         (s.storage 1) unallocated hUnallocLe
     by_cases hGt0 : unallocated > 0
     · change 0 < unallocated.val at hGt0
