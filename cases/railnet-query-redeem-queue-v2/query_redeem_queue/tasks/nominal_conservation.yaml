@@ -1,0 +1,35 @@
+manifest_kind: task
+schema_version: 1
+task_id: nominal_conservation
+case_id: railnet-query-redeem-queue-v2/query_redeem_queue
+split: active
+family_id: railnet-query-redeem-queue-v2
+implementation_id: base-staging-52085313
+source_ref: https://base.blockscout.com/api/v2/smart-contracts/0xfebd3ca7e01285e27299c7001307a3d64186aa49
+task_interface_version: 2
+theorem_name: Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.nominal_conservation_all_histories
+proof_family: protocol_transition_correctness
+property_class: accounting_conservation
+difficulty: hard
+category: interval_allocation
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - Benchmark/Cases/RailnetV2/QueryRedeemQueueV2/Contract.lean
+  - cases/railnet-query-redeem-queue-v2/query_redeem_queue/verity/Contract.lean
+specification_files:
+  - Benchmark/Cases/RailnetV2/QueryRedeemQueueV2/Specs.lean
+  - cases/railnet-query-redeem-queue-v2/query_redeem_queue/verity/Specs.lean
+editable_files:
+  - Benchmark/Generated/RailnetV2/QueryRedeemQueueV2/Tasks/NominalConservation.lean
+reference_solution_module: Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Proofs
+reference_solution_declaration: Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.nominal_conservation_all_histories
+abstraction_level: source_structured_transition
+abstraction_notes: >
+  Prove induction on arbitrary finite histories from successful initialization.
+  Demand prefixes consume disjoint interval segments; floor allocations for each
+  fulfillment sum to at most its nominal amountOut. No coverage/budget premise.
+unsupported_feature_codes:
+  - erc7201_source_to_verity_refinement_pending
