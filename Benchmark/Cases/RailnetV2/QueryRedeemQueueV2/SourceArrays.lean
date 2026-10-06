@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib.Init
 
 namespace Benchmark.Cases.RailnetV2.QueryRedeemQueueV2
 
