@@ -24,7 +24,7 @@ specification_files:
   - Benchmark/Cases/KPK/SharesSettlementAccounting/Specs.lean
 editable_files:
   - Benchmark/Generated/KPK/SharesSettlementAccounting/Tasks/MintFloorBounds.lean
-reference_solution_module: Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs
+reference_solution_module: Benchmark.Cases.KPK.SharesSettlementAccounting.ConversionBounds
 reference_solution_declaration: Benchmark.Cases.KPK.SharesSettlementAccounting.Mint_floor_bounds
 abstraction_level: arithmetic_supporting_lemma
 abstraction_notes: Supporting mathematical floor lemma; execution-to-conversion connection and whole-batch SettlementAccounting are proved separately. Terminal independent reviews pending.
