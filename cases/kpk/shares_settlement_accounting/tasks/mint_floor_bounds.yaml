@@ -1,0 +1,31 @@
+manifest_kind: task
+schema_version: 1
+task_id: mint_floor_bounds
+case_id: kpk/shares_settlement_accounting
+split: active
+family_id: kpk
+implementation_id: carry_shares
+source_ref: https://github.com/karpatkey/onchain-investment-vehicles@714d3d66a6e0e2bc7849ae48c3a25f63f23e903f:src/kpkShares.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.KPK.SharesSettlementAccounting.Mint_floor_bounds
+proof_family: functional_correctness
+property_class: rounding_bound
+difficulty: hard
+category: arithmetic
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/kpk/shares_settlement_accounting/verity/Contract.lean
+  - Benchmark/Cases/KPK/SharesSettlementAccounting/Contract.lean
+specification_files:
+  - cases/kpk/shares_settlement_accounting/verity/Specs.lean
+  - Benchmark/Cases/KPK/SharesSettlementAccounting/Specs.lean
+editable_files:
+  - Benchmark/Generated/KPK/SharesSettlementAccounting/Tasks/MintFloorBounds.lean
+reference_solution_module: Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs
+reference_solution_declaration: Benchmark.Cases.KPK.SharesSettlementAccounting.Mint_floor_bounds
+abstraction_level: arithmetic_supporting_lemma
+abstraction_notes: Supporting mathematical floor lemma; execution-to-conversion connection and whole-batch SettlementAccounting are proved separately. Terminal independent reviews pending.
+unsupported_feature_codes: []

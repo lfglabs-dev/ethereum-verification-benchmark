@@ -1,0 +1,14 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: kpk
+implementation_id: carry_shares
+display_name: KpkShares Carry source graph
+split: active
+status: translated
+upstream_repo: https://github.com/karpatkey/onchain-investment-vehicles
+upstream_commit: 714d3d66a6e0e2bc7849ae48c3a25f63f23e903f
+source_language: solidity
+source_artifact_path: src/kpkShares.sol
+case_ids:
+  - kpk/shares_settlement_accounting
+notes: Package version 5.4.0 at upgradeable gitlink 37bfda9eeb81cca848a9989118485a73d002eae4 and nested contracts gitlink 3d479dca0411378a99c9191d98e9fe1e35c1585d. Matches XAUt/WBTC Carry source graph at retained block 26106081. No kUSD/kETH or bytecode-refinement claim.
