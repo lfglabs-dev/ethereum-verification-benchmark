@@ -3435,7 +3435,7 @@
       ],
       "lean_target": "Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Compile",
       "failure_reason": null,
-      "notes": "Railnet Luca specification dated 2026-09-30: any finite history, arbitrary redeem order and repeated partial redeems, cumulative nominal payouts <= cumulative nominal fulfill amountOutProvided. Phase 3 source-transition induction proved arbitrary finite histories, reachable states and recursive callback schedules; proof-only storage and bytecode refinement remain outside scope. The agent-facing generated task retains its exact ?_ placeholder.",
+      "notes": "Railnet specification dated 2026-09-30: any finite history, arbitrary redeem order and repeated partial redeems, cumulative nominal payouts <= cumulative nominal fulfill amountOutProvided. Phase 3 source-transition induction proved arbitrary finite histories, reachable states and recursive callback schedules; proof-only storage and bytecode refinement remain outside scope. The agent-facing generated task retains its exact ?_ placeholder.",
       "buildable": true,
       "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
       "lean_toolchain": "leanprover/lean4:v4.31.0",

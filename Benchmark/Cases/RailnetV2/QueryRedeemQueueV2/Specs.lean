@@ -3,7 +3,7 @@ import Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Contract
 namespace Benchmark.Cases.RailnetV2.QueryRedeemQueueV2
 
 /-!
-The Railnet Luca (2026-09-30) specification: for ANY finite queue history
+The Railnet (2026-09-30) specification: for ANY finite queue history
 from a successful initialize, in any redeem order and with any number of
 repeated partial redeem calls, total nominal payout cannot exceed total
 nominal assets provided by fulfill calls. No coverage/last-redeemer premise,
