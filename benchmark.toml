@@ -17,6 +17,7 @@ backlog_glob = "backlog/*/*/case.yaml"
 backlog_task_glob = "backlog/*/*/tasks/*.yaml"
 result_schema = "schemas/run-result.schema.json"
 active_cases = [
+  "railnet-query-redeem-queue-v2/query_redeem_queue",
   "1inch/xycswap_curve_safety",
   "aera_finance/provisioner_v2_async_settlement",
   "alchemix/earmark_conservation",

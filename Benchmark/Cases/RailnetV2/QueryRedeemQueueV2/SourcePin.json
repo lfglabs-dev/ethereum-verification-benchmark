@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "case_slug": "railnet-query-redeem-queue-v2",
+  "chain_id": 8453,
+  "chain": "Base mainnet",
+  "environment": "Railnet staging (public indexer name base_testnet)",
+  "block_number": 52085313,
+  "block_hash": "0x5972c0302d45574c6103262d8417219532853a053591c7049143ea9711772e50",
+  "queue_proxy": "0x387d9d519ad7a0147f27ba460fbc1323d6846f77",
+  "beacon": "0xd39883049e8eea302d69ec31d901d8313aea42fb",
+  "implementation": "0xfebd3ca7e01285e27299c7001307a3d64186aa49",
+  "parent_multivehicle": "0xa3b5b485d0bad0e4e5161f44012e1e220ea1ba04",
+  "public_verified_source_url": "https://base.blockscout.com/api/v2/smart-contracts/0xfebd3ca7e01285e27299c7001307a3d64186aa49",
+  "target_source_path": "src/vehicles/multi/QueryRedeemQueue.sol",
+  "target_source_sha256": "6fb63f25a4af6a64e287291f7a664f265c2b90efe521990e1ccd444a295ab0de",
+  "source_manifest_sha256": "5a62f3a6092a047071da16bb0788589c386e38c03d4134d5a5a32c6c5a65e928",
+  "implementation_runtime_sha256": "671e667a67b921f97232d9f42b2b7d2c119ebf45582c39d42c1e2fd02916bddd",
+  "compiler_version": "v0.8.34+commit.80d5c536",
+  "compiler_settings": {
+    "evmVersion": "prague",
+    "libraries": {},
+    "metadata": {
+      "appendCBOR": true,
+      "bytecodeHash": "ipfs",
+      "useLiteralContent": false
+    },
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "": [
+          "*"
+        ],
+        "*": [
+          "*"
+        ]
+      }
+    },
+    "remappings": [
+      "script/=script/",
+      "src/=src/",
+      "test/=test/",
+      "@forge-deploy/=lib/forge-deploy/contracts/",
+      "@forge-std/=lib/forge-std/src/",
+      "@openzeppelin-contracts/=lib/openzeppelin-contracts/contracts/",
+      "@openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+      "@morpho/=lib/morpho-blue/src/",
+      "@createx/=lib/createx/src/",
+      "@deploy-sol/=lib/deploy-sol/src/",
+      "@halmos-cheatcodes/=lib/halmos-cheatcodes/src/",
+      "@aave-v3-libs/=lib/aave-v3/src/contracts/protocol/libraries/",
+      "@openzeppelin/contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/contracts/",
+      "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+      "aave-v3/=lib/aave-v3/",
+      "createx/=lib/createx/src/",
+      "ds-test/=lib/aave-v3/lib/forge-std/lib/ds-test/src/",
+      "erc4626-tests/=lib/openzeppelin-contracts-upgradeable/lib/erc4626-tests/",
+      "forge-std/=lib/forge-std/src/",
+      "halmos-cheatcodes/=lib/halmos-cheatcodes/src/",
+      "morpho-blue/=lib/morpho-blue/",
+      "openzeppelin-contracts-upgradeable/=lib/openzeppelin-contracts-upgradeable/",
+      "openzeppelin-contracts/=lib/openzeppelin-contracts/",
+      "openzeppelin/=lib/createx/lib/openzeppelin-contracts/contracts/",
+      "solady/=lib/createx/lib/solady/",
+      "solidity-utils/=lib/aave-v3/lib/solidity-utils/"
+    ],
+    "viaIR": true
+  },
+  "independent_compilation": {
+    "compiler": "0.8.34+commit.80d5c536.Emscripten.clang",
+    "compiledBytes": 8049,
+    "deployedBytes": 8049,
+    "fullMatch": false,
+    "executableMatchWithoutCbor": true,
+    "immutableReferences": {}
+  },
+  "verified_source_flags": {
+    "is_verified": true,
+    "is_fully_verified": false,
+    "is_verified_via_eth_bytecode_db": true
+  },
+  "selection_reason": "Independently identified as a staging MultiVehicle queue by public Railnet docs and indexer, pinned through on-chain beacon and parent reads, with public explorer source and independent executable-bytecode reproduction.",
+  "limits": [
+    "Metadata-inclusive runtime differs; exact executable prefix matches.",
+    "Single-block pin does not establish upgrade continuity.",
+    "No mechanized Solidity-to-Lean or bytecode refinement claim.",
+    "No private source or earlier attempt used."
+  ]
+}
