@@ -23,11 +23,13 @@ python3 scripts/check_v03_strat50.py
 python3 -m unittest discover -s tests
 python3 scripts/check_publication_safe_classification.py
 
-if python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --dry-run >/tmp/verity-default-run-task-smoke.out; then
+smoke_out="$(mktemp -t verity-default-run-task-smoke.XXXXXX.out)"
+trap 'rm -f "$smoke_out" "${v02_audit:-}"' EXIT
+if python3 -m harness.cli run-task ethereum/deposit_contract_minimal/deposit_count --harness default --dry-run >"$smoke_out"; then
   echo "expected default run-task dry-run to fail verification on placeholder proof" >&2
   exit 1
 fi
-python3 scripts/check_run_artifacts.py "$(tail -1 /tmp/verity-default-run-task-smoke.out)"
+python3 scripts/check_run_artifacts.py "$(tail -1 "$smoke_out")"
 
 python3 scripts/check_group_workspaces.py --suite active
 python3 scripts/check_verifier_policy.py

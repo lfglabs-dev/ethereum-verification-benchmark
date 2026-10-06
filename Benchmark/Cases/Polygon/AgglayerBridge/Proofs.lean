@@ -14,6 +14,56 @@ Reference proofs for the AgglayerBridge claim membership/nullifier invariant.
 open Verity
 open Verity.EVM.Uint256
 
+@[simp] private theorem readSlot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.readSlot slotIdx = s.storage slotIdx := rfl
+@[simp] private theorem readAddrSlot_eq_storageAddr (s : ContractState) (slotIdx : Nat) :
+    s.readAddrSlot slotIdx = s.storageAddr slotIdx := rfl
+@[simp] private theorem readMap_eq_storageMap (s : ContractState) (slotIdx : Nat) (k : Address) :
+    s.readMap slotIdx k = s.storageMap slotIdx k := rfl
+@[simp] private theorem readMapUint_eq_storageMapUint (s : ContractState) (slotIdx : Nat) (k : Uint256) :
+    s.readMapUint slotIdx k = s.storageMapUint slotIdx k := rfl
+@[simp] private theorem readMap2_eq_storageMap2 (s : ContractState) (slotIdx : Nat) (k1 k2 : Address) :
+    s.readMap2 slotIdx k1 k2 = s.storageMap2 slotIdx k1 k2 := rfl
+@[simp] private theorem readTransient_eq_transientStorage (s : ContractState) (slotIdx : Nat) :
+    s.readTransient slotIdx = s.transientStorage slotIdx := rfl
+@[simp] private theorem storage_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage =
+      s.storage := rfl
+@[simp] private theorem storageAddr_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageAddr =
+      s.storageAddr := rfl
+@[simp] private theorem storageMap_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap =
+      s.storageMap := rfl
+@[simp] private theorem storageMapUint_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMapUint =
+      s.storageMapUint := rfl
+@[simp] private theorem storageMap2_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap2 =
+      s.storageMap2 := rfl
+@[simp] private theorem address_ofNat_storageWords_addr (s : ContractState) (slotIdx : Nat) :
+    Verity.Core.Address.ofNat (s.storageWords (.addr slotIdx)).val = s.storageAddr slotIdx := rfl
+@[simp] private theorem storage_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) (slotIdx' : Nat) :
+    (s.writeSlot slotIdx value).storage slotIdx' = if slotIdx' == slotIdx then value else s.storage slotIdx' := by
+  simp [ContractState.storage, ContractState.writeSlot]
+@[simp] private theorem storageMapUint_writeMapUint (s : ContractState) (slotIdx : Nat) (key value : Uint256) (slotIdx' : Nat) (key' : Uint256) :
+    (s.writeMapUint slotIdx key value).storageMapUint slotIdx' key' =
+      if slotIdx' == slotIdx && key' == key then value else s.storageMapUint slotIdx' key' := by
+  simp [ContractState.storageMapUint, ContractState.writeMapUint]
+@[simp] private theorem externalArgWord_zero_nat :
+    Contracts.externalArgWord (0 : Nat) = 0 := rfl
+@[simp] private theorem externalArgWord_zero_uint :
+    Contracts.externalArgWord (0 : Uint256) = 0 := rfl
+@[simp] private theorem getElem?_zero_getD_eq_getElem (arr : Array Uint256) (h : 0 < arr.size) :
+    arr[0]?.getD 0 = arr[0] := by
+  simp [h]
+
+
 private theorem setAndCheckClaimed_consumes
     (s : ContractState)
     (leafIndex sourceBridgeNetwork : Uint256) :

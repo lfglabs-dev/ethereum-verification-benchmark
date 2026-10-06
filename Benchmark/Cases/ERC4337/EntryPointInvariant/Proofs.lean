@@ -6,6 +6,25 @@ namespace Benchmark.Cases.ERC4337.EntryPointInvariant
 open Verity
 open Verity.EVM.Uint256
 
+@[simp] private theorem readSlot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.readSlot slotIdx = s.storage slotIdx := rfl
+@[simp] private theorem readMap_eq_storageMap (s : ContractState) (slotIdx : Nat) (k : Address) :
+    s.readMap slotIdx k = s.storageMap slotIdx k := rfl
+@[simp] private theorem readMapUint_eq_storageMapUint (s : ContractState) (slotIdx : Nat) (k : Uint256) :
+    s.readMapUint slotIdx k = s.storageMapUint slotIdx k := rfl
+@[simp] private theorem storage_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage =
+      s.storage := rfl
+@[simp] private theorem storageMap_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap =
+      s.storageMap := rfl
+@[simp] private theorem storageMapUint_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMapUint =
+      s.storageMapUint := rfl
+
 /-!
 # ERC-4337 EntryPoint Invariant Proofs — historical record
 

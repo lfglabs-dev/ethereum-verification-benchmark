@@ -16,7 +16,7 @@ theorem swapDebtTokenToXt_updates_virtual_xt_reserve
     (cutLiqSquare : Uint256) (cutOffset : Int256)
     (s : ContractState)
     (hNonZeroInput : debtTokenAmtIn != 0)
-    (hLockOpen : s.storage 1 = 0)
+    (hLockOpen : s.transientStorage 1 = 0)
     (hVXtNonZero : plusInt256 (s.storage 0) cutOffset != 0)
     (hNoCross :
       singleSegmentBuyXtTokenAmtOut

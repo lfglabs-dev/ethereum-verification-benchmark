@@ -207,7 +207,9 @@ class V02ContractTests(unittest.TestCase):
                 return canonical_contract.load_v02_task_refs(require_pinned_source=True)
 
     def test_selector_is_frozen_and_operational(self) -> None:
-        self.assertEqual(discover_task_refs("v0.2"), [task["task_ref"] for task in self.manifest["tasks"]])
+        metadata = {task["task_ref"]: task for task in self.manifest["tasks"]}
+        with mock.patch("scripts.compute_fingerprints.task_entries", return_value=metadata):
+            self.assertEqual(discover_task_refs("v0.2"), [task["task_ref"] for task in self.manifest["tasks"]])
         self.assertEqual(self.manifest["task_count"], 240)
         self.assertEqual(self.manifest["manifest_schema_version"], 1)
         self.assertTrue(all(task["task_fingerprint"].startswith("sha256:") for task in self.manifest["tasks"]))
@@ -414,7 +416,9 @@ class V02ContractTests(unittest.TestCase):
         self.assertIn("forbidden reference escape hatch", audit["errors"][0])
 
     def test_implicit_v02_aggregate_has_only_canonical_cases(self) -> None:
-        summary = aggregate_results([], "v0.2")["case_summary"]
+        metadata = {task["task_ref"]: task for task in self.manifest["tasks"]}
+        with mock.patch("scripts.compute_fingerprints.task_entries", return_value=metadata):
+            summary = aggregate_results([], "v0.2")["case_summary"]
         canonical_case_ids = {
             "/".join(task["task_ref"].split("/")[:2]) for task in self.manifest["tasks"]
         }

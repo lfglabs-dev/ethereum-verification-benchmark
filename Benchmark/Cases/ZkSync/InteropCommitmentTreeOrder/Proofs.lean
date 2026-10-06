@@ -32,15 +32,28 @@ private theorem one_ne_zero_uint : (1 : Uint256) ≠ 0 := by
     simpa [val_one, val_zero] using this
   cases this
 
+@[simp] private theorem readSlot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.readSlot slotIdx = s.storage slotIdx := rfl
+@[simp] private theorem readMapUint_eq_storageMapUint (s : ContractState) (slotIdx : Nat) (k : Uint256) :
+    s.readMapUint slotIdx k = s.storageMapUint slotIdx k := rfl
+@[simp] private theorem storage_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) (slotIdx' : Nat) :
+    (s.writeSlot slotIdx value).storage slotIdx' = if slotIdx' == slotIdx then value else s.storage slotIdx' := by
+  simp [ContractState.storage, ContractState.writeSlot]
+@[simp] private theorem storageMapUint_writeMapUint (s : ContractState) (slotIdx : Nat) (key value : Uint256)
+    (slotIdx' : Nat) (key' : Uint256) :
+    (s.writeMapUint slotIdx key value).storageMapUint slotIdx' key' =
+      if slotIdx' == slotIdx && key' == key then value else s.storageMapUint slotIdx' key' := by
+  simp [ContractState.storageMapUint, ContractState.writeMapUint]
+@[simp] private theorem storage_writeMapUint (s : ContractState) (slotIdx : Nat) (key value : Uint256) :
+    (s.writeMapUint slotIdx key value).storage = s.storage := by
+  funext wordSlot; simp [ContractState.storage, ContractState.writeMapUint]
+@[simp] private theorem storageMapUint_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) :
+    (s.writeSlot slotIdx value).storageMapUint = s.storageMapUint := by
+  funext mapSlot mapKey; simp [ContractState.storageMapUint, ContractState.writeSlot]
+
 /-- Post-state of `setup`: sentinel leaf at index 0 and `leafNumber = 1`. -/
 private def setupPost (s : ContractState) : ContractState :=
-  { s with
-    storageMapUint := fun sl k =>
-      if sl == 3 && k == 0 then 0
-      else if sl == 2 && k == 0 then 0
-      else if sl == 1 && k == 0 then 0
-      else s.storageMapUint sl k
-    «storage» := fun sl => if sl == 0 then 1 else s.storage sl }
+  (((s.writeMapUint 1 0 0).writeMapUint 2 0 0).writeMapUint 3 0 0).writeSlot 0 1
 
 private theorem leafNumber_setupPost (s : ContractState) :
     leafNumber (setupPost s) = 1 := by
@@ -152,19 +165,11 @@ def insertLow (s : ContractState) (value lowHint : Uint256) : Uint256 :=
   walkLowLeafFuel (leafNumber s).val s lowHint value
 
 def insertPost (s : ContractState) (value lowHint : Uint256) : ContractState :=
-  { s with
-    storageMapUint := fun sl k =>
-      if sl == 4 && k == value then leafNumber s
-      else if sl == 3 && k == leafNumber s then
-        nextValue s (insertLow s value lowHint)
-      else if sl == 2 && k == leafNumber s then
-        nextIndex s (insertLow s value lowHint)
-      else if sl == 1 && k == leafNumber s then value
-      else if sl == 3 && k == insertLow s value lowHint then value
-      else if sl == 2 && k == insertLow s value lowHint then leafNumber s
-      else s.storageMapUint sl k
-    «storage» := fun sl =>
-      if sl == 0 then EVM.Uint256.add (leafNumber s) 1 else s.storage sl }
+  let low := insertLow s value lowHint
+  let ln := leafNumber s
+  ((((((s.writeMapUint 2 low ln).writeMapUint 3 low value).writeMapUint 1 ln value).writeMapUint
+      2 ln (nextIndex s low)).writeMapUint 3 ln (nextValue s low)).writeMapUint 4 value ln).writeSlot
+    0 (EVM.Uint256.add ln 1)
 
 def walkResult (fuel : Nat) (s : ContractState) (idx value : Uint256) : Uint256 :=
   match fuel with
@@ -250,7 +255,8 @@ private theorem addPanic_apply (a b : Uint256) (s : ContractState) :
       match safeAdd a b with
       | some n => ContractResult.success n s
       | none => ContractResult.revert "Panic(0x11): arithmetic overflow" s := by
-  unfold addPanic requireSomeUint
+  change requireSomeUint (safeAdd a b) "Panic(0x11): arithmetic overflow" s = _
+  unfold requireSomeUint
   cases h : safeAdd a b with
   | none =>
       simp [h, Bind.bind, Verity.bind, Verity.require, Verity.pure, Pure.pure]
@@ -405,7 +411,7 @@ theorem insert_run_of_success
                   exact hn'.symm
                 simp [Contract.run, hsucc, insertPost, insertLow,
                   walkLowLeafFuel_eq_walkResult, leafNumber, nextValue, nextIndex,
-                  hnAdd, ContractState.writeMapUint, ContractState.writeSlot]
+                  hnAdd]
           · have hrev :=
               insert_apply_revert_hint_too_large value lowHint s hln hv hex hhint
                 (eq_false_of_ne_true hval)

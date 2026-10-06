@@ -469,11 +469,8 @@ def regressionUnrelated : Address := 3
 def regressionNegOne : Uint256 := sub 0 1
 
 def finiteProjectionRegressionPost (corruptUnrelated : Bool) : ContractState :=
-  { defaultState with storageMap := fun slotIndex account =>
-      if slotIndex == 0 && account == regressionSender then regressionNegOne
-      else if slotIndex == 0 && account == regressionReceiver then 1
-      else if corruptUnrelated && slotIndex == 0 && account == regressionUnrelated then 1
-      else 0 }
+  let base := (defaultState.writeMap 0 regressionSender regressionNegOne).writeMap 0 regressionReceiver 1
+  if corruptUnrelated then base.writeMap 0 regressionUnrelated 1 else base
 
 /-- W1-W3: endpoint cancellation alone does not survive a missing sender, a corrupt
 unrelated member, or duplicate counting. -/

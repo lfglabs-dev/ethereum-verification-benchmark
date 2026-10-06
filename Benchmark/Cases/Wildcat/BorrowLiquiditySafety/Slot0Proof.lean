@@ -10,6 +10,77 @@ open Verity.Stdlib.Math
 open Verity.Proofs.Stdlib.Automation
 open Verity.Proofs.Stdlib.Math (safeAdd_some safeSub_some)
 
+@[simp] theorem readSlot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.readSlot slotIdx = s.storage slotIdx := rfl
+@[simp] theorem readAddrSlot_eq_storageAddr (s : ContractState) (slotIdx : Nat) :
+    s.readAddrSlot slotIdx = s.storageAddr slotIdx := rfl
+@[simp] theorem readMap_eq_storageMap (s : ContractState) (slotIdx : Nat) (k : Address) :
+    s.readMap slotIdx k = s.storageMap slotIdx k := rfl
+@[simp] theorem readMapUint_eq_storageMapUint (s : ContractState) (slotIdx : Nat) (k : Uint256) :
+    s.readMapUint slotIdx k = s.storageMapUint slotIdx k := rfl
+@[simp] theorem readMap2_eq_storageMap2 (s : ContractState) (slotIdx : Nat) (k1 k2 : Address) :
+    s.readMap2 slotIdx k1 k2 = s.storageMap2 slotIdx k1 k2 := rfl
+@[simp] theorem readTransient_eq_transientStorage (s : ContractState) (slotIdx : Nat) :
+    s.readTransient slotIdx = s.transientStorage slotIdx := rfl
+@[simp] theorem storage_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage =
+      s.storage := rfl
+@[simp] theorem storageAddr_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageAddr =
+      s.storageAddr := rfl
+@[simp] theorem storageMap_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap =
+      s.storageMap := rfl
+@[simp] theorem storageMapUint_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMapUint =
+      s.storageMapUint := rfl
+@[simp] theorem storageMap2_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap2 =
+      s.storageMap2 := rfl
+@[simp] theorem storage_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) (slotIdx' : Nat) :
+    (s.writeSlot slotIdx value).storage slotIdx' = if slotIdx' == slotIdx then value else s.storage slotIdx' := by
+  simp [ContractState.storage, ContractState.writeSlot]
+@[simp] theorem storageAddr_writeAddrSlot (s : ContractState) (slotIdx : Nat) (value : Address) (slotIdx' : Nat) :
+    (s.writeAddrSlot slotIdx value).storageAddr slotIdx' =
+      if slotIdx' == slotIdx then value else s.storageAddr slotIdx' := by
+  by_cases h : slotIdx' = slotIdx
+  · subst h; simp
+  · simp [ContractState.storageAddr_writeAddrSlot_other s h value, h]
+@[simp] theorem storageMap_writeMap (s : ContractState) (slotIdx : Nat) (key : Address) (value : Uint256)
+    (slotIdx' : Nat) (key' : Address) :
+    (s.writeMap slotIdx key value).storageMap slotIdx' key' =
+      if slotIdx' == slotIdx && key' == key then value else s.storageMap slotIdx' key' := by
+  simp [ContractState.storageMap, ContractState.writeMap]
+@[simp] theorem storageMapUint_writeMapUint (s : ContractState) (slotIdx : Nat) (key value : Uint256)
+    (slotIdx' : Nat) (key' : Uint256) :
+    (s.writeMapUint slotIdx key value).storageMapUint slotIdx' key' =
+      if slotIdx' == slotIdx && key' == key then value else s.storageMapUint slotIdx' key' := by
+  simp [ContractState.storageMapUint, ContractState.writeMapUint]
+@[simp] theorem storage_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256) :
+    (s.writeMap2 slotIdx key1 key2 value).storage = s.storage := by
+  funext wordSlot; simp [ContractState.storage, ContractState.writeMap2]
+@[simp] theorem storageAddr_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256) :
+    (s.writeMap2 slotIdx key1 key2 value).storageAddr = s.storageAddr := by
+  funext addrSlot; simp [ContractState.storageAddr, ContractState.writeMap2]
+@[simp] theorem storageMap_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256) :
+    (s.writeMap2 slotIdx key1 key2 value).storageMap = s.storageMap := by
+  funext mapSlot mapKey; simp [ContractState.storageMap, ContractState.writeMap2]
+@[simp] theorem storageMapUint_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256) :
+    (s.writeMap2 slotIdx key1 key2 value).storageMapUint = s.storageMapUint := by
+  funext mapSlot mapKey; simp [ContractState.storageMapUint, ContractState.writeMap2]
+@[simp] theorem storageMap2_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256)
+    (slotIdx' : Nat) (key1' key2' : Address) :
+    (s.writeMap2 slotIdx key1 key2 value).storageMap2 slotIdx' key1' key2' =
+      if slotIdx' == slotIdx && key1' == key1 && key2' == key2 then value else s.storageMap2 slotIdx' key1' key2' := by
+  simp [ContractState.storageMap2, ContractState.writeMap2, and_assoc]
+
+
+
 set_option maxRecDepth 50000
 set_option maxHeartbeats 1000000
 set_option compiler.extract_closed false
@@ -44,6 +115,7 @@ private theorem uint256_sub_notation (a b : Uint256) : a - b = sub a b := rfl
 private theorem uint256_mul_notation (a b : Uint256) : a * b = mul a b := rfl
 private theorem uint256_div_notation (a b : Uint256) : a / b = div a b := rfl
 
+attribute [-simp] Verity.Core.Uint256.add_comm Verity.Core.Uint256.mul_comm
 attribute [local simp] uint256_add_notation uint256_sub_notation
   uint256_mul_notation uint256_div_notation
 

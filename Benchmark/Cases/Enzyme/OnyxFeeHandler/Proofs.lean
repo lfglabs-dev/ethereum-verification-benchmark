@@ -14,6 +14,39 @@ open Verity.Core.Reentrancy
 
 set_option linter.unusedSimpArgs false
 
+@[simp] private theorem storage_mk_storageWords
+    (storageWords : StorageKey → Uint256)
+    (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd)
+    (slotIdx : Nat) :
+    (ContractState.mk storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage slotIdx =
+      storageWords (.slot slotIdx) := rfl
+
+@[simp] private theorem storageAddr_mk_storageWords
+    (storageWords : StorageKey → Uint256)
+    (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd)
+    (slotIdx : Nat) :
+    (ContractState.mk storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageAddr slotIdx =
+      wordToAddress (storageWords (.addr slotIdx)) := rfl
+
+@[simp] private theorem storageMap_mk_storageWords
+    (storageWords : StorageKey → Uint256)
+    (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd)
+    (slotIdx : Nat) (k : Address) :
+    (ContractState.mk storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap slotIdx k =
+      storageWords (.map slotIdx k) := rfl
+
+@[simp] private theorem wordToAddress_storageWords_addr (s : ContractState) (slotIdx : Nat) :
+    wordToAddress (s.storageWords (.addr slotIdx)) = s.storageAddr slotIdx := rfl
+
+@[simp] private theorem address_ofNat_storageWords_addr (s : ContractState) (slotIdx : Nat) :
+    Verity.Core.Address.ofNat (s.storageWords (.addr slotIdx)).val = s.storageAddr slotIdx := rfl
+
+@[simp] private theorem storageWords_slot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.storageWords (.slot slotIdx) = s.storage slotIdx := rfl
+
+@[simp] private theorem storageWords_map_eq_storageMap (s : ContractState) (slotIdx : Nat) (k : Address) :
+    s.storageWords (.map slotIdx k) = s.storageMap slotIdx k := rfl
+
 namespace DynamicFeeProjectionEq
 
 theorem refl (s : ContractState) : DynamicFeeProjectionEq s s := by
@@ -599,7 +632,7 @@ theorem performance_only_exact_accounting
     runStaticWordCall, runExternalWordCall, externalCallSucceeded,
     totalFeesOwedOf, feesOwedTo,
     managementFeeTrackerOf, performanceFeeTrackerOf, performanceFeeRecipientOf,
-    managementFeeBase, sub,
+    managementFeeBase,
     hReentryManagementTracker, hReentryPerformanceTracker,
     hReentryManagementRecipient, hReentryPerformanceRecipient,
     hReentryTotal, hReentryUsers,

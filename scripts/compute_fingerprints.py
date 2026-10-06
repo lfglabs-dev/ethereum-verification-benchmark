@@ -270,6 +270,8 @@ def baseline_contract_entries(
     commit: str,
 ) -> tuple[dict[str, dict[str, object]], dict[str, dict[str, str]]]:
     """Recompute canonical task and reference entries in ``commit`` only."""
+    if not (ROOT / ".git").exists():
+        raise ValueError(f"pinned source unavailable (infra): {commit}")
     source = trusted_closure_helper_source()
     program = """
 import hashlib, json
@@ -344,6 +346,8 @@ def baseline_version_metadata(
     This deliberately calls the same ``build_version_manifest`` implementation
     used for ordinary releases, rather than reimplementing its identity hashes.
     """
+    if not (ROOT / ".git").exists():
+        raise ValueError(f"pinned source unavailable (infra): {commit}")
     program = f"""
 import json
 from scripts.compute_fingerprints import build_version_manifest

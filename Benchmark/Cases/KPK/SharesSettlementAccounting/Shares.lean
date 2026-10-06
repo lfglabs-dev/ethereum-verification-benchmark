@@ -5,6 +5,83 @@ open Verity Verity.Stdlib.Math
 set_option maxHeartbeats 2000000
 set_option linter.unusedSimpArgs false
 
+@[simp] theorem readSlot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.readSlot slotIdx = s.storage slotIdx := rfl
+@[simp] theorem readAddrSlot_eq_storageAddr (s : ContractState) (slotIdx : Nat) :
+    s.readAddrSlot slotIdx = s.storageAddr slotIdx := rfl
+@[simp] theorem readMap_eq_storageMap (s : ContractState) (slotIdx : Nat) (k : Address) :
+    s.readMap slotIdx k = s.storageMap slotIdx k := rfl
+@[simp] theorem readMapUint_eq_storageMapUint (s : ContractState) (slotIdx : Nat) (k : Uint256) :
+    s.readMapUint slotIdx k = s.storageMapUint slotIdx k := rfl
+@[simp] theorem readMap2_eq_storageMap2 (s : ContractState) (slotIdx : Nat) (k1 k2 : Address) :
+    s.readMap2 slotIdx k1 k2 = s.storageMap2 slotIdx k1 k2 := rfl
+@[simp] theorem readTransient_eq_transientStorage (s : ContractState) (slotIdx : Nat) :
+    s.readTransient slotIdx = s.transientStorage slotIdx := rfl
+@[simp] theorem storage_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage =
+      s.storage := rfl
+@[simp] theorem storageAddr_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageAddr =
+      s.storageAddr := rfl
+@[simp] theorem storageMap_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap =
+      s.storageMap := rfl
+@[simp] theorem storageMapUint_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMapUint =
+      s.storageMapUint := rfl
+@[simp] theorem storageMap2_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap2 =
+      s.storageMap2 := rfl
+@[simp] theorem transientStorage_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).transientStorage =
+      s.transientStorage := rfl
+@[simp] theorem storage_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) (slotIdx' : Nat) :
+    (s.writeSlot slotIdx value).storage slotIdx' = if slotIdx' == slotIdx then value else s.storage slotIdx' := by
+  simp [ContractState.storage, ContractState.writeSlot]
+@[simp] theorem storageMap_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) :
+    (s.writeSlot slotIdx value).storageMap = s.storageMap := by
+  funext mapSlot mapKey; simp [ContractState.storageMap, ContractState.writeSlot]
+@[simp] theorem storageMap2_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) :
+    (s.writeSlot slotIdx value).storageMap2 = s.storageMap2 := by
+  funext mapSlot k1 k2; simp [ContractState.storageMap2, ContractState.writeSlot]
+@[simp] theorem storageMapUint_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) :
+    (s.writeSlot slotIdx value).storageMapUint = s.storageMapUint := by
+  funext mapSlot k; simp [ContractState.storageMapUint, ContractState.writeSlot]
+@[simp] theorem storageAddr_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) :
+    (s.writeSlot slotIdx value).storageAddr = s.storageAddr := by
+  funext addrSlot; simp [ContractState.storageAddr, ContractState.writeSlot]
+@[simp] theorem transientStorage_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) :
+    (s.writeSlot slotIdx value).transientStorage = s.transientStorage := by
+  funext tSlot; simp [ContractState.transientStorage, ContractState.writeSlot]
+@[simp] theorem storageMap_writeMap (s : ContractState) (slotIdx : Nat) (key : Address) (value : Uint256)
+    (slotIdx' : Nat) (key' : Address) :
+    (s.writeMap slotIdx key value).storageMap slotIdx' key' =
+      if slotIdx' == slotIdx && key' == key then value else s.storageMap slotIdx' key' := by
+  simp [ContractState.storageMap, ContractState.writeMap]
+@[simp] theorem storage_writeMap (s : ContractState) (slotIdx : Nat) (key : Address) (value : Uint256) :
+    (s.writeMap slotIdx key value).storage = s.storage := by
+  funext wordSlot; simp [ContractState.storage, ContractState.writeMap]
+@[simp] theorem storageMap2_writeMap (s : ContractState) (slotIdx : Nat) (key : Address) (value : Uint256) :
+    (s.writeMap slotIdx key value).storageMap2 = s.storageMap2 := by
+  funext mapSlot k1 k2; simp [ContractState.storageMap2, ContractState.writeMap]
+@[simp] theorem storageMapUint_writeMap (s : ContractState) (slotIdx : Nat) (key : Address) (value : Uint256) :
+    (s.writeMap slotIdx key value).storageMapUint = s.storageMapUint := by
+  funext mapSlot k; simp [ContractState.storageMapUint, ContractState.writeMap]
+@[simp] theorem storageAddr_writeMap (s : ContractState) (slotIdx : Nat) (key : Address) (value : Uint256) :
+    (s.writeMap slotIdx key value).storageAddr = s.storageAddr := by
+  funext addrSlot; simp [ContractState.storageAddr, ContractState.writeMap]
+@[simp] theorem transientStorage_writeMap (s : ContractState) (slotIdx : Nat) (key : Address) (value : Uint256) :
+    (s.writeMap slotIdx key value).transientStorage = s.transientStorage := by
+  funext tSlot; simp [ContractState.transientStorage, ContractState.writeMap]
+@[simp] theorem memory_writeMap (s : ContractState) (slotIdx : Nat) (key : Address) (value : Uint256) :
+    (s.writeMap slotIdx key value).memory = s.memory := rfl
+
 def shareWrite (s : State) (a : Address) (v : Uint256) : State :=
   {s with caller := {s.caller.writeMap balanceSlot.slot a v with
     knownAddresses := fun slot => if slot == balanceSlot.slot then
@@ -14,17 +91,19 @@ def supplyWrite (s : State) (v : Uint256) : State :=
 
 theorem shareWrite_balance (s : State) (a x : Address) (v : Uint256) :
     shareBalance (shareWrite s a v) x = if x = a then v.val else shareBalance s x := by
-  simp [shareBalance,shareWrite,ContractState.writeMap,ContractState.readMap]
+  simp [shareBalance,shareWrite,balanceSlot]
 
 theorem shareWrite_supply (s : State) (a : Address) (v : Uint256) :
-    totalSupply (shareWrite s a v) = totalSupply s := rfl
+    totalSupply (shareWrite s a v) = totalSupply s := by
+  simp [totalSupply,shareWrite]
 
 theorem supplyWrite_balance (s : State) (v : Uint256) (x : Address) :
-    shareBalance (supplyWrite s v) x = shareBalance s x := rfl
+    shareBalance (supplyWrite s v) x = shareBalance s x := by
+  simp [shareBalance,supplyWrite]
 
 theorem supplyWrite_supply (s : State) (v : Uint256) :
     totalSupply (supplyWrite s v) = v.val := by
-  simp [totalSupply,supplyWrite,ContractState.writeSlot,ContractState.readSlot]
+  simp [totalSupply,supplyWrite]
 
 theorem shareBalance_bounded (s : State) (a : Address) : shareBalance s a < wordLimit :=
   (s.caller.readMap balanceSlot.slot a).isLt
@@ -154,12 +233,12 @@ theorem burn_success (s t : State) (fromAddr : Address) (amount : Nat)
 
 theorem shareWrite_frame (s : State) (a : Address) (v : Uint256) (asset : Address) :
     CallerFrame s (shareWrite s a v) asset := by
-  simp [CallerFrame,shareWrite,ContractState.writeMap,ContractState.readMap]
+  simp [CallerFrame,shareWrite]
   constructor <;> intros <;> contradiction
 
 theorem supplyWrite_frame (s : State) (v : Uint256) (asset : Address) :
     CallerFrame s (supplyWrite s v) asset := by
-  simp [CallerFrame,supplyWrite,ContractState.writeSlot,ContractState.readSlot]
+  simp [CallerFrame,supplyWrite]
   intros; contradiction
 
 theorem sum_change_balance (accounts : List Address) (f g : Address → Nat)

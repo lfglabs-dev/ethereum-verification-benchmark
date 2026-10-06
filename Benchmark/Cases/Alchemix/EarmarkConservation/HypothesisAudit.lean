@@ -188,17 +188,19 @@ theorem H5_from_invariant_and_no_overflow
 
 def h6_cex_state : ContractState :=
   { Verity.defaultState with
-    «storage» := fun n =>
-      if n = 1 then (100 : Uint256)         -- totalDebt
-      else if n = 2 then ONE_Q128            -- _earmarkWeight
-      else if n = 3 then ONE_Q128            -- _redemptionWeight
-      else if n = 5 then (50 : Uint256)      -- transmuter amount
-      else (0 : Uint256)
-    «storageMapUint» := fun n k =>
-      if n = 100 ∧ k = (1 : Uint256) then (1 : Uint256)         -- debt
-      else if n = 102 ∧ k = (1 : Uint256) then ONE_Q128         -- lastAccruedEW
-      else if n = 103 ∧ k = (1 : Uint256) then ONE_Q128         -- lastAccruedRW
-      else (0 : Uint256) }
+    storageWords := fun
+      | .slot n =>
+        if n = 1 then (100 : Uint256)         -- totalDebt
+        else if n = 2 then ONE_Q128            -- _earmarkWeight
+        else if n = 3 then ONE_Q128            -- _redemptionWeight
+        else if n = 5 then (50 : Uint256)      -- transmuter amount
+        else (0 : Uint256)
+      | .mapUint n k =>
+        if n = 100 ∧ k = (1 : Uint256) then (1 : Uint256)         -- debt
+        else if n = 102 ∧ k = (1 : Uint256) then ONE_Q128         -- lastAccruedEW
+        else if n = 103 ∧ k = (1 : Uint256) then ONE_Q128         -- lastAccruedRW
+        else (0 : Uint256)
+      | _ => (0 : Uint256) }
 
 def h6_cex_ids : FiniteSet Uint256 :=
   ⟨[(1 : Uint256)], by simp⟩
@@ -265,16 +267,18 @@ theorem H6_from_sister_invariant
 
 def h3_cex_state : ContractState :=
   { Verity.defaultState with
-    «storage» := fun n =>
-      if n = 0 then (2 : Uint256)
-      else if n = 1 then (3 : Uint256)
-      else if n = 2 then ONE_Q128
-      else (0 : Uint256)
-    «storageMapUint» := fun n k =>
-      if n = 100 ∧ k = (1 : Uint256) then (3 : Uint256)
-      else if n = 101 ∧ k = (1 : Uint256) then (2 : Uint256)
-      else if n = 102 ∧ k = (1 : Uint256) then ONE_Q128
-      else (0 : Uint256) }
+    storageWords := fun
+      | .slot n =>
+        if n = 0 then (2 : Uint256)
+        else if n = 1 then (3 : Uint256)
+        else if n = 2 then ONE_Q128
+        else (0 : Uint256)
+      | .mapUint n k =>
+        if n = 100 ∧ k = (1 : Uint256) then (3 : Uint256)
+        else if n = 101 ∧ k = (1 : Uint256) then (2 : Uint256)
+        else if n = 102 ∧ k = (1 : Uint256) then ONE_Q128
+        else (0 : Uint256)
+      | _ => (0 : Uint256) }
 
 def h3_cex_ids : FiniteSet Uint256 :=
   ⟨[(1 : Uint256)], by simp⟩

@@ -3,7 +3,7 @@ import Verity.Proofs.Stdlib.Automation
 
 namespace Benchmark.Cases.Polaris.BondingCurve
 
-set_option maxRecDepth 10000
+set_option maxRecDepth 40000
 set_option maxHeartbeats 2000000
 
 open Verity
@@ -19,7 +19,7 @@ open Verity.EVM.Uint256
 
 @[simp] private theorem bind_getStorage_raw {α : Type} (sl : StorageSlot Uint256)
     (f : Uint256 → Contract α) (s : ContractState) :
-    Verity.bind (getStorage sl) f s = f (s.readSlot sl.slot) s := rfl
+    Verity.bind (getStorage sl) f s = f (s.storage sl.slot) s := rfl
 
 @[simp] private theorem bind_setStorage_raw {α : Type} (sl : StorageSlot Uint256)
     (value : Uint256) (f : Unit → Contract α) (s : ContractState) :
@@ -29,16 +29,58 @@ open Verity.EVM.Uint256
     (f : PUnit → Contract α) (s : ContractState) :
     Verity.bind (Verity.require true message) f s = f PUnit.unit s := rfl
 
-private theorem virtualBalanceSlot : BaseBondingCurve.virtualBalance.slot = 0 := by native_decide
-private theorem floorSupplySlot : BaseBondingCurve.floorSupply.slot = 1 := by native_decide
-private theorem floorBalanceSlot : BaseBondingCurve.floorBalance.slot = 2 := by native_decide
-private theorem totalSupplySlot : BaseBondingCurve.totalSupply.slot = 3 := by native_decide
-private theorem initializedSlot : BaseBondingCurve.initialized.slot = 5 := by native_decide
-private theorem alphaSlot : BaseBondingCurve.alpha.slot = 6 := by native_decide
-private theorem bPlusOneSlot : BaseBondingCurve.bPlusOne.slot = 7 := by native_decide
+@[simp] private theorem readSlot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.readSlot slotIdx = s.storage slotIdx := rfl
+
+@[simp] private theorem storage_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage =
+      s.storage := rfl
+
+@[simp] private theorem storage_mk_storageWords_apply
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) (slotIdx : Nat) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage slotIdx =
+      s.storage slotIdx := rfl
+
+@[simp] private theorem storage_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) (slotIdx' : Nat) :
+    (s.writeSlot slotIdx value).storage slotIdx' = if slotIdx' == slotIdx then value else s.storage slotIdx' := by
+  simp [ContractState.storage, ContractState.writeSlot]
+
+@[simp] private theorem externalResult_uint256_fromWords_singleton (w : Uint256) :
+    (Contracts.ExternalResult.fromWords [w] : Uint256) = w := rfl
+
+private def curvePowPostState (args : List Uint256) (siteId : Nat) (s : ContractState) : ContractState :=
+  (Contracts.externalCallContractWordsResolved (α := Uint256) "curvePow" args Contracts.ExecutableCallContext.stub 1 siteId s).snd
+
+@[simp] private theorem externalCallContractWordsResolved_curvePow_stub
+    {α : Type} [inst : Contracts.ExternalResult α]
+    (args : List Uint256) (siteId : Nat) (s : ContractState) :
+    Contracts.externalCallContractWordsResolved (α := α) "curvePow" args Contracts.ExecutableCallContext.stub 1 siteId s =
+      ContractResult.success (inst.fromWords [Contracts.externalCallWords "curvePow" args])
+        (curvePowPostState args siteId s) := rfl
+
+@[simp] private theorem bind_externalCallContractWordsResolved_curvePow_stub {α β : Type}
+    [inst : Contracts.ExternalResult α]
+    (args : List Uint256) (siteId : Nat) (f : α → Contract β) (s : ContractState) :
+    Verity.bind (Contracts.externalCallContractWordsResolved (α := α) "curvePow" args Contracts.ExecutableCallContext.stub 1 siteId) f s =
+      f (inst.fromWords [Contracts.externalCallWords "curvePow" args])
+        (curvePowPostState args siteId s) := rfl
+
+@[simp] private theorem storage_curvePowPostState
+    (args : List Uint256) (siteId : Nat) (s : ContractState) (slotIdx : Nat) :
+    (curvePowPostState args siteId s).storage slotIdx = s.storage slotIdx := rfl
+
+private theorem virtualBalanceSlot : BaseBondingCurve.virtualBalance.slot = 0 := rfl
+private theorem floorSupplySlot : BaseBondingCurve.floorSupply.slot = 1 := rfl
+private theorem floorBalanceSlot : BaseBondingCurve.floorBalance.slot = 2 := rfl
+private theorem totalSupplySlot : BaseBondingCurve.totalSupply.slot = 3 := rfl
+private theorem feePercentageSlot : BaseBondingCurve.feePercentage.slot = 4 := rfl
+private theorem initializedSlot : BaseBondingCurve.initialized.slot = 5 := rfl
+private theorem alphaSlot : BaseBondingCurve.alpha.slot = 6 := rfl
+private theorem bPlusOneSlot : BaseBondingCurve.bPlusOne.slot = 7 := rfl
 
 attribute [local simp] virtualBalanceSlot floorSupplySlot floorBalanceSlot totalSupplySlot
-  initializedSlot alphaSlot bPlusOneSlot
+  feePercentageSlot initializedSlot alphaSlot bPlusOneSlot
 
 private theorem virtual_supply_after_sell_net_burn
     (floor total net : Uint256)
@@ -46,7 +88,6 @@ private theorem virtual_supply_after_sell_net_burn
     (hNetValLeTotalSupply : net.val <= total.val) :
     add floor (sub total net) = sub (add floor total) net := by
   apply Verity.Core.Uint256.ext
-  change (add floor (sub total net)).val = (sub (add floor total) net).val
   have hSubVal : (sub total net).val = total.val - net.val := by
     rw [Verity.EVM.Uint256.sub_eq_of_le hNetValLeTotalSupply]
   have hLeftNoOverflow : floor.val + (sub total net).val < Verity.Core.Uint256.modulus := by
@@ -68,7 +109,6 @@ private theorem virtual_supply_after_floor_fee_burn
     (hBurnValLeTotalSupply : burn.val <= total.val) :
     add (add floor burn) (sub total burn) = add floor total := by
   apply Verity.Core.Uint256.ext
-  change (add (add floor burn) (sub total burn)).val = (add floor total).val
   have hNewFloorVal : (add floor burn).val = floor.val + burn.val := by
     rw [Verity.EVM.Uint256.add_eq_of_lt hNewFloorNoOverflow]
   have hSubVal : (sub total burn).val = total.val - burn.val := by
@@ -85,20 +125,19 @@ private theorem virtual_supply_after_floor_fee_burn
   omega
 
 private theorem virtual_supply_after_init
-    (virtual floor : Uint256)
-    (hFloorValLeVirtual : floor.val <= virtual.val) :
-    add floor (sub virtual floor) = virtual := by
+    (virtual_ floor : Uint256)
+    (hFloorValLeVirtual : floor.val <= virtual_.val) :
+    add floor (sub virtual_ floor) = virtual_ := by
   apply Verity.Core.Uint256.ext
-  change (add floor (sub virtual floor)).val = virtual.val
-  have hSubVal : (sub virtual floor).val = virtual.val - floor.val := by
+  have hSubVal : (sub virtual_ floor).val = virtual_.val - floor.val := by
     rw [Verity.EVM.Uint256.sub_eq_of_le hFloorValLeVirtual]
   have hAddNoOverflow :
-      floor.val + (sub virtual floor).val < Verity.Core.Uint256.modulus := by
+      floor.val + (sub virtual_ floor).val < Verity.Core.Uint256.modulus := by
     rw [hSubVal]
-    have hSumEq : floor.val + (virtual.val - floor.val) = virtual.val := by
+    have hSumEq : floor.val + (virtual_.val - floor.val) = virtual_.val := by
       exact Nat.add_sub_of_le hFloorValLeVirtual
     rw [hSumEq]
-    exact virtual.isLt
+    exact virtual_.isLt
   rw [Verity.EVM.Uint256.add_eq_of_lt hAddNoOverflow]
   rw [hSubVal]
   omega
@@ -112,7 +151,6 @@ private theorem virtual_supply_after_buy_mint
       total.val + minted.val < Verity.Core.Uint256.modulus) :
     add floor (add total minted) = add (add floor total) minted := by
   apply Verity.Core.Uint256.ext
-  change (add floor (add total minted)).val = (add (add floor total) minted).val
   have hOldSupplyVal : (add floor total).val = floor.val + total.val := by
     rw [Verity.EVM.Uint256.add_eq_of_lt hOldSupplyNoOverflow]
   have hTotalMintVal : (add total minted).val = total.val + minted.val := by
@@ -142,21 +180,39 @@ private theorem init_slot_writes
     totalSupplyOf s' = sub virtualSupply_ floorSupply_ ∧
     alphaOf s' = alphaOf s ∧
     bPlusOneOf s' = bPlusOneOf s := by
-  have hFloorNeZero : floorSupply_ ≠ 0 := by
-    intro h
-    simp [h] at hFloorNonZero
-  have hFloorLeVirtualVal : floorSupply_.val <= virtualSupply_.val := by
-    simpa [Verity.Core.Uint256.le_def] using hFloorLeVirtual
-  repeat' constructor
-  all_goals
-    simp [BaseBondingCurve.init, virtualBalanceOf, floorSupplyOf, floorBalanceOf,
-      totalSupplyOf, BaseBondingCurve.virtualBalance, BaseBondingCurve.floorSupply,
-      BaseBondingCurve.floorBalance, BaseBondingCurve.totalSupply,
-      BaseBondingCurve.initialized, BaseBondingCurve.alpha, BaseBondingCurve.bPlusOne,
-      alphaOf, bPlusOneOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision,
-      curvePow, Contracts.ExternalArg.toWord,
-      hFloorNonZero, hFloorLeVirtualVal,
-      Verity.require, Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
+  have hFloorLeVirtualBool : decide (floorSupply_ <= virtualSupply_) = true :=
+    decide_eq_true hFloorLeVirtual
+  have hStorage (slotIdx : Nat) :
+      (((BaseBondingCurve.init virtualSupply_ floorSupply_).run s).snd).storage slotIdx =
+        if slotIdx == 5 then 1
+        else if slotIdx == 3 then sub virtualSupply_ floorSupply_
+        else if slotIdx == 2 then
+          div (sub (add (mul (s.storage 6) (Contracts.externalCallWords "curvePow" [floorSupply_, s.storage 7])) 1000000000000000000) 1) (s.storage 7)
+        else if slotIdx == 1 then floorSupply_
+        else if slotIdx == 0 then
+          div (sub (add (mul (s.storage 6) (Contracts.externalCallWords "curvePow" [virtualSupply_, s.storage 7])) 1000000000000000000) 1) (s.storage 7)
+        else s.storage slotIdx := by
+    dsimp only [BaseBondingCurve.init, BaseBondingCurveExec.init, Contract.run, Bind.bind]
+    rw [hFloorNonZero, bind_require_true_raw,
+      hFloorLeVirtualBool, bind_require_true_raw,
+      bind_getStorage_raw, bind_getStorage_raw,
+      bind_externalCallContractWordsResolved_curvePow_stub,
+      bind_externalCallContractWordsResolved_curvePow_stub,
+      bind_setStorage_raw, bind_setStorage_raw, bind_setStorage_raw,
+      bind_setStorage_raw, setStorage_apply_raw]
+    dsimp only [ContractResult.snd,
+      virtualBalanceSlot, floorSupplySlot, floorBalanceSlot, totalSupplySlot,
+      initializedSlot, alphaSlot, bPlusOneSlot]
+    simp only [readSlot_eq_storage, externalResult_uint256_fromWords_singleton,
+      storage_writeSlot, storage_curvePowPostState]
+    rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa [virtualBalanceOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision, curvePow, alphaOf, bPlusOneOf] using hStorage 0
+  · simpa [floorSupplyOf] using hStorage 1
+  · simpa [floorBalanceOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision, curvePow, alphaOf, bPlusOneOf] using hStorage 2
+  · simpa [totalSupplyOf] using hStorage 3
+  · simpa [alphaOf] using hStorage 6
+  · simpa [bPlusOneOf] using hStorage 7
 
 private theorem buy_slot_writes
     (isFeeRouter : Bool) (bcTokenAmount buyFeeAmount : Uint256)
@@ -177,19 +233,31 @@ private theorem buy_slot_writes
     bPlusOneOf s' = bPlusOneOf s := by
   have hInitialized' : s.storage 5 = 1 := by
     simpa [initializedOf] using hInitialized
-  have hAmountNeZero : bcTokenAmount ≠ 0 := by
-    intro h
-    simp [h] at hAmountNonZero
-  repeat' constructor
-  all_goals
-    simp [BaseBondingCurve.buy, virtualBalanceOf, floorSupplyOf, floorBalanceOf,
-      totalSupplyOf, alphaOf, bPlusOneOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision,
-      BaseBondingCurve.virtualBalance, BaseBondingCurve.floorSupply,
-      BaseBondingCurve.totalSupply, BaseBondingCurve.alpha, BaseBondingCurve.bPlusOne,
-      BaseBondingCurve.initialized,
-      curvePow, Contracts.ExternalArg.toWord,
-      hInitialized', hAmountNeZero, getStorage, setStorage, Verity.require,
-      Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
+  have hStorage (slotIdx : Nat) :
+      (((BaseBondingCurve.buy isFeeRouter bcTokenAmount buyFeeAmount).run s).snd).storage slotIdx =
+        if slotIdx == 3 then add (s.storage 3) (add bcTokenAmount buyFeeAmount)
+        else if slotIdx == 0 then
+          div (sub (add (mul (s.storage 6) (Contracts.externalCallWords "curvePow"
+            [add (add (s.storage 1) (s.storage 3)) (add bcTokenAmount buyFeeAmount), s.storage 7])) 1000000000000000000) 1) (s.storage 7)
+        else s.storage slotIdx := by
+    dsimp only [BaseBondingCurve.buy, BaseBondingCurveExec.buy, Contract.run, Bind.bind]
+    rw [bind_getStorage_raw, initializedSlot, hInitialized',
+      beq_self_eq_true, bind_require_true_raw, hAmountNonZero, bind_require_true_raw,
+      bind_getStorage_raw, bind_getStorage_raw, bind_getStorage_raw, bind_getStorage_raw,
+      bind_externalCallContractWordsResolved_curvePow_stub,
+      bind_setStorage_raw, setStorage_apply_raw]
+    dsimp only [ContractResult.snd,
+      virtualBalanceSlot, floorSupplySlot, totalSupplySlot, alphaSlot, bPlusOneSlot]
+    simp only [readSlot_eq_storage, externalResult_uint256_fromWords_singleton,
+      storage_writeSlot, storage_curvePowPostState]
+    rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa [virtualBalanceOf, floorSupplyOf, totalSupplyOf, alphaOf, bPlusOneOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision, curvePow] using hStorage 0
+  · simpa [floorSupplyOf] using hStorage 1
+  · simpa [floorBalanceOf] using hStorage 2
+  · simpa [totalSupplyOf] using hStorage 3
+  · simpa [alphaOf] using hStorage 6
+  · simpa [bPlusOneOf] using hStorage 7
 
 private theorem sell_slot_writes
     (bcTokenAmount : Uint256) (s : ContractState)
@@ -205,42 +273,49 @@ private theorem sell_slot_writes
     totalSupplyOf s' = sub (totalSupplyOf s) (sellNetBurnAmount bcTokenAmount s) ∧
     alphaOf s' = alphaOf s ∧
     bPlusOneOf s' = bPlusOneOf s := by
-  have hNetNeZero : sellNetBurnAmount bcTokenAmount s ≠ 0 := by
-    intro h
-    simp [h] at hNetAmountNonZero
-  have hNetNeZero' :
-      sub bcTokenAmount (div (mul bcTokenAmount (s.storage 4)) 1000000000000000000) ≠ 0 := by
-    simpa [sellNetBurnAmount, sellFeeAmount, feePercentageOf, decimalPrecision] using hNetNeZero
-  have hNetLeOldSupplyVal :
-      (sellNetBurnAmount bcTokenAmount s).val <= (virtualSupplyOf s).val := by
-    simpa [Verity.Core.Uint256.le_def] using hNetLeOldSupply
-  have hNetLeOldSupplyVal' :
-      (sub bcTokenAmount (div (mul bcTokenAmount (s.storage 4)) 1000000000000000000)).val <=
-        (add (s.storage 1) (s.storage 3)).val := by
+  have hNetNonZero' :
+      (sub bcTokenAmount (div (mul bcTokenAmount (s.storage 4)) 1000000000000000000) != 0) = true := by
+    simpa [sellNetBurnAmount, sellFeeAmount, feePercentageOf, decimalPrecision] using hNetAmountNonZero
+  have hNetLeOldSupplyBool :
+      decide (sub bcTokenAmount (div (mul bcTokenAmount (s.storage 4)) 1000000000000000000) <=
+        add (s.storage 1) (s.storage 3)) = true := by
+    apply decide_eq_true
     simpa [sellNetBurnAmount, sellFeeAmount, feePercentageOf, virtualSupplyOf,
-      floorSupplyOf, totalSupplyOf, decimalPrecision] using hNetLeOldSupplyVal
-  have hNetLeTotalSupplyVal :
-      (sellNetBurnAmount bcTokenAmount s).val <= (totalSupplyOf s).val := by
-    simpa [Verity.Core.Uint256.le_def] using hNetLeTotalSupply
-  have hNetLeTotalSupplyVal' :
-      (sub bcTokenAmount (div (mul bcTokenAmount (s.storage 4)) 1000000000000000000)).val <=
-        (s.storage 3).val := by
+      floorSupplyOf, totalSupplyOf, decimalPrecision] using hNetLeOldSupply
+  have hNetLeTotalSupplyBool :
+      decide (sub bcTokenAmount (div (mul bcTokenAmount (s.storage 4)) 1000000000000000000) <=
+        s.storage 3) = true := by
+    apply decide_eq_true
     simpa [sellNetBurnAmount, sellFeeAmount, feePercentageOf, totalSupplyOf,
-      decimalPrecision] using hNetLeTotalSupplyVal
-  repeat' constructor
-  all_goals
-    simp [BaseBondingCurve.sell, sellNetBurnAmount,
-      sellFeeAmount, virtualBalanceOf, floorSupplyOf,
-      floorBalanceOf, totalSupplyOf, feePercentageOf, alphaOf, bPlusOneOf,
-      getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision,
-      sellVirtualSupplyAfter, virtualSupplyOf,
-      BaseBondingCurve.virtualBalance, BaseBondingCurve.floorSupply,
-      BaseBondingCurve.totalSupply, BaseBondingCurve.feePercentage,
-      BaseBondingCurve.alpha, BaseBondingCurve.bPlusOne,
-      curvePow, Contracts.ExternalArg.toWord,
-      decimalPrecision, hNetNeZero',
-      hNetLeOldSupplyVal', hNetLeTotalSupplyVal', getStorage, setStorage, Verity.require,
-      Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
+      decimalPrecision] using hNetLeTotalSupply
+  have hStorage (slotIdx : Nat) :
+      (((BaseBondingCurve.sell bcTokenAmount).run s).snd).storage slotIdx =
+        if slotIdx == 3 then
+          sub (s.storage 3) (sub bcTokenAmount (div (mul bcTokenAmount (s.storage 4)) 1000000000000000000))
+        else if slotIdx == 0 then
+          div (sub (add (mul (s.storage 6) (Contracts.externalCallWords "curvePow"
+            [sub (add (s.storage 1) (s.storage 3)) (sub bcTokenAmount (div (mul bcTokenAmount (s.storage 4)) 1000000000000000000)), s.storage 7])) 1000000000000000000) 1) (s.storage 7)
+        else s.storage slotIdx := by
+    dsimp only [BaseBondingCurve.sell, BaseBondingCurveExec.sell, Contract.run, Bind.bind]
+    rw [bind_getStorage_raw, bind_getStorage_raw, bind_getStorage_raw,
+      bind_getStorage_raw, bind_getStorage_raw,
+      feePercentageSlot, floorSupplySlot, totalSupplySlot, alphaSlot, bPlusOneSlot,
+      hNetNonZero', bind_require_true_raw,
+      hNetLeOldSupplyBool, bind_require_true_raw,
+      hNetLeTotalSupplyBool, bind_require_true_raw,
+      bind_externalCallContractWordsResolved_curvePow_stub,
+      bind_setStorage_raw, setStorage_apply_raw]
+    dsimp only [ContractResult.snd, virtualBalanceSlot, totalSupplySlot]
+    simp only [readSlot_eq_storage, externalResult_uint256_fromWords_singleton,
+      storage_writeSlot, storage_curvePowPostState]
+    rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa [virtualBalanceOf, sellVirtualSupplyAfter, virtualSupplyOf, floorSupplyOf, totalSupplyOf, sellNetBurnAmount, sellFeeAmount, feePercentageOf, alphaOf, bPlusOneOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision, curvePow] using hStorage 0
+  · simpa [floorSupplyOf] using hStorage 1
+  · simpa [floorBalanceOf] using hStorage 2
+  · simpa [totalSupplyOf, sellNetBurnAmount, sellFeeAmount, feePercentageOf, decimalPrecision] using hStorage 3
+  · simpa [alphaOf] using hStorage 6
+  · simpa [bPlusOneOf] using hStorage 7
 
 private theorem floor_sell_and_burn_slot_writes
     (authorizedFeeRouter : Bool) (bcTokenAmount : Uint256)
@@ -261,33 +336,44 @@ private theorem floor_sell_and_burn_slot_writes
     totalSupplyOf s' = totalSupplyAfterFeeBurn bcTokenAmount s ∧
     alphaOf s' = alphaOf s ∧
     bPlusOneOf s' = bPlusOneOf s := by
-  have hAuthorizedTrue : authorizedFeeRouter = true := hAuthorized
-  have hAmountNeZero : bcTokenAmount ≠ 0 := by
-    intro h
-    simp [h] at hAmountNonZero
-  have hNewFloorLeOldSupplyVal :
-      (floorSupplyAfterFeeBurn bcTokenAmount s).val <= (virtualSupplyOf s).val := by
-    simpa [Verity.Core.Uint256.le_def] using hNewFloorLeOldSupply
-  have hNewFloorLeOldSupplyVal' :
-      (add (s.storage 1) bcTokenAmount).val <= (add (s.storage 1) (s.storage 3)).val := by
+  have hNewFloorLeOldSupplyBool :
+      decide (add (s.storage 1) bcTokenAmount <= add (s.storage 1) (s.storage 3)) = true := by
+    apply decide_eq_true
     simpa [floorSupplyAfterFeeBurn, virtualSupplyOf, floorSupplyOf, totalSupplyOf]
-      using hNewFloorLeOldSupplyVal
-  have hBurnLeTotalSupplyVal : bcTokenAmount.val <= (totalSupplyOf s).val := by
-    simpa [Verity.Core.Uint256.le_def] using hBurnLeTotalSupply
-  have hBurnLeTotalSupplyVal' : bcTokenAmount.val <= (s.storage 3).val := by
-    simpa [totalSupplyOf] using hBurnLeTotalSupplyVal
-  repeat' constructor
-  all_goals
-    simp [BaseBondingCurve.floorSellAndBurn, floorSupplyAfterFeeBurn,
-      totalSupplyAfterFeeBurn, virtualBalanceOf,
-      floorSupplyOf, floorBalanceOf, totalSupplyOf,
-      alphaOf, bPlusOneOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision,
-      BaseBondingCurve.floorSupply, BaseBondingCurve.floorBalance, BaseBondingCurve.totalSupply,
-      BaseBondingCurve.alpha, BaseBondingCurve.bPlusOne,
-      curvePow, Contracts.ExternalArg.toWord,
-      hAuthorizedTrue, hAmountNeZero, hNewFloorLeOldSupplyVal',
-      hBurnLeTotalSupplyVal', getStorage, setStorage, Verity.require,
-      Verity.bind, Bind.bind, Contract.run, ContractResult.snd]
+      using hNewFloorLeOldSupply
+  have hBurnLeTotalSupplyBool :
+      decide (bcTokenAmount <= s.storage 3) = true := by
+    apply decide_eq_true
+    simpa [totalSupplyOf] using hBurnLeTotalSupply
+  have hStorage (slotIdx : Nat) :
+      (((BaseBondingCurve.floorSellAndBurn authorizedFeeRouter bcTokenAmount).run s).snd).storage slotIdx =
+        if slotIdx == 3 then sub (s.storage 3) bcTokenAmount
+        else if slotIdx == 2 then
+          div (sub (add (mul (s.storage 6) (Contracts.externalCallWords "curvePow"
+            [add (s.storage 1) bcTokenAmount, s.storage 7])) 1000000000000000000) 1) (s.storage 7)
+        else if slotIdx == 1 then add (s.storage 1) bcTokenAmount
+        else s.storage slotIdx := by
+    dsimp only [BaseBondingCurve.floorSellAndBurn, BaseBondingCurveExec.floorSellAndBurn,
+      Contract.run, Bind.bind]
+    rw [hAuthorized, bind_require_true_raw,
+      hAmountNonZero, bind_require_true_raw,
+      bind_getStorage_raw, bind_getStorage_raw, bind_getStorage_raw, bind_getStorage_raw,
+      floorSupplySlot, totalSupplySlot, alphaSlot, bPlusOneSlot,
+      hNewFloorLeOldSupplyBool, bind_require_true_raw,
+      hBurnLeTotalSupplyBool, bind_require_true_raw,
+      bind_externalCallContractWordsResolved_curvePow_stub,
+      bind_setStorage_raw, bind_setStorage_raw, setStorage_apply_raw]
+    dsimp only [ContractResult.snd, floorSupplySlot, floorBalanceSlot, totalSupplySlot]
+    simp only [readSlot_eq_storage, externalResult_uint256_fromWords_singleton,
+      storage_writeSlot, storage_curvePowPostState]
+    rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simpa [virtualBalanceOf] using hStorage 0
+  · simpa [floorSupplyOf, floorSupplyAfterFeeBurn] using hStorage 1
+  · simpa [floorBalanceOf, floorSupplyAfterFeeBurn, floorSupplyOf, alphaOf, bPlusOneOf, getBalanceFromReserveRatio, reserveRatioBalanceFromLeft, decimalPrecision, curvePow] using hStorage 2
+  · simpa [totalSupplyOf, totalSupplyAfterFeeBurn] using hStorage 3
+  · simpa [alphaOf] using hStorage 6
+  · simpa [bPlusOneOf] using hStorage 7
 
 /--
   Successful initialization establishes zero reserve-ratio deviation.

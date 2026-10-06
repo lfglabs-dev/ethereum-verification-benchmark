@@ -49,7 +49,7 @@ def entryPointV09Guarded
     (sender paymaster : Address) (key declaredNonce : Uint256)
     (beneficiary : Address) (hasInitCode hasCallData : Uint256)
     (callDataOffset callDataLength : Uint256) : Contract Uint256 :=
-  EntryPointV09.handleOp sender paymaster key declaredNonce
+  EntryPointV09.handleOp .stub sender paymaster key declaredNonce
     beneficiary hasInitCode hasCallData callDataOffset callDataLength
 
 /-- **Step 4 (guard lemma against real EntryPointV09)**: the v0.9

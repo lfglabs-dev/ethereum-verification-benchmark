@@ -49,6 +49,12 @@ open Contracts
 /-- `YoVault.DENOMINATOR`, used by `_feeOnTotal`. -/
 def feeDenominator : Uint256 := 1000000000000000000
 
+/-- Local SafeERC20 boundary: external token storage is out of scope and
+    transfer success/revert is already modeled by explicit boolean parameters
+    (`receiverTransferSucceeds`, `feeTransferSucceeds`). -/
+def Contracts.safeTransfer (_token _to : Address) (_amount : Uint256) : Contract Unit :=
+  Verity.pure ()
+
 /-- `YoVault.MAX_FEE`, used by `updateWithdrawFee`. -/
 def maxFee : Uint256 := 100000000000000000
 
@@ -153,6 +159,10 @@ verity_contract YoAsyncRedemptionEscrow where
     require (fromAddr != zeroAddress) "ERC20InvalidSender"
     _update fromAddr zeroAddress shares
 
+  -- No-op executable SafeERC20 transfer boundary after explicit revert check.
+  function internal _safeTransfer (_token : Address, _to : Address, _amount : Uint256) : Unit := do
+    pure ()
+
   -- YO's `_withdraw` override.  It distinguishes the gross pending unit,
   -- current-fee amount, and net receiver-transfer unit.  A failed modeled
   -- SafeERC20 transfer reverts, so `Contract.run` exposes whole-call rollback.
@@ -171,11 +181,11 @@ verity_contract YoAsyncRedemptionEscrow where
     -- `super._withdraw`: burn first, then send the fee-exclusive asset amount.
     _burn owner shares
     require receiverTransferSucceeds "SafeERC20FailedOperation"
-    safeTransfer asset receiver netAssets
+    _safeTransfer asset receiver netAssets
 
     if feeAmount > 0 && recipient != zeroAddress then
       require feeTransferSucceeds "SafeERC20FailedOperation"
-      safeTransfer asset recipient feeAmount
+      _safeTransfer asset recipient feeAmount
     else
       pure ()
 

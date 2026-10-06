@@ -4,6 +4,7 @@ namespace Benchmark.Cases.Polaris.BondingCurve
 
 open Verity hiding pure bind
 open Verity.EVM.Uint256
+open Contracts
 
 /-
   Verity model of Polaris `BaseBondingCurve`.
@@ -77,7 +78,7 @@ def getBalanceFromReserveRatio
   let left := mul alpha (curvePow supply bPlusOne)
   reserveRatioBalanceFromLeft left bPlusOne
 
-verity_contract BaseBondingCurve where
+verity_contract BaseBondingCurveExec where
   storage
     virtualBalance : Uint256 := slot 0
     floorSupply : Uint256 := slot 1
@@ -91,7 +92,7 @@ verity_contract BaseBondingCurve where
   linked_externals
     external curvePow(Uint256, Uint256) -> (Uint256)
 
-  function allow_post_interaction_writes init
+  function reentrancy_trusted allow_post_interaction_writes init
       (virtualSupply_ : Uint256, floorSupply_ : Uint256) : Unit := do
     require (floorSupply_ != 0) "Floor cannot be zero"
     require (floorSupply_ <= virtualSupply_) "Floor cannot be above current state"
@@ -112,7 +113,7 @@ verity_contract BaseBondingCurve where
     setStorage totalSupply (sub virtualSupply_ floorSupply_)
     setStorage initialized 1
 
-  function allow_post_interaction_writes buy
+  function reentrancy_trusted allow_post_interaction_writes buy
       (_isFeeRouter : Bool, bcTokenAmount : Uint256, buyFeeAmount : Uint256) : Unit := do
     let initialized_ ← getStorage initialized
     require (initialized_ == 1) "BC not initialized yet"
@@ -133,7 +134,7 @@ verity_contract BaseBondingCurve where
     setStorage virtualBalance computedNewVirtualBalance
     setStorage totalSupply (add totalSupply_ totalMinted)
 
-  function allow_post_interaction_writes sell (bcTokenAmount : Uint256) : Unit := do
+  function reentrancy_trusted allow_post_interaction_writes sell (bcTokenAmount : Uint256) : Unit := do
     let feePercentage_ ← getStorage feePercentage
     let floorSupply_ ← getStorage floorSupply
     let totalSupply_ ← getStorage totalSupply
@@ -155,7 +156,7 @@ verity_contract BaseBondingCurve where
     setStorage virtualBalance computedNewVirtualBalance
     setStorage totalSupply (sub totalSupply_ netAmount)
 
-  function allow_post_interaction_writes floorSellAndBurn
+  function reentrancy_trusted allow_post_interaction_writes floorSellAndBurn
       (authorizedFeeRouter : Bool, bcTokenAmount : Uint256) : Unit := do
     require authorizedFeeRouter "BC: Not allowed"
     require (bcTokenAmount != 0) "BC: Zero amount"
@@ -175,5 +176,30 @@ verity_contract BaseBondingCurve where
     setStorage floorSupply newFloorSupply
     setStorage floorBalance computedNewFloorBalance
     setStorage totalSupply (sub totalSupply_ bcTokenAmount)
+
+namespace BaseBondingCurve
+
+abbrev virtualBalance := BaseBondingCurveExec.virtualBalance
+abbrev floorSupply := BaseBondingCurveExec.floorSupply
+abbrev floorBalance := BaseBondingCurveExec.floorBalance
+abbrev totalSupply := BaseBondingCurveExec.totalSupply
+abbrev feePercentage := BaseBondingCurveExec.feePercentage
+abbrev initialized := BaseBondingCurveExec.initialized
+abbrev alpha := BaseBondingCurveExec.alpha
+abbrev bPlusOne := BaseBondingCurveExec.bPlusOne
+
+def init (virtualSupply_ floorSupply_ : Uint256) : Contract Unit :=
+  BaseBondingCurveExec.init .stub virtualSupply_ floorSupply_
+
+def buy (_isFeeRouter : Bool) (bcTokenAmount buyFeeAmount : Uint256) : Contract Unit :=
+  BaseBondingCurveExec.buy .stub _isFeeRouter bcTokenAmount buyFeeAmount
+
+def sell (bcTokenAmount : Uint256) : Contract Unit :=
+  BaseBondingCurveExec.sell .stub bcTokenAmount
+
+def floorSellAndBurn (authorizedFeeRouter : Bool) (bcTokenAmount : Uint256) : Contract Unit :=
+  BaseBondingCurveExec.floorSellAndBurn .stub authorizedFeeRouter bcTokenAmount
+
+end BaseBondingCurve
 
 end Benchmark.Cases.Polaris.BondingCurve

@@ -527,15 +527,16 @@ private def fromWords (xs : List Verity.Uint256) : Array Nat :=
     10..13: demand fields; 20..22: fulfillment fields; 30..34: ghost. -/
 def encodeVerity (q : QueueState) (v : Verity.ContractState) : Verity.ContractState :=
   { v with
-    «storage» := fun laneIdx =>
-      if laneIdx = 0 then asWord (if q.initialized then 1 else 0)
-      else if laneIdx = 1 then asWord q.multiVehicle
-      else if laneIdx = 2 then asWord q.manager
-      else if laneIdx = 3 then asWord q.assetIn
-      else if laneIdx = 4 then asWord q.assetOut
-      else if laneIdx = 5 then asWord q.retrievable
-      else if laneIdx = 6 then asWord q.selfAddress
-      else v.storage laneIdx,
+    storageWords := fun key =>
+      match key with
+      | .slot 0 => asWord (if q.initialized then 1 else 0)
+      | .slot 1 => asWord q.multiVehicle
+      | .slot 2 => asWord q.manager
+      | .slot 3 => asWord q.assetIn
+      | .slot 4 => asWord q.assetOut
+      | .slot 5 => asWord q.retrievable
+      | .slot 6 => asWord q.selfAddress
+      | _ => v.storageWords key,
     storageArray := fun laneIdx =>
       if laneIdx = 10 then asWords (q.demands.map (·.position))
       else if laneIdx = 11 then asWords (q.demands.map (·.amountIn))

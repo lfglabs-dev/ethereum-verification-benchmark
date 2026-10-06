@@ -100,6 +100,44 @@ open Verity hiding pure bind
 open Verity.EVM.Uint256
 open Contracts
 
+@[simp] private theorem readSlot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.readSlot slotIdx = s.storage slotIdx := rfl
+@[simp] private theorem readMapUint_eq_storageMapUint (s : ContractState) (slotIdx : Nat) (k : Uint256) :
+    s.readMapUint slotIdx k = s.storageMapUint slotIdx k := rfl
+@[simp] private theorem storage_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage =
+      s.storage := rfl
+@[simp] private theorem storageMapUint_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMapUint =
+      s.storageMapUint := rfl
+@[simp] private theorem storage_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) (slotIdx' : Nat) :
+    (s.writeSlot slotIdx value).storage slotIdx' = if slotIdx' == slotIdx then value else s.storage slotIdx' := by
+  simp [ContractState.storage, ContractState.writeSlot]
+@[simp] private theorem storageMapUint_writeMapUint (s : ContractState) (slotIdx : Nat) (key value : Uint256)
+    (slotIdx' : Nat) (key' : Uint256) :
+    (s.writeMapUint slotIdx key value).storageMapUint slotIdx' key' =
+      if slotIdx' == slotIdx && key' == key then value else s.storageMapUint slotIdx' key' := by
+  simp [ContractState.storageMapUint, ContractState.writeMapUint]
+@[simp] private theorem storageMapUint_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256)
+    (slotIdx' : Nat) (key' : Uint256) :
+    (s.writeSlot slotIdx value).storageMapUint slotIdx' key' = s.storageMapUint slotIdx' key' := rfl
+@[simp] private theorem storage_writeMapUint (s : ContractState) (slotIdx : Nat) (key value : Uint256) (slotIdx' : Nat) :
+    (s.writeMapUint slotIdx key value).storage slotIdx' = s.storage slotIdx' := rfl
+@[simp] private theorem evmCallWords_stub_zero
+    (gas target inOff inSize outOff : Uint256) (s : ContractState) :
+    evmCallWords ExecutableCallContext.stub.adversary gas target 0 inOff inSize outOff 0 s =
+      ContractResult.success 1
+        { s with
+          selfBalance := s.selfBalance - 0
+          calls := s.calls ++ [Compiler.CompilationModel.DenoteExternalCalls.journalEntry
+            { siteId := target.val, kind := .call, target := target.val, value := 0,
+              calldata := Compiler.CompilationModel.DenoteFunctionCalls.readMemoryWords s.memory inOff.val inSize.val,
+              gas := gas.val }
+            (.success [])]
+          returndata := [] } := rfl
+
 /-! ## Lemma (3): Reentrancy guard
 
 Wrapping `handleOpsBody` with `Verity.nonReentrant` on the `reentrancyLock`
@@ -110,7 +148,7 @@ an EOA-only `nonReentrant` modifier, modeled in `EntryPointV09.lean`.
 
 /-- The `nonReentrant`-wrapped entry point. -/
 def handleOpsGuarded (senderKey expectedNonce : Uint256) : Contract Uint256 :=
-  Verity.nonReentrant ⟨0⟩ (EntryPointFrame.handleOpsBody senderKey expectedNonce)
+  Verity.nonReentrant ⟨0⟩ (EntryPointFrame.handleOpsBody .stub senderKey expectedNonce)
 
 /-- **Lemma (3) — Reentrancy guard**: if the reentrancy lock is already set,
     every call into `handleOpsGuarded` reverts to the pre-call snapshot
@@ -148,7 +186,7 @@ written by `setMappingUint`, regardless of any external bytecode.
 theorem nonce_write_once
     (senderKey expectedNonce : Uint256) (s : ContractState)
     (hMatch : s.storageMapUint 1 senderKey = expectedNonce) :
-    let r := (EntryPointFrame.validateOne senderKey expectedNonce).run s
+    let r := (EntryPointFrame.validateOne .stub senderKey expectedNonce).run s
     match r with
     | ContractResult.success _ s' => s'.storageMapUint 1 senderKey = add expectedNonce 1
     | ContractResult.revert _ _   => True := by
@@ -167,7 +205,7 @@ theorem nonce_write_once
 theorem nonce_preserved_through_execution
     (senderKey expectedNonce : Uint256) (s : ContractState)
     (hMatch : s.storageMapUint 1 senderKey = expectedNonce) :
-    let r := (EntryPointFrame.handleOpsBody senderKey expectedNonce).run s
+    let r := (EntryPointFrame.handleOpsBody .stub senderKey expectedNonce).run s
     match r with
     | ContractResult.success _ s' => s'.storageMapUint 1 senderKey = add expectedNonce 1
     | ContractResult.revert _ _   => True := by
@@ -201,7 +239,7 @@ storage; the memory variant is identical structurally.
 theorem opInfos_frame
     (senderKey expectedNonce : Uint256) (s : ContractState)
     (hMatch : s.storageMapUint 1 senderKey = expectedNonce) :
-    let r := (EntryPointFrame.handleOpsBody senderKey expectedNonce).run s
+    let r := (EntryPointFrame.handleOpsBody .stub senderKey expectedNonce).run s
     match r with
     | ContractResult.success info _ => info = 1
     | ContractResult.revert _ _     => True := by
@@ -377,7 +415,7 @@ disturb the EntryPoint's own state machine.
 theorem bytecode_level_execution_iff_validation
     (senderKey expectedNonce : Uint256) (s : ContractState)
     (hMatch : s.storageMapUint 1 senderKey = expectedNonce) :
-    let r := (EntryPointFrame.handleOpsBody senderKey expectedNonce).run s
+    let r := (EntryPointFrame.handleOpsBody .stub senderKey expectedNonce).run s
     match r with
     | ContractResult.success info s' =>
         info = 1 ∧

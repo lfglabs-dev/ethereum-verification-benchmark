@@ -17,6 +17,22 @@ set_option maxHeartbeats 2400000
 @[simp] private theorem verity_pure_apply {α : Type} (value : α) (s : ContractState) :
     Verity.pure value s = ContractResult.success value s := rfl
 
+@[simp] private theorem readSlot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.readSlot slotIdx = s.storage slotIdx := rfl
+
+@[simp] private theorem readMap_eq_storageMap (s : ContractState) (slotIdx : Nat) (key : Address) :
+    s.readMap slotIdx key = s.storageMap slotIdx key := rfl
+
+@[simp] private theorem storage_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage =
+      s.storage := rfl
+
+@[simp] private theorem storageMap_mk_storageWords
+    (s : ContractState) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk s.storageWords sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap =
+      s.storageMap := rfl
+
 @[simp] private theorem uint_zero_ne_one : (0 : Uint256) ≠ 1 := by decide
 @[simp] private theorem uint_zero_ne_two : (0 : Uint256) ≠ 2 := by decide
 @[simp] private theorem uint_one_ne_zero : (1 : Uint256) ≠ 0 := by decide

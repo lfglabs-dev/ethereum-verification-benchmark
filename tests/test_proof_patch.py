@@ -72,6 +72,14 @@ end Sample
         self.assertIn("private lemma helper", candidate)
         self.assertIn("exact helper", candidate)
 
+    def test_indented_multiline_tactic_body_preserves_common_margin(self) -> None:
+        submitted = "  try simp only [grind_norm] at *\n  try unfold sample\n  simp\n    · trivial"
+        candidate = _patch_proof_body(ORIGINAL, submitted)
+        self.assertEqual(
+            candidate.rstrip(),
+            "theorem sample : True := by\n  try simp only [grind_norm] at *\n  try unfold sample\n  simp\n    · trivial",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

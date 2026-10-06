@@ -82,9 +82,7 @@ private theorem account_environment_preserving_setMapping
     AccountEnvironmentPreserving (setMapping sl key value) := by
   intro s slotIndex account hslot
   have hne : slotIndex ≠ sl.slot := by omega
-  change (if slotIndex == sl.slot && account == key then value else s.storageMap slotIndex account) =
-    s.storageMap slotIndex account
-  simp [hne]
+  simp [Contract.runState, setMapping, ContractState.writeMap, ContractState.storageMap, hne]
 
 private theorem state_preserving_account_environment {α : Type} {m : Contract α}
     (h : StatePreserving m) : AccountEnvironmentPreserving m := by
@@ -331,7 +329,7 @@ private theorem settle_success
       57896044618658097711785492504343953926634992332820282019728792003956564819968) =
     (delta < 57896044618658097711785492504343953926634992332820282019728792003956564819968))
   all_goals simp_all [SuperfluidCFA._settleBalance, SuperfluidCFA.sharedSettledBalances,
-    Verity.bind, Bind.bind, Verity.require, getMapping, setMapping,
+    Verity.bind, Bind.bind, Verity.require, getMapping, setMapping, ContractState.readMap,
     Verity.pure, Pure.pure, Contract.run, Contract.runState]
 
 private theorem settle_storage_preserving (account : Address) (delta : Uint256) :
@@ -435,7 +433,9 @@ private theorem setMapping_runState_read
     (sl : StorageSlot (Address → Uint256)) (key : Address) (value : Uint256) (s : ContractState)
     (readSlot : Nat) (query : Address) :
     ((setMapping sl key value).runState s).storageMap readSlot query =
-      if readSlot == sl.slot && query == key then value else s.storageMap readSlot query := rfl
+      if readSlot == sl.slot && query == key then value else s.storageMap readSlot query := by
+  by_cases hs : readSlot = sl.slot <;> by_cases hk : query = key <;>
+    simp [Contract.runState, setMapping, ContractState.writeMap, ContractState.storageMap, hs, hk]
 
 private theorem setMapping_read_success
     (sl : StorageSlot (Address → Uint256)) (key : Address) (value : Uint256)
@@ -1023,7 +1023,8 @@ private theorem setMapping2_read_success
       if readSlot == sl.slot && queryLeft == left && queryRight == right then value
       else s.storageMap2 readSlot queryLeft queryRight := by
   rw [success_state_eq _ _ _ _ h]
-  rfl
+  by_cases hs : readSlot = sl.slot <;> by_cases hl : queryLeft = left <;> by_cases hr : queryRight = right <;>
+    simp [Contract.runState, setMapping2, ContractState.writeMap2, ContractState.storageMap2, hs, hl, hr]
 
 private theorem setMapping2_read_not_slot_success
     (sl : StorageSlot (Address → Address → Uint256)) (left right : Address) (value : Uint256)
@@ -2705,18 +2706,14 @@ private theorem setFlowExists_runState_exists
     (s : ContractState) (sender receiver : Address) (existsWord : Uint256) :
     ((setMapping2 SuperfluidCFA.flowExists sender receiver existsWord).runState s).storageMap2 9
       sender receiver = existsWord := by
-  change (if 9 == SuperfluidCFA.flowExists.slot && sender == sender && receiver == receiver
-    then existsWord else s.storageMap2 9 sender receiver) = existsWord
-  simp [SuperfluidCFA.flowExists]
+  simp [Contract.runState, setMapping2, ContractState.writeMap2, ContractState.storageMap2, SuperfluidCFA.flowExists]
 
 private theorem setFlowExists_runState_nonexists
     (s : ContractState) (sender receiver : Address) (existsWord : Uint256)
     (slotIndex : Nat) (hslot : slotIndex ≠ 9) :
     ((setMapping2 SuperfluidCFA.flowExists sender receiver existsWord).runState s).storageMap2
       slotIndex sender receiver = s.storageMap2 slotIndex sender receiver := by
-  change (if slotIndex == SuperfluidCFA.flowExists.slot && sender == sender && receiver == receiver
-    then existsWord else s.storageMap2 slotIndex sender receiver) = s.storageMap2 slotIndex sender receiver
-  simp [hslot, SuperfluidCFA.flowExists]
+  simp [Contract.runState, setMapping2, ContractState.writeMap2, ContractState.storageMap2, hslot, SuperfluidCFA.flowExists]
 
 private theorem wrapperFlowObs_sourcePost
     (source : PinnedSourceState) (base post : ContractState) (sender receiver : Address)
@@ -3177,9 +3174,7 @@ private theorem setFlowExists_runState_other
     (slotIndex : Nat) (hslot : slotIndex ≠ 9) :
     ((setMapping2 SuperfluidCFA.flowExists sender receiver existsWord).runState s).storageMap2
       slotIndex sender receiver = s.storageMap2 slotIndex sender receiver := by
-  change (if slotIndex == SuperfluidCFA.flowExists.slot && sender == sender && receiver == receiver
-    then existsWord else s.storageMap2 slotIndex sender receiver) = s.storageMap2 slotIndex sender receiver
-  simp [hslot, SuperfluidCFA.flowExists]
+  simp [Contract.runState, setMapping2, ContractState.writeMap2, ContractState.storageMap2, hslot, SuperfluidCFA.flowExists]
 
 private def CallbackObs
     (base post : ContractState) (sender receiver : Address) (timestamp result : Uint256) : Prop :=

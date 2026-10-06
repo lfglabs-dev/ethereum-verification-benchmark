@@ -13,6 +13,90 @@ open Verity
 open Verity.EVM.Uint256
 open Verity.Stdlib.Math
 
+@[simp] private theorem readSlot_eq_storage (s : ContractState) (slotIdx : Nat) :
+    s.readSlot slotIdx = s.storage slotIdx := rfl
+@[simp] private theorem readAddrSlot_eq_storageAddr (s : ContractState) (slotIdx : Nat) :
+    s.readAddrSlot slotIdx = s.storageAddr slotIdx := rfl
+@[simp] private theorem readMap_eq_storageMap (s : ContractState) (slotIdx : Nat) (k : Address) :
+    s.readMap slotIdx k = s.storageMap slotIdx k := rfl
+@[simp] private theorem readMapUint_eq_storageMapUint (s : ContractState) (slotIdx : Nat) (k : Uint256) :
+    s.readMapUint slotIdx k = s.storageMapUint slotIdx k := rfl
+@[simp] private theorem readMap2_eq_storageMap2 (s : ContractState) (slotIdx : Nat) (k1 k2 : Address) :
+    s.readMap2 slotIdx k1 k2 = s.storageMap2 slotIdx k1 k2 := rfl
+@[simp] private theorem readTransient_eq_transientStorage (s : ContractState) (slotIdx : Nat) :
+    s.readTransient slotIdx = s.transientStorage slotIdx := rfl
+@[simp] private theorem storage_writeSlot (s : ContractState) (slotIdx : Nat) (value : Uint256) (slotIdx' : Nat) :
+    (s.writeSlot slotIdx value).storage slotIdx' = if slotIdx' == slotIdx then value else s.storage slotIdx' := by
+  simp [ContractState.storage, ContractState.writeSlot]
+@[simp] private theorem storageAddr_writeAddrSlot (s : ContractState) (slotIdx : Nat) (value : Address) (slotIdx' : Nat) :
+    (s.writeAddrSlot slotIdx value).storageAddr slotIdx' =
+      if slotIdx' == slotIdx then value else s.storageAddr slotIdx' := by
+  by_cases h : slotIdx' = slotIdx
+  · subst h; simp
+  · simp [ContractState.storageAddr_writeAddrSlot_other s h value, h]
+@[simp] private theorem storageMap_writeMap (s : ContractState) (slotIdx : Nat) (key : Address) (value : Uint256)
+    (slotIdx' : Nat) (key' : Address) :
+    (s.writeMap slotIdx key value).storageMap slotIdx' key' =
+      if slotIdx' == slotIdx && key' == key then value else s.storageMap slotIdx' key' := by
+  simp [ContractState.storageMap, ContractState.writeMap]
+@[simp] private theorem storageMapUint_writeMapUint (s : ContractState) (slotIdx : Nat) (key value : Uint256)
+    (slotIdx' : Nat) (key' : Uint256) :
+    (s.writeMapUint slotIdx key value).storageMapUint slotIdx' key' =
+      if slotIdx' == slotIdx && key' == key then value else s.storageMapUint slotIdx' key' := by
+  simp [ContractState.storageMapUint, ContractState.writeMapUint]
+@[simp] private theorem storage_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256) :
+    (s.writeMap2 slotIdx key1 key2 value).storage = s.storage := by
+  funext wordSlot; simp [ContractState.storage, ContractState.writeMap2]
+@[simp] private theorem storageAddr_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256) :
+    (s.writeMap2 slotIdx key1 key2 value).storageAddr = s.storageAddr := by
+  funext addrSlot; simp [ContractState.storageAddr, ContractState.writeMap2]
+@[simp] private theorem storageMap_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256) :
+    (s.writeMap2 slotIdx key1 key2 value).storageMap = s.storageMap := by
+  funext mapSlot mapKey; simp [ContractState.storageMap, ContractState.writeMap2]
+@[simp] private theorem storageMapUint_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256) :
+    (s.writeMap2 slotIdx key1 key2 value).storageMapUint = s.storageMapUint := by
+  funext mapSlot mapKey; simp [ContractState.storageMapUint, ContractState.writeMap2]
+@[simp] private theorem storageMap2_writeMap2 (s : ContractState) (slotIdx : Nat) (key1 key2 : Address) (value : Uint256)
+    (slotIdx' : Nat) (key1' key2' : Address) :
+    (s.writeMap2 slotIdx key1 key2 value).storageMap2 slotIdx' key1' key2' =
+      if slotIdx' == slotIdx && key1' == key1 && key2' == key2 then value else s.storageMap2 slotIdx' key1' key2' := by
+  simp [ContractState.storageMap2, ContractState.writeMap2, and_assoc]
+@[simp] private theorem storage_mk
+    (sw : StorageKey → Uint256) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk sw sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storage =
+      fun slotIdx => sw (.slot slotIdx) := rfl
+@[simp] private theorem storageAddr_mk
+    (sw : StorageKey → Uint256) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk sw sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageAddr =
+      fun slotIdx => Verity.wordToAddress (sw (.addr slotIdx)) := rfl
+@[simp] private theorem storageMap_mk
+    (sw : StorageKey → Uint256) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk sw sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap =
+      fun slotIdx k => sw (.map slotIdx k) := rfl
+@[simp] private theorem storageMapUint_mk
+    (sw : StorageKey → Uint256) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk sw sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMapUint =
+      fun slotIdx k => sw (.mapUint slotIdx k) := rfl
+@[simp] private theorem storageMap2_mk
+    (sw : StorageKey → Uint256) (sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd) :
+    (ContractState.mk sw sa snd this txo mv sb bt bn cid bbf cds cd sel mem ka ev calls cs rd).storageMap2 =
+      fun slotIdx k1 k2 => sw (.map2 slotIdx k1 k2) := rfl
+@[simp] private theorem storageWords_slot_eq (s : ContractState) (slotIdx : Nat) :
+    s.storageWords (.slot slotIdx) = s.storage slotIdx := rfl
+@[simp] private theorem storageWords_map_eq (s : ContractState) (slotIdx : Nat) (k : Address) :
+    s.storageWords (.map slotIdx k) = s.storageMap slotIdx k := rfl
+@[simp] private theorem storageWords_mapUint_eq (s : ContractState) (slotIdx : Nat) (k : Uint256) :
+    s.storageWords (.mapUint slotIdx k) = s.storageMapUint slotIdx k := rfl
+@[simp] private theorem storageWords_map2_eq (s : ContractState) (slotIdx : Nat) (k1 k2 : Address) :
+    s.storageWords (.map2 slotIdx k1 k2) = s.storageMap2 slotIdx k1 k2 := rfl
+@[simp] private theorem wordToAddress_storageWords_addr_eq (s : ContractState) (slotIdx : Nat) :
+    Verity.wordToAddress (s.storageWords (.addr slotIdx)) = s.storageAddr slotIdx := rfl
+@[simp] private theorem address_ofNat_storageWords_addr (s : ContractState) (slotIdx : Nat) :
+    Verity.Core.Address.ofNat (s.storageWords (.addr slotIdx)).val = s.storageAddr slotIdx := rfl
+
+attribute [local simp] YoAsyncRedemptionEscrow._safeTransfer
+
+
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 set_option maxHeartbeats 1000000
@@ -162,6 +246,7 @@ private theorem requestRedeem_queued_run
   have hTotalSafe := Verity.Proofs.Stdlib.Automation.safeAdd_some_val _ _ hTotalAdd
   have hSharesSafe := Verity.Proofs.Stdlib.Automation.safeAdd_some_val _ _ hSharesAdd
   have hAssetsSafe := Verity.Proofs.Stdlib.Automation.safeAdd_some_val _ _ hAssetsAdd
+  rw [uint256_add_notation] at hTotalSafe hSharesSafe hAssetsSafe
   have hNotInstant : ¬ grossAssets <=
       (if externalUnderlyingBalance > s.storage 0 then sub externalUnderlyingBalance (s.storage 0) else 0) :=
     Nat.not_le_of_gt hQueued
@@ -186,22 +271,6 @@ private theorem requestRedeem_queued_run
       hUnpaused, hSharesPositive, hOwnerShares, hNotInstant, hNotInstantVal, hTotalSafe,
       hSharesSafe, hAssetsSafe, queuedPostState, mapWriteState, ContractState.writeSlot,
       ContractState.writeMap, hExternal, hBranch]
-    constructor
-    · funext sl
-      by_cases hsl : sl = 0
-      · subst sl
-        exact Verity.Core.Uint256.add_comm _ _
-      · simp [hsl]
-    · funext sl key
-      by_cases h7 : sl = 7 ∧ key = receiver
-      · simp [h7]
-        change grossAssets + s.storageMap 7 receiver = s.storageMap 7 receiver + grossAssets
-        exact Verity.Core.Uint256.add_comm _ _
-      · by_cases h6 : sl = 6 ∧ key = receiver
-        · simp [h7, h6]
-          change shares + s.storageMap 6 receiver = s.storageMap 6 receiver + shares
-          exact Verity.Core.Uint256.add_comm _ _
-        · simp [h7, h6]
   · have hGrossNonzero : grossAssets.val ≠ 0 := by
       have hGrossPos : 0 < grossAssets.val := by simpa [hExternal] using hQueued
       omega
@@ -215,22 +284,6 @@ private theorem requestRedeem_queued_run
       hUnpaused, hSharesPositive, hOwnerShares, hNotInstant, hNotInstantVal, hTotalSafe,
       hSharesSafe, hAssetsSafe, queuedPostState, mapWriteState, ContractState.writeSlot,
       ContractState.writeMap, hExternal, hGrossNonzero]
-    constructor
-    · funext sl
-      by_cases hsl : sl = 0
-      · subst sl
-        exact Verity.Core.Uint256.add_comm _ _
-      · simp [hsl]
-    · funext sl key
-      by_cases h7 : sl = 7 ∧ key = receiver
-      · simp [h7]
-        change grossAssets + s.storageMap 7 receiver = s.storageMap 7 receiver + grossAssets
-        exact Verity.Core.Uint256.add_comm _ _
-      · by_cases h6 : sl = 6 ∧ key = receiver
-        · simp [h7, h6]
-          change shares + s.storageMap 6 receiver = s.storageMap 6 receiver + shares
-          exact Verity.Core.Uint256.add_comm _ _
-        · simp [h7, h6]
 
 /-- Post-state of the three pending-accounting writes in `fulfillRedeem`. -/
 private def pendingFulfillPostState

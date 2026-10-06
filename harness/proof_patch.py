@@ -9,14 +9,14 @@ from __future__ import annotations
 import re
 
 def _strip_thinking(text: str) -> str:
-    return re.sub(r"(?s)<think>.*?</think>\s*", "", text).strip()
+    return re.sub(r"(?s)<think>.*?</think>[ \t]*\r?\n?", "", text).strip("\r\n").rstrip()
 
 def _extract_lean_file(text: str) -> str:
     text = _strip_thinking(text)
-    fenced = re.search(r"```(?:lean)?\s*(.*?)```", text, flags=re.DOTALL | re.IGNORECASE)
+    fenced = re.search(r"```(?:lean)?[ \t]*\r?\n?(.*?)```", text, flags=re.DOTALL | re.IGNORECASE)
     if fenced:
-        return fenced.group(1).strip() + "\n"
-    return text.strip() + "\n"
+        return fenced.group(1).strip("\r\n").rstrip() + "\n"
+    return text.strip("\r\n").rstrip() + "\n"
 
 def _looks_like_full_file(body: str) -> bool:
     return bool(re.search(r"(?m)^\s*(?:import|namespace)\s+\S", body)) and bool(

@@ -81,6 +81,16 @@ def externalCallReturndata
     (target : Address) (selector : Uint256) (arguments : List Uint256) : Uint256 :=
   env.callOracle "externalCallReturndata" (externalCallKeyWords target selector arguments)
 
+/-- Environment-controlled reentry transformer on `Verity.Env`. -/
+def _root_.Verity.Env.reenter (env : Verity.Env) (s : ContractState) : ContractState :=
+  s.withStorageWords (fun key =>
+    match key with
+    | .slot slotIdx =>
+      if env.callOracle "reenterMutateSlot" [slotIdx] != 0 then
+        env.callOracle "reenterSlotValue" [slotIdx, s.storageWords key]
+      else s.storageWords key
+    | _ => s.storageWords key)
+
 /-- Execute a state-changing environment call and apply its possible reentry hook. -/
 def runExternalWordCall
     (env : Verity.Env)

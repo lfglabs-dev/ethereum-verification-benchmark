@@ -63,13 +63,13 @@ theorem validateAccount_refines_abstract
     (approves : Bool) (s s' : ContractState)
     (hNonce : s.storageMapUint 2 key = declaredNonce)
     (hConcrete :
-      (EntryPointV09._validateAccount sender key declaredNonce).run s =
+      (EntryPointV09._validateAccount .stub sender key declaredNonce).run s =
         ContractResult.success EntryPointV09.VALIDATION_SUCCESS s')
     (hWord  : abstractMatchesValidationWord approves
                 EntryPointV09.VALIDATION_SUCCESS = true) :
     approves = true ∧
       s.storageMapUint EntryPointV09.nonces.slot key = declaredNonce ∧
-      ((EntryPointV09._validateAccount sender key declaredNonce).run s).isSuccess = true := by
+      ((EntryPointV09._validateAccount .stub sender key declaredNonce).run s).isSuccess = true := by
   unfold abstractMatchesValidationWord at hWord
   constructor
   · simp at hWord

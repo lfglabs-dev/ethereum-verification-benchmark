@@ -120,6 +120,16 @@ attribute [grind_norm] Verity.msgSender Verity.contractAddress
 attribute [grind_norm] Verity.msgValue
 attribute [grind_norm] Verity.blockTimestamp Verity.blockNumber Verity.chainid
 attribute [grind_norm] Verity.require
+attribute [grind_norm, simp]
+  ContractState.readSlot
+  ContractState.readAddrSlot
+  ContractState.readTransient
+  ContractState.readMap
+  ContractState.readMapUint
+  ContractState.readMap2
+  ContractState.readArray
+  ContractState.readMapChain
+  ContractState.readTransientMapChain
 
 /-! ### Branch distribution and Uint256 order normalization
 

@@ -47,11 +47,9 @@ not consulted. A reverting condition is represented by the same false outcome be
 def specificConditionDenialIsTerminal_spec
     (s : ContractState) (specificStatus : Uint256) : Prop :=
   DAOAuthorization.isExecuteGranted s.sender false true true
-      { s with storageMap := fun sl key =>
-          if sl == 0 && key == s.sender then specificStatus else s.storageMap sl key } =
+      (s.writeMap 0 s.sender specificStatus) =
     ContractResult.success false
-      { s with storageMap := fun sl key =>
-          if sl == 0 && key == s.sender then specificStatus else s.storageMap sl key }
+      (s.writeMap 0 s.sender specificStatus)
 
 
 /-- A successful direct EXECUTE grant was admitted by ROOT authorization. -/
