@@ -341,7 +341,7 @@ This report is generated from the benchmark manifests.
 - Source ref: `https://base.blockscout.com/api/v2/smart-contracts/0xfebd3ca7e01285e27299c7001307a3d64186aa49`
 - Selected functions: `initialize`, `demand`, `fulfill`, `redeem`, `_redeemDemandWithFulfillments`, `_lookupFulfillment`, `resolve`, `retrieve`, `redeemable`, `pending`, `lookup`, `unredeemable`
 - Upstream source artifact: `src/vehicles/multi/QueryRedeemQueue.sol`
-- Notes: Railnet Luca specification dated 2026-09-30: any finite history, arbitrary redeem order and repeated partial redeems, cumulative nominal payouts <= cumulative nominal fulfill amountOutProvided. Phase 3 source-transition induction proved arbitrary finite histories, reachable states and recursive callback schedules; proof-only storage and bytecode refinement remain outside scope. The agent-facing generated task retains its exact ?_ placeholder.
+- Notes: Railnet specification dated 2026-09-30: any finite history, arbitrary redeem order and repeated partial redeems, cumulative nominal payouts <= cumulative nominal fulfill amountOutProvided. Phase 3 source-transition induction proved arbitrary finite histories, reachable states and recursive callback schedules; proof-only storage and bytecode refinement remain outside scope. The agent-facing generated task retains its exact ?_ placeholder.
 
 ### `reserve/auction_price_band`
 - Family / implementation: `reserve` / `dtfs`
