@@ -1,0 +1,40 @@
+manifest_kind: case
+project: kpk
+case_id: shares_settlement_accounting
+schema_version: 1
+split: active
+family_id: kpk
+implementation_id: carry_shares
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/karpatkey/onchain-investment-vehicles
+upstream_commit: 714d3d66a6e0e2bc7849ae48c3a25f63f23e903f
+original_contract_path: src/kpkShares.sol
+source_ref: https://github.com/karpatkey/onchain-investment-vehicles@714d3d66a6e0e2bc7849ae48c3a25f63f23e903f:src/kpkShares.sol
+lean_target: Benchmark.Cases.KPK.SharesSettlementAccounting.Compile
+spec_target: Benchmark.Cases.KPK.SharesSettlementAccounting.Specs
+proof_target: Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs
+selected_functions:
+  - KpkShares.processRequests
+  - KpkShares._chargeFees
+  - KpkShares._processApproved
+  - KpkShares._processRejected
+  - KpkShares.assetsToShares
+  - KpkShares.sharesToAssets
+source_language: solidity
+verity_version: 0cb6b59b2e9a93c377280cc56610b5bd5e277bd3
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: source_structured_semantic_model
+abstraction_tags:
+  - proof_only
+  - full_recursive_batch
+  - conventional_token_world
+  - mutable_fee_responder
+  - alias_safe_transfers
+  - whole_world_rollback
+  - checked_two_stage_conversion
+abstraction_notes: Logical source-storage projections and reviewed typed external interfaces, not automatic import/compiler/bytecode refinement. All request-processing branches and both complete arrays execute. Asset callbacks, taxes/rebases, module economics, NAV freshness, initialization/intake/cancellation/recovery/admin/upgrades and external share transfers are excluded. No global address or request-ID distinctness assumption.
+unsupported_feature_codes: []
+notes: Complete unchanged SettlementAccounting conjunction proved from actual successful processRequests execution; kernel dependencies standard-only. Includes exact fees/world replay, ordered duplicate-safe decisions, signed accounting, finite/infinite allowances, records/frames and conversion/request-trace facts. Independent terminal Proof/Build and Final Red Team accepted complete model-level proof; generated agent targets deliberately retain holes. Manual source-structured conventional-token model, not compiler/bytecode refinement or complete protocol verification. Carry source graph only, not kUSD/kETH.

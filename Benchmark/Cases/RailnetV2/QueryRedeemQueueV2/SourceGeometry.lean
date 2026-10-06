@@ -1,6 +1,5 @@
 import Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.AllocationMath
 import Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.SourceArrays
-import Mathlib.Tactic
 
 namespace Benchmark.Cases.RailnetV2.QueryRedeemQueueV2
 

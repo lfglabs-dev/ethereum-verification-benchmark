@@ -1,5 +1,6 @@
 import Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.AccountingLemmas
-import Mathlib.Tactic
+import Mathlib.Data.Finset.Card
+import Mathlib.Order.Interval.Finset.Nat
 
 namespace Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.IntervalLemmas
 

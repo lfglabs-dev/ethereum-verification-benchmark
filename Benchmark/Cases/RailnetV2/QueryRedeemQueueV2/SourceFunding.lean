@@ -1,5 +1,4 @@
 import Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.SourceTransitionBasics
-import Mathlib.Tactic
 
 namespace Benchmark.Cases.RailnetV2.QueryRedeemQueueV2
 

@@ -35,6 +35,7 @@ active_cases = [
   "hypernova/settled_payout_safety",
   "ipor/plasma_vault_redeem_split",
   "kleros/sortition_trees",
+  "kpk/shares_settlement_accounting",
   "kyberswap/partial_fill_price_floor",
   "lagoon/guardrails",
   "lido/vaulthub_locked",

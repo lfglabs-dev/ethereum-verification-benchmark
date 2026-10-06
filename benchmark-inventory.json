@@ -10,37 +10,37 @@
     "backlog_tasks": "backlog/*/*/tasks/*.yaml"
   },
   "summary": {
-    "family_count": 49,
-    "implementation_count": 50,
-    "active_case_count": 49,
+    "family_count": 51,
+    "implementation_count": 52,
+    "active_case_count": 51,
     "backlog_case_count": 1,
-    "active_task_count": 306,
+    "active_task_count": 310,
     "backlog_task_count": 0,
-    "buildable_case_count": 49,
-    "runnable_task_count": 306,
+    "buildable_case_count": 51,
+    "runnable_task_count": 310,
     "case_stage_counts": {
-      "build_green": 35,
+      "build_green": 36,
       "candidate": 1,
-      "proof_complete": 14
+      "proof_complete": 15
     },
     "translation_status_counts": {
       "blocked": 1,
-      "translated": 49
+      "translated": 51
     },
     "proof_status_counts": {
       "blocked": 1,
-      "complete": 42,
+      "complete": 44,
       "partial": 7
     },
     "task_track_counts": {
-      "proof-only": 306
+      "proof-only": 310
     },
     "task_property_class_counts": {
       "access_control_authorization": 16,
       "access_control_identity": 10,
       "accounting_and_rate_guard": 1,
       "accounting_bound": 22,
-      "accounting_conservation": 53,
+      "accounting_conservation": 54,
       "accounting_effect": 2,
       "accounting_invariant": 3,
       "accounting_invariant_break": 1,
@@ -123,8 +123,10 @@
       "revert_atomicity": 1,
       "revert_rollback": 1,
       "revert_safety": 2,
+      "rounding_bound": 2,
       "safety_invariant": 2,
       "scope_invariant": 1,
+      "settlement_accounting_integrity": 1,
       "signed_risk_floor": 2,
       "silent_failure": 2,
       "source_permitted_noop": 1,
@@ -143,13 +145,13 @@
     },
     "task_proof_family_counts": {
       "authorization_enablement": 48,
-      "functional_correctness": 65,
-      "protocol_transition_correctness": 47,
+      "functional_correctness": 68,
+      "protocol_transition_correctness": 48,
       "refinement_equivalence": 42,
       "state_preservation_local_effects": 104
     },
     "family_split_counts": {
-      "active": 48,
+      "active": 50,
       "mixed": 1
     }
   },
@@ -444,6 +446,23 @@
       "manifest_path": "families/kleros/family.yaml"
     },
     {
+      "family_id": "kpk",
+      "display_name": "KPK",
+      "split": "active",
+      "status": "active",
+      "description": "Full processRequests settlement accounting at an operator-supplied price; complete independently accepted model-level proof under explicit premises, not a bytecode or lifetime guarantee.",
+      "implementation_ids": [
+        "carry_shares"
+      ],
+      "case_ids": [
+        "kpk/shares_settlement_accounting"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/kpk/family.yaml"
+    },
+    {
       "family_id": "kyberswap",
       "display_name": "KyberSwap",
       "split": "active",
@@ -680,6 +699,23 @@
         "solidity"
       ],
       "manifest_path": "families/polygon/family.yaml"
+    },
+    {
+      "family_id": "railnet-query-redeem-queue-v2",
+      "display_name": "Railnet Query Redeem Queue V2",
+      "split": "active",
+      "status": "active",
+      "description": "Publicly verified Base staging Queue implementation; arbitrary finite queued demand, fulfillment, partial redeem, resolve and retrieve histories.",
+      "implementation_ids": [
+        "base-staging-52085313"
+      ],
+      "case_ids": [
+        "railnet-query-redeem-queue-v2/query_redeem_queue"
+      ],
+      "source_languages": [
+        "solidity"
+      ],
+      "manifest_path": "families/railnet-query-redeem-queue-v2/family.yaml"
     },
     {
       "family_id": "reserve",
@@ -1264,6 +1300,22 @@
       "manifest_path": "families/kleros/implementations/kleros_v2/implementation.yaml"
     },
     {
+      "family_id": "kpk",
+      "implementation_id": "carry_shares",
+      "display_name": "KpkShares Carry source graph",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": "https://github.com/karpatkey/onchain-investment-vehicles",
+      "upstream_commit": "714d3d66a6e0e2bc7849ae48c3a25f63f23e903f",
+      "source_language": "solidity",
+      "source_artifact_path": "src/kpkShares.sol",
+      "case_ids": [
+        "kpk/shares_settlement_accounting"
+      ],
+      "notes": "Package version 5.4.0 at upgradeable gitlink 37bfda9eeb81cca848a9989118485a73d002eae4 and nested contracts gitlink 3d479dca0411378a99c9191d98e9fe1e35c1585d. Matches XAUt/WBTC Carry source graph at retained block 26106081. No kUSD/kETH or bytecode-refinement claim.",
+      "manifest_path": "families/kpk/implementations/carry_shares/implementation.yaml"
+    },
+    {
       "family_id": "kyberswap",
       "implementation_id": "meta-aggregation-router-v2",
       "display_name": "MetaAggregationRouterV2",
@@ -1486,6 +1538,22 @@
       ],
       "notes": "Verity model of the AgglayerBridge claim path, focused on valid exit-root membership and source-network/leaf-index nullifier consumption.",
       "manifest_path": "families/polygon/implementations/agglayer_bridge/implementation.yaml"
+    },
+    {
+      "family_id": "railnet-query-redeem-queue-v2",
+      "implementation_id": "base-staging-52085313",
+      "display_name": "Railnet Base staging QueryRedeemQueue at block 52085313",
+      "split": "active",
+      "status": "translated",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "source_language": "solidity",
+      "source_artifact_path": "src/vehicles/multi/QueryRedeemQueue.sol",
+      "case_ids": [
+        "railnet-query-redeem-queue-v2/query_redeem_queue"
+      ],
+      "notes": "Blockscout-verified implementation 0xfebd3ca7e01285e27299c7001307a3d64186aa49 behind queue 0x387d9d519ad7a0147f27ba460fbc1323d6846f77 on Base. Source SHA-256 6fb63f25a4af6a64e287291f7a664f265c2b90efe521990e1ccd444a295ab0de. Independent compilation matched executable bytes but not CBOR metadata.",
+      "manifest_path": "families/railnet-query-redeem-queue-v2/implementations/base-staging-52085313/implementation.yaml"
     },
     {
       "family_id": "reserve",
@@ -2624,6 +2692,55 @@
       "proof_target": "Benchmark.Cases.Kleros.SortitionTrees.Proofs"
     },
     {
+      "case_id": "kpk/shares_settlement_accounting",
+      "project": "kpk",
+      "case_name": "shares_settlement_accounting",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kpk/shares_settlement_accounting/case.yaml",
+      "split": "active",
+      "family_id": "kpk",
+      "implementation_id": "carry_shares",
+      "stage": "proof_complete",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": "https://github.com/karpatkey/onchain-investment-vehicles",
+      "upstream_commit": "714d3d66a6e0e2bc7849ae48c3a25f63f23e903f",
+      "original_contract_path": "src/kpkShares.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://github.com/karpatkey/onchain-investment-vehicles@714d3d66a6e0e2bc7849ae48c3a25f63f23e903f:src/kpkShares.sol",
+      "selected_functions": [
+        "KpkShares.processRequests",
+        "KpkShares._chargeFees",
+        "KpkShares._processApproved",
+        "KpkShares._processRejected",
+        "KpkShares.assetsToShares",
+        "KpkShares.sharesToAssets"
+      ],
+      "lean_target": "Benchmark.Cases.KPK.SharesSettlementAccounting.Compile",
+      "failure_reason": null,
+      "notes": "Complete unchanged SettlementAccounting conjunction proved from actual successful processRequests execution; kernel dependencies standard-only. Includes exact fees/world replay, ordered duplicate-safe decisions, signed accounting, finite/infinite allowances, records/frames and conversion/request-trace facts. Independent terminal Proof/Build and Final Red Team accepted complete model-level proof; generated agent targets deliberately retain holes. Manual source-structured conventional-token model, not compiler/bytecode refinement or complete protocol verification. Carry source graph only, not kUSD/kETH.",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "source_structured_semantic_model",
+      "abstraction_tags": [
+        "proof_only",
+        "full_recursive_batch",
+        "conventional_token_world",
+        "mutable_fee_responder",
+        "alias_safe_transfers",
+        "whole_world_rollback",
+        "checked_two_stage_conversion"
+      ],
+      "abstraction_notes": "Logical source-storage projections and reviewed typed external interfaces, not automatic import/compiler/bytecode refinement. All request-processing branches and both complete arrays execute. Asset callbacks, taxes/rebases, module economics, NAV freshness, initialization/intake/cancellation/recovery/admin/upgrades and external share transfers are excluded. No global address or request-ID distinctness assumption.",
+      "unsupported_feature_codes": [],
+      "spec_target": "Benchmark.Cases.KPK.SharesSettlementAccounting.Specs",
+      "proof_target": "Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs"
+    },
+    {
       "case_id": "kyberswap/partial_fill_price_floor",
       "project": "kyberswap",
       "case_name": "partial_fill_price_floor",
@@ -3281,6 +3398,61 @@
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Polygon.AgglayerBridge.Specs",
       "proof_target": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs"
+    },
+    {
+      "case_id": "railnet-query-redeem-queue-v2/query_redeem_queue",
+      "project": "railnet-query-redeem-queue-v2",
+      "case_name": "query_redeem_queue",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/railnet-query-redeem-queue-v2/query_redeem_queue/case.yaml",
+      "split": "active",
+      "family_id": "railnet-query-redeem-queue-v2",
+      "implementation_id": "base-staging-52085313",
+      "stage": "build_green",
+      "translation_status": "translated",
+      "spec_status": "frozen",
+      "proof_status": "complete",
+      "source_language": "solidity",
+      "upstream_repo": null,
+      "upstream_commit": null,
+      "original_contract_path": "src/vehicles/multi/QueryRedeemQueue.sol",
+      "generated_artifact_path": null,
+      "source_ref": "https://base.blockscout.com/api/v2/smart-contracts/0xfebd3ca7e01285e27299c7001307a3d64186aa49",
+      "selected_functions": [
+        "initialize",
+        "demand",
+        "fulfill",
+        "redeem",
+        "_redeemDemandWithFulfillments",
+        "_lookupFulfillment",
+        "resolve",
+        "retrieve",
+        "redeemable",
+        "pending",
+        "lookup",
+        "unredeemable"
+      ],
+      "lean_target": "Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Compile",
+      "failure_reason": null,
+      "notes": "Railnet Luca specification dated 2026-09-30: any finite history, arbitrary redeem order and repeated partial redeems, cumulative nominal payouts <= cumulative nominal fulfill amountOutProvided. Phase 3 source-transition induction proved arbitrary finite histories, reachable states and recursive callback schedules; proof-only storage and bytecode refinement remain outside scope. The agent-facing generated task retains its exact ?_ placeholder.",
+      "buildable": true,
+      "verity_commit": "0cb6b59b2e9a93c377280cc56610b5bd5e277bd3",
+      "lean_toolchain": "leanprover/lean4:v4.31.0",
+      "abstraction_level": "source_structured_transition",
+      "abstraction_tags": [
+        "nominal_accounting",
+        "callback_interleaving_projection",
+        "external_tokens_opaque",
+        "proof_only_verity_storage_adapter"
+      ],
+      "abstraction_notes": "Executable source-structured Lean semantics with checked uint256 operations, full-precision floor mulDiv, exact 32 iterations per redeem call and unbounded successful operation histories. A Verity.Contract monad adapter executes those transitions in proof-only storage lanes; this is NOT an EDSL/Yul/ERC-7201 refinement. ERC20 calls are recorded at publication boundaries and callbacks may interleave before subsequent calls; no nonReentrant assumption.",
+      "unsupported_feature_codes": [
+        "erc7201_source_to_verity_refinement_pending",
+        "nested_evm_callback_refinement_pending"
+      ],
+      "spec_target": "Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Specs",
+      "proof_target": "Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Proofs"
     },
     {
       "case_id": "reserve/auction_price_band",
@@ -9383,6 +9555,141 @@
       }
     },
     {
+      "task_ref": "kpk/shares_settlement_accounting/mint_floor_bounds",
+      "task_id": "mint_floor_bounds",
+      "case_id": "kpk/shares_settlement_accounting",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kpk/shares_settlement_accounting/tasks/mint_floor_bounds.yaml",
+      "split": "active",
+      "family_id": "kpk",
+      "implementation_id": "carry_shares",
+      "source_ref": "https://github.com/karpatkey/onchain-investment-vehicles@714d3d66a6e0e2bc7849ae48c3a25f63f23e903f:src/kpkShares.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "rounding_bound",
+      "category": "arithmetic",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.KPK.SharesSettlementAccounting.Mint_floor_bounds",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/kpk/shares_settlement_accounting/verity/Contract.lean",
+        "Benchmark/Cases/KPK/SharesSettlementAccounting/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/kpk/shares_settlement_accounting/verity/Specs.lean",
+        "Benchmark/Cases/KPK/SharesSettlementAccounting/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/KPK/SharesSettlementAccounting/Tasks/MintFloorBounds.lean"
+      ],
+      "abstraction_level": "arithmetic_supporting_lemma",
+      "abstraction_notes": "Supporting mathematical floor lemma; execution-to-conversion connection and whole-batch SettlementAccounting are proved separately. Terminal independent reviews pending.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "kpk/shares_settlement_accounting/out_floor_bounds",
+      "task_id": "out_floor_bounds",
+      "case_id": "kpk/shares_settlement_accounting",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kpk/shares_settlement_accounting/tasks/out_floor_bounds.yaml",
+      "split": "active",
+      "family_id": "kpk",
+      "implementation_id": "carry_shares",
+      "source_ref": "https://github.com/karpatkey/onchain-investment-vehicles@714d3d66a6e0e2bc7849ae48c3a25f63f23e903f:src/kpkShares.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "rounding_bound",
+      "category": "arithmetic",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.KPK.SharesSettlementAccounting.Out_floor_bounds",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/kpk/shares_settlement_accounting/verity/Contract.lean",
+        "Benchmark/Cases/KPK/SharesSettlementAccounting/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/kpk/shares_settlement_accounting/verity/Specs.lean",
+        "Benchmark/Cases/KPK/SharesSettlementAccounting/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/KPK/SharesSettlementAccounting/Tasks/OutFloorBounds.lean"
+      ],
+      "abstraction_level": "arithmetic_supporting_lemma",
+      "abstraction_notes": "Supporting mathematical floor lemma; execution-to-conversion connection and whole-batch SettlementAccounting are proved separately. Terminal independent reviews pending.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "kpk/shares_settlement_accounting/settlement_accounting",
+      "task_id": "settlement_accounting",
+      "case_id": "kpk/shares_settlement_accounting",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/kpk/shares_settlement_accounting/tasks/settlement_accounting.yaml",
+      "split": "active",
+      "family_id": "kpk",
+      "implementation_id": "carry_shares",
+      "source_ref": "https://github.com/karpatkey/onchain-investment-vehicles@714d3d66a6e0e2bc7849ae48c3a25f63f23e903f:src/kpkShares.sol",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "settlement_accounting_integrity",
+      "category": "accounting",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.KPK.SharesSettlementAccounting.settlement_accounting",
+      "proof_family": "functional_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "cases/kpk/shares_settlement_accounting/verity/Contract.lean",
+        "Benchmark/Cases/KPK/SharesSettlementAccounting/Contract.lean"
+      ],
+      "specification_files": [
+        "cases/kpk/shares_settlement_accounting/verity/Specs.lean",
+        "Benchmark/Cases/KPK/SharesSettlementAccounting/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/KPK/SharesSettlementAccounting/Tasks/SettlementAccounting.lean"
+      ],
+      "abstraction_level": "source_structured_semantic_model",
+      "abstraction_notes": "Complete original conjunction for actual recursive two-array processRequests, fees, signed balances/supply, registered allowance accounting, original request traces, duplicate consumption, world replay and final price. Reference proves it without the generated task additional ID-range premise. Independent terminal proof accepted; conventional-token manual model only.",
+      "unsupported_feature_codes": [],
+      "reference_solution_module": "Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
       "task_ref": "kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor",
       "task_id": "check_return_amount_partial_fill_price_floor",
       "case_id": "kyberswap/partial_fill_price_floor",
@@ -12870,6 +13177,53 @@
       "abstraction_notes": "Message claims are proved to validate the modeled leaf against an accepted global exit root and consume the source-network/leaf-index bitmap nullifier. A private reachability lemma feeds the shared helper-consumption theorem.",
       "unsupported_feature_codes": [],
       "reference_solution_module": "Benchmark.Cases.Polygon.AgglayerBridge.Proofs",
+      "evaluation": {
+        "engine": "lean_proof_generation",
+        "target_kind": "proof_generation"
+      },
+      "readiness": {
+        "prompt_context": "ready",
+        "editable_proof": "ready",
+        "reference_solution": "ready"
+      }
+    },
+    {
+      "task_ref": "railnet-query-redeem-queue-v2/query_redeem_queue/nominal_conservation",
+      "task_id": "nominal_conservation",
+      "case_id": "railnet-query-redeem-queue-v2/query_redeem_queue",
+      "suite": "active",
+      "schema_version": 1,
+      "manifest_path": "cases/railnet-query-redeem-queue-v2/query_redeem_queue/tasks/nominal_conservation.yaml",
+      "split": "active",
+      "family_id": "railnet-query-redeem-queue-v2",
+      "implementation_id": "base-staging-52085313",
+      "source_ref": "https://base.blockscout.com/api/v2/smart-contracts/0xfebd3ca7e01285e27299c7001307a3d64186aa49",
+      "task_interface_version": 2,
+      "track": "proof-only",
+      "property_class": "accounting_conservation",
+      "category": "interval_allocation",
+      "difficulty": "hard",
+      "theorem_name": "Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.nominal_conservation_all_histories",
+      "proof_family": "protocol_transition_correctness",
+      "translation_status": "translated",
+      "proof_status": "complete",
+      "implementation_files": [
+        "Benchmark/Cases/RailnetV2/QueryRedeemQueueV2/Contract.lean",
+        "cases/railnet-query-redeem-queue-v2/query_redeem_queue/verity/Contract.lean"
+      ],
+      "specification_files": [
+        "Benchmark/Cases/RailnetV2/QueryRedeemQueueV2/Specs.lean",
+        "cases/railnet-query-redeem-queue-v2/query_redeem_queue/verity/Specs.lean"
+      ],
+      "editable_files": [
+        "Benchmark/Generated/RailnetV2/QueryRedeemQueueV2/Tasks/NominalConservation.lean"
+      ],
+      "abstraction_level": "source_structured_transition",
+      "abstraction_notes": "Prove induction on arbitrary finite histories from successful initialization. Demand prefixes consume disjoint interval segments; floor allocations for each fulfillment sum to at most its nominal amountOut. No coverage/budget premise.",
+      "unsupported_feature_codes": [
+        "erc7201_source_to_verity_refinement_pending"
+      ],
+      "reference_solution_module": "Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Proofs",
       "evaluation": {
         "engine": "lean_proof_generation",
         "target_kind": "proof_generation"
@@ -18395,5 +18749,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-09-28T12:14:23.337125+00:00"
+  "generated_at": "2026-10-06T09:58:35.452440+00:00"
 }

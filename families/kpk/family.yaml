@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: kpk
+display_name: KPK
+split: active
+status: active
+description: Full processRequests settlement accounting at an operator-supplied price; complete independently accepted model-level proof under explicit premises, not a bytecode or lifetime guarantee.
+implementation_ids:
+  - carry_shares
+case_ids:
+  - kpk/shares_settlement_accounting
+source_languages:
+  - solidity

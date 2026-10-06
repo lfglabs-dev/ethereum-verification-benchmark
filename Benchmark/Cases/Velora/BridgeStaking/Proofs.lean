@@ -1,10 +1,9 @@
 import Benchmark.Cases.Velora.BridgeStaking.Specs
 import Verity.Proofs.Stdlib.Automation
-import Verity.Proofs.Stdlib.Math
 
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
-set_option maxHeartbeats 8000000
+set_option maxHeartbeats 2000000
 
 namespace Benchmark.Cases.Velora.BridgeStaking
 
@@ -23,8 +22,9 @@ private theorem sub_val_of_le (a b : Uint256) (h : b.val ≤ a.val) :
     normalize the theorem and goal through different subtraction surfaces. -/
 private theorem safeSub_evm_some (a b : Uint256) (h : b.val ≤ a.val) :
     safeSub a b = some (sub a b) := by
-  rw [Verity.Proofs.Stdlib.Math.safeSub_some a b h]
-  congr 1
+  simp only [safeSub, show ¬ (b : Nat) > (a : Nat) from Nat.not_lt.mpr h,
+    if_false]
+  rfl
 
 /-! ## withdrawUnallocatedTokens -/
 
@@ -213,10 +213,10 @@ theorem rescuePendingFunds_preserves_allocated
               rfl
             have hnA : nA = sub (s.storage 2) (s.storageMapUint 4 key) := by
               exact Option.some.inj (hSA.symm.trans
-                (Verity.Proofs.Stdlib.Math.safeSub_some _ _ hAle))
+                (safeSub_evm_some _ _ hAle))
             have hnB : nB = sub (s.storage 0) (s.storageMapUint 4 key) := by
               exact Option.some.inj (hSB.symm.trans
-                (Verity.Proofs.Stdlib.Math.safeSub_some _ _ hBle))
+                (safeSub_evm_some _ _ hBle))
             cases vlrTransferSuccess with
             | false =>
               simpa [Staking.rescuePendingFunds, Staking.stakingVlrAmount,
@@ -278,10 +278,10 @@ theorem rescuePendingFunds_preserves_allocated
               rfl
             have hnA : nA = sub (s.storage 3) (s.storageMapUint 5 key) := by
               exact Option.some.inj (hSA.symm.trans
-                (Verity.Proofs.Stdlib.Math.safeSub_some _ _ hAle))
+                (safeSub_evm_some _ _ hAle))
             have hnB : nB = sub (s.storage 1) (s.storageMapUint 5 key) := by
               exact Option.some.inj (hSB.symm.trans
-                (Verity.Proofs.Stdlib.Math.safeSub_some _ _ hBle))
+                (safeSub_evm_some _ _ hBle))
             cases wethTransferSuccess with
             | false =>
               simpa [Staking.rescuePendingFunds, Staking.stakingVlrAmount,
@@ -414,13 +414,13 @@ theorem settleIfComplete_preserves
                 rw [hSWB]
                 rfl
               have hnAV : nAV = sub (s.storage 2) (s.storageMapUint 4 key) := by
-                exact Option.some.inj (hSA.symm.trans (Verity.Proofs.Stdlib.Math.safeSub_some _ _ hAle))
+                exact Option.some.inj (hSA.symm.trans (safeSub_evm_some _ _ hAle))
               have hnBV : nBV = sub (s.storage 0) (s.storageMapUint 4 key) := by
-                exact Option.some.inj (hSB.symm.trans (Verity.Proofs.Stdlib.Math.safeSub_some _ _ hBle))
+                exact Option.some.inj (hSB.symm.trans (safeSub_evm_some _ _ hBle))
               have hnAW : nAW = sub (s.storage 3) (s.storageMapUint 5 key) := by
-                exact Option.some.inj (hSWA.symm.trans (Verity.Proofs.Stdlib.Math.safeSub_some _ _ hWAle))
+                exact Option.some.inj (hSWA.symm.trans (safeSub_evm_some _ _ hWAle))
               have hnBW : nBW = sub (s.storage 1) (s.storageMapUint 5 key) := by
-                exact Option.some.inj (hSWB.symm.trans (Verity.Proofs.Stdlib.Math.safeSub_some _ _ hWBle))
+                exact Option.some.inj (hSWB.symm.trans (safeSub_evm_some _ _ hWBle))
               by_cases hDep : depositResult = 1
               · simp [Staking.settleIfComplete, Staking.stakingVlrReceived,
                   Staking.stakingWethReceived, Staking.stakingVlrAmount,

@@ -1,6 +1,5 @@
 import Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.IntervalLemmas
 import Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.LedgerLemmas
-import Mathlib.Tactic
 
 namespace Benchmark.Cases.RailnetV2.QueryRedeemQueueV2
 
