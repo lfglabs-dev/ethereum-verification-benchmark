@@ -1,5 +1,4 @@
 import Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.SourceFunding
-import Mathlib.Tactic
 
 namespace Benchmark.Cases.RailnetV2.QueryRedeemQueueV2
 

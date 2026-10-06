@@ -1,5 +1,5 @@
 import Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.SourceGeometry
-import Mathlib.Tactic
+import Mathlib.Tactic.SplitIfs
 
 namespace Benchmark.Cases.RailnetV2.QueryRedeemQueueV2
 
