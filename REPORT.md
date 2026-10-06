@@ -4,11 +4,11 @@ This report is generated from the benchmark manifests.
 
 ## Summary
 
-- Families: 49
-- Implementations: 50
-- Active cases: 49
-- Buildable active cases: 49
-- Active tasks: 306
+- Families: 51
+- Implementations: 52
+- Active cases: 51
+- Buildable active cases: 51
+- Active tasks: 310
 - Backlog cases: 1
 
 ## Buildable active cases
@@ -183,6 +183,16 @@ This report is generated from the benchmark manifests.
 - Upstream source artifact: `contracts/src/libraries/SortitionTrees.sol`
 - Notes: Sortition-tree slice focused on additive parent invariants, root conservation, interval-based draws, and ID/index correspondence.
 
+### `kpk/shares_settlement_accounting`
+- Family / implementation: `kpk` / `carry_shares`
+- Stage: `proof_complete`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.KPK.SharesSettlementAccounting.Compile`
+- Source ref: `https://github.com/karpatkey/onchain-investment-vehicles@714d3d66a6e0e2bc7849ae48c3a25f63f23e903f:src/kpkShares.sol`
+- Selected functions: `KpkShares.processRequests`, `KpkShares._chargeFees`, `KpkShares._processApproved`, `KpkShares._processRejected`, `KpkShares.assetsToShares`, `KpkShares.sharesToAssets`
+- Upstream source artifact: `src/kpkShares.sol`
+- Notes: Complete unchanged SettlementAccounting conjunction proved from actual successful processRequests execution; kernel dependencies standard-only. Includes exact fees/world replay, ordered duplicate-safe decisions, signed accounting, finite/infinite allowances, records/frames and conversion/request-trace facts. Independent terminal Proof/Build and Final Red Team accepted complete model-level proof; generated agent targets deliberately retain holes. Manual source-structured conventional-token model, not compiler/bytecode refinement or complete protocol verification. Carry source graph only, not kUSD/kETH.
+
 ### `kyberswap/partial_fill_price_floor`
 - Family / implementation: `kyberswap` / `meta-aggregation-router-v2`
 - Stage: `build_green`
@@ -322,6 +332,16 @@ This report is generated from the benchmark manifests.
 - Selected functions: `claimAsset`, `claimMessage`, `_verifyLeafAndSetNullifier`, `_verifyLeaf`, `_setAndCheckClaimed`, `isClaimed`, `_validateAndDecodeGlobalIndex`, `_bitmapPositions`, `_addLeafBridge`, `_updateGlobalExitRoot`
 - Upstream source artifact: `contracts/AgglayerBridge.sol`
 - Notes: The public claim theorems show successful claims validate the leaf and consume the source-network/leaf-index bitmap entry. A private reachability lemma feeds the shared helper theorem that proves successful nullifier-helper execution flips the expected bitmap bit.
+
+### `railnet-query-redeem-queue-v2/query_redeem_queue`
+- Family / implementation: `railnet-query-redeem-queue-v2` / `base-staging-52085313`
+- Stage: `build_green`
+- Status dimensions: translation=`translated`, spec=`frozen`, proof=`complete`
+- Lean target: `Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Compile`
+- Source ref: `https://base.blockscout.com/api/v2/smart-contracts/0xfebd3ca7e01285e27299c7001307a3d64186aa49`
+- Selected functions: `initialize`, `demand`, `fulfill`, `redeem`, `_redeemDemandWithFulfillments`, `_lookupFulfillment`, `resolve`, `retrieve`, `redeemable`, `pending`, `lookup`, `unredeemable`
+- Upstream source artifact: `src/vehicles/multi/QueryRedeemQueue.sol`
+- Notes: Railnet Luca specification dated 2026-09-30: any finite history, arbitrary redeem order and repeated partial redeems, cumulative nominal payouts <= cumulative nominal fulfill amountOutProvided. Phase 3 source-transition induction proved arbitrary finite histories, reachable states and recursive callback schedules; proof-only storage and bytecode refinement remain outside scope. The agent-facing generated task retains its exact ?_ placeholder.
 
 ### `reserve/auction_price_band`
 - Family / implementation: `reserve` / `dtfs`
@@ -1619,6 +1639,36 @@ This report is generated from the benchmark manifests.
 - Editable proof file: `Benchmark/Generated/Kleros/SortitionTrees/Tasks/RootMinusLeftEqualsRightSubtree.lean`
 - Hidden reference solution: `Benchmark.Cases.Kleros.SortitionTrees.Proofs`
 
+### `kpk/shares_settlement_accounting/mint_floor_bounds`
+- Track / property class / proof family: `proof-only` / `rounding_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.KPK.SharesSettlementAccounting.Mint_floor_bounds`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/kpk/shares_settlement_accounting/verity/Contract.lean`, `Benchmark/Cases/KPK/SharesSettlementAccounting/Contract.lean`
+- Specification files: `cases/kpk/shares_settlement_accounting/verity/Specs.lean`, `Benchmark/Cases/KPK/SharesSettlementAccounting/Specs.lean`
+- Editable proof file: `Benchmark/Generated/KPK/SharesSettlementAccounting/Tasks/MintFloorBounds.lean`
+- Hidden reference solution: `Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs`
+
+### `kpk/shares_settlement_accounting/out_floor_bounds`
+- Track / property class / proof family: `proof-only` / `rounding_bound` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.KPK.SharesSettlementAccounting.Out_floor_bounds`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/kpk/shares_settlement_accounting/verity/Contract.lean`, `Benchmark/Cases/KPK/SharesSettlementAccounting/Contract.lean`
+- Specification files: `cases/kpk/shares_settlement_accounting/verity/Specs.lean`, `Benchmark/Cases/KPK/SharesSettlementAccounting/Specs.lean`
+- Editable proof file: `Benchmark/Generated/KPK/SharesSettlementAccounting/Tasks/OutFloorBounds.lean`
+- Hidden reference solution: `Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs`
+
+### `kpk/shares_settlement_accounting/settlement_accounting`
+- Track / property class / proof family: `proof-only` / `settlement_accounting_integrity` / `functional_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.KPK.SharesSettlementAccounting.settlement_accounting`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `cases/kpk/shares_settlement_accounting/verity/Contract.lean`, `Benchmark/Cases/KPK/SharesSettlementAccounting/Contract.lean`
+- Specification files: `cases/kpk/shares_settlement_accounting/verity/Specs.lean`, `Benchmark/Cases/KPK/SharesSettlementAccounting/Specs.lean`
+- Editable proof file: `Benchmark/Generated/KPK/SharesSettlementAccounting/Tasks/SettlementAccounting.lean`
+- Hidden reference solution: `Benchmark.Cases.KPK.SharesSettlementAccounting.Proofs`
+
 ### `kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor`
 - Track / property class / proof family: `proof-only` / `price_floor` / `functional_correctness`
 - Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
@@ -2388,6 +2438,16 @@ This report is generated from the benchmark manifests.
 - Specification files: `cases/polygon/agglayer_bridge/verity/Specs.lean`, `Benchmark/Cases/Polygon/AgglayerBridge/Specs.lean`
 - Editable proof file: `Benchmark/Generated/Polygon/AgglayerBridge/Tasks/claimMessage_valid_leaf_and_consumes_unique_nullifier.lean`
 - Hidden reference solution: `Benchmark.Cases.Polygon.AgglayerBridge.Proofs`
+
+### `railnet-query-redeem-queue-v2/query_redeem_queue/nominal_conservation`
+- Track / property class / proof family: `proof-only` / `accounting_conservation` / `protocol_transition_correctness`
+- Readiness: prompt_context=`ready`, editable_proof=`ready`, reference_solution=`ready`
+- Theorem target: `Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.nominal_conservation_all_histories`
+- Evaluation: engine=`lean_proof_generation`, target_kind=`proof_generation`
+- Implementation files: `Benchmark/Cases/RailnetV2/QueryRedeemQueueV2/Contract.lean`, `cases/railnet-query-redeem-queue-v2/query_redeem_queue/verity/Contract.lean`
+- Specification files: `Benchmark/Cases/RailnetV2/QueryRedeemQueueV2/Specs.lean`, `cases/railnet-query-redeem-queue-v2/query_redeem_queue/verity/Specs.lean`
+- Editable proof file: `Benchmark/Generated/RailnetV2/QueryRedeemQueueV2/Tasks/NominalConservation.lean`
+- Hidden reference solution: `Benchmark.Cases.RailnetV2.QueryRedeemQueueV2.Proofs`
 
 ### `reserve/auction_price_band/price_at_end_time`
 - Track / property class / proof family: `proof-only` / `price_computation` / `functional_correctness`

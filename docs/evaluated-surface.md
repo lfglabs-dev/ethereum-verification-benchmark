@@ -7,7 +7,7 @@ and `backlog/*/*/tasks/*.yaml`.
 
 ## Active Suite
 
-The active suite currently contains 49 cases and 306 task manifests. Of those, 306 tasks are runnable proof tasks with hidden reference proofs.
+The active suite currently contains 51 cases and 310 task manifests. Of those, 310 tasks are runnable proof tasks with hidden reference proofs.
 
 | Case | Runnable Tasks | Case Proof Status |
 |------|---------------:|-------------------|
@@ -28,6 +28,7 @@ The active suite currently contains 49 cases and 306 task manifests. Of those, 3
 | `hypernova/settled_payout_safety` | 2 | `complete` |
 | `ipor/plasma_vault_redeem_split` | 2 | `complete` |
 | `kleros/sortition_trees` | 6 | `partial` |
+| `kpk/shares_settlement_accounting` | 3 | `complete` |
 | `kyberswap/partial_fill_price_floor` | 1 | `complete` |
 | `lagoon/guardrails` | 3 | `complete` |
 | `lido/vaulthub_locked` | 5 | `partial` |
@@ -42,6 +43,7 @@ The active suite currently contains 49 cases and 306 task manifests. Of those, 3
 | `piku/fund_conservation` | 4 | `complete` |
 | `polaris/bonding_curve` | 4 | `complete` |
 | `polygon/agglayer_bridge` | 2 | `complete` |
+| `railnet-query-redeem-queue-v2/query_redeem_queue` | 1 | `complete` |
 | `reserve/auction_price_band` | 4 | `complete` |
 | `rootstock/flyover_quote_lifecycle` | 3 | `complete` |
 | `safe/owner_manager_reach` | 15 | `complete` |

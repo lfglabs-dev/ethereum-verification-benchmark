@@ -1,0 +1,21 @@
+{
+  "upstream_repository": "https://github.com/karpatkey/onchain-investment-vehicles",
+  "upstream_revision": "714d3d66a6e0e2bc7849ae48c3a25f63f23e903f",
+  "source_path": "src/kpkShares.sol",
+  "source_sha256": "b4850c980b9b91b4a5cba0c55404bb20d5651491434498d4e3e0d51a6a97dfd2",
+  "observation": {
+    "chain_id": 1,
+    "block": 26106081,
+    "block_hash": "0x6868af650ba6bffb2d4fd641324a22cbb2d38c3bad0d0432262082ec6f2041d0",
+    "timestamp_utc": "2026-10-02T17:18:23Z"
+  },
+  "matching_carry_implementations": [
+    "0x9b02f0c0b5975f0573e10113bcc64feac27a6ceb",
+    "0x93756d774ccc6928b4d93f255ba9ebd9f87a1996"
+  ],
+  "dependency_gitlinks": {
+    "openzeppelin_upgradeable": "37bfda9eeb81cca848a9989118485a73d002eae4",
+    "openzeppelin_contracts": "3d479dca0411378a99c9191d98e9fe1e35c1585d"
+  },
+  "boundary": "Retained source/backend runtime comparison, not mechanized Solidity-to-Lean or bytecode refinement, unique original deployment Git provenance, current-state or kUSD/kETH certification."
+}
