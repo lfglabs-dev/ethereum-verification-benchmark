@@ -144,6 +144,31 @@ theorem ite_apply_arg {c : Prop} [Decidable c] {α β : Sort _} (f g : α → β
     (if c then f else g) x = if c then f x else g x := by
   split <;> rfl
 
+@[grind_norm, simp]
+theorem contractResult_match_ite {α : Type} {β : Sort _}
+    (c : Prop) [Decidable c]
+    (r1 r2 : ContractResult α)
+    (onSuccess : α → ContractState → β)
+    (onRevert : String → ContractState → β) :
+    Verity.instReprContractResult.repr.match_1 (fun _ => β) (if c then r1 else r2) onSuccess onRevert =
+    if c then
+      Verity.instReprContractResult.repr.match_1 (fun _ => β) r1 onSuccess onRevert
+    else
+      Verity.instReprContractResult.repr.match_1 (fun _ => β) r2 onSuccess onRevert := by
+  by_cases h : c <;> simp [h]
+
+@[grind_norm, simp]
+theorem contractResult_snd_ite {α : Type} (c : Prop) [Decidable c]
+    (r1 r2 : ContractResult α) :
+    (if c then r1 else r2).snd = if c then r1.snd else r2.snd := by
+  by_cases h : c <;> simp [h]
+
+@[grind_norm, simp]
+theorem contractResult_fst_ite {α : Type} [Inhabited α] (c : Prop) [Decidable c]
+    (r1 r2 : ContractResult α) :
+    (if c then r1 else r2).fst = if c then r1.fst else r2.fst := by
+  by_cases h : c <;> simp [h]
+
 attribute [grind_norm] ge_iff_le gt_iff_lt
 attribute [grind_norm] Verity.Core.Uint256.le_def Verity.Core.Uint256.lt_def
 

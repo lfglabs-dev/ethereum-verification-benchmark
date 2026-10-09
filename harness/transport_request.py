@@ -333,6 +333,16 @@ def _merge_tool_call_delta(tool_calls: list[dict[str, Any]], delta: dict[str, An
                 current_function["arguments"] = str(current_function.get("arguments") or "") + arguments
 
 
+def _is_nonempty_tool_call(tool_call: dict[str, Any]) -> bool:
+    if tool_call.get("id"):
+        return True
+    function = tool_call.get("function")
+    if isinstance(function, dict):
+        if function.get("name") or function.get("arguments"):
+            return True
+    return False
+
+
 def _finalize_stream_choice(index: int, state: dict[str, Any]) -> dict[str, Any]:
     message = state.setdefault("message", {})
     if not isinstance(message, dict):
@@ -340,10 +350,14 @@ def _finalize_stream_choice(index: int, state: dict[str, Any]) -> dict[str, Any]
     message.setdefault("role", "assistant")
     message.setdefault("content", "")
     tool_calls = state.get("tool_calls")
-    if isinstance(tool_calls, list) and tool_calls:
-        message["tool_calls"] = tool_calls
-        if message.get("content") == "":
-            message["content"] = None
+    if isinstance(tool_calls, list):
+        filtered_tool_calls = [
+            tc for tc in tool_calls if isinstance(tc, dict) and _is_nonempty_tool_call(tc)
+        ]
+        if filtered_tool_calls:
+            message["tool_calls"] = filtered_tool_calls
+            if message.get("content") == "":
+                message["content"] = None
     choice: dict[str, Any] = {
         "index": index,
         "message": message,

@@ -106,6 +106,43 @@ class TransportStreamingTests(unittest.TestCase):
         self.assertEqual(message["tool_calls"][0]["function"]["arguments"], "{\"value\":\"ok\"}")
         self.assertEqual(response["usage"]["total_tokens"], 8)  # type: ignore[index]
 
+    def test_streaming_nonzero_tool_call_index_strips_empty_placeholders(self) -> None:
+        lines = [
+            sse({"id": "chatcmpl-2", "choices": [{"index": 0, "delta": {"role": "assistant", "content": ""}}]}),
+            sse(
+                {
+                    "choices": [
+                        {
+                            "index": 0,
+                            "delta": {
+                                "tool_calls": [
+                                    {
+                                        "index": 1,
+                                        "id": "toolu_1",
+                                        "type": "function",
+                                        "function": {"name": "check_proof", "arguments": "{\"proof\":\"rfl\"}"},
+                                    }
+                                ]
+                            },
+                        }
+                    ]
+                }
+            ),
+            sse({"choices": [{"index": 0, "delta": {}, "finish_reason": "tool_calls"}]}),
+            b"data: [DONE]\n\n",
+        ]
+
+        def fake_urlopen(request: object, timeout: int) -> FakeResponse:
+            return FakeResponse(lines=lines)
+
+        with mock.patch.object(transport_request.urllib.request, "urlopen", side_effect=fake_urlopen):
+            response = transport_request.chat_completion([{"role": "user", "content": "hi"}], base_url="http://provider.test/v1")
+
+        message = response["choices"][0]["message"]  # type: ignore[index]
+        self.assertEqual(len(message["tool_calls"]), 1)
+        self.assertEqual(message["tool_calls"][0]["id"], "toolu_1")
+        self.assertEqual(message["tool_calls"][0]["function"]["name"], "check_proof")
+
     def test_streaming_chunks_under_idle_timeout_succeed(self) -> None:
         lines = [
             sse({"choices": [{"index": 0, "delta": {"role": "assistant"}}]}),
