@@ -27,6 +27,7 @@ active_cases = [
   "cow/gpv2_settlement",
   "damn_vulnerable_defi/side_entrance",
   "doppler/multicurve_fee_conservation",
+  "dromos/allocation_conservation",
   "enzyme/onyx_fee_handler",
   "erc4337/entry_point_invariant",
   "ethereum/deposit_contract_minimal",

@@ -1,0 +1,31 @@
+manifest_kind: task
+schema_version: 1
+task_id: transaction_conservation
+case_id: dromos/allocation_conservation
+split: active
+family_id: dromos
+implementation_id: metadex03
+source_ref: https://github.com/dromos-labs/metadex-public@0058bd9b1d49b0fb0a6d130dd51886b2c64e3d99:V3/src/voter/Voter.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Dromos.AllocationConservation.transaction_conservation
+proof_family: state_preservation_local_effects
+property_class: accounting_conservation
+difficulty: hard
+category: cross_chain_allocation_ledger
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - Benchmark/Cases/Dromos/AllocationConservation/Contract.lean
+  - cases/dromos/allocation_conservation/verity/Contract.lean
+specification_files:
+  - Benchmark/Cases/Dromos/AllocationConservation/Specs.lean
+  - cases/dromos/allocation_conservation/verity/Specs.lean
+editable_files:
+  - Benchmark/Generated/Dromos/AllocationConservation/Tasks/TransactionConservation.lean
+reference_solution_module: Benchmark.Cases.Dromos.AllocationConservation.Proofs
+reference_solution_declaration: Benchmark.Cases.Dromos.AllocationConservation.transaction_conservation
+abstraction_level: protocol_slice
+abstraction_notes: Executable root-ledger projection for the Dromos Labs team. All eight target-writer entries are modeled, including CHAIN0/TOKEN0 and arbitrary finite authenticated deallocation callbacks. EnumerableSet retains logical values and independently stored index-plus-one positions, with moved-position updates, removed-position resets and clear positions loop. Initialization, concrete arbitrary-list add/remove/swap-and-pop representation preservation, exact one-cell amount/token/position frames, support/range and finite-sum replacement are mechanically proved. Operational writer/callback preservation and Reachable transaction conservation depend only on standard Lean foundations, not a case-local domain axiom. Full source-to-model/physical-storage/bytecode refinement is unproved. Non-ledger signed point/cast/transport failures are conservatively omitted. View results and chain/gauge guards are explicit symbolic inputs. The selected claim is allocation amount sum equals committed; support pairing and set representation are auxiliary. Independent Proof and Red Team re-reviews passed for the symbolic ledger-model proof; source/physical-storage/bytecode correspondence remains unproved. No private/deployed or whole-source verified-result claim.
+unsupported_feature_codes: []
