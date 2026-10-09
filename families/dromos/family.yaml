@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: dromos
+display_name: Dromos Labs MetaDEX
+split: active
+status: active
+description: Draft root allocation-chain principal accounting case; proofs pending.
+implementation_ids:
+  - metadex03
+case_ids:
+  - dromos/allocation_conservation
+source_languages:
+  - solidity

@@ -1,0 +1,3 @@
+# Preserve upstream licensing bytes, including CRLF and original spaces.
+LICENSE -text -whitespace
+NOTICE -text -whitespace
