@@ -1,0 +1,132 @@
+{
+  "updated_at": "2026-10-10T11:42:59Z",
+  "wall_elapsed_seconds": 801.5,
+  "panel": "STRAT-50",
+  "budget_profile": "high (p4_normal: max_attempts=16, max_tool_calls=120, max_turns=50)",
+  "reasoning_effort": "low",
+  "muse_routing_policy": "Paid muse/muse-spark-1.3 stopped at 35/50 (preserved); remaining 15 unfinished tasks run on subscription muse-code/muse-spark-1.3",
+  "muse_combined_progress": {
+    "valid_completed": 36,
+    "solved": 8,
+    "pass_rate_on_50_pct": 16.0
+  },
+  "leaderboard": [
+    {
+      "model": "openai/gpt-6.1-sol",
+      "lane_state": "completed",
+      "valid_completed": 50,
+      "solved": 20,
+      "genuine_fail": 30,
+      "infra_invalid": 0,
+      "pass_rate_on_valid_pct": 40.0,
+      "pass_rate_on_50_pct": 40.0,
+      "total_tokens": 2180066,
+      "total_requests": 560,
+      "cum_elapsed_seconds": 24340.0
+    },
+    {
+      "model": "anthropic/claude-opus-5-5",
+      "lane_state": "completed",
+      "valid_completed": 50,
+      "solved": 8,
+      "genuine_fail": 42,
+      "infra_invalid": 0,
+      "pass_rate_on_valid_pct": 16.0,
+      "pass_rate_on_50_pct": 16.0,
+      "total_tokens": 3080091,
+      "total_requests": 377,
+      "cum_elapsed_seconds": 8054.0
+    },
+    {
+      "model": "zai/glm-5.3",
+      "lane_state": "completed",
+      "valid_completed": 50,
+      "solved": 10,
+      "genuine_fail": 40,
+      "infra_invalid": 0,
+      "pass_rate_on_valid_pct": 20.0,
+      "pass_rate_on_50_pct": 20.0,
+      "total_tokens": 3741342,
+      "total_requests": 702,
+      "cum_elapsed_seconds": 16994.3
+    },
+    {
+      "model": "kimi/k3-256k",
+      "lane_state": "stopped_quota_exhausted (Kimi 7-day weekly quota limit HTTP 403/429)",
+      "valid_completed": 0,
+      "solved": 0,
+      "genuine_fail": 0,
+      "infra_invalid": 1,
+      "pass_rate_on_valid_pct": 0.0,
+      "pass_rate_on_50_pct": 0.0,
+      "total_tokens": 0,
+      "total_requests": 0,
+      "cum_elapsed_seconds": 313.7
+    },
+    {
+      "model": "openai/gpt-6-luna",
+      "lane_state": "completed",
+      "valid_completed": 50,
+      "solved": 10,
+      "genuine_fail": 40,
+      "infra_invalid": 0,
+      "pass_rate_on_valid_pct": 20.0,
+      "pass_rate_on_50_pct": 20.0,
+      "total_tokens": 2150310,
+      "total_requests": 596,
+      "cum_elapsed_seconds": 17743.4
+    },
+    {
+      "model": "google/gemini-4-argon-eap",
+      "lane_state": "completed",
+      "valid_completed": 50,
+      "solved": 20,
+      "genuine_fail": 30,
+      "infra_invalid": 0,
+      "pass_rate_on_valid_pct": 40.0,
+      "pass_rate_on_50_pct": 40.0,
+      "total_tokens": 2918787,
+      "total_requests": 480,
+      "cum_elapsed_seconds": 16274.9
+    },
+    {
+      "model": "muse/muse-spark-1.3",
+      "lane_state": "stopped_paid_route_disabled (35/50 preserved; remaining 15 on muse-code/muse-spark-1.3)",
+      "valid_completed": 35,
+      "solved": 8,
+      "genuine_fail": 27,
+      "infra_invalid": 5,
+      "pass_rate_on_valid_pct": 22.86,
+      "pass_rate_on_50_pct": 16.0,
+      "total_tokens": 3043546,
+      "total_requests": 480,
+      "cum_elapsed_seconds": 16614.2
+    },
+    {
+      "model": "muse-code/muse-spark-1.3",
+      "lane_state": "stopped_quota_exhausted (Subscription quota exhausted; resets at 2026-10-10T14:47:14Z)",
+      "valid_completed": 1,
+      "solved": 0,
+      "genuine_fail": 1,
+      "infra_invalid": 4,
+      "pass_rate_on_valid_pct": 0.0,
+      "pass_rate_on_50_pct": 0.0,
+      "total_tokens": 61777,
+      "total_requests": 11,
+      "cum_elapsed_seconds": 2013.8
+    },
+    {
+      "model": "xai/grok-4.7",
+      "lane_state": "completed",
+      "valid_completed": 50,
+      "solved": 8,
+      "genuine_fail": 42,
+      "infra_invalid": 0,
+      "pass_rate_on_valid_pct": 16.0,
+      "pass_rate_on_50_pct": 16.0,
+      "total_tokens": 2792065,
+      "total_requests": 443,
+      "cum_elapsed_seconds": 10495.9
+    }
+  ]
+}

@@ -106,3 +106,33 @@ Do not delete its manifest, panel, release artifacts, runner compatibility, or
 toolchain pin: those are required to audit published v0.2 results. Product and
 documentation defaults should point to v0.3; invoking v0.2 should require an
 explicit version/commit selection and should never silently fall back from v0.3.
+
+## Multi-Model Campaign Results (`p4_normal`, `reasoning_effort=low`)
+
+Six complete 50-task cohorts and three partial/quota-blocked cohorts were evaluated on the frozen v0.3 STRAT-50 panel under `p4_normal` (`max_attempts=16`, `max_tool_calls=120`, `max_turns=50`) with `reasoning_effort="low"`. Across all evaluated models, **23 / 50 tasks (46.0%)** were solved by at least one model.
+
+### Complete Cohorts (50/50 valid verifier verdicts, 0 `INFRA_INVALID`)
+
+| Rank | Model | Solved | Valid Verdicts | Solve Rate | Total Tokens | Total Requests | Cum. Time (s) |
+|---:|---|---:|---:|---:|---:|---:|---:|
+| 1 | **`openai/gpt-6.1-sol`** | **20** | 50/50 | **40.0%** | 2,180,066 | 560 | 24,340.0 |
+| 1 (tie) | **`google/gemini-4-argon-eap`** | **20** | 50/50 | **40.0%** | 2,918,787 | 480 | 16,274.9 |
+| 3 | **`openai/gpt-6-luna`** | **10** | 50/50 | **20.0%** | 2,150,310 | 596 | 17,743.4 |
+| 3 (tie) | **`zai/glm-5.3`** | **10** | 50/50 | **20.0%** | 3,741,342 | 702 | 16,994.3 |
+| 5 | **`xai/grok-4.7`** | **8** | 50/50 | **16.0%** | 2,792,065 | 443 | 10,495.9 |
+| 5 (tie) | **`anthropic/claude-opus-5-5`** | **8** | 50/50 | **16.0%** | 3,080,091 | 377 | 8,054.0 |
+
+### Partial / Quota-Blocked Cohorts
+
+| Model / Route | Status | Valid Verdicts | Solved | Genuine Fail | Solve Rate (Valid) | Solve Rate (/50) | Total Tokens | Notes |
+|---|---|---:|---:|---:|---:|---:|---:|---|
+| `muse/muse-spark-1.3` | `stopped_paid_route_disabled` | 35/50 | **8** | 27 | 22.86% | 16.00% | 3,043,546 | Paid Meta API route stopped at 35/50 per user instruction; completed verdicts preserved without relabelling. |
+| `muse-code/muse-spark-1.3` | `stopped_quota_exhausted` | 1/15 | **0** | 1 | 0.00% | 0.00% | 61,777 | Muse Code subscription route for remaining 15 tasks; hit upstream subscription quota window (`resets_at: 2026-10-10T14:47:14Z`), no paid fallback. |
+| `kimi/k3-256k` | `stopped_quota_exhausted` | 0/50 | **0** | 0 | 0.00% | 0.00% | 0 | Blocked by upstream Kimi 7-day weekly quota limit (`HTTP 403/429`). |
+
+### Committed Campaign Artifacts
+
+- [`leaderboard.json`](./leaderboard.json) — machine-readable v0.3 STRAT-50 leaderboard, solved task lists per model, and union of solved tasks (`23/50`).
+- [`summary.json`](./summary.json) — per-model aggregate metrics and lane status.
+- [`results.json`](./results.json) — deduplicated per-task outcomes across evaluated models.
+- [`results_muse_code_subscription.json`](./results_muse_code_subscription.json) — separately labelled subscription route records for `muse-code/muse-spark-1.3`.
