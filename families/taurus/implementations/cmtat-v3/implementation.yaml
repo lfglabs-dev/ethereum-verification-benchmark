@@ -1,0 +1,17 @@
+manifest_kind: implementation
+schema_version: 1
+family_id: taurus
+implementation_id: cmtat-v3
+display_name: CMTAT v3.0.0 standard variant
+split: active
+status: translated
+upstream_repo: https://github.com/CMTA/CMTAT
+upstream_commit: 69eecc9735ce8ada84fd35801888b05747658939
+source_language: solidity
+source_artifact_path: contracts/modules/0_CMTATBaseCommon.sol
+case_ids:
+  - taurus/cmtat_partial_freeze
+notes: >
+  Latest formally audited release lineage at retrieval on 2026-10-16, incorporating
+  Halborn assessment/remediation. This does not attest audit of every final-tag byte.
+  Standard variant with RuleEngine and SnapshotEngine zero on every included call.

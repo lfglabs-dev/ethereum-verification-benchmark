@@ -1,0 +1,13 @@
+manifest_kind: family
+schema_version: 1
+family_id: taurus
+display_name: Taurus CMTAT
+split: active
+status: active
+description: Partial-freeze protection for ordinary CMTAT token transfers.
+implementation_ids:
+  - cmtat-v3
+case_ids:
+  - taurus/cmtat_partial_freeze
+source_languages:
+  - solidity
