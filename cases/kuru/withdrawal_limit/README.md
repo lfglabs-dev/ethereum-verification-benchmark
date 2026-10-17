@@ -40,7 +40,7 @@ Benchmark.Cases.Kuru.WithdrawalLimit.policy_bundle : PolicyBundle
 | `ordinary_and_global_no_reuse` | Exact deposit credit, deposit-first consumption, conditional writes and list-inductive batch conservation on shared state. |
 | `drip_and_configuration` | Capped refill, settlement under the old configuration, no instant grant or retroactive rate change, and flow locks. |
 | `approved_authority_and_replay` | Authority and signed-instruction checkpoints, pre-transfer nonce consumption and callback-compatible replay exclusion. |
-| `payout_coverage_and_atomicity` | Both gross payout paths, persistent reentrancy guard, allowed callbacks, non-payout frames and rollback. |
+| `payout_coverage_and_atomicity` | Both payout paths, measured deposit credit and withdrawal settlement, checked refunds, persistent reentrancy guard, allowed callbacks and rollback. |
 
 The Lean case is split by role. `Contract.lean` with `Contract/Limiter.lean` and `Contract/History.lean` is the model. `Specs.lean` is the specification. `Proofs.lean` and the five `Proofs/*Proofs.lean` modules are the complete reference proofs. `Tests/Regression.lean` contains supplemental finite model checks. `Compile.lean` is only the model/specification elaboration target, not a Solidity or Yul compiler result.
 
@@ -54,6 +54,8 @@ The trace starts from fresh correctly initialized and bound proxies with unchang
 
 Signature acceptance is an external, model-defined interface bound to the exact owner, payload and domain. It is not a proof of cryptographic recovery, hashing or human assent. Price/role-provider answers, token observations and linked math-library correspondence have their documented external/manual boundaries.
 
-Payout accounting is gross instructed value, not net native loss, exchange-rate fairness or recipient proceeds. A native callback may return surplus without restoring spending credit. A checked token custody debit does not prove truthful token balance reporting.
+ERC20 deposits credit the positive measured custody increase, bounded by the request. Both withdrawal paths reserve the requested maximum, pin the limiter's price and configuration before callbacks, and refund any request-minus-debit difference to the post-callback account balance using checked addition. Ordinary capacity is consumed afterward using the measured custody debit; an approved receipt retains the complete signed requested maximum separately from the actual debit. The measured settlement and credit obligations are included in the eighth specification group.
 
-Independent proof and adversarial reviews accepted the complete model-level result with no critical or major findings. The source revision is pinned in the case manifest without redistributing the original Solidity or exposing a private repository URL. The complete repository build and whole Solidity suite were not established green by this case; finite checks and focused source tests are not substitutes for the universal Lean proofs.
+Payout accounting uses measured ERC20 custody debit and gross requested native payout, not recipient proceeds, exchange-rate fairness or net native loss. A native callback may return surplus without restoring spending credit. Supplied before/after token observations remain an external boundary: measuring a delta does not prove truthful balance reporting or automatic rebase reconciliation.
+
+For source revision `62c478b05dfe936c87fa95f35d89307d4a2d303c`, independent modelization, proof, scoped-build and adversarial reviews accepted all eight specification groups and the combined policy result with no critical or major findings. The source revision is pinned in the case manifest without redistributing the original Solidity or exposing a private repository URL. The complete repository build remains incomplete under the bounded runner, and the Solidity/fork suites were not run for this update; finite model checks do not substitute for the universal Lean proofs.

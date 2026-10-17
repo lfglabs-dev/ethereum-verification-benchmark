@@ -1380,7 +1380,7 @@
       "split": "active",
       "status": "translated",
       "upstream_repo": null,
-      "upstream_commit": "52d8e49aff11c52654955c8591a032172a40c79e",
+      "upstream_commit": "62c478b05dfe936c87fa95f35d89307d4a2d303c",
       "source_language": "solidity",
       "source_artifact_path": "Benchmark/Cases/Kuru/WithdrawalLimit",
       "case_ids": [
@@ -2880,7 +2880,7 @@
       "proof_status": "complete",
       "source_language": "solidity",
       "upstream_repo": null,
-      "upstream_commit": "52d8e49aff11c52654955c8591a032172a40c79e",
+      "upstream_commit": "62c478b05dfe936c87fa95f35d89307d4a2d303c",
       "original_contract_path": "src/account/AccountCore.sol",
       "generated_artifact_path": null,
       "source_ref": "model:Benchmark/Cases/Kuru/WithdrawalLimit/Contract.lean",
@@ -2899,6 +2899,8 @@
         "AccountCore.fulfillApprovedWithdrawal",
         "AccountCore.invalidateApprovedWithdrawalNonce",
         "AccountCore.setWithdrawalAuthority",
+        "AccountCore._deposit",
+        "AccountCore._withdrawAsset",
         "AccountCore._transferAsset",
         "AccountCore.receive",
         "AccountCore._registerAccount",
@@ -2922,7 +2924,7 @@
         "non_custody_writer_frame",
         "unchanged_implementation_trace"
       ],
-      "abstraction_notes": "Source-shaped executable multi-contract semantic model using Verity Address/UIntN and invariant APIs. All eight complete specification groups and PolicyBundle have machine-checked reference proofs. Root/child allocation and list writers are concrete; non-custody arithmetic and creation authorization use explicit projections. The ordinary batch theorem requires a successful initial capacity observation. Source/helper/storage/external correspondence is manually reviewed; no Solidity compiler or bytecode refinement is claimed. Original Solidity is not distributed.",
+      "abstraction_notes": "Source-shaped executable multi-contract semantic model using Verity Address/UIntN and invariant APIs. All eight complete specification groups and PolicyBundle have machine-checked reference proofs. Root/child allocation and list writers are concrete; non-custody arithmetic and creation authorization use explicit projections. The ordinary batch theorem requires a successful initial capacity observation. Deposits credit measured custody receipts; withdrawals reserve the requested maximum, pin before callbacks, refund the difference and account for actual debit. Source/helper/storage/external correspondence is manually reviewed; no Solidity compiler or bytecode refinement is claimed. Original Solidity is not distributed.",
       "unsupported_feature_codes": [],
       "spec_target": "Benchmark.Cases.Kuru.WithdrawalLimit.Specs",
       "proof_target": "Benchmark.Cases.Kuru.WithdrawalLimit.Proofs"
@@ -19341,5 +19343,5 @@
     }
   ],
   "backlog_tasks": [],
-  "generated_at": "2026-10-16T07:56:38.998663+00:00"
+  "generated_at": "2026-10-17T11:07:00.469454+00:00"
 }

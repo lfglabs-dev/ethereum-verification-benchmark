@@ -224,7 +224,7 @@ def OrdinaryAndGlobalNoReuse : Prop :=
   (∀ d w xs caller args obs next, Reachable d w xs → CallbacksAdmissible obs →
     withdraw d w caller args obs = .ok next →
     OrdinaryCheckpoints d w caller args ∧
-    ∃ f, next.payouts = w.payouts ++ [⟨.ordinary, args.token, args.recipient, args.amount, some f, none⟩] ∧
+    ∃ f, next.payouts = w.payouts ++ [⟨.ordinary, args.token, args.recipient, debitedAmount args.token args.amount obs, some f, none⟩] ∧
     OrdinaryConsumption w.limiter next.limiter w.now (expiredReference xs w.now).1 f) ∧
   (∀ d w xs calls next C A, Reachable d w xs →
     capacityState w.limiter w.now = .ok (C, A) →
@@ -283,7 +283,7 @@ def ApprovedAuthorityAndReplay : Prop :=
     ApprovedCheckpoints d w caller q sig ∧
     q.nonce + 1 ≤ next.core.approvedNonces q.account ∧
     SameFundingPools w.limiter next.limiter ∧
-    next.payouts = w.payouts ++ [⟨.approved, q.token, q.recipient, q.amount, none, some q⟩]) ∧
+    next.payouts = w.payouts ++ [⟨.approved, q.token, q.recipient, debitedAmount q.token q.amount obs, none, some q⟩]) ∧
   (∀ d w caller account n next, policyAction d w caller (.invalidateNonce account n) = .ok next →
     next.core.approvedNonces account = n ∧ w.core.approvedNonces account < n) ∧
   (∀ d w caller authority next, policyAction d w caller (.rotateAuthority authority) = .ok next →
@@ -291,6 +291,63 @@ def ApprovedAuthorityAndReplay : Prop :=
   (∀ d w caller q sig obs first second,
     fulfillApprovedWithdrawal d w caller q sig obs = .ok first →
     fulfillApprovedWithdrawal d first caller q sig obs ≠ .ok second)
+
+/-- General successful deposit: credit and limiter input are the SAME positive
+    measured receipt, added to the post-callback ledger (not the entry ledger). -/
+def MeasuredDepositCredit : Prop :=
+  ∀ d w caller target token amount msgValue obs next,
+    deposit d w caller target token amount msgValue obs = .ok next →
+    let received := receivedAmount token amount obs
+    0 < received ∧ received ≤ amount ∧
+    ∃ entered id core funded v limiter,
+      activeGuardEnter d w = .ok entered ∧
+      allocateDeposit entered.core target = .ok (id, core) ∧
+      (if token = 0 then ∃ custody,
+        checkedAdd 256 entered.nativeCustody msgValue = .ok custody ∧
+        funded = { entered with core := core, nativeCustody := custody }
+       else callbacks d obs.callbacks { entered with core := core } = .ok funded) ∧
+      recordDeposit funded.limiter funded.now funded.quotes d.coreAddress d.coreAddress
+        token received (funded.core.tokens token).decimals = .ok (v, limiter) ∧
+      next = guardExit d { funded with limiter := limiter, core := { funded.core with
+        balances := updateBalance funded.core.balances id token (funded.core.balances id token + received) } }
+
+/-- Exact ordinary settlement witnesses are source checkpoints, not arbitrary
+    balances. In particular the refund uses transferred.core, and capacity is
+    recorded only AFTER it, with post-callback decimals and the actual debit. -/
+def MeasuredOrdinarySettlement : Prop :=
+  ∀ d w caller a obs next, withdraw d w caller a obs = .ok next →
+    let debit := debitedAmount a.token a.amount obs
+    0 < debit ∧ debit ≤ a.amount ∧
+    ∃ entered prepared transferred refunded funding limiter,
+      activeGuardEnter d w = .ok entered ∧
+      withdrawBeforeTransfer d entered a.rootId a.token a.amount = .ok prepared ∧
+      prepared.limiter.transient.flowStarted = true ∧
+      transferAsset d prepared a.token a.recipient a.amount obs = .ok (debit, transferred) ∧
+      transferred.limiter = prepared.limiter ∧
+      refundAsset transferred a.rootId a.token a.amount debit = .ok refunded ∧
+      refunded.core.balances a.rootId a.token =
+        transferred.core.balances a.rootId a.token + (a.amount - debit) ∧
+      recordWithdrawal refunded.limiter refunded.now refunded.quotes d.coreAddress d.coreAddress
+        a.token debit (refunded.core.tokens a.token).decimals = .ok (funding, limiter) ∧
+      next = guardExit d { refunded with limiter := limiter, payouts := refunded.payouts ++
+        [⟨.ordinary, a.token, a.recipient, debit, some funding, none⟩] }
+
+/-- Approved debit is bounded by the signed maximum; the complete signed request
+    survives in the instruction receipt, while the Withdrawal receipt is actual. -/
+def MeasuredApprovedSettlement : Prop :=
+  ∀ d w caller q sig obs next, fulfillApprovedWithdrawal d w caller q sig obs = .ok next →
+    let debit := debitedAmount q.token q.amount obs
+    0 < debit ∧ debit ≤ q.amount ∧
+    ∃ prepared transferred refunded,
+      approvedBeforeTransfer d w caller q sig = .ok prepared ∧
+      prepared.limiter.transient.flowStarted = true ∧
+      transferAsset d prepared q.token q.recipient q.amount obs = .ok (debit, transferred) ∧
+      transferred.limiter = prepared.limiter ∧
+      refundAsset transferred (w.core.rootAccountIdOf q.account) q.token q.amount debit = .ok refunded ∧
+      refunded.core.balances (w.core.rootAccountIdOf q.account) q.token =
+        transferred.core.balances (w.core.rootAccountIdOf q.account) q.token + (q.amount - debit) ∧
+      next = guardExit d { refunded with payouts := refunded.payouts ++
+        [⟨.approved, q.token, q.recipient, debit, none, some q⟩] }
 
 /-- Group 8: physical path inventory, rollback, actual guard, and surplus framing. -/
 def PayoutCoverageAndAtomicity : Prop :=
@@ -312,7 +369,8 @@ def PayoutCoverageAndAtomicity : Prop :=
     (executeTransaction d w calls).core = w.core ∧
     (executeTransaction d w calls).limiter.persistent = w.limiter.persistent ∧
     (executeTransaction d w calls).nativeCustody = w.nativeCustody ∧
-    (executeTransaction d w calls).payouts = w.payouts)
+    (executeTransaction d w calls).payouts = w.payouts) ∧
+  MeasuredDepositCredit ∧ MeasuredOrdinarySettlement ∧ MeasuredApprovedSettlement
 
 /-- Full target; passing only one conjunct is NOT the client's completed result. -/
 def PolicyBundle : Prop :=

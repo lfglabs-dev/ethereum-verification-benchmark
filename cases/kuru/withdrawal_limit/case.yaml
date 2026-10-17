@@ -10,7 +10,7 @@ translation_status: translated
 spec_status: frozen
 proof_status: complete
 upstream_repo: null
-upstream_commit: 52d8e49aff11c52654955c8591a032172a40c79e
+upstream_commit: 62c478b05dfe936c87fa95f35d89307d4a2d303c
 original_contract_path: src/account/AccountCore.sol
 source_ref: model:Benchmark/Cases/Kuru/WithdrawalLimit/Contract.lean
 lean_target: Benchmark.Cases.Kuru.WithdrawalLimit.Compile
@@ -31,6 +31,8 @@ selected_functions:
   - AccountCore.fulfillApprovedWithdrawal
   - AccountCore.invalidateApprovedWithdrawalNonce
   - AccountCore.setWithdrawalAuthority
+  - AccountCore._deposit
+  - AccountCore._withdrawAsset
   - AccountCore._transferAsset
   - AccountCore.receive
   - AccountCore._registerAccount
@@ -54,7 +56,9 @@ abstraction_notes: >
   APIs. All eight complete specification groups and PolicyBundle have machine-checked reference
   proofs. Root/child allocation and list writers are concrete; non-custody arithmetic and creation
   authorization use explicit projections. The ordinary batch theorem requires a successful initial
-  capacity observation. Source/helper/storage/external correspondence is manually reviewed; no
+  capacity observation. Deposits credit measured custody receipts; withdrawals reserve the
+  requested maximum, pin before callbacks, refund the difference and account for actual debit.
+  Source/helper/storage/external correspondence is manually reviewed; no
   Solidity compiler or bytecode refinement is claimed. Original Solidity is not distributed.
 unsupported_feature_codes: []
 notes: >

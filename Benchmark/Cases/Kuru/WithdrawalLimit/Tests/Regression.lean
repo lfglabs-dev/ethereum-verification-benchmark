@@ -197,6 +197,132 @@ private def modifierRegressions : Checked (List String) := do
     "paused_child_and_custody_rejection", "guard_only_callback_sentinel_rejection",
     "active_callback_sentinel_rejection", "guard_only_allocation_failure_atomic_restore"]
 
+/-- Positive partial receipt/debit checks for both public deposit overloads and
+    both payout paths. These are finite executable checks, not source-suite claims. -/
+private def measuredTransferRegressions : Checked (List String) := do
+  let d := testDeployment
+  let initial ← fixture 10
+  let credited ← deposit d initial 1 (.owner 1) 10 10 0 ⟨true, true, 100, 109, []⟩
+  ensure (credited.core.balances 1 10 = 9 ∧ current credited.limiter.persistent.history = 9) .balance
+  let credited2 ← deposit d credited 1 (.rootId 1) 10 5 0 ⟨true, true, 109, 113, []⟩
+  ensure (credited2.core.balances 1 10 = 13 ∧ current credited2.limiter.persistent.history = 13) .balance
+  let ordinary ← withdraw d (endTransaction credited) 1 ⟨1, 10, 5, 30⟩ ⟨true, true, 109, 105, []⟩
+  ensure (ordinary.core.balances 1 10 = 5 ∧ ordinary.limiter.persistent.cursor = 4) .balance
+  ensure ((ordinary.payouts.getLast?.map Payout.amount) = some 4) .transfer
+  let authorized ← policyAction d (endTransaction credited) 1 (.rotateAuthority 3)
+  let q : ApprovedWithdrawal := ⟨1, 10, 30, 4, 0, authorized.now, 1⟩
+  let sig : SignatureAcceptance := { owner := 1, domainProxy := 100, chainId := 1, payload := q, accepted := true }
+  let approved ← fulfillApprovedWithdrawal d authorized 3 q sig ⟨true, true, 109, 106, []⟩
+  ensure (approved.core.balances 1 10 = 6 ∧ approved.core.approvedNonces 1 = 1) .balance
+  ensure (approved.limiter.persistent.cursor = 0 ∧ current approved.limiter.persistent.history = 9) .limit
+  ensure ((approved.payouts.getLast?.map Payout.amount) = some 3 ∧
+    (approved.payouts.getLast?.bind Payout.approvedInstruction) = some q) .signature
+  ensure ((deposit d initial 1 (.owner 1) 10 10 0 ⟨true, true, 100, 100, []⟩).toOption.isNone = true) .transfer
+  ensure ((deposit d initial 1 (.owner 1) 10 10 0 ⟨true, true, 100, 99, []⟩).toOption.isNone = true) .transfer
+  ensure ((deposit d initial 1 (.owner 1) 10 10 0 ⟨true, true, 100, 111, []⟩).toOption.isNone = true) .transfer
+  ensure ((withdraw d credited 1 ⟨1, 10, 5, 30⟩ ⟨true, true, 109, 109, []⟩).toOption.isNone = true) .transfer
+  ensure ((withdraw d credited 1 ⟨1, 10, 5, 30⟩ ⟨true, true, 109, 110, []⟩).toOption.isNone = true) .transfer
+  ensure ((withdraw d credited 1 ⟨1, 10, 5, 30⟩ ⟨true, true, 109, 103, []⟩).toOption.isNone = true) .transfer
+  ensure ((fulfillApprovedWithdrawal d authorized 3 q sig ⟨true, true, 109, 109, []⟩).toOption.isNone = true) .transfer
+  ensure ((fulfillApprovedWithdrawal d authorized 3 q sig ⟨true, true, 109, 110, []⟩).toOption.isNone = true) .transfer
+  ensure ((fulfillApprovedWithdrawal d authorized 3 q sig ⟨true, true, 109, 104, []⟩).toOption.isNone = true) .transfer
+  ensure ((withdraw d credited 1 ⟨1, 10, 10, 30⟩ ⟨true, true, 109, 101, []⟩).toOption.isNone = true) .balance
+  let lowFrame : InternalFrame := {
+    owner := 1, grants := authorized.core.grants, reserves := authorized.core.reserves,
+    balances := updateBalance authorized.core.balances 1 10 3 }
+  let low := environmentAction d authorized (.internalFrame lowFrame)
+  let reserved := caughtCall low (fun s => fulfillApprovedWithdrawal d s 3 q sig ⟨true, true, 109, 106, []⟩)
+  ensure (reserved.core.approvedNonces 1 = 0 ∧ reserved.core.balances 1 10 = 3 ∧ reserved.payouts.length = 0) .nonce
+  return ["ordinary_reserves_requested_maximum", "approved_reserves_signed_maximum_and_rolls_back_nonce",
+    "measured_deposit_owner_partial_credit", "measured_deposit_id_partial_credit",
+    "measured_ordinary_partial_debit_refund_capacity", "measured_ordinary_actual_receipt",
+    "measured_approved_partial_debit_refund_nonce", "measured_approved_pools_unchanged",
+    "measured_approved_signed_maximum_retained", "deposit_zero_delta_rejected",
+    "deposit_wrong_direction_rejected", "deposit_above_request_rejected",
+    "ordinary_zero_delta_rejected", "ordinary_wrong_direction_rejected", "ordinary_above_request_rejected",
+    "approved_zero_delta_rejected", "approved_wrong_direction_rejected", "approved_above_request_rejected"]
+
+private def measuredCallbackRegressions : Checked (List String) := do
+  let d := testDeployment
+  let w ← fixture 10
+  let funded ← deposit d w 1 (.owner 1) 10 10 0 ⟨true, true, 0, 9, []⟩
+  let w := endTransaction funded
+  let pinCallbacks : List Callback := [
+    { caller := 1, action := .configureDrip 999 1 },
+    { caller := 1, action := .configureSource 10 21 },
+    { caller := 1, action := .configureToken 10 true (.ok 19) },
+    { caller := 1, action := .configureToken 10 false (.ok 0),
+      environmentBefore := [.publish 20 (.ok 100)] },
+    { caller := 30, action := .nestedGuarded }]
+  let next ← withdraw d w 1 ⟨1, 10, 5, 30⟩ ⟨true, true, 9, 5, pinCallbacks⟩
+  ensure (next.limiter.transient.prices 10 = 1 ∧ next.limiter.persistent.cursor = 4) .price
+  ensure (next.limiter.persistent.capacityUsd18 = 0 ∧ next.limiter.persistent.priceSource 10 = 20) .config
+  ensure ((next.core.tokens 10).decimals = 18 ∧ (next.core.tokens 10).enabled = false) .config
+  ensure (next.core.guardWord = 50 ∧ next.core.balances 1 10 = 5) .balance
+  let propagate : List Callback := [{ caller := 1, action := .configureDrip 999 1, catchFailure := false }]
+  let failed := caughtCall w (fun s => withdraw d s 1 ⟨1, 10, 5, 30⟩ ⟨true, true, 9, 5, propagate⟩)
+  ensure (failed.core.balances 1 10 = 9 ∧ failed.limiter.transient.flowStarted = false ∧
+    failed.limiter.transient.prices 10 = 0 ∧ failed.payouts.length = 0) .limit
+  let frame : InternalFrame := {
+    owner := 1, grants := w.core.grants,
+    balances := updateBalance w.core.balances 1 10 40, reserves := w.core.reserves }
+  let adjust : List Callback := [{ caller := 1, action := .observe, environmentBefore := [.internalFrame frame] }]
+  let adjusted ← withdraw d w 1 ⟨1, 10, 5, 30⟩ ⟨true, true, 9, 5, adjust⟩
+  ensure (adjusted.core.balances 1 10 = 41 ∧ adjusted.limiter.persistent.cursor = 4) .balance
+  let overflow : InternalFrame := { frame with balances := updateBalance w.core.balances 1 10 (maxWord 256) }
+  let overflowCb : List Callback := [{ caller := 1, action := .freeze true, environmentBefore := [.internalFrame overflow] }]
+  let rejected := caughtCall w (fun s => withdraw d s 1 ⟨1, 10, 5, 30⟩ ⟨true, true, 9, 5, overflowCb⟩)
+  ensure (rejected.core.balances 1 10 = 9 ∧ rejected.core.frozen = false ∧
+    rejected.limiter.transient.flowStarted = false ∧ rejected.limiter.persistent.cursor = 0) .arithmetic
+  let authority ← policyAction d w 1 (.rotateAuthority 3)
+  let q : ApprovedWithdrawal := ⟨1, 10, 30, 5, 0, authority.now, 1⟩
+  let sig : SignatureAcceptance := { owner := 1, domainProxy := 100, chainId := 1, payload := q, accepted := true }
+  let approved ← fulfillApprovedWithdrawal d authority 3 q sig ⟨true, true, 9, 5, pinCallbacks⟩
+  ensure (approved.limiter.transient.prices 10 = 1 ∧ approved.core.balances 1 10 = 5 ∧
+    approved.limiter.persistent.cursor = 0) .price
+  let failedApproved := caughtCall authority (fun s =>
+    fulfillApprovedWithdrawal d s 3 q sig ⟨true, true, 9, 5, overflowCb⟩)
+  ensure (failedApproved.core.approvedNonces 1 = 0 ∧ failedApproved.core.balances 1 10 = 9 ∧
+    failedApproved.core.frozen = false ∧ failedApproved.limiter.transient.flowStarted = false) .nonce
+  let invalidCb : List Callback := [{ caller := 1, action := .invalidateNonce 1 5 }]
+  let invalid := caughtCall authority (fun s =>
+    fulfillApprovedWithdrawal d s 3 q sig ⟨true, true, 9, 9, invalidCb⟩)
+  ensure (invalid.core.approvedNonces 1 = 0 ∧ invalid.core.balances 1 10 = 9 ∧
+    invalid.limiter.transient.prices 10 = 0 ∧ invalid.payouts.length = 0) .nonce
+  -- A callback may alter free balance without altering the funding pools. Record
+  -- ordinary capacity after the transfer; failure must roll back that callback.
+  let overBudgetFrame : InternalFrame := { frame with balances := updateBalance w.core.balances 1 10 20 }
+  let overBudget := environmentAction d w (.internalFrame overBudgetFrame)
+  let mutated : List Callback := [{ caller := 1, action := .freeze true }]
+  let capacityFailure := caughtCall overBudget (fun s =>
+    withdraw d s 1 ⟨1, 10, 12, 30⟩ ⟨true, true, 20, 10, mutated⟩)
+  ensure (capacityFailure.core.balances 1 10 = 20 ∧ capacityFailure.core.frozen = false ∧
+    capacityFailure.limiter.transient.flowStarted = false ∧ capacityFailure.limiter.persistent.cursor = 0) .limit
+  let empty ← fixture 10
+  let failedDeposit := caughtCall empty (fun s => deposit d s 1 (.owner 9) 10 10 0
+    ⟨true, true, 100, 100, [{ caller := 1, action := .freeze true }]⟩)
+  ensure (failedDeposit.core.lastAccountId = 1 ∧ failedDeposit.core.rootAccountIdOf 9 = 0 ∧
+    failedDeposit.core.frozen = false ∧ current failedDeposit.limiter.persistent.history = 0) .transfer
+  let roles : Key → Roles := fun _ => ⟨1, 1, 1⟩
+  let fresh ← freshBoundPair d 100000 1 0 1 1 2 roles
+  let fresh := environmentAction d fresh (.publish 20 (.ok 1))
+  let fresh ← policyAction d fresh 1 (.configureSource 10 20)
+  let seeded : InternalFrame := {
+    owner := 1, grants := fresh.core.grants, reserves := fresh.core.reserves,
+    balances := updateBalance fresh.core.balances 1 10 10 }
+  let fresh := environmentAction d fresh (.internalFrame seeded)
+  let decimals ← withdraw d fresh 1 ⟨1, 10, 5, 30⟩
+    ⟨true, true, 10, 6, [{ caller := 1, action := .configureToken 10 true (.ok 18) }]⟩
+  ensure ((decimals.core.tokens 10).decimals = 18 ∧
+    decimals.limiter.persistent.drip.available = usdScale - 4 ∧ decimals.core.balances 1 10 = 6) .limit
+  return ["deposit_invalid_delta_rolls_back_allocation_callback",
+    "ordinary_record_uses_post_callback_core_decimals", "ordinary_callback_price_pinned_before_transfer", "ordinary_callback_configuration_locked",
+    "callback_decimals_stable_but_enabled_mutable", "partial_callback_guard_and_refund",
+    "uncaught_config_callback_rolls_back_pinning", "refund_adds_to_post_callback_ledger",
+    "ordinary_refund_overflow_rolls_back_callback_and_flow", "approved_callback_price_pinned",
+    "approved_refund_overflow_rolls_back_nonce", "approved_invalid_delta_rolls_back_callback_nonce",
+    "ordinary_post_transfer_capacity_failure_atomic"]
+
 def finiteRegressions : Checked (List String) := do
   let h ← historyRegressions
   let v ← valuationRegressions
@@ -206,7 +332,9 @@ def finiteRegressions : Checked (List String) := do
   let d ← dripRegressions
   let r ← revisionRegressions
   let m ← modifierRegressions
-  return h ++ v ++ o ++ a ++ n ++ d ++ r ++ m
+  let measured ← measuredTransferRegressions
+  let callbacks ← measuredCallbackRegressions
+  return h ++ v ++ o ++ a ++ n ++ d ++ r ++ m ++ measured ++ callbacks
 
 #eval do
   match finiteRegressions with

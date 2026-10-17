@@ -12,6 +12,14 @@ namespace Benchmark.Cases.Kuru.WithdrawalLimit
 #check write
 #check recordWithdrawal
 #check recordDeposit
+#check transferAsset
+#check withdrawBeforeTransfer
+#check refundAsset
+#check receivedAmount
+#check debitedAmount
+#check MeasuredDepositCredit
+#check MeasuredOrdinarySettlement
+#check MeasuredApprovedSettlement
 #check fulfillApprovedWithdrawal
 #check executeTransaction
 #check Reachable

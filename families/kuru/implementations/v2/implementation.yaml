@@ -6,7 +6,7 @@ display_name: Kuru V2 withdrawal-policy semantic model
 split: active
 status: translated
 upstream_repo: null
-upstream_commit: 52d8e49aff11c52654955c8591a032172a40c79e
+upstream_commit: 62c478b05dfe936c87fa95f35d89307d4a2d303c
 source_language: solidity
 source_artifact_path: Benchmark/Cases/Kuru/WithdrawalLimit
 case_ids:

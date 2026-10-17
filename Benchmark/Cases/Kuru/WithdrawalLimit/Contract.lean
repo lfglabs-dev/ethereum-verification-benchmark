@@ -38,7 +38,8 @@ Simplifications and boundaries (not undisclosed axioms):
    Caught failures keep earlier calls; uncaught route failure restores its entry.
    The timestamp stays fixed within a route. New transactions clear transients,
    accept only monotone timestamps, and preserve every persistent funding field.
-8. Logs are gross payout receipts. No claim of net native debit, receipt economics,
+8. Logs use measured ERC20 custody debit and gross native payout. No claim of net
+   native debit, recipient receipt economics,
    net-inflow/loss bound, deployment/upgrade safety or bytecode refinement. No
    upgrade transition exists: the trace is for unchanged pinned implementations.
 9. This is a Verity-type/rely-guarantee semantic model, not emitted Yul. Compile
@@ -129,8 +130,9 @@ structure Payout where
   kind : PayoutKind
   token : Key
   recipient : Key
+  /-- Actual observed ERC20 custody debit, or requested native gross payout. -/
   amount : Nat
-  /-- Ordinary valued gross amount; approved amount deliberately NOT valued. -/
+  /-- Ordinary valued actual debit; approved amount deliberately NOT valued. -/
   funding : Option Funding
   approvedInstruction : Option ApprovedWithdrawal
 
@@ -392,22 +394,39 @@ structure TransferObservation where
 
 /-- The only modeled physical-outflow helper; two direct Core callers below. -/
 def transferAsset (d : Deployment) (w : World) (token recipient : Key)
-    (amount : Nat) (obs : TransferObservation) : Checked World := do
+    (amount : Nat) (obs : TransferObservation) : Checked (Nat × World) := do
   if token = 0 then
     ensure (w.nativeCustody ≥ amount) .transfer
     let w := { w with nativeCustody := w.nativeCustody - amount }
     let w ← callbacks d obs.callbacks w
     ensure (obs.callSucceeds = true) .transfer
-    return w
+    return (amount, w)
   else
     ensure (obs.readsSucceed = true ∧ obs.beforeBalance < width 256) .transfer
     let w ← callbacks d obs.callbacks w
     ensure (obs.callSucceeds = true) .transfer
     ensure (obs.afterBalance < width 256) .transfer
-    ensure (obs.beforeBalance ≥ obs.afterBalance ∧ obs.beforeBalance - obs.afterBalance = amount) .transfer
+    ensure (obs.afterBalance < obs.beforeBalance ∧ obs.beforeBalance - obs.afterBalance ≤ amount) .transfer
     -- Recipient proceeds are not inferred from these observations.
     let _ := recipient
-    return w
+    return (obs.beforeBalance - obs.afterBalance, w)
+
+/-- Source _withdrawAsset prefix: reserve the requested maximum, then pin flow/price.
+    Factored at the external CALL, like approvedBeforeTransfer. -/
+def withdrawBeforeTransfer (d : Deployment) (w : World) (id : Nat) (token : Key)
+    (amount : Nat) : Checked World := do
+  ensure (w.core.balances id token ≥ amount) .balance
+  let w := { w with core := { w.core with balances := updateBalance w.core.balances id token (w.core.balances id token - amount) } }
+  requireLimiter w
+  let limiter ← checkApprovedWithdrawal w.limiter w.now w.quotes d.coreAddress d.coreAddress token
+  return { w with limiter := limiter }
+
+/-- Source _withdrawAsset suffix. Add to the POST-callback ledger, checked for overflow. -/
+def refundAsset (w : World) (id : Nat) (token : Key) (amount debited : Nat) : Checked World := do
+  if debited < amount then
+    let balance ← checkedAdd 256 (w.core.balances id token) (amount - debited)
+    return { w with core := { w.core with balances := updateBalance w.core.balances id token balance } }
+  else return w
 
 structure OrdinaryArgs where
   rootId : Nat
@@ -423,16 +442,15 @@ def withdraw (d : Deployment) (w : World) (caller : Key)
   ensure (withdrawAuthorized w.core w.now a.rootId caller = true) .unauthorized
   ensure (a.amount > 0) .amount
   ensure (a.recipient ≠ 0 ∧ a.recipient ≠ d.coreAddress) .recipient
-  ensure (w.core.balances a.rootId a.token ≥ a.amount) .balance
   requireRelease w.core a.token
-  let w := { w with core := { w.core with balances := (updateBalance w.core.balances a.rootId a.token (w.core.balances a.rootId a.token - a.amount)) } }
+  let prepared ← withdrawBeforeTransfer d w a.rootId a.token a.amount
+  let (debited, transferred) ← transferAsset d prepared a.token a.recipient a.amount obs
+  let w ← refundAsset transferred a.rootId a.token a.amount debited
   requireLimiter w
   let (funding, limiter) ← recordWithdrawal w.limiter w.now w.quotes d.coreAddress d.coreAddress
-    a.token a.amount (w.core.tokens a.token).decimals
-  let w := { w with limiter := limiter }
-  let w ← transferAsset d w a.token a.recipient a.amount obs
-  return guardExit d { w with payouts := w.payouts ++ [⟨.ordinary, a.token, a.recipient,
-    a.amount, some funding, none⟩] }
+    a.token debited (w.core.tokens a.token).decimals
+  return guardExit d { w with limiter := limiter, payouts := w.payouts ++ [⟨.ordinary, a.token, a.recipient,
+    debited, some funding, none⟩] }
 
 def signatureValid (d : Deployment) (owner : Key) (q : ApprovedWithdrawal)
     (sig : SignatureAcceptance) : Bool := decide (
@@ -457,10 +475,13 @@ def approvedBeforeTransfer (d : Deployment) (w : World) (caller : Key)
   ensure (q.nonce = w.core.approvedNonces q.account) .nonce
   ensure (signatureValid d (w.core.accounts id).owner q sig = true) .signature
   requireRelease w.core q.token
-  ensure (w.core.balances id q.token ≥ q.amount) .balance
   let nextNonce ← checkedAdd 256 q.nonce 1
   let w := { w with core := { w.core with
-    approvedNonces := update w.core.approvedNonces q.account nextNonce,
+    approvedNonces := update w.core.approvedNonces q.account nextNonce } }
+  -- Inline withdrawBeforeTransfer at this model-only checkpoint to expose the
+  -- source nonce-before-reservation order to checkpoint proofs.
+  ensure (w.core.balances id q.token ≥ q.amount) .balance
+  let w := { w with core := { w.core with
     balances := updateBalance w.core.balances id q.token (w.core.balances id q.token - q.amount) } }
   requireLimiter w
   let limiter ← checkApprovedWithdrawal w.limiter w.now w.quotes d.coreAddress d.coreAddress q.token
@@ -469,25 +490,37 @@ def approvedBeforeTransfer (d : Deployment) (w : World) (caller : Key)
 def fulfillApprovedWithdrawal (d : Deployment) (w : World) (caller : Key)
     (q : ApprovedWithdrawal) (sig : SignatureAcceptance) (obs : TransferObservation) : Checked World := do
   let prepared ← approvedBeforeTransfer d w caller q sig
-  let w ← transferAsset d prepared q.token q.recipient q.amount obs
+  let (debited, transferred) ← transferAsset d prepared q.token q.recipient q.amount obs
+  let w ← refundAsset transferred (w.core.rootAccountIdOf q.account) q.token q.amount debited
   return guardExit d { w with payouts := w.payouts ++ [⟨.approved, q.token, q.recipient,
-    q.amount, none, some q⟩] }
+    debited, none, some q⟩] }
+
+/-- Deterministic measured credit selected only after observation checks succeed. -/
+def receivedAmount (token : Key) (amount : Nat) (obs : TransferObservation) : Nat :=
+  if token = 0 then amount else obs.afterBalance - obs.beforeBalance
+
+/-- Deterministic measured debit; native callbacks may create surplus. -/
+def debitedAmount (token : Key) (amount : Nat) (obs : TransferObservation) : Nat :=
+  if token = 0 then amount else obs.beforeBalance - obs.afterBalance
 
 inductive DepositTarget where
   | rootId (id : Nat)
   | owner (owner : Key)
+
+/-- Shared checked allocation prefix of both deposit overloads. -/
+def allocateDeposit (core : Core) : DepositTarget → Checked (Nat × Core)
+  | .rootId id => do
+    ensure (id < width 40) .config
+    requireRoot core id
+    pure (id, core)
+  | .owner owner => ensureRoot core owner
 
 /-- Both Core overloads converge on this source-ordered `_deposit` model. -/
 def deposit (d : Deployment) (w : World) (_caller : Key) (target : DepositTarget)
     (token : Key) (amount msgValue : Nat) (obs : TransferObservation) : Checked World := do
   ensure (amount < width 256 ∧ msgValue < width 256) .config
   let w ← activeGuardEnter d w
-  let (id, core) ← match target with
-    | .rootId id => do
-      ensure (id < width 40) .config
-      requireRoot w.core id
-      pure (id, w.core)
-    | .owner owner => ensureRoot w.core owner
+  let (id, core) ← allocateDeposit w.core target
   let w := { w with core := core }
   ensure (amount > 0) .amount
   ensure ((w.core.tokens token).enabled = true) .token
@@ -500,12 +533,13 @@ def deposit (d : Deployment) (w : World) (_caller : Key) (target : DepositTarget
       ensure (obs.readsSucceed = true ∧ obs.beforeBalance < width 256) .transfer
       let w ← callbacks d obs.callbacks w
       ensure (obs.callSucceeds = true ∧ obs.afterBalance < width 256) .transfer
-      ensure (obs.afterBalance ≥ obs.beforeBalance ∧ obs.afterBalance - obs.beforeBalance = amount) .transfer
+      ensure (obs.afterBalance > obs.beforeBalance ∧ obs.afterBalance - obs.beforeBalance ≤ amount) .transfer
       pure w
+  let received := receivedAmount token amount obs
   requireLimiter w
   let (_, limiter) ← recordDeposit w.limiter w.now w.quotes d.coreAddress d.coreAddress
-    token amount (w.core.tokens token).decimals
-  let balance ← checkedAdd 256 (w.core.balances id token) amount
+    token received (w.core.tokens token).decimals
+  let balance ← checkedAdd 256 (w.core.balances id token) received
   return guardExit d { w with limiter := limiter, core := { w.core with
     balances := updateBalance w.core.balances id token balance } }
 

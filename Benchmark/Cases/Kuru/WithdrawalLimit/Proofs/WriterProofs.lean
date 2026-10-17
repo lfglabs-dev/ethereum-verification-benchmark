@@ -144,23 +144,27 @@ theorem writer_callbacks (d : Deployment) (cs : List Callback) (w next : World)
       · have hi := ih _ he.1 h; exact ⟨hi.1,hi.2.trans he.2⟩
       · contradiction
 
-theorem writer_transfer (d : Deployment) (w : World) (token recipient : Key) (amount : Nat)
+theorem writer_transfer (d : Deployment) (w : World) (token recipient : Key) (amount : Nat) {debited : Nat}
     (obs : TransferObservation) (next : World) (hs : WorldSafe w xs)
-    (h : transferAsset d w token recipient amount obs = .ok next) :
+    (h : transferAsset d w token recipient amount obs = .ok (debited, next)) :
     WorldSafe next xs ∧ current next.limiter.persistent.history = current w.limiter.persistent.history := by
   unfold transferAsset at h
   split at h
   · obtain ⟨_,h⟩ := core_ensure_ok h
     obtain ⟨out,hout,h⟩ := core_bind_ok h
     obtain ⟨_,h⟩ := core_ensure_ok h
-    rw [← Except.ok.inj h]
+    have hv := congrArg Prod.snd (Except.ok.inj h)
+    dsimp only at hv
+    rw [← hv]
     exact writer_callbacks d obs.callbacks { w with nativeCustody := w.nativeCustody-amount } out hs hout
   · obtain ⟨_,h⟩ := core_ensure_ok h
     obtain ⟨out,hout,h⟩ := core_bind_ok h
     obtain ⟨_,h⟩ := core_ensure_ok h
     obtain ⟨_,h⟩ := core_ensure_ok h
     obtain ⟨_,h⟩ := core_ensure_ok h
-    rw [← Except.ok.inj h]
+    have hv := congrArg Prod.snd (Except.ok.inj h)
+    dsimp only at hv
+    rw [← hv]
     exact writer_callbacks d obs.callbacks w out hs hout
 
 theorem consumption_total {a b : Limiter} {now E : Nat} {f : Funding}
@@ -168,12 +172,29 @@ theorem consumption_total {a b : Limiter} {now E : Nat} {f : Funding}
   rcases h with ⟨A,ha,hcursor,hcredit,hu,hr,hbound,hD,_⟩
   exact hD
 
+theorem writer_approved_frame (s : Limiter) (now : Nat) (fetch : PriceFetch)
+    (caller core token : Key) (next : Limiter)
+    (h : checkApprovedWithdrawal s now fetch caller core token = .ok next) : FundingFrame s next := by
+  unfold checkApprovedWithdrawal at h
+  obtain ⟨_, h⟩ := core_ensure_ok h
+  obtain ⟨started, hs, h⟩ := core_bind_ok h
+  obtain ⟨quote, snapped, hp, h⟩ := core_bind_pair_ok h
+  rw [← Except.ok.inj h]
+  exact frame_trans (beginFlow_frame s started now hs) (snapshot_frame started fetch token quote snapped hp)
+
+theorem writer_refund (w next : World) (id : Nat) (token : Key) (amount debit : Nat)
+    (hs : WorldSafe w xs) (h : refundAsset w id token amount debit = .ok next) : WorldSafe next xs := by
+  have hf := core_refund_frame w next id token amount debit h
+  change LimiterSafe next.limiter xs next.now
+  rw [hf.1, hf.2.2.1]
+  exact hs
+
 theorem writer_withdraw (d : Deployment) (w : World) (caller : Key)
     (a : OrdinaryArgs) (obs : TransferObservation) (next : World) (hs : WorldSafe w xs)
     (h : withdraw d w caller a obs = .ok next) :
     WorldSafe next xs ∧ current next.limiter.persistent.history = current w.limiter.persistent.history ∧
     OrdinaryCheckpoints d w caller a ∧
-    ∃ f, next.payouts = w.payouts ++ [⟨.ordinary,a.token,a.recipient,a.amount,some f,none⟩] ∧
+    ∃ f, next.payouts = w.payouts ++ [⟨.ordinary,a.token,a.recipient,debitedAmount a.token a.amount obs,some f,none⟩] ∧
       OrdinaryConsumption w.limiter next.limiter w.now (expiredReference xs w.now).1 f := by
   unfold withdraw at h
   obtain ⟨_,h⟩ := core_ensure_ok h
@@ -187,30 +208,39 @@ theorem writer_withdraw (d : Deployment) (w : World) (caller : Key)
   obtain ⟨hauth,h⟩ := core_ensure_ok h
   obtain ⟨hamount,h⟩ := core_ensure_ok h
   obtain ⟨hrecipient,h⟩ := core_ensure_ok h
-  obtain ⟨hbalance,h⟩ := core_ensure_ok h
   obtain ⟨u,hrelease,h⟩ := core_bind_ok h
   have hfreeze := core_ensure_success hrelease
-  obtain ⟨u,hbound,h⟩ := core_bind_ok h
-  have hb := core_ensure_success hbound
+  obtain ⟨prepared,hprep,h⟩ := core_bind_ok h
+  obtain ⟨hbalance,hbound,pinned,hpin,hpeq⟩ := core_withdrawBefore_success d _ prepared a.rootId a.token a.amount hprep
+  have hpSafe : WorldSafe prepared xs := by
+    rw [hpeq]
+    exact safe_approved w.limiter xs w.now w.quotes d.coreAddress d.coreAddress a.token pinned hs hpin
+  have hpFrame := writer_approved_frame w.limiter w.now w.quotes d.coreAddress d.coreAddress a.token pinned hpin
+  have hpFlow := (core_approvedLimiter_frame w.limiter w.now w.quotes d.coreAddress d.coreAddress a.token pinned hpin).2
+  obtain ⟨debit,out,hout,h⟩ := core_bind_pair_ok h
+  have htSafe := writer_transfer d prepared a.token a.recipient a.amount obs out hpSafe hout
+  have htFrame := core_transferAsset_frame d prepared a.token a.recipient a.amount obs out hout
+  have htEq : out.limiter = pinned := by
+    rw [htFrame.2.2.2 (by rw [hpeq]; exact hpFlow), hpeq]
+  have hd := (core_transfer_debit d prepared a.token a.recipient a.amount debit obs out hout).1
+  obtain ⟨refunded,hrf,h⟩ := core_bind_ok h
+  have hrSafe := writer_refund out refunded a.rootId a.token a.amount debit htSafe.1 hrf
+  have hrFrame := core_refund_frame out refunded a.rootId a.token a.amount debit hrf
+  have hrEq : refunded.limiter = pinned := hrFrame.2.2.1.trans htEq
+  have hn : refunded.now = w.now := by rw [hrFrame.1, htFrame.1, hpeq]
+  obtain ⟨u,_,h⟩ := core_bind_ok h
   obtain ⟨f,limiter,hl,h⟩ := core_bind_pair_ok h
-  have hlim := withdrawal_exact w.limiter xs w.now w.quotes d.coreAddress d.coreAddress
-    a.token a.amount (w.core.tokens a.token).decimals f limiter hs hl
-  obtain ⟨out,hout,h⟩ := core_bind_ok h
-  let checkpoint : World := { w with core := { w.core with guardWord := d.coreAddress.toNat, balances := updateBalance w.core.balances a.rootId a.token (w.core.balances a.rootId a.token-a.amount) }, limiter := limiter }
-  have hsafe := writer_transfer d checkpoint a.token a.recipient a.amount obs out hlim.1 hout
-  have hframe := core_transferAsset_frame d checkpoint a.token a.recipient a.amount obs out hout
-  have hlimEq : out.limiter = limiter := hframe.2.2.2 hlim.2.2
+  have hlim := withdrawal_exact refunded.limiter xs refunded.now refunded.quotes d.coreAddress d.coreAddress
+    a.token debit (refunded.core.tokens a.token).decimals f limiter hrSafe hl
+  have hcons : OrdinaryConsumption w.limiter limiter w.now (expiredReference xs w.now).1 f := by
+    have hh := hlim.2.1
+    rw [hn,hrEq] at hh
+    exact consumption_frame hpFrame hh
   rw [← Except.ok.inj h]
-  refine ⟨hsafe.1,?_,?_,f,?_,?_⟩
-  · change current out.limiter.persistent.history = current w.limiter.persistent.history
-    rw [hlimEq]
-    exact consumption_total hlim.2.1
-  · exact ⟨hp,hg,hrnz,hr,hauth,hamount,hrecipient.1,hrecipient.2,hbalance,hfreeze.1,hfreeze.2,hb⟩
-  · change out.payouts ++ [_] = w.payouts ++ [_]
-    rw [hframe.2.1]
-  · change OrdinaryConsumption w.limiter out.limiter w.now (expiredReference xs w.now).1 f
-    rw [hlimEq]
-    exact hlim.2.1
+  refine ⟨hlim.1,consumption_total hcons,?_,f,?_,hcons⟩
+  · exact ⟨hp,hg,hrnz,hr,hauth,hamount,hrecipient.1,hrecipient.2,hbalance,hfreeze.1,hfreeze.2,hbound⟩
+  · change refunded.payouts ++ [_] = w.payouts ++ [_]
+    rw [hrFrame.2.1,htFrame.2.1,hpeq,hd]
 
 theorem writer_approvedBefore (d : Deployment) (w : World) (caller : Key)
     (q : ApprovedWithdrawal) (sig : SignatureAcceptance) (next : World)
@@ -231,8 +261,8 @@ theorem writer_approvedBefore (d : Deployment) (w : World) (caller : Key)
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨u, _, h⟩ := core_bind_ok h
-  obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨n, _, h⟩ := core_bind_ok h
+  obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨u, _, h⟩ := core_bind_ok h
   obtain ⟨l, hl, h⟩ := core_bind_ok h
   have hsafe := safe_approved w.limiter xs w.now w.quotes d.coreAddress d.coreAddress q.token l hs hl
@@ -248,12 +278,14 @@ theorem writer_approved (d : Deployment) (w : World) (caller : Key)
   have hpools := (core_approved_success d w caller q sig obs next h).2.2.1
   unfold fulfillApprovedWithdrawal at h
   obtain ⟨prepared,hp,h⟩ := core_bind_ok h
-  obtain ⟨out,hout,h⟩ := core_bind_ok h
+  obtain ⟨debit,out,hout,h⟩ := core_bind_pair_ok h
+  obtain ⟨refunded,hr,h⟩ := core_bind_ok h
   have hs' := writer_approvedBefore d w caller q sig prepared hs hp
   have hs'' := writer_transfer d prepared q.token q.recipient q.amount obs out hs' hout
+  have hsFinal := writer_refund out refunded (w.core.rootAccountIdOf q.account) q.token q.amount debit hs''.1 hr
   refine ⟨?_,hpools.1⟩
   rw [← Except.ok.inj h]
-  exact hs''.1
+  exact hsFinal
 
 theorem writer_deposit (d : Deployment) (w : World) (caller : Key)
     (target : DepositTarget) (token : Key) (amount msgValue : Nat)
@@ -261,7 +293,7 @@ theorem writer_deposit (d : Deployment) (w : World) (caller : Key)
     (hs : WorldSafe w xs)
     (h : deposit d w caller target token amount msgValue obs = .ok next) :
     WorldSafe next (nextGhost xs w next) := by
-  simp only [deposit] at h
+  simp only [deposit, allocateDeposit] at h
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨entered, he, h⟩ := core_bind_ok h
   obtain ⟨_, _, heq⟩ := core_activeGuardEnter_success d w entered he
@@ -283,12 +315,12 @@ theorem writer_deposit (d : Deployment) (w : World) (caller : Key)
       ensure (obs.readsSucceed = true ∧ obs.beforeBalance < width 256) .transfer >>= fun _ =>
       callbacks d obs.callbacks { entered with core := p.2 } >>= fun funded =>
       ensure (obs.callSucceeds = true ∧ obs.afterBalance < width 256) .transfer >>= fun _ =>
-      ensure (obs.afterBalance ≥ obs.beforeBalance ∧ obs.afterBalance - obs.beforeBalance = amount) .transfer >>= fun _ =>
+      ensure (obs.afterBalance > obs.beforeBalance ∧ obs.afterBalance - obs.beforeBalance ≤ amount) .transfer >>= fun _ =>
         pure funded) >>= fun funded =>
       requireLimiter funded >>= fun _ =>
       recordDeposit funded.limiter funded.now funded.quotes d.coreAddress d.coreAddress
-        token amount (funded.core.tokens token).decimals >>= fun lp =>
-      checkedAdd 256 (funded.core.balances p.1 token) amount >>= fun balance =>
+        token (receivedAmount token amount obs) (funded.core.tokens token).decimals >>= fun lp =>
+      checkedAdd 256 (funded.core.balances p.1 token) (receivedAmount token amount obs) >>= fun balance =>
       pure (guardExit d { funded with limiter := lp.2, core := { funded.core with
         balances := updateBalance funded.core.balances p.1 token balance } }))) = .ok next := by
     cases target <;> by_cases ht : token = 0 <;>
@@ -320,7 +352,7 @@ theorem writer_deposit (d : Deployment) (w : World) (caller : Key)
   have hv := Except.ok.inj h0
   rw [← hv]
   have hrecord := deposit_exact funded.limiter xs funded.now funded.quotes d.coreAddress d.coreAddress
-    token amount (funded.core.tokens token).decimals v limiter hframe.1 hlim
+    token (receivedAmount token amount obs) (funded.core.tokens token).decimals v limiter hframe.1 hlim
   have hD : current funded.limiter.persistent.history = current w.limiter.persistent.history := by
     simpa only [heq] using hframe.2
   have hg : nextGhost xs w (guardExit d { funded with limiter := limiter, core := { funded.core with balances := updateBalance funded.core.balances id token balance } }) =

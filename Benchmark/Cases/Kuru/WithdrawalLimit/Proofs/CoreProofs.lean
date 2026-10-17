@@ -236,9 +236,9 @@ theorem core_approvedBeforeTransfer_success (d : Deployment) (w : World) (caller
   obtain ⟨u, hrelease, h⟩ := core_bind_ok h
   unfold requireRelease at hrelease
   have hfreeze := core_ensure_success hrelease
-  obtain ⟨hbalance, h⟩ := core_ensure_ok h
   obtain ⟨n, hn, h⟩ := core_bind_ok h
   obtain ⟨heqn, _⟩ := core_checkedAdd_ok hn
+  obtain ⟨hbalance, h⟩ := core_ensure_ok h
   obtain ⟨u, hbound, h⟩ := core_bind_ok h
   unfold requireLimiter at hbound
   have hb := core_ensure_success hbound
@@ -577,10 +577,62 @@ theorem core_callbacks_frame (d : Deployment) (cs : List Callback) (w next : Wor
           exact (hl2 hflow0).trans hl
       · contradiction
 
+/-- The measured return is tied to observations, never freely chosen. -/
+theorem core_transfer_debit (d : Deployment) (w : World) (token recipient : Key)
+    (amount debit : Nat) (obs : TransferObservation) (next : World)
+    (h : transferAsset d w token recipient amount obs = .ok (debit, next)) :
+    debit = debitedAmount token amount obs ∧ debit ≤ amount ∧ (amount > 0 → debit > 0) := by
+  unfold transferAsset at h
+  by_cases ht : token = 0
+  · simp only [ht, if_pos] at h
+    obtain ⟨_, h⟩ := core_ensure_ok h
+    obtain ⟨out, _, h⟩ := core_bind_ok h
+    obtain ⟨_, h⟩ := core_ensure_ok h
+    have hv := congrArg Prod.fst (Except.ok.inj h)
+    dsimp only at hv
+    exact ⟨by simpa [debitedAmount, ht] using hv.symm, by omega, by omega⟩
+  · simp only [ht, if_false] at h
+    obtain ⟨_, h⟩ := core_ensure_ok h
+    obtain ⟨out, _, h⟩ := core_bind_ok h
+    obtain ⟨_, h⟩ := core_ensure_ok h
+    obtain ⟨_, h⟩ := core_ensure_ok h
+    obtain ⟨hd, h⟩ := core_ensure_ok h
+    have hv := congrArg Prod.fst (Except.ok.inj h)
+    dsimp only at hv
+    exact ⟨by simpa [debitedAmount, ht] using hv.symm, by omega, by omega⟩
+
+theorem core_withdrawBefore_success (d : Deployment) (w next : World)
+    (id : Nat) (token : Key) (amount : Nat)
+    (h : withdrawBeforeTransfer d w id token amount = .ok next) :
+    w.core.balances id token ≥ amount ∧ w.core.limiterBound = true ∧
+    ∃ limiter, checkApprovedWithdrawal w.limiter w.now w.quotes d.coreAddress d.coreAddress token = .ok limiter ∧
+      next = { w with core := { w.core with balances := updateBalance w.core.balances id token (w.core.balances id token - amount) }, limiter := limiter } := by
+  unfold withdrawBeforeTransfer at h
+  obtain ⟨hb, h⟩ := core_ensure_ok h
+  obtain ⟨u, hu, h⟩ := core_bind_ok h
+  have hl := core_ensure_success hu
+  obtain ⟨limiter, hp, h⟩ := core_bind_ok h
+  exact ⟨hb, hl, limiter, hp, (Except.ok.inj h).symm⟩
+
+theorem core_refund_frame (w next : World) (id : Nat) (token : Key) (amount debit : Nat)
+    (h : refundAsset w id token amount debit = .ok next) :
+    next.now = w.now ∧ next.payouts = w.payouts ∧ next.limiter = w.limiter ∧
+      next.core.approvedNonces = w.core.approvedNonces ∧
+      next.core.balances id token = w.core.balances id token + (amount - debit) := by
+  unfold refundAsset at h
+  split at h
+  · obtain ⟨balance, hb, h⟩ := core_bind_ok h
+    have he := (core_checkedAdd_ok hb).1
+    rw [← Except.ok.inj h]
+    exact ⟨rfl, rfl, rfl, rfl, by simpa [updateBalance] using he⟩
+  · have hv := Except.ok.inj h
+    subst next
+    exact ⟨rfl, rfl, rfl, rfl, by omega⟩
+
 /-- transferAsset retains time/logs and monotone nonces even with native refunds. -/
 theorem core_transferAsset_frame (d : Deployment) (w : World) (token recipient : Key)
-    (amount : Nat) (obs : TransferObservation) (next : World)
-    (h : transferAsset d w token recipient amount obs = .ok next) :
+    (amount : Nat) {debited : Nat} (obs : TransferObservation) (next : World)
+    (h : transferAsset d w token recipient amount obs = .ok (debited, next)) :
     next.now = w.now ∧ next.payouts = w.payouts ∧
     (∀ k, w.core.approvedNonces k ≤ next.core.approvedNonces k) ∧
     (w.limiter.transient.flowStarted = true → next.limiter = w.limiter) := by
@@ -589,7 +641,8 @@ theorem core_transferAsset_frame (d : Deployment) (w : World) (token recipient :
   · obtain ⟨_, h⟩ := core_ensure_ok h
     obtain ⟨out, hout, h⟩ := core_bind_ok h
     obtain ⟨_, h⟩ := core_ensure_ok h
-    have hv := Except.ok.inj h
+    have hv := congrArg Prod.snd (Except.ok.inj h)
+    dsimp only at hv
     subst next
     simpa only using core_callbacks_frame d obs.callbacks
       { w with nativeCustody := w.nativeCustody - amount } out hout
@@ -598,7 +651,8 @@ theorem core_transferAsset_frame (d : Deployment) (w : World) (token recipient :
     obtain ⟨_, h⟩ := core_ensure_ok h
     obtain ⟨_, h⟩ := core_ensure_ok h
     obtain ⟨_, h⟩ := core_ensure_ok h
-    have hv := Except.ok.inj h
+    have hv := congrArg Prod.snd (Except.ok.inj h)
+    dsimp only at hv
     subst next
     exact core_callbacks_frame d obs.callbacks w out hout
 
@@ -621,8 +675,8 @@ theorem core_approvedBeforeTransfer_frame (d : Deployment) (w : World) (caller :
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨u, _, h⟩ := core_bind_ok h
-  obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨n, _, h⟩ := core_bind_ok h
+  obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨u, _, h⟩ := core_bind_ok h
   obtain ⟨l, hl, h⟩ := core_bind_ok h
   have hflow := (core_approvedLimiter_frame w.limiter w.now w.quotes
@@ -638,23 +692,30 @@ theorem core_approved_success (d : Deployment) (w : World) (caller : Key)
     ApprovedCheckpoints d w caller q sig ∧
     q.nonce + 1 ≤ next.core.approvedNonces q.account ∧
     SameFundingPools w.limiter next.limiter ∧
-    next.payouts = w.payouts ++ [⟨.approved, q.token, q.recipient, q.amount, none, some q⟩] ∧
+    next.payouts = w.payouts ++ [⟨.approved, q.token, q.recipient, debitedAmount q.token q.amount obs, none, some q⟩] ∧
     next.now = w.now := by
   unfold fulfillApprovedWithdrawal at h
   obtain ⟨prepared, hprepared, h⟩ := core_bind_ok h
   obtain ⟨hc, hnonce, _, _, hpools⟩ := core_approvedBeforeTransfer_success d w caller q sig prepared hprepared
   obtain ⟨hnow, hlogs, hflow⟩ := core_approvedBeforeTransfer_frame d w caller q sig prepared hprepared
-  obtain ⟨out, hout, h⟩ := core_bind_ok h
+  obtain ⟨pair, hout, h⟩ := core_bind_ok h
+  rcases pair with ⟨debit, out⟩
+  have hd := (core_transfer_debit d prepared q.token q.recipient q.amount debit obs out hout).1
   obtain ⟨houtnow, houtlogs, houtnonce, houtlimiter⟩ :=
     core_transferAsset_frame d prepared q.token q.recipient q.amount obs out hout
+  obtain ⟨refunded, hrefund, h⟩ := core_bind_ok h
+  obtain ⟨hrnow, hrlogs, hrli, hrnonce, _⟩ :=
+    core_refund_frame out refunded (w.core.rootAccountIdOf q.account) q.token q.amount debit hrefund
   have hv := Except.ok.inj h
   rw [← hv]
-  refine ⟨hc, ?_, ?_, ?_, houtnow.trans hnow⟩
-  · simpa only [guardExit, hnonce] using houtnonce q.account
-  · change SameFundingPools w.limiter out.limiter
-    rw [houtlimiter hflow]
+  refine ⟨hc, ?_, ?_, ?_, hrnow.trans (houtnow.trans hnow)⟩
+  · change q.nonce + 1 ≤ refunded.core.approvedNonces q.account
+    rw [hrnonce, ← hnonce]
+    exact houtnonce q.account
+  · change SameFundingPools w.limiter refunded.limiter
+    rw [hrli, houtlimiter hflow]
     exact hpools
-  · simp only [guardExit, houtlogs, hlogs]
+  · simp only [guardExit, hrlogs, houtlogs, hlogs, hd]
 
 theorem core_approved_replay_rejected (d : Deployment) (w : World) (caller : Key)
     (q : ApprovedWithdrawal) (sig : SignatureAcceptance) (obs : TransferObservation)
@@ -667,7 +728,7 @@ theorem core_approved_replay_rejected (d : Deployment) (w : World) (caller : Key
   change q.nonce = first.core.approvedNonces q.account at heq
   omega
 
-/-- Entire unchanged group7, including arbitrary-input checkpoint/replay clauses. -/
+/-- Entire group7: measured receipts and the retained arbitrary-input checkpoint/replay clauses. -/
 theorem approved_authority_and_replay : ApprovedAuthorityAndReplay := by
   refine ⟨core_approvedBeforeTransfer_success, ?_, core_invalidateNonce_success,
     core_rotateAuthority_success, core_approved_replay_rejected⟩
@@ -686,7 +747,7 @@ theorem core_withdraw_frame (d : Deployment) (w : World) (caller : Key)
     (a : OrdinaryArgs) (obs : TransferObservation) (next : World)
     (h : withdraw d w caller a obs = .ok next) :
     next.now = w.now ∧ ∃ f, next.payouts = w.payouts ++
-      [⟨.ordinary, a.token, a.recipient, a.amount, some f, none⟩] := by
+      [⟨.ordinary, a.token, a.recipient, debitedAmount a.token a.amount obs, some f, none⟩] := by
   unfold withdraw at h
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨entered, he, h⟩ := core_bind_ok h
@@ -696,17 +757,21 @@ theorem core_withdraw_frame (d : Deployment) (w : World) (caller : Key)
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨_, h⟩ := core_ensure_ok h
-  obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨u, _, h⟩ := core_bind_ok h
+  obtain ⟨prepared, hp, h⟩ := core_bind_ok h
+  obtain ⟨_, _, limiter, _, hpeq⟩ := core_withdrawBefore_success d _ prepared a.rootId a.token a.amount hp
+  obtain ⟨debit, out, hout, h⟩ := core_bind_pair_ok h
+  have hf := core_transferAsset_frame d prepared a.token a.recipient a.amount obs out hout
+  have hd := (core_transfer_debit d prepared a.token a.recipient a.amount debit obs out hout).1
+  obtain ⟨refunded, hr, h⟩ := core_bind_ok h
+  have hrf := core_refund_frame out refunded a.rootId a.token a.amount debit hr
   obtain ⟨u, _, h⟩ := core_bind_ok h
-  obtain ⟨f, limiter, _, h⟩ := core_bind_pair_ok h
-  obtain ⟨out, hout, h⟩ := core_bind_ok h
-  have hf := core_transferAsset_frame d _ a.token a.recipient a.amount obs out hout
+  obtain ⟨f, finalLimiter, _, h⟩ := core_bind_pair_ok h
   have hv := Except.ok.inj h
   rw [← hv]
-  refine ⟨hf.1, f, ?_⟩
-  change out.payouts ++ [_] = w.payouts ++ [_]
-  rw [hf.2.1]
+  refine ⟨hrf.1.trans (hf.1.trans (by rw [hpeq])), f, ?_⟩
+  change refunded.payouts ++ [_] = w.payouts ++ [_]
+  rw [hrf.2.1, hf.2.1, hpeq, hd]
 
 /-- Both deposit overloads create no physical payout receipt and keep time fixed. -/
 theorem core_deposit_frame (d : Deployment) (w : World) (caller : Key)
@@ -714,7 +779,7 @@ theorem core_deposit_frame (d : Deployment) (w : World) (caller : Key)
     (obs : TransferObservation) (next : World)
     (h : deposit d w caller target token amount msgValue obs = .ok next) :
     next.now = w.now ∧ next.payouts = w.payouts := by
-  simp only [deposit] at h
+  simp only [deposit, allocateDeposit] at h
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨entered, he, h⟩ := core_bind_ok h
   obtain ⟨_, _, heq⟩ := core_activeGuardEnter_success d w entered he
@@ -736,12 +801,12 @@ theorem core_deposit_frame (d : Deployment) (w : World) (caller : Key)
       ensure (obs.readsSucceed = true ∧ obs.beforeBalance < width 256) .transfer >>= fun _ =>
       callbacks d obs.callbacks { entered with core := p.2 } >>= fun funded =>
       ensure (obs.callSucceeds = true ∧ obs.afterBalance < width 256) .transfer >>= fun _ =>
-      ensure (obs.afterBalance ≥ obs.beforeBalance ∧ obs.afterBalance - obs.beforeBalance = amount) .transfer >>= fun _ =>
+      ensure (obs.afterBalance > obs.beforeBalance ∧ obs.afterBalance - obs.beforeBalance ≤ amount) .transfer >>= fun _ =>
         pure funded) >>= fun funded =>
       requireLimiter funded >>= fun _ =>
       recordDeposit funded.limiter funded.now funded.quotes d.coreAddress d.coreAddress
-        token amount (funded.core.tokens token).decimals >>= fun lp =>
-      checkedAdd 256 (funded.core.balances p.1 token) amount >>= fun balance =>
+        token (receivedAmount token amount obs) (funded.core.tokens token).decimals >>= fun lp =>
+      checkedAdd 256 (funded.core.balances p.1 token) (receivedAmount token amount obs) >>= fun balance =>
       pure (guardExit d { funded with limiter := lp.2, core := { funded.core with
         balances := updateBalance funded.core.balances p.1 token balance } }))) = .ok next := by
     cases target <;> by_cases ht : token = 0 <;>
@@ -808,10 +873,129 @@ theorem core_invoke_payout_inventory (d : Deployment) (w : World) (entry : Entry
     exact Or.inl (core_environment_frame d w action).2.2.1
   | abort error => contradiction
 
-/-- Entire unchanged group8; gross path receipts, guard, surplus and atomicity. -/
+theorem measured_deposit_credit : MeasuredDepositCredit := by
+  intro d w caller target token amount msgValue obs next h
+  dsimp only
+  simp only [deposit, allocateDeposit] at h
+  obtain ⟨_, h⟩ := core_ensure_ok h
+  obtain ⟨entered, he, h⟩ := core_bind_ok h
+  let allocation : Checked (Nat × Core) := match target with
+    | .rootId id => do
+      ensure (id < width 40) .config
+      requireRoot entered.core id
+      pure (id, entered.core)
+    | .owner owner => ensureRoot entered.core owner
+  have h0 : (allocation >>= fun p =>
+    ensure (amount > 0) .amount >>= fun _ =>
+    ensure ((p.2.tokens token).enabled = true) .token >>= fun _ =>
+    ((if token = 0 then
+      ensure (msgValue = amount) .transfer >>= fun _ =>
+      checkedAdd 256 entered.nativeCustody msgValue >>= fun custody =>
+        pure ({ entered with core := p.2, nativeCustody := custody } : World)
+    else
+      ensure (msgValue = 0) .transfer >>= fun _ =>
+      ensure (obs.readsSucceed = true ∧ obs.beforeBalance < width 256) .transfer >>= fun _ =>
+      callbacks d obs.callbacks { entered with core := p.2 } >>= fun funded =>
+      ensure (obs.callSucceeds = true ∧ obs.afterBalance < width 256) .transfer >>= fun _ =>
+      ensure (obs.afterBalance > obs.beforeBalance ∧ obs.afterBalance - obs.beforeBalance ≤ amount) .transfer >>= fun _ =>
+        pure funded) >>= fun funded =>
+      requireLimiter funded >>= fun _ =>
+      recordDeposit funded.limiter funded.now funded.quotes d.coreAddress d.coreAddress
+        token (receivedAmount token amount obs) (funded.core.tokens token).decimals >>= fun lp =>
+      checkedAdd 256 (funded.core.balances p.1 token) (receivedAmount token amount obs) >>= fun balance =>
+      pure (guardExit d { funded with limiter := lp.2, core := { funded.core with
+        balances := updateBalance funded.core.balances p.1 token balance } }))) = .ok next := by
+    cases target <;> by_cases ht : token = 0 <;>
+      simpa [allocation, ht, Bind.bind, core_except_bind_assoc, core_except_ok_bind,
+        Pure.pure, Except.pure] using h
+  obtain ⟨id, core, halloc, h0⟩ := core_bind_pair_ok h0
+  have ha : allocateDeposit entered.core target = .ok (id, core) := by
+    cases target <;> simpa only [allocateDeposit, allocation] using halloc
+  obtain ⟨hamount, h0⟩ := core_ensure_ok h0
+  obtain ⟨_, h0⟩ := core_ensure_ok h0
+  obtain ⟨funded, hf, h0⟩ := core_bind_ok h0
+  have hreceipt : 0 < receivedAmount token amount obs ∧ receivedAmount token amount obs ≤ amount ∧
+      (if token = 0 then ∃ custody,
+        checkedAdd 256 entered.nativeCustody msgValue = .ok custody ∧
+        funded = { entered with core := core, nativeCustody := custody }
+       else callbacks d obs.callbacks { entered with core := core } = .ok funded) := by
+    by_cases ht : token = 0
+    · simp only [ht, if_pos] at hf
+      obtain ⟨_, hf⟩ := core_ensure_ok hf
+      obtain ⟨custody, hc, hf⟩ := core_bind_ok hf
+      exact ⟨by simpa [receivedAmount, ht] using hamount, by simp [receivedAmount, ht],
+        by simpa only [ht, if_pos] using (show ∃ custody,
+          checkedAdd 256 entered.nativeCustody msgValue = .ok custody ∧
+          funded = { entered with core := core, nativeCustody := custody } from
+          ⟨custody, hc, (Except.ok.inj hf).symm⟩)⟩
+    · simp only [ht, if_false] at hf
+      obtain ⟨_, hf⟩ := core_ensure_ok hf
+      obtain ⟨_, hf⟩ := core_ensure_ok hf
+      obtain ⟨out, hout, hf⟩ := core_bind_ok hf
+      obtain ⟨_, hf⟩ := core_ensure_ok hf
+      obtain ⟨hdelta, hf⟩ := core_ensure_ok hf
+      have hv := Except.ok.inj hf
+      exact ⟨by simp only [receivedAmount, if_neg ht]; omega,
+        by simpa only [receivedAmount, if_neg ht] using hdelta.2,
+        by simpa only [if_neg ht, ← hv] using hout⟩
+  obtain ⟨u, _, h0⟩ := core_bind_ok h0
+  obtain ⟨v, limiter, hl, h0⟩ := core_bind_pair_ok h0
+  obtain ⟨balance, hb, h0⟩ := core_bind_ok h0
+  have heq := (core_checkedAdd_ok hb).1
+  exact ⟨hreceipt.1, hreceipt.2.1, entered, id, core, funded, v, limiter,
+    he, ha, hreceipt.2.2, hl, by simpa only [heq] using (Except.ok.inj h0).symm⟩
+
+theorem measured_ordinary_settlement : MeasuredOrdinarySettlement := by
+  intro d w caller a obs next h
+  dsimp only
+  unfold withdraw at h
+  obtain ⟨_, h⟩ := core_ensure_ok h
+  obtain ⟨entered, he, h⟩ := core_bind_ok h
+  obtain ⟨u, _, h⟩ := core_bind_ok h
+  obtain ⟨_, h⟩ := core_ensure_ok h
+  obtain ⟨hamount, h⟩ := core_ensure_ok h
+  obtain ⟨_, h⟩ := core_ensure_ok h
+  obtain ⟨u, _, h⟩ := core_bind_ok h
+  obtain ⟨prepared, hp, h⟩ := core_bind_ok h
+  obtain ⟨_, _, pinned, hpin, hpeq⟩ := core_withdrawBefore_success d entered prepared a.rootId a.token a.amount hp
+  have hflow : prepared.limiter.transient.flowStarted = true := by
+    rw [hpeq]
+    exact (core_approvedLimiter_frame entered.limiter entered.now entered.quotes d.coreAddress d.coreAddress a.token pinned hpin).2
+  obtain ⟨debit, transferred, ht, h⟩ := core_bind_pair_ok h
+  obtain ⟨hd, hle, hpos⟩ := core_transfer_debit d prepared a.token a.recipient a.amount debit obs transferred ht
+  have htf := core_transferAsset_frame d prepared a.token a.recipient a.amount obs transferred ht
+  obtain ⟨refunded, hr, h⟩ := core_bind_ok h
+  have hrf := core_refund_frame transferred refunded a.rootId a.token a.amount debit hr
+  obtain ⟨u, _, h⟩ := core_bind_ok h
+  obtain ⟨funding, limiter, hl, h⟩ := core_bind_pair_ok h
+  subst debit
+  exact ⟨hpos hamount, hle, entered, prepared, transferred, refunded, funding, limiter,
+    he, hp, hflow, ht, htf.2.2.2 hflow, hr, hrf.2.2.2.2, hl, (Except.ok.inj h).symm⟩
+
+theorem measured_approved_settlement : MeasuredApprovedSettlement := by
+  intro d w caller q sig obs next h
+  dsimp only
+  unfold fulfillApprovedWithdrawal at h
+  obtain ⟨prepared, hp, h⟩ := core_bind_ok h
+  have hc := (core_approvedBeforeTransfer_success d w caller q sig prepared hp).1
+  have hposAmount : q.amount > 0 := by
+    have hn := hc.2.2.2.2.1
+    change q.amount ≠ 0 at hn
+    omega
+  have hflow := (core_approvedBeforeTransfer_frame d w caller q sig prepared hp).2.2
+  obtain ⟨debit, transferred, ht, h⟩ := core_bind_pair_ok h
+  obtain ⟨hd, hle, hpos⟩ := core_transfer_debit d prepared q.token q.recipient q.amount debit obs transferred ht
+  have htf := core_transferAsset_frame d prepared q.token q.recipient q.amount obs transferred ht
+  obtain ⟨refunded, hr, h⟩ := core_bind_ok h
+  have hrf := core_refund_frame transferred refunded (w.core.rootAccountIdOf q.account) q.token q.amount debit hr
+  subst debit
+  exact ⟨hpos hposAmount, hle, prepared, transferred, refunded, hp, hflow, ht,
+    htf.2.2.2 hflow, hr, hrf.2.2.2.2, (Except.ok.inj h).symm⟩
+
+/-- Entire group8; gross path receipts, guard, surplus and atomicity. -/
 theorem payout_coverage_and_atomicity : PayoutCoverageAndAtomicity := by
   refine ⟨?_, core_nested_guard_reject, core_receiveNative_frame, core_internalFrame_frame,
-    ?_, ?_⟩
+    ?_, ?_, measured_deposit_credit, measured_ordinary_settlement, measured_approved_settlement⟩
   · intro d w xs entry next _hr _ha h
     exact core_invoke_payout_inventory d w entry next h
   · intro d w entry err h
@@ -1488,15 +1672,17 @@ theorem core_safe_callbacks (d : Deployment) (cs : List Callback) (w next : Worl
       · contradiction
 
 theorem core_safe_transfer (d : Deployment) (w : World) (token recipient : Key)
-    (amount : Nat) (obs : TransferObservation) (next : World) (hc : CoreSafe w.core)
+    (amount : Nat) {debited : Nat} (obs : TransferObservation) (next : World) (hc : CoreSafe w.core)
     (ha : CallbacksAdmissible obs)
-    (h : transferAsset d w token recipient amount obs = .ok next) : CoreSafe next.core := by
+    (h : transferAsset d w token recipient amount obs = .ok (debited, next)) : CoreSafe next.core := by
   unfold transferAsset at h
   split at h
   · obtain ⟨_, h⟩ := core_ensure_ok h
     obtain ⟨out, hout, h⟩ := core_bind_ok h
     obtain ⟨_, h⟩ := core_ensure_ok h
-    rw [← Except.ok.inj h]
+    have hv := congrArg Prod.snd (Except.ok.inj h)
+    dsimp only at hv
+    rw [← hv]
     exact core_safe_callbacks d obs.callbacks
       { w with nativeCustody := w.nativeCustody - amount } out hc ha hout
   · obtain ⟨_, h⟩ := core_ensure_ok h
@@ -1504,7 +1690,9 @@ theorem core_safe_transfer (d : Deployment) (w : World) (token recipient : Key)
     obtain ⟨_, h⟩ := core_ensure_ok h
     obtain ⟨_, h⟩ := core_ensure_ok h
     obtain ⟨_, h⟩ := core_ensure_ok h
-    rw [← Except.ok.inj h]
+    have hv := congrArg Prod.snd (Except.ok.inj h)
+    dsimp only at hv
+    rw [← hv]
     exact core_safe_callbacks d obs.callbacks w out hc ha hout
 
 theorem core_safe_balance (c : Core) (id : Nat) (token : Key) (v : Nat)
@@ -1516,6 +1704,24 @@ theorem core_safe_balance (c : Core) (id : Nat) (token : Key) (v : Nat)
   by_cases hi : i = id ∧ k = token
   · simpa only [updateBalance, if_pos hi] using hv
   · simpa only [updateBalance, if_neg hi] using (hc.balances i k).1
+
+theorem core_safe_refund (w next : World) (id : Nat) (token : Key) (amount debit : Nat)
+    (hc : CoreSafe w.core) (h : refundAsset w id token amount debit = .ok next) : CoreSafe next.core := by
+  unfold refundAsset at h
+  split at h
+  · obtain ⟨balance, hb, h⟩ := core_bind_ok h
+    rw [← Except.ok.inj h]
+    exact core_safe_balance w.core id token balance hc (core_checkedAdd_ok hb).2
+  · rw [← Except.ok.inj h]
+    exact hc
+
+theorem core_safe_withdrawBefore (d : Deployment) (w next : World)
+    (id : Nat) (token : Key) (amount : Nat) (hc : CoreSafe w.core)
+    (h : withdrawBeforeTransfer d w id token amount = .ok next) : CoreSafe next.core := by
+  obtain ⟨_, _, limiter, _, heq⟩ := core_withdrawBefore_success d w next id token amount h
+  rw [heq]
+  exact core_safe_balance w.core id token _ hc
+    (lt_of_le_of_lt (Nat.sub_le _ _) (hc.balances id token).1)
 
 theorem core_safe_nonce (c : Core) (account : Key) (n : Nat) (hc : CoreSafe c)
     (hn : n < width 256) : CoreSafe { c with approvedNonces := update c.approvedNonces account n } := by
@@ -1538,17 +1744,17 @@ theorem core_safe_withdraw (d : Deployment) (w : World) (caller : Key)
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨_, h⟩ := core_ensure_ok h
-  obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨u, _, h⟩ := core_bind_ok h
+  obtain ⟨prepared, hp, h⟩ := core_bind_ok h
+  obtain ⟨debit, out, hout, h⟩ := core_bind_pair_ok h
+  obtain ⟨refunded, hr, h⟩ := core_bind_ok h
   obtain ⟨u, _, h⟩ := core_bind_ok h
   obtain ⟨f, limiter, _, h⟩ := core_bind_pair_ok h
-  obtain ⟨out, hout, h⟩ := core_bind_ok h
-  have hwidth : entered.core.balances a.rootId a.token - a.amount < width 256 :=
-    lt_of_le_of_lt (Nat.sub_le _ _) (hs.balances a.rootId a.token).1
-  have hb := core_safe_balance entered.core a.rootId a.token _ hs hwidth
-  have hf := core_safe_transfer d _ a.token a.recipient a.amount obs out hb ha hout
+  have hpSafe := core_safe_withdrawBefore d entered prepared a.rootId a.token a.amount hs hp
+  have htSafe := core_safe_transfer d prepared a.token a.recipient a.amount obs out hpSafe ha hout
+  have hrSafe := core_safe_refund out refunded a.rootId a.token a.amount debit htSafe hr
   rw [← Except.ok.inj h]
-  exact core_safe_guardExit d _ hf
+  exact core_safe_guardExit d _ hrSafe
 
 theorem core_safe_approvedBefore (d : Deployment) (w : World) (caller : Key)
     (q : ApprovedWithdrawal) (sig : SignatureAcceptance) (next : World) (hc : CoreSafe w.core)
@@ -1567,8 +1773,8 @@ theorem core_safe_approvedBefore (d : Deployment) (w : World) (caller : Key)
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨u, _, h⟩ := core_bind_ok h
-  obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨n, hn, h⟩ := core_bind_ok h
+  obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨u, _, h⟩ := core_bind_ok h
   obtain ⟨l, _, h⟩ := core_bind_ok h
   have hs' := core_safe_nonce entered.core q.account n hs (core_checkedAdd_ok hn).2
@@ -1584,11 +1790,13 @@ theorem core_safe_approved (d : Deployment) (w : World) (caller : Key)
     (h : fulfillApprovedWithdrawal d w caller q sig obs = .ok next) : CoreSafe next.core := by
   unfold fulfillApprovedWithdrawal at h
   obtain ⟨prepared, hp, h⟩ := core_bind_ok h
-  obtain ⟨out, hout, h⟩ := core_bind_ok h
+  obtain ⟨debit, out, hout, h⟩ := core_bind_pair_ok h
+  obtain ⟨refunded, hr, h⟩ := core_bind_ok h
   have hs := core_safe_approvedBefore d w caller q sig prepared hc hp
   have hs' := core_safe_transfer d prepared q.token q.recipient q.amount obs out hs ha hout
+  have hs'' := core_safe_refund out refunded (w.core.rootAccountIdOf q.account) q.token q.amount debit hs' hr
   rw [← Except.ok.inj h]
-  exact core_safe_guardExit d _ hs'
+  exact core_safe_guardExit d _ hs''
 
 theorem core_safe_deposit (d : Deployment) (w : World) (caller : Key)
     (target : DepositTarget) (token : Key) (amount msgValue : Nat)
@@ -1596,7 +1804,7 @@ theorem core_safe_deposit (d : Deployment) (w : World) (caller : Key)
     (hc : CoreSafe w.core) (ha : CallbacksAdmissible obs)
     (h : deposit d w caller target token amount msgValue obs = .ok next) :
     CoreSafe next.core := by
-  simp only [deposit] at h
+  simp only [deposit, allocateDeposit] at h
   obtain ⟨_, h⟩ := core_ensure_ok h
   obtain ⟨entered, he, h⟩ := core_bind_ok h
   obtain ⟨_, _, heq⟩ := core_activeGuardEnter_success d w entered he
@@ -1618,12 +1826,12 @@ theorem core_safe_deposit (d : Deployment) (w : World) (caller : Key)
       ensure (obs.readsSucceed = true ∧ obs.beforeBalance < width 256) .transfer >>= fun _ =>
       callbacks d obs.callbacks { entered with core := p.2 } >>= fun funded =>
       ensure (obs.callSucceeds = true ∧ obs.afterBalance < width 256) .transfer >>= fun _ =>
-      ensure (obs.afterBalance ≥ obs.beforeBalance ∧ obs.afterBalance - obs.beforeBalance = amount) .transfer >>= fun _ =>
+      ensure (obs.afterBalance > obs.beforeBalance ∧ obs.afterBalance - obs.beforeBalance ≤ amount) .transfer >>= fun _ =>
         pure funded) >>= fun funded =>
       requireLimiter funded >>= fun _ =>
       recordDeposit funded.limiter funded.now funded.quotes d.coreAddress d.coreAddress
-        token amount (funded.core.tokens token).decimals >>= fun lp =>
-      checkedAdd 256 (funded.core.balances p.1 token) amount >>= fun balance =>
+        token (receivedAmount token amount obs) (funded.core.tokens token).decimals >>= fun lp =>
+      checkedAdd 256 (funded.core.balances p.1 token) (receivedAmount token amount obs) >>= fun balance =>
       pure (guardExit d { funded with limiter := lp.2, core := { funded.core with
         balances := updateBalance funded.core.balances p.1 token balance } }))) = .ok next := by
     cases target <;> by_cases ht : token = 0 <;>

@@ -24,5 +24,10 @@ theorem policy_bundle : PolicyBundle :=
 #print axioms approved_authority_and_replay
 #print axioms payout_coverage_and_atomicity
 #print axioms policy_bundle
+#print axioms measured_deposit_credit
+#print axioms measured_ordinary_settlement
+#print axioms measured_approved_settlement
+#print axioms core_transfer_debit
+#print axioms core_refund_frame
 
 end Benchmark.Cases.Kuru.WithdrawalLimit
