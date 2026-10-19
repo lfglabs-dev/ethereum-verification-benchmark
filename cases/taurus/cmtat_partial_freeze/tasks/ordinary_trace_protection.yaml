@@ -1,0 +1,33 @@
+manifest_kind: task
+schema_version: 1
+task_id: ordinary_trace_protection
+case_id: taurus/cmtat_partial_freeze
+split: active
+family_id: taurus
+implementation_id: cmtat-v3
+source_ref: https://github.com/CMTA/CMTAT@69eecc9735ce8ada84fd35801888b05747658939:contracts/modules/0_CMTATBaseCommon.sol
+task_interface_version: 2
+theorem_name: Benchmark.Cases.Taurus.CMTATPartialFreeze.all_traces_protected
+proof_family: state_preservation_local_effects
+property_class: partial_freeze_protection
+difficulty: medium
+category: token_transfer_restrictions
+track: proof-only
+translation_status: translated
+proof_status: complete
+evaluation_engine: lean_proof_generation
+implementation_files:
+  - cases/taurus/cmtat_partial_freeze/verity/Contract.lean
+  - Benchmark/Cases/Taurus/CMTATPartialFreeze/Contract.lean
+specification_files:
+  - cases/taurus/cmtat_partial_freeze/verity/Specs.lean
+  - Benchmark/Cases/Taurus/CMTATPartialFreeze/Specs.lean
+editable_files:
+  - Benchmark/Generated/Taurus/CMTATPartialFreeze/Tasks/AllTracesProtected.lean
+reference_solution_module: Benchmark.Cases.Taurus.CMTATPartialFreeze.Proofs
+reference_solution_declaration: Benchmark.Cases.Taurus.CMTATPartialFreeze.all_traces_protected
+abstraction_level: protocol_slice
+abstraction_notes: >
+  Standard variant; RuleEngine and SnapshotEngine zero at every ordinary call.
+  Sender protection and per-step trace only; no global recipient-backing claim.
+unsupported_feature_codes: []

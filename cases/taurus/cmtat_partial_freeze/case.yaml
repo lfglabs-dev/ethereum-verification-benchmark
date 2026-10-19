@@ -1,0 +1,47 @@
+manifest_kind: case
+schema_version: 1
+project: taurus
+case_id: cmtat_partial_freeze
+split: active
+family_id: taurus
+implementation_id: cmtat-v3
+stage: proof_complete
+translation_status: translated
+spec_status: frozen
+proof_status: complete
+upstream_repo: https://github.com/CMTA/CMTAT
+upstream_commit: 69eecc9735ce8ada84fd35801888b05747658939
+original_contract_path: contracts/modules/0_CMTATBaseCommon.sol
+source_ref: https://github.com/CMTA/CMTAT@69eecc9735ce8ada84fd35801888b05747658939:contracts/modules/0_CMTATBaseCommon.sol
+lean_target: Benchmark.Cases.Taurus.CMTATPartialFreeze.Compile
+spec_target: Benchmark.Cases.Taurus.CMTATPartialFreeze.Specs
+proof_target: Benchmark.Cases.Taurus.CMTATPartialFreeze.Proofs
+selected_functions:
+  - transfer
+  - transferFrom
+  - _checkActiveBalance
+  - _spendAllowance
+  - _transfer
+  - _update
+source_language: solidity
+verity_version: 85e0262baca2656ba2444ddfc2ed1d596544cd7b
+lean_toolchain: leanprover/lean4:v4.31.0
+abstraction_level: protocol_slice
+abstraction_tags:
+  - verity_types_semantic_model
+  - standard_variant_rule_and_snapshot_engines_unset
+  - bounded_uint256_modular_recipient_credit
+  - sequential_aliasing
+  - atomic_revert_wrapper
+abstraction_notes: >
+  Standard CMTAT v3.0.0 ordinary transfer and transferFrom with RuleEngine and
+  SnapshotEngine zero at every modeled operation. Source-shaped semantic functions
+  use Verity bounded Address/Uint256 types. Hand-reviewed correspondence, not
+  DSL compilation, Yul emission or bytecode refinement. Frozen mappings, exact
+  sender balances and finite/maximum allowances are modeled. Enabled engines,
+  ERC1363 callback variants, upgrades and privileged money movement are excluded.
+unsupported_feature_codes: []
+notes: >
+  Case-local Lake targets and separate source checks pass. Whole-root baseline
+  remains incomplete at an unchanged pinned Verity/Macro/SpecGen.lean timeout;
+  no root-green or source-EVM-test claim. See REPRODUCIBILITY.md.
