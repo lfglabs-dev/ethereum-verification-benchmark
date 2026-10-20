@@ -20,8 +20,7 @@ theorem spotPrice_sell_le_book_value
     (hSafe : sellArithmeticSafe eth oldEth oldNxmSellReserve capital supply elapsed speed)
     (hScale : realisticSellScale eth capital supply) :
     spotPrice_sell_le_book_value_spec eth oldEth oldNxmBuyReserve oldNxmSellReserve capital supply elapsed speed := by
-  exact spotPrice_sell_le_book_value_main
-    eth oldEth oldNxmBuyReserve oldNxmSellReserve capital supply elapsed speed
-    hEth hOldEth hSupply hCapital hSellReserve hSafe hScale
+  -- Replace this placeholder with a complete Lean proof.
+  exact ?_
 
 end Benchmark.Cases.NexusMutual.RammSpotPrice

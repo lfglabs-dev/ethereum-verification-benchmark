@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import re
 import json
 import os
@@ -639,6 +640,44 @@ def _compact_fair_messages(messages: list[dict[str, Any]], *, system_prompt: str
         },
     ]
     return True
+
+
+# Repetition guard: an action is a repeat only if its *full* canonical
+# payload is identical to the immediately preceding action. Earlier versions
+# truncated the payload (500 chars for tool arguments, 300 for text) and
+# counted occurrences cumulatively over the whole run, so distinct proofs that
+# share a long header (imports, theorem statement) collided and runs were
+# stopped as repetition_loop while still making progress.
+REPETITION_WARN_AT = 2
+REPETITION_STOP_AT = 3
+
+
+def _action_signature(kind: str, payload: object) -> str:
+    """Return a collision-resistant signature over the full canonical payload."""
+    canonical = json.dumps(payload, sort_keys=True, default=str, ensure_ascii=False, separators=(",", ":"))
+    return f"{kind}:sha256:{hashlib.sha256(canonical.encode('utf-8')).hexdigest()}"
+
+
+class _RepetitionTracker:
+    """Track runs of identical consecutive actions.
+
+    ``observe`` returns the length of the current streak of identical
+    actions. Any different action in between resets the streak, so revisiting
+    an earlier action (e.g. re-reading a file after a context reset) is not
+    treated as a loop.
+    """
+
+    def __init__(self) -> None:
+        self.last_signature: str | None = None
+        self.streak = 0
+
+    def observe(self, signature: str) -> int:
+        if signature == self.last_signature:
+            self.streak += 1
+        else:
+            self.last_signature = signature
+            self.streak = 1
+        return self.streak
 
 
 def _stuck_signature(first_error: object) -> str:
@@ -2571,7 +2610,7 @@ def _attempt_task_fair(
     usage_totals = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0, "requests": 0}
     response_meta_totals: dict[str, dict[str, object]] = {}
     corrective_protocol_sent = False
-    repeated_signatures: dict[str, int] = {}
+    repetition_tracker = _RepetitionTracker()
 
     def protocol_failure(status: str, request_index: int, detail: dict[str, object]) -> dict[str, object] | None:
         nonlocal corrective_protocol_sent
@@ -2621,16 +2660,15 @@ def _attempt_task_fair(
             "role_metrics": role_metrics,
         }
 
-    def repetition_failure(signature: str) -> dict[str, object] | None:
+    def repetition_failure(signature: str, preview: str = "") -> dict[str, object] | None:
         nonlocal pending_repetition_warning
-        count = repeated_signatures.get(signature, 0) + 1
-        repeated_signatures[signature] = count
-        if count == 2:
+        count = repetition_tracker.observe(signature)
+        if count == REPETITION_WARN_AT:
             pending_repetition_warning = (
                 "You repeated the same unproductive action. Change strategy: inspect a different goal/file or submit a materially different proof attempt."
             )
             return None
-        if count >= 3:
+        if count >= REPETITION_STOP_AT:
             unresolved_writer_failure = bool(
                 STRICT_ROLE_SEPARATION
                 and not attempts
@@ -2655,6 +2693,8 @@ def _attempt_task_fair(
                 "tool_log": str(tool_log_path),
                 "conversation_log": str(conversation_log_path),
                 "loop_signature": signature,
+                "loop_signature_preview": preview if len(preview) <= 400 else f"{preview[:200]} ... {preview[-200:]}",
+                "loop_repeat_count": count,
                 "role_metrics": role_metrics,
                 **response_state_fields(),
             }
@@ -2806,7 +2846,8 @@ def _attempt_task_fair(
             text = _response_text(response)
             no_tool_responses += 1
             if text.strip():
-                repeated = repetition_failure("no-tool:" + re.sub(r"\s+", " ", text.strip())[:300])
+                normalized_text = re.sub(r"\s+", " ", text.strip())
+                repeated = repetition_failure(_action_signature("no-tool", normalized_text), normalized_text)
                 if repeated is not None:
                     return repeated
             if no_tool_responses >= no_tool_response_limit:
@@ -2897,7 +2938,10 @@ def _attempt_task_fair(
                 if failure is not None:
                     return failure
                 continue
-            repeated = repetition_failure("tool:" + name + ":" + json.dumps(args, sort_keys=True, default=str)[:500])
+            repeated = repetition_failure(
+                _action_signature("tool:" + name, args),
+                name + ":" + json.dumps(args, sort_keys=True, default=str),
+            )
             if repeated is not None:
                 return repeated
             if tool_calls_executed >= max_tool_calls:
