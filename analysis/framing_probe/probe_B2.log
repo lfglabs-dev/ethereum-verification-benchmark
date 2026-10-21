@@ -1,0 +1,21 @@
+20 runs pending
+anthropic/claude-opus-5-5 B2 onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 B2 ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free: solved_property checks=2 calib=5
+openai/gpt-6.1-sol B2 lagoon/guardrails/exact_compliance: solved_property checks=1 calib=5
+openai/gpt-6.1-sol B2 ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free: solved_property checks=1 calib=5
+openai/gpt-6.1-sol B2 forgeyields/global_solvency/transfer_remote_preserves_global_solvency: solved_property checks=2 calib=5
+anthropic/claude-opus-5-5 B2 forgeyields/global_solvency/transfer_remote_preserves_global_solvency: solved_property checks=3 calib=4
+anthropic/claude-opus-5-5 B2 ethereum/deposit_contract_minimal/deposit_count: solved_property checks=4 calib=5
+anthropic/claude-opus-5-5 B2 lagoon/guardrails/exact_compliance: solved_property checks=1 calib=5
+openai/gpt-6.1-sol B2 kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor: solved_property checks=5 calib=5
+openai/gpt-6.1-sol B2 kleros/sortition_trees/draw_interval_matches_weights: solved_property checks=4 calib=5
+openai/gpt-6.1-sol B2 onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller: solved_property checks=2 calib=5
+anthropic/claude-opus-5-5 B2 damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool: solved_property checks=4 calib=5
+anthropic/claude-opus-5-5 B2 kleros/sortition_trees/draw_interval_matches_weights: solved_property checks=5 calib=5
+anthropic/claude-opus-5-5 B2 uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 B2 pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard: solved_property checks=3 calib=5
+openai/gpt-6.1-sol B2 uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1: solved_property checks=2 calib=5
+anthropic/claude-opus-5-5 B2 kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor: solved_property checks=3 calib=5
+openai/gpt-6.1-sol B2 pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard: solved_property checks=5 calib=5
+openai/gpt-6.1-sol B2 ethereum/deposit_contract_minimal/deposit_count: solved_property checks=6 calib=5
+openai/gpt-6.1-sol B2 damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None

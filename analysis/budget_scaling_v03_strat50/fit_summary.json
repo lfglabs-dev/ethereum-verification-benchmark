@@ -1,0 +1,4435 @@
+{
+ "provisional": true,
+ "provisional_reason": "EVB harness repetition-guard bug; cascade to be rerun on the fixed harness",
+ "input": "/var/lib/sandboxed-node/bcbd2c6f-968b-4eca-ad7d-1199ee6e9a45/archive/budget_scaling_v03_strat50_output",
+ "bootstrap_reps": 1000,
+ "seed": 20261020,
+ "finished_models": [
+  "openai__gpt-6-astra",
+  "openai__gpt-5.6-terra",
+  "openai__gpt-6-luna"
+ ],
+ "partial_models": [
+  "anthropic__claude-opus-5-5",
+  "zai__glm-5.3",
+  "google__gemini-4-argon-eap"
+ ],
+ "task_count": 50,
+ "models": {
+  "openai__gpt-6-astra": {
+   "partial": false,
+   "profiles_run": [
+    "p01_ultra_tiny",
+    "p02_tiny",
+    "p03_ultra_cheap",
+    "p04_cheap",
+    "p05_quick_minus",
+    "p06_quick",
+    "p07_medium",
+    "p08_normal"
+   ],
+   "tasks": 50,
+   "solved": 24,
+   "infra_invalid_runs_total": 16,
+   "post_solve_reruns": [
+    {
+     "task_ref": "uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1",
+     "solved_at": "p01_ultra_tiny",
+     "rerun_profile": "p02_tiny",
+     "final_class": "INFRA_INVALID",
+     "total_tokens": 15636
+    }
+   ],
+   "per_profile": [
+    {
+     "profile": "p01_ultra_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 6,
+     "executed_tasks": 50,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 5,
+     "cumulative_solved": 5,
+     "cumulative_total_tokens": 747948,
+     "cumulative_requests": 198
+    },
+    {
+     "profile": "p02_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 10,
+     "executed_tasks": 46,
+     "infra_invalid_tasks": 2,
+     "newly_solved": 0,
+     "cumulative_solved": 5,
+     "cumulative_total_tokens": 1442544,
+     "cumulative_requests": 382
+    },
+    {
+     "profile": "p03_ultra_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 16,
+     "executed_tasks": 45,
+     "infra_invalid_tasks": 4,
+     "newly_solved": 6,
+     "cumulative_solved": 11,
+     "cumulative_total_tokens": 2290910,
+     "cumulative_requests": 602
+    },
+    {
+     "profile": "p04_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 24,
+     "executed_tasks": 39,
+     "infra_invalid_tasks": 5,
+     "newly_solved": 1,
+     "cumulative_solved": 12,
+     "cumulative_total_tokens": 3022470,
+     "cumulative_requests": 792
+    },
+    {
+     "profile": "p05_quick_minus",
+     "max_attempts": 3,
+     "max_tool_calls": 32,
+     "executed_tasks": 38,
+     "infra_invalid_tasks": 4,
+     "newly_solved": 1,
+     "cumulative_solved": 13,
+     "cumulative_total_tokens": 3911117,
+     "cumulative_requests": 1020
+    },
+    {
+     "profile": "p06_quick",
+     "max_attempts": 4,
+     "max_tool_calls": 40,
+     "executed_tasks": 37,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 5,
+     "cumulative_solved": 18,
+     "cumulative_total_tokens": 4936103,
+     "cumulative_requests": 1276
+    },
+    {
+     "profile": "p07_medium",
+     "max_attempts": 8,
+     "max_tool_calls": 80,
+     "executed_tasks": 32,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 21,
+     "cumulative_total_tokens": 6290324,
+     "cumulative_requests": 1598
+    },
+    {
+     "profile": "p08_normal",
+     "max_attempts": 16,
+     "max_tool_calls": 120,
+     "executed_tasks": 29,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 3,
+     "cumulative_solved": 24,
+     "cumulative_total_tokens": 8077475,
+     "cumulative_requests": 2004
+    }
+   ]
+  },
+  "openai__gpt-5.6-terra": {
+   "partial": false,
+   "profiles_run": [
+    "p01_ultra_tiny",
+    "p02_tiny",
+    "p03_ultra_cheap",
+    "p04_cheap",
+    "p05_quick_minus",
+    "p06_quick",
+    "p07_medium",
+    "p08_normal"
+   ],
+   "tasks": 50,
+   "solved": 20,
+   "infra_invalid_runs_total": 13,
+   "post_solve_reruns": [],
+   "per_profile": [
+    {
+     "profile": "p01_ultra_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 6,
+     "executed_tasks": 50,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 3,
+     "cumulative_total_tokens": 495765,
+     "cumulative_requests": 144
+    },
+    {
+     "profile": "p02_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 10,
+     "executed_tasks": 47,
+     "infra_invalid_tasks": 2,
+     "newly_solved": 1,
+     "cumulative_solved": 4,
+     "cumulative_total_tokens": 976378,
+     "cumulative_requests": 283
+    },
+    {
+     "profile": "p03_ultra_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 16,
+     "executed_tasks": 46,
+     "infra_invalid_tasks": 2,
+     "newly_solved": 1,
+     "cumulative_solved": 5,
+     "cumulative_total_tokens": 1635148,
+     "cumulative_requests": 461
+    },
+    {
+     "profile": "p04_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 24,
+     "executed_tasks": 45,
+     "infra_invalid_tasks": 4,
+     "newly_solved": 3,
+     "cumulative_solved": 8,
+     "cumulative_total_tokens": 2304398,
+     "cumulative_requests": 639
+    },
+    {
+     "profile": "p05_quick_minus",
+     "max_attempts": 3,
+     "max_tool_calls": 32,
+     "executed_tasks": 42,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 2,
+     "cumulative_solved": 10,
+     "cumulative_total_tokens": 3123509,
+     "cumulative_requests": 846
+    },
+    {
+     "profile": "p06_quick",
+     "max_attempts": 4,
+     "max_tool_calls": 40,
+     "executed_tasks": 40,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 13,
+     "cumulative_total_tokens": 4077783,
+     "cumulative_requests": 1081
+    },
+    {
+     "profile": "p07_medium",
+     "max_attempts": 8,
+     "max_tool_calls": 80,
+     "executed_tasks": 37,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 4,
+     "cumulative_solved": 17,
+     "cumulative_total_tokens": 5539433,
+     "cumulative_requests": 1410
+    },
+    {
+     "profile": "p08_normal",
+     "max_attempts": 16,
+     "max_tool_calls": 120,
+     "executed_tasks": 33,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 20,
+     "cumulative_total_tokens": 7675741,
+     "cumulative_requests": 1868
+    }
+   ]
+  },
+  "openai__gpt-6-luna": {
+   "partial": false,
+   "profiles_run": [
+    "p01_ultra_tiny",
+    "p02_tiny",
+    "p03_ultra_cheap",
+    "p04_cheap",
+    "p05_quick_minus",
+    "p06_quick",
+    "p07_medium",
+    "p08_normal"
+   ],
+   "tasks": 50,
+   "solved": 12,
+   "infra_invalid_runs_total": 14,
+   "post_solve_reruns": [],
+   "per_profile": [
+    {
+     "profile": "p01_ultra_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 6,
+     "executed_tasks": 50,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 2,
+     "cumulative_solved": 2,
+     "cumulative_total_tokens": 594412,
+     "cumulative_requests": 168
+    },
+    {
+     "profile": "p02_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 10,
+     "executed_tasks": 48,
+     "infra_invalid_tasks": 3,
+     "newly_solved": 1,
+     "cumulative_solved": 3,
+     "cumulative_total_tokens": 1167967,
+     "cumulative_requests": 330
+    },
+    {
+     "profile": "p03_ultra_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 16,
+     "executed_tasks": 47,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 1,
+     "cumulative_solved": 4,
+     "cumulative_total_tokens": 1925701,
+     "cumulative_requests": 537
+    },
+    {
+     "profile": "p04_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 24,
+     "executed_tasks": 46,
+     "infra_invalid_tasks": 3,
+     "newly_solved": 0,
+     "cumulative_solved": 4,
+     "cumulative_total_tokens": 2643422,
+     "cumulative_requests": 736
+    },
+    {
+     "profile": "p05_quick_minus",
+     "max_attempts": 3,
+     "max_tool_calls": 32,
+     "executed_tasks": 46,
+     "infra_invalid_tasks": 3,
+     "newly_solved": 2,
+     "cumulative_solved": 6,
+     "cumulative_total_tokens": 3567832,
+     "cumulative_requests": 985
+    },
+    {
+     "profile": "p06_quick",
+     "max_attempts": 4,
+     "max_tool_calls": 40,
+     "executed_tasks": 44,
+     "infra_invalid_tasks": 2,
+     "newly_solved": 1,
+     "cumulative_solved": 7,
+     "cumulative_total_tokens": 4640860,
+     "cumulative_requests": 1271
+    },
+    {
+     "profile": "p07_medium",
+     "max_attempts": 8,
+     "max_tool_calls": 80,
+     "executed_tasks": 43,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 4,
+     "cumulative_solved": 11,
+     "cumulative_total_tokens": 6396509,
+     "cumulative_requests": 1711
+    },
+    {
+     "profile": "p08_normal",
+     "max_attempts": 16,
+     "max_tool_calls": 120,
+     "executed_tasks": 39,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 1,
+     "cumulative_solved": 12,
+     "cumulative_total_tokens": 8883949,
+     "cumulative_requests": 2325
+    }
+   ]
+  },
+  "anthropic__claude-opus-5-5": {
+   "partial": true,
+   "profiles_run": [
+    "p01_ultra_tiny",
+    "p02_tiny",
+    "p03_ultra_cheap",
+    "p04_cheap",
+    "p05_quick_minus",
+    "p06_quick",
+    "p07_medium"
+   ],
+   "tasks": 50,
+   "solved": 25,
+   "infra_invalid_runs_total": 5,
+   "post_solve_reruns": [],
+   "per_profile": [
+    {
+     "profile": "p01_ultra_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 6,
+     "executed_tasks": 50,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 7,
+     "cumulative_solved": 7,
+     "cumulative_total_tokens": 1218620,
+     "cumulative_requests": 157
+    },
+    {
+     "profile": "p02_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 10,
+     "executed_tasks": 43,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 0,
+     "cumulative_solved": 7,
+     "cumulative_total_tokens": 2288995,
+     "cumulative_requests": 293
+    },
+    {
+     "profile": "p03_ultra_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 16,
+     "executed_tasks": 43,
+     "infra_invalid_tasks": 3,
+     "newly_solved": 5,
+     "cumulative_solved": 12,
+     "cumulative_total_tokens": 3731754,
+     "cumulative_requests": 472
+    },
+    {
+     "profile": "p04_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 24,
+     "executed_tasks": 38,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 15,
+     "cumulative_total_tokens": 5065589,
+     "cumulative_requests": 634
+    },
+    {
+     "profile": "p05_quick_minus",
+     "max_attempts": 3,
+     "max_tool_calls": 32,
+     "executed_tasks": 35,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 3,
+     "cumulative_solved": 18,
+     "cumulative_total_tokens": 6661135,
+     "cumulative_requests": 823
+    },
+    {
+     "profile": "p06_quick",
+     "max_attempts": 4,
+     "max_tool_calls": 40,
+     "executed_tasks": 32,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 21,
+     "cumulative_total_tokens": 8337464,
+     "cumulative_requests": 1019
+    },
+    {
+     "profile": "p07_medium",
+     "max_attempts": 8,
+     "max_tool_calls": 80,
+     "executed_tasks": 29,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 4,
+     "cumulative_solved": 25,
+     "cumulative_total_tokens": 10774042,
+     "cumulative_requests": 1292
+    }
+   ]
+  },
+  "zai__glm-5.3": {
+   "partial": true,
+   "profiles_run": [
+    "p01_ultra_tiny",
+    "p02_tiny",
+    "p03_ultra_cheap",
+    "p04_cheap",
+    "p05_quick_minus",
+    "p06_quick"
+   ],
+   "tasks": 50,
+   "solved": 11,
+   "infra_invalid_runs_total": 6,
+   "post_solve_reruns": [
+    {
+     "task_ref": "nexus_mutual/ramm_price_band/sync_sets_buy_price",
+     "solved_at": "p04_cheap",
+     "rerun_profile": "p05_quick_minus",
+     "final_class": "SOLVED",
+     "total_tokens": 13352
+    },
+    {
+     "task_ref": "erc4337/entry_point_invariant/execution_length_eq_validation_length",
+     "solved_at": "p05_quick_minus",
+     "rerun_profile": "p06_quick",
+     "final_class": "GENUINE_FAIL",
+     "total_tokens": 45655
+    }
+   ],
+   "per_profile": [
+    {
+     "profile": "p01_ultra_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 6,
+     "executed_tasks": 50,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 1,
+     "cumulative_solved": 1,
+     "cumulative_total_tokens": 652702,
+     "cumulative_requests": 155
+    },
+    {
+     "profile": "p02_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 10,
+     "executed_tasks": 49,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 1,
+     "cumulative_solved": 2,
+     "cumulative_total_tokens": 1369307,
+     "cumulative_requests": 318
+    },
+    {
+     "profile": "p03_ultra_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 16,
+     "executed_tasks": 48,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 2,
+     "cumulative_solved": 4,
+     "cumulative_total_tokens": 2705164,
+     "cumulative_requests": 577
+    },
+    {
+     "profile": "p04_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 24,
+     "executed_tasks": 46,
+     "infra_invalid_tasks": 4,
+     "newly_solved": 1,
+     "cumulative_solved": 5,
+     "cumulative_total_tokens": 3990211,
+     "cumulative_requests": 838
+    },
+    {
+     "profile": "p05_quick_minus",
+     "max_attempts": 3,
+     "max_tool_calls": 32,
+     "executed_tasks": 46,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 8,
+     "cumulative_total_tokens": 5777815,
+     "cumulative_requests": 1177
+    },
+    {
+     "profile": "p06_quick",
+     "max_attempts": 4,
+     "max_tool_calls": 40,
+     "executed_tasks": 43,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 11,
+     "cumulative_total_tokens": 7518483,
+     "cumulative_requests": 1500
+    }
+   ]
+  },
+  "google__gemini-4-argon-eap": {
+   "partial": true,
+   "profiles_run": [
+    "p01_ultra_tiny",
+    "p02_tiny",
+    "p03_ultra_cheap",
+    "p04_cheap"
+   ],
+   "tasks": 50,
+   "solved": 17,
+   "infra_invalid_runs_total": 2,
+   "post_solve_reruns": [
+    {
+     "task_ref": "lifi/swap_atomicity/min_output_required_for_commit",
+     "solved_at": "p03_ultra_cheap",
+     "rerun_profile": "p04_cheap",
+     "final_class": "GENUINE_FAIL",
+     "total_tokens": 19972
+    },
+    {
+     "task_ref": "onedelta/caller_address_integrity/transfers_permit2_transfer_from_uses_outer_caller",
+     "solved_at": "p03_ultra_cheap",
+     "rerun_profile": "p04_cheap",
+     "final_class": "GENUINE_FAIL",
+     "total_tokens": 20552
+    }
+   ],
+   "per_profile": [
+    {
+     "profile": "p01_ultra_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 6,
+     "executed_tasks": 50,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 9,
+     "cumulative_solved": 9,
+     "cumulative_total_tokens": 781231,
+     "cumulative_requests": 168
+    },
+    {
+     "profile": "p02_tiny",
+     "max_attempts": 1,
+     "max_tool_calls": 10,
+     "executed_tasks": 41,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 12,
+     "cumulative_total_tokens": 1422007,
+     "cumulative_requests": 300
+    },
+    {
+     "profile": "p03_ultra_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 16,
+     "executed_tasks": 38,
+     "infra_invalid_tasks": 1,
+     "newly_solved": 3,
+     "cumulative_solved": 15,
+     "cumulative_total_tokens": 1964391,
+     "cumulative_requests": 400
+    },
+    {
+     "profile": "p04_cheap",
+     "max_attempts": 2,
+     "max_tool_calls": 24,
+     "executed_tasks": 37,
+     "infra_invalid_tasks": 0,
+     "newly_solved": 2,
+     "cumulative_solved": 17,
+     "cumulative_total_tokens": 2887291,
+     "cumulative_requests": 563
+    }
+   ]
+  }
+ },
+ "units": {
+  "tokens": {
+   "survival": {
+    "H1_single": {
+     "openai__gpt-6-astra": {
+      "theta": [
+       12.0,
+       12.446991492852543,
+       0.7236661517769125
+      ],
+      "nll": 85.74284978998509,
+      "partial": false,
+      "params": {
+       "A": 0.9999938558253978,
+       "mu": 12.446991492852543,
+       "sigma": 2.061978897975559,
+       "median_effort": 254483.55420180334,
+       "A_at_bound": true
+      },
+      "alpha_from_sigma_sd_match": 0.8796401195060712,
+      "alpha_from_sigma_1702": 0.8254206683060701
+     },
+     "openai__gpt-5.6-terra": {
+      "theta": [
+       12.0,
+       12.758746096310103,
+       0.7584485152700221
+      ],
+      "nll": 79.36431099935038,
+      "partial": false,
+      "params": {
+       "A": 0.9999938558253978,
+       "mu": 12.758746096310103,
+       "sigma": 2.1349612897893784,
+       "median_effort": 347578.5968193757,
+       "A_at_bound": true
+      },
+      "alpha_from_sigma_sd_match": 0.8495701411116244,
+      "alpha_from_sigma_1702": 0.7972041498550582
+     },
+     "openai__gpt-6-luna": {
+      "theta": [
+       0.5481245061794473,
+       12.889116711849685,
+       0.7490986212315326
+      ],
+      "nll": 53.06921940011003,
+      "partial": false,
+      "params": {
+       "A": 0.6337003527440949,
+       "mu": 12.889116711849685,
+       "sigma": 2.1150926575005,
+       "median_effort": 395979.1003103053,
+       "A_at_bound": false
+      },
+      "alpha_from_sigma_sd_match": 0.8575507828473415,
+      "alpha_from_sigma_1702": 0.804692879039791
+     },
+     "anthropic__claude-opus-5-5": {
+      "theta": [
+       12.0,
+       12.668403767120202,
+       0.7771903175249314
+      ],
+      "nll": 84.31317964789118,
+      "partial": true,
+      "params": {
+       "A": 0.9999938558253978,
+       "mu": 12.668403767120202,
+       "sigma": 2.175351623660559,
+       "median_effort": 317554.1922875506,
+       "A_at_bound": true
+      },
+      "alpha_from_sigma_sd_match": 0.8337959456789146,
+      "alpha_from_sigma_1702": 0.7824022477506283
+     },
+     "zai__glm-5.3": {
+      "theta": [
+       1.4669842323055167,
+       13.15395959008601,
+       0.6333913534095682
+      ],
+      "nll": 50.1407059708004,
+      "partial": true,
+      "params": {
+       "A": 0.8125985713779175,
+       "mu": 13.15395959008601,
+       "sigma": 1.8839890299811055,
+       "median_effort": 516050.33599610056,
+       "A_at_bound": false
+      },
+      "alpha_from_sigma_sd_match": 0.9627441218447055,
+      "alpha_from_sigma_1702": 0.9034022878663308
+     },
+     "google__gemini-4-argon-eap": {
+      "theta": [
+       12.0,
+       12.347903405061052,
+       1.092988498215719
+      ],
+      "nll": 51.129594123862304,
+      "partial": true,
+      "params": {
+       "A": 0.9999938558253978,
+       "mu": 12.347903405061052,
+       "sigma": 2.9831759803644355,
+       "median_effort": 230476.3204859241,
+       "A_at_bound": true
+      },
+      "alpha_from_sigma_sd_match": 0.6080095093862473,
+      "alpha_from_sigma_1702": 0.570532885489403
+     }
+    },
+    "finished": {
+     "models": [
+      "openai__gpt-6-astra",
+      "openai__gpt-5.6-terra",
+      "openai__gpt-6-luna"
+     ],
+     "fits": {
+      "H1": {
+       "hypothesis": "H1",
+       "nll": 218.17638331417862,
+       "k": 9,
+       "aic": 454.35276662835724,
+       "theta": [
+        9.999018305800172,
+        12.446841907584291,
+        0.723625956784928,
+        10.834473242258854,
+        12.75870688335063,
+        0.7584215332941697,
+        0.5492766695178941,
+        12.890124790523558,
+        0.749275452879986
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.9999545575446168,
+         "mu": 12.446841907584291,
+         "sigma": 2.0618960184159656,
+         "median_effort": 254445.4900580709,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.9999802921386852,
+         "mu": 12.75870688335063,
+         "sigma": 2.1349036850925596,
+         "median_effort": 347564.96750116954,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.6339677565336597,
+         "mu": 12.890124790523558,
+         "sigma": 2.11546670589258,
+         "median_effort": 396378.47966571164,
+         "A_at_bound": false
+        }
+       }
+      },
+      "H2": {
+       "hypothesis": "H2",
+       "nll": 218.18392445769098,
+       "k": 7,
+       "aic": 450.36784891538196,
+       "theta": [
+        0.738923471107123,
+        8.427386819786783,
+        12.460316725786981,
+        4.9677868180047335,
+        12.721855596202008,
+        0.4902169680536832,
+        12.837103775292823
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.9997812553714753,
+         "mu": 12.460316725786981,
+         "sigma": 2.0936803934246897,
+         "median_effort": 257897.3008114599,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.9930895550470035,
+         "mu": 12.721855596202008,
+         "sigma": 2.0936803934246897,
+         "median_effort": 334989.87826017255,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.6201575431397897,
+         "mu": 12.837103775292823,
+         "sigma": 2.0936803934246897,
+         "median_effort": 375909.52758461534,
+         "A_at_bound": false
+        }
+       }
+      },
+      "H3": {
+       "hypothesis": "H3",
+       "nll": 218.37259489074603,
+       "k": 5,
+       "aic": 446.74518978149206,
+       "theta": [
+        0.7814622837230516,
+        12.0,
+        12.500795243970186,
+        12.787952166890777,
+        13.709792036067745
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.9999938558253978,
+         "mu": 12.500795243970186,
+         "sigma": 2.1846645303139396,
+         "median_effort": 268550.7650024434,
+         "A_at_bound": true
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.9999938558253978,
+         "mu": 12.787952166890777,
+         "sigma": 2.1846645303139396,
+         "median_effort": 357879.69695781055,
+         "A_at_bound": true
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.9999938558253978,
+         "mu": 13.709792036067745,
+         "sigma": 2.1846645303139396,
+         "median_effort": 899677.852054095,
+         "A_at_bound": true
+        }
+       }
+      }
+     },
+     "likelihood_ratio_tests": {
+      "H2_vs_H1": {
+       "lr_stat": 0.01508228702471115,
+       "df": 2,
+       "p_value": 0.9924872195689103
+      },
+      "H3_vs_H2": {
+       "lr_stat": 0.377340866110103,
+       "df": 2,
+       "p_value": 0.8280593627245091
+      },
+      "H3_vs_H1": {
+       "lr_stat": 0.39242315313481413,
+       "df": 4,
+       "p_value": 0.9830925298537355
+      }
+     },
+     "preferred_by_aic": "H3",
+     "delta_aic": {
+      "H1": 7.607576846865186,
+      "H2": 3.622659133889897,
+      "H3": 0.0
+     }
+    },
+    "sensitivity_all_models": {
+     "models": [
+      "openai__gpt-6-astra",
+      "openai__gpt-5.6-terra",
+      "openai__gpt-6-luna",
+      "anthropic__claude-opus-5-5",
+      "zai__glm-5.3",
+      "google__gemini-4-argon-eap"
+     ],
+     "fits": {
+      "H1": {
+       "hypothesis": "H1",
+       "nll": 403.76020301357687,
+       "k": 18,
+       "aic": 843.5204060271537,
+       "theta": [
+        7.112946120011432,
+        12.444913229715223,
+        0.7231960116469166,
+        11.07342652342477,
+        12.758857057281146,
+        0.7585107487912501,
+        0.5121617189109571,
+        12.85744380109605,
+        0.7432434483759665,
+        12.0,
+        12.668386608604774,
+        0.7771750649475212,
+        1.5148770668443472,
+        13.17094275304249,
+        0.6364012629089947,
+        4.883490788388622,
+        12.322500738346102,
+        1.089287498293161
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.9991861709939903,
+         "mu": 12.444913229715223,
+         "sigma": 2.061009706794102,
+         "median_effort": 253955.21961136733,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.9999844809466817,
+         "mu": 12.758857057281146,
+         "sigma": 2.135094160082578,
+         "median_effort": 347617.16661782394,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.6253130949624423,
+         "mu": 12.85744380109605,
+         "sigma": 2.102744609639996,
+         "median_effort": 383633.82699593116,
+         "A_at_bound": false
+        },
+        "anthropic__claude-opus-5-5": {
+         "A": 0.9999938558253978,
+         "mu": 12.668386608604774,
+         "sigma": 2.1753184441945614,
+         "median_effort": 317548.74357578903,
+         "A_at_bound": true
+        },
+        "zai__glm-5.3": {
+         "A": 0.8197828635042531,
+         "mu": 13.17094275304249,
+         "sigma": 1.88966820907925,
+         "median_effort": 524889.3476836126,
+         "A_at_bound": false
+        },
+        "google__gemini-4-argon-eap": {
+         "A": 0.9924863417629235,
+         "mu": 12.322500738346102,
+         "sigma": 2.9721556519885146,
+         "median_effort": 224695.34430303436,
+         "A_at_bound": false
+        }
+       }
+      },
+      "H2": {
+       "hypothesis": "H2",
+       "nll": 403.8602278126241,
+       "k": 13,
+       "aic": 833.7204556252482,
+       "theta": [
+        0.7485393354815373,
+        11.833732172161493,
+        12.46973617657877,
+        10.45038868134944,
+        12.746271169852507,
+        0.5449965739198853,
+        12.886267357478172,
+        11.068895400767056,
+        12.64500320293008,
+        12.0,
+        13.657698497528651,
+        0.4497655699683805,
+        10.792487840966094
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.9999927444178074,
+         "mu": 12.46973617657877,
+         "sigma": 2.1139100470566516,
+         "median_effort": 260338.028858335,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.9999710638134964,
+         "mu": 12.746271169852507,
+         "sigma": 2.1139100470566516,
+         "median_effort": 343269.5130204165,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.6329739807410157,
+         "mu": 12.886267357478172,
+         "sigma": 2.1139100470566516,
+         "median_effort": 394852.42144575756,
+         "A_at_bound": false
+        },
+        "anthropic__claude-opus-5-5": {
+         "A": 0.999984410469494,
+         "mu": 12.64500320293008,
+         "sigma": 2.1139100470566516,
+         "median_effort": 310209.5149742744,
+         "A_at_bound": false
+        },
+        "zai__glm-5.3": {
+         "A": 0.9999938558253978,
+         "mu": 13.657698497528651,
+         "sigma": 2.1139100470566516,
+         "median_effort": 854010.2692050266,
+         "A_at_bound": true
+        },
+        "google__gemini-4-argon-eap": {
+         "A": 0.6105834946632688,
+         "mu": 10.792487840966094,
+         "sigma": 2.1139100470566516,
+         "median_effort": 48653.92880920217,
+         "A_at_bound": false
+        }
+       }
+      },
+      "H3": {
+       "hypothesis": "H3",
+       "nll": 404.5290690006508,
+       "k": 8,
+       "aic": 825.0581380013016,
+       "theta": [
+        0.8050986353993103,
+        12.0,
+        12.523689400090092,
+        12.818672962128108,
+        13.757217533081597,
+        12.691677795457952,
+        13.777762199725084,
+        11.91766552246916
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.9999938558253978,
+         "mu": 12.523689400090092,
+         "sigma": 2.236917127152987,
+         "median_effort": 274769.9277423547,
+         "A_at_bound": true
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.9999938558253978,
+         "mu": 12.818672962128108,
+         "sigma": 2.236917127152987,
+         "median_effort": 369044.6661330287,
+         "A_at_bound": true
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.9999938558253978,
+         "mu": 13.757217533081597,
+         "sigma": 2.236917127152987,
+         "median_effort": 943373.4750302884,
+         "A_at_bound": true
+        },
+        "anthropic__claude-opus-5-5": {
+         "A": 0.9999938558253978,
+         "mu": 12.691677795457952,
+         "sigma": 2.236917127152987,
+         "median_effort": 325031.6351370398,
+         "A_at_bound": true
+        },
+        "zai__glm-5.3": {
+         "A": 0.9999938558253978,
+         "mu": 13.777762199725084,
+         "sigma": 2.236917127152987,
+         "median_effort": 962955.2301545694,
+         "A_at_bound": true
+        },
+        "google__gemini-4-argon-eap": {
+         "A": 0.9999938558253978,
+         "mu": 11.91766552246916,
+         "sigma": 2.236917127152987,
+         "median_effort": 149891.28182646693,
+         "A_at_bound": true
+        }
+       }
+      }
+     },
+     "likelihood_ratio_tests": {
+      "H2_vs_H1": {
+       "lr_stat": 0.2000495980944379,
+       "df": 5,
+       "p_value": 0.9991133273298576
+      },
+      "H3_vs_H2": {
+       "lr_stat": 1.337682376053408,
+       "df": 5,
+       "p_value": 0.9310068441545171
+      },
+      "H3_vs_H1": {
+       "lr_stat": 1.537731974147846,
+       "df": 10,
+       "p_value": 0.9988129504768474
+      }
+     },
+     "preferred_by_aic": "H3",
+     "delta_aic": {
+      "H1": 18.462268025852154,
+      "H2": 8.662317623946592,
+      "H3": 0.0
+     }
+    }
+   },
+   "panel_fits": {
+    "openai__gpt-6-astra": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 8842541.496011252,
+      "alpha": 1.0571058731299086,
+      "sse": 0.004052071201873272,
+      "rmse": 0.022505752603149246,
+      "theta": [
+       15.995084892842534,
+       0.05553486566571212
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9999938558253978,
+      "k_half": 8842445.042872751,
+      "alpha": 1.057112826808949,
+      "sse": 0.004052081025298318,
+      "rmse": 0.022505779883449713,
+      "theta": [
+       15.995073984930528,
+       0.05554144367870641,
+       12.0
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 16.022750664974964,
+      "sigma": 1.6115036907309193,
+      "median_effort": 9090592.67660634,
+      "sse": 0.00476272887112025,
+      "rmse": 0.024399612884019928,
+      "theta": [
+       16.022750664974964,
+       0.47716771251641654
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 9090592.67660634,
+      "alpha_from_sigma_sd_match": 1.125532243374227,
+      "alpha_from_sigma_1702": 1.0561564393489133
+     }
+    },
+    "openai__gpt-5.6-terra": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 11083044.915678354,
+      "alpha": 1.0504712868846426,
+      "sse": 0.0012413998820634752,
+      "rmse": 0.012456925192756613,
+      "theta": [
+       16.22092701341387,
+       0.04923890812084336
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9999907191116683,
+      "k_half": 11083535.698014809,
+      "alpha": 1.0504274601310903,
+      "sse": 0.0012414040223443564,
+      "rmse": 0.012456945965727094,
+      "theta": [
+       16.220971294698845,
+       0.04919718621147376,
+       11.587544009410534
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 16.279504396281983,
+      "sigma": 1.665122052296584,
+      "median_effort": 11751652.139439404,
+      "sse": 0.0018629998748764703,
+      "rmse": 0.015260241949574678,
+      "theta": [
+       16.279504396281983,
+       0.5098984254283832
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 11751652.139439404,
+      "alpha_from_sigma_sd_match": 1.0892891375335363,
+      "alpha_from_sigma_1702": 1.0221472940392284
+     }
+    },
+    "openai__gpt-6-luna": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 30750337.752673533,
+      "alpha": 0.9027811047644767,
+      "sse": 0.0014840631121170514,
+      "rmse": 0.013620128083635316,
+      "theta": [
+       17.24141153598326,
+       -0.10227516384963466
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9999831732305519,
+      "k_half": 30750484.621815167,
+      "alpha": 0.9027763809339192,
+      "sse": 0.0014840657661453086,
+      "rmse": 0.013620140262426212,
+      "theta": [
+       17.241416312151642,
+       -0.10228039639481239,
+       10.992522693258461
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 17.459429808659383,
+      "sigma": 2.0851480550231005,
+      "median_effort": 38241421.120861426,
+      "sse": 0.001787600580457958,
+      "rmse": 0.014948246470982633,
+      "theta": [
+       17.459429808659383,
+       0.7348398623331077
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 38241421.120861426,
+      "alpha_from_sigma_sd_match": 0.8698659837917954,
+      "alpha_from_sigma_1702": 0.8162489929191835
+     }
+    },
+    "anthropic__claude-opus-5-5": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 11459976.274009014,
+      "alpha": 1.0028025240283651,
+      "sse": 0.002997192145258872,
+      "rmse": 0.02069227649306748,
+      "theta": [
+       16.254371198917923,
+       0.0027986042796524797
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9999938558253978,
+      "k_half": 11459431.911706865,
+      "alpha": 1.0028410637371077,
+      "sse": 0.0029972084769754746,
+      "rmse": 0.020692332869155304,
+      "theta": [
+       16.254323696617877,
+       0.002837035543295083,
+       12.0
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 16.279208722606803,
+      "sigma": 1.6928598205803094,
+      "median_effort": 11748177.998893172,
+      "sse": 0.0038591804148636563,
+      "rmse": 0.02348002316518587,
+      "theta": [
+       16.279208722606803,
+       0.5264193003019738
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 11748177.998893172,
+      "alpha_from_sigma_sd_match": 1.0714409676357317,
+      "alpha_from_sigma_1702": 1.0053992535640413
+     }
+    },
+    "zai__glm-5.3": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 22451450.593626596,
+      "alpha": 1.1957027622913357,
+      "sse": 0.0003367467116109308,
+      "rmse": 0.007491625453475042,
+      "theta": [
+       16.926865784480555,
+       0.1787340981283475
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9998660147434824,
+      "k_half": 22447397.862097148,
+      "alpha": 1.1957626418105798,
+      "sse": 0.0003367680720190503,
+      "rmse": 0.0074918630528844465,
+      "theta": [
+       16.92668525728755,
+       0.17878417580804448,
+       8.917646795820643
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 17.14744676097474,
+      "sigma": 1.6266446073666807,
+      "median_effort": 27992488.40713953,
+      "sse": 0.0005676867332845721,
+      "rmse": 0.009726996224293946,
+      "theta": [
+       17.14744676097474,
+       0.486519370059921
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 27992488.40713953,
+      "alpha_from_sigma_sd_match": 1.1150557140877353,
+      "alpha_from_sigma_1702": 1.0463256646793362
+     }
+    },
+    "google__gemini-4-argon-eap": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 7557777.517321703,
+      "alpha": 0.6682655280093169,
+      "sse": 0.00018732113358634633,
+      "rmse": 0.00684326555064076,
+      "theta": [
+       15.838087725745112,
+       -0.40306968740656707
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.6421317934073818,
+      "k_half": 2459787.2303849603,
+      "alpha": 0.8373893158903917,
+      "sse": 0.00016922886699393576,
+      "rmse": 0.006504399799250039,
+      "theta": [
+       14.715585412454491,
+       -0.17746618414771076,
+       0.5846287876911975
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 15.892560955958013,
+      "sigma": 2.528626947409687,
+      "median_effort": 7980893.7025659215,
+      "sse": 0.00017969375669647566,
+      "rmse": 0.006702494996202453,
+      "theta": [
+       15.892560955958013,
+       0.9276764468861287
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 7980893.7025659215,
+      "alpha_from_sigma_sd_match": 0.7173060328619312,
+      "alpha_from_sigma_1702": 0.6730925658067198
+     }
+    }
+   },
+   "panel_points": {
+    "openai__gpt-6-astra": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 747948.0,
+      "solve_rate": 0.1,
+      "cumulative_solved": 5
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 1442544.0,
+      "solve_rate": 0.1,
+      "cumulative_solved": 5
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 2290910.0,
+      "solve_rate": 0.22,
+      "cumulative_solved": 11
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 3022470.0,
+      "solve_rate": 0.24,
+      "cumulative_solved": 12
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 3911117.0,
+      "solve_rate": 0.26,
+      "cumulative_solved": 13
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 4936103.0,
+      "solve_rate": 0.36,
+      "cumulative_solved": 18
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 6290324.0,
+      "solve_rate": 0.42,
+      "cumulative_solved": 21
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 8077475.0,
+      "solve_rate": 0.48,
+      "cumulative_solved": 24
+     }
+    ],
+    "openai__gpt-5.6-terra": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 495765.0,
+      "solve_rate": 0.06,
+      "cumulative_solved": 3
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 976378.0,
+      "solve_rate": 0.08,
+      "cumulative_solved": 4
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 1635148.0,
+      "solve_rate": 0.1,
+      "cumulative_solved": 5
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 2304398.0,
+      "solve_rate": 0.16,
+      "cumulative_solved": 8
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 3123509.0,
+      "solve_rate": 0.2,
+      "cumulative_solved": 10
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 4077783.0,
+      "solve_rate": 0.26,
+      "cumulative_solved": 13
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 5539433.0,
+      "solve_rate": 0.34,
+      "cumulative_solved": 17
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 7675741.0,
+      "solve_rate": 0.4,
+      "cumulative_solved": 20
+     }
+    ],
+    "openai__gpt-6-luna": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 594412.0,
+      "solve_rate": 0.04,
+      "cumulative_solved": 2
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 1167967.0,
+      "solve_rate": 0.06,
+      "cumulative_solved": 3
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 1925701.0,
+      "solve_rate": 0.08,
+      "cumulative_solved": 4
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 2643422.0,
+      "solve_rate": 0.08,
+      "cumulative_solved": 4
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 3567832.0,
+      "solve_rate": 0.12,
+      "cumulative_solved": 6
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 4640860.0,
+      "solve_rate": 0.14,
+      "cumulative_solved": 7
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 6396509.0,
+      "solve_rate": 0.22,
+      "cumulative_solved": 11
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 8883949.0,
+      "solve_rate": 0.24,
+      "cumulative_solved": 12
+     }
+    ],
+    "anthropic__claude-opus-5-5": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 1218620.0,
+      "solve_rate": 0.14,
+      "cumulative_solved": 7
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 2288995.0,
+      "solve_rate": 0.14,
+      "cumulative_solved": 7
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 3731754.0,
+      "solve_rate": 0.24,
+      "cumulative_solved": 12
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 5065589.0,
+      "solve_rate": 0.3,
+      "cumulative_solved": 15
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 6661135.0,
+      "solve_rate": 0.36,
+      "cumulative_solved": 18
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 8337464.0,
+      "solve_rate": 0.42,
+      "cumulative_solved": 21
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 10774042.0,
+      "solve_rate": 0.5,
+      "cumulative_solved": 25
+     }
+    ],
+    "zai__glm-5.3": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 652702.0,
+      "solve_rate": 0.02,
+      "cumulative_solved": 1
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 1369307.0,
+      "solve_rate": 0.04,
+      "cumulative_solved": 2
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 2705164.0,
+      "solve_rate": 0.08,
+      "cumulative_solved": 4
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 3990211.0,
+      "solve_rate": 0.1,
+      "cumulative_solved": 5
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 5777815.0,
+      "solve_rate": 0.16,
+      "cumulative_solved": 8
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 7518483.0,
+      "solve_rate": 0.22,
+      "cumulative_solved": 11
+     }
+    ],
+    "google__gemini-4-argon-eap": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 781231.0,
+      "solve_rate": 0.18,
+      "cumulative_solved": 9
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 1422007.0,
+      "solve_rate": 0.24,
+      "cumulative_solved": 12
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 1964391.0,
+      "solve_rate": 0.3,
+      "cumulative_solved": 15
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 2887291.0,
+      "solve_rate": 0.34,
+      "cumulative_solved": 17
+     }
+    ]
+   },
+   "marginal": {
+    "openai__gpt-6-astra": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 747948.0,
+      "delta_effort": 747948.0,
+      "newly_solved": 5,
+      "effort_per_extra_solve": 149589.6
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 1442544.0,
+      "delta_effort": 694596.0,
+      "newly_solved": 0,
+      "effort_per_extra_solve": null
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 2290910.0,
+      "delta_effort": 848366.0,
+      "newly_solved": 6,
+      "effort_per_extra_solve": 141394.33333333334
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 3022470.0,
+      "delta_effort": 731560.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 731560.0
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 3911117.0,
+      "delta_effort": 888647.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 888647.0
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 4936103.0,
+      "delta_effort": 1024986.0,
+      "newly_solved": 5,
+      "effort_per_extra_solve": 204997.2
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 6290324.0,
+      "delta_effort": 1354221.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 451407.0
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 8077475.0,
+      "delta_effort": 1787151.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 595717.0
+     }
+    ],
+    "openai__gpt-5.6-terra": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 495765.0,
+      "delta_effort": 495765.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 165255.0
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 976378.0,
+      "delta_effort": 480613.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 480613.0
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 1635148.0,
+      "delta_effort": 658770.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 658770.0
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 2304398.0,
+      "delta_effort": 669250.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 223083.33333333334
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 3123509.0,
+      "delta_effort": 819111.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 409555.5
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 4077783.0,
+      "delta_effort": 954274.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 318091.3333333333
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 5539433.0,
+      "delta_effort": 1461650.0,
+      "newly_solved": 4,
+      "effort_per_extra_solve": 365412.5
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 7675741.0,
+      "delta_effort": 2136308.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 712102.6666666666
+     }
+    ],
+    "openai__gpt-6-luna": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 594412.0,
+      "delta_effort": 594412.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 297206.0
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 1167967.0,
+      "delta_effort": 573555.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 573555.0
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 1925701.0,
+      "delta_effort": 757734.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 757734.0
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 2643422.0,
+      "delta_effort": 717721.0,
+      "newly_solved": 0,
+      "effort_per_extra_solve": null
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 3567832.0,
+      "delta_effort": 924410.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 462205.0
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 4640860.0,
+      "delta_effort": 1073028.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 1073028.0
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 6396509.0,
+      "delta_effort": 1755649.0,
+      "newly_solved": 4,
+      "effort_per_extra_solve": 438912.25
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 8883949.0,
+      "delta_effort": 2487440.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 2487440.0
+     }
+    ],
+    "anthropic__claude-opus-5-5": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 1218620.0,
+      "delta_effort": 1218620.0,
+      "newly_solved": 7,
+      "effort_per_extra_solve": 174088.57142857142
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 2288995.0,
+      "delta_effort": 1070375.0,
+      "newly_solved": 0,
+      "effort_per_extra_solve": null
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 3731754.0,
+      "delta_effort": 1442759.0,
+      "newly_solved": 5,
+      "effort_per_extra_solve": 288551.8
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 5065589.0,
+      "delta_effort": 1333835.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 444611.6666666667
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 6661135.0,
+      "delta_effort": 1595546.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 531848.6666666666
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 8337464.0,
+      "delta_effort": 1676329.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 558776.3333333334
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 10774042.0,
+      "delta_effort": 2436578.0,
+      "newly_solved": 4,
+      "effort_per_extra_solve": 609144.5
+     }
+    ],
+    "zai__glm-5.3": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 652702.0,
+      "delta_effort": 652702.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 652702.0
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 1369307.0,
+      "delta_effort": 716605.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 716605.0
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 2705164.0,
+      "delta_effort": 1335857.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 667928.5
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 3990211.0,
+      "delta_effort": 1285047.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 1285047.0
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 5777815.0,
+      "delta_effort": 1787604.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 595868.0
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 7518483.0,
+      "delta_effort": 1740668.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 580222.6666666666
+     }
+    ],
+    "google__gemini-4-argon-eap": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 781231.0,
+      "delta_effort": 781231.0,
+      "newly_solved": 9,
+      "effort_per_extra_solve": 86803.44444444444
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 1422007.0,
+      "delta_effort": 640776.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 213592.0
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 1964391.0,
+      "delta_effort": 542384.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 180794.66666666666
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 2887291.0,
+      "delta_effort": 922900.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 461450.0
+     }
+    ]
+   },
+   "bootstrap_ci95": {
+    "H1": {
+     "anthropic__claude-opus-5-5": {
+      "A": {
+       "lo": 0.5216218379999982,
+       "hi": 0.9999938558253978,
+       "median": 0.9999938558253978,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 78272.11851452624,
+       "hi": 750517.3316280732,
+       "median": 276509.64186398545,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 1.069039411923506,
+       "hi": 3.3199524601688473,
+       "median": 2.0894453263947694,
+       "n": 1000
+      }
+     },
+     "google__gemini-4-argon-eap": {
+      "A": {
+       "lo": 0.2801907769954364,
+       "hi": 0.9999938558253978,
+       "median": 0.7689433642036543,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 6766.005787088495,
+       "hi": 642451.6988739928,
+       "median": 84132.83980575127,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.7862574095493509,
+       "hi": 4.113383325606146,
+       "median": 2.3960131939424936,
+       "n": 1000
+      }
+     },
+     "openai__gpt-5.6-terra": {
+      "A": {
+       "lo": 0.3606858413207092,
+       "hi": 0.9999938558253978,
+       "median": 0.9999938557249207,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 46255.15386115001,
+       "hi": 946602.5591418084,
+       "median": 229514.11908194527,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.6974718400876345,
+       "hi": 3.1410418578390398,
+       "median": 1.8498287855323334,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "A": {
+       "lo": 0.43106368548004415,
+       "hi": 0.9999938558253978,
+       "median": 0.914709918135667,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 48283.765684198865,
+       "hi": 530248.9611331731,
+       "median": 159855.32313881748,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8131993472258069,
+       "hi": 3.101727261548951,
+       "median": 1.7641488878925164,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "A": {
+       "lo": 0.16054630286167296,
+       "hi": 0.9999938558253978,
+       "median": 0.4574110324658788,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 35627.23572567373,
+       "hi": 6530720.701522208,
+       "median": 161462.6870409964,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.44295360704632003,
+       "hi": 3.9177665040002507,
+       "median": 1.6356615508465804,
+       "n": 1000
+      }
+     },
+     "zai__glm-5.3": {
+      "A": {
+       "lo": 0.13937503117472938,
+       "hi": 0.9999938558253978,
+       "median": 0.5390170122505009,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 37485.70480623071,
+       "hi": 3371414.053731029,
+       "median": 196135.7744324893,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.5073797671904294,
+       "hi": 3.1398839922976616,
+       "median": 1.3822587184561308,
+       "n": 1000
+      }
+     }
+    },
+    "H2": {
+     "openai__gpt-5.6-terra": {
+      "A": {
+       "lo": 0.38569692184552007,
+       "hi": 0.9999938558253978,
+       "median": 0.7692228891092613,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 56590.46719527943,
+       "hi": 575474.3188186791,
+       "median": 179974.6733437277,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.7658450159971704,
+       "hi": 2.865426741733862,
+       "median": 1.7937372785217158,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "A": {
+       "lo": 0.45163389392535,
+       "hi": 0.9999938558253978,
+       "median": 0.8539730499920032,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 52460.5112249517,
+       "hi": 491881.43509940227,
+       "median": 154312.95420586682,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.7658450159971704,
+       "hi": 2.865426741733862,
+       "median": 1.7937372785217158,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "A": {
+       "lo": 0.18316100393206475,
+       "hi": 0.9999691681737396,
+       "median": 0.46338650795523273,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 64440.36140444588,
+       "hi": 865450.0461917253,
+       "median": 183499.05838247936,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.7658450159971704,
+       "hi": 2.865426741733862,
+       "median": 1.7937372785217158,
+       "n": 1000
+      }
+     }
+    },
+    "H3": {
+     "openai__gpt-5.6-terra": {
+      "A": {
+       "lo": 0.43845497140614037,
+       "hi": 0.9999938558253978,
+       "median": 0.9999938557020815,
+       "n": 1000
+      },
+      "effort_ratio_vs_gpt-6-astra": {
+       "lo": 0.881541099145926,
+       "hi": 1.9838561333045934,
+       "median": 1.3501858883042583,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 64865.90694977941,
+       "hi": 981070.3597625395,
+       "median": 267439.41136461205,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8560589458114563,
+       "hi": 3.169722110871792,
+       "median": 2.0095530050153068,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "A": {
+       "lo": 0.43845497140614037,
+       "hi": 0.9999938558253978,
+       "median": 0.9999938557020815,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 53923.29980977685,
+       "hi": 659019.4237751288,
+       "median": 199323.60952388856,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8560589458114563,
+       "hi": 3.169722110871792,
+       "median": 2.0095530050153068,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "A": {
+       "lo": 0.43845497140614037,
+       "hi": 0.9999938558253978,
+       "median": 0.9999938557020815,
+       "n": 1000
+      },
+      "effort_ratio_vs_gpt-6-astra": {
+       "lo": 2.077181177160702,
+       "hi": 5.965850922020307,
+       "median": 3.3709420856564796,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 135960.5531146564,
+       "hi": 2930969.7633701386,
+       "median": 667945.9479709443,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8560589458114563,
+       "hi": 3.169722110871792,
+       "median": 2.0095530050153068,
+       "n": 1000
+      }
+     }
+    },
+    "loglogistic_A1": {
+     "anthropic__claude-opus-5-5": {
+      "alpha": {
+       "lo": 0.6264714396145397,
+       "hi": 1.6365900243273557,
+       "median": 1.0109274163409592,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 6351639.398719922,
+       "hi": 25207029.343368128,
+       "median": 11351069.841596179,
+       "n": 1000
+      }
+     },
+     "google__gemini-4-argon-eap": {
+      "alpha": {
+       "lo": 0.25422546898295867,
+       "hi": 1.1430376602958812,
+       "median": 0.6764401769179345,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 2873765.730028899,
+       "hi": 112066296.73265631,
+       "median": 7514022.910923306,
+       "n": 1000
+      }
+     },
+     "openai__gpt-5.6-terra": {
+      "alpha": {
+       "lo": 0.6263274976329907,
+       "hi": 1.7237401195530933,
+       "median": 1.0730500200689346,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 5997763.976327731,
+       "hi": 31258986.994766723,
+       "median": 11020780.27710075,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "alpha": {
+       "lo": 0.6578798263824663,
+       "hi": 1.7105298159169846,
+       "median": 1.0819846452186717,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 4916442.060238633,
+       "hi": 19070838.722985733,
+       "median": 8995712.960158251,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "alpha": {
+       "lo": 0.4080610989193792,
+       "hi": 1.8370679639010739,
+       "median": 0.9326719463274151,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 12157364.49062235,
+       "hi": 367564616.01055175,
+       "median": 28018728.77940822,
+       "n": 1000
+      }
+     },
+     "zai__glm-5.3": {
+      "alpha": {
+       "lo": 0.5982861582163165,
+       "hi": 2.7975270097305898,
+       "median": 1.2012631464999677,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 10389674.418251619,
+       "hi": 158593962.62279063,
+       "median": 20604833.754929848,
+       "n": 1000
+      }
+     }
+    },
+    "loglogistic_Afree": {
+     "anthropic__claude-opus-5-5": {
+      "A": {
+       "lo": 0.9999938557638516,
+       "hi": 0.9999938558253978,
+       "median": 0.9999938558240029,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.6264736347574748,
+       "hi": 1.6365959178363643,
+       "median": 1.0109308632204816,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 6351558.079653949,
+       "hi": 25206622.231122438,
+       "median": 11350943.061765457,
+       "n": 1000
+      }
+     },
+     "google__gemini-4-argon-eap": {
+      "A": {
+       "lo": 0.26626227407220876,
+       "hi": 0.9999839697429368,
+       "median": 0.6341998810399518,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.3192272324348945,
+       "hi": 2.814962875852455,
+       "median": 0.9705800932765267,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 576983.1908889285,
+       "hi": 27256173.91913472,
+       "median": 2380120.1083256584,
+       "n": 1000
+      }
+     },
+     "openai__gpt-5.6-terra": {
+      "A": {
+       "lo": 0.9999907189539671,
+       "hi": 0.9999907192329421,
+       "median": 0.99999071911088,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.6263295152128865,
+       "hi": 1.7237479014754002,
+       "median": 1.0730544113633194,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 5997688.468011052,
+       "hi": 31258437.03322928,
+       "median": 11020611.887554545,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "A": {
+       "lo": 0.9999938557668033,
+       "hi": 0.9999938558253978,
+       "median": 0.9999938558225258,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.6578809592134406,
+       "hi": 1.7105329174675319,
+       "median": 1.0819872928516596,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 4916397.497681805,
+       "hi": 19070498.378082182,
+       "median": 8995594.12043337,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "A": {
+       "lo": 0.9999831716707488,
+       "hi": 0.9999831738527553,
+       "median": 0.9999831732662243,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.40806191002155845,
+       "hi": 1.8370731090901222,
+       "median": 0.9326738264734529,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 12157096.297843548,
+       "hi": 367547669.0364742,
+       "median": 28018003.66718162,
+       "n": 1000
+      }
+     },
+     "zai__glm-5.3": {
+      "A": {
+       "lo": 0.9998659649056207,
+       "hi": 0.9998660378607622,
+       "median": 0.9998660164178125,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.5982991938616555,
+       "hi": 2.797556642159004,
+       "median": 1.2012940357132904,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 10388435.223099405,
+       "hi": 158541934.9994363,
+       "median": 20600644.809997667,
+       "n": 1000
+      }
+     }
+    },
+    "lognormal_A1": {
+     "anthropic__claude-opus-5-5": {
+      "median_effort": {
+       "lo": 6359587.767236116,
+       "hi": 27176256.946000796,
+       "median": 11593398.535611693,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 1.0360075725429607,
+       "hi": 2.684053887445099,
+       "median": 1.6847404301429916,
+       "n": 1000
+      }
+     },
+     "google__gemini-4-argon-eap": {
+      "median_effort": {
+       "lo": 2893451.5238877675,
+       "hi": 141557811.4529991,
+       "median": 8014384.977819318,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 1.5144675804279302,
+       "hi": 6.6343074292624005,
+       "median": 2.5197202590431043,
+       "n": 1000
+      }
+     },
+     "openai__gpt-5.6-terra": {
+      "median_effort": {
+       "lo": 6064063.897487859,
+       "hi": 38458562.43456994,
+       "median": 11647400.964736877,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 1.0045549750384035,
+       "hi": 2.8460399461552544,
+       "median": 1.6240407721865582,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "median_effort": {
+       "lo": 4923765.631195432,
+       "hi": 20965515.18184258,
+       "median": 9238612.362239953,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.991972657546239,
+       "hi": 2.5678563456058043,
+       "median": 1.5944049159764884,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "median_effort": {
+       "lo": 12774575.57187514,
+       "hi": 731989081.543107,
+       "median": 33885449.324409015,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 1.0070881666638218,
+       "hi": 4.613156129688882,
+       "median": 2.0092124446137785,
+       "n": 1000
+      }
+     },
+     "zai__glm-5.3": {
+      "median_effort": {
+       "lo": 10952875.474993372,
+       "hi": 293691168.09557664,
+       "median": 25084294.64431927,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.6938429476830422,
+       "hi": 3.2875405512146747,
+       "median": 1.5974336472195154,
+       "n": 1000
+      }
+     }
+    }
+   }
+  },
+  "requests": {
+   "survival": {
+    "H1_single": {
+     "openai__gpt-6-astra": {
+      "theta": [
+       1.0985663088788529,
+       3.475916761008909,
+       0.41932481752941164
+      ],
+      "nll": 86.42461143324397,
+      "partial": false,
+      "params": {
+       "A": 0.7499913786904143,
+       "mu": 3.475916761008909,
+       "sigma": 1.520934300686657,
+       "median_effort": 32.32745150300103,
+       "A_at_bound": false
+      },
+      "alpha_from_sigma_sd_match": 1.192556025211175,
+      "alpha_from_sigma_1702": 1.1190489945762925
+     },
+     "openai__gpt-5.6-terra": {
+      "theta": [
+       2.756936448528539,
+       4.196549776019806,
+       0.5630397734243097
+      ],
+      "nll": 79.32162730028517,
+      "partial": false,
+      "params": {
+       "A": 0.9403039010818501,
+       "mu": 4.196549776019806,
+       "sigma": 1.756002244540626,
+       "median_effort": 66.45664472488399,
+       "A_at_bound": false
+      },
+      "alpha_from_sigma_sd_match": 1.0329140352031336,
+      "alpha_from_sigma_1702": 0.9692470526683449
+     },
+     "openai__gpt-6-luna": {
+      "theta": [
+       0.013237104440783222,
+       4.080033919149312,
+       0.5362831048133243
+      ],
+      "nll": 53.37991711958201,
+      "partial": false,
+      "params": {
+       "A": 0.5033092277898382,
+       "mu": 4.080033919149312,
+       "sigma": 1.709640483449197,
+       "median_effort": 59.14747604792928,
+       "A_at_bound": false
+      },
+      "alpha_from_sigma_sd_match": 1.060924435162462,
+      "alpha_from_sigma_1702": 0.9955309414329132
+     },
+     "anthropic__claude-opus-5-5": {
+      "theta": [
+       1.2273379471105348,
+       3.0206336662395663,
+       0.41561518383772095
+      ],
+      "nll": 86.69369569664809,
+      "partial": true,
+      "params": {
+       "A": 0.7733523131612007,
+       "mu": 3.0206336662395663,
+       "sigma": 1.5153026437124877,
+       "median_effort": 20.504280438771335,
+       "A_at_bound": false
+      },
+      "alpha_from_sigma_sd_match": 1.1969881869871315,
+      "alpha_from_sigma_1702": 1.1232079657896619
+     },
+     "zai__glm-5.3": {
+      "theta": [
+       12.0,
+       4.828849106858614,
+       0.5531993867491249
+      ],
+      "nll": 49.11829267414537,
+      "partial": true,
+      "params": {
+       "A": 0.9999938558253978,
+       "mu": 4.828849106858614,
+       "sigma": 1.738807244928081,
+       "median_effort": 125.06693911152152,
+       "A_at_bound": true
+      },
+      "alpha_from_sigma_sd_match": 1.0431284833467775,
+      "alpha_from_sigma_1702": 0.9788319004102128
+     },
+     "google__gemini-4-argon-eap": {
+      "theta": [
+       -0.38675177123388477,
+       1.5734089753883034,
+       -0.08831732739007331
+      ],
+      "nll": 53.62417269827428,
+      "partial": true,
+      "params": {
+       "A": 0.40449948959107007,
+       "mu": 1.5734089753883034,
+       "sigma": 0.9154703268165437,
+       "median_effort": 4.823061900233205,
+       "A_at_bound": false
+      },
+      "alpha_from_sigma_sd_match": 1.9812759748767863,
+      "alpha_from_sigma_1702": 1.8591536504722488
+     }
+    },
+    "finished": {
+     "models": [
+      "openai__gpt-6-astra",
+      "openai__gpt-5.6-terra",
+      "openai__gpt-6-luna"
+     ],
+     "fits": {
+      "H1": {
+       "hypothesis": "H1",
+       "nll": 219.1261560107395,
+       "k": 9,
+       "aic": 456.252312021479,
+       "theta": [
+        1.0990999147147118,
+        3.4761840535170716,
+        0.4194362977863549,
+        2.750818135048161,
+        4.195834002821882,
+        0.5628732897962142,
+        0.013865774891706316,
+        4.080613350876714,
+        0.5364273812920024
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.750091418737387,
+         "mu": 3.4761840535170716,
+         "sigma": 1.5211038642846122,
+         "median_effort": 32.33609354352066,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.9399595383948887,
+         "mu": 4.195834002821882,
+         "sigma": 1.7557099232500408,
+         "median_effort": 66.40909385961356,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.5034663881858713,
+         "mu": 4.080613350876714,
+         "sigma": 1.7098871621524938,
+         "median_effort": 59.18175790318537,
+         "A_at_bound": false
+        }
+       }
+      },
+      "H2": {
+       "hypothesis": "H2",
+       "nll": 219.15799812723884,
+       "k": 7,
+       "aic": 452.3159962544777,
+       "theta": [
+        0.4891496674272734,
+        1.5187584616361847,
+        3.6713090263767527,
+        1.499590429161745,
+        3.909092937234955,
+        -0.14432108518630749,
+        3.90990654252175
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.820355584996745,
+         "mu": 3.6713090263767527,
+         "sigma": 1.630928798273085,
+         "median_effort": 39.30332128514519,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.8175133822106524,
+         "mu": 3.909092937234955,
+         "sigma": 1.630928798273085,
+         "median_effort": 49.85371101335507,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.4639822235936477,
+         "mu": 3.90990654252175,
+         "sigma": 1.630928798273085,
+         "median_effort": 49.89428876109854,
+         "A_at_bound": false
+        }
+       }
+      },
+      "H3": {
+       "hypothesis": "H3",
+       "nll": 219.57862999238716,
+       "k": 5,
+       "aic": 449.1572599847743,
+       "theta": [
+        0.6030218176424348,
+        2.6159110392367295,
+        3.981080431457645,
+        4.225163249592605,
+        5.075774832098775
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.9318785935310782,
+         "mu": 3.981080431457645,
+         "sigma": 1.8276332387454928,
+         "median_effort": 53.574886962119834,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.9318785935310782,
+         "mu": 4.225163249592605,
+         "sigma": 1.8276332387454928,
+         "median_effort": 68.3856665695615,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.9318785935310782,
+         "mu": 5.075774832098775,
+         "sigma": 1.8276332387454928,
+         "median_effort": 160.09619160188362,
+         "A_at_bound": false
+        }
+       }
+      }
+     },
+     "likelihood_ratio_tests": {
+      "H2_vs_H1": {
+       "lr_stat": 0.06368423299869619,
+       "df": 2,
+       "p_value": 0.9686595053604945
+      },
+      "H3_vs_H2": {
+       "lr_stat": 0.8412637302966459,
+       "df": 2,
+       "p_value": 0.6566317859653203
+      },
+      "H3_vs_H1": {
+       "lr_stat": 0.9049479632953421,
+       "df": 4,
+       "p_value": 0.9238498829571608
+      }
+     },
+     "preferred_by_aic": "H3",
+     "delta_aic": {
+      "H1": 7.095052036704658,
+      "H2": 3.158736269703354,
+      "H3": 0.0
+     }
+    },
+    "sensitivity_all_models": {
+     "models": [
+      "openai__gpt-6-astra",
+      "openai__gpt-5.6-terra",
+      "openai__gpt-6-luna",
+      "anthropic__claude-opus-5-5",
+      "zai__glm-5.3",
+      "google__gemini-4-argon-eap"
+     ],
+     "fits": {
+      "H1": {
+       "hypothesis": "H1",
+       "nll": 408.5627724656109,
+       "k": 18,
+       "aic": 853.1255449312218,
+       "theta": [
+        1.0985330785751786,
+        3.475898130019639,
+        0.41931642753464016,
+        3.2315621995643617,
+        4.242381425254073,
+        0.5726723770065539,
+        0.015625835759689694,
+        4.0824808935179036,
+        0.536889840667751,
+        1.225585460692673,
+        3.0198070163932895,
+        0.41536362426387097,
+        4.435293976330323,
+        4.8092003981507725,
+        0.5498957513076714,
+        -0.38672097206943207,
+        1.5734475220274864,
+        -0.0883236434765627
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.7499851478134725,
+         "mu": 3.475898130019639,
+         "sigma": 1.520921540109357,
+         "median_effort": 32.32684921620957,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.9620048948608653,
+         "mu": 4.242381425254073,
+         "sigma": 1.7729988473987532,
+         "median_effort": 69.57333841870654,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.50390637945625,
+         "mu": 4.0824808935179036,
+         "sigma": 1.7106780983759433,
+         "median_effort": 59.29238562849412,
+         "A_at_bound": false
+        },
+        "anthropic__claude-opus-5-5": {
+         "A": 0.7730449928060193,
+         "mu": 3.0198070163932895,
+         "sigma": 1.5149215027670186,
+         "median_effort": 20.487337582368255,
+         "A_at_bound": false
+        },
+        "zai__glm-5.3": {
+         "A": 0.9882872334935429,
+         "mu": 4.8092003981507725,
+         "sigma": 1.7330723379247954,
+         "median_effort": 122.6335203135191,
+         "A_at_bound": false
+        },
+        "google__gemini-4-argon-eap": {
+         "A": 0.40450690850492205,
+         "mu": 1.5734475220274864,
+         "sigma": 0.9154645446450415,
+         "median_effort": 4.823247816643234,
+         "A_at_bound": false
+        }
+       }
+      },
+      "H2": {
+       "hypothesis": "H2",
+       "nll": 409.5420074339254,
+       "k": 13,
+       "aic": 845.0840148678508,
+       "theta": [
+        0.38203267519594225,
+        0.9381126872631443,
+        3.3847106465515835,
+        0.8042706172154153,
+        3.5716882637409078,
+        -0.42083269461555795,
+        3.5874208044474076,
+        1.070914496487923,
+        2.9394720091427367,
+        0.5484615215170178,
+        4.053536039438824,
+        0.4053064649532455,
+        2.305551825305952
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.7187182714446455,
+         "mu": 3.3847106465515835,
+         "sigma": 1.4652599620071274,
+         "median_effort": 29.509452818752706,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.6908872656231955,
+         "mu": 3.5716882637409078,
+         "sigma": 1.4652599620071274,
+         "median_effort": 35.576605171851796,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.3963175108072839,
+         "mu": 3.5874208044474076,
+         "sigma": 1.4652599620071274,
+         "median_effort": 36.140741574507636,
+         "A_at_bound": false
+        },
+        "anthropic__claude-opus-5-5": {
+         "A": 0.7447707888679597,
+         "mu": 2.9394720091427367,
+         "sigma": 1.4652599620071274,
+         "median_effort": 18.90586155450713,
+         "A_at_bound": false
+        },
+        "zai__glm-5.3": {
+         "A": 0.6337785786394727,
+         "mu": 4.053536039438824,
+         "sigma": 1.4652599620071274,
+         "median_effort": 57.600775977276825,
+         "A_at_bound": false
+        },
+        "google__gemini-4-argon-eap": {
+         "A": 0.5999619250388661,
+         "mu": 2.305551825305952,
+         "sigma": 1.4652599620071274,
+         "median_effort": 10.029711374173905,
+         "A_at_bound": false
+        }
+       }
+      },
+      "H3": {
+       "hypothesis": "H3",
+       "nll": 410.33254334135097,
+       "k": 8,
+       "aic": 836.6650866827019,
+       "theta": [
+        0.47173562935778823,
+        1.1910756140657435,
+        3.5484051463238004,
+        3.797224456486626,
+        4.6168946858801965,
+        3.0462693500822238,
+        4.388929232271711,
+        2.7434934259207298
+       ],
+       "params": {
+        "openai__gpt-6-astra": {
+         "A": 0.7669333817522687,
+         "mu": 3.5484051463238004,
+         "sigma": 1.6027736014249139,
+         "median_effort": 34.75783959154872,
+         "A_at_bound": false
+        },
+        "openai__gpt-5.6-terra": {
+         "A": 0.7669333817522687,
+         "mu": 3.797224456486626,
+         "sigma": 1.6027736014249139,
+         "median_effort": 44.577286432408776,
+         "A_at_bound": false
+        },
+        "openai__gpt-6-luna": {
+         "A": 0.7669333817522687,
+         "mu": 4.6168946858801965,
+         "sigma": 1.6027736014249139,
+         "median_effort": 101.17935012460707,
+         "A_at_bound": false
+        },
+        "anthropic__claude-opus-5-5": {
+         "A": 0.7669333817522687,
+         "mu": 3.0462693500822238,
+         "sigma": 1.6027736014249139,
+         "median_effort": 21.036717221080956,
+         "A_at_bound": false
+        },
+        "zai__glm-5.3": {
+         "A": 0.7669333817522687,
+         "mu": 4.388929232271711,
+         "sigma": 1.6027736014249139,
+         "median_effort": 80.55411803461655,
+         "A_at_bound": false
+        },
+        "google__gemini-4-argon-eap": {
+         "A": 0.7669333817522687,
+         "mu": 2.7434934259207298,
+         "sigma": 1.6027736014249139,
+         "median_effort": 15.541182343424643,
+         "A_at_bound": false
+        }
+       }
+      }
+     },
+     "likelihood_ratio_tests": {
+      "H2_vs_H1": {
+       "lr_stat": 1.9584699366289442,
+       "df": 5,
+       "p_value": 0.8548611667771702
+      },
+      "H3_vs_H2": {
+       "lr_stat": 1.5810718148511569,
+       "df": 5,
+       "p_value": 0.90352879386088
+      },
+      "H3_vs_H1": {
+       "lr_stat": 3.539541751480101,
+       "df": 10,
+       "p_value": 0.9657386710407772
+      }
+     },
+     "preferred_by_aic": "H3",
+     "delta_aic": {
+      "H1": 16.4604582485199,
+      "H2": 8.418928185148843,
+      "H3": 0.0
+     }
+    }
+   },
+   "panel_fits": {
+    "openai__gpt-6-astra": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 2215.338282968406,
+      "alpha": 1.0983889205776733,
+      "sse": 0.0043348067368378165,
+      "rmse": 0.023277689793120088,
+      "theta": [
+       7.703160394505929,
+       0.09384448854681969
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9999938558253978,
+      "k_half": 2215.3351648592034,
+      "alpha": 1.0983854803929398,
+      "sse": 0.0043348192355418935,
+      "rmse": 0.02327772335179574,
+      "theta": [
+       7.703158986995653,
+       0.0938413565140246,
+       12.0
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 7.731296503101822,
+      "sigma": 1.5543255546571244,
+      "median_effort": 2278.5544394789226,
+      "sse": 0.005164497496330585,
+      "rmse": 0.025407915834269507,
+      "theta": [
+       7.731296503101822,
+       0.4410417246358738
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 2278.5544394789226,
+      "alpha_from_sigma_sd_match": 1.166936591114808,
+      "alpha_from_sigma_1702": 1.0950086967948305
+     }
+    },
+    "openai__gpt-5.6-terra": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 2633.0788078698847,
+      "alpha": 1.161969571459665,
+      "sse": 0.0014329729719404058,
+      "rmse": 0.013383632597039966,
+      "theta": [
+       7.8759090898763,
+       0.15011647173544382
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9999902137599541,
+      "k_half": 2633.1004550775465,
+      "alpha": 1.1619602081960152,
+      "sse": 0.001432980613809947,
+      "rmse": 0.013383668283629992,
+      "theta": [
+       7.875917311095739,
+       0.15010841360586377,
+       11.53452344958847
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 7.93120808107607,
+      "sigma": 1.5085596084016206,
+      "median_effort": 2782.786606489809,
+      "sse": 0.002230922994452482,
+      "rmse": 0.01669926268751289,
+      "theta": [
+       7.93120808107607,
+       0.4111552938522708
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 2782.786606489809,
+      "alpha_from_sigma_sd_match": 1.202338544749989,
+      "alpha_from_sigma_1702": 1.128228537023696
+     }
+    },
+    "openai__gpt-6-luna": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 7672.017992615894,
+      "alpha": 0.944083154498818,
+      "sse": 0.001571722561859848,
+      "rmse": 0.014016608727951315,
+      "theta": [
+       8.945334961792001,
+       -0.05754102932328731
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9999872313975943,
+      "k_half": 7671.543925479384,
+      "alpha": 0.9441263353242032,
+      "sse": 0.0015717251987170467,
+      "rmse": 0.014016620485681662,
+      "theta": [
+       8.945273168169479,
+       -0.05749529199845602,
+       11.268508568795582
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 9.158342305320195,
+      "sigma": 1.998244131108724,
+      "median_effort": 9493.307022239444,
+      "sse": 0.0019159452282607255,
+      "rmse": 0.015475566339639745,
+      "theta": [
+       9.158342305320195,
+       0.6922688605041517
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 9493.307022239444,
+      "alpha_from_sigma_sd_match": 0.907696580211064,
+      "alpha_from_sigma_1702": 0.8517477787139286
+     }
+    },
+    "anthropic__claude-opus-5-5": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 1381.4287970576572,
+      "alpha": 1.043912470225341,
+      "sse": 0.0032513187955518917,
+      "rmse": 0.021551661505560777,
+      "theta": [
+       7.230873602722272,
+       0.04297564516528756
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9999938558253978,
+      "k_half": 1381.4099563960376,
+      "alpha": 1.0439111569384125,
+      "sse": 0.0032513364179231627,
+      "rmse": 0.021551719911224728,
+      "theta": [
+       7.230859964096712,
+       0.042974387121349926,
+       12.0
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 7.255739318932964,
+      "sigma": 1.6287727437911408,
+      "median_effort": 1416.2096467840495,
+      "sse": 0.004182160839909237,
+      "rmse": 0.024442822025258507,
+      "theta": [
+       7.255739318932964,
+       0.4878268133140755
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 1416.2096467840495,
+      "alpha_from_sigma_sd_match": 1.1135987946436334,
+      "alpha_from_sigma_1702": 1.0449585471564407
+     }
+    },
+    "zai__glm-5.3": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 4124.137235613407,
+      "alpha": 1.2939044528850159,
+      "sse": 0.00035328126399647013,
+      "rmse": 0.007673344164448663,
+      "theta": [
+       8.324612121890013,
+       0.2576643547783308
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.9999624332543658,
+      "k_half": 4123.430907611964,
+      "alpha": 1.2940607406276254,
+      "sse": 0.0003532874288405659,
+      "rmse": 0.007673411115018816,
+      "theta": [
+       8.3244408403702,
+       0.257785135183872,
+       10.189353756074722
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 8.528039640136699,
+      "sigma": 1.5028323109049062,
+      "median_effort": 5054.527423479398,
+      "sse": 0.0005801813672820546,
+      "rmse": 0.009833457914030503,
+      "theta": [
+       8.528039640136699,
+       0.4073515349556069
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 5054.527423479398,
+      "alpha_from_sigma_sd_match": 1.2069206597920883,
+      "alpha_from_sigma_1702": 1.1325282186508008
+     }
+    },
+    "google__gemini-4-argon-eap": {
+     "loglogistic_A1": {
+      "A": 1.0,
+      "k_half": 1374.1102471778956,
+      "alpha": 0.7267738267235112,
+      "sse": 0.00019440008747787388,
+      "rmse": 0.006971371591693307,
+      "theta": [
+       7.225561707684128,
+       -0.3191399547713093
+      ]
+     },
+     "loglogistic_Afree": {
+      "A": 0.8314560704176789,
+      "k_half": 885.8679904050927,
+      "alpha": 0.7834874508042745,
+      "sse": 0.00019273025824423655,
+      "rmse": 0.006941366188370927,
+      "theta": [
+       6.786567944476107,
+       -0.24400023415635608,
+       1.5959820400078324
+      ]
+     },
+     "lognormal_A1": {
+      "A": 1.0,
+      "mu": 7.27812809260295,
+      "sigma": 2.3292571380161045,
+      "median_effort": 1448.2744504698114,
+      "sse": 0.00019693351481101076,
+      "rmse": 0.007016650105481439,
+      "theta": [
+       7.27812809260295,
+       0.8455493918563579
+      ]
+     },
+     "mapping_from_panel_lognormal": {
+      "k_half_equiv": 1448.2744504698114,
+      "alpha_from_sigma_sd_match": 0.7787029326350301,
+      "alpha_from_sigma_1702": 0.730705069964771
+     }
+    }
+   },
+   "panel_points": {
+    "openai__gpt-6-astra": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 198.0,
+      "solve_rate": 0.1,
+      "cumulative_solved": 5
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 382.0,
+      "solve_rate": 0.1,
+      "cumulative_solved": 5
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 602.0,
+      "solve_rate": 0.22,
+      "cumulative_solved": 11
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 792.0,
+      "solve_rate": 0.24,
+      "cumulative_solved": 12
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 1020.0,
+      "solve_rate": 0.26,
+      "cumulative_solved": 13
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1276.0,
+      "solve_rate": 0.36,
+      "cumulative_solved": 18
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 1598.0,
+      "solve_rate": 0.42,
+      "cumulative_solved": 21
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 2004.0,
+      "solve_rate": 0.48,
+      "cumulative_solved": 24
+     }
+    ],
+    "openai__gpt-5.6-terra": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 144.0,
+      "solve_rate": 0.06,
+      "cumulative_solved": 3
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 283.0,
+      "solve_rate": 0.08,
+      "cumulative_solved": 4
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 461.0,
+      "solve_rate": 0.1,
+      "cumulative_solved": 5
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 639.0,
+      "solve_rate": 0.16,
+      "cumulative_solved": 8
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 846.0,
+      "solve_rate": 0.2,
+      "cumulative_solved": 10
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1081.0,
+      "solve_rate": 0.26,
+      "cumulative_solved": 13
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 1410.0,
+      "solve_rate": 0.34,
+      "cumulative_solved": 17
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 1868.0,
+      "solve_rate": 0.4,
+      "cumulative_solved": 20
+     }
+    ],
+    "openai__gpt-6-luna": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 168.0,
+      "solve_rate": 0.04,
+      "cumulative_solved": 2
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 330.0,
+      "solve_rate": 0.06,
+      "cumulative_solved": 3
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 537.0,
+      "solve_rate": 0.08,
+      "cumulative_solved": 4
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 736.0,
+      "solve_rate": 0.08,
+      "cumulative_solved": 4
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 985.0,
+      "solve_rate": 0.12,
+      "cumulative_solved": 6
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1271.0,
+      "solve_rate": 0.14,
+      "cumulative_solved": 7
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 1711.0,
+      "solve_rate": 0.22,
+      "cumulative_solved": 11
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 2325.0,
+      "solve_rate": 0.24,
+      "cumulative_solved": 12
+     }
+    ],
+    "anthropic__claude-opus-5-5": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 157.0,
+      "solve_rate": 0.14,
+      "cumulative_solved": 7
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 293.0,
+      "solve_rate": 0.14,
+      "cumulative_solved": 7
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 472.0,
+      "solve_rate": 0.24,
+      "cumulative_solved": 12
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 634.0,
+      "solve_rate": 0.3,
+      "cumulative_solved": 15
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 823.0,
+      "solve_rate": 0.36,
+      "cumulative_solved": 18
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1019.0,
+      "solve_rate": 0.42,
+      "cumulative_solved": 21
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 1292.0,
+      "solve_rate": 0.5,
+      "cumulative_solved": 25
+     }
+    ],
+    "zai__glm-5.3": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 155.0,
+      "solve_rate": 0.02,
+      "cumulative_solved": 1
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 318.0,
+      "solve_rate": 0.04,
+      "cumulative_solved": 2
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 577.0,
+      "solve_rate": 0.08,
+      "cumulative_solved": 4
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 838.0,
+      "solve_rate": 0.1,
+      "cumulative_solved": 5
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 1177.0,
+      "solve_rate": 0.16,
+      "cumulative_solved": 8
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1500.0,
+      "solve_rate": 0.22,
+      "cumulative_solved": 11
+     }
+    ],
+    "google__gemini-4-argon-eap": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 168.0,
+      "solve_rate": 0.18,
+      "cumulative_solved": 9
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 300.0,
+      "solve_rate": 0.24,
+      "cumulative_solved": 12
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 400.0,
+      "solve_rate": 0.3,
+      "cumulative_solved": 15
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 563.0,
+      "solve_rate": 0.34,
+      "cumulative_solved": 17
+     }
+    ]
+   },
+   "marginal": {
+    "openai__gpt-6-astra": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 198.0,
+      "delta_effort": 198.0,
+      "newly_solved": 5,
+      "effort_per_extra_solve": 39.6
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 382.0,
+      "delta_effort": 184.0,
+      "newly_solved": 0,
+      "effort_per_extra_solve": null
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 602.0,
+      "delta_effort": 220.0,
+      "newly_solved": 6,
+      "effort_per_extra_solve": 36.666666666666664
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 792.0,
+      "delta_effort": 190.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 190.0
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 1020.0,
+      "delta_effort": 228.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 228.0
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1276.0,
+      "delta_effort": 256.0,
+      "newly_solved": 5,
+      "effort_per_extra_solve": 51.2
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 1598.0,
+      "delta_effort": 322.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 107.33333333333333
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 2004.0,
+      "delta_effort": 406.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 135.33333333333334
+     }
+    ],
+    "openai__gpt-5.6-terra": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 144.0,
+      "delta_effort": 144.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 48.0
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 283.0,
+      "delta_effort": 139.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 139.0
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 461.0,
+      "delta_effort": 178.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 178.0
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 639.0,
+      "delta_effort": 178.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 59.333333333333336
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 846.0,
+      "delta_effort": 207.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 103.5
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1081.0,
+      "delta_effort": 235.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 78.33333333333333
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 1410.0,
+      "delta_effort": 329.0,
+      "newly_solved": 4,
+      "effort_per_extra_solve": 82.25
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 1868.0,
+      "delta_effort": 458.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 152.66666666666666
+     }
+    ],
+    "openai__gpt-6-luna": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 168.0,
+      "delta_effort": 168.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 84.0
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 330.0,
+      "delta_effort": 162.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 162.0
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 537.0,
+      "delta_effort": 207.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 207.0
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 736.0,
+      "delta_effort": 199.0,
+      "newly_solved": 0,
+      "effort_per_extra_solve": null
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 985.0,
+      "delta_effort": 249.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 124.5
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1271.0,
+      "delta_effort": 286.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 286.0
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 1711.0,
+      "delta_effort": 440.0,
+      "newly_solved": 4,
+      "effort_per_extra_solve": 110.0
+     },
+     {
+      "profile": "p08_normal",
+      "cumulative_effort": 2325.0,
+      "delta_effort": 614.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 614.0
+     }
+    ],
+    "anthropic__claude-opus-5-5": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 157.0,
+      "delta_effort": 157.0,
+      "newly_solved": 7,
+      "effort_per_extra_solve": 22.428571428571427
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 293.0,
+      "delta_effort": 136.0,
+      "newly_solved": 0,
+      "effort_per_extra_solve": null
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 472.0,
+      "delta_effort": 179.0,
+      "newly_solved": 5,
+      "effort_per_extra_solve": 35.8
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 634.0,
+      "delta_effort": 162.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 54.0
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 823.0,
+      "delta_effort": 189.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 63.0
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1019.0,
+      "delta_effort": 196.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 65.33333333333333
+     },
+     {
+      "profile": "p07_medium",
+      "cumulative_effort": 1292.0,
+      "delta_effort": 273.0,
+      "newly_solved": 4,
+      "effort_per_extra_solve": 68.25
+     }
+    ],
+    "zai__glm-5.3": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 155.0,
+      "delta_effort": 155.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 155.0
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 318.0,
+      "delta_effort": 163.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 163.0
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 577.0,
+      "delta_effort": 259.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 129.5
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 838.0,
+      "delta_effort": 261.0,
+      "newly_solved": 1,
+      "effort_per_extra_solve": 261.0
+     },
+     {
+      "profile": "p05_quick_minus",
+      "cumulative_effort": 1177.0,
+      "delta_effort": 339.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 113.0
+     },
+     {
+      "profile": "p06_quick",
+      "cumulative_effort": 1500.0,
+      "delta_effort": 323.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 107.66666666666667
+     }
+    ],
+    "google__gemini-4-argon-eap": [
+     {
+      "profile": "p01_ultra_tiny",
+      "cumulative_effort": 168.0,
+      "delta_effort": 168.0,
+      "newly_solved": 9,
+      "effort_per_extra_solve": 18.666666666666668
+     },
+     {
+      "profile": "p02_tiny",
+      "cumulative_effort": 300.0,
+      "delta_effort": 132.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 44.0
+     },
+     {
+      "profile": "p03_ultra_cheap",
+      "cumulative_effort": 400.0,
+      "delta_effort": 100.0,
+      "newly_solved": 3,
+      "effort_per_extra_solve": 33.333333333333336
+     },
+     {
+      "profile": "p04_cheap",
+      "cumulative_effort": 563.0,
+      "delta_effort": 163.0,
+      "newly_solved": 2,
+      "effort_per_extra_solve": 81.5
+     }
+    ]
+   },
+   "bootstrap_ci95": {
+    "H1": {
+     "anthropic__claude-opus-5-5": {
+      "A": {
+       "lo": 0.4561028128831136,
+       "hi": 0.9999938558253978,
+       "median": 0.7602315117663133,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 7.118232963132089,
+       "hi": 50.87381331358933,
+       "median": 18.764884808810258,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.9692701450236518,
+       "hi": 1.8743137061953734,
+       "median": 1.4324508103018627,
+       "n": 1000
+      }
+     },
+     "google__gemini-4-argon-eap": {
+      "A": {
+       "lo": 0.24613803347780377,
+       "hi": 0.8316198538799622,
+       "median": 0.41213866260242715,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 2.6396278893739153,
+       "hi": 16.101965387369244,
+       "median": 4.774448904204685,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.5708004795358768,
+       "hi": 1.3096473736211884,
+       "median": 0.8831855780151163,
+       "n": 1000
+      }
+     },
+     "openai__gpt-5.6-terra": {
+      "A": {
+       "lo": 0.35270595681441386,
+       "hi": 0.9999938558253978,
+       "median": 0.7848301423223949,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 12.654905790948892,
+       "hi": 125.12665249242613,
+       "median": 43.04903717389098,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.6612746933271079,
+       "hi": 2.1747880324532036,
+       "median": 1.5148997592361741,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "A": {
+       "lo": 0.42767074952393713,
+       "hi": 0.9999938558253978,
+       "median": 0.7132205179110771,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 11.715960919385184,
+       "hi": 86.33758915358187,
+       "median": 27.632677282178612,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8468813094348953,
+       "hi": 2.0058485663859225,
+       "median": 1.4296580154676892,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "A": {
+       "lo": 0.15482766831732386,
+       "hi": 0.9999938558253978,
+       "median": 0.41400281048265564,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 9.487186738666782,
+       "hi": 384.51112705965727,
+       "median": 38.44656606598119,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.44922374275527244,
+       "hi": 2.3352599713207356,
+       "median": 1.482149143307105,
+       "n": 1000
+      }
+     },
+     "zai__glm-5.3": {
+      "A": {
+       "lo": 0.14080165820819693,
+       "hi": 0.9999938558253978,
+       "median": 0.6008538584007185,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 8.583107962733106,
+       "hi": 250.80935317198836,
+       "median": 47.54411866918535,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.4807022687565601,
+       "hi": 2.2385866651648114,
+       "median": 1.306151757860662,
+       "n": 1000
+      }
+     }
+    },
+    "H2": {
+     "openai__gpt-5.6-terra": {
+      "A": {
+       "lo": 0.38578662555787574,
+       "hi": 0.9999938558253978,
+       "median": 0.702451521797132,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 14.20791896308435,
+       "hi": 95.79428105274047,
+       "median": 35.22789417458077,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8028899416139156,
+       "hi": 1.9136843637258996,
+       "median": 1.477146278803339,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "A": {
+       "lo": 0.45025511011038843,
+       "hi": 0.9999938558253978,
+       "median": 0.7183050534836315,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 12.768894770324403,
+       "hi": 81.65952755278776,
+       "median": 29.256621566736932,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8028899416139156,
+       "hi": 1.9136843637258996,
+       "median": 1.477146278803339,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "A": {
+       "lo": 0.1841259173278987,
+       "hi": 0.7788578619176502,
+       "median": 0.4152316052328552,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 12.889384492141483,
+       "hi": 106.31654028218824,
+       "median": 37.4486273090684,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8028899416139156,
+       "hi": 1.9136843637258996,
+       "median": 1.477146278803339,
+       "n": 1000
+      }
+     }
+    },
+    "H3": {
+     "openai__gpt-5.6-terra": {
+      "A": {
+       "lo": 0.43811339708318303,
+       "hi": 0.9999938558253978,
+       "median": 0.8283847653152161,
+       "n": 1000
+      },
+      "effort_ratio_vs_gpt-6-astra": {
+       "lo": 0.9131350659171577,
+       "hi": 1.7659752874557197,
+       "median": 1.3051075259396856,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 16.210191286139793,
+       "hi": 147.6090881075502,
+       "median": 48.44002689790902,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8860766364728161,
+       "hi": 2.257659589899429,
+       "median": 1.6466790352226477,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "A": {
+       "lo": 0.43811339708318303,
+       "hi": 0.9999938558253978,
+       "median": 0.8283847653152161,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 12.90223662170278,
+       "hi": 110.16956489750073,
+       "median": 37.851914375018175,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8860766364728161,
+       "hi": 2.257659589899429,
+       "median": 1.6466790352226477,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "A": {
+       "lo": 0.43811339708318303,
+       "hi": 0.9999938558253978,
+       "median": 0.8283847653152161,
+       "n": 1000
+      },
+      "effort_ratio_vs_gpt-6-astra": {
+       "lo": 1.9457407069056694,
+       "hi": 4.611742722254906,
+       "median": 2.971257277103646,
+       "n": 1000
+      },
+      "median_effort": {
+       "lo": 31.691060378593864,
+       "hi": 396.16157754729585,
+       "median": 111.93175508330374,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8860766364728161,
+       "hi": 2.257659589899429,
+       "median": 1.6466790352226477,
+       "n": 1000
+      }
+     }
+    },
+    "loglogistic_A1": {
+     "anthropic__claude-opus-5-5": {
+      "alpha": {
+       "lo": 0.6526757359443718,
+       "hi": 1.7060362888651752,
+       "median": 1.0501039399238996,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 786.2662132118924,
+       "hi": 2926.8981541755206,
+       "median": 1365.884762445077,
+       "n": 1000
+      }
+     },
+     "google__gemini-4-argon-eap": {
+      "alpha": {
+       "lo": 0.27584754289120283,
+       "hi": 1.242438590336121,
+       "median": 0.7363488251767945,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 574.4373347022736,
+       "hi": 15715.315103024124,
+       "median": 1364.982677618917,
+       "n": 1000
+      }
+     },
+     "openai__gpt-5.6-terra": {
+      "alpha": {
+       "lo": 0.6735356606185213,
+       "hi": 1.9250227726781473,
+       "median": 1.1895009675438923,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 1506.9688111032294,
+       "hi": 6802.846744870045,
+       "median": 2623.5761174987874,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "alpha": {
+       "lo": 0.682232110255195,
+       "hi": 1.7926471605853211,
+       "median": 1.1256624411434872,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 1272.319835359164,
+       "hi": 4674.351259551356,
+       "median": 2243.309787818417,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "alpha": {
+       "lo": 0.4211157646516979,
+       "hi": 1.9424095073172136,
+       "median": 0.9749038814662658,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 3189.625546245706,
+       "hi": 84784.50575604208,
+       "median": 7016.9366692906915,
+       "n": 1000
+      }
+     },
+     "zai__glm-5.3": {
+      "alpha": {
+       "lo": 0.6540113044712021,
+       "hi": 3.0112139536114655,
+       "median": 1.3082690850867986,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 2046.4425693005192,
+       "hi": 25273.911876295017,
+       "median": 3827.8481426421336,
+       "n": 1000
+      }
+     }
+    },
+    "loglogistic_Afree": {
+     "anthropic__claude-opus-5-5": {
+      "A": {
+       "lo": 0.9999938557678668,
+       "hi": 0.9999938558253978,
+       "median": 0.9999938558243066,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.6526779489737329,
+       "hi": 1.706043118949928,
+       "median": 1.0501077652654083,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 786.2565562632274,
+       "hi": 2926.870041865905,
+       "median": 1365.8747087329134,
+       "n": 1000
+      }
+     },
+     "google__gemini-4-argon-eap": {
+      "A": {
+       "lo": 0.2890936948988832,
+       "hi": 0.9999875029703637,
+       "median": 0.8145970232746806,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.31168430534224445,
+       "hi": 2.6813939930308632,
+       "median": 0.9003606135602144,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 148.4131591025766,
+       "hi": 4926.33220855398,
+       "median": 802.3180209371317,
+       "n": 1000
+      }
+     },
+     "openai__gpt-5.6-terra": {
+      "A": {
+       "lo": 0.9999902136119019,
+       "hi": 0.9999902138697978,
+       "median": 0.9999902137623514,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.6735378415031287,
+       "hi": 1.9250275918782045,
+       "median": 1.189503821788877,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 1506.9374459909552,
+       "hi": 6802.733289003517,
+       "median": 2623.5413270896115,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "A": {
+       "lo": 0.9999938557695143,
+       "hi": 0.9999938558253978,
+       "median": 0.9999938558229596,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.6822336512702761,
+       "hi": 1.7926505794845353,
+       "median": 1.1256653391279072,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 1272.3086127643273,
+       "hi": 4674.270641845375,
+       "median": 2243.2872617357734,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "A": {
+       "lo": 0.9999872305654871,
+       "hi": 0.9999872317297405,
+       "median": 0.9999872314192205,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.42111625932608376,
+       "hi": 1.9424159975979673,
+       "median": 0.9749068459532354,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 3189.5873624470996,
+       "hi": 84750.31785830806,
+       "median": 7016.760437648884,
+       "n": 1000
+      }
+     },
+     "zai__glm-5.3": {
+      "A": {
+       "lo": 0.9999624298525517,
+       "hi": 0.9999624347888605,
+       "median": 0.9999624333681604,
+       "n": 1000
+      },
+      "alpha": {
+       "lo": 0.6540153750091662,
+       "hi": 3.0112306776551714,
+       "median": 1.3082797840998919,
+       "n": 1000
+      },
+      "k_half": {
+       "lo": 2046.3788961640323,
+       "hi": 25271.560630487213,
+       "median": 3827.7396191862103,
+       "n": 1000
+      }
+     }
+    },
+    "lognormal_A1": {
+     "anthropic__claude-opus-5-5": {
+      "median_effort": {
+       "lo": 787.3760962064912,
+       "hi": 3197.314421039326,
+       "median": 1394.7127442816536,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.990414276875003,
+       "hi": 2.6017119470503958,
+       "median": 1.6197356406818333,
+       "n": 1000
+      }
+     },
+     "google__gemini-4-argon-eap": {
+      "median_effort": {
+       "lo": 576.2846988851022,
+       "hi": 20728.776553941774,
+       "median": 1461.5713817116243,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 1.386317905786107,
+       "hi": 6.129124302100491,
+       "median": 2.3197127304961143,
+       "n": 1000
+      }
+     },
+     "openai__gpt-5.6-terra": {
+      "median_effort": {
+       "lo": 1531.2189758000293,
+       "hi": 8332.470375676903,
+       "median": 2763.334162215208,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.8912650065298156,
+       "hi": 2.600927958718585,
+       "median": 1.4697453021894717,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-astra": {
+      "median_effort": {
+       "lo": 1274.2633652180964,
+       "hi": 5156.141338143464,
+       "median": 2304.3710223566422,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.9451462067017262,
+       "hi": 2.4869406265668017,
+       "median": 1.53046684600768,
+       "n": 1000
+      }
+     },
+     "openai__gpt-6-luna": {
+      "median_effort": {
+       "lo": 3330.7301956464453,
+       "hi": 170794.50751457192,
+       "median": 8387.178826836684,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.9518932593110039,
+       "hi": 4.458529772281874,
+       "median": 1.9257445362749197,
+       "n": 1000
+      }
+     },
+     "zai__glm-5.3": {
+      "median_effort": {
+       "lo": 2158.881791404154,
+       "hi": 44716.35860126333,
+       "median": 4569.479459093171,
+       "n": 1000
+      },
+      "sigma": {
+       "lo": 0.6466078497965406,
+       "hi": 3.0296821483079728,
+       "median": 1.4830398336535713,
+       "n": 1000
+      }
+     }
+    }
+   }
+  }
+ },
+ "leaderboard_comparison": {
+  "source": "analysis/v0.3_strat50/leaderboard.json",
+  "leaderboard_profile": "p4_normal",
+  "scope": "STRAT-50 p4_normal (high budget) with reasoning_effort=low",
+  "models": {
+   "openai/gpt-6-astra": {
+    "cascade_last_profile": "p08_normal",
+    "cascade_reached_leaderboard_budget": true,
+    "cascade_solved": 24,
+    "cascade_cumulative_tokens": 8077475.0,
+    "leaderboard_solved": 23,
+    "leaderboard_total_tokens": 2610899,
+    "leaderboard_infra_invalid": 0,
+    "both": 22,
+    "cascade_only": 2,
+    "leaderboard_only": 1
+   },
+   "openai/gpt-5.6-terra": {
+    "cascade_last_profile": "p08_normal",
+    "cascade_reached_leaderboard_budget": true,
+    "cascade_solved": 20,
+    "cascade_cumulative_tokens": 7675741.0,
+    "leaderboard_solved": null,
+    "leaderboard_total_tokens": null,
+    "leaderboard_infra_invalid": null
+   },
+   "openai/gpt-6-luna": {
+    "cascade_last_profile": "p08_normal",
+    "cascade_reached_leaderboard_budget": true,
+    "cascade_solved": 12,
+    "cascade_cumulative_tokens": 8883949.0,
+    "leaderboard_solved": 12,
+    "leaderboard_total_tokens": 2150310,
+    "leaderboard_infra_invalid": 0,
+    "both": 10,
+    "cascade_only": 2,
+    "leaderboard_only": 2
+   },
+   "anthropic/claude-opus-5-5": {
+    "cascade_last_profile": "p07_medium",
+    "cascade_reached_leaderboard_budget": false,
+    "cascade_solved": 25,
+    "cascade_cumulative_tokens": 10774042.0,
+    "leaderboard_solved": 27,
+    "leaderboard_total_tokens": 4666790,
+    "leaderboard_infra_invalid": 0,
+    "both": 23,
+    "cascade_only": 2,
+    "leaderboard_only": 4
+   },
+   "zai/glm-5.3": {
+    "cascade_last_profile": "p06_quick",
+    "cascade_reached_leaderboard_budget": false,
+    "cascade_solved": 11,
+    "cascade_cumulative_tokens": 7518483.0,
+    "leaderboard_solved": 12,
+    "leaderboard_total_tokens": 3741342,
+    "leaderboard_infra_invalid": 0,
+    "both": 8,
+    "cascade_only": 3,
+    "leaderboard_only": 4
+   },
+   "google/gemini-4-argon-eap": {
+    "cascade_last_profile": "p04_cheap",
+    "cascade_reached_leaderboard_budget": false,
+    "cascade_solved": 17,
+    "cascade_cumulative_tokens": 2887291.0,
+    "leaderboard_solved": 27,
+    "leaderboard_total_tokens": 3280792,
+    "leaderboard_infra_invalid": 0,
+    "both": 17,
+    "cascade_only": 0,
+    "leaderboard_only": 10
+   }
+  }
+ },
+ "site_minimax_v01_check": {
+  "source": "analysis/budget_scaling_minimax_50/cascade_summary.csv",
+  "site_values": {
+   "k_half": 4600000,
+   "alpha": 1.19
+  },
+  "refit": {
+   "A": 1.0,
+   "k_half": 4622906.401499314,
+   "alpha": 1.1852075253796748,
+   "sse": 0.01266029547517693,
+   "rmse": 0.03558130896296106,
+   "theta": [
+    15.346534156496599,
+    0.1699178861568477
+   ]
+  }
+ },
+ "notes": {
+  "survival_median_effort": "exp(mu): per-TASK effort at which half of the reachable tasks are solved",
+  "panel_k_half": "cumulative PANEL effort (all 50 tasks, cascade) at which S = A/2; the /benchmark unit",
+  "alpha_sigma_mapping": "logistic with slope alpha in ln E vs normal with sd sigma: alpha = pi/(sigma*sqrt3) matches the sd, alpha = 1.702/sigma matches the CDF best; kHalf = exp(mu) when A = 1"
+ }
+}

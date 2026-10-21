@@ -1,0 +1,49 @@
+48 runs pending
+anthropic/claude-opus-5-5 C ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free: solved_counterexample checks=1 calib=5
+openai/gpt-6.1-sol A ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free: solved_property checks=1 calib=5
+openai/gpt-6.1-sol A forgeyields/global_solvency/transfer_remote_preserves_global_solvency: solved_property checks=2 calib=5
+anthropic/claude-opus-5-5 B lagoon/guardrails/exact_compliance: solved_property checks=5 calib=5
+openai/gpt-6.1-sol C lagoon/guardrails/exact_compliance: solved_counterexample checks=3 calib=5
+openai/gpt-6.1-sol A pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard: solved_property checks=5 calib=5
+openai/gpt-6.1-sol C forgeyields/global_solvency/transfer_remote_preserves_global_solvency: solved_counterexample checks=7 calib=5
+anthropic/claude-opus-5-5 C onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller: solved_counterexample checks=4 calib=5
+anthropic/claude-opus-5-5 C pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard: solved_counterexample checks=10 calib=5
+openai/gpt-6.1-sol A uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1: solved_property checks=3 calib=5
+openai/gpt-6.1-sol A kleros/sortition_trees/draw_interval_matches_weights: solved_property checks=4 calib=5
+anthropic/claude-opus-5-5 C uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1: solved_counterexample checks=7 calib=5
+openai/gpt-6.1-sol A ethereum/deposit_contract_minimal/deposit_count: solved_property checks=4 calib=5
+openai/gpt-6.1-sol C kleros/sortition_trees/draw_interval_matches_weights: budget_exhausted checks=16 calib=5
+anthropic/claude-opus-5-5 C damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool: budget_exhausted checks=16 calib=5
+anthropic/claude-opus-5-5 B pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard: solved_property checks=5 calib=5
+openai/gpt-6.1-sol A lagoon/guardrails/exact_compliance: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 A kleros/sortition_trees/draw_interval_matches_weights: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 B ethereum/deposit_contract_minimal/deposit_count: solved_property checks=1 calib=5
+openai/gpt-6.1-sol B uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None
+anthropic/claude-opus-5-5 C kleros/sortition_trees/draw_interval_matches_weights: budget_exhausted checks=16 calib=5
+openai/gpt-6.1-sol C ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free: solved_counterexample checks=1 calib=5
+openai/gpt-6.1-sol B ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free: solved_property checks=1 calib=None
+openai/gpt-6.1-sol C onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller: solved_counterexample checks=5 calib=5
+openai/gpt-6.1-sol B lagoon/guardrails/exact_compliance: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None
+openai/gpt-6.1-sol A onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller: solved_property checks=2 calib=5
+anthropic/claude-opus-5-5 A damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool: solved_property checks=2 calib=5
+anthropic/claude-opus-5-5 A pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard: solved_property checks=3 calib=5
+anthropic/claude-opus-5-5 C forgeyields/global_solvency/transfer_remote_preserves_global_solvency: solved_counterexample checks=7 calib=5
+openai/gpt-6.1-sol C pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard: solved_counterexample checks=5 calib=5
+openai/gpt-6.1-sol C kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor: solved_counterexample checks=11 calib=5
+anthropic/claude-opus-5-5 A onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 A lagoon/guardrails/exact_compliance: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 B damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool: solved_property checks=3 calib=5
+anthropic/claude-opus-5-5 A kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor: solved_property checks=5 calib=5
+openai/gpt-6.1-sol B onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None
+openai/gpt-6.1-sol B kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None
+openai/gpt-6.1-sol C uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1: budget_exhausted checks=16 calib=5
+anthropic/claude-opus-5-5 C lagoon/guardrails/exact_compliance: solved_counterexample checks=2 calib=5
+openai/gpt-6.1-sol C ethereum/deposit_contract_minimal/deposit_count: solved_counterexample checks=11 calib=5
+anthropic/claude-opus-5-5 C kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor: solved_counterexample checks=7 calib=5
+anthropic/claude-opus-5-5 C ethereum/deposit_contract_minimal/deposit_count: budget_exhausted checks=16 calib=5
+openai/gpt-6.1-sol B damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None
+openai/gpt-6.1-sol B pareto/redemption_backing/deposit_funds_preserves_closed_epoch_reserve_guard: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None
+openai/gpt-6.1-sol B ethereum/deposit_contract_minimal/deposit_count: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None
+openai/gpt-6.1-sol B forgeyields/global_solvency/transfer_remote_preserves_global_solvency: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None
+openai/gpt-6.1-sol C damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None
+openai/gpt-6.1-sol B kleros/sortition_trees/draw_interval_matches_weights: infra_error: transport failed: HTTP 502: b'error code: 502\n' checks=0 calib=None

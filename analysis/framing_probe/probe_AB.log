@@ -1,0 +1,13 @@
+40 runs pending
+anthropic/claude-opus-5-5 A ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 B uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 B forgeyields/global_solvency/transfer_remote_preserves_global_solvency: solved_property checks=6 calib=5
+openai/gpt-6.1-sol A damn_vulnerable_defi/side_entrance/exploit_trace_drains_pool: solved_property checks=6 calib=5
+openai/gpt-6.1-sol A kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor: solved_property checks=5 calib=5
+anthropic/claude-opus-5-5 A uniswap_v2/pair_fee_adjusted_swap/swap_sets_reserve1: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 A ethereum/deposit_contract_minimal/deposit_count: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 A forgeyields/global_solvency/transfer_remote_preserves_global_solvency: solved_property checks=3 calib=5
+anthropic/claude-opus-5-5 B ipor/plasma_vault_redeem_split/fee_payout_bounded_by_fee_free: solved_property checks=2 calib=5
+anthropic/claude-opus-5-5 B onedelta/caller_address_integrity/direct_erc20_transfer_from_uses_outer_caller: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 B kleros/sortition_trees/draw_interval_matches_weights: solved_property checks=1 calib=5
+anthropic/claude-opus-5-5 B kyberswap/partial_fill_price_floor/check_return_amount_partial_fill_price_floor: solved_property checks=3 calib=5
