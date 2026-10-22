@@ -46,3 +46,5 @@ notes: >
   output * denominator <= feeAdjustedInput * balanceOut. This is the direct
   analog of the Uniswap V2 K invariant, adapted to XYCSwap's basis-points fee
   structure.
+
+# ci gate probe 2026-10-22
