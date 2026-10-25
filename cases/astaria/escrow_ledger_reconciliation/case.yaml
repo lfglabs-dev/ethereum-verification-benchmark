@@ -1,0 +1,22 @@
+manifest_kind: case
+project: astaria
+case_id: escrow_ledger_reconciliation
+schema_version: 1
+split: active
+family_id: astaria
+implementation_id: contracts
+stage: build_green
+translation_status: pending
+spec_status: draft
+proof_status: none
+upstream_repo: https://github.com/AstariaXYZ/astaria-core
+upstream_commit: 0000000000000000000000000000000000000000
+original_contract_path: src/WithdrawProxy.sol
+lean_target: Benchmark.Cases.Astaria.EscrowLedgerReconciliation.Compile
+selected_functions: []
+abstraction_notes: >
+  Scaffold entry for the Astaria escrow ledger reconciliation benchmark.
+  Pins the module target while the contract translation is pending.
+unsupported_feature_codes: []
+notes: >
+  Stub case. To be replaced by the translated model.
