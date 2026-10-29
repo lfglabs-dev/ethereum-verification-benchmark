@@ -14,11 +14,13 @@ from pathlib import Path
 try:
     from .manifests import Group, Task, group_to_json
     from .paths import ROOT
+    from .process_utils import run_in_process_group
     from .verify_lease import verify_lease
     from .workspace_builder import initialise_remote_git_checkout, setup_private_lake, sha256_file
 except ImportError:
     from manifests import Group, Task, group_to_json
     from paths import ROOT
+    from process_utils import run_in_process_group
     from verify_lease import verify_lease
     from workspace_builder import initialise_remote_git_checkout, setup_private_lake, sha256_file
 
@@ -44,17 +46,12 @@ def _run(command: list[str], cwd: Path, timeout: int, *, lease: bool = True) -> 
             if lease_reason not in {"acquired", "reentrant"}:
                 return 125, f"verifier lease unavailable: {lease_reason}"
             return _run(command, cwd, timeout, lease=False)
-    try:
-        completed = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=timeout, check=False)
-    except subprocess.TimeoutExpired as exc:
-        stdout = exc.stdout or ""
-        stderr = exc.stderr or ""
-        if isinstance(stdout, bytes):
-            stdout = stdout.decode("utf-8", errors="replace")
-        if isinstance(stderr, bytes):
-            stderr = stderr.decode("utf-8", errors="replace")
+    # subprocess.run(timeout=...) only kills the direct child, which left
+    # lake's lean child orphaned; terminate the whole process group instead.
+    code, stdout, stderr, timed_out = run_in_process_group(command, cwd=cwd, timeout=timeout)
+    if timed_out:
         return 124, stdout + stderr + "\ntimeout"
-    return completed.returncode, (completed.stdout + completed.stderr).strip()
+    return code, (stdout + stderr).strip()
 
 
 LAKE_FAILURE_HEADER = "Some required builds logged failures:"

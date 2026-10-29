@@ -8,6 +8,7 @@ import sys
 import tomllib
 
 from manifest_utils import load_manifest_data
+from task_file_policy import task_file_errors
 
 ROOT = Path(__file__).resolve().parent.parent
 ROOT_RESOLVED = ROOT.resolve()
@@ -354,6 +355,10 @@ def main() -> int:
                     errors.append(
                         f"{rel}: editable_files entries must live under Benchmark/Generated/.../*.lean"
                     )
+                else:
+                    editable_resolved = resolve_repo_file(editable_path)
+                    if editable_resolved is not None and editable_resolved.is_file():
+                        errors.extend(f"{rel}: {error}" for error in task_file_errors(editable_resolved))
         if not isinstance(reference_solution_module, str) or not reference_solution_module:
             errors.append(f"{rel}: reference_solution_module must be a non-empty string")
         if not isinstance(reference_solution_declaration, str) or not reference_solution_declaration:

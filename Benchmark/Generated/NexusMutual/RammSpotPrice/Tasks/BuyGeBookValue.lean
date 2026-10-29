@@ -19,8 +19,7 @@ theorem spotPrice_buy_ge_book_value
     (hBuyReserve : calculateBuyReserve eth oldEth oldNxmBuyReserve capital supply elapsed speed != 0)
     (hSafe : buyArithmeticSafe eth oldEth oldNxmBuyReserve capital supply elapsed speed) :
     spotPrice_buy_ge_book_value_spec eth oldEth oldNxmBuyReserve oldNxmSellReserve capital supply elapsed speed := by
-  exact spotPrice_buy_ge_book_value_main
-    eth oldEth oldNxmBuyReserve oldNxmSellReserve capital supply elapsed speed
-    hEth hOldEth hSupply hCapital hBuyReserve hSafe
+  -- Replace this placeholder with a complete Lean proof.
+  exact ?_
 
 end Benchmark.Cases.NexusMutual.RammSpotPrice

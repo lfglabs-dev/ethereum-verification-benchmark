@@ -8,13 +8,14 @@ from __future__ import annotations
 
 import os
 import re
-import signal
 import subprocess
 from pathlib import Path
 
 try:
+    from .process_utils import run_in_process_group
     from .verify_lease import verify_lease
 except ImportError:
+    from process_utils import run_in_process_group
     from verify_lease import verify_lease
 
 LEAN_CHECK_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_LEAN_CHECK_TIMEOUT_SECONDS", os.environ.get("GAZELLA_LEAN_CHECK_TIMEOUT_SECONDS", "240")))
@@ -26,43 +27,25 @@ def _run_lean_command(workspace: Path, command: list[str], timeout_seconds: int)
         return _run_lean_command_unleased(workspace, command, timeout_seconds)
 
 def _run_lean_command_unleased(workspace: Path, command: list[str], timeout_seconds: int) -> tuple[int, str]:
-    process: subprocess.Popen[str] | None = None
-    try:
-        # ``lake env lean`` is a verification command, rather than a normal
-        # Lake build.  Under sandboxed.sh's remote_required policy the Lake
-        # shim deliberately keeps that verb local unless this capability flag
-        # is set.  check_proof is the harness's verifier, so opt it into the
-        # expanded remote protocol here instead of silently failing before
-        # Lean is invoked.
-        child_env = os.environ.copy()
-        if child_env.get("SANDBOXED_COMPUTE_POLICY") == "remote_required":
-            child_env["SANDBOXED_REMOTE_LAKE_VERIFY"] = "1"
-        process = subprocess.Popen(
-            command,
-            cwd=workspace,
-            env=child_env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            start_new_session=True,
-        )
-        stdout, stderr = process.communicate(timeout=timeout_seconds)
-    except subprocess.TimeoutExpired as exc:
-        if process is not None:
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            stdout, stderr = process.communicate()
-        else:
-            stdout = exc.stdout or ""
-            stderr = exc.stderr or ""
-        if isinstance(stdout, bytes):
-            stdout = stdout.decode("utf-8", errors="replace")
-        if isinstance(stderr, bytes):
-            stderr = stderr.decode("utf-8", errors="replace")
+    # ``lake env lean`` is a verification command, rather than a normal
+    # Lake build.  Under sandboxed.sh's remote_required policy the Lake
+    # shim deliberately keeps that verb local unless this capability flag
+    # is set.  check_proof is the harness's verifier, so opt it into the
+    # expanded remote protocol here instead of silently failing before
+    # Lean is invoked.
+    child_env = os.environ.copy()
+    if child_env.get("SANDBOXED_COMPUTE_POLICY") == "remote_required":
+        child_env["SANDBOXED_REMOTE_LAKE_VERIFY"] = "1"
+    # Runs in its own session; on timeout the whole group (lake and its lean
+    # child) is terminated so no orphaned lean keeps running.  Output is
+    # captured as bytes and decoded tolerantly: a killed lean can leave a
+    # truncated multi-byte code point at the end of the pipe.
+    code, stdout, stderr, timed_out = run_in_process_group(
+        command, cwd=workspace, env=child_env, timeout=timeout_seconds
+    )
+    if timed_out:
         return 124, stdout + stderr + "\ntimeout"
-    return process.returncode, (stdout + stderr).strip()
+    return code, (stdout + stderr).strip()
 
 def _compact_lean_output(output: str, limit: int = 4000) -> str:
     lines = output.splitlines()
