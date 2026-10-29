@@ -13,8 +13,10 @@ import subprocess
 from pathlib import Path
 
 try:
+    from .process_utils import decode_output
     from .verify_lease import verify_lease
 except ImportError:
+    from process_utils import decode_output
     from verify_lease import verify_lease
 
 LEAN_CHECK_TIMEOUT_SECONDS = int(os.environ.get("DEFAULT_HARNESS_LEAN_CHECK_TIMEOUT_SECONDS", os.environ.get("GAZELLA_LEAN_CHECK_TIMEOUT_SECONDS", "240")))
@@ -26,7 +28,7 @@ def _run_lean_command(workspace: Path, command: list[str], timeout_seconds: int)
         return _run_lean_command_unleased(workspace, command, timeout_seconds)
 
 def _run_lean_command_unleased(workspace: Path, command: list[str], timeout_seconds: int) -> tuple[int, str]:
-    process: subprocess.Popen[str] | None = None
+    process: subprocess.Popen[bytes] | None = None
     try:
         # ``lake env lean`` is a verification command, rather than a normal
         # Lake build.  Under sandboxed.sh's remote_required policy the Lake
@@ -43,9 +45,10 @@ def _run_lean_command_unleased(workspace: Path, command: list[str], timeout_seco
             env=child_env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True,
             start_new_session=True,
         )
+        # Capture bytes and decode tolerantly: a killed Lean can leave a
+        # truncated multi-byte code point at the end of the pipe.
         stdout, stderr = process.communicate(timeout=timeout_seconds)
     except subprocess.TimeoutExpired as exc:
         if process is not None:
@@ -55,14 +58,10 @@ def _run_lean_command_unleased(workspace: Path, command: list[str], timeout_seco
                 pass
             stdout, stderr = process.communicate()
         else:
-            stdout = exc.stdout or ""
-            stderr = exc.stderr or ""
-        if isinstance(stdout, bytes):
-            stdout = stdout.decode("utf-8", errors="replace")
-        if isinstance(stderr, bytes):
-            stderr = stderr.decode("utf-8", errors="replace")
-        return 124, stdout + stderr + "\ntimeout"
-    return process.returncode, (stdout + stderr).strip()
+            stdout = exc.stdout
+            stderr = exc.stderr
+        return 124, decode_output(stdout) + decode_output(stderr) + "\ntimeout"
+    return process.returncode, (decode_output(stdout) + decode_output(stderr)).strip()
 
 def _compact_lean_output(output: str, limit: int = 4000) -> str:
     lines = output.splitlines()

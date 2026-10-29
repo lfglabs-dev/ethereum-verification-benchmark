@@ -14,11 +14,13 @@ from pathlib import Path
 try:
     from .manifests import Group, Task, group_to_json
     from .paths import ROOT
+    from .process_utils import decode_output
     from .verify_lease import verify_lease
     from .workspace_builder import initialise_remote_git_checkout, setup_private_lake, sha256_file
 except ImportError:
     from manifests import Group, Task, group_to_json
     from paths import ROOT
+    from process_utils import decode_output
     from verify_lease import verify_lease
     from workspace_builder import initialise_remote_git_checkout, setup_private_lake, sha256_file
 
@@ -45,16 +47,10 @@ def _run(command: list[str], cwd: Path, timeout: int, *, lease: bool = True) -> 
                 return 125, f"verifier lease unavailable: {lease_reason}"
             return _run(command, cwd, timeout, lease=False)
     try:
-        completed = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=timeout, check=False)
+        completed = subprocess.run(command, cwd=cwd, capture_output=True, timeout=timeout, check=False)
     except subprocess.TimeoutExpired as exc:
-        stdout = exc.stdout or ""
-        stderr = exc.stderr or ""
-        if isinstance(stdout, bytes):
-            stdout = stdout.decode("utf-8", errors="replace")
-        if isinstance(stderr, bytes):
-            stderr = stderr.decode("utf-8", errors="replace")
-        return 124, stdout + stderr + "\ntimeout"
-    return completed.returncode, (completed.stdout + completed.stderr).strip()
+        return 124, decode_output(exc.stdout) + decode_output(exc.stderr) + "\ntimeout"
+    return completed.returncode, (decode_output(completed.stdout) + decode_output(completed.stderr)).strip()
 
 
 LAKE_FAILURE_HEADER = "Some required builds logged failures:"
